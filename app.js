@@ -8,7 +8,6 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const chalk = require('chalk');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
 const handlebars = require('./helpers/index').register(require('handlebars'));
 const flash = require('connect-flash');
 const passport = require('passport');
@@ -23,26 +22,36 @@ const usersRouter = require('./routes/users');
 
 const app = express();
 
+process.env.NODE_ENV = conf.ENV;
+app.use(helmet());
+app.use(logger('dev'));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 // view engine setup
+app.use('/static', express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  secret: conf.SECRET,
+  saveUninitialized: true,
+  resave: true
+}));
+
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
-  indentedSyntax: true, // true = .sass and false = .scss
+  indentedSyntax: false, // true = .sass and false = .scss
   sourceMap: true
 }));
-app.use(express.static(path.join(__dirname, 'public')));
 // -- Express Config
 app.engine('hbs', exphbs({
   extname         : 'hbs',
   defaultLayout   : 'default',
-  layoutsDir      : path.join(__dirname, '/layouts'),
+  layoutsDir      : path.join(__dirname, '/views/layouts'),
   partialsDir     : path.join(__dirname, '/views/partials')
 }));
 app.use(cookieParser());
@@ -55,7 +64,6 @@ app.use(i18n({
   siteLangs: ['fr'],
   textsVarName: 'tr'
 }));
-app.use(helmet());
 app.use(fileUpload());
 app.use(compress({
   filter: function (req, res) {
@@ -81,7 +89,10 @@ app.use(expressValidator({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
 // -- Global Vars
+app.set('env', conf.ENV);
+app.set('trust proxy', true);
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');

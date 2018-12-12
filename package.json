@@ -7,7 +7,8 @@
     "start": "npm run lint && node ./bin/www",
     "start debug": "DEBUG=easyteamup:* npm start",
     "dev": "nodemon --exec npm start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass:compile": "node-sass --include-path sass public/stylesheets/mstaff.sass public/assets/main.css"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,6 @@
   },
   "dependencies": {
     "bcryptjs": "*",
-    "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "compression": "^1.7.3",
     "connect-flash": "*",
@@ -51,6 +51,8 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "*",
     "request": "^2.87.0",
+    "sequelize": "^4.41.2",
+    "sequelize-cli": "^5.4.0",
     "sha1": "^1.1.1",
     "shortid": "^2.2.13"
   },
