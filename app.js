@@ -99,7 +99,6 @@ app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   res.locals.user = req.user || null;
   res.locals.session = req.user || null;
-  res.locals.admin = !!(req.user && config.roles.includes(req.user.role));
   next();
 });
 
