@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sorok-Dva/easy-team-up"
+    "url": "git+https://github.com/Sorok-Dva/mstaff"
   },
   "bugs": {
-    "url": "https://github.com/Sorok-Dva/easy-team-up/issues"
+    "url": "https://github.com/Sorok-Dva/mstaff/issues"
   },
   "dependencies": {
     "bcryptjs": "*",
