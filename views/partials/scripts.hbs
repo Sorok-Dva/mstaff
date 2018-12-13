@@ -1,19 +1,24 @@
 <script>
-    $("[data-toggle=popover]").popover();
-
-    let activeBtnLoader;
-
-    $(document).on('click', '.btn-loader', (e) => {
-        let $this = $(e.target);
-        activeBtnLoader = $this;
-        let loadingText = $this.attr('data-loading-text');
-        if ($this.html() !== loadingText) {
-            $this.data('original-text', $this.html());
-            $this.html(loadingText);
-        }
-        setTimeout(function() {
-            $this.html($this.data('original-text'));
-        }, 10000);
+    $(document).ready(() => {
+        // $("[data-toggle=popover]").popover();
+        {{#if sequelizeError}}
+            {{#each sequelizeError.errors as |error|}}
+                $('#{{error.path}}').css('border', '3px solid red');
+            {{/each}}
+        {{/if}}
+        let activeBtnLoader;
+        $(document).on('click', '.btn-loader', (e) => {
+            let $this = $(e.target);
+            activeBtnLoader = $this;
+            let loadingText = $this.attr('data-loading-text');
+            if ($this.html() !== loadingText) {
+                $this.data('original-text', $this.html());
+                $this.html(loadingText);
+            }
+            setTimeout(function() {
+                $this.html($this.data('original-text'));
+            }, 10000);
+        });
     });
 
     {{#if error_msg}}

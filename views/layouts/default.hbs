@@ -29,8 +29,14 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" />
 
         <script src="/static/vendors/tether/dist/js/tether.min.js"></script>
-        <script src="/static/vendors/jquery/dist/jquery.min.js"></script>
-        <script src="/static/javascripts/jquery-ui.min.js"></script>
+        <script
+                src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+        <script
+                src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
         <script src="/static/vendors/bootstrap/dist/js/bootstrap.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
         <script src="/static/vendors/remarkable-bootstrap-notify/dist/bootstrap-notify.js"></script>
@@ -56,6 +62,11 @@
             {{#each errors as |error|}}
                 <div class="alert alert-danger">{{error.msg}}</div>
             {{/each}}
+            {{#if sequelizeError}}
+                {{#each sequelizeError.errors as |error|}}
+                    <div class="alert alert-danger">{{error.message}}</div>
+                {{/each}}
+            {{/if}}
             {{{body}}}
         </main>
 

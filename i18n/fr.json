@@ -1,3 +1,46 @@
 {
-  "title": "Mstaff"
+  "layouts": {
+    "default": {
+    },
+    "landing": {
+    },
+    "admin": {
+    }
+  },
+  "partials": {
+    "header": {
+    },
+    "scripts": {
+      "notify_error_title": "Erreur",
+      "notify_success_title": "Succès"
+    }
+  },
+  "pages": {
+    "index": {
+    },
+    "login": {
+      "title_card_header": "Connexion",
+      "form_email_label": "Adresse e-mail",
+      "form_email_ph": "Votre adresse e-mail",
+      "form_password_label": "Mot de passe",
+      "form_password_ph": "Votre mot de passe",
+      "form_submit_btn_loading_text": "Connexion en cours",
+      "form_submit_btn": "Connexion"
+    },
+    "register": {
+      "title_card_header": "Inscription",
+      "card-lead": "",
+      "form_firstName_label": "Nom",
+      "form_firstName_label_ph": "Votre nom de famille",
+      "form_lastName_label": "Prémom",
+      "form_lastName_label_ph": "Votre prénom",
+      "form_email_label": "Adresse e-mail",
+      "form_email_muted": "Nous ne partagerons jamais votre email avec quiconque.",
+      "form_email_ph": "Votre adresse e-mail",
+      "form_password_label": "Mot de passe",
+      "form_password_ph": "Votre mot de passe",
+      "form_submit_btn_loading_text": "Validation de l'inscription",
+      "form_submit_btn": "S'inscrire"
+    }
+  }
 }
