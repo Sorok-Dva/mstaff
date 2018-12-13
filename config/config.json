@@ -3,7 +3,7 @@
     "username": "mstaff",
     "password": "Mstaff2019*",
     "database": "mstaff_development",
-    "host": "127.0.0.1",
+    "host": "91.121.79.166",
     "dialect": "mysql",
     "operatorsAliases": false
   },
