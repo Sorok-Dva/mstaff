@@ -1,4 +1,5 @@
 const createError = require('http-errors');
+const cors = require('cors');
 const express = require('express');
 const session = require('express-session');
 const compress = require('compression');
@@ -23,18 +24,28 @@ const usersRouter = require('./routes/users');
 const app = express();
 
 process.env.NODE_ENV = conf.ENV;
-app.use(helmet());
+
 app.use(logger('dev'));
 
+// parse body params and attache them to req.body
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
-// view engine setup
-app.use('/static', express.static(path.join(__dirname, 'public')));
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.use(cookieParser(conf.SECRET));
+app.use(compress({
+  filter: function (req, res) {
+    return (/json|text|javascript|css|image\/svg\+xml|application\/x-font-ttf/).test(res.getHeader('Content-Type'));
+  },
+  level: 9
+}));
 
-app.use(cookieParser());
+// secure apps by setting various HTTP headers
+app.use(helmet());
+// enable CORS - Cross Origin Resource Sharing
+app.use(cors());
+
+// process.on('unhandledRejection', reason => Sentry.send(reason, { context: 'unhandledRejection' })); To implement later
+
 app.use(session({
   secret: conf.SECRET,
   saveUninitialized: true,
@@ -47,6 +58,10 @@ app.use(sassMiddleware({
   indentedSyntax: false, // true = .sass and false = .scss
   sourceMap: true
 }));
+// view engine setup
+app.use('/static', express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 // -- Express Config
 app.engine('hbs', exphbs({
   extname         : 'hbs',
@@ -54,7 +69,6 @@ app.engine('hbs', exphbs({
   layoutsDir      : path.join(__dirname, '/views/layouts'),
   partialsDir     : path.join(__dirname, '/views/partials')
 }));
-app.use(cookieParser());
 
 app.use(i18n({
   translationsPath: path.join(__dirname, 'i18n'),
@@ -65,12 +79,6 @@ app.use(i18n({
   textsVarName: 'tr'
 }));
 app.use(fileUpload());
-app.use(compress({
-  filter: function (req, res) {
-    return (/json|text|javascript|css|image\/svg\+xml|application\/x-font-ttf/).test(res.getHeader('Content-Type'));
-  },
-  level: 9
-}));
 app.use(expressValidator({
   errorFormatter: function (param, msg, value) {
     let namespace = param.split('.'),

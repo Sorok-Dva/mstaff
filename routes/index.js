@@ -7,6 +7,6 @@ const IndexController = require('../controllers/index');
 router.get('/', IndexController.getIndex);
 router.get('/login', UserController.ensureIsNotAuthenticated, IndexController.getLogin);
 router.get('/register', UserController.ensureIsNotAuthenticated, IndexController.getRegister)
-  .post('/register', UserController.ensureIsNotAuthenticated, IndexController.postRegister);
+  .post('/register', UserController.ensureIsNotAuthenticated, UserController.create);
 
 module.exports = router;
