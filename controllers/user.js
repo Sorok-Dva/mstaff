@@ -1,3 +1,4 @@
+const { check, validationResult } = require('express-validator/check');
 const User = require('../models/index').User;
 const bcrypt = require('bcryptjs');
 
@@ -19,8 +20,24 @@ module.exports = {
       res.redirect('/');
     }
   },
+  validate: (method) => {
+    switch (method) {
+    case 'create': {
+      return [
+        check('email').isEmail(),
+        check('password').isLength({ min: 8 }),
+        check('firstName').exists()
+      ]
+    }
+    }
+  },
   // End Middlewares
   create: (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.render('users/register', { errors: errors.array() });
+    }
+
     let password = req.body.password;
     bcrypt.genSalt(10).then(salt => {
       bcrypt.hash(password, salt).then(hash => {
@@ -28,9 +45,13 @@ module.exports = {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
-          password: hash
+          password: hash,
+          birthday: new Date(req.body.birthday),
+          postal_code: req.body.postal_code,
+          town: req.body.town,
+          phone: req.body.phone
         }).then(user => res.render('login', { user }))
-          .catch(error => res.render('users/register', { sequelizeError: error }));
+          .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
       });
     });
   },
