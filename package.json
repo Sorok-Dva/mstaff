@@ -6,7 +6,8 @@
     "lint": "eslint --fix --cache .",
     "start": "npm run sass:compile && npm run lint && node ./bin/www",
     "start debug": "DEBUG=mstaffv2:* npm start",
-    "migrate": "sequelize db:migrate",
+    "db:migrate": "sequelize db:migrate",
+    "db:seed": "sequelize db:seed:all",
     "dev": "nodemon --exec npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "sass:compile": "node-sass --include-path sass public/stylesheets/mstaff.sass public/assets/main.css"
