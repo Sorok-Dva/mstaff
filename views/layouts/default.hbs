@@ -50,23 +50,7 @@
         </header>
 
         <main role="main" class="main-content container">
-            {{#if success_msg}}
-                <div class="alert alert-success">{{success_msg}}</div>
-            {{/if}}
-            {{#if error_msg}}
-                <div class="alert alert-danger">{{error_msg}}</div>
-            {{/if}}
-            {{#if error}}
-                <div class="alert alert-danger">{{error}}</div>
-            {{/if}}
-            {{#each errors as |error|}}
-                <div class="alert alert-danger">{{error.msg}}</div>
-            {{/each}}
-            {{#if sequelizeError}}
-                {{#each sequelizeError.errors as |error|}}
-                    <div class="alert alert-danger">{{error.message}}</div>
-                {{/each}}
-            {{/if}}
+            {{> flash}}
             {{{body}}}
         </main>
 

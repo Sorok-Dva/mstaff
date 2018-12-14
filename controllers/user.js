@@ -25,7 +25,9 @@ module.exports = {
     case 'create': {
       return [
         check('email').isEmail(),
-        check('password').isLength({ min: 8 }),
+        check('password')
+          .isLength({ min: 8 }).withMessage('must be at least 8 chars long')
+          .matches(/\d/).withMessage('must contain a number'),
         check('firstName').exists()
       ]
     }
@@ -35,7 +37,7 @@ module.exports = {
   create: (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.render('users/register', { errors: errors.array() });
+      return res.render('users/register', { body: req.body, errors: errors.array() });
     }
 
     let password = req.body.password;
