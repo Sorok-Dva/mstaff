@@ -28,7 +28,8 @@ module.exports = {
         check('password')
           .isLength({ min: 8 }).withMessage('must be at least 8 chars long')
           .matches(/\d/).withMessage('must contain a number'),
-        check('firstName').exists()
+        check('firstName').exists(),
+        check('lastName').exists()
       ]
     }
     }
