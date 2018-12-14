@@ -5,8 +5,16 @@ const passport = require('../bin/passport');
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
 
+/**
+ * @Route('/') GET;
+ * Show Index page
+ */
 router.get('/', IndexController.getIndex);
 
+/**
+ * @Route('/login') GET + POST;
+ * Show Login Page + Send Login Form
+ */
 router.get('/login',
   UserController.ensureIsNotAuthenticated,
   IndexController.getLogin)
@@ -18,6 +26,10 @@ router.get('/login',
       failureFlash: true
     }), IndexController.postLogin);
 
+/**
+ * @Route('/register') GET + POST;
+ * Show Register Page + Send Register Form
+ */
 router.get('/register',
   UserController.ensureIsNotAuthenticated,
   IndexController.getRegister)
@@ -26,6 +38,10 @@ router.get('/register',
     UserController.validate('create'),
     UserController.create);
 
+/**
+ * @Route('/logout') GET;
+ * Logout user
+ */
 router.get('/logout', UserController.ensureAuthenticated, IndexController.getLogout);
 
 module.exports = router;

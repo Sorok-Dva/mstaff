@@ -3,7 +3,14 @@ const User = require('../models/index').User;
 const bcrypt = require('bcryptjs');
 
 module.exports = {
-  // Middlewares
+  /**
+   * ensureIsNotAuthenticated MiddleWare
+   * @param req
+   * @param res
+   * @param next
+   * @returns {*}
+   * @description Ensure that the current user is logged-out
+   */
   ensureIsNotAuthenticated: (req, res, next) => {
     if (!req.isAuthenticated()) {
       return next();
@@ -12,6 +19,14 @@ module.exports = {
       res.redirect('/');
     }
   },
+  /**
+   * ensureAuthenticated MiddleWare
+   * @param req
+   * @param res
+   * @param next
+   * @returns {*}
+   * @description Ensure that the current user is logged-in
+   */
   ensureAuthenticated: (req, res, next) => {
     if (req.isAuthenticated()) {
       return next();
@@ -20,6 +35,11 @@ module.exports = {
       res.redirect('/');
     }
   },
+  /**
+   * validate MiddleWare
+   * @param method
+   * @description Form Validator. Each form validation must be created in new case.
+   */
   validate: (method) => {
     switch (method) {
     case 'create': {
@@ -34,7 +54,13 @@ module.exports = {
     }
     }
   },
-  // End Middlewares
+  /**
+   * Create User Method
+   * @param req
+   * @param res
+   * @description Method triggered on new user form submit.
+   *              Verify form consistency, generate password hash and execute query.
+   */
   create: (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -58,10 +84,18 @@ module.exports = {
       });
     });
   },
+  /**
+   * ComparePassword Method
+   * @param candidatePassword
+   * @param hash
+   * @param callback
+   * @returns callback
+   * @description Compare two passwords hash to authenticate user.
+   */
   comparePassword: (candidatePassword, hash, callback) => {
     bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
       if (err) throw err;
-      callback(null, isMatch);
+      return callback(null, isMatch);
     });
   }
 };
