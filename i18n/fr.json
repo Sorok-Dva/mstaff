@@ -35,7 +35,7 @@
       "form_lastName_label": "Prénom*",
       "form_lastName_label_ph": "Votre prénom",
       "form_email_label": "Adresse e-mail*",
-      "form_birthDate_label": "Date de naissance",
+      "form_birthDate_label": "Date de naissance*",
       "form_postalCode_label": "Code postal*",
       "form_postalCode_label_ph": "ex: 75000",
       "form_city_label": "Ville*",
