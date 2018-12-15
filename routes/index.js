@@ -44,4 +44,10 @@ router.get('/register',
  */
 router.get('/logout', UserController.ensureAuthenticated, IndexController.getLogout);
 
+/**
+ * @Route('/404') GET;
+ * 404 Page
+ */
+router.get('/404', IndexController.get404);
+
 module.exports = router;
