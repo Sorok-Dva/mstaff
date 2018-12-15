@@ -52,6 +52,9 @@ module.exports = {
         check('lastName').exists()
       ]
     }
+    case 'ApiVerifyEmailAvailability': {
+      check('email').isEmail();
+    }
     }
   },
   /**
@@ -97,6 +100,20 @@ module.exports = {
     bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
       if (err) throw err;
       return callback(null, isMatch);
+    });
+  },
+  /**
+   * [API] Verify Email Availability Method
+   * @param req
+   * @param res
+   * @returns boolean
+   * @description Check if email is already used by a user. Used by registration form.
+   */
+  ApiVerifyEmailAvailability: (req, res) => {
+    User.findOne({
+      where: { email: req.params.email }
+    }).then(user => {
+      res.status(201).json({ available: !user })
     });
   }
 };

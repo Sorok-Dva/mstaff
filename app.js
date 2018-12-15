@@ -20,13 +20,14 @@ const sassMiddleware = require('node-sass-middleware');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const apiRouter = require('./routes/api/api');
+const apiUserRouter = require('./routes/api/user');
 
 const app = express();
 
 process.env.NODE_ENV = conf.ENV;
 
 app.use(logger('dev'));
-
 // parse body params and attache them to req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -112,11 +113,8 @@ app.use((req, res, next) => {
 // ------ ROUTES
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+app.use('/api', apiRouter);
+app.use('/api/user', apiUserRouter);
 
 // error handler
 app.use(function (err, req, res, next) {
