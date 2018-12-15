@@ -62,6 +62,7 @@ app.use(sassMiddleware({
 }));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+app.set('view cache', true);
 app.set('view engine', 'hbs');
 // -- Express Config
 app.engine('hbs', exphbs({
