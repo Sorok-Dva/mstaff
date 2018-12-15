@@ -76,6 +76,9 @@
               $('#email').css('border', '2px solid green');
               $('#emailTaken').hide();
           }
-      }).catch(error => $('#emailTaken').hide());
+      }).catch(error => {
+        $('#emailTaken').hide();
+        $('#email').css('border', '3px solid red');
+      });
     })
 </script>
