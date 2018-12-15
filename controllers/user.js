@@ -85,7 +85,7 @@ module.exports = {
           postal_code: req.body.postal_code,
           town: req.body.town,
           phone: req.body.phone
-        }).then(user => res.render('login', { user }))
+        }).then(user => res.render('users/login', { user }))
           .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
       });
     });
