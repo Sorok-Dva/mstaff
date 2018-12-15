@@ -14,7 +14,9 @@ module.exports = {
         return res.render('establishments/homepage');
       });
     } else {
-      return res.render('index', { layout: 'landing' })
+      let opts = {};
+      if (!req.user) opts.layout = 'landing';
+      return res.render('index', opts)
     }
   },
   getLogin:     (req, res) => res.render('users/login'),
