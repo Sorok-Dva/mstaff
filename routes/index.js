@@ -30,10 +30,10 @@ router.get('/login',
  * @Route('/register') GET + POST;
  * Show Register Page + Send Register Form
  */
-router.get('/register/:code_es?',
+router.get('/register/:esCode?',
   UserController.ensureIsNotAuthenticated,
   IndexController.getRegister)
-  .post('/register/:code_es?',
+  .post('/register/:esCode?',
     UserController.ensureIsNotAuthenticated,
     UserController.validate('create'),
     UserController.create);

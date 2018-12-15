@@ -68,7 +68,7 @@ module.exports = {
     }
 
     let password = req.body.password;
-    let code_es = req.params.code_es;
+    let esCode = req.params.esCode;
     bcrypt.genSalt(10).then(salt => {
       bcrypt.hash(password, salt).then(hash => {
         User.create({
