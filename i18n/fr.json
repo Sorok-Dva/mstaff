@@ -31,7 +31,6 @@
       "title_card_header": "Inscription",
       "card-lead": "",
       "form_es_label": "Code établissement",
-      "form_es_label_ph": "XXXXXX",
       "form_firstName_label": "Nom*",
       "form_firstName_label_ph": "Votre nom",
       "form_lastName_label": "Prénom*",
@@ -50,7 +49,10 @@
       "form_password_ph": "Votre mot de passe",
       "form_password_label_ph": "Votre mot de passe",
       "form_submit_btn_loading_text": "Validation de l'inscription",
-      "form_submit_btn": "S'inscrire"
+      "form_submit_btn": "S'inscrire",
+      "errors": {
+        "email_taken": "Cette adresse e-mail est déjà utilisée."
+      }
     }
   }
 }
