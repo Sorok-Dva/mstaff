@@ -53,7 +53,9 @@ module.exports = {
       ]
     }
     case 'ApiVerifyEmailAvailability': {
-      check('email').isEmail();
+      return [
+        check('email').isEmail()
+      ]
     }
     }
   },
@@ -110,10 +112,14 @@ module.exports = {
    * @description Check if email is already used by a user. Used by registration form.
    */
   ApiVerifyEmailAvailability: (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
     User.findOne({
       where: { email: req.params.email }
     }).then(user => {
-      res.status(201).json({ available: !user })
+      return res.status(201).json({ available: !user });
     });
   }
 };
