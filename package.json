@@ -4,36 +4,38 @@
   "private": true,
   "scripts": {
     "lint": "eslint --fix --cache .",
-    "start": "npm run lint && node ./bin/www",
-    "start debug": "DEBUG=easyteamup:* npm start",
+    "start": "npm run sass:compile && npm run lint && node ./bin/www",
+    "start debug": "DEBUG=mstaffv2:* npm start",
+    "db:migrate": "sequelize db:migrate",
+    "db:seed": "sequelize db:seed:all",
     "dev": "nodemon --exec npm start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass:compile": "node-sass --include-path sass public/stylesheets/mstaff.sass public/assets/main.css"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sorok-Dva/easy-team-up"
+    "url": "git+https://github.com/Sorok-Dva/mstaff"
   },
   "bugs": {
-    "url": "https://github.com/Sorok-Dva/easy-team-up/issues"
+    "url": "https://github.com/Sorok-Dva/mstaff/issues"
   },
   "dependencies": {
     "bcryptjs": "*",
-    "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "compression": "^1.7.3",
     "connect-flash": "*",
     "cookie-parser": "~1.4.3",
-    "dotenv": "^4.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
     "express": "^4.16.3",
-    "express-fileupload": "^0.4.0",
+    "express-fileupload": "^1.0.0",
     "express-handlebars": "*",
     "express-hbs": "^1.0.4",
     "express-messages": "*",
     "express-session": "^1.15.6",
-    "express-validator": "^4.3.0",
+    "express-validator": "^5.3.0",
     "handlebars": "^4.0.12",
     "handlebars-dateformat": "^1.1.1",
-    "handlebars-helpers": "^0.10.0",
     "hbs": "^4.0.1",
     "helmet": "^3.13.0",
     "i18n": "^0.8.3",
@@ -43,6 +45,7 @@
     "moment": "^2.22.2",
     "moment-countdown": "0.0.3",
     "morgan": "^1.9.0",
+    "mysql2": "^1.6.4",
     "node-sass-middleware": "0.11.0",
     "node-schedule": "^1.3.0",
     "nodemailer": "^4.6.7",
@@ -51,17 +54,18 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "*",
     "request": "^2.87.0",
-    "sha1": "^1.1.1",
-    "shortid": "^2.2.13"
+    "sequelize": "^4.41.2",
+    "sequelize-cli": "^5.4.0",
+    "sha1": "^1.1.1"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^10.2.1",
+    "eslint": "^5.10.0",
+    "eslint-config-standard": "^12.0.0",
     "eslint-plugin-async-await": "0.0.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "nyc": "^13.0.1"
   },
   "main": "bin/www"
