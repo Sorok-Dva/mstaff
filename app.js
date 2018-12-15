@@ -1,14 +1,11 @@
-const createError = require('http-errors');
-const cors = require('cors');
 const express = require('express');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-const expressValidator = require('express-validator');
 const exphbs = require('express-handlebars');
 const fileUpload = require('express-fileupload');
 const compress = require('compression');
+const cors = require('cors');
 const path = require('path');
-const chalk = require('chalk');
 const cookieParser = require('cookie-parser');
 const handlebars = require('./helpers/index').register(require('handlebars'));
 const flash = require('connect-flash');
@@ -18,6 +15,7 @@ const i18n = require('i18n-express');
 const conf = require('dotenv').config().parsed;
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const apiRouter = require('./routes/api/api');
@@ -42,12 +40,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser(conf.SECRET));
-app.use(compress({
-  filter: function (req, res) {
-    return (/json|text|javascript|css|image\/svg\+xml|application\/x-font-ttf/).test(res.getHeader('Content-Type'));
-  },
-  level: 9
-}));
 
 // secure apps by setting various HTTP headers
 app.use(helmet());
@@ -69,7 +61,6 @@ app.use(sassMiddleware({
   sourceMap: true
 }));
 // view engine setup
-app.use('/static', express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 // -- Express Config
@@ -88,29 +79,19 @@ app.use(i18n({
   siteLangs: ['fr'],
   textsVarName: 'tr'
 }));
-app.use(fileUpload());
-app.use(expressValidator({
-  errorFormatter: function (param, msg, value) {
-    let namespace = param.split('.'),
-      root = namespace.shift(),
-      formParam = root;
-    while (namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
-    }
-    return {
-      param: formParam,
-      msg: msg,
-      value: value
-    };
-  }
-}));
+
+app.set('env', env);
+app.set('trust proxy', true);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-
-// -- Global Vars
-app.set('env', conf.ENV);
-app.set('trust proxy', true);
+app.use(compress({
+  filter: function (req, res) {
+    return (/json|text|javascript|css|image\/svg\+xml|application\/x-font-ttf/).test(res.getHeader('Content-Type'));
+  },
+  level: 9
+}));
+app.use(fileUpload());
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
@@ -119,6 +100,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/static', express.static(path.join(__dirname, 'public')));
 // ------ ROUTES
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
