@@ -1,12 +1,16 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const User = require('../models').User;
+const Models = require('../models');
 const UserController = require('../controllers/user');
 
 passport.use(new LocalStrategy((email, password, done) => {
-  User.findOne({
-    where: { email }
+  Models.User.findOne({
+    where: { email },
+    include:[{
+      model: Models.Candidate,
+      as: 'candidate'
+    }]
   }).then(user => {
     if (!user) return done(null, false, { message: 'Utilisateur inconnu' });
     UserController.comparePassword(password, user.dataValues.password, (err, isMatch) => {
@@ -23,6 +27,6 @@ passport.use(new LocalStrategy((email, password, done) => {
 passport.serializeUser((user, done) => done(null, user.id));
 
 passport.deserializeUser((id, done) =>
-  User.findOne({ where: { id } }).then(user => done(null, user)));
+  Models.User.findOne({ where: { id } }).then(user => done(null, user)));
 
 module.exports = passport;
