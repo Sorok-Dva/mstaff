@@ -32,6 +32,7 @@
     "express-handlebars": "*",
     "express-hbs": "^1.0.4",
     "express-messages": "*",
+    "express-mysql-session": "^2.0.1",
     "express-session": "^1.15.6",
     "express-validator": "^5.3.0",
     "handlebars": "^4.0.12",
