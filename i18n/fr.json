@@ -9,6 +9,9 @@
   },
   "partials": {
     "header": {
+      "li_item_register": "S'enregister",
+      "li_item_login": "Connexion",
+      "li_item_logout": "Déconnexion"
     },
     "scripts": {
       "notify_error_title": "Erreur",
