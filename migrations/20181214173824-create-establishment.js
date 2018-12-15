@@ -19,7 +19,7 @@ module.exports = {
       },
       code: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       sector: {
         type: Sequelize.STRING
