@@ -2,10 +2,11 @@ const createError = require('http-errors');
 const cors = require('cors');
 const express = require('express');
 const session = require('express-session');
-const compress = require('compression');
+const MySQLStore = require('express-mysql-session')(session);
 const expressValidator = require('express-validator');
 const exphbs = require('express-handlebars');
 const fileUpload = require('express-fileupload');
+const compress = require('compression');
 const path = require('path');
 const chalk = require('chalk');
 const cookieParser = require('cookie-parser');
@@ -17,7 +18,6 @@ const i18n = require('i18n-express');
 const conf = require('dotenv').config().parsed;
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
-
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const apiRouter = require('./routes/api/api');
@@ -25,7 +25,16 @@ const apiUserRouter = require('./routes/api/user');
 
 const app = express();
 
-process.env.NODE_ENV = conf.ENV;
+const env = conf.ENV || 'development';
+const config = require(`${__dirname}/config/config.json`)[env];
+
+// -- Express Session configuration
+let sessionStore = new MySQLStore({
+  host: config.host,
+  user: config.username,
+  password: config.password,
+  database: config.database
+});
 
 app.use(logger('dev'));
 // parse body params and attache them to req.body
@@ -50,9 +59,9 @@ app.use(cors());
 app.use(session({
   secret: conf.SECRET,
   saveUninitialized: true,
+  store: sessionStore,
   resave: true
 }));
-
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
