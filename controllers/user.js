@@ -119,8 +119,7 @@ module.exports = {
    */
   comparePassword: (candidatePassword, hash, callback) => {
     bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
-      if (err) throw err;
-      return callback(null, isMatch);
+      return callback(err, isMatch);
     });
   },
   /**

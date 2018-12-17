@@ -121,6 +121,13 @@ app.use(function (err, req, res, next) {
 
 if (env === 'development' || env === 'local') {
   app.use(logger('dev'));
+  // error handling code within middleware
+  process.on('uncaughtException', error => {
+    console.log(error);
+    if(!error.isOperational)
+    { throw error; }
+    process.exit(1);
+  });
 }
 
 module.exports = app;

@@ -23,5 +23,6 @@ module.exports = {
   postLogin:    (req, res) => res.redirect('/'),
   getLogout:    (req, res) => req.logout() + res.redirect('/'),
   getRegister:  (req, res) => res.render('users/register'),
-  get404:       (req, res) => res.render('error', { error: 'Lien invalide' })
+  get404:       (req, res) => res.render('error', { error: 'Lien invalide' }),
+  getRegisterDemo:(req, res) => res.render('users/registerDemo')
 };

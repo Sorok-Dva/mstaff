@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     domain_name: DataTypes.STRING,
     domain_enable: DataTypes.BOOLEAN
   }, {});
-  Establishment.associate = function(models) {
+  Establishment.associate = function (models) {
     // associations can be defined here
   };
   return Establishment;
