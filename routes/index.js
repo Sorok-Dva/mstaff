@@ -4,6 +4,7 @@ const passport = require('../bin/passport');
 
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
+const EstablishmentController = require('../controllers/establishment');
 
 /**
  * @Route('/') GET;
@@ -28,7 +29,7 @@ router.get('/login',
 
 /**
  * @Route('/register') GET + POST;
- * Show Register Page + Send Register Form
+ * Show Register Page + Send Register Form (for new candidates)
  */
 router.get('/register/:esCode?',
   UserController.ensureIsNotAuthenticated,
@@ -37,6 +38,18 @@ router.get('/register/:esCode?',
     UserController.ensureIsNotAuthenticated,
     UserController.validate('create'),
     UserController.create);
+
+/**
+ * @Route('/register/demo') GET + POST;
+ * Show Register Page + Send Register Form (for new establishments)
+ */
+router.get('/register/demo',
+  UserController.ensureIsNotAuthenticated,
+  IndexController.getRegisterDemo)
+  .post('/register/demo',
+    UserController.ensureIsNotAuthenticated,
+    EstablishmentController.validate('create'),
+    EstablishmentController.create);
 
 /**
  * @Route('/logout') GET;
