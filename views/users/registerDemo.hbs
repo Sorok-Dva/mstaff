@@ -1,0 +1,84 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="card border-info mb-3 align-self-center" style="width:30rem">
+            <div class="card-header">{{tr.pages.register.title_card_header}}</div>
+            <div class="card-body">
+                <p class="lead">{{tr.pages.register.card-lead}}</p>
+                <form class="form-horizontal" action="/register" method="post">
+                    <div class="form-group">
+                        <label for="firstName">{{tr.pages.register.form_firstName_label}}</label>
+                        <input id="firstName" name="firstName" type="text"
+                               placeholder="{{tr.pages.register.form_firstName_label_ph}}"
+                               class="form-control input-md" value="{{body.firstName}}" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">{{tr.pages.register.form_lastName_label}}</label>
+                        <input id="lastName" name="lastName" type="text"
+                               placeholder="{{tr.pages.register.form_lastName_label_ph}}"
+                               class="form-control input-md" value="{{body.lastName}}" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="birthday">{{tr.pages.register.form_birthDate_label}}</label>
+                        <input id="birthday" name="birthday" type="date" value="{{body.birthday}}"
+                               class="form-control input-md" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="postal_code">{{tr.pages.register.form_postalCode_label}}</label>
+                        <input id="postal_code" name="postal_code" type="text"
+                               placeholder="{{tr.pages.register.form_postalCode_label_ph}}"
+                               class="form-control input-md" value="{{body.postal_code}}" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="town">{{tr.pages.register.form_city_label}}</label>
+                        <input id="town" name="town" type="text"
+                               placeholder="{{tr.pages.register.form_city_label_ph}}"
+                               class="form-control input-md" value="{{body.town}}" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">{{tr.pages.register.form_phoneNumber_label}}</label>
+                        <input id="phone" name="phone" type="text"
+                               placeholder="{{tr.pages.register.form_phoneNumber_label_ph}}"
+                               class="form-control input-md" value="{{body.phone}}" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">{{tr.pages.register.form_email_label}}</label>
+                        <input id="email" name="email" type="email"
+                               placeholder="{{tr.pages.register.form_email_ph}}"
+                               class="form-control input-md" value="{{body.email}}" required="">
+                        <small id="emailTaken" class="form-text text-muted">{{tr.pages.register.errors.email_taken}}</small>
+                        <small id="emailHelp" class="form-text text-muted">{{tr.pages.register.form_email_muted}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">{{tr.pages.register.form_password_label}}</label>
+                        <input id="password" name="password" type="password"
+                               placeholder="{{tr.pages.register.form_password_label_ph}}"
+                               class="form-control input-md" required="">
+                    </div>
+                    <button class="btn btn-info btn-loader float-md-right" type="submit"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>
+                            {{tr.pages.register.form_submit_btn_loading_text}}">
+                            {{tr.pages.register.form_submit_btn}}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#email').blur(() => {
+      let email = $('#email').val();
+      $.get(`/api/user/emailAvailable/${email}`, (result) => {
+          if (!result.available) {
+              $('#email').css('border', '3px solid red');
+              $('#emailTaken').show();
+          } else {
+              $('#email').css('border', '2px solid green');
+              $('#emailTaken').hide();
+          }
+      }).catch(error => {
+        $('#emailTaken').hide();
+        $('#email').css('border', '3px solid red');
+      });
+    })
+</script>

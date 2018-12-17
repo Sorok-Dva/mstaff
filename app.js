@@ -18,6 +18,7 @@ const sassMiddleware = require('node-sass-middleware');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const boRouter = require('./routes/backOffice');
 const apiRouter = require('./routes/api/api');
 const apiUserRouter = require('./routes/api/user');
 
@@ -34,20 +35,20 @@ let sessionStore = new MySQLStore({
   database: config.database
 });
 
-app.use(logger('dev'));
+app.set('env', env);
+
+app.set('trust proxy', true);
+// secure apps by setting various HTTP headers
+app.use(helmet());
 // parse body params and attache them to req.body
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser(conf.SECRET));
 
-// secure apps by setting various HTTP headers
-app.use(helmet());
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
-
-// process.on('unhandledRejection', reason => Sentry.send(reason, { context: 'unhandledRejection' })); To implement later
-
 app.use(session({
   secret: conf.SECRET,
   saveUninitialized: true,
@@ -63,15 +64,16 @@ app.use(sassMiddleware({
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view cache', true);
+
 app.set('view engine', 'hbs');
-// -- Express Config
+
+// express config
 app.engine('hbs', exphbs({
   extname         : 'hbs',
   defaultLayout   : 'default',
   layoutsDir      : path.join(__dirname, '/views/layouts'),
   partialsDir     : path.join(__dirname, '/views/partials')
 }));
-
 app.use(i18n({
   translationsPath: path.join(__dirname, 'i18n'),
   cookieLangName: 'mstaff_lang',
@@ -80,9 +82,6 @@ app.use(i18n({
   siteLangs: ['fr'],
   textsVarName: 'tr'
 }));
-
-app.set('env', env);
-app.set('trust proxy', true);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -104,7 +103,8 @@ app.use((req, res, next) => {
 app.use('/static', express.static(path.join(__dirname, 'public')));
 // ------ ROUTES
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
+app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
 app.use('/api/user', apiUserRouter);
 
@@ -112,11 +112,15 @@ app.use('/api/user', apiUserRouter);
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = env === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
+
+if (env === 'development' || env === 'local') {
+  app.use(logger('dev'));
+}
 
 module.exports = app;
