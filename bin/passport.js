@@ -16,7 +16,8 @@ passport.use(new LocalStrategy((email, password, done) => {
     UserController.comparePassword(password, user.dataValues.password, (err, isMatch) => {
       if (err) return done(null, false, err);
       if (isMatch) {
-        return done(null, user.dataValues);
+        let session = { id: user.dataValues.id, email: user.dataValues.email, role: user.dataValues.role };
+        return done(null, session);
       } else {
         return done(null, false, { message: 'Mot de passe invalide.' });
       }
