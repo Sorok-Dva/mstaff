@@ -7,6 +7,7 @@
     "start": "npm run sass:compile && npm run lint && node ./bin/www",
     "start debug": "DEBUG=mstaffv2:* npm start",
     "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo": "sequelize db:migrate:undo",
     "db:seed": "sequelize db:seed:all",
     "dev": "nodemon --exec npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
