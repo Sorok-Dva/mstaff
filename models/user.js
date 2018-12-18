@@ -35,12 +35,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     role: {
       type: DataTypes.STRING
+    },
+    type: {
+      type: DataTypes.ENUM,
+      values: ['admin', 'candidate', 'es', 'demo'],
+      allowNull: false
     }
   }, {});
   User.associate = function (models) {
     User.hasOne(models.Candidate, {
       foreignKey: 'user_id',
       as: 'candidate'
+    });
+    User.hasOne(models.Demos, {
+      foreignKey: 'email',
+      as: 'demo'
     });
   };
   return User;

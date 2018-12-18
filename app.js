@@ -62,7 +62,10 @@ app.use(sassMiddleware({
 }));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-if (!env === 'development') app.set('view cache', true);
+if (!env === 'development') {
+  app.set('view cache', true);
+  console.log('view cache');
+}
 
 app.set('view engine', 'hbs');
 

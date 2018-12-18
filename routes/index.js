@@ -43,13 +43,13 @@ router.get('/register/:esCode?',
  * @Route('/register/demo') GET + POST;
  * Show Register Page + Send Register Form (for new establishments)
  */
-router.get('/register/demo',
+router.get('/demo/register',
   UserController.ensureIsNotAuthenticated,
   IndexController.getRegisterDemo)
-  .post('/register/demo',
+  .post('/demo/register',
     UserController.ensureIsNotAuthenticated,
-    EstablishmentController.validate('create'),
-    EstablishmentController.create);
+    UserController.validate('createDemo'),
+    UserController.createDemo;
 
 /**
  * @Route('/logout') GET;

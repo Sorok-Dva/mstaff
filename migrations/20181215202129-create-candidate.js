@@ -3,18 +3,20 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Candidates', {
       id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+        primaryKey: true
       },
       user_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Users',
           key: 'id'
         },
-        type: Sequelize.INTEGER
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       es_id: {
         type: Sequelize.INTEGER
@@ -44,8 +46,8 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });

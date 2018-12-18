@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('Demos', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,30 +11,15 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        primaryKey: true,
-        unique: true
+        unique: true,
+        references: {
+          model: 'Users',
+          key: 'email'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      firstName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      lastName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      birthday: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
-      postal_code: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      town: {
+      type: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -42,14 +27,19 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      role: {
+      es_name: {
         type: Sequelize.STRING,
-        defaultValue: 'User'
+        allowNull: false,
+        references: {
+          model: 'Establishments',
+          key: 'name'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      type: {
-        type: Sequelize.ENUM,
-        values: ['admin', 'candidate', 'es', 'demo'],
-        allowNull: false
+      done: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,
@@ -64,6 +54,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('Demos');
   }
 };

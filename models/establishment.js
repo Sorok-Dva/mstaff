@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     finess: DataTypes.STRING,
     code: DataTypes.STRING,
+    type: DataTypes.STRING,
     sector: DataTypes.STRING,
     address: DataTypes.STRING,
     postal_code: DataTypes.STRING,
@@ -16,7 +17,10 @@ module.exports = (sequelize, DataTypes) => {
     domain_enable: DataTypes.BOOLEAN
   }, {});
   Establishment.associate = function (models) {
-    // associations can be defined here
+    Establishment.hasOne(models.Demos, {
+      foreignKey: 'es_name',
+      has: 'demo'
+    })
   };
   return Establishment;
 };

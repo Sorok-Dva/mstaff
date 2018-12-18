@@ -5,7 +5,8 @@
     "database": "mstaff_development",
     "host": "91.121.79.166",
     "dialect": "mysql",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "logging": true
   },
   "test": {
     "username": "root",

@@ -61,7 +61,7 @@ module.exports = {
    */
   validate: (method) => {
     switch (method) {
-    case 'create': {
+      case 'create': {
       return [
         check('email').isEmail(),
         check('password')
@@ -71,8 +71,8 @@ module.exports = {
         check('lastName').exists()
       ]
     }
-    case 'ApiVerifyEmailAvailability': {
-      return [
+      case 'ApiVerifyEmailAvailability': {
+        return [
         check('email').isEmail()
       ]
     }
@@ -108,6 +108,15 @@ module.exports = {
           .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
       });
     });
+  },
+
+  createDemo: (req, res) => {
+    // Inscription concernant une demo ES
+    if (req.body.type && req.body.esName) {
+
+    }
+
+
   },
   /**
    * ComparePassword Method
