@@ -36,7 +36,6 @@ let sessionStore = new MySQLStore({
 });
 
 app.set('env', env);
-
 app.set('trust proxy', true);
 // secure apps by setting various HTTP headers
 app.use(helmet());
@@ -63,7 +62,7 @@ app.use(sassMiddleware({
 }));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view cache', true);
+if (!env === 'development') app.set('view cache', true);
 
 app.set('view engine', 'hbs');
 
@@ -82,16 +81,32 @@ app.use(i18n({
   siteLangs: ['fr'],
   textsVarName: 'tr'
 }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
+
 app.use(compress({
   filter: function (req, res) {
     return (/json|text|javascript|css|image\/svg\+xml|application\/x-font-ttf/).test(res.getHeader('Content-Type'));
   },
   level: 9
 }));
+
+if (env === 'development' || env === 'local') {
+  app.use(logger('dev'));
+  // error handling code within middleware
+  process.on('uncaughtException', error => {
+    console.log('uncaught');
+    if(!error.isOperational)
+    { throw error; }
+    console.log('process exit');
+    process.exit(1);
+  });
+}
+
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
 app.use(fileUpload());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
@@ -100,7 +115,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/static', express.static(path.join(__dirname, 'public')));
 // ------ ROUTES
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
@@ -110,6 +124,7 @@ app.use('/api/user', apiUserRouter);
 
 // error handler
 app.use(function (err, req, res, next) {
+  console.log('error handler');
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = env === 'development' ? err : {};
@@ -118,16 +133,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-if (env === 'development' || env === 'local') {
-  app.use(logger('dev'));
-  // error handling code within middleware
-  process.on('uncaughtException', error => {
-    console.log(error);
-    if(!error.isOperational)
-    { throw error; }
-    process.exit(1);
-  });
-}
 
 module.exports = app;
