@@ -22,4 +22,16 @@ router.get('/stats', UserController.ensureIsAdmin, BackOfficeController.stats);
  */
 router.get('/users', UserController.ensureIsAdmin, BackOfficeController.getUsers);
 
+/**
+ * @Route('/back-office/users/candidates') GET;
+ * Show Users (candidates type) List page
+ */
+router.get('/users/candidates', UserController.ensureIsAdmin, BackOfficeController.getUsers);
+
+/**
+ * @Route('/back-office/user/:id/') GET;
+ * Show User data
+ */
+router.get('/user/:id', UserController.ensureIsAdmin, BackOfficeController.getUser);
+
 module.exports = router;
