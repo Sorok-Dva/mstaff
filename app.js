@@ -15,6 +15,17 @@ const app = express();
 const env = conf.ENV || 'development';
 const config = require(`${__dirname}/config/config.json`)[env];
 
+if (env === 'development' || env === 'local') {
+  app.use(middleware.loggerDev);
+  process.on('uncaughtException', error => {
+    console.log('uncaught');
+    if(!error.isOperational) {
+      throw new Error(error);
+    }
+    process.exit(1);
+  });
+}
+
 // express config
 app.set('env', env);
 app.set('trust proxy', true);
@@ -27,7 +38,6 @@ app.set('view engine', 'hbs');
 
 // ------ MIDDLEWARES
 app.engine('hbs', middleware.exphbs);
-
 app.use(middleware.helmet);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -51,17 +61,6 @@ app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
 app.use('/api/user', apiUserRouter);
 
-if (env === 'development' || env === 'local') {
-  app.use(middleware.loggerDev);
-  process.on('uncaughtException', error => {
-    console.log('uncaught');
-    if(!error.isOperational) {
-      throw new Error(error);
-    }
-    process.exit(1);
-  });
-}
-
-app.use(middleware.errorHandler);
+app.use(middleware.errorHandler); // errorHandler always must be in last position.
 
 module.exports = app;

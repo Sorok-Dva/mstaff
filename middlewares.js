@@ -63,8 +63,8 @@ module.exports = {
     textsVarName: 'tr'
   }),
   loggerDev: logger('dev'),
-  passportInit: passport.initialize,
-  passportSession: passport.session,
+  passportInit: passport.initialize(),
+  passportSession: passport.session(),
   sass: sassMiddleware({
     src: path.join(__dirname, 'public'),
     dest: path.join(__dirname, 'public'),
