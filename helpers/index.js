@@ -8,6 +8,10 @@ module.exports.register = async (Handlebars) => {
     return moment(new Date(context)).format(format);
   });
 
+  Handlebars.registerHelper('age', (context, format) => {
+    return moment().diff(new Date(context), format);
+  });
+
   Handlebars.registerHelper('number', (number) => {
     if (number) {
       return number.toLocaleString();
