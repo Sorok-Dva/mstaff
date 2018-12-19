@@ -49,7 +49,7 @@ router.get('/demo/register',
   .post('/demo/register',
     UserController.ensureIsNotAuthenticated,
     UserController.validate('createDemo'),
-    UserController.createDemo;
+    UserController.createDemo);
 
 /**
  * @Route('/logout') GET;

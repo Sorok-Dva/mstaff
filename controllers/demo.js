@@ -9,13 +9,13 @@ module.exports = {
    */
   validate: (method) => {
     switch (method) {
-      case 'createDemo': {
-        return [check('email').isEmail(),
-          check('phone').isMobilePhone(),
-          check('type').exists(),
-          check('nameEs').exists()
-        ]
-      }
+    case 'createDemo': {
+      return [check('email').isEmail(),
+        check('phone').isMobilePhone(),
+        check('type').exists(),
+        check('nameEs').exists()
+      ]
+    }
     }
   },
   /**
@@ -30,5 +30,5 @@ module.exports = {
     if (req.body.type && req.body.esName) {
 
     }
-  },
+  }
 };

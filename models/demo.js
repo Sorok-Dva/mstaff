@@ -7,12 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     es_name: DataTypes.STRING,
     done: DataTypes.BOOLEAN
   }, {});
-  Demo.associate = function(models) {
+  Demo.associate = function (models) {
     Demo.belongsTo(models.Establishment, {
       foreignKey: 'name',
       onDelete: 'CASCADE'
     });
-    Demo.BelongsTo(models.User, {
+    Demo.belongsTo(models.User, {
       foreignKey: 'email',
       onDelete: 'CASCADE'
     })

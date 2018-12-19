@@ -61,7 +61,7 @@ module.exports = {
    */
   validate: (method) => {
     switch (method) {
-      case 'create': {
+    case 'create': {
       return [
         check('email').isEmail(),
         check('password')
@@ -71,8 +71,8 @@ module.exports = {
         check('lastName').exists()
       ]
     }
-      case 'ApiVerifyEmailAvailability': {
-        return [
+    case 'ApiVerifyEmailAvailability': {
+      return [
         check('email').isEmail()
       ]
     }
@@ -115,8 +115,6 @@ module.exports = {
     if (req.body.type && req.body.esName) {
 
     }
-
-
   },
   /**
    * ComparePassword Method
