@@ -13,6 +13,19 @@ module.exports = {
 
     }
   },
-  index:  (req, res) => res.render('back-office/index', { layout, title: 'Tableau de bord' }),
-  stats:  (req, res) => res.render('back-office/stats', { layout, title: 'Statistiques' })
+  index:  (req, res) => res.render('back-office/index', { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } }),
+  stats:  (req, res) => res.render('back-office/stats', { layout, title: 'Statistiques', a: { main: 'dashboard', sub: 'stats' } }),
+  getUsers:(req, res) => {
+    User.findAll({
+      attributes: {
+        exclude: ['password']
+      }
+    }).then(users => {
+      res.render('back-office/users/list', {
+        layout,
+        title: 'Liste des utilisateurs (tout type confondu)',
+        a: { main: 'users', sub: 'all' },
+        users })
+    });
+  }
 };
