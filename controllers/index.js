@@ -25,17 +25,22 @@ module.exports = {
   getRegister:  (req, res) => {
     if (req.params.esCode) {
       Establishment.findOne({
+        attributes: ['id', 'name', 'code'],
         where: {
           code: req.params.esCode
         }
       }).then(es => {
         if (!es) {
-          req.flash('error', '')
+          req.flash('error', 'Code ES invalide.');
+          return res.redirect('/register');
+        } else {
+          es = es.dataValues;
+          res.render('users/register', { es });
         }
       });
+    } else {
+      res.render('users/register');
     }
-
-    res.render('users/register')
   },
   get404:       (req, res) => res.render('error', { error: 'Lien invalide' }),
   getRegisterDemo:(req, res) => res.render('users/registerDemo')

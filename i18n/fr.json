@@ -32,6 +32,7 @@
     },
     "register": {
       "title_card_header": "Inscription",
+      "title_card_header_es": " dans l'établissement ",
       "card-lead": "",
       "form_es_label": "Code établissement",
       "form_firstName_label": "Nom*",

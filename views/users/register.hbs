@@ -1,10 +1,15 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="card border-info mb-3 align-self-center" style="width:30rem">
-            <div class="card-header">{{tr.pages.register.title_card_header}}</div>
+            <div class="card-header">
+                {{tr.pages.register.title_card_header}}
+                {{#if es}}
+                    {{tr.pages.register.title_card_header_es}} {{es.name}}
+                {{/if}}
+            </div>
             <div class="card-body">
                 <p class="lead">{{tr.pages.register.card-lead}}</p>
-                <form class="form-horizontal" action="/register" method="post">
+                <form class="form-horizontal" action="/register/{{es.code}}" method="post">
                     <div class="form-group">
                         <label for="firstName">{{tr.pages.register.form_firstName_label}}</label>
                         <input id="firstName" name="firstName" type="text"

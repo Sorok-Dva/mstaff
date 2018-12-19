@@ -1,6 +1,7 @@
 const { check, validationResult } = require('express-validator/check');
 const User = require('../models/index').User;
 const Candidate = require('../models/index').Candidate;
+const Establishment = require('../models/index').Establishment;
 const bcrypt = require('bcryptjs');
 
 module.exports = {
@@ -88,12 +89,26 @@ module.exports = {
    */
   create: (req, res) => {
     const errors = validationResult(req);
+    let password = req.body.password;
+    let esCode = req.params.esCode;
+    let esId = null;
+
     if (!errors.isEmpty()) {
       return res.render('users/register', { body: req.body, errors: errors.array() });
     }
 
-    let password = req.body.password;
-    let esCode = req.params.esCode;
+    if (esCode) {
+      Establishment.findOne({
+        attributes: ['id', 'code'],
+        where: {
+          code: esCode
+        }
+      }).then(es => {
+        if (es) {
+          esId = es.dataValues.id;
+        }
+      });
+    }
     bcrypt.genSalt(10).then(salt => {
       bcrypt.hash(password, salt).then(hash => {
         User.create({
@@ -110,7 +125,7 @@ module.exports = {
         }).then(user => {
           return Candidate.create({
             user_id: user.id,
-            es_id: (esCode) || null
+            es_id: (esId) || null
           });
         }).then(candidate => {
           res.redirect('/login');
