@@ -1,5 +1,6 @@
 const { check, validationResult } = require('express-validator/check');
 const User = require('../models/index').User;
+const Candidate = require('../models/index').Candidate;
 const layout = 'admin';
 
 module.exports = {
@@ -26,6 +27,27 @@ module.exports = {
         title: 'Liste des utilisateurs (tout type confondu)',
         a: { main: 'users', sub: 'all' },
         users })
+    });
+  },
+  getUser:(req, res) => {
+    User.findOne({
+      where: {
+        id: req.params.id
+      },
+      include:[{
+        model: Candidate,
+        as: 'candidate'
+      }],
+      attributes: {
+        exclude: ['password']
+      }
+    }).then(user => {
+      res.render('back-office/users/show', {
+        layout,
+        title: `Profil de ${user.dataValues.firstName} ${user.dataValues.lastName}`,
+        a: { main: 'users', sub: 'profile' },
+        user
+      })
     });
   }
 };
