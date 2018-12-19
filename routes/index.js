@@ -45,11 +45,7 @@ router.get('/register/:esCode?',
  */
 router.get('/demo/register',
   UserController.ensureIsNotAuthenticated,
-  IndexController.getRegisterDemo)
-  .post('/demo/register',
-    UserController.ensureIsNotAuthenticated,
-    UserController.validate('createDemo'),
-    UserController.createDemo);
+  IndexController.getRegisterDemo);
 
 /**
  * @Route('/logout') GET;

@@ -17,9 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     domain_enable: DataTypes.BOOLEAN
   }, {});
   Establishment.associate = function (models) {
-    Establishment.hasOne(models.Demos, {
+    Establishment.hasOne(models.Demo, {
       foreignKey: 'es_name',
-      has: 'demo'
+      as: 'demo'
     })
   };
   return Establishment;
