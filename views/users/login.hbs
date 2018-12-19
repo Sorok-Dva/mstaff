@@ -15,7 +15,11 @@
                         <input id="password" name="password" type="password" placeholder="{{tr.pages.login.form_password_ph}}" class="form-control input-md" required="">
                     </div>
                 </div>
-                <button class="btn btn-success btn-loader float-md-right" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {{tr.pages.login.form_submit_btn_loading_text}}">{{tr.pages.login.form_submit_btn}}</button>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+                <button class="btn btn-success btn-loader float-md-right"
+                        type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {{tr.pages.login.form_submit_btn_loading_text}}">
+                    {{tr.pages.login.form_submit_btn}}
+                </button>
             </form>
         </div>
     </div>

@@ -6,6 +6,7 @@ const fileUpload = require('express-fileupload');
 const compress = require('compression');
 const cors = require('cors');
 const path = require('path');
+const csurf = require('csurf');
 const cookieParser = require('cookie-parser');
 const handlebars = require('./helpers/index').register(require('handlebars'));
 const flash = require('connect-flash');
@@ -45,6 +46,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser(conf.SECRET));
+// enable crsf token middleware
+app.use(csurf({ cookie: true }));
 
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
@@ -112,10 +115,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
+  if (req.url.search('static') !== -1) return next();
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
   res.locals.user = req.user || null;
+  res.locals.csrfToken = req.csrfToken();
   next();
 });
 
