@@ -1,5 +1,6 @@
 const { check, validationResult } = require('express-validator/check');
 const User = require('../models/index').User;
+const layout = 'admin';
 
 module.exports = {
   /**
@@ -12,5 +13,6 @@ module.exports = {
 
     }
   },
-  index:  (req, res) => res.render('back-office/index')
+  index:  (req, res) => res.render('back-office/index', { layout, title: 'Tableau de bord' }),
+  stats:  (req, res) => res.render('back-office/stats', { layout, title: 'Statistiques' })
 };

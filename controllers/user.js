@@ -1,5 +1,6 @@
 const { check, validationResult } = require('express-validator/check');
 const User = require('../models/index').User;
+const Candidate = require('../models/index').Candidate;
 const bcrypt = require('bcryptjs');
 
 module.exports = {
@@ -103,18 +104,19 @@ module.exports = {
           birthday: new Date(req.body.birthday),
           postal_code: req.body.postal_code,
           town: req.body.town,
-          phone: req.body.phone
-        }).then(user => res.render('users/login', { user }))
-          .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
+          phone: req.body.phone,
+          role: 'User',
+          type: 'candidate'
+        }).then(user => {
+          return Candidate.create({
+            user_id: user.id,
+            es_id: (esCode) || null
+          });
+        }).then(candidate => {
+          res.redirect('/login');
+        }).catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
       });
     });
-  },
-
-  createDemo: (req, res) => {
-    // Inscription concernant une demo ES
-    if (req.body.type && req.body.esName) {
-
-    }
   },
   /**
    * ComparePassword Method

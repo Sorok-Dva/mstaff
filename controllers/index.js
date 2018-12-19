@@ -22,7 +22,21 @@ module.exports = {
   getLogin:     (req, res) => res.render('users/login'),
   postLogin:    (req, res) => res.redirect('/'),
   getLogout:    (req, res) => req.logout() + res.redirect('/'),
-  getRegister:  (req, res) => res.render('users/register'),
+  getRegister:  (req, res) => {
+    if (req.params.esCode) {
+      Establishment.findOne({
+        where: {
+          code: req.params.esCode
+        }
+      }).then(es => {
+        if (!es) {
+          req.flash('error', '')
+        }
+      });
+    }
+
+    res.render('users/register')
+  },
   get404:       (req, res) => res.render('error', { error: 'Lien invalide' }),
   getRegisterDemo:(req, res) => res.render('users/registerDemo')
 };

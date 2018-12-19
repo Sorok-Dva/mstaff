@@ -10,4 +10,10 @@ const BackOfficeController = require('../controllers/backOffice');
  */
 router.get('/', UserController.ensureIsAdmin, BackOfficeController.index);
 
+/**
+ * @Route('/back-office/stats') GET;
+ * Show Back Office Stats page
+ */
+router.get('/stats', UserController.ensureIsAdmin, BackOfficeController.stats);
+
 module.exports = router;
