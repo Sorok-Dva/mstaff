@@ -97,8 +97,9 @@ if (env === 'development' || env === 'local') {
   // error handling code within middleware
   process.on('uncaughtException', error => {
     console.log('uncaught');
-    if(!error.isOperational)
-    { throw error; }
+    if(!error.isOperational) {
+      throw new Error(error);
+    }
     console.log('process exit');
     process.exit(1);
   });
@@ -126,8 +127,8 @@ app.use('/api', apiRouter);
 app.use('/api/user', apiUserRouter);
 
 // error handler
-app.use(function (err, req, res, next) {
-  console.log('error handler');
+app.use((err, req, res, next) => {
+  console.log(err);
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = env === 'development' ? err : {};
