@@ -1,0 +1,114 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-content">
+                <div class="toolbar">
+                    <!--Here you can write extra buttons/actions for the toolbar-->
+                </div>
+                <table id="users-table" class="table">
+                    <thead>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-field="id" class="text-center">ID</th>
+                        <th data-field="identity" data-sortable="true">Identité</th>
+                        <th data-field="age" data-sortable="true">Âge</th>
+                        <th data-field="localisation" data-sortable="true">Localisation</th>
+                        <th data-field="phone" data-sortable="true">Téléphone</th>
+                        <th data-field="type" data-sortable="true">Type</th>
+                        <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+                            data-formatter="operateFormatter">Actions</th>
+                    </thead>
+                    <tbody>
+                    {{#each users as |user|}}
+                        <tr>
+                            <td></td>
+                            <td>{{user.id}}</td>
+                            <td>{{user.firstName}} {{user.lastName}}</td>
+                            <td>{{age user.birthday 'years'}} ans</td>
+                            <td>{{user.town}} ({{user.postal_code}})</td>
+                            <td>{{user.phone}}</td>
+                            <td>{{user.type}}</td>
+                            <td></td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let table = $('#users-table');
+
+    operateFormatter = (value, row, index) => {
+        return [
+            '<div class="table-icons">',
+            '<a rel="tooltip" title="View" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
+            '<i class="ti-image"></i>',
+            '</a>',
+            '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+            '<i class="ti-pencil-alt"></i>',
+            '</a>',
+            '<a rel="tooltip" title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+            '<i class="ti-close"></i>',
+            '</a>',
+            '</div>',
+        ].join('');
+    };
+
+    $(document).ready(() => {
+        window.operateEvents = {
+            'click .view': function (e, value, row, index) {
+                info = JSON.stringify(row);
+
+                swal('You click view icon, row: ', info);
+                console.log(info);
+            },
+            'click .edit': function (e, value, row, index) {
+                info = JSON.stringify(row);
+
+                swal('You click edit icon, row: ', info);
+                console.log(info);
+            },
+            'click .remove': function (e, value, row, index) {
+                console.log(row);
+                table.bootstrapTable('remove', {
+                    field: 'id',
+                    values: [row.id]
+                });
+            }
+        };
+
+        table.bootstrapTable({
+            toolbar: ".toolbar",
+            search: true,
+            showToggle: true,
+            showColumns: true,
+            pagination: true,
+            searchAlign: 'left',
+            pageSize: 25,
+            clickToSelect: true,
+            pageList: [10,25,50,100,200,500],
+            formatShowingRows: (pageFrom, pageTo, totalRows) => {
+                //do nothing here, we don't want to show the text "showing x of y from..."
+            },
+            formatRecordsPerPage: (pageNumber) => {
+                return pageNumber + " rows visible";
+            },
+            icons: {
+                toggle: 'fa fa-th-list',
+                columns: 'fa fa-columns',
+                detailOpen: 'fa fa-plus-circle',
+                detailClose: 'ti-close'
+            }
+        });
+
+        //activate the tooltips after the data table is initialized
+        $('[rel="tooltip"]').tooltip();
+
+        $(window).resize(function () {
+            table.bootstrapTable('resetView');
+        });
+    });
+
+</script>

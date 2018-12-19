@@ -16,4 +16,10 @@ router.get('/', UserController.ensureIsAdmin, BackOfficeController.index);
  */
 router.get('/stats', UserController.ensureIsAdmin, BackOfficeController.stats);
 
+/**
+ * @Route('/back-office/users/') GET;
+ * Show Users List page
+ */
+router.get('/users', UserController.ensureIsAdmin, BackOfficeController.getUsers);
+
 module.exports = router;
