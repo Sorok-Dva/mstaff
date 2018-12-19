@@ -6,6 +6,7 @@ module.exports = {
       name: 'Santé pour tous',
       finess: '000420042',
       code: '12345',
+      type: 'es',
       domain_name: 'sante',
       domain_enable: true
     }], {});

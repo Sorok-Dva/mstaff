@@ -11,7 +11,8 @@ module.exports = {
       postal_code: '75000',
       town: 'PARIS',
       phone: '+33700004242',
-      role: 'User'
+      role: 'User',
+      type: 'candidate'
     }], {});
   },
 
