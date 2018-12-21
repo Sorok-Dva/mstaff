@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id',
       onDelete: 'CASCADE'
     });
+    Candidate.hasMany(models.Experience, {
+      foreignKey: 'candidate_id',
+      as: 'experiences'
+    });
+
   };
   return Candidate;
 };
