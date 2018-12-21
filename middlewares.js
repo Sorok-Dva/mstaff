@@ -36,6 +36,7 @@ module.exports = {
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
   errorHandler: (err, req, res, next) => { // error handler
+    let opts = {};
     console.log(err);
     // set locals, only providing error in development
     res.locals.message = err.message;
@@ -43,7 +44,8 @@ module.exports = {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    if (!req.user) opts.layout = 'onepage';
+    res.render('error', opts);
   },
   exphbs: exphbs({
     extname         : 'hbs',
