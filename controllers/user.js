@@ -94,7 +94,7 @@ module.exports = {
     let esId = null;
 
     if (!errors.isEmpty()) {
-      return res.render('users/register', { body: req.body, errors: errors.array() });
+      return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
     }
 
     if (esCode) {
@@ -130,8 +130,8 @@ module.exports = {
             es_id: (esId) || null
           });
         }).then(candidate => {
-          res.render(`/register/complete/profile`, { user: usr, candidate });
-        }).catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
+          res.render(`users/registerWizard`, { layout: 'onepage', user: usr, candidate });
+        }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
       });
     });
   },
@@ -161,7 +161,8 @@ module.exports = {
       return res.status(400).json({ errors: errors.array() })
     }
     User.findOne({
-      where: { email: req.params.email }
+      where: { email: req.params.email },
+      attributes: [ 'id' ]
     }).then(user => {
       return res.status(201).json({ available: !user });
     });
