@@ -1,16 +1,12 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Experiences', {
+    return queryInterface.createTable('CandidateFormations', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      name: {
-        allowNull: false,
-        type: Sequelize.STRING
       },
       candidate_id: {
         type: Sequelize.INTEGER,
@@ -22,42 +18,21 @@ module.exports = {
         },
         allowNull: false
       },
-      poste_id: {
+      formation_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Posts',
+          model: 'Formations',
           key: 'id',
           onUpdate: 'CASCADE',
           onDelete: 'CASCADE'
         },
         allowNull: false
-      },
-      service_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Services',
-          key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
-        },
-        allowNull: false
-      },
-      internship: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
       },
       start: {
-        type: Sequelize.DATE,
-        allowNull: false
+        type: Sequelize.DATE
       },
       end: {
         type: Sequelize.DATE
-      },
-      current: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
       },
       createdAt: {
         allowNull: false,
@@ -72,6 +47,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Experiences');
+    return queryInterface.dropTable('CandidateFormations');
   }
 };
