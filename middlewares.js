@@ -67,7 +67,7 @@ module.exports = {
   passportSession: passport.session(),
   sass: sassMiddleware({
     src: path.join(__dirname, 'public'),
-    dest: path.join(__dirname, 'public'),
+    dest: path.join(__dirname, 'public/assets/css'),
     indentedSyntax: false, // true = .sass and false = .scss
     sourceMap: true
   }),
