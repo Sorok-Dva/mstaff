@@ -16,9 +16,9 @@ module.exports = {
     ];
     let records = [];
 
-    Equipments.forEach((qualification) => {
+    Equipments.forEach((equipment) => {
       records.push({
-        name: qualification
+        name: equipment
       });
     });
 

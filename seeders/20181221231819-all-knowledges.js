@@ -63,9 +63,9 @@ module.exports = {
     ];
     let records = [];
 
-    Knowledges.forEach((qualification) => {
+    Knowledges.forEach((knowledge) => {
       records.push({
-        name: qualification
+        name: knowledge
       });
     });
 
