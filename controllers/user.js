@@ -109,6 +109,7 @@ module.exports = {
         }
       });
     }
+    let usr;
     bcrypt.genSalt(10).then(salt => {
       bcrypt.hash(password, salt).then(hash => {
         User.create({
@@ -123,12 +124,13 @@ module.exports = {
           role: 'User',
           type: 'candidate'
         }).then(user => {
+          usr = user;
           return Candidate.create({
             user_id: user.id,
             es_id: (esId) || null
           });
         }).then(candidate => {
-          res.redirect('/login');
+          res.render(`/register/complete/profile`, { user: usr, candidate });
         }).catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
       });
     });

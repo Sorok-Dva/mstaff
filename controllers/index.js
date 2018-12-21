@@ -42,6 +42,7 @@ module.exports = {
       res.render('users/register');
     }
   },
+  getRegisterWizard:  (req, res) => console.log(res.locals) + res.render('users/registerWizard'),
   get404:       (req, res) => res.render('error', { error: 'Lien invalide' }),
-  getRegisterDemo:(req, res) => res.render('users/registerDemo')
+  getRegisterDemo:(req, res) => res.render('demo/register')
 };
