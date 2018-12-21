@@ -13,10 +13,18 @@ module.exports = (sequelize, DataTypes) => {
     end: DataTypes.DATE,
     current: DataTypes.BOOLEAN
   }, {});
-  Experience.associate = function(models) {
+  Experience.associate = function (models) {
     Experience.belongsTo(models.Candidate, {
       foreignKey: 'id',
       onDelete: 'CASCADE'
+    });
+    Experience.hasOne(models.Service, {
+      foreignKey: 'id',
+      as: 'service'
+    });
+    Experience.hasOne(models.Post, {
+      foreignKey: 'id',
+      as: 'poste'
     });
   };
   return Experience;

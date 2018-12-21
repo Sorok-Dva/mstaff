@@ -4,9 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false
-    },
+    }
   }, {});
-  Service.associate = function(models) {
+  Service.associate = function (models) {
     Service.belongsTo(models.Experience, {
       foreignKey: 'id',
       onDelete: 'CASCADE'

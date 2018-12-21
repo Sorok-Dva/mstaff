@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'candidate_id',
       as: 'experiences'
     });
-
   };
   return Candidate;
 };
