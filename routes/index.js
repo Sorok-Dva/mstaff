@@ -4,7 +4,6 @@ const passport = require('../bin/passport');
 
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
-const EstablishmentController = require('../controllers/establishment');
 
 /**
  * @Route('/') GET;
@@ -38,6 +37,14 @@ router.get('/register/:esCode?',
     UserController.ensureIsNotAuthenticated,
     UserController.validate('create'),
     UserController.create);
+
+/**
+ * @Route('/register/complete/profile') GET + POST;
+ * Show Register Wizard for profile completion
+ */
+router.get('/register/complete/profile',
+  UserController.ensureIsNotAuthenticated,
+  IndexController.getRegisterWizard);
 
 /**
  * @Route('/register/demo') GET + POST;
