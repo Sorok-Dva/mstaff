@@ -13,7 +13,6 @@ const apiUserRouter = require('./routes/api/user');
 const app = express();
 
 const env = conf.ENV || 'development';
-const config = require(`${__dirname}/config/config.json`)[env];
 
 if (env === 'development' || env === 'local') {
   app.use(middleware.loggerDev);
