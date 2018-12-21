@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
+const middleware = require('../middlewares');
 
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
@@ -20,11 +21,8 @@ router.get('/login',
   IndexController.getLogin)
   .post('/login',
     UserController.ensureIsNotAuthenticated,
-    passport.authenticate('local', {
-      successRedirect: '/',
-      failureRedirect: '/login?error=login',
-      failureFlash: true
-    }), IndexController.postLogin);
+    middleware.passportAuthentication,
+    IndexController.postLogin);
 
 /**
  * @Route('/register') GET + POST;
@@ -65,5 +63,16 @@ router.get('/logout', UserController.ensureAuthenticated, IndexController.getLog
  * 404 Page
  */
 router.get('/404', IndexController.get404);
+
+/**
+ * @Route('/profile') GET;
+ * Show user profile.
+ */
+router.get('/profile', UserController.ensureAuthenticated, IndexController.getProfile);
+/**
+ * @Route('/profile/edit') GET;
+ * Form for edit user profile.
+ */
+router.get('/profile/edit', UserController.ensureAuthenticated, IndexController.getEditProfile);
 
 module.exports = router;

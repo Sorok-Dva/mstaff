@@ -65,6 +65,11 @@ module.exports = {
   loggerDev: logger('dev'),
   passportInit: passport.initialize(),
   passportSession: passport.session(),
+  passportAuthentication: passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login?error=login',
+    failureFlash: true
+  }),
   sass: sassMiddleware({
     src: path.join(__dirname, 'public'),
     dest: path.join(__dirname, 'public/assets/css'),
