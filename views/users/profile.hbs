@@ -40,7 +40,10 @@
     <div class="col-lg-8 col-md-7">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title"><i class="fa fa-briefcase"></i> Expériences</h4>
+                <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Expériences</h4>
+                <button type="button" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+                </button>
             </div>
             <div class="card-content table-responsive table-full-width">
                 <table class="table table-hover">
@@ -53,7 +56,30 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        {{#if user.candidate.experiences}}
+                            {{#each user.candidate.experiences as |xp|}}
+                                <tr>
+                                    <td>
+                                        {{date xp.start 'MM/YYYY' }} -
+                                        {{#if xp.end}}
+                                            {{date xp.end 'MM/YYYY' }}
+                                        {{else}}
+                                            maintenant
+                                        {{/if}}
+                                        {{#if xp.internship}}
+                                           <small>(stage)</small>
+                                        {{/if}}
+                                    </td>
+                                    <td>{{xp.name}}</td>
+                                    <td>{{xp.poste.name}}</td>
+                                    <td>{{xp.service.name}}</td>
+                                </tr>
+                            {{/each}}
+                        {{else}}
+                           <tr class="text-center">
+                               <td>Aucune donnée disponible</td>
+                           </tr>
+                        {{/if}}
                     </tbody>
                 </table>
             </div>
@@ -62,18 +88,104 @@
     <div class="col-lg-8 col-md-7">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title"><i class="fa fa-graduation-cap"></i> Formations</h4>
+                <h4 class="card-title pull-left"><i class="fa fa-graduation-cap"></i> Formations</h4>
+                <button type="button" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+                </button>
             </div>
-            <div class="card-content">
+            <div class="card-content table-responsive table-full-width">
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="info">
+                        <th><i class="fa fa-book" aria-hidden="true"></i> Diplômes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#if user.candidate.qualifications}}
+                        {{#each user.candidate.qualifications as |diploma|}}
+                            <tr>
+                                <td></td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr class="text-center">
+                            <td>Aucune donnée disponible</td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
     <div class="col-lg-8 col-md-7">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title"><i class="fa fa-briefcase"></i> Compétences</h4>
+                <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Compétences</h4>
+                <button type="button" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+                </button>
             </div>
-            <div class="card-content">
+            <div class="card-content table-responsive table-full-width">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="info">
+                            <th><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if user.candidate.knowledges}}
+                            {{#each user.candidate.knowledges as |knowledge|}}
+                                <tr>
+                                    <td></td>
+                                </tr>
+                            {{/each}}
+                        {{else}}
+                            <tr class="text-center">
+                                <td>Aucune donnée disponible</td>
+                            </tr>
+                        {{/if}}
+                    </tbody>
+                </table>
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="info">
+                            <th><i class="fa fa-stethoscope" aria-hidden="true"></i> Matériels et produits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {{#if user.candidate.knowledges}}
+                        {{#each user.candidate.knowledges as |knowledge|}}
+                            <tr>
+                                <td></td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr class="text-center">
+                            <td>Aucune donnée disponible</td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="info">
+                        <th><i class="fa fa-floppy-o" aria-hidden="true"></i> Logiciels</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#if user.candidate.knowledges}}
+                        {{#each user.candidate.knowledges as |knowledge|}}
+                            <tr>
+                                <td></td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr class="text-center">
+                            <td>Aucune donnée disponible</td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
