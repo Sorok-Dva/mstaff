@@ -77,7 +77,7 @@
                             {{/each}}
                         {{else}}
                            <tr class="text-center">
-                               <td>Aucune donnée disponible</td>
+                               <td colspan="4">Aucune donnée disponible</td>
                            </tr>
                         {{/if}}
                     </tbody>
@@ -101,10 +101,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{#if user.candidate.qualifications}}
-                        {{#each user.candidate.qualifications as |diploma|}}
+                    {{#if user.candidate.formations}}
+                        {{#each user.candidate.formations as |diploma|}}
                             <tr>
-                                <td></td>
+                                <td>{{diploma.formation.name}}</td>
                             </tr>
                         {{/each}}
                     {{else}}
@@ -133,10 +133,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{#if user.candidate.knowledges}}
-                            {{#each user.candidate.knowledges as |knowledge|}}
+                        {{#if user.candidate.skills}}
+                            {{#each user.candidate.skills as |knowledge|}}
                                 <tr>
-                                    <td></td>
+                                    <td>{{knowledge.skill.name}}</td>
                                 </tr>
                             {{/each}}
                         {{else}}
@@ -153,10 +153,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {{#if user.candidate.knowledges}}
-                        {{#each user.candidate.knowledges as |knowledge|}}
+                    {{#if user.candidate.equipments}}
+                        {{#each user.candidate.equipments as |equipment|}}
                             <tr>
-                                <td></td>
+                                <td>{{equipment.equipment.name}}</td>
                             </tr>
                         {{/each}}
                     {{else}}
@@ -173,10 +173,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{#if user.candidate.knowledges}}
-                        {{#each user.candidate.knowledges as |knowledge|}}
+                    {{#if user.candidate.softwares}}
+                        {{#each user.candidate.softwares as |software|}}
                             <tr>
-                                <td></td>
+                                <td>{{software.software.name}}</td>
                             </tr>
                         {{/each}}
                     {{else}}
