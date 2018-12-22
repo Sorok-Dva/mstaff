@@ -56,30 +56,52 @@ module.exports = {
           include:[{
             model: Models.Experience, // Experiences Associations (user.candidate.experiences)
             as: 'experiences',
-            include: [{ all: true }] // Service & Post Associations (user.candidate.experiences.service|post)
+            include: [{
+              model: Models.Service,
+              as: 'service'
+            }, {
+              model: Models.Post,
+              as: 'poste'
+            }] // Service & Post Associations (user.candidate.experiences.service|post)
           }, {
             model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
             as: 'qualifications',
-            include: [{ all: true }] // Qualifications Associations (user.candidate.qualifications.qualification)
+            include: {
+              model: Models.Qualification,
+              as: 'diploma'
+            } // Qualifications Associations (user.candidate.qualifications.qualification)
           }, {
             model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
             as: 'formations',
-            include: [{ all: true }] // Formations Associations (user.candidate.formations.formation)
+            include: {
+              model: Models.Formation,
+              as: 'formation'
+            } // Formations Associations (user.candidate.formations.formation)
           }, {
             model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
             as: 'skills',
-            include: [{ all: true }]  // Skills Associations (user.candidate.skills.skill)
+            include: {
+              model: Models.Skill,
+              as: 'skill'
+            } // Skills Associations (user.candidate.skills.skill)
           }, {
             model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
             as: 'equipments',
-            include: [{ all: true, nest: true }]  // Equipments Associations (user.candidate.equipments.equipment)
+            include: {
+              model: Models.Equipment,
+              as: 'equipment'
+            } // Equipments Associations (user.candidate.equipments.equipment)
           }, {
             model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
             as: 'softwares',
-            include: [{ all: true, nest: true }]  // Skills Associations (user.candidate.softwares.software)
+            include: {
+              model: Models.Software,
+              as: 'software'
+            } // Skills Associations (user.candidate.softwares.software)
           }]
         }]
       }).then(user => {
+        console.log(user.candidate);
         return res.render('users/profile', { user, a: { main: 'profile' } })
       }).catch(error => next(new Error(error)));
     }

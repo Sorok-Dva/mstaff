@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     CandidateSoftware.hasOne(models.Software, {
       foreignKey: 'id',
-      as: 'softwares'
+      as: 'software'
     });
   };
   return CandidateSoftware;

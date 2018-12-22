@@ -37,7 +37,7 @@ module.exports = {
       "Etre capable d'assurer une intervention dans sa globalité (préparation, réalisation) en endoscopie",
       "Etre capable d'instrumenter et d'aider le chirurgien en chirurgie digestive", "Etre capable d'instrumenter et d'aider le chirurgien en chirurgie urologique",
       "Etre capable d'instrumenter et d'aider le chirurgien en chirurgie gynécologique et obstétricale", "Etre capable d'instrumenter et d'aider le chirurgien en chirurgie orthopédique",
-      "Etre capable d'instrumenter et d'aider le chirurgien en chirurgie vasculaire", "Etre capable d'instrumenter et d'aider le chirurgien en endoscopie", '' +
+      "Etre capable d'instrumenter et d'aider le chirurgien en chirurgie vasculaire", "Etre capable d'instrumenter et d'aider le chirurgien en endoscopie",
       'Etre titulaire de la formation radioprotection du patient', 'Mesurer les paramètres: température, fréquence respiratoire, TA, pls, SPO2, curarisation, RCF.',
       'Identifier les anomalies des paramètres: température, fréquence respiratoire, TA, pls,SPO2,curarisation',
       "Contrôle du fonctionnement des moniteurs,système d'aspiration trachéale,test des respirateurs,défibrillateur", 'Savoir surveiller un KT radial',
