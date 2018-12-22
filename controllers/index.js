@@ -51,25 +51,40 @@ module.exports = {
       Models.User.findOne({
         where: { id: req.user.id },
         include:[{
-          model: Models.Candidate,
+          model: Models.Candidate, // Candidate Associations (user.candidate)
           as: 'candidate',
-          include: {
-            model: Models.Experience,
+          include:[{
+            model: Models.Experience, // Experiences Associations (user.candidate.experiences)
             as: 'experiences',
-            include: [{
-              model: Models.Service,
-              as: 'service'
-            }, {
-              model: Models.Post,
-              as: 'poste'
-            }]
-          }
+            include: [{ all: true }] // Service & Post Associations (user.candidate.experiences.service|post)
+          }, {
+            model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
+            as: 'qualifications',
+            include: [{ all: true }] // Qualifications Associations (user.candidate.qualifications.qualification)
+          }, {
+            model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
+            as: 'formations',
+            include: [{ all: true }] // Formations Associations (user.candidate.formations.formation)
+          }, {
+            model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
+            as: 'skills',
+            include: [{ all: true }]  // Skills Associations (user.candidate.skills.skill)
+          }, {
+            model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
+            as: 'equipments',
+            include: [{ all: true, nest: true }]  // Equipments Associations (user.candidate.equipments.equipment)
+          }, {
+            model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
+            as: 'softwares',
+            include: [{ all: true, nest: true }]  // Skills Associations (user.candidate.softwares.software)
+          }]
         }]
       }).then(user => {
         return res.render('users/profile', { user, a: { main: 'profile' } })
-      }).catch(error => next(error));
+      }).catch(error => next(new Error(error)));
     }
   },
+  // include: [{ all: true, nest: true }]
   getEditProfile: (req, res, next) => {
     if (req.user.type === 'candidate') {
       Models.User.findOne({
