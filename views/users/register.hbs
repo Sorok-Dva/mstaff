@@ -12,50 +12,50 @@
                     </h3>
                 </div>
                 <div class="card-content">
-                    <div class="form-group">
+                    <div class="form-group firstName">
                         <label for="firstName">{{tr.pages.register.form_firstName_label}}</label>
                         <input id="firstName" name="firstName" type="text"
                                placeholder="{{tr.pages.register.form_firstName_label_ph}}"
                                class="form-control input-md" value="{{body.firstName}}" required="">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group lastName">
                         <label for="lastName">{{tr.pages.register.form_lastName_label}}</label>
                         <input id="lastName" name="lastName" type="text"
                                placeholder="{{tr.pages.register.form_lastName_label_ph}}"
                                class="form-control input-md" value="{{body.lastName}}" required="">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group birthday">
                         <label for="birthday">{{tr.pages.register.form_birthDate_label}}</label>
                         <input id="birthday" name="birthday" type="date" value="{{body.birthday}}"
                                class="form-control input-md" required="">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group postal_code">
                         <label for="postal_code">{{tr.pages.register.form_postalCode_label}}</label>
                         <input id="postal_code" name="postal_code" type="text"
                                placeholder="{{tr.pages.register.form_postalCode_label_ph}}"
                                class="form-control input-md" value="{{body.postal_code}}" required="">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group town">
                         <label for="town">{{tr.pages.register.form_city_label}}</label>
                         <input id="town" name="town" type="text"
                                placeholder="{{tr.pages.register.form_city_label_ph}}"
                                class="form-control input-md" value="{{body.town}}" required="">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group phone">
                         <label for="phone">{{tr.pages.register.form_phoneNumber_label}}</label>
                         <input id="phone" name="phone" type="text"
                                placeholder="{{tr.pages.register.form_phoneNumber_label_ph}}"
                                class="form-control input-md" value="{{body.phone}}" required="">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group email">
                         <label for="email">{{tr.pages.register.form_email_label}}</label>
-                        <input id="email" name="email" type="email"
+                        <input id="email" name="email" type="email" email="true"
                                placeholder="{{tr.pages.register.form_email_ph}}"
                                class="form-control input-md" value="{{body.email}}" required="">
                         <small id="emailTaken" class="form-text text-muted">{{tr.pages.register.errors.email_taken}}</small>
                         <small id="emailHelp" class="form-text text-muted">{{tr.pages.register.form_email_muted}}</small>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group password">
                         <label for="password">{{tr.pages.register.form_password_label}}</label>
                         <input id="password" name="password" type="password"
                                placeholder="{{tr.pages.register.form_password_label_ph}}"
@@ -80,15 +80,15 @@
       let email = $('#email').val();
       $.get(`/api/user/emailAvailable/${email}`, (result) => {
           if (!result.available) {
-              $('#email').css('border', '3px solid red');
+              $('.form-group.email').addClass('has-error');
               $('#emailTaken').show();
           } else {
-              $('#email').css('border', '2px solid green');
+              $('.form-group.email').addClass('has-success').removeClass('has-error');
               $('#emailTaken').hide();
           }
       }).catch(error => {
         $('#emailTaken').hide();
-        $('#email').css('border', '3px solid red');
+        $('.form-group.email').addClass('has-error').removeClass('has-success');
       });
     })
 </script>
