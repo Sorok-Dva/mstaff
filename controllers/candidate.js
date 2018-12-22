@@ -1,6 +1,26 @@
+const { check, validationResult } = require('express-validator/check');
+
 const Models = require('../models/index');
 
 module.exports = {
+  /**
+   * validate MiddleWare
+   * @param method
+   * @description Form Validator. Each form validation must be created in new case.
+   */
+  validate: (method) => {
+    switch (method) {
+    case 'postAddExperience': {
+      return [
+        check('name').isLength({ min: 3 }),
+        check('post_id').isNumeric(),
+        check('service_id').isNumeric(),
+        check('internship').isBoolean(),
+        check('current').isBoolean()
+      ]
+    }
+    }
+  },
   addVideo: (req, res, next) => {
 
   },
@@ -116,5 +136,25 @@ module.exports = {
         }).catch(error => next(new Error(error)));
       }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
+  },
+  postAddExperience: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.Experience.create({
+      name: req.body.name,
+      candidate_id: req.user.id,
+      poste_id: parseInt(req.body.post_id),
+      service_id: parseInt(req.body.service_id),
+      internship: req.body.internship,
+      current: req.body.current,
+      start: req.body.start,
+      end: req.body.end || null
+    }).then(experience => {
+      res.status(200).send({ experience });
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   }
 };
