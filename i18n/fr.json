@@ -9,6 +9,9 @@
   },
   "partials": {
     "header": {
+      "li_item_register": "S'enregister",
+      "li_item_login": "Connexion",
+      "li_item_logout": "Déconnexion"
     },
     "scripts": {
       "notify_error_title": "Erreur",
@@ -29,6 +32,7 @@
     },
     "register": {
       "title_card_header": "Inscription",
+      "title_card_header_es": " dans l'établissement ",
       "card-lead": "",
       "form_es_label": "Code établissement",
       "form_firstName_label": "Nom*",
@@ -50,6 +54,9 @@
       "form_password_label_ph": "Votre mot de passe",
       "form_submit_btn_loading_text": "Validation de l'inscription",
       "form_submit_btn": "S'inscrire",
+      "respond_here": "Répondez ici",
+      "es_type": "Type d'établissement",
+      "terms": "En cliquant sur S'inscrire, vous acceptez les Conditions d'utilisation et la Politique de confidentialité de Mstaff",
       "errors": {
         "email_taken": "Cette adresse e-mail est déjà utilisée."
       }

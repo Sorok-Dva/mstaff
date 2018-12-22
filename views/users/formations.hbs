@@ -1,0 +1,220 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Expériences professionnelles</h4>
+                <hr style="width:80%; margin-top: 14px;">
+            </div>
+            <div class="card-content">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="name">Établissement *</label>
+                            <input id="name" name="name" type="text"
+                                   placeholder="Clinique, hopital ..."
+                                   class="form-control input-md" value="{{body.name}}" required="">
+                        </div>
+                        <div class="form-group">
+                            <label for="post_id">Poste *</label>
+                            <select class="form-control input-md" name="post_id" id="post_id" required="" style="width:75%">
+                                {{#each posts as |post|}}
+                                    <option value="{{post.id}}">{{post.name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="checkbox">
+                                <label for="internship">
+                                    <input id="internship" name="internship" type="checkbox">
+                                    En tant que stagiaire
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="service_id">Service *</label>
+                            <select class="form-control input-md" name="service_id" id="service_id" required="" style="width:75%">
+                                {{#each services as |service|}}
+                                    <option value="{{service.id}}">{{service.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="start">Début *</label>
+                            <input id="start" name="start" type="date"
+                                   class="form-control input-md" required="">
+                            <label for="end">Fin *</label>
+                            <input id="end" name="end" type="date"
+                                   class="form-control input-md" required="">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label for="current">
+                                    <input id="current" name="current" type="checkbox">
+                                    J'occupe actuellement ce poste
+                                </label>
+                            </div>
+                        </div>
+                        <button type="button" id="addExperience" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="col-md-9 table-responsive table-full-width">
+                        <table class="table table-hover ">
+                            <thead>
+                            <tr class="info">
+                                <th>Date</th>
+                                <th>Établissement</th>
+                                <th>Poste</th>
+                                <th>Service</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="experienceTbody">
+                            {{#if user.candidate.experiences}}
+                                {{#each user.candidate.experiences as |xp|}}
+                                    <tr>
+                                        <td>
+                                            {{date xp.start 'MM/YYYY' }} -
+                                            {{#if xp.end}}
+                                                {{date xp.end 'MM/YYYY' }}
+                                            {{else}}
+                                                maintenant
+                                            {{/if}}
+                                            {{#if xp.internship}}
+                                                <small>(stage)</small>
+                                            {{/if}}
+                                        </td>
+                                        <td>{{xp.name}}</td>
+                                        <td>{{xp.poste.name}}</td>
+                                        <td>{{xp.service.name}}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-simple btn-warning btn-icon edit"><i class="ti-pencil-alt"></i></a>
+                                            <a href="#" class="btn btn-simple btn-danger btn-icon remove"><i class="ti-close"></i></a>
+                                        </td>
+
+                                    </tr>
+                                {{/each}}
+                            {{else}}
+                                <tr class="text-center">
+                                    <td colspan="4">Aucune donnée disponible</td>
+                                </tr>
+                            {{/if}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title pull-left"><i class="fa fa-book" aria-hidden="true"></i> Formations</h4>
+            </div>
+            <div class="card-content table-responsive table-full-width">
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="info">
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#if user.candidate.formations}}
+                        {{#each user.candidate.formations as |formation|}}
+                            <tr>
+                                <td>{{diploma.formation.name}}</td>
+                            </tr>
+                        {{/each}}
+                    {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title pull-left"><i class="fa fa-graduation-cap"></i> Diplômes complémentaires</h4>
+            </div>
+            <div class="card-content table-responsive table-full-width">
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="info">
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#if user.candidate.qualifications}}
+                        {{#each user.candidate.qualifications as |diploma|}}
+                            <tr>
+                                <td>{{diploma.qualification.name}}</td>
+                            </tr>
+                        {{/each}}
+                    {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+      $('#addExperience').click(() => {
+        let stop = false;
+        let name = $('#name').val();
+        let service_id = parseInt($('#service_id').val());
+        let post_id = parseInt($('#post_id').val());
+        let internship = $('#internship').prop('checked');
+        let current = $('#current').prop('checked');
+        let start = new Date($('#start').val());
+        let end = new Date($('#end').val());
+        let _csrf = "{{csrfToken}}";
+
+        if (isNaN(start.getTime())) {
+          notification(
+            {
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Champ invalide :',
+              message: `Vous devez indiquer une date de début valide.`
+            }
+          );
+          stop = true;
+        }
+        if (!current && isNaN(end.getTime())) {
+          notification({
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Champ invalide :',
+              message: `Vous devez indiquer une date de fin valide.`
+          });
+          stop = true
+        }
+        if (!stop) {
+          if (isNaN(end.getTime())) end = null;
+          $.post('/add/Experience', { name, service_id, post_id, internship, current, start, end, _csrf}, (data) => {
+            if (data.experience) {
+              let newTr = '<tr>';
+              notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Expérience ajoutée avec succès :',
+                  message: `Votre expérience nommée "${data.experience.name}" vient d'être ajoutée à votre profil.`
+              });
+              setTimeout(location.reload(), 5000);
+            }
+          }).catch(errors => {
+            errors.responseJSON.errors.forEach((e, i) => {
+              notification({
+                  icon: 'exclamation',
+                  type: 'danger',
+                  title: 'Champ invalide :',
+                  message: `${e.param}`
+              });
+            });
+          });
+        }
+      });
+      $('#service_id').select2();
+      $('#post_id').select2();
+    });
+</script>

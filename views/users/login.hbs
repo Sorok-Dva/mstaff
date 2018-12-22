@@ -1,22 +1,32 @@
-<div class="row justify-content-center">
-    <div class="card border-success mb-3 align-self-center" style="width:30rem">
-        <div class="card-header">{{tr.pages.login.title_card_header}}</div>
-        <div class="card-body">
-            <form class="form-horizontal" action="/login" method="post">
-                <div class="form-group">
-                    <label class="col-md-12 control-label" for="email">{{tr.pages.login.form_email_label}}</label>
-                    <div class="col-md-12">
-                        <input id="email" name="username" type="text" placeholder="{{tr.pages.login.form_email_ph}}" class="form-control input-md" required="">
+<div class="row">
+    <div class="col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3">
+        <form action="/login" method="post">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+            <div class="card" data-background="color" data-color="blue">
+                <div class="card-header">
+                    <h3 class="card-title">{{tr.pages.login.title_card_header}}</h3>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label>{{tr.pages.login.form_email_label}}</label>
+                        <input type="email" name="username" email="true"
+                               placeholder="{{tr.pages.login.form_email_ph}}"
+                               class="form-control input-no-border" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{{tr.pages.login.form_password_label}}</label>
+                        <input type="password" name="password"
+                               placeholder="{{tr.pages.login.form_password_ph}}"
+                               class="form-control input-no-border" required>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-12 control-label" for="password">{{tr.pages.login.form_password_label}}</label>
-                    <div class="col-md-12">
-                        <input id="password" name="password" type="password" placeholder="{{tr.pages.login.form_password_ph}}" class="form-control input-md" required="">
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-fill btn-wd ">{{tr.pages.login.form_submit_btn}}</button>
+                    <div class="forgot">
+                        <a href="#">Forgot your password?</a>
                     </div>
                 </div>
-                <button class="btn btn-success btn-loader float-md-right" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {{tr.pages.login.form_submit_btn_loading_text}}">{{tr.pages.login.form_submit_btn}}</button>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>

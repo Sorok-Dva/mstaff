@@ -1,5 +1,7 @@
 const { check, validationResult } = require('express-validator/check');
 const User = require('../models/index').User;
+const Candidate = require('../models/index').Candidate;
+const Establishment = require('../models/index').Establishment;
 const bcrypt = require('bcryptjs');
 
 module.exports = {
@@ -36,6 +38,44 @@ module.exports = {
     }
   },
   /**
+   * ensureIsAdmin MiddleWare
+   * @param req
+   * @param res
+   * @param next
+   * @returns {*}
+   * @description Ensure that the current user is an admin
+   */
+  ensureIsAdmin: (req, res, next) => {
+    if (req.isAuthenticated()) {
+      if (['Admin'].includes(req.user.role)) {
+        next();
+      } else {
+        res.redirect('/');
+      }
+    } else {
+      res.redirect('/');
+    }
+  },
+  /**
+   * ensureIsCandidate MiddleWare
+   * @param req
+   * @param res
+   * @param next
+   * @returns {*}
+   * @description Ensure that the current user is a candidate
+   */
+  ensureIsCandidate: (req, res, next) => {
+    if (req.isAuthenticated()) {
+      if (['candidate'].includes(req.user.type)) {
+        next();
+      } else {
+        res.redirect('/');
+      }
+    } else {
+      res.redirect('/');
+    }
+  },
+  /**
    * validate MiddleWare
    * @param method
    * @description Form Validator. Each form validation must be created in new case.
@@ -68,12 +108,27 @@ module.exports = {
    */
   create: (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.render('users/register', { body: req.body, errors: errors.array() });
-    }
-
     let password = req.body.password;
     let esCode = req.params.esCode;
+    let esId = null;
+
+    if (!errors.isEmpty()) {
+      return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
+    }
+
+    if (esCode) {
+      Establishment.findOne({
+        attributes: ['id', 'code'],
+        where: {
+          code: esCode
+        }
+      }).then(es => {
+        if (es) {
+          esId = es.dataValues.id;
+        }
+      });
+    }
+    let usr;
     bcrypt.genSalt(10).then(salt => {
       bcrypt.hash(password, salt).then(hash => {
         User.create({
@@ -84,9 +139,18 @@ module.exports = {
           birthday: new Date(req.body.birthday),
           postal_code: req.body.postal_code,
           town: req.body.town,
-          phone: req.body.phone
-        }).then(user => res.render('login', { user }))
-          .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
+          phone: req.body.phone,
+          role: 'User',
+          type: 'candidate'
+        }).then(user => {
+          usr = user;
+          return Candidate.create({
+            user_id: user.id,
+            es_id: (esId) || null
+          });
+        }).then(candidate => {
+          res.render(`users/registerWizard`, { layout: 'onepage', user: usr, candidate });
+        }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
       });
     });
   },
@@ -100,8 +164,7 @@ module.exports = {
    */
   comparePassword: (candidatePassword, hash, callback) => {
     bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
-      if (err) throw err;
-      return callback(null, isMatch);
+      return callback(err, isMatch);
     });
   },
   /**
@@ -117,7 +180,8 @@ module.exports = {
       return res.status(400).json({ errors: errors.array() })
     }
     User.findOne({
-      where: { email: req.params.email }
+      where: { email: req.params.email },
+      attributes: [ 'id' ]
     }).then(user => {
       return res.status(201).json({ available: !user });
     });

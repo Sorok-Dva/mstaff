@@ -11,6 +11,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
+        primaryKey: true,
         unique: true
       },
       password: {
@@ -44,6 +45,11 @@ module.exports = {
       role: {
         type: Sequelize.STRING,
         defaultValue: 'User'
+      },
+      type: {
+        type: Sequelize.ENUM,
+        values: ['admin', 'candidate', 'es', 'demo'],
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

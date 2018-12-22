@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
+const middleware = require('../middlewares');
 
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
@@ -20,15 +21,12 @@ router.get('/login',
   IndexController.getLogin)
   .post('/login',
     UserController.ensureIsNotAuthenticated,
-    passport.authenticate('local', {
-      successRedirect: '/',
-      failureRedirect: '/login?error=login',
-      failureFlash: true
-    }), IndexController.postLogin);
+    middleware.passportAuthentication,
+    IndexController.postLogin);
 
 /**
  * @Route('/register') GET + POST;
- * Show Register Page + Send Register Form
+ * Show Register Page + Send Register Form (for new candidates)
  */
 router.get('/register/:esCode?',
   UserController.ensureIsNotAuthenticated,
@@ -37,6 +35,22 @@ router.get('/register/:esCode?',
     UserController.ensureIsNotAuthenticated,
     UserController.validate('create'),
     UserController.create);
+
+/**
+ * @Route('/register/complete/profile') GET + POST;
+ * Show Register Wizard for profile completion
+ */
+router.get('/register/complete/profile',
+  UserController.ensureIsNotAuthenticated,
+  IndexController.getRegisterWizard);
+
+/**
+ * @Route('/register/demo') GET + POST;
+ * Show Register Page + Send Register Form (for new establishments)
+ */
+router.get('/demo/register',
+  UserController.ensureIsNotAuthenticated,
+  IndexController.getRegisterDemo);
 
 /**
  * @Route('/logout') GET;

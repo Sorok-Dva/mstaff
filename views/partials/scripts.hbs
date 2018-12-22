@@ -1,3 +1,5 @@
+<script src="/static/assets/js/perfect-scrollbar.min.js" type="text/javascript"></script>
+<script src="/static/assets/js/dashboard.js"></script>
 <script>
     $(document).ready(() => {
         // $("[data-toggle=popover]").popover();
@@ -73,4 +75,31 @@
             }
         });
         {{/if}}
+
+    let notification = (opts) => {
+        $.notify({
+            // options
+            icon: `fa fa-${opts.icon}`,
+            title: `<b>${opts.title}</b>`,
+            message: `${opts.message}`,
+        },{
+            type: `${opts.type}`,
+            allow_dismiss: true,
+            newest_on_top: false,
+            showProgressbar: false,
+            placement: {
+                from: 'bottom',
+                align: 'left'
+            },
+            offset: 20,
+            spacing: 10,
+            z_index: 1031,
+            delay: 5000,
+            timer: 15000,
+            animate: {
+                enter: 'animated fadeInDown',
+                exit: 'animated fadeOutUp'
+            }
+        });
+    }
 </script>
