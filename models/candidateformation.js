@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     start: DataTypes.DATE,
     end: DataTypes.DATE
   }, {});
-  CandidateFormation.associate = function(models) {
+  CandidateFormation.associate = function (models) {
     CandidateFormation.belongsTo(models.Candidate, {
       foreignKey: 'id',
       onDelete: 'CASCADE'

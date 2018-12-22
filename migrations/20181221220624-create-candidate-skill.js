@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('CandidateKnowledges', {
+    return queryInterface.createTable('CandidateSkills', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,10 +18,10 @@ module.exports = {
         },
         allowNull: false
       },
-      formation_id: {
+      knowledge_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Knowledges',
+          model: 'Skills',
           key: 'id',
           onUpdate: 'CASCADE',
           onDelete: 'CASCADE'
@@ -47,6 +47,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('CandidateKnowledges');
+    return queryInterface.dropTable('CandidateSkills');
   }
 };

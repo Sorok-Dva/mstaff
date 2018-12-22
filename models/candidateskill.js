@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const CandidateKnowledge = sequelize.define('CandidateKnowledge', {
+  const CandidateSkill = sequelize.define('CandidateSkill', {
     candidate_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       allowNull: false
     },
-    formation_id: {
+    knowledge_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Knowledge',
+        model: 'Skill',
         key: 'id',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
@@ -24,15 +24,15 @@ module.exports = (sequelize, DataTypes) => {
     start: DataTypes.DATE,
     end: DataTypes.DATE
   }, {});
-  CandidateKnowledge.associate = function(models) {
-    CandidateKnowledge.belongsTo(models.Candidate, {
+  CandidateSkill.associate = function (models) {
+    CandidateSkill.belongsTo(models.Candidate, {
       foreignKey: 'id',
       onDelete: 'CASCADE'
     });
-    CandidateKnowledge.hasOne(models.Knowledge, {
+    CandidateSkill.hasOne(models.Skill, {
       foreignKey: 'id',
-      as: 'knowledge'
+      as: 'skill'
     });
   };
-  return CandidateKnowledge;
+  return CandidateSkill;
 };

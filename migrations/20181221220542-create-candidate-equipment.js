@@ -18,7 +18,7 @@ module.exports = {
         },
         allowNull: false
       },
-      formation_id: {
+      equipment_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Equipments',

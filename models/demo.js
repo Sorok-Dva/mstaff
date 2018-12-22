@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Demo.associate = function (models) {
     Demo.belongsTo(models.Establishment, {
-      foreignKey: 'name',
+      foreignKey: 'es_name',
       onDelete: 'CASCADE'
     });
     Demo.belongsTo(models.User, {

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       allowNull: false
     },
-    formation_id: {
+    equipment_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     start: DataTypes.DATE,
     end: DataTypes.DATE
   }, {});
-  CandidateEquipment.associate = function(models) {
+  CandidateEquipment.associate = function (models) {
     CandidateEquipment.belongsTo(models.Candidate, {
       foreignKey: 'id',
       onDelete: 'CASCADE'

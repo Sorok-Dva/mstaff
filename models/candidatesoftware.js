@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       allowNull: false
     },
-    formation_id: {
+    software_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Software',
+        model: 'Softwares',
         key: 'id',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
@@ -24,14 +24,14 @@ module.exports = (sequelize, DataTypes) => {
     start: DataTypes.DATE,
     end: DataTypes.DATE
   }, {});
-  CandidateSoftware.associate = function(models) {
+  CandidateSoftware.associate = function (models) {
     CandidateSoftware.belongsTo(models.Candidate, {
       foreignKey: 'id',
       onDelete: 'CASCADE'
     });
     CandidateSoftware.hasOne(models.Software, {
       foreignKey: 'id',
-      as: 'software'
+      as: 'softwares'
     });
   };
   return CandidateSoftware;
