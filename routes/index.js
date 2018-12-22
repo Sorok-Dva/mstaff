@@ -64,15 +64,4 @@ router.get('/logout', UserController.ensureAuthenticated, IndexController.getLog
  */
 router.get('/404', IndexController.get404);
 
-/**
- * @Route('/profile') GET;
- * Show user profile.
- */
-router.get('/profile', UserController.ensureAuthenticated, IndexController.getProfile);
-/**
- * @Route('/profile/edit') GET;
- * Form for edit user profile.
- */
-router.get('/profile/edit', UserController.ensureAuthenticated, IndexController.getEditProfile);
-
 module.exports = router;

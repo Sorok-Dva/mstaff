@@ -6,6 +6,7 @@ const middleware = require('./middlewares');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const candidateRouter = require('./routes/candidate');
 const boRouter = require('./routes/backOffice');
 const apiRouter = require('./routes/api/api');
 const apiUserRouter = require('./routes/api/user');
@@ -55,6 +56,7 @@ app.use(middleware.setLocals);
 
 // ------ ROUTES
 app.use('/', indexRouter);
+app.use('/', candidateRouter);
 app.use('/user', usersRouter);
 app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
