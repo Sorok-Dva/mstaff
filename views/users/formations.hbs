@@ -40,8 +40,8 @@
                             <label for="start">Début *</label>
                             <input id="start" name="start" type="date"
                                    class="form-control input-md" required="">
-                            <label for="start">Fin *</label>
-                            <input id="start" name="start" type="date"
+                            <label for="end">Fin *</label>
+                            <input id="end" name="end" type="date"
                                    class="form-control input-md" required="">
                         </div>
                         <div class="form-group">
@@ -52,7 +52,7 @@
                                 </label>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+                        <button type="button" id="addExperience" class="btn btn-success pull-right" style="margin-bottom: 5px;">
                             <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
                         </button>
                     </div>
@@ -67,7 +67,7 @@
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="experienceTbody">
                             {{#if user.candidate.experiences}}
                                 {{#each user.candidate.experiences as |xp|}}
                                     <tr>
@@ -158,7 +158,63 @@
 </div>
 <script>
     $(document).ready(function() {
-        $('#service_id').select2();
-        $('#post_id').select2();
+      $('#addExperience').click(() => {
+        let stop = false;
+        let name = $('#name').val();
+        let service_id = parseInt($('#service_id').val());
+        let post_id = parseInt($('#post_id').val());
+        let internship = $('#internship').prop('checked');
+        let current = $('#current').prop('checked');
+        let start = new Date($('#start').val());
+        let end = new Date($('#end').val());
+        let _csrf = "{{csrfToken}}";
+
+        if (isNaN(start.getTime())) {
+          notification(
+            {
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Champ invalide :',
+              message: `Vous devez indiquer une date de début valide.`
+            }
+          );
+          stop = true;
+        }
+        if (!current && isNaN(end.getTime())) {
+          notification({
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Champ invalide :',
+              message: `Vous devez indiquer une date de fin valide.`
+          });
+          stop = true
+        }
+        if (!stop) {
+          if (isNaN(end.getTime())) end = null;
+          $.post('/add/Experience', { name, service_id, post_id, internship, current, start, end, _csrf}, (data) => {
+            if (data.experience) {
+              let newTr = '<tr>';
+              notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Expérience ajoutée avec succès :',
+                  message: `Votre expérience nommée "${data.experience.name}" vient d'être ajoutée à votre profil.`
+              });
+              setTimeout(location.reload(), 5000);
+            }
+          }).catch(errors => {
+            errors.responseJSON.errors.forEach((e, i) => {
+              notification({
+                  icon: 'exclamation',
+                  type: 'danger',
+                  title: 'Champ invalide :',
+                  message: `${e.param}`
+              });
+            });
+          });
+        }
+      });
+      $('#service_id').select2();
+      $('#post_id').select2();
     });
 </script>
