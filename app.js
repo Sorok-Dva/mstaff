@@ -53,6 +53,7 @@ app.use(middleware.passportInit);
 app.use(middleware.passportSession);
 app.use(middleware.flash);
 app.use(middleware.setLocals);
+app.use(middleware.wildcardSubdomains);
 
 // ------ ROUTES
 app.use('/', indexRouter);
