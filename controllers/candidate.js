@@ -19,6 +19,16 @@ module.exports = {
         check('current').isBoolean()
       ]
     }
+    case 'postAddFormation': {
+      return [
+        check('name').isLength({ min: 3 })
+      ]
+    }
+    case 'postAddDiploma': {
+      return [
+        check('name').isLength({ min: 3 })
+      ]
+    }
     }
   },
   addVideo: (req, res, next) => {
@@ -43,18 +53,10 @@ module.exports = {
             }] // Service & Post Associations (user.candidate.experiences.service|post)
           }, {
             model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
-            as: 'qualifications',
-            include: {
-              model: Models.Qualification,
-              as: 'diploma'
-            } // Qualifications Associations (user.candidate.qualifications.qualification)
+            as: 'qualifications'
           }, {
             model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
             as: 'formations',
-            include: {
-              model: Models.Formation,
-              as: 'formation'
-            } // Formations Associations (user.candidate.formations.formation)
           }, {
             model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
             as: 'skills',
@@ -79,7 +81,6 @@ module.exports = {
           }]
         }]
       }).then(user => {
-        console.log(user.candidate);
         return res.render('users/profile', { user, a: { main: 'profile' } })
       }).catch(error => next(new Error(error)));
     }
@@ -115,18 +116,10 @@ module.exports = {
           }] // Service & Post Associations (user.candidate.experiences.service|post)
         }, {
           model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
-          as: 'qualifications',
-          include: {
-            model: Models.Qualification,
-            as: 'diploma'
-          } // Qualifications Associations (user.candidate.qualifications.qualification)
+          as: 'qualifications'
         }, {
           model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
-          as: 'formations',
-          include: {
-            model: Models.Formation,
-            as: 'formation'
-          } // Formations Associations (user.candidate.formations.formation)
+          as: 'formations'
         }]
       }]
     }).then(user => {
@@ -137,13 +130,50 @@ module.exports = {
       }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
   },
+  getXpById: (req, res, next) => {
+    Models.Experience.findOne({ where: { id: req.params.id, candidate_id: req.user.id } }).then(experience => {
+      res.status(200).send({ experience });
+    }).catch(error => next(error));
+  },
+  removeXP: (req, res, next) => {
+    Models.Experience.findOne({ where: { id: req.params.id, candidate_id: req.user.id } }).then(experience => {
+      experience.destroy();
+      res.status(200).send({ done: true });
+    }).catch(error => next(error));
+  },
+  getFormationById: (req, res, next) => {
+    Models.CandidateFormation.findOne({ where: { id: req.params.id, candidate_id: req.user.id } }).then(formation => {
+      res.status(200).send({ formation });
+    }).catch(error => next(error));
+  },
+  removeFormation: (req, res, next) => {
+    Models.CandidateFormation.findOne({ where: { id: req.params.id, candidate_id: req.user.id } }).then(formation => {
+      formation.destroy();
+      res.status(200).send({ done: true });
+    }).catch(error => next(error));
+  },
+  getDiplomaById: (req, res, next) => {
+    Models.CandidateQualification.findOne({ where: { id: req.params.id, candidate_id: req.user.id } }).then(diploma => {
+      res.status(200).send({ diploma });
+    }).catch(error => next(error));
+  },
+  removeDiploma: (req, res, next) => {
+    Models.CandidateQualification.findOne({ where: { id: req.params.id, candidate_id: req.user.id } }).then(diploma => {
+      diploma.destroy();
+      res.status(200).send({ done: true });
+    }).catch(error => next(error));
+  },
   postAddExperience: (req, res, next) => {
+    check('start').isBefore(new Date);
+    check('start').isBefore(req.body.end);
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
 
+    console.log(req.body);
     Models.Experience.create({
       name: req.body.name,
       candidate_id: req.user.id,
@@ -155,6 +185,39 @@ module.exports = {
       end: req.body.end || null
     }).then(experience => {
       res.status(200).send({ experience });
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  postAddFormation: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateFormation.create({
+      name: req.body.name,
+      candidate_id: req.user.id,
+      formation_id: parseInt(req.body.formation_id),
+      start: req.body.start,
+      end: req.body.end || null
+    }).then(formation => {
+      res.status(200).send({ formation });
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  postAddDiploma: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateQualification.create({
+      name: req.body.name,
+      candidate_id: req.user.id,
+      start: req.body.start,
+      end: req.body.end || null
+    }).then(diploma => {
+      res.status(200).send({ diploma });
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   }
 };

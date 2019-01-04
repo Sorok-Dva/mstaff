@@ -1,0 +1,449 @@
+<style>
+    .checkbox label:after,
+    .radio label:after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    .checkbox .cr,
+    .radio .cr {
+        position: relative;
+        display: inline-block;
+        border: 1px solid #a9a9a9;
+        border-radius: .25em;
+        width: 1.3em;
+        height: 1.3em;
+        /*float: left;
+        margin-right: .5em;*/
+    }
+
+    .radio .cr {
+        border-radius: 50%;
+    }
+
+    .checkbox .cr .cr-icon,
+    .radio .cr .cr-icon {
+        position: absolute;
+        font-size: .8em;
+        line-height: 0;
+        top: 50%;
+        left: 20%;
+    }
+
+    .radio .cr .cr-icon {
+        margin-left: 0.04em;
+    }
+
+    .checkbox label input[type="checkbox"],
+    .radio label input[type="radio"] {
+        display: none;
+    }
+
+    .checkbox label input[type="checkbox"] + .cr > .cr-icon,
+    .radio label input[type="radio"] + .cr > .cr-icon {
+        transform: scale(3) rotateZ(-20deg);
+        opacity: 0;
+        transition: all .3s ease-in;
+    }
+
+    .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+    .radio label input[type="radio"]:checked + .cr > .cr-icon {
+        transform: scale(1) rotateZ(0deg);
+        opacity: 1;
+    }
+
+    .checkbox label input[type="checkbox"]:disabled + .cr,
+    .radio label input[type="radio"]:disabled + .cr {
+        opacity: .5;
+    }
+</style>
+<div class="col-md-12" style="margin-bottom: 25px">
+    <h3 class="text-right color-grey">Profil complété à <span class="percent">40</span>%</h3>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%;background-color: #5EB4FF;">
+            <span class="sr-only"><span class="percent">40</span>% Complete</span>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 text-center step" id="step0">
+    <div style="border: 1px solid #DDD;padding: 25px;">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Bienvenue dans l'outil Mstaff qui accélère <strong>le processus de
+                    recrutement des professionnels du secteur de la santé.</strong></h3>
+            </div>
+        </div>
+        <hr style="width: 50%;border-top: 4px solid #eee;">
+        <div class="row row-space-1">
+            <div class="col-md-12">
+                <h3 style="color: #02AED7">
+                    En <span style="color:#02AED7;text-decoration: underline;">1 minute</span> seulement, nous vous
+                    permettrons d'être déjà visible auprès des <strong>établissements</strong> de votre choix.
+                </h3>
+            </div>
+        </div>
+        <hr style="width: 50%;border-top: 4px solid #eee;">
+        <div class="row row-space-1">
+            <div class="col-md-12 text-center">
+                <button class="btn btn-blue btn-lg" id="goToStep1">
+                    <strong>C'est parti !</strong>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 step hidden" id="step1">
+    <div style="border: 1px solid #DDD;padding: 25px;">
+        <div class="row" style="margin-bottom: 30px">
+            <div class="col-md-3 text-center">
+                <img src="/static/assets/images/calendar-ok.png" width="100">
+            </div>
+            <div class="col-md-9">
+                <h3>Que recherchez-vous ?</h3>
+                <hr style="width: 100%;border-top: 2px solid #eee;">
+            </div>
+        </div>
+        <div class="row text-center" id="type_contrat_row">
+            <div class="col-md-4 col-md-offset-3">
+                <div class="checkbox">
+                    <label style="font-size: 2.5em">
+                        <input type="checkbox" name="contractType" value="cdi-cdd">
+                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                        <h6> Un contrat de </h6>
+                        <h4 style="margin-top: -2px;font-weight: bold"> CDI/CDD </h4>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="checkbox">
+                    <label style="font-size: 2.5em">
+                        <input type="checkbox" name="contractType" value="vacations">
+                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                        <h6> Effectuer des </h6>
+                        <h4 style="margin-top: -2px;font-weight: bold"> Vacations </h4>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="checkbox">
+                    <label style="font-size: 2.5em">
+                        <input type="checkbox" name="contractType" value="stage">
+                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                        <h6> Une convention de </h6>
+                        <h4 style="margin-top: -2px;font-weight: bold"> Stage </h4>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr style="width: 50%;border-top: 4px solid #eee; margin-bottom: 30px;">
+        <div class="row">
+            <div class="col-md-3 text-center">
+                <h4 style="font-weight: bold">En tant que</h4>
+            </div>
+            <div class="col-md-9">
+                <div class="form-group" data-id="entandque" >
+                    <div class="searchbar-wrapper">
+                        <input style="border: 0px" placeholder="Infirmier(e), Informaticien, Responsable Juridique" type="text" id="entandque" class="form-control" autocomplete="off">
+                        <input name="" type="hidden" autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="date_fin" name="souhait_date_fin" value="0" autocomplete="off">
+        <input type="hidden" id="date_debut" name="souhait_date_debut" value="20/12/2018" autocomplete="off">
+        <input type="hidden" id="type_contrat_id" name="souhait_type_contrat_id" value="0" autocomplete="off">
+        <input type="hidden" id="souhait_poste_id" name="souhait_poste_id" value="" autocomplete="off">
+        <input type="hidden" id="disponibilites" name="souhait_disponibilites" value="[]" autocomplete="off">
+
+        <div class="row row-space-1">
+            <div class="col-md-12 text-center">
+                <button class="btn pull-left" id="goBack">
+                    Retour
+                </button>
+                <button type="submit" class="btn btn-info btn-lg" id="goToStep2">
+                    <strong>Suivant <i class="fa fa-arrow-right"></i></strong>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- STEP 3 70%)-->
+<div class="col-md-12 step hidden" id="step2">
+    <div style="border: 1px solid #DDD;padding: 20px;">
+        <div class="row">
+            <div class="col-md-3 text-center">
+                <i class="fa fa-heartbeat" style="color: #00BCD4;font-size: 6em"></i>
+            </div>
+            <div class="col-md-9">
+                <h3>Quelle est votre dernière expérience ?</h3>
+                <hr style="width: 100%;border-top: 2px solid #eee;">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4><strong>Poste</strong></h4>
+                <hr style="border-top: 1px dashed #E0E0E0;">
+            </div>
+            <div class="col-md-8">
+                <h4>
+                    <div class="form-group ng-isolate-scope ng-not-empty ng-valid" ng-init="initInput()" url="url_poste" slim="true" show-button="false" custom-term="true" ng-model="poste_selected" model-selection="poste_selected" model-data="poste_selected_data" model-value="poste_selected_value" data-id="select_poste" placeholder="">
+                        <div ng-class="{'searchbar-wrapper-slim':slim,'searchbar-wrapper-clean':clean,'searchbar-wrapper':(!slim &amp;&amp; !clean),'focus-input':focus===true}" class="searchbar-wrapper-slim">
+                            <div style="border: 1px solid #DDD" ng-class="{'searchbar-wrapper-input-slim':slim,'searchbar-wrapper-input-clean':clean,'searchbar-wrapper-input':(!slim &amp;&amp; !clean )}" class="searchbar-wrapper-input-slim">
+                                <input style="border: 0px" placeholder="" ng-change="onChange()" ng-model="term" ng-keypress="keyPress($event,term)" ng-focus="focus=true;onFocus();" ng-blur="focus=false;onBlur();" ng-keyup="onKeyUp()" type="text" id="select_poste" class="form-control pull-right ng-pristine ng-untouched ng-valid ng-not-empty" autocomplete="off" wtx-context="8C029FAF-A48E-4C78-8C2B-6702D18C6F75">
+                                <!-- ngIf: !clean --><label ng-if="!clean" class="searchbar-wrapper-label ng-binding ng-scope" ng-click="focusInput()" for="select_poste"></label><!-- end ngIf: !clean -->
+                            </div>
+                            <input name="" ng-model="data" type="hidden" autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty" wtx-context="608FFF4A-66ED-424B-BB97-13318AE93B0B">
+                            <button ng-click="search(term)" style="position: absolute;right: 25px;top:10px" ng-show="showButton === true" class="btn btn-large btn-primary ng-hide">Rechercher
+                            </button>
+                        </div>
+                    </div>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h4><strong>Type de service</strong></h4>
+                <hr style="border-top: 1px dashed #E0E0E0;">
+            </div>
+            <div class="col-md-8">
+                <h4>
+                <div class="form-group ng-isolate-scope ng-not-empty ng-valid" ng-init="initInput()" ng-show="poste_selected.obj.categorie.id !== 3" url="url_service" slim="true" show-button="false" custom-term="true" ng-model="service_selected" model-selection="service_selected" model-data="service_selected_data" model-value="service_selected_value" data-id="select_service" placeholder="">
+                    <div ng-class="{'searchbar-wrapper-slim':slim,'searchbar-wrapper-clean':clean,'searchbar-wrapper':(!slim &amp;&amp; !clean),'focus-input':focus===true}" class="searchbar-wrapper-slim">
+                        <div style="border: 1px solid #DDD" ng-class="{'searchbar-wrapper-input-slim':slim,'searchbar-wrapper-input-clean':clean,'searchbar-wrapper-input':(!slim &amp;&amp; !clean )}" class="searchbar-wrapper-input-slim">
+                            <input style="border: 0px" placeholder="" ng-change="onChange()" ng-model="term" ng-keypress="keyPress($event,term)" ng-focus="focus=true;onFocus();" ng-blur="focus=false;onBlur();" ng-keyup="onKeyUp()" type="text" id="select_service" class="form-control pull-right ng-pristine ng-untouched ng-valid ng-empty" autocomplete="off" wtx-context="75BD406A-9816-48F4-96CC-E6A86C372CE9">
+                            <!-- ngIf: !clean --><label ng-if="!clean" class="searchbar-wrapper-label ng-binding ng-scope" ng-click="focusInput()" for="select_service"></label><!-- end ngIf: !clean -->
+                        </div>
+
+
+                        <input name="" ng-model="data" type="hidden" autocomplete="off" class="ng-pristine ng-untouched ng-valid ng-empty" wtx-context="AEFBACEA-CF08-46CF-9533-684644A7BE8B">
+                        <button ng-click="search(term)" style="position: absolute;right: 25px;top:10px" ng-show="showButton === true" class="btn btn-large btn-primary ng-hide">Rechercher
+                        </button>
+
+                    </div>
+                    <!-- ngIf: selectMode -->
+                </div>
+                <input ng-show="poste_selected.obj.categorie.id === 3" type="text" class="form-control ng-hide" value="Services généraux" disabled="" wtx-context="3AE807B8-850B-4D50-9E78-F062AAE5C93E">
+            </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h4><strong>Etablissement</strong></h4>
+                <hr style="border-top: 1px dashed #E0E0E0;  ">
+            </div>
+            <div class="col-md-8">
+                <h4>
+                    <input name="xp_etablissement" type="text" placeholder="Saisir le nom d'un établissement..." id="selectES" class="form-control" wtx-context="32FF8CCE-9592-4B69-B4E9-14DE70653953">
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h4><strong>Période</strong></h4>
+                <hr style="border-top: 1px dashed #E0E0E0;  ">
+            </div>
+            <div class="col-md-4">
+                <h4>
+                    <div class="form-group">
+                        <div style="color: black" date-max="today" month-picker="true" ng-model="date_debut" name="xp_date_debut" show-input="true" class="ng-isolate-scope ng-empty ng-valid">
+
+                            <div ng-show="showInput" class="input-group date">
+                                <input ng-focus="showCalandar = true" name="xp_date_debut" type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="model" placeholder="" wtx-context="1A9A28BF-3AA9-4764-86AD-24B661DA1B4C">
+                                <span class="input-group-addon" ng-click="showCalandar = !showCalandar"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <div ng-show="showCalandar &amp;&amp; monthPicker" class="mstaff-pickdate ng-hide mstaff-pickdate-absolute" ng-init="init()" ng-class="{'mstaff-pickdate-absolute':showInput}">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-2 col-sm-2 col-xs-2 text-center" ng-show="!showYearPicker">
+                                            <i ng-click="prevYear()" style="margin-top: 22px;color:#dddddd;cursor: pointer" class="fa fa-chevron-left fa-2x"></i></div>
+
+                                        <div class="col-md-8 col-sm-8  col-xs-8 text-center" ng-show="!showYearPicker" ng-click="showYearPicker = true">
+                                            <h4 class="text-center capitalize ng-binding" style="margin-top: 20px">2018</h4>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2  col-xs-2  text-center" ng-show="!showYearPicker">
+                                            <i ng-click="nextYear()" style="margin-top: 22px;color:#dddddd;cursor: pointer" class="fa fa-chevron-right fa-2x"></i>
+                                        </div>
+
+                                        <div class="col-md-2 col-sm-2  text-center ng-hide" ng-show="showYearPicker">
+                                            <i ng-click="prevDecade()" style="margin-top: 22px;color:#dddddd;cursor: pointer" class="fa fa-chevron-left fa-2x"></i></div>
+                                        <div class="col-md-8 col-sm-8 text-center ng-hide" ng-show="showYearPicker" ng-click="showYearPicker = true">
+                                            <h4 class="text-center capitalize ng-binding" style="margin-top: 20px">2012 -
+                                                2023</h4>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 text-center ng-hide" ng-show="showYearPicker">
+                                            <i ng-click="nextDecade()" style="margin-top: 22px;color:#dddddd;cursor: pointer" class="fa fa-chevron-right fa-2x"></i>
+                                        </div>
+                                    </div>
+                                    <div ng-show="monthPicker &amp;&amp; !showYearPicker" class="mstaff-pickdate-monthpicker" style="padding: 12px;width: 100%;float: left;">
+                                        <!-- ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">JANV.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">FÉVR.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">MARS
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">AVR.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">MAI
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">JUIN
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">JUIL.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">AOÛT
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">SEPT.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">OCT.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">NOV.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">DÉC.
+                                    </button><!-- end ngRepeat: m in monthArrayObj -->
+                                    </div>
+                                    <div ng-show="showYearPicker" class="ng-hide">
+                                        <div class="mstaff-pickdate-monthpicker" style="padding: 12px;width: 100%;float: left;">
+                                            <!-- ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2012
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2013
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2014
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2015
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2016
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2017
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2018
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2019
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2020
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2021
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2022
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2023
+                                        </button><!-- end ngRepeat: year in yearArray -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- ngIf: !monthPicker -->
+                        </div>
+                    </div>
+                </h4>
+            </div>
+            <div class="col-md-4">
+                <h4>
+                    <div class="form-group" ng-show="!poste_actuel">
+                        <div style="color: black" date-min="date_debut" date-max="today" month-picker="true" ng-model="date_fin" name="xp_date_fin" show-input="true" class="ng-isolate-scope ng-empty ng-valid">
+
+                            <div ng-show="showInput" class="input-group date">
+                                <input ng-focus="showCalandar = true" name="xp_date_fin" type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="model" placeholder="" wtx-context="21B15F3F-D488-4FEE-B907-CD6B3D5C9306">
+                                <span class="input-group-addon" ng-click="showCalandar = !showCalandar"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <div ng-show="showCalandar &amp;&amp; monthPicker" class="mstaff-pickdate ng-hide mstaff-pickdate-absolute" ng-init="init()" ng-class="{'mstaff-pickdate-absolute':showInput}">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-2 col-sm-2 col-xs-2 text-center" ng-show="!showYearPicker">
+                                            <i ng-click="prevYear()" style="margin-top: 22px;color:#dddddd;cursor: pointer" class="fa fa-chevron-left fa-2x"></i></div>
+
+                                        <div class="col-md-8 col-sm-8  col-xs-8 text-center" ng-show="!showYearPicker" ng-click="showYearPicker = true">
+                                            <h4 class="text-center capitalize ng-binding" style="margin-top: 20px">2018</h4>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2  col-xs-2  text-center" ng-show="!showYearPicker">
+                                            <i ng-click="nextYear()" style="margin-top: 22px;color:#dddddd;cursor: pointer" class="fa fa-chevron-right fa-2x"></i>
+                                        </div>
+
+                                        <div class="col-md-2 col-sm-2  text-center ng-hide" ng-show="showYearPicker">
+                                            <i ng-click="prevDecade()" style="margin-top: 22px;color:#dddddd;cursor: pointer" class="fa fa-chevron-left fa-2x"></i></div>
+                                        <div class="col-md-8 col-sm-8 text-center ng-hide" ng-show="showYearPicker" ng-click="showYearPicker = true">
+                                            <h4 class="text-center capitalize ng-binding" style="margin-top: 20px">2012 -
+                                                2023</h4>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 text-center ng-hide" ng-show="showYearPicker">
+                                            <i ng-click="nextDecade()" style="margin-top: 22px;color:#dddddd;cursor: pointer" class="fa fa-chevron-right fa-2x"></i>
+                                        </div>
+                                    </div>
+                                    <div ng-show="monthPicker &amp;&amp; !showYearPicker" class="mstaff-pickdate-monthpicker" style="padding: 12px;width: 100%;float: left;">
+                                        <!-- ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">JANV.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">FÉVR.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">MARS
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">AVR.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">MAI
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">JUIN
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">JUIL.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">AOÛT
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">SEPT.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">OCT.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">NOV.
+                                    </button><!-- end ngRepeat: m in monthArrayObj --><button type="button" ng-click="setMonthSelected($index + 1,m)" ng-class="{'mstaff-pickdate-limit':(m.isBeforeDateMin || m.isAfterDateMax)}" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="m in monthArrayObj">DÉC.
+                                    </button><!-- end ngRepeat: m in monthArrayObj -->
+                                    </div>
+                                    <div ng-show="showYearPicker" class="ng-hide">
+                                        <div class="mstaff-pickdate-monthpicker" style="padding: 12px;width: 100%;float: left;">
+                                            <!-- ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2012
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2013
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2014
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2015
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2016
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2017
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2018
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2019
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2020
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2021
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2022
+                                        </button><!-- end ngRepeat: year in yearArray --><button type="button" ng-click="setYearSelected(year)" class="mstaff-pickdate-monthpicker-item ng-binding ng-scope" ng-repeat="year in yearArray">2023
+                                        </button><!-- end ngRepeat: year in yearArray -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- ngIf: !monthPicker -->
+                        </div>
+                    </div>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-4 col-md-4">
+                <div class="checkbox checkbox-primary">
+                    <input onchange="" ng-model="poste_actuel" id="posteActuel" type="checkbox" name="xp_poste_actuel" class="ng-pristine ng-untouched ng-valid ng-empty" wtx-context="F1B69A78-10AB-43FB-B70B-985005DFDE67">
+                    <label for="posteActuel"><strong>J'occupe
+                        actuellement ce poste</strong></label>
+                </div>
+            </div>
+            <div class=" col-md-4">
+                <div class="checkbox checkbox-primary">
+                    <input id="stagiaire" type="checkbox" name="xp_is_stage" wtx-context="2AD7E4AC-09DA-4AC8-8FE2-3E6B2E3594DF">
+                    <label for="stagiaire"><strong>En tant que
+                        STAGIAIRE</strong></label>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="xp_poste_id" id="xp_poste_id" autocomplete="off" value="5" wtx-context="34E6E552-DA9F-438F-B4DC-0307759BFC31">
+        <input type="hidden" name="xp_service_id" id="xp_service_id" autocomplete="off" value="" wtx-context="8FB882F6-B524-4528-8EFD-97633FAF42EA">
+        <input type="hidden" name="xp_poste_actuel" id="xp_poste_actuel" autocomplete="off" value="off" wtx-context="19B8F2EC-4232-4BFE-8A63-C0E7B00849C7">
+
+        <div class="row" style="margin-top: 15px">
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-blue btn-lg">
+                    <strong>Suivant <i class="fa fa-arrow-right"></i></strong>
+                </button>
+                <br>
+                <a href="https://app.mstaff.co/inscription/externe/etape2" class="btn btn-flat btn-lg pull-left" style="color:grey ; ;margin-top:5px;border-bottom:2px solid #F4F4F4">
+                    Retour
+                </a>
+                <a href="https://app.mstaff.co/inscription/externe/etape4" class="btn btn-flat btn-lg firstxp-label pull-right" style="color:#E91E63 ;margin-top:5px;border-bottom:2px solid #F4F4F4">
+                    Je recherche ma première expérience
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- STEP 3 90%)-->
+
+
+<script>
+    let step;
+    $('#goBack').click(() => {
+        $('.step').hide();
+        $(`#step${step - 1}`).show();
+    });
+    $('#goToStep1').click(() => {
+      step = 1;
+      $('#step0').hide();
+      $('#step1').removeClass('hidden').show();
+    });
+    $('#goToStep2').click(() => {
+        step = 2;
+        $('#step1').hide();
+        $('#step2').removeClass('hidden').show();
+    });
+</script>
