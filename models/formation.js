@@ -4,10 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   }, {});
   Formation.associate = function (models) {
-    Formation.belongsTo(models.CandidateFormation, {
-      foreignKey: 'id',
-      onDelete: 'CASCADE'
-    });
+
   };
   return Formation;
 };

@@ -11,15 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       allowNull: false
     },
-    qualification_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Qualification',
-        key: 'id',
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      }
+    name: {
+      type: DataTypes.STRING,
     },
     start: DataTypes.DATE,
     end: DataTypes.DATE
@@ -28,10 +21,6 @@ module.exports = (sequelize, DataTypes) => {
     CandidateQualification.belongsTo(models.Candidate, {
       foreignKey: 'id',
       onDelete: 'CASCADE'
-    });
-    CandidateQualification.hasOne(models.Qualification, {
-      foreignKey: 'id',
-      as: 'diploma'
     });
   };
   return CandidateQualification;
