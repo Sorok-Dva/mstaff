@@ -19,6 +19,9 @@ module.exports = {
     }
     }
   },
+  getIndex:     (req, res, next) => {
+    res.render('index', { layout: 'onepage' });
+  },
   /**
    * Create User Method
    * @param req

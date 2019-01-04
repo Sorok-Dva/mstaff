@@ -1,18 +1,6 @@
 const Models = require('../models/index');
 
 module.exports = {
-  test: (req, res, next) => {
-    console.log(req.params);
-    Models.Establishment.findOne({
-      where: {
-        domain_enable: true,
-        domain_name: req.params.sub
-      }
-    }).then(es => {
-      if (!es) return res.redirect(`${req.headers.host.split('.')[1]}/404`);
-      return res.render('establishments/homepage');
-    });
-  },
   getIndex:     (req, res, next) => {
     if (!req.subdomain) {
       if (req.user && (req.user.type === 'candidate' || 'admin')) {
@@ -20,13 +8,21 @@ module.exports = {
       }
       return res.render('index', { layout: 'landing' })
     } else {
-      // render subdomain specific data
-      res.render('index', { layout: 'onepage' });
+      console.log(req.subdomain);
+      Models.Establishment.findOne({
+        where: {
+          domain_enable: true,
+          domain_name: req.subdomain
+        }
+      }).then(es => {
+        if (!es) return res.redirect(`/404`);
+        return res.render('establishments/homepage');
+      });
     }
   },
   getLogin:     (req, res) => res.render('users/login', { layout: 'onepage' }),
   postLogin:    (req, res) => res.redirect('/'),
-  getLogout:    (req, res) => req.logout() + res.redirect('/'),
+  getLogout:    (req, res) => req.logout() + req.session.destroy() + res.redirect('/'),
   getRegister:  (req, res) => {
     if (req.params.esCode) {
       Models.Establishment.findOne({
