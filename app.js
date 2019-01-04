@@ -10,6 +10,7 @@ const candidateRouter = require('./routes/candidate');
 const boRouter = require('./routes/backOffice');
 const apiRouter = require('./routes/api/api');
 const apiUserRouter = require('./routes/api/user');
+const apiCandidateRouter = require('./routes/api/candidate');
 
 const app = express();
 
@@ -62,6 +63,7 @@ app.use('/user', usersRouter);
 app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
 app.use('/api/user', apiUserRouter);
+app.use('/api/candidate', apiCandidateRouter);
 
 app.use(middleware.errorHandler); // errorHandler always must be in last position.
 
