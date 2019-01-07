@@ -1,28 +1,18 @@
 <script src="/static/assets/js/perfect-scrollbar.min.js" type="text/javascript"></script>
 <script src="/static/assets/js/star-rating.min.js" type="text/javascript"></script>
 <script src="/static/assets/js/dashboard.js"></script>
+<script src="/static/javascripts/main.js"></script>
+<script src="/static/javascripts/timepicker.js"></script>
 <script>
-    $(document).ready(() => {
+    // $(document).ready(() => {
         // $("[data-toggle=popover]").popover();
         {{#if sequelizeError}}
             {{#each sequelizeError.errors as |error|}}
                 $('#{{error.path}}').css('border', '3px solid red');
             {{/each}}
         {{/if}}
-        let activeBtnLoader;
-        $(document).on('click', '.btn-loader', (e) => {
-            let $this = $(e.target);
-            activeBtnLoader = $this;
-            let loadingText = $this.attr('data-loading-text');
-            if ($this.html() !== loadingText) {
-                $this.data('original-text', $this.html());
-                $this.html(loadingText);
-            }
-            setTimeout(function() {
-                $this.html($this.data('original-text'));
-            }, 10000);
-        });
-    });
+
+    // });
 
     {{#if error_msg}}
         $.notify({
@@ -76,31 +66,4 @@
             }
         });
         {{/if}}
-
-    let notification = (opts) => {
-        $.notify({
-            // options
-            icon: `fa fa-${opts.icon}`,
-            title: `<b>${opts.title}</b>`,
-            message: `${opts.message}`,
-        },{
-            type: `${opts.type}`,
-            allow_dismiss: true,
-            newest_on_top: false,
-            showProgressbar: false,
-            placement: {
-                from: 'bottom',
-                align: 'left'
-            },
-            offset: 20,
-            spacing: 10,
-            z_index: 1031,
-            delay: 5000,
-            timer: 15000,
-            animate: {
-                enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
-            }
-        });
-    }
 </script>

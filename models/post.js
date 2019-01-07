@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   Post.associate = function (models) {
     Post.belongsTo(models.Experience, {
       foreignKey: 'id',
+      fieldName: 'service_id',
       onDelete: 'CASCADE'
     });
   };

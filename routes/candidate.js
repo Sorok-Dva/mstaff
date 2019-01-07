@@ -44,5 +44,23 @@ router.post('/add/Experience',
   CandidateController.validate('postAddExperience'),
   CandidateController.postAddExperience
 );
+/**
+ * @Route('/add/Formation') POST;
+ * add Candidate Formation.
+ */
+router.post('/add/Formation',
+  UserController.ensureIsCandidate,
+  CandidateController.validate('postAddFormation'),
+  CandidateController.postAddFormation
+);
+/**
+ * @Route('/add/Diploma') POST;
+ * add Candidate Diploma.
+ */
+router.post('/add/Diploma',
+  UserController.ensureIsCandidate,
+  CandidateController.validate('postAddDiploma'),
+  CandidateController.postAddDiploma
+);
 
 module.exports = router;

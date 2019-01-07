@@ -64,3 +64,6 @@ gen
 
 # Git Metrics
 /.gtm/
+
+# Apache2 logs
+/logs/

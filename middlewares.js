@@ -17,6 +17,7 @@ const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
+const wildcardSubdomains = require('wildcard-subdomains');
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -92,5 +93,11 @@ module.exports = {
     saveUninitialized: true,
     store: sessionStore,
     resave: true
-  })
+  }),
+  wildcardSubdomains: (req, res, next) => {
+    console.log(req.subdomains);
+    if (!req.subdomains.length || req.subdomains.slice(-1)[0] === 'www') return next();
+    req.subdomain = req.subdomains.slice(-1)[0];
+    next();
+  }
 };
