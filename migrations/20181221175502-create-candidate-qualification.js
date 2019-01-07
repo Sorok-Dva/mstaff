@@ -18,15 +18,8 @@ module.exports = {
         },
         allowNull: false
       },
-      qualification_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Qualifications',
-          key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
-        }
+      name: {
+        type: Sequelize.STRING
       },
       start: {
         type: Sequelize.DATE

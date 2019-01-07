@@ -18,15 +18,8 @@ module.exports = {
         },
         allowNull: false
       },
-      software_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Softwares',
-          key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
-        },
-        allowNull: false
+      name: {
+        type: Sequelize.STRING
       },
       start: {
         type: Sequelize.DATE
