@@ -31,6 +31,11 @@ router.post('/profile/add/video', UserController.ensureIsCandidate, CandidateCon
  */
 router.get('/formations', UserController.ensureIsCandidate, CandidateController.getFormationsAndXP);
 /**
+ * @Route('/knowledges') GET;
+ * Show knowledges candidate page
+ */
+router.get('/knowledges', UserController.ensureIsCandidate, CandidateController.getKnowledge);
+/**
  * @Route('/add/Experience') POST;
  * add Candidate Experience.
  */
