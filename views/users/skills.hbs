@@ -1,0 +1,188 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"><i class="fa fa-question-circle" aria-hidden="true"></i> Légende</h5>
+            </div>
+            <div class="card-body" style="padding-top: 0px;">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <span class="fa fa-star checked"></span>
+                        <h5 class="inline text-bold">Ne pas savoir faire</h5>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <h5 class="inline text-bold">Savoir le réaliser avec tutorat</h5>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <h5 class="inline text-bold">Savoir le réaliser en autonomie</h5>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <h5 class="inline text-bold">Savoir former et transmettre</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 card-competence">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr style="background-color: #FFF;">
+                                            <th>Compétences</th>
+                                            <th style="min-width: 130px;">Niveau</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each user.candidate.skills as |skill|}}
+                                            <tr>
+                                                <td>{{skill.name}}</td>
+                                                <td>
+                                                    <span class="fa fa-star checked"></span>
+                                                    <span class="fa fa-star checked"></span>
+                                                    <span class="fa fa-star checked"></span>
+                                                    <span class="fa fa-star checked"></span>
+                                                </td>
+                                            </tr>
+                                        {{/each}}
+                                        {{#each skills as |skill|}}
+                                            <tr>
+                                                <td>{{skill.name}}</td>
+                                                <td>
+                                                    <span class="fa fa-star checked"></span>
+                                                    <span class="fa fa-star checked"></span>
+                                                    <span class="fa fa-star checked"></span>
+                                                    <span class="fa fa-star checked"></span>
+                                                </td>
+                                            </tr>
+                                        {{/each}}
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 card-competence">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-stethoscope" aria-hidden="true"></i> Materiels et Produits</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                       autocomplete
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr style="background-color: #FFF;">
+                                    <th>Matériel</th>
+                                    <th style="min-width: 130px;">Mon niveau</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {{#each user.candidate.equipments as |equipment|}}
+                                <tr>
+                                    <td>{{equipment.name}}</td>
+                                    <td>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            {{#each equipments as |equipment|}}
+                                <tr>
+                                    <td>{{equipment.name}}</td>
+                                    <td>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 card-competence">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-save" aria-hidden="true"></i> Logiciels</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="autocomplete">
+                            <input class="form-group input-no-border" id="myInput" type="text" placeholder="Ajouter un nouveau logiciel">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr style="background-color: #FFF;">
+                                    <th>Logiciel</th>
+                                    <th style="min-width: 130px;">Mon niveau</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {{#each user.candidate.softwares as |software|}}
+                                <tr>
+                                    <td>{{software.name}}</td>
+                                    <td>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            {{#each softwares as |software|}}
+                                <tr>
+                                    <td>{{software.name}}</td>
+                                    <td>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                        <span class="fa fa-star checked"></span>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
