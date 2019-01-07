@@ -20,6 +20,12 @@ module.exports.register = async (Handlebars) => {
     }
   });
 
+  Handlebars.registerHelper('rating', (stars, star) => {
+    if (star <= stars) {
+      return 'selected';
+    }
+  });
+
   Handlebars.registerHelper('ifCond', (v1, operator, v2, options) => {
     switch (operator) {
     case '==':

@@ -21,11 +21,8 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      start: {
-        type: Sequelize.DATE
-      },
-      end: {
-        type: Sequelize.DATE
+      stars: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

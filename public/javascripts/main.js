@@ -17,7 +17,6 @@ jQuery.each( [ "put", "delete" ], function( i, method ) {
     });
   };
 });
-$('.rating').rating();
 
 let notification = (opts) => {
   $.notify({
@@ -47,8 +46,8 @@ let notification = (opts) => {
 };
 
 let errorsHandler = errors => {
-  errors = errors.responseJSON;
-  if (errors.errors) {
+  errors = errors === undefined ? null : errors.responseJSON;
+  if (errors && errors.errors) {
     errors.errors.forEach((e, i) => {
       notification({
         icon: 'exclamation',
@@ -58,7 +57,7 @@ let errorsHandler = errors => {
       });
     });
   } else {
-    let message = (errors.sequelizeError) ?
+    let message = (errors && errors.sequelizeError) ?
       `<b>${errors.sequelizeError.name}</b>: ${errors.sequelizeError.original.sqlMessage}`
       : `Erreur inconnue.`;
     notification({
