@@ -4,12 +4,12 @@ const LocalStrategy = require('passport-local').Strategy;
 const Models = require('../models');
 const UserController = require('../controllers/user');
 
-let attributes = ['id', 'password', 'email', 'firstName', 'lastName', 'type', 'role'];
+let attributes = ['id', 'email', 'firstName', 'lastName', 'type', 'role'];
 
 passport.use(new LocalStrategy((email, password, done) => {
   Models.User.findOne({
     where: { email },
-    attributes
+    attributes: ['id', 'password', 'email', 'role']
   }).then(user => {
     if (!user) return done(null, false, { message: 'Utilisateur inconnu' });
     UserController.comparePassword(password, user.dataValues.password, (err, isMatch) => {
@@ -37,7 +37,7 @@ passport.deserializeUser((id, done) => {
     let session = {
       id: user.dataValues.id,
       email: user.dataValues.email,
-      identity: `${user.dataValues.firstName} ${user.dataValues.lastName}`,
+      fullName: user.fullName,
       type: user.dataValues.type,
       role: user.dataValues.role
     };

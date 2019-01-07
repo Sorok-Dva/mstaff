@@ -11,18 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       allowNull: false
     },
-    software_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Softwares',
-        key: 'id',
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      }
-    },
-    start: DataTypes.DATE,
-    end: DataTypes.DATE
+    name: DataTypes.STRING,
+    stars: DataTypes.INTEGER
   }, {});
   CandidateSoftware.associate = function (models) {
     CandidateSoftware.belongsTo(models.Candidate, {

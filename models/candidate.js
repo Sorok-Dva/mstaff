@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Candidate = sequelize.define('Candidate', {
     user_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true
     },
     es_id: DataTypes.INTEGER,

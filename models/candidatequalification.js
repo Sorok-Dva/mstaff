@@ -11,15 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       allowNull: false
     },
-    qualification_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Qualification',
-        key: 'id',
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      }
+    name: {
+      type: DataTypes.STRING
     },
     start: DataTypes.DATE,
     end: DataTypes.DATE

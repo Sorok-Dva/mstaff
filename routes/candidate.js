@@ -31,6 +31,11 @@ router.post('/profile/add/video', UserController.ensureIsCandidate, CandidateCon
  */
 router.get('/formations', UserController.ensureIsCandidate, CandidateController.getFormationsAndXP);
 /**
+ * @Route('/knowledges') GET;
+ * Show knowledges candidate page
+ */
+router.get('/knowledges', UserController.ensureIsCandidate, CandidateController.getKnowledge);
+/**
  * @Route('/add/Experience') POST;
  * add Candidate Experience.
  */
@@ -38,6 +43,24 @@ router.post('/add/Experience',
   UserController.ensureIsCandidate,
   CandidateController.validate('postAddExperience'),
   CandidateController.postAddExperience
+);
+/**
+ * @Route('/add/Formation') POST;
+ * add Candidate Formation.
+ */
+router.post('/add/Formation',
+  UserController.ensureIsCandidate,
+  CandidateController.validate('postAddFormation'),
+  CandidateController.postAddFormation
+);
+/**
+ * @Route('/add/Diploma') POST;
+ * add Candidate Diploma.
+ */
+router.post('/add/Diploma',
+  UserController.ensureIsCandidate,
+  CandidateController.validate('postAddDiploma'),
+  CandidateController.postAddDiploma
 );
 
 module.exports = router;

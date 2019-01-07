@@ -7526,7 +7526,7 @@ button:focus {
 }
 
 hr {
-    border-color: #24c6ce;
+    border-color: #0071da;
 }
 
 .animation-transition-general {
@@ -9039,7 +9039,7 @@ star {
 }
 
 .card .card-header {
-    padding: 20px 15px 0px;
+    padding: 10px 15px 0px;
     position: relative;
     border-radius: 3px 3px 0 0;
     z-index: 3;
@@ -9092,7 +9092,7 @@ star {
 
 .card .card-title {
     margin: 0;
-    color: #252422;
+    color: #0071da;
     font-weight: 300;
 }
 
@@ -9879,7 +9879,7 @@ star {
     color: #FFFFFF;
     font-weight: 500;
     font-size: 0.75em;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     display: inline-block;
     line-height: 1.5em;
 }
@@ -10147,7 +10147,7 @@ star {
     width: 19px;
     height: 19px;
     left: 0;
-    top: -2px;
+    top: 1px;
     text-align: center;
     margin-left: -20px;
     font-size: 16px;
@@ -13483,4 +13483,33 @@ star {
     background: #454cad;
     border-color: #454cad;
     cursor: pointer;
+}
+
+/* Rating Star Widgets Style */
+.rating-stars ul {
+    list-style-type:none;
+    padding:0;
+
+    -moz-user-select:none;
+    -webkit-user-select:none;
+}
+.rating-stars ul > li.star {
+    display:inline-block;
+
+}
+
+/* Idle State of the stars */
+.rating-stars ul > li.star > i.fa {
+    font-size:1em; /* Change the size of the stars */
+    color:#ccc; /* Color on idle state */
+}
+
+/* Hover state of the stars */
+.rating-stars ul > li.star.hover > i.fa {
+    color:#FFCC36;
+}
+
+/* Selected state of the stars */
+.rating-stars ul > li.star.selected > i.fa {
+    color:#FF912C;
 }

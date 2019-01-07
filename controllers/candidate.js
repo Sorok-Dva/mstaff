@@ -19,6 +19,16 @@ module.exports = {
         check('current').isBoolean()
       ]
     }
+    case 'postAddFormation': {
+      return [
+        check('name').isLength({ min: 3 })
+      ]
+    }
+    case 'postAddDiploma': {
+      return [
+        check('name').isLength({ min: 3 })
+      ]
+    }
     }
   },
   addVideo: (req, res, next) => {
@@ -43,43 +53,22 @@ module.exports = {
             }] // Service & Post Associations (user.candidate.experiences.service|post)
           }, {
             model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
-            as: 'qualifications',
-            include: {
-              model: Models.Qualification,
-              as: 'diploma'
-            } // Qualifications Associations (user.candidate.qualifications.qualification)
+            as: 'qualifications'
           }, {
             model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
-            as: 'formations',
-            include: {
-              model: Models.Formation,
-              as: 'formation'
-            } // Formations Associations (user.candidate.formations.formation)
+            as: 'formations'
           }, {
             model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
-            as: 'skills',
-            include: {
-              model: Models.Skill,
-              as: 'skill'
-            } // Skills Associations (user.candidate.skills.skill)
+            as: 'skills'
           }, {
             model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
-            as: 'equipments',
-            include: {
-              model: Models.Equipment,
-              as: 'equipment'
-            } // Equipments Associations (user.candidate.equipments.equipment)
+            as: 'equipments'
           }, {
             model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
-            as: 'softwares',
-            include: {
-              model: Models.Software,
-              as: 'software'
-            } // Skills Associations (user.candidate.softwares.software)
+            as: 'softwares'
           }]
         }]
       }).then(user => {
-        console.log(user.candidate);
         return res.render('users/profile', { user, a: { main: 'profile' } })
       }).catch(error => next(new Error(error)));
     }
@@ -115,18 +104,10 @@ module.exports = {
           }] // Service & Post Associations (user.candidate.experiences.service|post)
         }, {
           model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
-          as: 'qualifications',
-          include: {
-            model: Models.Qualification,
-            as: 'diploma'
-          } // Qualifications Associations (user.candidate.qualifications.qualification)
+          as: 'qualifications'
         }, {
           model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
-          as: 'formations',
-          include: {
-            model: Models.Formation,
-            as: 'formation'
-          } // Formations Associations (user.candidate.formations.formation)
+          as: 'formations'
         }]
       }]
     }).then(user => {
@@ -137,13 +118,87 @@ module.exports = {
       }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
   },
+  getKnowledge: (req, res, next) => {
+    let render = { a: { main: 'knowledges' } };
+    Models.User.findOne({
+      where: { id: req.user.id },
+      include:[{
+        model: Models.Candidate, // Candidate Associations (user.candidate)
+        as: 'candidate',
+        include:[{
+          model: Models.CandidateSkill,
+          as: 'skills'
+        }, {
+          model: Models.CandidateEquipment,
+          as: 'equipments'
+        }, {
+          model: Models.CandidateSoftware,
+          as: 'softwares'
+        }]
+      }]
+    }).then(user => {
+      render.user = user;
+      return Models.Skill.findAll();
+    }).then(skills => {
+      render.skills = skills;
+      return Models.Equipment.findAll();
+    }).then(equipments => {
+      render.equipments = equipments;
+      return Models.Software.findAll();
+    }).then(softwares => {
+      render.softwares = softwares;
+      return res.render('users/skills', render)
+    }).catch(error => next(new Error(error)));
+  },
+  getXpById: (req, res, next) => {
+    let opts = { where: { id: req.params.id, candidate_id: req.user.id } };
+    Models.Experience.findOne(opts).then(experience => {
+      res.status(200).send({ experience });
+    }).catch(error => next(error));
+  },
+  removeXP: (req, res, next) => {
+    let opts = { where: { id: req.params.id, candidate_id: req.user.id } };
+    Models.Experience.findOne(opts).then(experience => {
+      experience.destroy();
+      res.status(200).send({ done: true });
+    }).catch(error => next(error));
+  },
+  getFormationById: (req, res, next) => {
+    let opts = { where: { id: req.params.id, candidate_id: req.user.id } };
+    Models.CandidateFormation.findOne(opts).then(formation => {
+      res.status(200).send({ formation });
+    }).catch(error => next(error));
+  },
+  removeFormation: (req, res, next) => {
+    let opts = { where: { id: req.params.id, candidate_id: req.user.id } };
+    Models.CandidateFormation.findOne(opts).then(formation => {
+      formation.destroy();
+      res.status(200).send({ done: true });
+    }).catch(error => next(error));
+  },
+  getDiplomaById: (req, res, next) => {
+    let opts = { where: { id: req.params.id, candidate_id: req.user.id } };
+    Models.CandidateQualification.findOne(opts).then(diploma => {
+      res.status(200).send({ diploma });
+    }).catch(error => next(error));
+  },
+  removeDiploma: (req, res, next) => {
+    let opts = { where: { id: req.params.id, candidate_id: req.user.id } };
+    Models.CandidateQualification.findOne(opts).then(diploma => {
+      diploma.destroy();
+      res.status(200).send({ done: true });
+    }).catch(error => next(error));
+  },
   postAddExperience: (req, res, next) => {
+    check('start').isBefore(new Date());
+    check('start').isBefore(req.body.end);
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-
+    let xp = {};
     Models.Experience.create({
       name: req.body.name,
       candidate_id: req.user.id,
@@ -154,7 +209,191 @@ module.exports = {
       start: req.body.start,
       end: req.body.end || null
     }).then(experience => {
-      res.status(200).send({ experience });
+      xp = experience.dataValues;
+      Models.Service.findOne({ where: { id: experience.service_id } }).then(service => {
+        xp.service = service.dataValues;
+        return Models.Post.findOne({ where: { id: experience.poste_id } });
+      }).then(poste => {
+        xp.poste = poste.dataValues;
+        res.status(200).send({ experience: xp });
+      });
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  postAddFormation: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateFormation.create({
+      name: req.body.name,
+      candidate_id: req.user.id,
+      formation_id: parseInt(req.body.formation_id),
+      start: req.body.start,
+      end: req.body.end || null
+    }).then(formation => {
+      res.status(200).send({ formation });
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  postAddDiploma: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateQualification.create({
+      name: req.body.name,
+      candidate_id: req.user.id,
+      start: req.body.start,
+      end: req.body.end || null
+    }).then(diploma => {
+      res.status(200).send({ diploma });
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  addSkill: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateSkill.findOne({
+      where: { name: req.body.name, candidate_id: req.user.id }
+    }).then(skill => {
+      if (skill) return res.status(400).send({ body: req.body, error: 'Already exists' });
+      return Models.CandidateSkill.create({
+        candidate_id: req.user.id,
+        name: req.body.name,
+        stars: 0
+      }).then(skill => res.status(201).send({ skill }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  addEquipment: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateEquipment.findOne({
+      where: { name: req.body.name, candidate_id: req.user.id }
+    }).then(equipment => {
+      if (equipment) return res.status(400).send({ body: req.body, error: 'Already exists' });
+      return Models.CandidateEquipment.create({
+        candidate_id: req.user.id,
+        name: req.body.name,
+        stars: 0
+      }).then(equipment => res.status(201).send({ equipment }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  addSoftware: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateSoftware.findOne({
+      where: { name: req.body.name, candidate_id: req.user.id }
+    }).then(software => {
+      if (software) return res.status(400).send({ body: req.body, error: 'Already exists' });
+      return Models.CandidateSoftware.create({
+        candidate_id: req.user.id,
+        name: req.body.name,
+        stars: 0
+      }).then(software => res.status(201).send({ software }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  rateSkill: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateSkill.findOne({
+      where: { id: req.params.id, candidate_id: req.user.id }
+    }).then(skill => {
+      if (!skill) return res.status(400).send({ body: req.body, error: 'Not exists' });
+      return skill.update({
+        stars: req.body.rate
+      }).then(skill => res.status(201).send({ skill }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  rateEquipment: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateEquipment.findOne({
+      where: { id: req.params.id, candidate_id: req.user.id }
+    }).then(equipment => {
+      if (!equipment) return res.status(400).send({ body: req.body, error: 'Not exists' });
+      return equipment.update({
+        stars: req.body.rate
+      }).then(equipment => res.status(201).send({ equipment }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  rateSoftware: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateSoftware.findOne({
+      where: { id: req.params.id, candidate_id: req.user.id }
+    }).then(software => {
+      if (!software) return res.status(400).send({ body: req.body, error: 'Not exists' });
+      return software.update({
+        stars: req.body.rate
+      }).then(software => res.status(201).send({ software }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  deleteSkill: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateSkill.findOne({
+      where: { id: req.params.id, candidate_id: req.user.id }
+    }).then(skill => {
+      if (!skill) return res.status(400).send({ body: req.body, error: 'Not exists' });
+      skill.destroy().then(skill => res.status(201).send({ deleted: true, skill }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  deleteEquipment: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateEquipment.findOne({
+      where: { id: req.params.id, candidate_id: req.user.id }
+    }).then(equipment => {
+      if (!equipment) return res.status(400).send({ body: req.body, error: 'Not exists' });
+      equipment.destroy().then(equipment => res.status(201).send({ deleted: true, equipment }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  deleteSoftware: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.CandidateSoftware.findOne({
+      where: { id: req.params.id, candidate_id: req.user.id }
+    }).then(software => {
+      if (!software) return res.status(400).send({ body: req.body, error: 'Not exists' });
+      software.destroy().then(software => res.status(201).send({ deleted: true, software }));
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   }
 };

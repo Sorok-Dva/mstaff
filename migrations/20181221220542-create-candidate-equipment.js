@@ -18,21 +18,11 @@ module.exports = {
         },
         allowNull: false
       },
-      equipment_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Equipments',
-          key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
-        },
-        allowNull: false
+      name: {
+        type: Sequelize.STRING
       },
-      start: {
-        type: Sequelize.DATE
-      },
-      end: {
-        type: Sequelize.DATE
+      stars: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

@@ -36,6 +36,7 @@
     "express-messages": "*",
     "express-mysql-session": "^2.0.1",
     "express-session": "^1.15.6",
+    "express-subdomain": "^1.0.5",
     "express-validator": "^5.3.0",
     "handlebars": "^4.0.12",
     "handlebars-dateformat": "^1.1.1",
@@ -59,7 +60,8 @@
     "request": "^2.87.0",
     "sequelize": "^4.41.2",
     "sequelize-cli": "^5.4.0",
-    "sha1": "^1.1.1"
+    "sha1": "^1.1.1",
+    "wildcard-subdomains": "^1.1.0"
   },
   "devDependencies": {
     "eslint": "^5.10.0",
