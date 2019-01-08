@@ -7799,7 +7799,8 @@ textarea.form-control {
     background-color: #cfcfca;
     border-radius: 3px;
     box-shadow: none;
-    height: 8px;
+    height: 4px;
+    margin-bottom: 0 !important;
 }
 
 .progress-thin {
@@ -8167,6 +8168,7 @@ star {
 .alert .close ~ span {
     display: block;
     max-width: 89%;
+    margin-bottom: 6px;
 }
 
 .alert.alert-with-icon {
