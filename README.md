@@ -43,3 +43,15 @@ Run test :
 curl http://localhost:3001/api/
 ```
 It should read `{"message":"welcome"}`
+
+## ORM Commands
+
+Create new model (exemple) :  
+```bash
+node_modules/.bin/sequelize model:generate --name TableName --attributes column1:integer,column2:string,column3:date
+``` 
+
+Create new seed :  
+```bash
+node_modules/.bin/sequelize seed:generate --name seed-name
+``` 
