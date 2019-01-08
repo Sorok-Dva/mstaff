@@ -12,9 +12,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      offer_id: {
+      wish_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       candidate_id: {
         type: Sequelize.INTEGER,

@@ -22,6 +22,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'candidate_id',
       as: 'experiences'
     });
+    Candidate.hasMany(models.Wish, {
+      foreignKey: 'candidate_id',
+      as: 'wishes'
+    });
+    Candidate.hasMany(models.Application, {
+      foreignKey: 'candidate_id',
+      as: 'applications'
+    });
     Candidate.hasMany(models.CandidateQualification, {
       foreignKey: 'candidate_id',
       as: 'qualifications'
