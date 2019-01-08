@@ -12120,7 +12120,7 @@ star {
     border: 0 none;
 }
 
-.nav-tabs > li.active :after {
+/*.nav-tabs > li.active :after {
     border-bottom: 11px solid #FFFFFF;
     border-left: 11px solid rgba(0, 0, 0, 0);
     border-right: 11px solid rgba(0, 0, 0, 0);
@@ -12129,8 +12129,9 @@ star {
     position: absolute;
     right: 40%;
     bottom: 0;
-}
+}*/
 
+/*
 .nav-tabs > li.active :before {
     border-bottom: 11px solid #F1EAE0;
     border-left: 11px solid rgba(0, 0, 0, 0);
@@ -12141,6 +12142,7 @@ star {
     right: 40%;
     bottom: 1px;
 }
+*/
 
 .nav-stacked {
     border-right: 1px solid #F1EAE0;
@@ -13198,8 +13200,8 @@ star {
 
 @media (min-width: 992px) {
     .table-full-width {
-        margin-left: -15px;
-        margin-right: -15px;
+        /*margin-left: -15px;*/
+        /*margin-right: -15px;*/
     }
     .table-responsive {
         overflow: visible;

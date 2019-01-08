@@ -4,7 +4,6 @@ toAutocomplete.forEach((ac) => {
   let list = [];
   let e = ac.substring(0, ac.length - 1);
   let eCapitalize = e.charAt(0).toUpperCase() + e.slice(1);
-  console.log(e, eCapitalize);
 
   $.get(`/api/${ac}/all`, (data) => $.map(data[`${ac}`], value => list.push(value.name)));
 
