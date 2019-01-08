@@ -8,8 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       offer_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       candidate_id: {
         type: Sequelize.INTEGER,
@@ -23,7 +28,7 @@ module.exports = {
       },
       es_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'Establishments',
           key: 'id'
@@ -45,7 +50,7 @@ module.exports = {
       },
       new: {
         type: Sequelize.BOOLEAN,
-        defaultValue: true,
+        defaultValue: true
       },
       createdAt: {
         allowNull: false,
