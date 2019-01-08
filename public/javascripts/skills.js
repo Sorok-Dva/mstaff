@@ -10,7 +10,7 @@ $('#skills').autocomplete({
   source: listSkills,
   minLength: 3,
   select: (event, ui) => {
-    if ($(`td:contains('${ui.item.label}')`).length > 0) {
+    if ($(`tr[data-type="skill"]>td:contains('${ui.item.label}')`).length > 0) {
       $('#addNewSkill').attr('disabled', 'disabled');
       $('#skillAlreadyInList').show();
     } else {
@@ -19,7 +19,7 @@ $('#skills').autocomplete({
     }
   },
   search: (event, ui) => {
-    if ($(`td:contains('${event.target.value}')`).length > 0) {
+    if ($(`tr[data-type="skill"]>td:contains('${event.target.value}')`).length > 0) {
       $('#addNewSkill').attr('disabled', 'disabled');
       $('#skillAlreadyInList').show();
     } else {
@@ -28,11 +28,12 @@ $('#skills').autocomplete({
     }
   }
 });
+
 $('#equipments').autocomplete({
   source: listEquipments,
   minLength: 3,
   select: (event, ui) => {
-    if ($(`td:contains('${ui.item.label}')`).length > 0) {
+    if ($(`tr[data-type="equipment"]>td:contains('${ui.item.label}')`).length > 0) {
       $('#addNewEquipment').attr('disabled', 'disabled');
       $('#equipmentAlreadyInList').show();
     } else {
@@ -41,7 +42,7 @@ $('#equipments').autocomplete({
     }
   },
   search: (event, ui) => {
-    if ($(`td:contains('${event.target.value}')`).length > 0) {
+    if ($(`tr[data-type="equipment"]>td:contains('${event.target.value}')`).length > 0) {
       $('#addNewEquipment').attr('disabled', 'disabled');
       $('#equipmentAlreadyInList').show();
     } else {
@@ -54,7 +55,7 @@ $('#softwares').autocomplete({
   source: listSoftwares,
   minLength: 3,
   select: (event, ui) => {
-    if ($(`td:contains('${ui.item.label}')`).length > 0) {
+    if ($(`tr[data-type="software"]>td:contains('${ui.item.label}')`).length > 0) {
       $('#addNewSoftware').attr('disabled', 'disabled');
       $('#softwareAlreadyInList').show();
     } else {
@@ -63,7 +64,7 @@ $('#softwares').autocomplete({
     }
   },
   search: (event, ui) => {
-    if ($(`td:contains('${event.target.value}')`).length > 0) {
+    if ($(`tr[data-type="software"]>td:contains('${event.target.value}')`).length > 0) {
       $('#addNewSoftware').attr('disabled', 'disabled');
       $('#softwareAlreadyInList').show();
     } else {
@@ -78,6 +79,7 @@ $('#addNewSkill').click(() => {
   let name = $('#skills').val();
   $.post('/api/candidate/skills/add', {name, _csrf}, (data) => {
     if (data.skill) {
+      $('#skills').val('');
       notification({
         icon: 'check-circle',
         type: 'success',
@@ -93,10 +95,9 @@ $('#addNewSkill').click(() => {
             'data-type': 'skill',
             'data-id': data.skill.id
           })
-            .append($('<li>').attr({class: 'star', title: 'Poor', 'data-value': 1}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Fair', 'data-value': 2}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Good', 'data-value': 3}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Excellent', 'data-value': 4}).html('<i class="fa fa-star"></i>')))
+            .append($('<li>').attr({class: 'star', title: 'Fair', 'data-value': 1}).html('<i class="fa fa-star"></i>'))
+            .append($('<li>').attr({class: 'star', title: 'Good', 'data-value': 2}).html('<i class="fa fa-star"></i>'))
+            .append($('<li>').attr({class: 'star', title: 'Excellent', 'data-value': 3}).html('<i class="fa fa-star"></i>')))
         ))
         .append($('<td>').append($('<button>').attr({
           class: 'btn btn-simple btn-danger btn-icon remove',
@@ -122,6 +123,7 @@ $('#addNewEquipment').click(() => {
   let name = $('#equipments').val();
   $.post('/api/candidate/equipments/add', {name, _csrf}, (data) => {
     if (data.equipment) {
+      $('#equipments').val('');
       notification({
         icon: 'check-circle',
         type: 'success',
@@ -137,10 +139,9 @@ $('#addNewEquipment').click(() => {
             'data-type': 'equipment',
             'data-id': data.equipment.id
           })
-            .append($('<li>').attr({class: 'star', title: 'Poor', 'data-value': 1}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Fair', 'data-value': 2}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Good', 'data-value': 3}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Excellent', 'data-value': 4}).html('<i class="fa fa-star"></i>')))
+            .append($('<li>').attr({class: 'star', title: 'Fair', 'data-value': 1}).html('<i class="fa fa-star"></i>'))
+            .append($('<li>').attr({class: 'star', title: 'Good', 'data-value': 2}).html('<i class="fa fa-star"></i>'))
+            .append($('<li>').attr({class: 'star', title: 'Excellent', 'data-value': 3}).html('<i class="fa fa-star"></i>')))
         ))
         .append($('<td>').append($('<button>').attr({
           class: 'btn btn-simple btn-danger btn-icon remove',
@@ -166,6 +167,7 @@ $('#addNewSoftware').click(() => {
   let name = $('#softwares').val();
   $.post('/api/candidate/softwares/add', {name, _csrf}, (data) => {
     if (data.software) {
+      $('#softwares').val('');
       notification({
         icon: 'check-circle',
         type: 'success',
@@ -181,10 +183,9 @@ $('#addNewSoftware').click(() => {
             'data-type': 'software',
             'data-id': data.software.id
           })
-            .append($('<li>').attr({class: 'star', title: 'Poor', 'data-value': 1}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Fair', 'data-value': 2}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Good', 'data-value': 3}).html('<i class="fa fa-star"></i>'))
-            .append($('<li>').attr({class: 'star', title: 'Excellent', 'data-value': 4}).html('<i class="fa fa-star"></i>')))
+            .append($('<li>').attr({class: 'star', title: 'Fair', 'data-value': 1}).html('<i class="fa fa-star"></i>'))
+            .append($('<li>').attr({class: 'star', title: 'Good', 'data-value': 2}).html('<i class="fa fa-star"></i>'))
+            .append($('<li>').attr({class: 'star', title: 'Excellent', 'data-value': 3}).html('<i class="fa fa-star"></i>')))
         ))
         .append($('<td>').append($('<button>').attr({
           class: 'btn btn-simple btn-danger btn-icon remove',
@@ -206,10 +207,14 @@ $('#addNewSoftware').click(() => {
   });
 });
 
-$('body').on('click', '.remove', function () {
-  let type = $(this).attr('data-type');
-  let id = $(this).attr('data-id');
+$('body').on('click', '.remove', (event) => {
+  let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
+  let type = $(event.target).attr('data-type') || $(event.target).parent().attr('data-type');
+  $('#btnRemoveSkill').attr('onclick', `removeSkill('${type}', ${id})`);
+  $("#removeSkillModal").modal();
+});
 
+let removeSkill = (type, id) => {
   $.delete(`/api/candidate/${type}/${id}`, {_csrf}, (data) => {
     if (data.deleted) {
       notification({
@@ -231,4 +236,4 @@ $('body').on('click', '.remove', function () {
       });
     } else return errorsHandler(error);
   });
-});
+};
