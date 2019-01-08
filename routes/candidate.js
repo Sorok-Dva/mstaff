@@ -35,6 +35,19 @@ router.get('/formations', UserController.ensureIsCandidate, CandidateController.
  * Show knowledges candidate page
  */
 router.get('/knowledges', UserController.ensureIsCandidate, CandidateController.getKnowledge);
+
+/**
+ * @Route('/applications') GET;
+ * Show applications candidate page
+ */
+router.get('/applications', UserController.ensureIsCandidate, CandidateController.getWishes);
+
+/**
+ * @Route('/applications/new') GET;
+ * Show new application form page
+ */
+router.get('/applications/new', UserController.ensureIsCandidate, CandidateController.addApplication);
+
 /**
  * @Route('/add/Experience') POST;
  * add Candidate Experience.

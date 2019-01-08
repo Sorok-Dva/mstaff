@@ -38,6 +38,7 @@ module.exports = {
     if (req.user.type === 'candidate') {
       Models.User.findOne({
         where: { id: req.user.id },
+        attributes: ['id', 'email', 'role', 'type'],
         include:[{
           model: Models.Candidate, // Candidate Associations (user.candidate)
           as: 'candidate',
@@ -69,7 +70,7 @@ module.exports = {
           }]
         }]
       }).then(user => {
-        return res.render('users/profile', { user, a: { main: 'profile' } })
+        return res.render('candidates/profile', { user, a: { main: 'profile' } })
       }).catch(error => next(new Error(error)));
     }
   },
@@ -77,6 +78,7 @@ module.exports = {
     if (req.user.type === 'candidate') {
       Models.User.findOne({
         where: { id: req.user.id },
+        attributes: ['id', 'email', 'role', 'type'],
         include:[{
           model: Models.Candidate,
           as: 'candidate'
@@ -89,6 +91,7 @@ module.exports = {
   getFormationsAndXP: (req, res, next) => {
     Models.User.findOne({
       where: { id: req.user.id },
+      attributes: ['id', 'email', 'role', 'type'],
       include:[{
         model: Models.Candidate, // Candidate Associations (user.candidate)
         as: 'candidate',
@@ -113,7 +116,7 @@ module.exports = {
     }).then(user => {
       Models.Post.findAll().then(posts => {
         Models.Service.findAll().then(services => {
-          return res.render('users/formations', { user, posts, services, a: { main: 'cv' } })
+          return res.render('candidates/formations', { user, posts, services, a: { main: 'cv' } })
         }).catch(error => next(new Error(error)));
       }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
@@ -122,6 +125,7 @@ module.exports = {
     let render = { a: { main: 'knowledges' } };
     Models.User.findOne({
       where: { id: req.user.id },
+      attributes: ['id', 'email', 'role', 'type'],
       include:[{
         model: Models.Candidate, // Candidate Associations (user.candidate)
         as: 'candidate',
@@ -147,7 +151,32 @@ module.exports = {
       return Models.Software.findAll();
     }).then(softwares => {
       render.softwares = softwares;
-      return res.render('users/skills', render)
+      return res.render('candidates/skills', render)
+    }).catch(error => next(new Error(error)));
+  },
+  addApplication: (req, res, next) => {
+    let render = { a: { main: 'applications' } };
+    Models.Post.findAll().then(posts => {
+      render.posts = posts.dataValues;
+      return res.render('candidates/add-application', render)
+    }).catch(error => next(new Error(error)));
+  },
+  getWishes: (req, res, next) => {
+    let render = { a: { main: 'applications' } };
+    Models.User.findOne({
+      where: { id: req.user.id },
+      attributes: ['id', 'email', 'role', 'type'],
+      include:[{
+        model: Models.Candidate, // Candidate Associations (user.candidate)
+        as: 'candidate',
+        include:[{
+          model: Models.Wish,
+          as: 'wishes'
+        }]
+      }]
+    }).then(user => {
+      render.user = user.dataValues;
+      return res.render('candidates/applications', render)
     }).catch(error => next(new Error(error)));
   },
   getXpById: (req, res, next) => {
