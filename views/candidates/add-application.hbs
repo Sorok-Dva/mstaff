@@ -1,3 +1,21 @@
+<style>
+    .checkbox label::before {
+        content: "";
+        margin-top: 20px;
+        transform: scale(1.5);
+    }
+    .checkbox label::after {
+        top: 19px;
+        font-size: 21px;
+    }
+    h3, .h3 {
+        font-size: 1.825em;
+        line-height: 2.2 !important;
+    }
+    .form-group {
+         margin-bottom: 0 !important;
+    }
+</style>
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="wizard">
@@ -5,32 +23,30 @@
                 <div class="connecting-line"></div>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active">
-                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Contrat">
                             <span class="round-tab">
-                                <i class="fa fa-folder-open"></i>
-                            </span>
-                        </a>
-                    </li>
-
-                    <li role="presentation" class="disabled">
-                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
-                            <span class="round-tab">
-                                <i class="fa fa-pencil"></i>
+                                <i class="fa fa-handshake-o"></i>
                             </span>
                         </a>
                     </li>
                     <li role="presentation" class="disabled">
-                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
+                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Disponibilités">
                             <span class="round-tab">
-                                <i class="fa fa-picture-o"></i>
+                                <i class="fa fa-calendar-check-o"></i>
                             </span>
                         </a>
                     </li>
-
                     <li role="presentation" class="disabled">
-                        <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Complete">
+                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Établissements">
                             <span class="round-tab">
-                                <i class="fa fa-check-circle-o"></i>
+                                <i class="fa fa-hospital-o"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li role="presentation" class="disabled">
+                        <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Validation">
+                            <span class="round-tab">
+                                <i class="fa fa-check"></i>
                             </span>
                         </a>
                     </li>
@@ -38,25 +54,188 @@
             </div>
 
             <form role="form">
-                <div class="tab-content">
+                <div class="tab-content" style="padding:30px">
                     <div class="tab-pane active" role="tabpanel" id="step1">
-                        <h3>Step 1</h3>
-                        <p>This is step 1</p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="text-bold">Sélectionnez votre type de contrat</h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="contractType" class="row">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Type de contrat *:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="contracts" class="row sub-step">
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="cdi-cdd" name="cdi-cdd" type="checkbox">
+                                            <label for="cdi-cdd">
+                                                <h3>CDI / CDD</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="vacation" name="vacation" type="checkbox">
+                                            <label for="vacation">
+                                                <h3>VACATION</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="internship" name="internship" type="checkbox">
+                                            <label for="internship">
+                                                <h3>STAGE</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        <div id="activityType" class="row" style="display: none;">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Type d'activité *:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="activity" class="row sub-step">
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="full_time" name="full_time" type="checkbox">
+                                            <label for="full_time">
+                                               <h3>Temps plein</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="part_time" name="part_time" type="checkbox">
+                                            <label for="part_time">
+                                                <h3>Temps partiel</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        <div id="timeType" class="row" style="display: none;">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Aménagement horaire *:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="time" class="row sub-step">
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="daytime" name="daytime" type="checkbox">
+                                            <label for="daytime">
+                                                <h3>Jour</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="nighttime" name="nighttime" type="checkbox">
+                                            <label for="nighttime">
+                                                <h3>Nuit</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        <div id="liberalType" class="row" style="display: none;">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Cabinets libéraux :</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="time" class="row sub-step">
+                                    <div class="form-group col-sm-12">
+                                        <div class="checkbox">
+                                            <input id="liberal" name="liberal" type="checkbox">
+                                            <label for="liberal">
+                                                <h3>Je suis interessé(e) par les offres des cabinets libéraux autour de moi (+/-30KM)</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        <div id="postType" class="row">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Type de poste *:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group col-sm-12" style="margin-top: 25px">
+                                    <label for="id_label_multiple">
+                                        <select class="js-example-basic-multiple js-states form-control" id="id_label_multiple" multiple="multiple">
+                                            {{#each posts as |post|}}
+                                                <option value="{{post.id}}">{{post.name}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
                         <ul class="list-inline pull-right">
-                            <li><button type="button" class="btn btn-primary next-step">Save and continue</button></li>
+                            <li><button type="button" class="btn btn-primary next-step">Continuer</button></li>
                         </ul>
                     </div>
                     <div class="tab-pane" role="tabpanel" id="step2">
-                        <h3>Step 2</h3>
-                        <p>This is step 2</p>
-                        <ul class="list-inline pull-right">
-                            <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
-                            <li><button type="button" class="btn btn-primary next-step">Save and continue</button></li>
-                        </ul>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="text-bold">Saisissez vos dates de stage</h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6"> <label for="start">Du *</label>
+                               <input id="start" name="start" type="text"
+                                      class="form-control input-md from" required="" autocomplete="off">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="end">Au *</label>
+                                <input id="end" name="end" type="text"
+                                       class="form-control input-md to" autocomplete="off">
+                            </div>
+                            <ul class="list-inline pull-right">
+                                <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
+                                <li><button type="button" class="btn btn-primary next-step">Continuer</button></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="tab-pane" role="tabpanel" id="step3">
-                        <h3>Step 3</h3>
-                        <p>This is step 3</p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="text-bold">Où souhaitez-vous postuler ?</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="searchES" style="padding: 20px;">
+                                    <div>
+                                        <div class="animate-show-hide">
+                                            <div class="row" style="margin-bottom: 40px;">
+                                                <div class="col-md-offset-2 col-md-8 text-center " style="color: #02AED7">
+                                                    <strong style="color: #02AED7">Je souhaite postuler autour de mon domicile</strong>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+
+                                            </div>
+                                            <div class="row">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <ul class="list-inline pull-right">
                             <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
                             <li><button type="button" class="btn btn-default next-step">Skip</button></li>
@@ -73,3 +252,49 @@
         </div>
     </div>
 </div>
+<script>
+    $('#step1 input[type="checkbox"]').change(function() {
+        let checked = $(this).attr('name');
+        let step = $(this).parent().closest('.sub-step').closest('.tab-pane').attr('id');
+        let subStep = $(this).parent().closest('.sub-step').attr('id');
+
+        if (this.checked) {
+            $(`#${subStep}`).find(':input').not(`[name=${checked}]`).prop('checked', false);
+            switch (checked) {
+                case 'cdi-cdd':
+                  $('#activityType').show();
+                  $('#timeType').show();
+                  $('#liberalType').hide();
+                  break;
+                case 'vacation':
+                    $('#liberalType').show();
+                    resetContract(checked);
+                  break;
+                case 'internship':
+                    $('#liberalType').hide();
+                    resetContract(checked);
+                  break;
+            }
+        } else {
+            if (checked === 'cdi-cdd') {
+                $(`#${subStep}`).find(':input').prop('checked', false);
+                $('#activityType').hide();
+                $('#timeType').hide();
+            }
+            if (checked === 'vacation') {
+                $(`#${subStep}`).find(':input').prop('checked', false);
+                $('#liberalType').hide();
+            }
+        }
+    });
+
+    let resetContract = (checked) => {
+        $('#step1').find(':input').not(`[name=${checked}]`).prop('checked', false);
+        $('#activityType').hide();
+        $('#timeType').hide();
+    };
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2();
+    });
+
+</script>
