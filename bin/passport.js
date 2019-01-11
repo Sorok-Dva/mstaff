@@ -37,7 +37,7 @@ passport.deserializeUser((id, done) => {
     let session = {
       id: user.dataValues.id,
       email: user.dataValues.email,
-      fullName: user.fullName,
+      fullName: `${user.dataValues.firstName} ${user.dataValues.lastName}`,
       type: user.dataValues.type,
       role: user.dataValues.role
     };
