@@ -49,5 +49,29 @@ module.exports = {
         user
       })
     });
+  },
+  impersonateUser:(req, res) => {
+    User.findOne({
+      where: { id: req.params.id },
+      attributes: { exclude: ['password'] }
+    }).then(user => {
+      let originalUser = req.user.id;
+      let originalRole = req.user.role;
+      req.logIn(user, (err) => console.log(err));
+      req.session.originalUser = originalUser;
+      req.session.role = originalRole;
+      res.redirect('/');
+    });
+  },
+  removeUserImpersonation:(req, res) => {
+    User.findOne({
+      where: { id: req.session.originalUser },
+      attributes: { exclude: ['password'] }
+    }).then(user => {
+      delete req.session.originalUser;
+      delete req.session.role;
+      req.logIn(user, (err) => console.log(err));
+      res.redirect('/');
+    });
   }
 };

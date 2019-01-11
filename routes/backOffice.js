@@ -34,4 +34,16 @@ router.get('/users/candidates', UserController.ensureIsAdmin, BackOfficeControll
  */
 router.get('/user/:id', UserController.ensureIsAdmin, BackOfficeController.getUser);
 
+/**
+ * @Route('/back-office/impersonate/user/:id/') GET;
+ * Impersonate User Session
+ */
+router.get('/impersonate/user/:id', UserController.ensureIsAdmin, BackOfficeController.impersonateUser);
+
+/**
+ * @Route('/back-office/impersonate/user/:id/') GET;
+ * Impersonate User Session
+ */
+router.get('/removeImpersonation', UserController.ensureIsAdmin, BackOfficeController.removeUserImpersonation);
+
 module.exports = router;

@@ -66,4 +66,9 @@
             }
         });
         {{/if}}
+
+        {{#if session.originalUser}}
+        $('body :input').prop('disabled', true);
+        $('body :button').prop('disabled', true);
+        {{/if}}
 </script>

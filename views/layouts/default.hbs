@@ -51,8 +51,12 @@
         <div class="wrapper">
             {{> sidebar}}
             <div class="main-panel">
+                {{#if session.originalUser}}
+                    <div class="col-md-12 alert alert-warning" style="margin-bottom: -1%">
+                        Vous être en train d'utiliser Mstaff en tant que <b>{{user.email}}</b> - <a href="/back-office/removeImpersonation"> Retour </a>
+                    </div>
+                {{/if}}
                 {{> header}}
-
                 <div class="content">
                     <div class="container-fluid">
                         {{> flash}}

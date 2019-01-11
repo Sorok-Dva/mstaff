@@ -59,7 +59,7 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .view': (e, value, row, index) => {
-                // $(location).attr('href', `/user/${row.id}`);
+                $(location).attr('href', `/back-office/impersonate/user/${row.id}`);
             },
             'click .edit': (e, value, row, index) => {
                 $(location).attr('href', `/back-office/user/${row.id}`);
