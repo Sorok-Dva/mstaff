@@ -41,12 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       values: ['admin', 'candidate', 'es', 'demo'],
       allowNull: false
     }
-  }, {
-    getterMethods: {
-      fullName: () => {
-        return `${this.firstName} ${this.lastName}`;
-      }
-    }
   });
   User.associate = function (models) {
     User.hasOne(models.Candidate, {
