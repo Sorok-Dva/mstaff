@@ -38,7 +38,7 @@ module.exports = {
     if (req.user.type === 'candidate') {
       Models.User.findOne({
         where: { id: req.user.id },
-        attributes: ['id', 'email', 'role', 'type'],
+        attributes: { exclude: ['password'] },
         include:[{
           model: Models.Candidate, // Candidate Associations (user.candidate)
           as: 'candidate',
