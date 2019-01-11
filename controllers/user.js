@@ -47,7 +47,7 @@ module.exports = {
    */
   ensureIsAdmin: (req, res, next) => {
     if (req.isAuthenticated()) {
-      if (['Admin'].includes(req.user.role)) {
+      if (['Admin'].includes(req.user.role) || ['Admin'].includes(req.session.role)) {
         next();
       } else {
         res.redirect('/');
