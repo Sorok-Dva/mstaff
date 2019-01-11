@@ -157,7 +157,7 @@ module.exports = {
   addApplication: (req, res, next) => {
     let render = { a: { main: 'applications' } };
     Models.Post.findAll().then(posts => {
-      render.posts = posts.dataValues;
+      render.posts = posts;
       return res.render('candidates/add-application', render)
     }).catch(error => next(new Error(error)));
   },
