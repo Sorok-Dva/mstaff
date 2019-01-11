@@ -3,8 +3,11 @@ const Models = require('../models/index');
 module.exports = {
   getIndex:     (req, res, next) => {
     if (!req.subdomain) {
-      if (req.user && (req.user.type === 'candidate' || 'admin')) {
+      if (req.user && (req.user.type === 'candidate')) {
         return res.redirect('/profile')
+      }
+      if (req.user && (req.user.type === 'admin')) {
+        return res.redirect('/back-office')
       }
       return res.render('index', { layout: 'landing' })
     } else {
