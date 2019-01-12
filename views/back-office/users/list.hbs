@@ -10,6 +10,7 @@
                         <th data-field="state" data-checkbox="true"></th>
                         <th data-field="id" class="text-center">ID</th>
                         <th data-field="identity" data-sortable="true">Identité</th>
+                        <th data-field="email" data-sortable="true">Email</th>
                         <th data-field="age" data-sortable="true">Âge</th>
                         <th data-field="localisation" data-sortable="true">Localisation</th>
                         <th data-field="phone" data-sortable="true">Téléphone</th>
@@ -23,10 +24,11 @@
                             <td></td>
                             <td>{{user.id}}</td>
                             <td>{{user.firstName}} {{user.lastName}}</td>
+                            <td>{{user.email}}</td>
                             <td>{{age user.birthday 'years'}} ans</td>
                             <td>{{user.town}} ({{user.postal_code}})</td>
                             <td>{{user.phone}}</td>
-                            <td>{{user.type}}</td>
+                            <td>{{rolify user.type}}</td>
                             <td></td>
                         </tr>
                     {{/each}}
