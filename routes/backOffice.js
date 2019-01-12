@@ -41,9 +41,22 @@ router.get('/user/:id', UserController.ensureIsAdmin, BackOfficeController.getUs
 router.get('/impersonate/user/:id', UserController.ensureIsAdmin, BackOfficeController.impersonateUser);
 
 /**
- * @Route('/back-office/impersonate/user/:id/') GET;
- * Impersonate User Session
+ * @Route('/back-office/removeImpersonation/') GET;
+ * Remove Impersonation
  */
 router.get('/removeImpersonation', UserController.ensureIsAdmin, BackOfficeController.removeUserImpersonation);
+
+/**
+ * @Route('/back-office/impersonateRemoveReadOnly/') GET;
+ * Generate PinCode for Remove Read Only
+ */
+router.post('/impersonateRemoveReadOnly', UserController.ensureIsAdmin, BackOfficeController.impersonateRemoveReadOnly);
+router.get('/impersonatePutReadOnly', UserController.ensureIsAdmin, BackOfficeController.impersonatePutReadOnly);
+
+/**
+ * @Route('/back-office/impersonateRemoveReadOnly/validate/') GET;
+ * Validation of removing read only
+ */
+router.post('/impersonateRemoveReadOnly/validate', UserController.ensureIsAdmin, BackOfficeController.impersonateRemoveReadOnlyValidation);
 
 module.exports = router;
