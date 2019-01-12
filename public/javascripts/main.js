@@ -44,10 +44,10 @@ let notification = (opts) => {
   });
 };
 
-let errorsHandler = errors => {
-  errors = errors === undefined ? null : errors.responseJSON;
-  if (errors && errors.errors) {
-    errors.errors.forEach((e, i) => {
+let errorsHandler = data => {
+  let errors = data === undefined ? null : data;
+  if (errors && errors.responseJSON && errors.responseJSON.errors) {
+    errors.responseJSON.errors.forEach((e, i) => {
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -58,7 +58,7 @@ let errorsHandler = errors => {
   } else {
     let message = (errors && errors.sequelizeError) ?
       `<b>${errors.sequelizeError.name}</b>: ${errors.sequelizeError.original.sqlMessage}`
-      : `Erreur inconnue.`;
+      : errors;
     notification({
       icon: 'exclamation',
       type: 'danger',
