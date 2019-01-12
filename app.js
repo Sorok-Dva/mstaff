@@ -55,6 +55,7 @@ app.use(middleware.passportSession);
 app.use(middleware.flash);
 app.use(middleware.setLocals);
 app.use(middleware.wildcardSubdomains);
+app.use(middleware.readOnlySessionForImpersonation);
 
 // ------ ROUTES
 app.use('/', indexRouter);

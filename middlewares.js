@@ -73,6 +73,23 @@ module.exports = {
     failureRedirect: '/login?error=login',
     failureFlash: true
   }),
+  /**
+   * readOnlySessionForImpersonation middleware : security method that ensure that the current impersonate session
+   *                                              can't access to CUD routes if the session is in read only mode.
+   * @param req
+   * @param res
+   * @param next
+   * @returns {*}
+   */
+  readOnlySessionForImpersonation: (req, res, next) => {
+    if (req.session && req.session.originalUser) {
+      let isBORoute = ((req.url.split('back-office').length - 1) !== 0);
+      if (req.session.readOnly && !isBORoute && req.method !== 'GET') {
+        return res.status(403).json('Operation not allowed, session is in read only mode.')
+      }
+      next();
+    } else next();
+  },
   sass: sassMiddleware({
     src: path.join(__dirname, 'public'),
     dest: path.join(__dirname, 'public/assets/css'),
@@ -81,6 +98,7 @@ module.exports = {
   }),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
+    res.locals.readOnly = (req.session.readOnly) ? 'lock' : 'unlock';
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
@@ -96,7 +114,6 @@ module.exports = {
     resave: true
   }),
   wildcardSubdomains: (req, res, next) => {
-    console.log(req.subdomains);
     if (!req.subdomains.length || req.subdomains.slice(-1)[0] === 'www') return next();
     req.subdomain = req.subdomains.slice(-1)[0];
     next();
