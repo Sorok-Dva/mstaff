@@ -1,6 +1,5 @@
 const { check, validationResult } = require('express-validator/check');
-const User = require('../models/index').User;
-const Candidate = require('../models/index').Candidate;
+const Models = require('../models/index');
 const layout = 'admin';
 
 module.exports = {
@@ -17,7 +16,7 @@ module.exports = {
   index:  (req, res) => res.render('back-office/index', { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } }),
   stats:  (req, res) => res.render('back-office/stats', { layout, title: 'Statistiques', a: { main: 'dashboard', sub: 'stats' } }),
   getUsers:(req, res) => {
-    User.findAll({
+    Models.User.findAll({
       attributes: {
         exclude: ['password']
       }
@@ -29,13 +28,33 @@ module.exports = {
         users })
     });
   },
+  getCandidates:(req, res) => {
+    Models.User.findAll({
+      where: {
+        type: 'candidate'
+      },
+      include:[{
+        model: Models.Candidate,
+        as: 'candidate'
+      }],
+      attributes: {
+        exclude: ['password']
+      }
+    }).then(users => {
+      res.render('back-office/candidates/list', {
+        layout,
+        title: 'Liste des candidats',
+        a: { main: 'users', sub: 'candidates' },
+        users })
+    });
+  },
   getUser:(req, res) => {
-    User.findOne({
+    Models.User.findOne({
       where: {
         id: req.params.id
       },
       include:[{
-        model: Candidate,
+        model: Models.Candidate,
         as: 'candidate'
       }],
       attributes: {
@@ -51,7 +70,7 @@ module.exports = {
     });
   },
   impersonateUser:(req, res) => {
-    User.findOne({
+    Models.User.findOne({
       where: { id: req.params.id },
       attributes: { exclude: ['password'] }
     }).then(user => {
@@ -64,7 +83,7 @@ module.exports = {
     });
   },
   removeUserImpersonation:(req, res) => {
-    User.findOne({
+    Models.User.findOne({
       where: { id: req.session.originalUser },
       attributes: { exclude: ['password'] }
     }).then(user => {

@@ -26,7 +26,7 @@ router.get('/users', UserController.ensureIsAdmin, BackOfficeController.getUsers
  * @Route('/back-office/users/candidates') GET;
  * Show Users (candidates type) List page
  */
-router.get('/users/candidates', UserController.ensureIsAdmin, BackOfficeController.getUsers);
+router.get('/users/candidates', UserController.ensureIsAdmin, BackOfficeController.getCandidates);
 
 /**
  * @Route('/back-office/user/:id/') GET;
