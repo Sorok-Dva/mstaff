@@ -268,3 +268,35 @@
         </div>
     </div>
 </div>
+<div class="modal fade in" id="removeReadOnlyModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Confirmation </h4>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer la lecture seule ? Cette action ne doit être destinée qu'à des fins de débug.</p>
+                <p>Veuillez entrer votre mot de passe pour confirmer cette action</p>
+                <form role="form" class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="editDName">Mot de passe *</label>
+                                <div class="col-md-9">
+                                    <input id="removeROPassword" type="password" class="form-control input-md">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                <button type="button" id="btnRemoveRO" onclick="removeRO()" class="btn btn-danger">
+                    Valider
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

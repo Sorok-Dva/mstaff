@@ -3,6 +3,7 @@
 <script src="/static/assets/js/dashboard.js"></script>
 <script src="/static/javascripts/main.js"></script>
 <script src="/static/assets/js/timepicker.js"></script>
+<script src="/static/assets/js/jquery.ultima.block.min.js"></script>
 <script>
     // $(document).ready(() => {
         // $("[data-toggle=popover]").popover();
@@ -68,7 +69,55 @@
         {{/if}}
 
         {{#if session.originalUser}}
-        $('body :input').prop('disabled', true);
-        $('body :button').prop('disabled', true);
+            let roState = '{{ readOnly }}';
+            if ('lock' === roState) {
+                $('#bodyContent').block('Compte en lecture seule.');
+            }
+            /*$('body :input').prop('disabled', true);
+            $('body :button').prop('disabled', true);*/
+        $('#removeReadOnly').click(() => {
+          if ('lock' === roState) $("#removeReadOnlyModal").modal();
+          else {
+              $.get('/back-office/impersonatePutReadOnly', (data) => {
+                  if (data.status === 'ok') {
+                      roState = 'lock';
+                      $('#removeReadOnly').attr('class', 'fa fa-lock');
+                      $('#bodyContent').block('Compte en lecture seule.');
+                      notification({
+                          icon: 'check-circle',
+                          type: 'success',
+                          title: 'Activation de la lecture seule validée :',
+                          message: `Vous ne pouvez plus intéragir sur ce compte.`
+                      });
+                  } else {
+                  }
+              });
+          }
+        });
+        let removeRO = () => {
+            let password = $('#removeROPassword').val();
+            let _csrf = $('#csrfToken').val();
+            $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
+              if (data.status === 'send') {
+                  $("#removeReadOnlyModal").modal('hide');
+                  let pinCode = prompt('Code PIN envoyé sur discord. Veuillez le saisir ici :');
+                  $.post('/back-office/impersonateRemoveReadOnly/validate', { pinCode, _csrf }, (response) => {
+                    if (response.authorized) {
+                      roState = 'unlock';
+                      $('#removeReadOnly').attr('class', 'fa fa-unlock');
+                      $('#bodyContent').unblock();
+                        notification({
+                            icon: 'check-circle',
+                            type: 'success',
+                            title: 'Désactivation de la lecture seule validée :',
+                            message: `Vous pouvez maintenant intéragir sur ce compte.`
+                        });
+                    }
+                  });
+              } else {
+
+              }
+            });
+        };
         {{/if}}
 </script>
