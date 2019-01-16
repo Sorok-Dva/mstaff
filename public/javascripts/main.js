@@ -68,8 +68,14 @@ let errorsHandler = data => {
   }
 };
 
-let nextTab = elem => $(elem).next().find('a[data-toggle="tab"]').click();
-let prevTab = elem => $(elem).prev().find('a[data-toggle="tab"]').click();
+let loadTemplate = (url, data, callback) => {
+  $.ajax({url, cache: true, success: function(source) {
+      let template = Handlebars.compile(source);
+      return callback(template(data));
+    }});
+};
+let nextTab = elem => $(elem).next().find('a.tabWizard[data-toggle="tab"]').click();
+let prevTab = elem => $(elem).prev().find('a.tabWizard[data-toggle="tab"]').click();
 
 $(document).ready(function() {
   $('body').prepend('<div id="dialog"></div>');
@@ -112,14 +118,7 @@ $(document).ready(function() {
     }
   });
 
-  $(".next-step").click(function (e) {
-    let $active = $('.wizard .nav-tabs li.active');
-    $active.next().removeClass('disabled');
-    nextTab($active);
-  });
-
-  $(".prev-step").click(function (e) {
-    let $active = $('.wizard .nav-tabs li.active');
-    prevTab($active);
+  $(".stop-step").click(function (e) {
+    history.back()
   });
 });
