@@ -16,7 +16,6 @@ const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
-const sassMiddleware = require('node-sass-middleware');
 const wildcardSubdomains = require('wildcard-subdomains');
 
 let sessionStore = new MySQLStore({
@@ -90,12 +89,6 @@ module.exports = {
       next();
     } else next();
   },
-  sass: sassMiddleware({
-    src: path.join(__dirname, 'public'),
-    dest: path.join(__dirname, 'public/assets/css'),
-    indentedSyntax: false, // true = .sass and false = .scss
-    sourceMap: true
-  }),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = (req.session.readOnly) ? 'lock' : 'unlock';

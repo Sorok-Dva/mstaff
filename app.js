@@ -45,7 +45,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(middleware.cookieParser);
 app.use(middleware.csurf);
 app.use(middleware.session);
-app.use(middleware.sass);
 app.use(middleware.i18n);
 app.use(middleware.compress);
 app.use('/static', express.static(path.join(__dirname, 'public')));
