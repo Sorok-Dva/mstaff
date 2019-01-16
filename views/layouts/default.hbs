@@ -23,7 +23,7 @@
         <link href="/static/assets/css/dashboard.css" rel="stylesheet"/>
         <link href="/static/assets/css/animate.min.css" rel="stylesheet"/>
         <link href="/static/assets/css/star-rating.min.css" rel="stylesheet"/>
-        <link rel="stylesheet" href="/static/assets/main.css">
+        <link rel="stylesheet" href="/static/stylesheets/main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" />
 
         <!--  Fonts and icons -->
@@ -43,6 +43,7 @@
         <script src="/static/assets/js/moment.js"></script>
         <script src="/static/assets/js/bootstrap-datetimepicker.js"></script>
         <script src="/static/assets/js/bootstrap-selectpicker.js"></script>
+        <script src="/static/assets/js/nouislider.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     </head>
@@ -53,11 +54,13 @@
             <div class="main-panel">
                 {{#if session.originalUser}}
                     <div class="col-md-12 alert alert-warning" style="position:fixed;z-index: 5;">
-                        Vous être en train d'utiliser Mstaff en tant que <b>{{user.email}}</b> - <a href="/back-office/removeImpersonation"> Retour </a>
+                        Vous être en train d'utiliser Mstaff en tant que <b>{{user.email}}</b>
+                        <i id="removeReadOnly" class="fa fa-{{readOnly}}"></i>
+                        - <a href="/back-office/removeImpersonation"> Retour </a>
                     </div>
                 {{/if}}
                 {{> header}}
-                <div class="content">
+                <div id="bodyContent" class="content">
                     <div class="container-fluid">
                         {{> flash}}
                         {{{body}}}
