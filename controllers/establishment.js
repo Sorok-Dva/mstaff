@@ -1,6 +1,6 @@
 const { check, validationResult } = require('express-validator/check');
+let sequelize = require('../bin/sequelize');
 const Models = require('../models/index');
-const bcrypt = require('bcryptjs');
 
 module.exports = {
   /**
@@ -19,7 +19,7 @@ module.exports = {
     }
     }
   },
-  getIndex:     (req, res, next) => {
+  getIndex: (req, res, next) => {
     res.render('index', { layout: 'onepage' });
   },
   /**
@@ -43,5 +43,26 @@ module.exports = {
       type: 'es' // @TODO edit User migration to add type column in user table
     }).then(user => res.render('users/login', { user }))
       .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
+  },
+  findByGeo: (req, res, next) => {
+    let rayon = req.body.rayon, lat = req.body.lat, lon = req.body.lon, filterQuery = req.body.filter;
+    let formule = `(6366*acos(cos(radians(${lat}))*cos(radians(lat))*cos(radians(lon) -radians(${lon}))+sin(radians(${lat}))*sin(radians(lat))))`;
+    let sql = `SELECT * FROM EstablishmentReferences WHERE ${formule} <= ${rayon}`;
+    sequelize.query(sql, { type: sequelize.QueryTypes.SELECT }).then((data) => {
+      let ids = [];
+      for (let k in data) {
+        ids.push(data[k].finess_et);
+      }
+      let filter = {
+        where: {
+          finess_et: ids
+        },
+        limit: 5000
+      };
+      if (filterQuery) filter.where.cat = filterQuery;
+      Models.EstablishmentReference.findAll(filter).then((es) => {
+        return res.status(200).json(es);
+      });
+    });
   }
 };
