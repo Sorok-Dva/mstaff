@@ -19,18 +19,18 @@
                                 </tr>
                             </thead>
                             <tbody id="applicationTbody">
-                                {{#if user.candidate.applications}}
-                                {{#each user.candidate.applications as |application|}}
-                                    <tr data-applicationId="{{application.id}}">
-                                        <td>{{application.name}}</td>
+                                {{#if user.candidate.wishes}}
+                                {{#each user.candidate.wishes as |wish|}}
+                                    <tr data-applicationId="{{wish.id}}">
+                                        <td>{{wish.name}}</td>
                                         <td></td>
-                                        <td></td>
+                                        <td>{{wish.es_count}}</td>
                                         <td></td>
                                         <td>
-                                            <button class="btn btn-simple btn-warning btn-icon editApplication" data-id="{{application.id}}">
+                                            <button class="btn btn-simple btn-warning btn-icon editApplication" data-id="{{wish.id}}">
                                                 <i class="ti-pencil-alt"></i>
                                             </button>
-                                            <button class="btn btn-simple btn-danger btn-icon removeApplication" data-id="{{application.id}}">
+                                            <button class="btn btn-simple btn-danger btn-icon removeApplication" data-id="{{wish.id}}">
                                                 <i class="ti-close"></i>
                                             </button>
                                         </td>

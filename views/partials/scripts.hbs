@@ -15,56 +15,20 @@
 
     // });
 
-    {{#if error_msg}}
-        $.notify({
-            // options
-            icon: 'fa fa-exclamation',
-            title: '{{tr.partials.scripts.notify_error_title}} :',
-            message: '{{error_msg}}',
-        },{
-            type: 'danger',
-            allow_dismiss: true,
-            newest_on_top: false,
-            showProgressbar: false,
-            placement: {
-                from: 'bottom',
-                align: 'left'
-            },
-            offset: 20,
-            spacing: 10,
-            z_index: 1031,
-            delay: 5000,
-            timer: 15000,
-            animate: {
-                enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
-            }
-        });
+        {{#if error_msg}}
+            notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: '{{tr.partials.scripts.notify_error_title}} :',
+                message: `{{error_msg}}`
+            });
         {{/if}}
         {{#if success_msg}}
-        $.notify({
-            // options
-            icon: 'fa fa-check-circle',
-            title: '{{tr.partials.scripts.notify_success_title}} :',
-            message: '{{success_msg}}',
-        },{
+        notification({
+            icon: 'check-circle',
             type: 'success',
-            allow_dismiss: true,
-            newest_on_top: false,
-            showProgressbar: false,
-            placement: {
-                from: 'bottom',
-                align: 'left'
-            },
-            offset: 20,
-            spacing: 10,
-            z_index: 1031,
-            delay: 5000,
-            timer: 15000,
-            animate: {
-                enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
-            }
+            title: '{{tr.partials.scripts.notify_success_title}} :',
+            message: `{{success_msg}}`
         });
         {{/if}}
 
@@ -73,51 +37,49 @@
             if ('lock' === roState) {
                 $('#bodyContent').block('Compte en lecture seule.');
             }
-            /*$('body :input').prop('disabled', true);
-            $('body :button').prop('disabled', true);*/
-        $('#removeReadOnly').click(() => {
-          if ('lock' === roState) $("#removeReadOnlyModal").modal();
-          else {
-              $.get('/back-office/impersonatePutReadOnly', (data) => {
-                  if (data.status === 'ok') {
-                      roState = 'lock';
-                      $('#removeReadOnly').attr('class', 'fa fa-lock');
-                      $('#bodyContent').block('Compte en lecture seule.');
-                      notification({
-                          icon: 'check-circle',
-                          type: 'success',
-                          title: 'Activation de la lecture seule validée :',
-                          message: `Vous ne pouvez plus intéragir sur ce compte.`
-                      });
-                  } else {
-                  }
-              });
-          }
-        });
-        let removeRO = () => {
-            let password = $('#removeROPassword').val();
-            let _csrf = $('#csrfToken').val();
-            $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
-              if (data.status === 'send') {
-                  $("#removeReadOnlyModal").modal('hide');
-                  let pinCode = prompt('Code PIN envoyé sur discord. Veuillez le saisir ici :');
-                  $.post('/back-office/impersonateRemoveReadOnly/validate', { pinCode, _csrf }, (response) => {
-                    if (response.authorized) {
-                      roState = 'unlock';
-                      $('#removeReadOnly').attr('class', 'fa fa-unlock');
-                      $('#bodyContent').unblock();
-                        notification({
-                            icon: 'check-circle',
-                            type: 'success',
-                            title: 'Désactivation de la lecture seule validée :',
-                            message: `Vous pouvez maintenant intéragir sur ce compte.`
-                        });
-                    }
+            $('#removeReadOnly').click(() => {
+              if ('lock' === roState) $("#removeReadOnlyModal").modal();
+              else {
+                  $.get('/back-office/impersonatePutReadOnly', (data) => {
+                      if (data.status === 'ok') {
+                          roState = 'lock';
+                          $('#removeReadOnly').attr('class', 'fa fa-lock');
+                          $('#bodyContent').block('Compte en lecture seule.');
+                          notification({
+                              icon: 'check-circle',
+                              type: 'success',
+                              title: 'Activation de la lecture seule validée :',
+                              message: `Vous ne pouvez plus intéragir sur ce compte.`
+                          });
+                      } else {
+                      }
                   });
-              } else {
-
               }
             });
-        };
+            let removeRO = () => {
+                let password = $('#removeROPassword').val();
+                let _csrf = $('#csrfToken').val();
+                $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
+                  if (data.status === 'send') {
+                      $("#removeReadOnlyModal").modal('hide');
+                      let pinCode = prompt('Code PIN envoyé sur discord. Veuillez le saisir ici :');
+                      $.post('/back-office/impersonateRemoveReadOnly/validate', { pinCode, _csrf }, (response) => {
+                        if (response.authorized) {
+                          roState = 'unlock';
+                          $('#removeReadOnly').attr('class', 'fa fa-unlock');
+                          $('#bodyContent').unblock();
+                            notification({
+                                icon: 'check-circle',
+                                type: 'success',
+                                title: 'Désactivation de la lecture seule validée :',
+                                message: `Vous pouvez maintenant intéragir sur ce compte.`
+                            });
+                        }
+                      });
+                  } else {
+
+                  }
+                });
+            };
         {{/if}}
 </script>
