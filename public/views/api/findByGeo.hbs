@@ -1,13 +1,13 @@
 {{#each this}}
-    <div id="es{{this.id}}" data-type="es" data-es_type="{{this.category_name}}" onmouseover="addMarker({lat: {{this.lat}}, lon: {{this.lon}} })" onmouseleave="removeAllMarker()" class="col-md-6">
+    <div id="es{{this.id}}" data-type="es" data-es_type="{{this.category_name}}" onmouseover="addMarker({lat: {{this.lat}}, lon: {{this.lon}} })" onmouseleave="removeAllMarker()" class="col-md-6 es-card">
         <div class="small-box bg-gray-light text-center small-box-es-add">
             <h5 style="margin-top: 0px;margin-bottom: 5px;cursor: pointer;">
                 <i class="fa fa-info-circle text-blue" onmouseover="$('#esInfo{{this.id}}').show();" onmouseleave="$('#esInfo{{this.id}}').hide();"></i>
                 <span style="cursor:pointer"> {{this.name}}</span>
             </h5>
             <h6 style="margin-top: 0px;margin-bottom: 5px;cursor: pointer;">{{this.address_town}}</h6>
-            <i class="selectEs fa fa-square fa-2x" data-id="{{this.id}}" onclick="addEs({id: {{this.id}}, finess: {{this.finess_et}} })" style="cursor: pointer;border-radius: 0px 0px 2px 0px;position:absolute;bottom: 0;right: 0%;padding: 4px 5px;"></i>
-            <i class="unselectEs fa fa-check-square fa-2x" data-id="{{this.id}}" onclick="removeEs({id: {{this.id}}, finess: {{this.finess_et}} })" style="display:none;cursor: pointer;border-radius: 0px 0px 2px 0px;position:absolute;bottom: 0;right: 0%;padding: 4px 5px;"></i>
+            <i class="selectEs fa fa-square fa-2x" data-id="{{this.id}}" onclick="addEs({id: {{this.id}}, finess_et: {{this.finess_et}} })" style="cursor: pointer;border-radius: 0px 0px 2px 0px;position:absolute;bottom: 0;right: 0%;padding: 4px 5px;"></i>
+            <i class="unselectEs fa fa-check-square fa-2x" data-id="{{this.id}}" onclick="removeEs({id: {{this.id}}, finess_et: {{this.finess_et}} })" style="display:none;cursor: pointer;border-radius: 0px 0px 2px 0px;position:absolute;bottom: 0;right: 0%;padding: 4px 5px;"></i>
         </div>
     </div>
     <div id="esInfo{{this.id}}" style="z-index: 99999;background-color: #036093;color:white;position: fixed;font-size: 9px;display:none">
