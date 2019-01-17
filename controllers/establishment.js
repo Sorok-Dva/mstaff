@@ -64,5 +64,16 @@ module.exports = {
         return res.status(200).json(es);
       });
     });
+  },
+  addApplication: (body, wish) => {
+    for (let i = 0; i < body.es.length; i++) {
+      Models.Application.create({
+        name: body.name || 'Candidature sans nom',
+        wish_id: wish.id,
+        candidate_id: body.user.id,
+        finess: body.es[i],
+        new: true
+      });
+    }
   }
 };
