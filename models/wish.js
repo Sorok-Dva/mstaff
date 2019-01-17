@@ -4,6 +4,15 @@ module.exports = (sequelize, DataTypes) => {
     candidate_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
     contract_type: DataTypes.STRING,
+    posts: {
+      type: DataTypes.JSON,
+      get () {
+        return JSON.parse(this.getDataValue('posts'))
+      },
+      set (data) {
+        this.setDataValue('posts', JSON.stringify(data));
+      }
+    },
     full_time: DataTypes.BOOLEAN,
     part_time: DataTypes.BOOLEAN,
     day_time: DataTypes.BOOLEAN,

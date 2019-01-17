@@ -14,7 +14,13 @@ module.exports = {
       },
       wish_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'Wishes',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       candidate_id: {
         type: Sequelize.INTEGER,
@@ -32,6 +38,16 @@ module.exports = {
         references: {
           model: 'Establishments',
           key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      finess: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'EstablishmentReferences',
+          key: 'finess_et'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'

@@ -24,7 +24,11 @@ module.exports = {
       },
       contract_type: {
         type: Sequelize.STRING,
-        allowNull: true
+        allowNull: false
+      },
+      posts: {
+        type: Sequelize.JSON,
+        allowNull: false
       },
       full_time: {
         type: Sequelize.BOOLEAN,
@@ -56,7 +60,7 @@ module.exports = {
       },
       end: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true
       },
       status: {
         type: Sequelize.STRING
