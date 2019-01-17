@@ -23,4 +23,6 @@ router.post('/skills/add', UserController.ensureIsCandidate, CandidateController
 router.post('/equipments/add', UserController.ensureIsCandidate, CandidateController.addEquipment);
 router.post('/softwares/add', UserController.ensureIsCandidate, CandidateController.addSoftware);
 
+router.post('/wish/add', UserController.ensureIsCandidate, CandidateController.addWish);
+
 module.exports = router;

@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const middleware = require('../middlewares');
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/uploads/candidates/videos/')
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${req.user.id}${Date.now()}.${file.mimetype.split('/')[1]}`)
+  }
+});
+const videoUpload = multer({ storage: storage }).single('file');
 
 const UserController = require('../controllers/user');
 const CandidateController = require('../controllers/candidate');
@@ -24,7 +33,7 @@ router.get('/profile/edit',
  * @Route('/profile/add/video') POST;
  * Candidate upload video to his profile.
  */
-router.post('/profile/add/video', UserController.ensureIsCandidate, CandidateController.addVideo);
+router.post('/profile/add/video', UserController.ensureIsCandidate, videoUpload, CandidateController.addVideo);
 /**
  * @Route('/formations') GET;
  * Show Formations and Experiences candidate page
