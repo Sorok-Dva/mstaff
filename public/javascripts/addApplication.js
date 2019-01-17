@@ -160,7 +160,7 @@ let highlightLabel = ($this) => {
 };
 
 let addEs = (data) => {
-  let finess = parseInt(data.finess || data.finess_et);
+  let finess = parseInt(data.finess_et);
   if (application.selectedES.indexOf(finess) === -1) {
     $(`i.selectEs[data-id="${data.id}"]`).hide();
     $(`i.unselectEs[data-id="${data.id}"]`).show();
@@ -171,7 +171,7 @@ let addEs = (data) => {
 };
 
 let removeEs = (data) => {
-  let finess = parseInt(data.finess || data.finess_et);
+  let finess = parseInt(data.finess_et);
   let index = application.selectedES.indexOf(finess);
   if (index !== -1) {
     $(`i.unselectEs[data-id="${data.id}"]`).hide();
@@ -179,7 +179,6 @@ let removeEs = (data) => {
     application.selectedES.splice(index, 1);
     $('#selectedEsCount').html(application.selectedES.length);
     $(`#es_selected > #es${data.id}`).remove();
-
   }
 };
 
@@ -290,20 +289,69 @@ let verifyStep = (step, element) => {
       });
       element.next().removeClass('disabled');
       nextTab(element);
+      application.valid = true;
       break;
   }
 };
 
 let selectAll = () => {
   selectedAll = !selectedAll;
-  $('.selectEs').each((i, e) => {
-    let es = allEs.find(es => es.id === parseInt($(e).attr('data-id')));
-    if (selectedAll === true) {
-      addEs(es);
-    } else {
-      removeEs(es);
-    }
-  });
+  if (selectedAll === true) {
+    $(`#esList i.selectEs`).hide();
+    $(`#esList i.unselectEs`).show();
+    $('#es_selected').append($(`#esList .es-card`).clone().attr('class', 'col-md-3'));
+    allEs.map((es, i) => {
+      application.selectedES.push(parseInt(es.finess_et))
+    });
+  } else {
+    $(`#esList i.unselectEs`).hide();
+    $(`#esList i.selectEs`).show();
+    $(`#es_selected > .es-card`).remove();
+    allEs.map((es, i) => {
+      let index = application.selectedES.indexOf(parseInt(es.finess_et));
+      if (index !== -1) application.selectedES.splice(index, 1);
+    });
+  }
+  $('#selectedEsCount').html(application.selectedES.length);
+};
+
+let addWish = () => {
+  if (application.valid) {
+    let opts = {
+      name: application.name,
+      contractType: application.contractType.name,
+      fullTime: (('activityType' in application) && application.activityType.name === 'full_time'),
+      partTime: (('activityType' in application) && application.activityType.name === 'part_time'),
+      dayTime: (('timeType' in application) && application.timeType.name === 'daytime'),
+      nightTime: (('timeType' in application) && application.timeType.name === 'nighttime'),
+      liberal: !!application.liberal,
+      availability: application.availability,
+      start: application.start,
+      end: application.end,
+      lat: pos.lat,
+      lon: pos.lng,
+      es: application.selectedES.toString(),
+      es_count: application.selectedES.length,
+      posts: application.postType,
+      _csrf
+    };
+    $.post('/api/candidate/wish/add', opts, (data) => {
+      if (data.wish) {
+        $(location).attr('href', `/applications`);
+      } else {
+        notification(
+          {
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Une erreur est survenue :',
+            message: `Impossible d'ajouter votre souhait, veuillez réessayer ou contacter notre assistance si le problème persiste.`
+          }
+        );
+      }
+    });
+  } else {
+
+  }
 };
 
 noUiSlider.create(slider, {
@@ -340,7 +388,11 @@ $(document).ready(function() {
   $('#geolocationFilter').select2({ dropdownAutoWidth: true });
 
   $('#selectPostType').on('change', e => {
-    application.postType = $('#selectPostType').select2('data');
+    let postType = $('#selectPostType').select2('data');
+    application.postType = [];
+    postType.forEach((post) => {
+      application.postType.push(post.text);
+    })
   });
   $('#geolocationFilter').on('select2:select', e => {
     let data = $('#geolocationFilter').select2('data');
