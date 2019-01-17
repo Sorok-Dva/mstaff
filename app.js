@@ -40,15 +40,14 @@ app.set('view engine', 'hbs');
 // ------ MIDDLEWARES
 app.engine('hbs', middleware.exphbs);
 app.use(middleware.helmet);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '150mb' }));
+app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(middleware.cookieParser);
 app.use(middleware.csurf);
 app.use(middleware.session);
 app.use(middleware.i18n);
 app.use(middleware.compress);
 app.use('/static', express.static(path.join(__dirname, 'public')));
-app.use(middleware.fileUpload);
 app.use(middleware.passportInit);
 app.use(middleware.passportSession);
 app.use(middleware.flash);

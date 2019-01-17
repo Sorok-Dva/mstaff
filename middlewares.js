@@ -5,7 +5,6 @@ const config = require(`./config/config.json`)[env];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
-const fileUpload = require('express-fileupload');
 const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
@@ -53,7 +52,6 @@ module.exports = {
     layoutsDir      : path.join(__dirname, '/views/layouts'),
     partialsDir     : path.join(__dirname, '/views/partials')
   }),
-  fileUpload: fileUpload(),
   flash: flash(),
   helmet: helmet(), // secure apps by setting various HTTP headers
   i18n: i18n({
