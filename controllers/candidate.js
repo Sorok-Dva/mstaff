@@ -32,7 +32,15 @@ module.exports = {
     }
   },
   addVideo: (req, res, next) => {
+    if (Object.keys(req.file).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
 
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let video = req.file;
+
+    console.log(video);
+    res.send('File uploaded!');
   },
   getProfile: (req, res, next) => {
     if (req.user.type === 'candidate') {
@@ -424,5 +432,44 @@ module.exports = {
       if (!software) return res.status(400).send({ body: req.body, error: 'Not exists' });
       software.destroy().then(software => res.status(201).send({ deleted: true, software }));
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  addWish: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.Wish.create({
+      candidate_id: req.user.id,
+      name: req.body.name || 'Candidature sans nom',
+      contract_type: req.body.contractType,
+      posts: req.body.posts,
+      full_time: req.body.fullTime,
+      part_time: req.body.partTime,
+      day_time: req.body.dayTime,
+      night_time: req.body.nightTime,
+      liberal_cabinets: req.body.liberal,
+      availability: req.body.availability,
+      start: req.body.start,
+      end: req.body.end,
+      lat: req.body.lat,
+      lon: req.body.lon,
+      geolocation: !!req.body.lat,
+      es_count: req.body.es_count
+    }).then(wish => {
+      req.flash('success_msg', `Souhait ajouté avec succès auprès de ${req.body.es_count} établissements.`);
+      res.status(201).send({ wish });
+      req.body.es = JSON.parse(`[${req.body.es}]`);
+      for (let i = 0; i < req.body.es.length; i++) {
+        Models.Application.create({
+          name: req.body.name || 'Candidature sans nom',
+          wish_id: wish.id,
+          candidate_id: req.user.id,
+          ref_es_id: req.body.es[i],
+          new: true
+        });
+      }
+    });
   }
 };
