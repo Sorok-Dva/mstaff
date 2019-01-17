@@ -13458,6 +13458,16 @@ star {
     background: linear-gradient(to right, #393f90 0%, #454cad 50%);
     border-radius: 4px;
 }
+.uploader .progress.success[value]::-webkit-progress-value {
+    background: -webkit-linear-gradient(left, #03901a 0%, #04e900 50%);
+    background: linear-gradient(to right, #03901a 0%, #04e900 50%);
+    border-radius: 4px;
+}
+.uploader .progress.success[value]::-moz-progress-bar {
+    background: linear-gradient(to right, #03901a 0%, #04e900 50%);
+    border-radius: 4px;
+}
+
 .uploader input[type="file"] {
     display: none;
 }
