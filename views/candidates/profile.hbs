@@ -40,9 +40,15 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title"><i class="fa fa-film" aria-hidden="true"></i> Vidéo de présentation</h4>
+                {{#if user.candidate.video}}
+                    <span id="removeVideo" class="btn btn-danger pull-right"><i class="fa fa-trash"></i></span>
+                {{else}}
+                    <span id="removeVideo" style="display: none" class="btn btn-danger pull-rigt"><i class="fa fa-trash"></i></span>
+                {{/if}}
             </div>
             <div class="card-content text-center">
-                <form id="file-upload-form" class="uploader" method="post" action="/profile/add/video">
+
+                <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/video">
                     <input id="file-upload" type="file" name="file" accept="video/mp4" />
 
                     <label for="file-upload" id="file-drag">
@@ -55,18 +61,11 @@
                         {{/if}}
                             Your browser does not support HTML5 video.
                         </video>
-                        <img id="file-image" src="#" alt="Preview" style="display:none">
-                        <div id="start">
-                            {{#if user.candidate.video}}
-                                <i style="display: none" class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
-                                <div style="display: none">Choisir une vidéo ou déposer ici</div>
-                                <div id="notvideo" style="color:red;display:none">Veuillez selectionner un fichier dans un format vidéo traditionnel.</div>
-                            {{else}}
-                                <i class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
-                                <div>Choisir une vidéo ou déposer ici</div>
-                                <div id="notvideo" style="color:red;display:none">Veuillez selectionner un fichier dans un format vidéo traditionnel.</div>
-                            {{/if}}
 
+                        <div id="start" {{#if user.candidate.video}}style="display: none"{{/if}}>
+                            <i class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
+                            <div>Choisir une vidéo ou déposer ici</div>
+                            <div id="notvideo" style="color:red;display:none">Veuillez selectionner un fichier dans un format vidéo traditionnel.</div>
                             <span id="file-upload-btn" class="btn btn-primary">Selectionnez une vidéo</span>
                             <div id="messages"></div>
                         </div>

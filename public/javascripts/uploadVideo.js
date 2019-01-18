@@ -76,6 +76,7 @@ function uploadFile(f) {
         $('#file-progress').attr('class', `progress ${(xhr.status === 200 ? "success" : "failure")}`);
 
         if (xhr.readyState === 4 && xhr.status === 200) {
+          $('#removeVideo').show();
           notification({
             icon: 'check-circle',
             type: 'success',
@@ -135,3 +136,22 @@ if (window.File && window.FileList && window.FileReader) {
 } else {
   document.getElementById('file-drag').style.display = 'none';
 }
+
+$('#removeVideo').click(() => {
+  $.post('/api/candidate/delete/video', {_csrf}, (data) => {
+    if (data.result === 'deleted') {
+      output('');
+      $('#start').show();
+      $('i.fa-video-camera').show();
+      $('#response').hide();
+      $('#removeVideo').hide();
+      $('#video-preview').hide();
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Vidéo de profil supprimée :',
+        message: `Votre vidéo de présentation a correctement été supprimée de votre profil.`
+      });
+    }
+  })
+});

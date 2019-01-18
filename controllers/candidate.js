@@ -51,6 +51,19 @@ module.exports = {
       })
     });
   },
+  deleteVideo: (req, res, next) => {
+    Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+      if (candidate.video !== null || undefined) {
+        if (fs.existsSync(`./public/uploads/candidates/videos/${candidate.video}`)) {
+          fs.unlinkSync(`./public/uploads/candidates/videos/${candidate.video}`);
+        }
+      }
+      candidate.video = null;
+      candidate.save().then(() => {
+        return res.send({ result: 'deleted' });
+      })
+    });
+  },
   getProfile: (req, res, next) => {
     if (req.user.type === 'candidate') {
       Models.User.findOne({
