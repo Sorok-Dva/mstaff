@@ -43,18 +43,30 @@
             </div>
             <div class="card-content text-center">
                 <form id="file-upload-form" class="uploader" method="post" action="/profile/add/video">
-                    <input id="file-upload" type="file" name="file" accept=".mp4, .avi, .wmv, .mov, .wmf" />
+                    <input id="file-upload" type="file" name="file" accept="video/mp4" />
 
                     <label for="file-upload" id="file-drag">
-                        <video id="video-preview" style="display:none;width:inherit" controls>
-                            <source src="" id="videoSrc">
+                        {{#if user.candidate.video}}
+                            <video id="video-preview" style="width:inherit" controls>
+                                <source src="/static/uploads/candidates/videos/{{user.candidate.video}}" id="videoSrc">
+                        {{else}}
+                            <video id="video-preview" style="display:none;width:inherit" controls>
+                                <source src="" id="videoSrc">
+                        {{/if}}
                             Your browser does not support HTML5 video.
                         </video>
                         <img id="file-image" src="#" alt="Preview" style="display:none">
                         <div id="start">
-                            <i class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
-                            <div>Choisir une vidéo ou déposer ici</div>
-                            <div id="notvideo" style="color:red;display:none">Veuillez selectionner un fichier dans un format vidéo traditionnel.</div>
+                            {{#if user.candidate.video}}
+                                <i style="display: none" class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
+                                <div style="display: none">Choisir une vidéo ou déposer ici</div>
+                                <div id="notvideo" style="color:red;display:none">Veuillez selectionner un fichier dans un format vidéo traditionnel.</div>
+                            {{else}}
+                                <i class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
+                                <div>Choisir une vidéo ou déposer ici</div>
+                                <div id="notvideo" style="color:red;display:none">Veuillez selectionner un fichier dans un format vidéo traditionnel.</div>
+                            {{/if}}
+
                             <span id="file-upload-btn" class="btn btn-primary">Selectionnez une vidéo</span>
                             <div id="messages"></div>
                         </div>
