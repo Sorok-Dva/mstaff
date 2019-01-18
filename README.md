@@ -55,3 +55,8 @@ Create new seed :
 ```bash
 node_modules/.bin/sequelize seed:generate --name seed-name
 ``` 
+
+## Some useful documentations
+
+- [Express.js (4.x)](http://expressjs.com/fr/api.html)
+- [Handlebars](https://handlebarsjs.com/)
