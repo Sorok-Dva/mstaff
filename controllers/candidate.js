@@ -1,4 +1,5 @@
 const { check, validationResult } = require('express-validator/check');
+const fs = require('fs');
 
 const Models = require('../models/index');
 
@@ -36,11 +37,19 @@ module.exports = {
       return res.status(400).send('No files were uploaded.');
     }
 
-    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
     let video = req.file;
 
-    console.log(video);
-    res.send('File uploaded!');
+    Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+      if (candidate.video !== null || undefined) {
+        if (fs.existsSync(`./public/uploads/candidates/videos/${candidate.video}`)) {
+          fs.unlinkSync(`./public/uploads/candidates/videos/${candidate.video}`)
+        }
+      }
+      candidate.video = video.filename;
+      candidate.save().then(() => {
+        return res.send({ result: 'updated' });
+      })
+    });
   },
   getProfile: (req, res, next) => {
     if (req.user.type === 'candidate') {
