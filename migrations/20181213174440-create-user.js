@@ -28,15 +28,15 @@ module.exports = {
       },
       birthday: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true
       },
       postal_code: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       town: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       phone: {
         type: Sequelize.STRING,
