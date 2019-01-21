@@ -9,55 +9,12 @@
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
-            <li{{#ifCond a.main '===' 'profile'}} class="active"{{/ifCond}}>
-                <a href="/profile">
-                    <i class="ti-user"></i>
-                    <p>Mon Profil</p>
-                </a>
-            </li>
-            <li{{#ifCond a.main '===' 'cv'}} class="active"{{/ifCond}}>
-                <a href="/formations">
-                    <i class="fa fa-graduation-cap"></i>
-                    <p>Formation et expérience</p>
-                </a>
-            </li>
-            <li{{#ifCond a.main '===' 'knowledges'}} class="active"{{/ifCond}}>
-                <a href="/knowledges">
-                    <i class="ti-settings"></i>
-                    <p>Mes compétences</p>
-                </a>
-            </li>
-            <li{{#ifCond a.main '===' 'applications'}} class="active"{{/ifCond}}>
-                <a href="/applications">
-                    <i class="fa fa-balance-scale"></i>
-                    <p>Mes candidatures</p>
-                </a>
-            </li>
-            <li{{#ifCond a.main '===' '-'}} class="active"{{/ifCond}}>
-                <a href="/profile">
-                    <i class="ti-calendar"></i>
-                    <p>Mes disponibilités</p>
-                </a>
-            </li>
-            <li{{#ifCond a.main '===' 'documents'}} class="active"{{/ifCond}}>
-                <a href="/documents">
-                    <i class="ti-files"></i>
-                    <p>Mes documents</p>
-                </a>
-            </li>
-            <li{{#ifCond a.main '===' 'history'}} class="active"{{/ifCond}}>
-                <a href="/history">
-                    <i class="ti-star"></i>
-                    <p>Mon historique</p>
-                </a>
-            </li>
-            <li{{#ifCond a.main '===' 'conferences'}} class="active"{{/ifCond}}>
-                <a href="/conferences">
-                    <i class="ti-comments"></i>
-                    <p>Mes entretiens</p>
-                </a>
-            </li>
-
+            {{#ifCond user.type '===' 'candidate'}}
+                {{> candidate/sidebar-menu}}
+            {{/ifCond}}
+            {{#ifCond user.type '===' 'es'}}
+                {{> es/sidebar-menu}}
+            {{/ifCond}}
         </ul>
     </div>
 </div>

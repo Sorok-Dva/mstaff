@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
+const UserController = require('../controllers/user');
 const EstablishmentController = require('../controllers/establishment');
 
 /**
- * @Route('/') GET;
+ * @Route('/index') GET;
  * Show Index page
  */
-router.get('/', EstablishmentController.getIndex);
+router.get('/index', UserController.ensureIsEs, EstablishmentController.getIndex);
 
 module.exports = router;

@@ -6,6 +6,9 @@ module.exports = {
       if (req.user && (req.user.type === 'candidate')) {
         return res.redirect('/profile')
       }
+      if (req.user && (req.user.type === 'es')) {
+        return res.redirect('/index')
+      }
       if (req.user && (req.user.type === 'admin')) {
         return res.redirect('/back-office')
       }

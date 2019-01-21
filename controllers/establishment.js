@@ -20,7 +20,7 @@ module.exports = {
     }
   },
   getIndex: (req, res, next) => {
-    res.render('index', { layout: 'onepage' });
+    res.render('index');
   },
   /**
    * Create User Method
