@@ -76,6 +76,25 @@ module.exports = {
     }
   },
   /**
+   * ensureIsEs MiddleWare
+   * @param req
+   * @param res
+   * @param next
+   * @returns {*}
+   * @description Ensure that the current user is an es
+   */
+  ensureIsEs: (req, res, next) => {
+    if (req.isAuthenticated()) {
+      if (['es'].includes(req.user.type)) {
+        next();
+      } else {
+        res.redirect('/');
+      }
+    } else {
+      res.redirect('/');
+    }
+  },
+  /**
    * validate MiddleWare
    * @param method
    * @description Form Validator. Each form validation must be created in new case.
