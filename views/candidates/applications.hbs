@@ -19,8 +19,8 @@
                                 </tr>
                             </thead>
                             <tbody id="applicationTbody">
-                                {{#if user.candidate.wishes}}
-                                {{#each user.candidate.wishes as |wish|}}
+                                {{#if wishes}}
+                                {{#each wishes as |wish|}}
                                     <tr data-applicationId="{{wish.id}}">
                                         <td>{{wish.name}}</td>
                                         <td></td>

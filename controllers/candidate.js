@@ -195,24 +195,18 @@ module.exports = {
   },
   getWishes: (req, res, next) => {
     let render = { a: { main: 'applications' } };
-    Models.User.findOne({
-      where: { id: req.user.id },
-      attributes: ['id', 'email', 'role', 'type'],
-      include:[{
-        model: Models.Candidate, // Candidate Associations (user.candidate)
-        as: 'candidate',
-        include:[{
-          model: Models.Wish,
-          as: 'wishes'
-        }]
-      }]
-    }).then(user => {
-      render.user = user.dataValues;
+    Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+      render.candidate = candidate;
+      return Models.Wish.findAll({ where: { candidate_id: candidate.id } });
+    }).then(wishes => {
+      render.wishes = wishes;
       return res.render('candidates/applications', render)
     }).catch(error => next(new Error(error)));
   },
   getXpById: (req, res, next) => {
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
       Models.Experience.findOne(opts).then(experience => {
         res.status(200).send({ experience });
@@ -220,7 +214,9 @@ module.exports = {
     });
   },
   removeXP: (req, res, next) => {
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
       Models.Experience.findOne(opts).then(experience => {
         experience.destroy();
@@ -229,7 +225,9 @@ module.exports = {
     });
   },
   getFormationById: (req, res, next) => {
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
       Models.CandidateFormation.findOne(opts).then(formation => {
         res.status(200).send({ formation });
@@ -237,7 +235,9 @@ module.exports = {
     });
   },
   removeFormation: (req, res, next) => {
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
       Models.CandidateFormation.findOne(opts).then(formation => {
         formation.destroy();
@@ -246,7 +246,9 @@ module.exports = {
     });
   },
   getDiplomaById: (req, res, next) => {
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
       Models.CandidateQualification.findOne(opts).then(diploma => {
         res.status(200).send({ diploma });
@@ -254,7 +256,9 @@ module.exports = {
     });
   },
   removeDiploma: (req, res, next) => {
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
       Models.CandidateQualification.findOne(opts).then(diploma => {
         diploma.destroy();
@@ -274,10 +278,10 @@ module.exports = {
     let xp = {};
     return Models.Candidate.findOne({
       where: { user_id: req.user.id }
-    }).then(user => {
+    }).then(candidate => {
       Models.Experience.create({
         name: req.body.name,
-        candidate_id: user.candidate.id,
+        candidate_id: candidate.id,
         poste_id: parseInt(req.body.post_id),
         service_id: parseInt(req.body.service_id),
         internship: req.body.internship,
@@ -302,7 +306,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateFormation.create({
         name: req.body.name,
         candidate_id: candidate.id,
@@ -320,7 +326,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateQualification.create({
         name: req.body.name,
         candidate_id: candidate.id,
@@ -337,7 +345,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateSkill.findOne({
         where: { name: req.body.name, candidate_id: candidate.id }
       }).then(skill => {
@@ -356,7 +366,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateEquipment.findOne({
         where: { name: req.body.name, candidate_id: candidate.id }
       }).then(equipment => {
@@ -375,7 +387,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateSoftware.findOne({
         where: { name: req.body.name, candidate_id: candidate.id }
       }).then(software => {
@@ -395,7 +409,9 @@ module.exports = {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
 
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateSkill.findOne({
         where: { id: req.params.id, candidate_id: candidate.id }
       }).then(skill => {
@@ -412,7 +428,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateEquipment.findOne({
         where: { id: req.params.id, candidate_id: candidate.id }
       }).then(equipment => {
@@ -429,7 +447,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateSoftware.findOne({
         where: { id: req.params.id, candidate_id: candidate.id }
       }).then(software => {
@@ -446,7 +466,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateSkill.findOne({
         where: { id: req.params.id, candidate_id: candidate.id }
       }).then(skill => {
@@ -461,7 +483,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateEquipment.findOne({
         where: { id: req.params.id, candidate_id: candidate.id }
       }).then(equipment => {
@@ -476,7 +500,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.CandidateSoftware.findOne({
         where: { id: req.params.id, candidate_id: candidate.id }
       }).then(software => {
@@ -491,7 +517,9 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
-    return Models.User.findOne({ where: { id: req.user.id } }).then(candidate => {
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
       Models.Wish.create({
         candidate_id: candidate.id,
         name: req.body.name || 'Candidature sans nom',
