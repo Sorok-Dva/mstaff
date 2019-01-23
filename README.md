@@ -59,5 +59,8 @@ node_modules/.bin/sequelize seed:generate --name seed-name
 ## Some useful documentations
 
 - [Express.js (4.x)](http://expressjs.com/fr/api.html)
-- [Sequelize](http://docs.sequelizejs.com/)
+- [Sequelize Model Definition](http://docs.sequelizejs.com/manual/tutorial/models-definition.html)
+- [Sequelize Model Usage](http://docs.sequelizejs.com/manual/tutorial/models-usage.html)
+- [Sequelize Querying](http://docs.sequelizejs.com/manual/tutorial/querying.html)
 - [Handlebars](https://handlebarsjs.com/)
+- [Jquery](https://api.jquery.com/)
