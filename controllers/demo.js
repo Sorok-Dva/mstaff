@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator/check');
-const Demo = require('../models/index').Demo;
+const { Demo } = require('../models/index').Demo;
 
 module.exports = {
   /**
@@ -9,13 +9,13 @@ module.exports = {
    */
   validate: (method) => {
     switch (method) {
-    case 'createDemo': {
-      return [check('email').isEmail(),
-        check('phone').isMobilePhone(),
-        check('type').exists(),
-        check('nameEs').exists()
-      ]
-    }
+      case 'createDemo': {
+        return [check('email').isEmail(),
+          check('phone').isMobilePhone(),
+          check('type').exists(),
+          check('nameEs').exists()
+        ]
+      }
     }
   },
   /**
@@ -27,8 +27,8 @@ module.exports = {
    */
   create: (req, res) => {
     // Inscription concernant une demo ES
-    if (req.body.type && req.body.esName) {
+    /*if (req.body.type && req.body.esName) {
 
-    }
+    }*/
   }
 };

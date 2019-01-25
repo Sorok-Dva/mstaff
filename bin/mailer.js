@@ -18,7 +18,7 @@ Mailer.sendEmail = (to, subject, text) => {
     html: putText2Template(subject, text)
   }, (error, info) => {
     if (error) {
-      console.log(error);
+      throw new Error(error);
     }
   });
 };
@@ -33,7 +33,7 @@ Mailer.sendValidationMail = (nickname, to, key) => {
     html: putText2Template('', text)
   }, (error, info) => {
     if (error) {
-      console.log('Mailer error :' + error, info);
+      throw new Error(error);
     }
   });
 };

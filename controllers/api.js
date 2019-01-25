@@ -9,8 +9,7 @@ module.exports = {
    * @description Form Validator. Each form validation must be created in new case.
    */
   validate: (method) => {
-    switch (method) {
-    }
+
   },
   getSkillsList: (req, res, next) => {
     Models.Skill.findAll().then(skills => {

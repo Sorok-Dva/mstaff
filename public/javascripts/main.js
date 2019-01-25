@@ -74,6 +74,7 @@ let loadTemplate = (url, data, callback) => {
       return callback(template(data));
     }});
 };
+
 let nextTab = elem => $(elem).next().find('a.tabWizard[data-toggle="tab"]').click();
 let prevTab = elem => $(elem).prev().find('a.tabWizard[data-toggle="tab"]').click();
 
@@ -122,3 +123,29 @@ $(document).ready(function() {
     history.back()
   });
 });
+
+/*
+*     module.exports = {
+  "extends": "standard",
+  "plugins": ["async-await"],
+  "rules": {
+    "async-await/space-after-async": 2,
+    "async-await/space-after-await": 2,
+    "brace-style": "off",
+    "eol-last": "off",
+    "eqeqeq": "off",
+    "for-direction": "off",
+    "indent": ["warn", 2],
+    "keyword-spacing": "off",
+    "key-spacing": "off",
+    "no-dupe-arg": "off",
+    "no-dupe-keys": "off",
+    "no-unused-vars": "off",
+    "no-return-assign": ["warn", "except-parens"],
+    "no-useless-escape": "off",
+    "no-trailing-spaces": "off",
+    "one-var": "off",
+    "semi": "off",
+    "standard/object-curly-even-spacing": "off",
+  }
+};*/

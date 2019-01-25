@@ -10,13 +10,13 @@ module.exports = {
    */
   validate: (method) => {
     switch (method) {
-    case 'create': {
-      return [
-        check('email').isEmail(),
-        check('firstName').exists(),
-        check('lastName').exists()
-      ]
-    }
+      case 'create': {
+        return [
+          check('email').isEmail(),
+          check('firstName').exists(),
+          check('lastName').exists()
+        ]
+      }
     }
   },
   getIndex: (req, res, next) => {
@@ -45,7 +45,7 @@ module.exports = {
       .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
   },
   findByGeo: (req, res, next) => {
-    let rayon = req.body.rayon, lat = req.body.lat, lon = req.body.lon, filterQuery = req.body.filter;
+    let { rayon, lat, lon, filterQuery } = req.body;
     let formule = `(6366*acos(cos(radians(${lat}))*cos(radians(lat))*cos(radians(lon) -radians(${lon}))+sin(radians(${lat}))*sin(radians(lat))))`;
     let sql = `SELECT * FROM EstablishmentReferences WHERE ${formule} <= ${rayon}`;
     sequelize.query(sql, { type: sequelize.QueryTypes.SELECT }).then((data) => {

@@ -14,7 +14,7 @@ module.exports = {
       }
       return res.render('index', { layout: 'landing' })
     } else {
-      console.log(req.subdomain);
+      // console.log(req.subdomain);
       Models.Establishment.findOne({
         where: {
           domain_enable: true,

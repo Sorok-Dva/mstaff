@@ -22,13 +22,13 @@ module.exports.register = async (Handlebars) => {
 
   Handlebars.registerHelper('rolify', (role) => {
     switch (role) {
-    case 'User': return 'Utilisateur';
-    case 'Admin': return 'Administrateur';
-    case 'admin': return 'Administrateur';
-    case 'es': return 'Établissement';
-    case 'demo': return 'Démo';
-    case 'candidate': return 'Candidat';
-    default: return role
+      case 'User': return 'Utilisateur';
+      case 'Admin': return 'Administrateur';
+      case 'admin': return 'Administrateur';
+      case 'es': return 'Établissement';
+      case 'demo': return 'Démo';
+      case 'candidate': return 'Candidat';
+      default: return role
     }
   });
 
@@ -40,28 +40,28 @@ module.exports.register = async (Handlebars) => {
 
   Handlebars.registerHelper('ifCond', (v1, operator, v2, options) => {
     switch (operator) {
-    case '==':
-      return (v1 == v2) ? options.fn(this) : options.inverse(this);
-    case '===':
-      return (v1 === v2) ? options.fn(this) : options.inverse(this);
-    case '!=':
-      return (v1 != v2) ? options.fn(this) : options.inverse(this);
-    case '!==':
-      return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-    case '<':
-      return (v1 < v2) ? options.fn(this) : options.inverse(this);
-    case '<=':
-      return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-    case '>':
-      return (v1 > v2) ? options.fn(this) : options.inverse(this);
-    case '>=':
-      return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-    case '&&':
-      return (v1 && v2) ? options.fn(this) : options.inverse(this);
-    case '||':
-      return (v1 || v2) ? options.fn(this) : options.inverse(this);
-    default:
-      return options.inverse(this);
+      case '==':
+        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+      case '===':
+        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+      case '!=':
+        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+      case '!==':
+        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+      case '<':
+        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+      case '<=':
+        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+      case '>':
+        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+      case '>=':
+        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+      case '&&':
+        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+      case '||':
+        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+      default:
+        return options.inverse(this);
     }
   });
 
