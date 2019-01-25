@@ -103,8 +103,8 @@ module.exports = {
             as: 'softwares'
           }]
         }]
-      }).then(user => {
-        return res.render('candidates/profile', { user, a: { main: 'profile' } })
+      }).then(usr => {
+        return res.render('candidates/profile', { usr, a: { main: 'profile' } })
       }).catch(error => next(new Error(error)));
     }
   },
@@ -117,8 +117,8 @@ module.exports = {
           model: Models.Candidate,
           as: 'candidate'
         }]
-      }).then(user => {
-        return res.render('users/edit', { user, a: { main: 'profile' } })
+      }).then(usr => {
+        return res.render('users/edit', { usr, a: { main: 'profile' } })
       }).catch(error => next(error));
     }
   },
@@ -175,8 +175,8 @@ module.exports = {
           as: 'softwares'
         }]
       }]
-    }).then(user => {
-      render.user = user;
+    }).then(usr => {
+      render.usr = usr;
       return Models.Skill.findAll();
     }).then(skills => {
       render.skills = skills;
