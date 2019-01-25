@@ -19,9 +19,6 @@ const env = conf.ENV || 'development';
 
 if (env === 'development' || env === 'local') {
   app.use(middleware.loggerDev);
-  process.on('uncaughtException', error => {
-    throw new Error(error);
-  });
 }
 
 // express config
