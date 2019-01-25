@@ -20,11 +20,7 @@ const env = conf.ENV || 'development';
 if (env === 'development' || env === 'local') {
   app.use(middleware.loggerDev);
   process.on('uncaughtException', error => {
-    console.log('uncaught');
-    if(!error.isOperational) {
-      throw new Error(error);
-    }
-    process.exit(1);
+    throw new Error(error);
   });
 }
 

@@ -12,9 +12,7 @@ module.exports = {
    * @description Form Validator. Each form validation must be created in new case.
    */
   validate: (method) => {
-    switch (method) {
 
-    }
   },
   index:  (req, res) => res.render('back-office/index', { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } }),
   stats:  (req, res) => res.render('back-office/stats', { layout, title: 'Statistiques', a: { main: 'dashboard', sub: 'stats' } }),
@@ -80,7 +78,7 @@ module.exports = {
       discord(`**${req.user.fullName}** vient de se connecter en tant que **${user.dataValues.email}** sur Mstaff.`, 'infos');
       let originalUser = req.user.id;
       let originalRole = req.user.role;
-      req.logIn(user, (err) => console.log(err));
+      req.logIn(user, (err) => new Error(err));
       req.session.originalUser = originalUser;
       req.session.role = originalRole;
       req.session.readOnly = true;
@@ -96,7 +94,7 @@ module.exports = {
       delete req.session.originalUser;
       delete req.session.role;
       delete req.session.readOnly;
-      req.logIn(user, (err) => console.log(err));
+      req.logIn(user, (err) => new Error(err));
       res.redirect('/');
     });
   },
@@ -110,7 +108,8 @@ module.exports = {
         if (isMatch) {
           let pinCode = Math.floor(Math.random() * 90000) + 10000;
           req.session.pinCode = pinCode;
-          discord(`***Admin Mstaff** vient de demander une suppression de la lecture seule sur le compte de ${req.user.fullName}. Code PIN : **${pinCode}***`, 'infos');
+          discord(`***Admin Mstaff** vient de demander une suppression de la lecture seule sur le compte de ${req.user.fullName}.
+           Code PIN : **${pinCode}***`, 'infos');
           return res.status(200).json({ status: 'send' });
         } else {
           return res.status(200).json({ error: 'invalid password' });

@@ -12,25 +12,28 @@ module.exports = {
    */
   validate: (method) => {
     switch (method) {
-    case 'postAddExperience': {
-      return [
-        check('name').isLength({ min: 3 }),
-        check('post_id').isNumeric(),
-        check('service_id').isNumeric(),
-        check('internship').isBoolean(),
-        check('current').isBoolean()
-      ]
-    }
-    case 'postAddFormation': {
-      return [
-        check('name').isLength({ min: 3 })
-      ]
-    }
-    case 'postAddDiploma': {
-      return [
-        check('name').isLength({ min: 3 })
-      ]
-    }
+      case 'postAddExperience': {
+        return [
+          check('name').isLength({ min: 3 }),
+          check('post_id').isNumeric(),
+          check('service_id').isNumeric(),
+          check('internship').isBoolean(),
+          check('current').isBoolean()
+        ]
+      }
+      case 'postAddFormation': {
+        return [
+          check('name').isLength({ min: 3 })
+        ]
+      }
+      case 'postAddDiploma': {
+        return [
+          check('name').isLength({ min: 3 })
+        ]
+      }
+      case 'putFormation': {
+        return [ check('name').isLength({ min: 10 }) ]
+      }
     }
   },
   addVideo: (req, res, next) => {
@@ -338,6 +341,26 @@ module.exports = {
         res.status(200).send({ diploma });
       }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
     })
+  },
+  putFormation: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    // @todo secure with candidate_id clause
+    return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+      Models.CandidateFormation.findOne({ where: { id: req.params.id, candidate_id: candidate.id } }).then(formation => {
+        if (!formation) return res.status(400).send({ errors: 'Formation not found' });
+        formation.name = req.body.name;
+        formation.start = req.body.start;
+        formation.end = req.body.end;
+        formation.save().then(() => {
+          return res.status(200).send({ result: 'updated' });
+        });
+      })
+    }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
   },
   addSkill: (req, res, next) => {
     const errors = validationResult(req);

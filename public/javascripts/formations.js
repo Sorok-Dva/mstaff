@@ -255,6 +255,8 @@ $('body').on('click', 'button.removeXP', (event) => {
         $('#editFEnd').val(`${("0" + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
       }
       $("#editFormationModal").modal();
+      $('#editFormationId').val(id);
+      $('#editFormation').attr('onclick', `editFormation(${$('#editFormation').attr('data-id')})`);
     }
   }).catch(errors => {
     notification({
@@ -356,4 +358,31 @@ let removeCandidateDiploma = id => {
       message: `Impossible de supprimer ce diplôme.`
     });
   });
+};
+
+let editFormation = (íd) => {
+  let _csrf = $('#csrfToken').val();
+  let startDate = $('#editFStart').val().split('/');
+  let endDate = $('#editFEnd').val().split('/');
+  let start = new Date(startDate[1], startDate[0] - 1);
+  let end = new Date(endDate[1], endDate[0] - 1);
+  $.put(`/api/candidate/formation/${$('#editFormationId').val()}`, {
+    name: $('#editFName').val(),
+    start,
+    end,
+    _csrf
+  }, (data) => {
+    if (data.result === 'updated') {
+      notification({
+        type: 'success',
+        icon: 'check-circle',
+        title: 'Formation editée :',
+        message: 'Votre formation a correctement été modifiée.'
+      })
+    } else {
+      if (data.errors) {
+        errorsHandler(data.errors);
+      }
+    }
+  }).catch(errors => errorsHandler(errors));
 };

@@ -9,12 +9,7 @@
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
-            {{#ifCond user.type '===' 'candidate'}}
-                {{> candidate/sidebar-menu}}
-            {{/ifCond}}
-            {{#ifCond user.type '===' 'es'}}
-                {{> es/sidebar-menu}}
-            {{/ifCond}}
+            {{> candidate/sidebar-menu}}
         </ul>
     </div>
 </div>

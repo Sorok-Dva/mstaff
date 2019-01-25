@@ -6,10 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     contract_type: DataTypes.STRING,
     posts: {
       type: DataTypes.JSON,
-      get () {
+      get() {
         return JSON.parse(this.getDataValue('posts'))
       },
-      set (data) {
+      set(data) {
         this.setDataValue('posts', JSON.stringify(data));
       }
     },

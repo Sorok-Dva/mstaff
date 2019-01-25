@@ -36,7 +36,6 @@ module.exports = {
   csurf: csurf({ cookie: true }), // enable crsf token middleware
   errorHandler: (err, req, res, next) => { // error handler
     let opts = {};
-    console.log(err);
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = env === 'development' ? err : {};
@@ -45,6 +44,7 @@ module.exports = {
     res.status(err.status || 500);
     if (!req.user) opts.layout = 'onepage';
     res.render('error', opts);
+    throw new Error(err);
   },
   exphbs: exphbs({
     extname         : 'hbs',
@@ -106,7 +106,7 @@ module.exports = {
   }),
   wildcardSubdomains: (req, res, next) => {
     if (!req.subdomains.length || req.subdomains.slice(-1)[0] === 'www') return next();
-    req.subdomain = req.subdomains.slice(-1)[0];
+    // req.subdomain = req.subdomains.slice(-1)[0];
     next();
   }
 };

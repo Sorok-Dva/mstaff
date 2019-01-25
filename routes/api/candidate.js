@@ -27,7 +27,12 @@ router.post('/delete/video', UserController.ensureIsCandidate, CandidateControll
 router.get('/xp/:id', UserController.ensureIsCandidate, CandidateController.getXpById)
   .delete('/xp/:id', UserController.ensureIsCandidate, CandidateController.removeXP);
 router.get('/formation/:id', UserController.ensureIsCandidate, CandidateController.getFormationById)
-  .delete('/formation/:id', UserController.ensureIsCandidate, CandidateController.removeFormation);
+  .delete('/formation/:id', UserController.ensureIsCandidate, CandidateController.removeFormation)
+  .put('/formation/:id',
+    UserController.ensureIsCandidate,
+    CandidateController.validate('putFormation'),
+    CandidateController.putFormation
+  );
 router.get('/diploma/:id', UserController.ensureIsCandidate, CandidateController.getDiplomaById)
   .delete('/diploma/:id', UserController.ensureIsCandidate, CandidateController.removeDiploma);
 

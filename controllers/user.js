@@ -1,7 +1,5 @@
 const { check, validationResult } = require('express-validator/check');
-const User = require('../models/index').User;
-const Candidate = require('../models/index').Candidate;
-const Establishment = require('../models/index').Establishment;
+const { User, Candidate, Establishment } = require('../models/index');
 const bcrypt = require('bcryptjs');
 
 module.exports = {
@@ -101,21 +99,21 @@ module.exports = {
    */
   validate: (method) => {
     switch (method) {
-    case 'create': {
-      return [
-        check('email').isEmail(),
-        check('password')
-          .isLength({ min: 8 }).withMessage('must be at least 8 chars long')
-          .matches(/\d/).withMessage('must contain a number'),
-        check('firstName').exists(),
-        check('lastName').exists()
-      ]
-    }
-    case 'ApiVerifyEmailAvailability': {
-      return [
-        check('email').isEmail()
-      ]
-    }
+      case 'create': {
+        return [
+          check('email').isEmail(),
+          check('password')
+            .isLength({ min: 8 }).withMessage('must be at least 8 chars long')
+            .matches(/\d/).withMessage('must contain a number'),
+          check('firstName').exists(),
+          check('lastName').exists()
+        ]
+      }
+      case 'ApiVerifyEmailAvailability': {
+        return [
+          check('email').isEmail()
+        ]
+      }
     }
   },
   /**
@@ -127,8 +125,8 @@ module.exports = {
    */
   create: (req, res) => {
     const errors = validationResult(req);
-    let password = req.body.password;
-    let esCode = req.params.esCode;
+    let { password } = req.body;
+    let { esCode } = req.params;
     let esId = null;
 
     if (!errors.isEmpty()) {
