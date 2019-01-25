@@ -148,10 +148,10 @@ module.exports = {
           as: 'formations'
         }]
       }]
-    }).then(user => {
+    }).then(candidate => {
       Models.Post.findAll().then(posts => {
         Models.Service.findAll().then(services => {
-          return res.render('candidates/formations', { user, posts, services, a: { main: 'cv' } })
+          return res.render('candidates/formations', { candidate, posts, services, a: { main: 'cv' } })
         }).catch(error => next(new Error(error)));
       }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
