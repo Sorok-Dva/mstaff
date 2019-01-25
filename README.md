@@ -64,3 +64,4 @@ node_modules/.bin/sequelize seed:generate --name seed-name
 - [Sequelize Querying](http://docs.sequelizejs.com/manual/tutorial/querying.html)
 - [Handlebars](https://handlebarsjs.com/)
 - [Jquery](https://api.jquery.com/)
+- [Lodash](https://lodash.com/docs/4.17.11)
