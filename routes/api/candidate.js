@@ -36,17 +36,9 @@ router.get('/formation/:id', UserController.ensureIsCandidate, CandidateControll
 router.get('/diploma/:id', UserController.ensureIsCandidate, CandidateController.getDiplomaById)
   .delete('/diploma/:id', UserController.ensureIsCandidate, CandidateController.removeDiploma);
 
-router.post('/rate/skill/:id', UserController.ensureIsCandidate, CandidateController.rateSkill);
-router.post('/rate/equipment/:id', UserController.ensureIsCandidate, CandidateController.rateEquipment);
-router.post('/rate/software/:id', UserController.ensureIsCandidate, CandidateController.rateSoftware);
-
-router.delete('/skill/:id', UserController.ensureIsCandidate, CandidateController.deleteSkill);
-router.delete('/equipment/:id', UserController.ensureIsCandidate, CandidateController.deleteEquipment);
-router.delete('/software/:id', UserController.ensureIsCandidate, CandidateController.deleteSoftware);
-
-router.post('/skills/add', UserController.ensureIsCandidate, CandidateController.addSkill);
-router.post('/equipments/add', UserController.ensureIsCandidate, CandidateController.addEquipment);
-router.post('/softwares/add', UserController.ensureIsCandidate, CandidateController.addSoftware);
+router.post('/:type/add', UserController.ensureIsCandidate, CandidateController.addRating);
+router.post('/rate/:type/:id', UserController.ensureIsCandidate, CandidateController.starsRating);
+router.delete('/:type/:id', UserController.ensureIsCandidate, CandidateController.deleteRating);
 
 router.post('/wish/add', UserController.ensureIsCandidate, CandidateController.addWish);
 
