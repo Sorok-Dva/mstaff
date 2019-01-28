@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('CandidateSkills', {
+    return queryInterface.createTable('CandidateDocuments', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,11 +18,19 @@ module.exports = {
         },
         allowNull: false
       },
+      filename: {
+        type: Sequelize.STRING
+      },
       name: {
         type: Sequelize.STRING
       },
-      stars: {
-        type: Sequelize.INTEGER
+      type: {
+        type: Sequelize.ENUM,
+        values: ['CNI', 'VIT', 'RIB', 'DIP', 'OrNa', 'CV', 'LM', 'ADELI'],
+        allowNull: false
+      },
+      path: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +45,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('CandidateSkills');
+    return queryInterface.dropTable('CandidateDocuments');
   }
 };

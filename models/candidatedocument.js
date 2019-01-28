@@ -11,7 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       allowNull: false
     },
-    type: DataTypes.STRING,
+    filename: DataTypes.STRING,
+    name: DataTypes.STRING,
+    type: {
+      type: DataTypes.ENUM,
+      values: ['CNI', 'VIT', 'RIB', 'DIP', 'OrNa', 'CV', 'LM', 'ADELI'],
+    },
     path: DataTypes.STRING
   }, {});
   CandidateDocument.associate = function (models) {
