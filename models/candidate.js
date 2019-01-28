@@ -50,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'candidate_id',
       as: 'softwares'
     });
+    Candidate.hasMany(models.CandidateDocument, {
+      foreignKey: 'candidate_id',
+      as: 'documents'
+    });
   };
   return Candidate;
 };

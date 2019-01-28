@@ -190,6 +190,19 @@ module.exports = {
       return res.render('candidates/skills', render)
     }).catch(error => next(new Error(error)));
   },
+  getDocuments: (req, res, next) => {
+    let render = { a: { main: 'documents' } };
+    Models.Candidate.findOne({
+      where: { user_id: req.user.id },
+      include: {
+        model: Models.CandidateDocument,
+        as: 'documents'
+      }
+    }).then(usr => {
+      render.usr = usr;
+      return res.render('candidates/documents', render)
+    }).catch(error => next(new Error(error)));
+  },
   addApplication: (req, res, next) => {
     let render = { a: { main: 'applications' } };
     Models.Post.findAll().then(posts => {
