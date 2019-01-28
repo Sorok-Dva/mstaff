@@ -14,10 +14,9 @@ let fileSelectHandler = (e) => {
   // Cancel event and hover styling
   fileDragHover(e);
 
-  if (files.length > 1) {
-    output(`<strong>Vous ne pouvez uploader qu'une vidéo.</strong>`);
-  } else {
-    parseFile(files[0]);
+  // process all File objects
+  for (let i = 0, f; f = files[i]; i++) {
+    parseFile(f);
   }
 };
 
@@ -28,26 +27,22 @@ let parseFile = (f) => {
   output('<strong>' + encodeURI(file.name) + '</strong>');
 
   let imageName = file.name;
-  let $source = $('#videoSrc');
 
-  let isGood = (/\.(?=mp4)/gi).test(imageName);
+  let isGood = (/\.(?=pdf|docx|doc)/gi).test(imageName);
   if (isGood) {
     $('#start').hide();
-    $('#notvideo').hide();
+    $('#notgoodfile').hide();
     $('#response').show();
-    $('#video-preview').show();
-    $source[0].src = URL.createObjectURL(file);
-    $source.parent()[0].load();
-    $source.attr('data-type', 'preview');
-
+    $('#documents-preview').show();
     $('#file-progress').attr('max', file.size);
+    uploadFile(file);
   }
   else {
-    output(`<strong>Mauvais format. Formats autorisé : mp4</strong>`);
+    output(`<strong>Mauvais format. Formats autorisé : pdf, doc ou docx</strong>`);
     $('#start').show();
-    $('#notvideo').show();
+    $('#notgoodfile').show();
     $('#response').hide();
-    $('#video-preview').hide();
+    $('#documents-preview').hide();
     document.getElementById("file-upload-form").reset();
   }
 };
@@ -65,13 +60,10 @@ function uploadFile(f) {
     pBar = document.getElementById('file-progress'),
     fileSizeLimit = 10240; // In MB
   if (xhr.upload) {
-    // Check if file is less than x MB
     if (file.size <= fileSizeLimit * 10240 * 1024) {
-      // Progress bar
       pBar.style.display = 'inline';
       xhr.upload.addEventListener('progress', updateFileProgress, false);
 
-      // File received / failed
       xhr.onreadystatechange = function(e) {
         $('#file-progress').attr('class', `progress ${(xhr.status === 200 ? "success" : "failure")}`);
 
@@ -80,9 +72,18 @@ function uploadFile(f) {
           notification({
             icon: 'check-circle',
             type: 'success',
-            title: 'Vidéo de profil sauvegardée :',
-            message: `Votre vidéo de présentation a correctement été ajoutée à votre profil.`
+            title: 'Document sauvegardé :',
+            message: `Votre document a correctement été sauvegarder sur nos serveurs.`
           });
+        } else if (xhr.readyState === 4 && xhr.status === 400) {
+          if (xhr.response === 'Document of same type with same name already exist.') {
+            notification({
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Doublon détécté :',
+              message: `Un document de même type portant le même nom existe déjà sur votre compte.`
+            });
+          }
         }
       };
 
@@ -92,7 +93,7 @@ function uploadFile(f) {
       xhr.setRequestHeader('X-File-Name', file.name);
       xhr.setRequestHeader('X-File-Size', file.size);
       let formdata = new FormData();
-      formdata.append('file', file);
+      formdata.append('CV', file);
       xhr.send(formdata);
     } else {
       output('Please upload a smaller file (< ' + fileSizeLimit + ' MB).');
@@ -106,26 +107,6 @@ if (window.File && window.FileList && window.FileReader) {
     fileDrag = document.getElementById('file-drag');
 
   fileSelect.addEventListener('change', fileSelectHandler, false);
-
-  videoPreview.addEventListener('loadedmetadata', () => {
-    if ($('#videoSrc').attr('data-type') !== 'preview') return false;
-    let duration = $('#videoSrc').parent()[0].duration.toFixed(2);
-    if (duration <= 600) {
-      uploadFile(file);
-    } else {
-      output(`<strong>Vidéo trop longue. Durée maximale autorisée : 10 minutes.</strong>`);
-      $('#start').show();
-      $('#response').hide();
-      $('#video-preview').hide();
-      document.getElementById("file-upload-form").reset();
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Impossible d\'enregistrer cette vidéo :',
-        message: `La durée de votre vidéo est plus grand que la limite autorisée : 10 minutes.`
-      });
-    }
-  });
 
   let xhr = new XMLHttpRequest();
   if (xhr.upload) {
