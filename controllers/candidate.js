@@ -37,36 +37,54 @@ module.exports = {
       }
     }
   },
-  addVideo: (req, res, next) => {
-    if (Object.keys(req.file).length === 0) {
-      return res.status(400).send('No files were uploaded.');
+  postVideo: (req, res, next) => {
+    if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
+    let video = { filename: null };
+    if (req.params.action === 'add') {
+      if (Object.keys(req.file).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+      }
+      video = req.file;
     }
 
-    let video = req.file;
-
     Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
-      if (candidate.video !== null || undefined) {
+      if (!_.isNil(candidate.video)) {
         if (fs.existsSync(`./public/uploads/candidates/videos/${candidate.video}`)) {
           fs.unlinkSync(`./public/uploads/candidates/videos/${candidate.video}`)
         }
       }
       candidate.video = video.filename;
       candidate.save().then(() => {
-        return res.send({ result: 'updated' });
+        return res.send({ result: 'done' });
       })
     });
   },
-  deleteVideo: (req, res, next) => {
-    Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
-      if (candidate.video !== null || undefined) {
-        if (fs.existsSync(`./public/uploads/candidates/videos/${candidate.video}`)) {
-          fs.unlinkSync(`./public/uploads/candidates/videos/${candidate.video}`);
+  uploadDocument: (req, res, next) => {
+    if (Object.keys(req.files).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+    let file = Object.values(req.files)[0][0];
+    let candidate;
+    Models.Candidate.findOne({ where: { user_id: req.user.id }}).then(result => {
+      candidate = result;
+      return Models.CandidateDocument.findOne({ where: { name: file.originalname, type: file.fieldname } });
+    }).then(document => {
+      if (_.isNil(document)) {
+        Models.CandidateDocument.create({
+          candidate_id: candidate.id,
+          filename: file.filename,
+          name: file.originalname,
+          type: file.fieldname,
+          path: file.path,
+        }).then(document => {
+          return res.status(200).send(document);
+        });
+      } else {
+        if (fs.existsSync(`./public/uploads/documents/${document.filename}`)) {
+          fs.unlinkSync(`./public/uploads/candidates/videos/${document.filename}`)
         }
+        return res.status(400).send('Document of same type with same name already exist.')
       }
-      candidate.video = null;
-      candidate.save().then(() => {
-        return res.send({ result: 'deleted' });
-      })
     });
   },
   getProfile: (req, res, next) => {
