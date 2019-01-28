@@ -44,7 +44,6 @@ module.exports = {
     res.status(err.status || 500);
     if (!req.user) opts.layout = 'onepage';
     res.render('error', opts);
-    throw new Error(err);
   },
   exphbs: exphbs({
     extname         : 'hbs',
