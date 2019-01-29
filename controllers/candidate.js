@@ -1,7 +1,6 @@
 const { check, validationResult } = require('express-validator/check');
 const _ = require('lodash');
 const fs = require('fs');
-const sequelize = require('sequelize');
 
 const Models = require('../models/index');
 
@@ -142,60 +141,50 @@ module.exports = {
     }
   },
   getFormationsAndXP: (req, res, next) => {
-    Models.User.findOne({
-      where: { id: req.user.id },
+    Models.Candidate.findOne({
+      where: { user_id: req.user.id },
       include:[{
-        model: Models.Candidate, // Candidate Associations (user.candidate)
-        as: 'candidate',
+        model: Models.Experience, // Experiences Associations (user.candidate.experiences)
+        as: 'experiences',
         required: true,
-        include:[{
-          model: Models.Experience, // Experiences Associations (user.candidate.experiences)
-          as: 'experiences',
-          required: true,
-          include: [{
-            model: Models.Service,
-            as: 'service'
-          }, {
-            model: Models.Post,
-            as: 'poste'
-          }] // Service & Post Associations (user.candidate.experiences.service|post)
+        include: [{
+          model: Models.Service,
+          as: 'service',
         }, {
-          model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
-          as: 'qualifications'
-        }, {
-          model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
-          as: 'formations'
-        }]
+          model: Models.Post,
+          as: 'poste'
+        }] // Service & Post Associations (user.candidate.experiences.service|post)
+      }, {
+        model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
+        as: 'qualifications'
+      }, {
+        model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
+        as: 'formations'
       }]
-    }).then(u => {
+    }).then(candidate => {
       Models.Post.findAll().then(posts => {
         Models.Service.findAll().then(services => {
-          return res.render('candidates/formations', { u, posts, services, a: { main: 'cv' } })
+          return res.render('candidates/formations', { candidate, posts, services, a: { main: 'cv' } })
         }).catch(error => next(new Error(error)));
       }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
   },
   getKnowledge: (req, res, next) => {
     let render = { a: { main: 'knowledges' } };
-    Models.User.findOne({
-      where: { id: req.user.id },
-      attributes: ['id', 'email', 'role', 'type'],
+    Models.Candidate.findOne({
+      where: { user_id: req.user.id },
       include:[{
-        model: Models.Candidate, // Candidate Associations (user.candidate)
-        as: 'candidate',
-        include:[{
-          model: Models.CandidateSkill,
-          as: 'skills'
-        }, {
-          model: Models.CandidateEquipment,
-          as: 'equipments'
-        }, {
-          model: Models.CandidateSoftware,
-          as: 'softwares'
-        }]
+        model: Models.CandidateSkill,
+        as: 'skills'
+      }, {
+        model: Models.CandidateEquipment,
+        as: 'equipments'
+      }, {
+        model: Models.CandidateSoftware,
+        as: 'softwares'
       }]
-    }).then(usr => {
-      render.usr = usr;
+    }).then(candidate => {
+      render.candidate = candidate;
       return Models.Skill.findAll();
     }).then(skills => {
       render.skills = skills;
@@ -214,10 +203,10 @@ module.exports = {
       where: { user_id: req.user.id },
       include: {
         model: Models.CandidateDocument,
-        as: 'documents'
+        required: true
       }
-    }).then(usr => {
-      render.usr = usr;
+    }).then(candidate => {
+      render.candidate = candidate;
       return res.render('candidates/documents', render)
     }).catch(error => next(new Error(error)));
   },
