@@ -203,6 +203,7 @@ module.exports = {
       where: { user_id: req.user.id },
       include: {
         model: Models.CandidateDocument,
+        as: 'documents',
         required: true
       }
     }).then(candidate => {
