@@ -2,6 +2,7 @@
  * Handlebars helpers
  */
 const moment = require('moment');
+const _ = require('lodash');
 
 module.exports.register = async (Handlebars) => {
   /**
@@ -149,6 +150,12 @@ module.exports.register = async (Handlebars) => {
     } else {
       return options.inverse(this);
     }
+  });
+
+  Handlebars.registerHelper('countFiles', (object, type) => {
+    let count = 0;
+    if (!_.isNil(object)) object.forEach((e, i) => (object[i].type === type) ? count++ : null);
+    return count;
   });
 
   /* eslint-disable no-console */
