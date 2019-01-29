@@ -1,4 +1,4 @@
-let file = null;
+let file = null, pi = 0;
 let fileDragHover = (e) => {
   let fileDrag = document.getElementById('file-drag');
 
@@ -16,29 +16,30 @@ let fileSelectHandler = (e) => {
 
   // process all File objects
   for (let i = 0, f; f = files[i]; i++) {
-    parseFile(f);
+    pi++;
+    parseFile(f, pi);
   }
 };
 
 let output = (msg) => $('#messages').html(msg);
 
-let parseFile = (f) => {
+let parseFile = (f, i) => {
   file = f;
-  output('<strong>' + encodeURI(file.name) + '</strong>');
+  $('#response').append(`<div id="title${i}">${encodeURI(file.name)}</div><progress class="progress" id="file-progress${i}" value="0"></progress>`);
 
   let imageName = file.name;
 
-  let isGood = (/\.(?=pdf|docx|doc)/gi).test(imageName);
+  let isGood = (/\.(?=pdf|png|pnj)/gi).test(imageName);
   if (isGood) {
     $('#start').hide();
     $('#notgoodfile').hide();
     $('#response').show();
     $('#documents-preview').show();
     $('#file-progress').attr('max', file.size);
-    uploadFile(file);
+    uploadFile(file, i);
   }
   else {
-    output(`<strong>Mauvais format. Formats autorisé : pdf, doc ou docx</strong>`);
+    output(`<strong>Mauvais format. Formats autorisé : pdf, png ou pnj</strong>`);
     $('#start').show();
     $('#notgoodfile').show();
     $('#response').hide();
@@ -49,24 +50,25 @@ let parseFile = (f) => {
 
 let updateFileProgress = (e) => {
   if (e.lengthComputable)  {
-    (e.lengthComputable) ? $('#file-progress').attr('value', e.loaded) : null;
+    (e.lengthComputable) ? $(`#file-progress${e.target.i}`).attr('value', e.loaded) : null;
   }
 };
 
-function uploadFile(f) {
+function uploadFile(f, i) {
   file = f;
   let xhr = new XMLHttpRequest(),
-    fileInput = document.getElementById('class-roster-file'),
-    pBar = document.getElementById('file-progress'),
-    fileSizeLimit = 10240; // In MB
+    pBar = document.getElementById(`file-progress${i}`),
+    fileSizeLimit = 10240,
+    type = $('#file-upload').attr('name'); // In MB
   if (xhr.upload) {
     if (file.size <= fileSizeLimit * 10240 * 1024) {
       pBar.style.display = 'inline';
       xhr.upload.addEventListener('progress', updateFileProgress, false);
+      xhr.upload.i = i;
 
       xhr.onreadystatechange = function(e) {
-        $('#file-progress').attr('class', `progress ${(xhr.status === 200 ? "success" : "failure")}`);
-
+        $(`#file-progress${i}`).attr('class', `progress ${(xhr.status === 200 ? "success" : "failure")}`);
+        $('#start').show();
         if (xhr.readyState === 4 && xhr.status === 200) {
           $('#removeVideo').show();
           notification({
@@ -75,8 +77,15 @@ function uploadFile(f) {
             title: 'Document sauvegardé :',
             message: `Votre document a correctement été sauvegarder sur nos serveurs.`
           });
+          $(`#${type}Count`).html(parseInt($(`#${type}Count`).html()) + 1);
+          setTimeout(() => {
+            $(`#file-progress${i}`).fadeOut().remove();
+            $(`#title${i}`).fadeOut().remove();
+          }, 5000);
         } else if (xhr.readyState === 4 && xhr.status === 400) {
           if (xhr.response === 'Document of same type with same name already exist.') {
+            $(`#file-progress${i}`).remove();
+            $(`#title${i}`).fadeOut().remove();
             notification({
               icon: 'exclamation',
               type: 'danger',
@@ -93,7 +102,7 @@ function uploadFile(f) {
       xhr.setRequestHeader('X-File-Name', file.name);
       xhr.setRequestHeader('X-File-Size', file.size);
       let formdata = new FormData();
-      formdata.append('CV', file);
+      formdata.append(type, file);
       xhr.send(formdata);
     } else {
       output('Please upload a smaller file (< ' + fileSizeLimit + ' MB).');
@@ -138,4 +147,40 @@ $('#removeVideo').click(() => {
       });
     }
   })
+});
+
+$('i[data-action="addDoc"]').click(function() {
+  let type = $(this).attr('data-type');
+  let fileInput = $('#file-upload');
+  let sendButton = $('#file-upload-btn');
+
+  $('#response').empty().hide();
+  fileInput.attr({name: type});
+  switch (type) {
+    case 'DIP':
+      sendButton.html('Selectionnez un ou plusieurs diplômes');
+      break;
+    case 'CNI':
+      sendButton.html('Selectionnez votre pièce d\'identité');
+      break;
+    case 'VIT':
+      sendButton.html('Selectionnez votre carte vitale ou attestation de santé');
+      break;
+    case 'RIB':
+      sendButton.html('Selectionnez votre RIB');
+      break;
+    case 'OrNa':
+      sendButton.html('Selectionnez votre Attestation d\'inscription à l\'Ordre National');
+      break;
+    case 'CV':
+      sendButton.html('Selectionnez votre CV');
+      break;
+    case 'LM':
+      sendButton.html('Selectionnez votre lettre de motivation');
+      break;
+    case 'ADELI':
+      sendButton.html('Selectionnez votre justificatif de référencement ADELI');
+      break;
+  }
+  $('form').show();
 });
