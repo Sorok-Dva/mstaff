@@ -9014,7 +9014,7 @@ star {
     position: relative;
 }
 
-.card .card-title,
+/*.card .card-title,
 .card .stats,
 .card .category,
 .card .description,
@@ -9025,7 +9025,7 @@ star {
 .card small,
 .card a {
     position: relative;
-}
+}*/
 
 .card .card-link {
     color: #444444;
