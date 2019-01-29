@@ -25,12 +25,12 @@ let output = (msg) => $('#messages').html(msg);
 
 let parseFile = (f, i) => {
   file = f;
-  $('#response').append(`<div id="title${i}">${encodeURI(file.name)}</div><progress class="progress" id="file-progress${i}" value="0"></progress>`);
-
   let imageName = file.name;
+  let isGood = (/\.(?=pdf|png|jpeg|jpg)/gi).test(imageName);
 
-  let isGood = (/\.(?=pdf|png|pnj)/gi).test(imageName);
   if (isGood) {
+    $('#response').append(`<div id="title${i}">${encodeURI(file.name)}</div><progress class="progress" id="file-progress${i}" value="0"></progress>`);
+
     $('#start').hide();
     $('#notgoodfile').hide();
     $('#response').show();
@@ -70,18 +70,24 @@ function uploadFile(f, i) {
         $(`#file-progress${i}`).attr('class', `progress ${(xhr.status === 200 ? "success" : "failure")}`);
         $('#start').show();
         if (xhr.readyState === 4 && xhr.status === 200) {
-          $('#removeVideo').show();
-          notification({
-            icon: 'check-circle',
-            type: 'success',
-            title: 'Document sauvegardé :',
-            message: `Votre document a correctement été sauvegarder sur nos serveurs.`
-          });
-          $(`#${type}Count`).html(parseInt($(`#${type}Count`).html()) + 1);
-          setTimeout(() => {
-            $(`#file-progress${i}`).fadeOut().remove();
-            $(`#title${i}`).fadeOut().remove();
-          }, 5000);
+          let response = JSON.parse(xhr.response);
+          if (response.id) {
+            let url = `/static/uploads/candidates/documents/${response.filename}`;
+            let rmBtn = ` - <button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="${response.id}"><i class="fa fa-trash"></i></button>`;
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Document sauvegardé :',
+              message: `Votre document a correctement été sauvegarder sur nos serveurs.`
+            });
+            $(`#${type}List ul`).append(`<li><a href="${url}" target="_blank">${response.name}</a>${rmBtn}</li>`);
+            $(`#${type}Count`).html(parseInt($(`#${type}Count`).html()) + 1);
+            $(`i[data-type="${type}"]`).attr('class', 'fal fa-check-circle fa-2x');
+            setTimeout(() => {
+              $(`#file-progress${i}`).fadeOut().remove();
+              $(`#title${i}`).fadeOut().remove();
+            }, 5000);
+          }
         } else if (xhr.readyState === 4 && xhr.status === 400) {
           if (xhr.response === 'Document of same type with same name already exist.') {
             $(`#file-progress${i}`).remove();
