@@ -152,6 +152,14 @@ module.exports.register = async (Handlebars) => {
     }
   });
 
+  Handlebars.registerHelper('addDocIcon', (object, type) => {
+    let iClass = 'plus-circle';
+    if (!_.isNil(object)) object.forEach((e, i) => {
+      (object[i].type === type) ? iClass = 'check-circle' : null
+    });
+    return iClass;
+  });
+
   Handlebars.registerHelper('countFiles', (object, type) => {
     let count = 0;
     if (!_.isNil(object)) object.forEach((e, i) => (object[i].type === type) ? count++ : null);
