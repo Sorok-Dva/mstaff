@@ -1,233 +1,239 @@
 <div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title"><i class="fa fa-question-circle" aria-hidden="true"></i> Légende</h5>
-            </div>
-            <div class="card-body" style="padding-top: 0px;">
-                <div class="row">
-                    <div class="col-md-4 text-center">
-                        <span class="fa fa-star checked"></span>
-                        <h5 class="inline text-bold">Je sais faire avec tutorat</h5>
+  <div class="col-lg-12 col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title pull-left"><i class="fal fa-files-o"></i> Mes documents</h4>
+        <hr style="width:85%; margin-top: 14px;">
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/document" style="display: none">
+            <input id="file-upload" type="file" accept="application/pdf, image/png, image/jpeg"/>
+            <label for="file-upload" id="file-drag">
+              <div id="start">
+                <i class="fal fa-file-pdf-o fa-3x" aria-hidden="true"></i>
+                <div>Choisir un ou plusieurs fichiers ou déposer ici</div>
+                <span id="file-upload-btn" class="btn btn-primary"></span>
+              </div>
+              <div id="response" style="display:none"></div>
+            </label>
+          </form>
+          <div class="col-md-12">
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-content center-block">
+                  <div class="col-md-12">
+                    <div class="icon-big icon-info text-center">
+                      <i class="fal fa-graduation-cap"></i>
                     </div>
-                    <div class="col-md-4 text-center">
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <h5 class="inline text-bold">Je sais faire en autonomie</h5>
+                    <div class="text-center">
+                      <small class="text-center">Diplôme (ou Attestation de jeune diplômé)</small>
+                      <br><br>
+                      <i class="fal fa-plus-circle fa-2x" style="cursor: pointer"
+                         data-action="addDoc" data-type="DIP"></i>
                     </div>
-                    <div class="col-md-4 text-center">
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <h5 class="inline text-bold">Je sais former</h5>
-                    </div>
+                  </div>
                 </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <div class="pull-right" style="position:relative; display:inline-block;">
+                      <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                         data-original-title=""></i>
+                    </div>
+                    <small id="DIPCount">0</small> <i class="fa fa-files-o"></i>
+                    {{#each candidate.documents as |document|}}
+                      test
+                    {{/each}}
+                  </div>
+                </div>
+              </div>
             </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-content center-block">
+                  <div class="col-md-12">
+                    <div class="icon-big icon-info text-center">
+                      <i class="fal fa-id-card"></i>
+                    </div>
+                    <div class="text-center">
+                      <small class="text-center">Pièce d'identité</small>
+                      <br><br>
+                      <i class="fal fa-plus-circle fa-2x" style="cursor: pointer"
+                         data-action="addDoc" data-type="CNI"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <div class="pull-right" style="position:relative; display:inline-block;">
+                      <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                         data-original-title=""></i>
+                    </div>
+                    <small id="CNICount">0</small> <i class="fa fa-files-o"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-content center-block">
+                  <div class="col-md-12">
+                    <div class="icon-big icon-info text-center">
+                      <i class="fal fa-file-certificate"></i>
+                    </div>
+                    <div class="text-center">
+                      <small class="text-center">Justificatif de référencement ADELI</small>
+                      <br><br>
+                      <i class="fal fa-plus-circle fa-2x" style="cursor: pointer"
+                         data-action="addDoc" data-type="ADELI"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <div class="pull-right" style="position:relative; display:inline-block;">
+                      <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                         data-original-title=""></i>
+                    </div>
+                    <small id="ADELICount">0</small> <i class="fa fa-files-o"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-content center-block">
+                  <div class="col-md-12">
+                    <div class="icon-big icon-info text-center">
+                      <i class="fal fa-shield-alt"></i>
+                    </div>
+                    <div class="text-center">
+                      <small class="text-center">Carte Vitale ou Attestation de Protection Santé</small>
+                      <br><br>
+                      <i class="fal fa-plus-circle fa-2x" style="cursor: pointer"
+                         data-action="addDoc" data-type="VIT"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <div class="pull-right" style="position:relative; display:inline-block;">
+                      <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                         data-original-title=""></i>
+                    </div>
+                    <small id="VITCount">0</small> <i class="fa fa-files-o"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-content center-block">
+                  <div class="col-md-12">
+                    <div class="icon-big icon-info text-center">
+                      <i class="fal fa-university"></i>
+                    </div>
+                    <div class="text-center">
+                      <small class="text-center">Relevé d'Identité Bancaire (RIB)</small>
+                      <br><br>
+                      <i class="fal fa-plus-circle fa-2x" style="cursor: pointer"
+                         data-action="addDoc" data-type="RIB"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <div class="pull-right" style="position:relative; display:inline-block;">
+                      <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                         data-original-title=""></i>
+                    </div>
+                    <small id="RIBCount">0</small> <i class="fa fa-files-o"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-content center-block">
+                  <div class="col-md-12">
+                    <div class="icon-big icon-info text-center">
+                      <i class="fal fa-user-md"></i>
+                    </div>
+                    <div class="text-center">
+                      <small class="text-center">Attestation d'inscription à l'Ordre National</small>
+                      <br><br>
+                      <i class="fal fa-plus-circle fa-2x" style="cursor: pointer"
+                         data-action="addDoc" data-type="OrNa"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <div class="pull-right" style="position:relative; display:inline-block;">
+                      <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                         data-original-title=""></i>
+                    </div>
+                    <small id="OrNaCount">0</small> <i class="fa fa-files-o"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-content center-block">
+                  <div class="col-md-12">
+                    <div class="icon-big icon-info text-center">
+                      <i class="fal fa-file-user"></i>
+                    </div>
+                    <div class="text-center">
+                      <small class="text-center">CV</small>
+                      <br><br>
+                      <i class="fal fa-plus-circle fa-2x" style="cursor: pointer"
+                         data-action="addDoc" data-type="CV"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <div class="pull-right" style="position:relative; display:inline-block;">
+                      <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                         data-original-title=""></i>
+                    </div>
+                    <small id="CVCount">0</small> <i class="fa fa-files-o"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-content center-block">
+                  <div class="col-md-12">
+                    <div class="icon-big icon-info text-center">
+                      <i class="fal fa-file-signature"></i>
+                    </div>
+                    <div class="text-center">
+                      <small class="text-center">Lettre de motivation</small>
+                      <br><br>
+                      <i class="fal fa-plus-circle fa-2x" style="cursor: pointer"
+                         data-action="addDoc" data-type="LM"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <div class="pull-right" style="position:relative; display:inline-block;">
+                      <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                         data-original-title=""></i>
+                    </div>
+                    <small id="LMCount">0</small> <i class="fa fa-files-o"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-<div class="row">
-    <div class="col-md-4 card-competence">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title"><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</h5>
-            </div>
-            <div class="card-body">
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group col-md-9">
-                            <input class="form-control form-control-sm" placeholder="Ajouter une nouvelle compétence"
-                                   id="skills" type="text">
-                        </div>
-                        <button type="button" id="addNewSkill" class="btn btn-primary mb-3" disabled>
-                            <i class="fa fa-plus"></i> Ajouter
-                        </button>
-                    </div>
-                    <div class="col-md-12 text-center" id="skillAlreadyInList" style="display: none">
-                        <b class="alert-danger">
-                            Cette compétence est déjà présente dans votre liste de compétences.
-                        </b>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table">
-                                    <thead>
-                                        <tr style="background-color: #FFF;">
-                                            <th style="width: 65%">Compétences</th>
-                                            <th>Niveau</th>
-                                            <th style="width:5%"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="skillsList">
-                                        {{#each usr.candidate.skills as |skill|}}
-                                            <tr data-type="skill" data-id="{{skill.id}}">
-                                                <td>{{skill.name}}</td>
-                                                <td>
-                                                    <div class="rating-stars text-center">
-                                                        <ul class="stars" data-type="skill" data-id="{{skill.id}}">
-                                                            <li class="star {{rating skill.stars 1}}" title="Fair" data-value="1">
-                                                                <i class="fa fa-star"></i>
-                                                            </li>
-                                                            <li class="star {{rating skill.stars 2}}" title="Good" data-value='2'>
-                                                                <i class="fa fa-star"></i>
-                                                            </li>
-                                                            <li class="star {{rating skill.stars 3}}" title="Excellent" data-value='3'>
-                                                                <i class="fa fa-star"></i>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-simple btn-danger btn-icon remove" data-type="skill" data-id="{{skill.id}}">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        {{/each}}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 card-competence">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title"><i class="fa fa-stethoscope" aria-hidden="true"></i> Materiels et Produits</h5>
-            </div>
-            <div class="card-body">
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group col-md-9">
-                            <input class="form-control form-control-sm" id="equipments" type="text"
-                                   placeholder="Ajouter un materiel/produit">
-                        </div>
-                        <button type="button" class="btn btn-primary mb-3" id="addNewEquipment" disabled>
-                            <i class="fa fa-plus"></i> Ajouter
-                        </button>
-                    </div>
-                    <div class="col-md-12 text-center" id="equipmentAlreadyInList" style="display: none">
-                        <b class="alert-danger">
-                            Ce materiel/produit est déjà présent dans votre liste.
-                        </b>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table">
-                            <thead>
-                                <tr style="background-color: #FFF;">
-                                    <th style="width: 65%">Matériel</th>
-                                    <th>Niveau</th>
-                                    <th style="width:5%"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="equipmentsList">
-                            {{#each usr.candidate.equipments as |equipment|}}
-                                <tr data-type="equipment" data-id="{{equipment.id}}">
-                                    <td>{{equipment.name}}</td>
-                                    <td>
-                                        <div class="rating-stars text-center">
-                                            <ul class="stars" data-type="equipment" data-id="{{equipment.id}}">
-                                                <li class="star {{rating equipment.stars 1}}" title="Fair" data-value="1">
-                                                    <i class="fa fa-star"></i>
-                                                </li>
-                                                <li class="star {{rating equipment.stars 2}}" title="Good" data-value='2'>
-                                                    <i class="fa fa-star"></i>
-                                                </li>
-                                                <li class="star {{rating equipment.stars 3}}" title="Excellent" data-value='3'>
-                                                    <i class="fa fa-star"></i>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-simple btn-danger btn-icon remove" data-type="equipment" data-id="{{equipment.id}}">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 card-competence">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title"><i class="fa fa-save" aria-hidden="true"></i> Logiciels</h5>
-            </div>
-            <div class="card-body">
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group col-md-9">
-                            <input class="form-control form-control-sm" id="softwares" type="text"
-                                   placeholder="Ajouter un nouveau logiciel">
-                        </div>
-                        <button type="button" class="btn btn-primary mb-3" id="addNewSoftware" disabled>
-                            <i class="fa fa-plus"></i> Ajouter
-                        </button>
-                    </div>
-                    <div class="col-md-12 text-center" id="softwareAlreadyInList" style="display: none">
-                        <b class="alert-danger">
-                            Ce logiciel est déjà présent dans votre liste.
-                        </b>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table">
-                            <thead>
-                                <tr style="background-color: #FFF;">
-                                    <th style="width: 65%">Logiciel</th>
-                                    <th>Niveau</th>
-                                    <th style="width:5%"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="softwaresList">
-                            {{#each usr.candidate.softwares as |software|}}
-                                <tr data-type="software" data-id="{{software.id}}">
-                                    <td>{{software.name}}</td>
-                                    <td>
-                                        <div class="rating-stars text-center">
-                                            <ul class="stars" data-type="software" data-id="{{software.id}}">
-                                                <li class="star {{rating software.stars 1}}" title="Fair" data-value="1">
-                                                    <i class="fa fa-star"></i>
-                                                </li>
-                                                <li class="star {{rating software.stars 2}}" title="Good" data-value='2'>
-                                                    <i class="fa fa-star"></i>
-                                                </li>
-                                                <li class="star {{rating software.stars 3}}" title="Excellent" data-value='3'>
-                                                    <i class="fa fa-star"></i>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-simple btn-danger btn-icon remove" data-type="software" data-id="{{software.id}}">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script src="/static/javascripts/skills.js"></script>
+<script src="/static/javascripts/uploadDocuments.js"></script>

@@ -68,8 +68,8 @@
                                 </tr>
                             </thead>
                             <tbody id="experienceTbody">
-                                {{#if u.candidate.experiences}}
-                                {{#each u.candidate.experiences as |xp|}}
+                                {{#if candidate.experiences}}
+                                {{#each candidate.experiences as |xp|}}
                                     <tr data-xpId="{{xp.id}}">
                                         <td>
                                             {{date xp.start 'MM/YYYY' }} -
@@ -144,8 +144,8 @@
                             </tr>
                             </thead>
                             <tbody id="formationsTbody">
-                            {{#if u.candidate.formations}}
-                                {{#each u.candidate.formations as |formation|}}
+                            {{#if candidate.formations}}
+                                {{#each candidate.formations as |formation|}}
                                     <tr data-formationId="{{formation.id}}">
                                         <td>
                                             {{date formation.start 'MM/YYYY' }} -
@@ -215,8 +215,8 @@
                             </tr>
                             </thead>
                             <tbody id="diplomaTbody">
-                            {{#if u.candidate.qualifications}}
-                                {{#each u.candidate.qualifications as |diploma|}}
+                            {{#if candidate.qualifications}}
+                                {{#each candidate.qualifications as |diploma|}}
                                     <tr data-diplomaId="{{diploma.id}}">
                                         <td>
                                             {{date diploma.start 'MM/YYYY' }} -
