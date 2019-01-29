@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   CandidateDocument.associate = function (models) {
     CandidateDocument.belongsTo(models.Candidate, {
       foreignKey: 'id',
+      targetKey: 'id',
       onDelete: 'CASCADE'
     });
   };
