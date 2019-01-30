@@ -204,6 +204,21 @@ let verifyStep = (step, element) => {
           });
           stop = true;
         }
+        if (application.contractType.name === 'cdi-cdd'){
+          $('#cdiDate').show();
+        } else {
+          $('#cdiDate').hide();
+        }
+        if (application.contractType.name === 'vacation'){
+          $('#vacationDate').show();
+        } else {
+          $('#vacationDate').hide();
+        }
+        if (application.contractType.name === 'internship'){
+          $('#internshipDate').show();
+        } else {
+          $('#internshipDate').hide();
+        }
       }
       if (!('postType' in application) || application.postType.length === 0) {
         notification({

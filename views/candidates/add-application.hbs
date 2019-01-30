@@ -1,4 +1,4 @@
-<style>
+    <style>
     .checkbox label::before {
         content: "";
         margin-top: 20px;
@@ -196,15 +196,25 @@
                         </div>
                         <hr>
                         <div class="row">
-                            <div class="col-md-6"> <label for="start">Du *</label>
-                               <input id="start" name="start" type="text"
-                                      class="form-control input-md from" required="" autocomplete="off">
+
+                            <div id="internshipDate" style="display:none">
+                                <div class="col-md-6"> <label for="start">Du *</label>
+                                    <input id="start" name="start" type="text"
+                                           class="form-control input-md from" required="" autocomplete="off">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="end">Au *</label>
+                                    <input id="end" name="end" type="text"
+                                           class="form-control input-md to" autocomplete="off">
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="end">Au *</label>
-                                <input id="end" name="end" type="text"
-                                       class="form-control input-md to" autocomplete="off">
+                            <div id="vacationDate" style="display:none">
                             </div>
+                            <div id="cdiDate" style="display:none">
+                                //TODO CALENDAR
+                            </div>
+
+
                             <ul class="list-inline pull-right">
                                 <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
                                 <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
@@ -406,3 +416,4 @@
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script src="/static/javascripts/addApplication.js"></script>
+<script src="/static/javascripts/datepicker.js"></script>
