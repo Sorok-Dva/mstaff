@@ -47,7 +47,6 @@
                 {{/if}}
             </div>
             <div class="card-content text-center">
-
                 <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/video">
                     <input id="file-upload" type="file" name="file" accept="video/mp4" />
 
@@ -167,7 +166,7 @@
                         {{/each}}
                     {{else}}
                         <tr class="text-center">
-                            <td>Aucune donnée disponible</td>
+                            <td colspan="2">Aucune donnée disponible</td>
                         </tr>
                     {{/if}}
                     </tbody>
@@ -210,7 +209,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr class="info">
-                            <th><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</th>
+                            <th style="width:80%"><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -238,7 +237,7 @@
                             {{/each}}
                         {{else}}
                             <tr class="text-center">
-                                <td>Aucune donnée disponible</td>
+                                <td colspan="2">Aucune donnée disponible</td>
                             </tr>
                         {{/if}}
                     </tbody>
@@ -246,7 +245,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr class="info">
-                            <th><i class="fa fa-stethoscope" aria-hidden="true"></i> Matériels et produits</th>
+                            <th style="width:80%"><i class="fa fa-stethoscope" aria-hidden="true"></i> Matériels et produits</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -274,7 +273,7 @@
                         {{/each}}
                     {{else}}
                         <tr class="text-center">
-                            <td>Aucune donnée disponible</td>
+                            <td colspan="2">Aucune donnée disponible</td>
                         </tr>
                     {{/if}}
                     </tbody>
@@ -310,7 +309,7 @@
                         {{/each}}
                     {{else}}
                         <tr class="text-center">
-                            <td>Aucune donnée disponible</td>
+                            <td colspan="2">Aucune donnée disponible</td>
                         </tr>
                     {{/if}}
                     </tbody>
