@@ -14,7 +14,19 @@ module.exports = {
   validate: (method) => {
 
   },
-  index:  (req, res) => res.render('back-office/index', { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } }),
+  index:  (req, res) => {
+    let render = { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } };
+    Models.User.count().then(count => {
+      render.usersCount = count;
+      return Models.Candidate.count();
+    }).then(count => {
+      render.candidatesCount = count;
+      return Models.Establishment.count();
+    }).then(count => {
+      render.esCount = count;
+      res.render('back-office/index', render);
+    });
+  },
   stats:  (req, res) => res.render('back-office/stats', { layout, title: 'Statistiques', a: { main: 'dashboard', sub: 'stats' } }),
   getUsers:(req, res) => {
     Models.User.findAll({
