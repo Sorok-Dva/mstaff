@@ -29,6 +29,12 @@ router.get('/users', UserController.ensureIsAdmin, BackOfficeController.getUsers
 router.get('/users/candidates', UserController.ensureIsAdmin, BackOfficeController.getCandidates);
 
 /**
+ * @Route('/back-office/users/es') GET;
+ * Show Users (es type) List page
+ */
+router.get('/users/es', UserController.ensureIsAdmin, BackOfficeController.getESUsers);
+
+/**
  * @Route('/back-office/user/:id/') GET;
  * Show User data
  */
@@ -58,5 +64,11 @@ router.get('/impersonatePutReadOnly', UserController.ensureIsAdmin, BackOfficeCo
  * Validation of removing read only
  */
 router.post('/impersonateRemoveReadOnly/validate', UserController.ensureIsAdmin, BackOfficeController.impersonateRemoveReadOnlyValidation);
+
+/**
+ * @Route('/back-office/es/') GET;
+ * Show ES List page
+ */
+router.get('/es', UserController.ensureIsAdmin, BackOfficeController.getES);
 
 module.exports = router;
