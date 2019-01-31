@@ -67,7 +67,7 @@ module.exports = {
       res.render('back-office/users/list', {
         layout,
         title: 'Liste des utilisateurs (tout type confondu)',
-        a: { main: 'users', sub: 'all' },
+        a: { main: 'users', sub: 'users_all' },
         users })
     });
   },
@@ -116,7 +116,7 @@ module.exports = {
       res.render('back-office/es/list', {
         layout,
         title: 'Liste des Établissements Mstaff',
-        a: { main: 'es', sub: 'all' },
+        a: { main: 'es', sub: 'es_all' },
         data
       })
     }).catch(error => next(new Error(error)));
