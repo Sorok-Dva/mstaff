@@ -166,6 +166,22 @@ module.exports.register = async (Handlebars) => {
     return count;
   });
 
+  Handlebars.registerHelper('weekStats', (object) => {
+    let res = [];
+    for (let day = 6; day >= 0; day--) {
+      let date = (day === 0) ? moment().format('MMM Do YY') : moment().subtract(day, 'days').format('MMM Do YY');
+      let isNull = true;
+      object.map((user) => {
+        if(date === moment(user.createdAt).format('MMM Do YY')){
+          res.push(user.dataValues.count);
+          isNull = false;
+        }
+      });
+      if (isNull) res.push(0);
+    }
+    return res;
+  });
+
   /* eslint-disable no-console */
   Handlebars.registerHelper('debug', function () {
     console.log('Context:', this);
