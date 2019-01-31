@@ -33,7 +33,7 @@ module.exports = {
         attributes: ['id', 'createdAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
         where: {
           createdAt: {
-            [Op.between]: [ moment().subtract(7, 'days')._d, new Date()]
+            [Op.between]: [ moment().subtract(6, 'days')._d, new Date()]
           }
         },
         group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))]
@@ -44,16 +44,28 @@ module.exports = {
         attributes: ['id', 'createdAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
         where: {
           createdAt: {
-            [Op.between]: [ moment().subtract(7, 'days')._d, new Date()]
+            [Op.between]: [ moment().subtract(6, 'days')._d, new Date()]
           }
         },
         group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))]
       });
     }).then(data => {
       render.usersWeekRegistration = data;
-      render.usersWeekCount = 0; render.ESWeekCount = 0;
+      return Models.Wish.findAll({
+        attributes: ['id', 'createdAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
+        where: {
+          createdAt: {
+            [Op.between]: [ moment().subtract(6, 'days')._d, new Date()]
+          }
+        },
+        group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))]
+      });
+    }).then(data => {
+      render.wishesWeek = data;
+      render.usersWeekCount = 0; render.ESWeekCount = 0; render.wishesWeekCount = 0;
       render.esWeekRegistration.map((data) => (render.ESWeekCount += parseInt(data.dataValues.count)));
       render.usersWeekRegistration.map((data) => (render.usersWeekCount += parseInt(data.dataValues.count)));
+      render.wishesWeek.map((data) => (render.wishesWeekCount += parseInt(data.dataValues.count)));
       res.render('back-office/index', render);
     });
   },

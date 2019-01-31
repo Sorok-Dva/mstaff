@@ -155,6 +155,33 @@
       </div>
     </div>
   </div>
+  <div class="col-lg-4 col-sm-6">
+    <div class="card">
+      <div class="card-content">
+        <div class="row">
+          <div class="col-xs-7">
+            <div class="numbers pull-left">{{wishesWeekCount}}</div>
+          </div>
+          <div class="col-xs-5">
+            <div class="pull-right">
+              <!--<span class="label label-danger"></span>-->
+            </div>
+          </div>
+        </div>
+        <h6 class="big-title">Nouveaux souhaits ces <span class="text-muted"> 7 derniers jours</span></h6>
+        <div id="chartWishesWeek"></div>
+      </div>
+      <div class="card-footer">
+        <hr>
+        <div class="footer-title">Voir plus</div>
+        <div class="pull-right">
+          <button class="btn btn-default btn-fill btn-icon btn-sm">
+            <i class="ti-angle-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
   let lastWeek = [
@@ -170,6 +197,16 @@
   let dataCandidateWeek = {
     labels: lastWeek,
     series: [[{{weekStats usersWeekRegistration}}]]
+  };
+
+  let dataESWeek = {
+    labels: lastWeek,
+    series: [[{{weekStats esWeekRegistration}}]]
+  };
+  {{log wishesWeek.dataValues}}
+  let dataWishesWeek = {
+    labels: lastWeek,
+    series: [[{{weekStats wishesWeek}}]]
   };
 
   let optionsUsersWeek = {
@@ -189,13 +226,8 @@
     low: 0,
     high: 'auto',
     classNames: {
-      line: 'ct-line ct-yellow'
+      line: 'ct-line ct-red'
     }
-  };
-
-  let dataESWeek = {
-    labels: lastWeek,
-    series: [[{{weekStats esWeekRegistration}}]]
   };
 
   let optionsESWeek = {
@@ -221,4 +253,5 @@
 
   Chartist.Line('#chartUsersWeek', dataCandidateWeek, optionsUsersWeek);
   Chartist.Line('#chartESWeek', dataESWeek, optionsESWeek);
+  Chartist.Line('#chartWishesWeek', dataWishesWeek, optionsUsersWeek);
 </script>
