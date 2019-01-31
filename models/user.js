@@ -52,6 +52,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'email',
       as: 'demo'
     });
+    User.hasMany(models.ESAccount, {
+      foreignKey: 'user_id',
+      sourceKey: 'id'
+    });
   };
   return User;
 };
