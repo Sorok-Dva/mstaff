@@ -1,4 +1,6 @@
 const { check, validationResult } = require('express-validator/check');
+const { Sequelize, Op } = require('sequelize');
+const moment = require('moment');
 const Models = require('../models/index');
 const layout = 'admin';
 
@@ -21,9 +23,37 @@ module.exports = {
       return Models.Candidate.count();
     }).then(count => {
       render.candidatesCount = count;
+      return Models.Wish.count();
+    }).then(count => {
+      render.wishesCount = count;
       return Models.Establishment.count();
     }).then(count => {
       render.esCount = count;
+      return Models.Establishment.findAll({
+        attributes: ['id', 'createdAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
+        where: {
+          createdAt: {
+            [Op.between]: [ moment().subtract(7, 'days')._d, new Date()]
+          }
+        },
+        group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))]
+      });
+    }).then(data => {
+      render.esWeekRegistration = data;
+      return Models.User.findAll({
+        attributes: ['id', 'createdAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
+        where: {
+          createdAt: {
+            [Op.between]: [ moment().subtract(7, 'days')._d, new Date()]
+          }
+        },
+        group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))]
+      });
+    }).then(data => {
+      render.usersWeekRegistration = data;
+      render.usersWeekCount = 0; render.ESWeekCount = 0;
+      render.esWeekRegistration.map((data) => (render.ESWeekCount += parseInt(data.dataValues.count)));
+      render.usersWeekRegistration.map((data) => (render.usersWeekCount += parseInt(data.dataValues.count)));
       res.render('back-office/index', render);
     });
   },
@@ -60,6 +90,36 @@ module.exports = {
         a: { main: 'users', sub: 'candidates' },
         users })
     });
+  },
+  getESUsers:(req, res, next) => {
+    Models.User.findAll({
+      where: { type: 'es' },
+      attributes: { exclude: ['password'] },
+      include: [{
+        model: Models.ESAccount,
+        required: true,
+        include: {
+          model: Models.Establishment,
+          required: true
+        }
+      }]
+    }).then(users => {
+      res.render('back-office/es/users/list', {
+        layout,
+        title: 'Liste des utilisateurs ES',
+        a: { main: 'users', sub: 'es' },
+        users })
+    }).catch(error => next(new Error(error)));
+  },
+  getES:(req, res, next) => {
+    Models.Establishment.findAll().then(data => {
+      res.render('back-office/es/list', {
+        layout,
+        title: 'Liste des Établissements Mstaff',
+        a: { main: 'es', sub: 'all' },
+        data
+      })
+    }).catch(error => next(new Error(error)));
   },
   getUser:(req, res) => {
     Models.User.findOne({

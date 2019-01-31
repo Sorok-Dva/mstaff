@@ -64,7 +64,7 @@ module.exports = {
     }
     let file = Object.values(req.files)[0][0];
     let candidate;
-    Models.Candidate.findOne({ where: { user_id: req.user.id }}).then(result => {
+    Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
       candidate = result;
       return Models.CandidateDocument.findOne({ where: { name: file.originalname, type: file.fieldname } });
     }).then(document => {
