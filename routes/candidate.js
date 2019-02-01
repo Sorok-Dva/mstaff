@@ -51,7 +51,7 @@ router.get('/applications/new', UserController.ensureIsCandidate, CandidateContr
  * @Route('/add/Experience') POST;
  * add Candidate Experience.
  */
-router.post('/add/Experience',
+router.post('/add/experience',
   UserController.ensureIsCandidate,
   CandidateController.validate('postAddExperience'),
   CandidateController.postAddExperience
@@ -61,7 +61,7 @@ router.post('/add/Experience',
  * @Route('/add/Formation') POST;
  * add Candidate Formation.
  */
-router.post('/add/Formation',
+router.post('/add/formation',
   UserController.ensureIsCandidate,
   CandidateController.validate('postAddFormation'),
   CandidateController.postAddFormation
@@ -71,7 +71,7 @@ router.post('/add/Formation',
  * @Route('/add/Diploma') POST;
  * add Candidate Diploma.
  */
-router.post('/add/Diploma',
+router.post('/add/diploma',
   UserController.ensureIsCandidate,
   CandidateController.validate('postAddDiploma'),
   CandidateController.postAddDiploma
