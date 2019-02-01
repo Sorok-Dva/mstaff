@@ -234,7 +234,7 @@ let verifyStep = (step, element) => {
       nextTab(element);
       break;
     case 2:
-      if (application.contractType.name !== 'vacation' && !('start' in application) && !('end' in application)) {
+      if (application.contractType.name === 'internship' && !('start' in application) && !('end' in application)) {
         notification({
           icon: 'exclamation',
           type: 'danger',
@@ -242,7 +242,7 @@ let verifyStep = (step, element) => {
           message: `Merci de choisir vos dates.`
         });
         stop = true;
-      } else if (application.contractType.name !== 'vacation' && !('start' in application)) {
+      } else if (application.contractType.name === 'internship' && !('start' in application)) {
         notification({
           icon: 'exclamation',
           type: 'danger',
@@ -250,7 +250,7 @@ let verifyStep = (step, element) => {
           message: `Merci de choisir une date de début.`
         });
         stop = true;
-      } else if (application.contractType.name !== 'vacation' && !('end' in application)) {
+      } else if (application.contractType.name === 'internship' && !('end' in application)) {
         notification({
           icon: 'exclamation',
           type: 'danger',
@@ -258,8 +258,18 @@ let verifyStep = (step, element) => {
           message: `Merci de choisir une date de fin.`
         });
         stop = true;
-      } else {
-
+      }
+      if (application.contractType.name === 'vacation' && !('availability' in application)) {
+        if ($.isEmptyObject(vacationsDates)){
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Informations manquantes :',
+            message: `Merci de choisir vos dates.`
+          });
+          stop = true;
+        }
+        application.availability = JSON.stringify(vacationsDates);
       }
       if (stop) return false;
       application.selectedES = [];

@@ -1,5 +1,6 @@
 let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 let datas;
+let vacationsDates = {};
 
 let generateCalendarMonths = (moment) => {
   let result = {};
@@ -54,7 +55,7 @@ let generateHTMLCalendar = (datas) => {
           }
         }
         // And then generate calendar
-        $(`tr[data-week="${row}"]`).append(`<td><div class="col-md-12">${i + 1}</div><span>${sun}${moon}</span></td>`);
+        $(`tr[data-week="${row}"]`).append(`<td><div data-day="${i + 1}" class="col-md-12">${i + 1}</div><span>${sun}${moon}</span></td>`);
         column++;
         if (i === value.length - 1)
           column = 0;
@@ -83,6 +84,44 @@ let switchCalendar = () => {
   });
 }
 
+let choosedVacations = (calendar) =>{
+  $('#vacationDate table .fa-sun, .fa-moon').click(function(){
+    let day = $(this).parent().siblings("div").attr('data-day');
+    let month = $(this).parents("table").attr('data-key');
+    let colorSun = 'rgb(255, 153,0)';
+    let colorMoon = 'rgb(0, 102,255)';
+    let colorBase = 'rgb(102, 97, 91)';
+
+    if ($.isEmptyObject(calendar[month]))
+        calendar[month] = {daytime : [], nighttime : []};
+
+    if ($(this).hasClass('fa-sun')){
+      if ($(this).css('color') ===  colorBase){
+        $(this).css('color', colorSun);
+        calendar[month].daytime.push(day);
+      } else {
+        $(this).css('color', colorBase);
+        let index = calendar[month].daytime.indexOf(day);
+        if (index !== -1)
+          calendar[month].daytime.splice(index,1);
+      }
+    }
+
+    if ($(this).hasClass('fa-moon')){
+      if ($(this).css('color') ===  colorBase){
+        $(this).css('color', colorMoon);
+        calendar[month].nighttime.push(day);
+      } else {
+        $(this).css('color', colorBase);
+        let index = calendar[month].nighttime.indexOf(day);
+        if (index !== -1)
+          calendar[month].nighttime.splice(index,1);
+      }
+    }
+  });
+}
+
 datas = generateDatasCalendar(24);
 generateHTMLCalendar(datas);
 switchCalendar();
+choosedVacations(vacationsDates);
