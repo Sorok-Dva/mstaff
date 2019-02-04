@@ -69,6 +69,12 @@ router.post('/impersonateRemoveReadOnly/validate', UserController.ensureIsAdmin,
  * @Route('/back-office/es/') GET;
  * Show ES List page
  */
-router.get('/es', UserController.ensureIsAdmin, BackOfficeController.getES);
+router.get('/es', UserController.ensureIsAdmin, BackOfficeController.getESList);
+
+/**
+ * @Route('/back-office/es/:id') GET;
+ * Show ES page
+ */
+router.get('/es/:id', UserController.ensureIsAdmin, BackOfficeController.getES);
 
 module.exports = router;

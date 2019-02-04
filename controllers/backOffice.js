@@ -1,5 +1,6 @@
 const { check, validationResult } = require('express-validator/check');
 const { Sequelize, Op } = require('sequelize');
+const _ = require('lodash');
 const moment = require('moment');
 const Models = require('../models/index');
 const layout = 'admin';
@@ -123,7 +124,7 @@ module.exports = {
         users })
     }).catch(error => next(new Error(error)));
   },
-  getES:(req, res, next) => {
+  getESList:(req, res, next) => {
     Models.Establishment.findAll().then(data => {
       res.render('back-office/es/list', {
         layout,
@@ -131,6 +132,32 @@ module.exports = {
         a: { main: 'es', sub: 'es_all' },
         data
       })
+    }).catch(error => next(new Error(error)));
+  },
+  getES:(req, res, next) => {
+    Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
+      if (_.isNil(data)) {
+        req.flash('error', 'Cet établissement n\'existe pas.');
+        return res.redirect('/back-office/es');
+      }
+      Models.Candidate.findAll({
+        include: [{
+          model: Models.Application,
+          as: 'applications',
+          required: true,
+          where: {
+            finess: data.dataValues.finess
+          },
+        }]
+      }).then(candidates => {
+        res.render('back-office/es/show', {
+          layout,
+          candidates,
+          title: `Établissement ${data.dataValues.name}`,
+          a: { main: 'es', sub: 'es_one' },
+          data
+        })
+      });
     }).catch(error => next(new Error(error)));
   },
   getUser:(req, res) => {
@@ -146,6 +173,10 @@ module.exports = {
         exclude: ['password']
       }
     }).then(user => {
+      if (_.isNil(user)) {
+        req.flash('error', 'Cet utilisateur n\'existe pas.');
+        return res.redirect('/back-office/users');
+      }
       res.render('back-office/users/show', {
         layout,
         title: `Profil de ${user.dataValues.firstName} ${user.dataValues.lastName}`,
@@ -159,6 +190,7 @@ module.exports = {
       where: { id: req.params.id },
       attributes: { exclude: ['password'] }
     }).then(user => {
+      if (_.isNil(user)) return res.status(400).send('User not found.');
       discord(`**${req.user.fullName}** vient de se connecter en tant que **${user.dataValues.email}** sur Mstaff.`, 'infos');
       let originalUser = req.user.id;
       let originalRole = req.user.role;
@@ -174,6 +206,7 @@ module.exports = {
       where: { id: req.session.originalUser },
       attributes: { exclude: ['password'] }
     }).then(user => {
+      if (_.isNil(user)) return res.status(400).send('User not found.');
       discord(`**${user.dataValues.email}** vient de se déconnecter du compte de **${req.user.fullName}**.`, 'infos');
       delete req.session.originalUser;
       delete req.session.role;
@@ -187,6 +220,7 @@ module.exports = {
       where: { id: req.session.originalUser },
       attributes: ['password']
     }).then(user => {
+      if (_.isNil(user)) return res.status(400).send('User not found.');
       UserController.comparePassword(req.body.password, user.dataValues.password, (err, isMatch) => {
         if (err) return res.status(200).json({ error: err });
         if (isMatch) {
