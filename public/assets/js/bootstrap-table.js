@@ -292,15 +292,15 @@
     searchTimeOut: 500,
     searchText: '',
     iconSize: undefined,
-    iconsPrefix: 'glyphicon', // glyphicon of fa (font awesome)
+    iconsPrefix: 'fal',
     icons: {
-      paginationSwitchDown: 'glyphicon-collapse-down icon-chevron-down',
-      paginationSwitchUp: 'glyphicon-collapse-up icon-chevron-up',
-      refresh: 'glyphicon-refresh icon-refresh',
-      toggle: 'glyphicon-list-alt icon-list-alt',
-      columns: 'glyphicon-th icon-th',
-      detailOpen: 'glyphicon-plus icon-plus',
-      detailClose: 'glyphicon-minus icon-minus'
+      paginationSwitchDown: 'fa-collapse-down icon-chevron-down',
+      paginationSwitchUp: 'fa-collapse-up icon-chevron-up',
+      refresh: 'fa-refresh icon-refresh',
+      toggle: 'fa-th-list icon-list-alt',
+      columns: 'fa-columns icon-th',
+      detailOpen: 'fa-plus-circle icon-plus',
+      detailClose: 'fa-minus-circle icon-minus'
     },
 
     rowStyle: function (row, index) {
