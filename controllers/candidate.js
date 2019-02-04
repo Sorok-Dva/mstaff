@@ -127,18 +127,42 @@ module.exports = {
     }
   },
   getEditProfile: (req, res, next) => {
-    if (req.user.type === 'candidate') {
-      Models.User.findOne({
-        where: { id: req.user.id },
-        attributes: ['id', 'email', 'role', 'type'],
-        include:[{
-          model: Models.Candidate,
-          as: 'candidate'
-        }]
-      }).then(usr => {
-        return res.render('users/edit', { usr, a: { main: 'profile' } })
-      }).catch(error => next(error));
+    Models.User.findOne({
+      where: { id: req.user.id },
+      attributes: { exclude: ['password'] },
+      include:[{
+        model: Models.Candidate,
+        as: 'candidate'
+      }]
+    }).then(usr => {
+      return res.render('users/edit', { usr, a: { main: 'profile' } })
+    }).catch(error => next(error));
+  },
+  postEditProfile: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
     }
+
+    return Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+      Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+        user.firstName = req.body.firstName;
+        user.lastName = req.body.lastName;
+        user.email = req.body.email;
+        user.birthday = req.body.birthday;
+        user.postal_code = req.body.postal_code;
+        user.town = req.body.town;
+        // user.phone = req.body.phone;
+        user.save().then(() => {
+          candidate.description = req.body.description;
+          candidate.save().then(() => {
+            req.flash('success_msg', 'Vos informations ont été sauvegardées.');
+            return res.redirect('/profile/edit');
+          });
+        });
+      })
+    }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
   },
   getFormationsAndXP: (req, res, next) => {
     Models.Candidate.findOne({

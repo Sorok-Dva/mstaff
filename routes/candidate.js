@@ -15,7 +15,7 @@ router.get('/profile', UserController.ensureIsCandidate, CandidateController.get
  * Form for edit user profile.
  */
 router.get('/profile/edit', UserController.ensureIsCandidate, CandidateController.getEditProfile)
-  .post('/profile/edit', UserController.ensureIsCandidate, CandidateController.getEditProfile);
+  .post('/profile/edit', UserController.ensureIsCandidate, CandidateController.postEditProfile);
 
 /**
  * @Route('/formations') GET;
