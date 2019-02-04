@@ -69,6 +69,50 @@ let errorsHandler = data => {
 };
 
 let loadTemplate = (url, data, callback) => {
+  Handlebars.registerHelper('log', function () {
+    console.log(['Values:'].concat(
+      Array.prototype.slice.call(arguments, 0, -1)
+    ));
+  });
+
+  Handlebars.registerHelper('ifCond', (v1, operator, v2, options) => {
+    switch (operator) {
+      case '==':
+        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+      case '===':
+        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+      case '!=':
+        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+      case '!==':
+        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+      case '<':
+        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+      case '<=':
+        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+      case '>':
+        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+      case '>=':
+        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+      case '&&':
+        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+      case '||':
+        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+      default:
+        return options.inverse(this);
+    }
+  });
+
+  Handlebars.registerHelper('repeat', function(n, block) {
+    let accum = '';
+    for(let i = 0; i < n; ++i) {
+      block.data.index = i;
+      block.data.first = i === 0;
+      block.data.last = i === (n - 1);
+      accum += block.fn(this);
+    }
+    return accum;
+  });
+
   $.ajax({url, cache: true, success: function(source) {
       let template = Handlebars.compile(source);
       return callback(template(data));

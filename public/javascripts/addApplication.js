@@ -210,6 +210,7 @@ let verifyStep = (step, element) => {
           $('#cdiDate').hide();
         }
         if (application.contractType.name === 'vacation'){
+          getCalendar(generateDatasCalendar(24));
           $('#vacationDate').show();
         } else {
           $('#vacationDate').hide();
@@ -234,6 +235,7 @@ let verifyStep = (step, element) => {
       nextTab(element);
       break;
     case 2:
+      console.log('STEP 2 !!!');
       if (application.contractType.name === 'internship' && !('start' in application) && !('end' in application)) {
         notification({
           icon: 'exclamation',
@@ -259,17 +261,23 @@ let verifyStep = (step, element) => {
         });
         stop = true;
       }
-      if (application.contractType.name === 'vacation' && !('availability' in application)) {
-        if ($.isEmptyObject(vacationsDates)){
-          notification({
-            icon: 'exclamation',
-            type: 'danger',
-            title: 'Informations manquantes :',
-            message: `Merci de choisir vos dates.`
-          });
-          stop = true;
+      if (application.contractType.name === 'vacation') {
+        if (!('availability' in application)){
+          if ($.isEmptyObject(vacationsDates)){
+            notification({
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Informations manquantes :',
+              message: `Merci de choisir vos dates.`
+            });
+            stop = true;
+          }
+          else
+            application.availability = JSON.stringify(vacationsDates);
         }
-        application.availability = JSON.stringify(vacationsDates);
+        else {
+
+        }
       }
       if (stop) return false;
       application.selectedES = [];
@@ -378,6 +386,14 @@ let addWish = () => {
 
   }
 };
+
+let getCalendar = (data) => {
+  loadTemplate('/static/views/candidates/calendar.hbs', data, (html) => {
+    //console.log(html);
+    $("#vacationDate").html(html);
+    //$('#loader').hide();
+  });
+}
 
 noUiSlider.create(slider, {
   start: 3,

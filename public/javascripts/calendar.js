@@ -1,5 +1,4 @@
 let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-let datas;
 let vacationsDates = {};
 
 let generateCalendarMonths = (moment) => {
@@ -13,9 +12,10 @@ let generateCalendarMonths = (moment) => {
 }
 
 let generateDatasCalendar = (duration) => {
-  let result = [];
+  let result = {};
   for (let i = 0; i < duration; i++) {
-    result.push(generateCalendarMonths(moment().add(i, 'months')));
+    let date = generateCalendarMonths(moment().add(i, 'months'));
+    result[Object.keys(date)] = date[Object.keys(date)];
   }
   return result;
 }
@@ -67,7 +67,7 @@ let generateHTMLCalendar = (datas) => {
 
 let switchCalendar = () => {
   $('#vacationDate table').first().show();
-
+/*
   $('#vacationDate table #toright').click(function(){
     let attr = $(this).parents("table").attr('data-key');
     if ($(`table[data-key="${attr}"]` ).next().length){
@@ -81,7 +81,7 @@ let switchCalendar = () => {
       $(`table[data-key="${attr}"]` ).hide();
       $(`table[data-key="${attr}"]` ).prev().show();
     }
-  });
+  });*/
 }
 
 let choosedVacations = (calendar) =>{
@@ -121,7 +121,6 @@ let choosedVacations = (calendar) =>{
   });
 }
 
-datas = generateDatasCalendar(24);
-generateHTMLCalendar(datas);
+
 switchCalendar();
 choosedVacations(vacationsDates);

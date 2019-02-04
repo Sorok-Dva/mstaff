@@ -1,0 +1,31 @@
+{{#each this}}
+
+    {{log this}}
+    <table data-key="{{@key}}"
+           {{#unless @first}}style="display:none"{{/unless}} class="text-center table table-striped col-md-12">
+        <thead>
+        <tr>
+            <th><i id="toleft" class="fal fa-arrow-circle-left"></i></th>
+            <th class="text-center" colspan="7">{{@key}}</th>
+            <th><i id="toright" class="fal fa-arrow-circle-right"></i></th>
+        </tr>
+        <tr data-tr="{{@key}}">
+            <td>Lundi</td>
+            <td>Mardi</td>
+            <td>Mercredi</td>
+            <td>Jeudi</td>
+            <td>Vendredi</td>
+            <td>Samedi</td>
+            <td>Dimanche</td>
+        </tr>
+        </thead>
+        <tbody data-tbody="{{@key}}">
+        {{#each this}}
+            {{#ifCond @index '===' '0'}}<tr>{{#repeat this}}<td></td>{{/repeat}}{{/ifCond}}
+            {{#ifCond @index '===' '6'}}</tr><tr>{{/ifCond}}
+            {{#ifCond @index '===' '12'}}</tr>{{/ifCond}}
+            <td>{{@index}}</td>
+        {{/each}}
+        </tbody>
+    </table>
+{{/each}}
