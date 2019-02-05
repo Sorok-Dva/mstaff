@@ -38,7 +38,8 @@ router.get('/users/es', UserController.ensureIsAdmin, BackOfficeController.getES
  * @Route('/back-office/user/:id/') GET;
  * Show User data
  */
-router.get('/user/:id', UserController.ensureIsAdmin, BackOfficeController.getUser);
+router.get('/user/:id', UserController.ensureIsAdmin, BackOfficeController.getUser)
+  .post('/user/:id/edit', UserController.ensureIsAdmin, BackOfficeController.editCandidate);
 
 /**
  * @Route('/back-office/impersonate/user/:id/') GET;

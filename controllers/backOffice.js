@@ -185,6 +185,33 @@ module.exports = {
       })
     });
   },
+  editCandidate: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.User.findOne({ where: { id: req.params.id } }).then(user => {
+      if (req.body.candidateId) {
+        Models.Candidate.findOne({ where: { user_id: req.params.id } }).then(candidate => {
+          candidate.description = req.body.description;
+          candidate.save();
+        });
+      }
+      user.firstName = req.body.firstName;
+      user.lastName = req.body.lastName;
+      user.email = req.body.email;
+      user.birthday = req.body.birthday;
+      user.postal_code = req.body.postal_code;
+      user.town = req.body.town;
+      user.role = req.body.role;
+      user.type = req.body.type;
+      // user.phone = req.body.phone;
+      user.save().then(() => {
+        req.flash('success_msg', 'Informations sauvegardées.');
+        return res.redirect('/back-office/users');
+      });
+    }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+  },
   impersonateUser:(req, res) => {
     Models.User.findOne({
       where: { id: req.params.id },
