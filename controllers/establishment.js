@@ -19,8 +19,15 @@ module.exports = {
       }
     }
   },
-  getIndex: (req, res, next) => {
-    res.render('index');
+  getNeeds: (req, res, next) => {
+    res.render('establishments/needs');
+  },
+  addNeed: (req, res, next) => {
+    let render = { a: { main: 'needs' } };
+    Models.Post.findAll().then(posts => {
+      render.posts = posts;
+      return res.render('establishments/addNeed', render);
+    }).catch(error => next(new Error(error)));
   },
   /**
    * Create User Method
