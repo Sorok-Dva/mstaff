@@ -495,8 +495,12 @@ $(document).ready(function() {
     verifyStep(parseInt($(this).attr('data-step')), $active);
   });
 
-  $(".prev-step").click(function (e) {
+  $('.prev-step').click(function (e) {
     let $active = $('.wizard .nav-tabs li.active');
     prevTab($active);
+  });
+
+  $('li[role="presentation"]').click(function() {
+    $(this).nextAll().removeClass('active').addClass('disabled');
   });
 });
