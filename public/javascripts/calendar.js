@@ -68,14 +68,14 @@ let generateDatasCalendar = (duration) => {
 
 let switchCalendar = () => {
 
-  $('#vacationDate table #toright').click(function(){
+  $('#vacationDate table .toright').click(function(){
     let attr = $(this).parents("table").attr('data-key');
     if ($(`table[data-key="${attr}"]` ).next().length){
       $(`table[data-key="${attr}"]` ).hide();
       $(`table[data-key="${attr}"]` ).next().show();
     }
   });
-  $('#vacationDate table #toleft').click(function(){
+  $('#vacationDate table .toleft').click(function(){
     let attr = $(this).parents("table").attr('data-key');
     if ($(`table[data-key="${attr}"]` ).prev().length){
       $(`table[data-key="${attr}"]` ).hide();

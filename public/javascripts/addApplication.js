@@ -189,7 +189,6 @@ let removeEs = (data) => {
 
 let verifyStep = (step, element) => {
   let stop = false;
-  console.log(application);
   switch (step) {
     // ----------------------------------------- Case 1 ----------------------------------------- //
     case 1:
@@ -286,11 +285,18 @@ let verifyStep = (step, element) => {
       }
       if (stop) return false;
       application.selectedES = [];
+
+      //Reset backStep
+      $(`#esList i.unselectEs`).hide();
+      $(`#esList i.selectEs`).show();
+      $('#es_selected').empty();
+
       element.next().removeClass('disabled');
       nextTab(element);
       break;
     // ----------------------------------------- Case 3 ----------------------------------------- //
     case 3:
+
       if (!('selectedES' in application) || application.selectedES.length < 1) {
         notification({
           icon: 'exclamation',
@@ -315,6 +321,9 @@ let verifyStep = (step, element) => {
         $('#recapActivityType').hide().find('h3').html('');
         $('#recapHourType').hide();
         $('#recapLiberal').show().find('h3').html(value);
+        $('#availability').empty();
+        $('#availability').append($('#vacationDate').clone(true));
+        $('#availability #vacationDate .fa-sun, .fa-moon').off();
       } else {
         $('#recapActivityType').hide().find('h3').html('');
         $('#recapHourType').hide();
