@@ -1,4 +1,4 @@
-<li{{#ifCond @root.a.main '===' 'besoins'}} class="active"{{/ifCond}}>
+<li{{#ifCond @root.a.main '===' 'needs'}} class="active"{{/ifCond}}>
     <a href="/besoins">
         <i class="ti-search"></i>
         <p>Mes besoins</p>
@@ -6,25 +6,13 @@
 </li>
 <li{{#ifCond @root.a.main '===' 'es'}} class="active"{{/ifCond}}>
     <a href="/es">
-        <i class="fa fa-hospital-o"></i>
+        <i class="fal fa-hospital-o"></i>
         <p>Mon établissmenet</p>
     </a>
 </li>
 <li{{#ifCond @root.a.main '===' 'cvtheque'}} class="active"{{/ifCond}}>
     <a href="/cvtheque">
-        <i class="fa fa-file-archive-o"></i>
+        <i class="fal fa-file-archive-o"></i>
         <p>Ma CVthèque</p>
     </a>
-</li>
-<li{{#ifCond @root.a.main '===' 'conferences'}} class="active"{{/ifCond}}>
-    <a href="/conferences">
-        <i class="fa fa-balance-scale"></i>
-        <p>Mes entretiens</p>
-    </a>
-</li>
-<li{{#ifCond @root.a.main '===' 'history'}} class="active"{{/ifCond}}>
-  <a href="/history">
-    <i class="ti-star"></i>
-    <p>Mon historique</p>
-  </a>
 </li>
