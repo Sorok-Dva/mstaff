@@ -7,7 +7,7 @@ module.exports = {
         return res.redirect('/profile')
       }
       if (req.user && (req.user.type === 'es')) {
-        return res.redirect('/index')
+        return res.redirect('/needs')
       }
       if (req.user && (req.user.type === 'admin')) {
         return res.redirect('/back-office')
