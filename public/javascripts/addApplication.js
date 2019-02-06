@@ -237,30 +237,32 @@ let verifyStep = (step, element) => {
       break;
     // ----------------------------------------- Case 2 ----------------------------------------- //
     case 2:
-      if (application.contractType.name === 'internship' && !('start' in application) && !('end' in application)) {
-        notification({
-          icon: 'exclamation',
-          type: 'danger',
-          title: 'Informations manquantes :',
-          message: `Merci de choisir vos dates.`
-        });
-        stop = true;
-      } else if (application.contractType.name === 'internship' && !('start' in application)) {
-        notification({
-          icon: 'exclamation',
-          type: 'danger',
-          title: 'Informations manquantes :',
-          message: `Merci de choisir une date de début.`
-        });
-        stop = true;
-      } else if (application.contractType.name === 'internship' && !('end' in application)) {
-        notification({
-          icon: 'exclamation',
-          type: 'danger',
-          title: 'Informations manquantes :',
-          message: `Merci de choisir une date de fin.`
-        });
-        stop = true;
+      if (application.contractType.name === 'internship') {
+        if (!('start' in application) && !('end' in application)){
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Informations manquantes :',
+            message: `Merci de choisir vos dates.`
+          });
+          stop = true;
+        } else if (!('start' in application)){
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Informations manquantes :',
+            message: `Merci de choisir une date de début.`
+          });
+          stop = true;
+        } else if (!('end' in application)) {
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Informations manquantes :',
+            message: `Merci de choisir une date de fin.`
+          });
+          stop = true;
+        }
       }
       if (application.contractType.name === 'vacation') {
           if ($.isEmptyObject(vacationsDates)){
@@ -455,11 +457,17 @@ $(document).ready(function() {
   });
 
   $('.from').on('dp.change', (e) => {
-    application.start = new Date(e.date) || null;
+    if (!e.date)
+      delete application.start;
+    else
+      application.start = new Date(e.date);
   });
 
   $('.to').on('dp.change', (e) => {
-    application.end = new Date(e.date) || null;
+    if (!e.date)
+      delete application.end;
+    else
+      application.end = new Date(e.date);
   });
 
   $('.next-step').click(function (e) {
