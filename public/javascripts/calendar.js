@@ -1,25 +1,6 @@
-let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 let vacationsDates = {};
 
-let generateCalendarMonths = (moment) => {
-  let result = {};
-  let date = moment.format('MMMMYYYY').toUpperCase();
-  result[date] = [];
-  for (let i = 1; i <= moment.daysInMonth(); i++) {
-    result[date].push(moment.date(i).format('e'));
-  }
-  return result;
-}
-
-let generateDatasCalendar = (duration) => {
-  let result = {};
-  for (let i = 0; i < duration; i++) {
-    let date = generateCalendarMonths(moment().add(i, 'months'));
-    result[Object.keys(date)] = date[Object.keys(date)];
-  }
-  return result;
-}
-
+/*
 let generateHTMLCalendar = (datas) => {
   let column = 0;
   let row = 0;
@@ -64,10 +45,29 @@ let generateHTMLCalendar = (datas) => {
     });
   });
 }
+*/
+
+let generateCalendarMonths = (moment) => {
+  let result = {};
+  let date = moment.format('MMMMYYYY').toUpperCase();
+  result[date] = [];
+  for (let i = 1; i <= moment.daysInMonth(); i++) {
+    result[date].push(moment.date(i).format('e'));
+  }
+  return result;
+}
+
+let generateDatasCalendar = (duration) => {
+  let result = {};
+  for (let i = 0; i < duration; i++) {
+    let date = generateCalendarMonths(moment().add(i, 'months'));
+    result[Object.keys(date)] = date[Object.keys(date)];
+  }
+  return result;
+}
 
 let switchCalendar = () => {
-  $('#vacationDate table').first().show();
-/*
+
   $('#vacationDate table #toright').click(function(){
     let attr = $(this).parents("table").attr('data-key');
     if ($(`table[data-key="${attr}"]` ).next().length){
@@ -81,7 +81,7 @@ let switchCalendar = () => {
       $(`table[data-key="${attr}"]` ).hide();
       $(`table[data-key="${attr}"]` ).prev().show();
     }
-  });*/
+  });
 }
 
 let choosedVacations = (calendar) =>{
@@ -104,6 +104,8 @@ let choosedVacations = (calendar) =>{
         let index = calendar[month].daytime.indexOf(day);
         if (index !== -1)
           calendar[month].daytime.splice(index,1);
+        if (calendar[month].daytime.length === 0 && calendar[month].nighttime.length === 0)
+          delete(calendar[month]);
       }
     }
 
@@ -116,11 +118,9 @@ let choosedVacations = (calendar) =>{
         let index = calendar[month].nighttime.indexOf(day);
         if (index !== -1)
           calendar[month].nighttime.splice(index,1);
+        if (calendar[month].daytime.length === 0 && calendar[month].nighttime.length === 0)
+          delete(calendar[month]);
       }
     }
   });
 }
-
-
-switchCalendar();
-choosedVacations(vacationsDates);

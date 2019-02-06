@@ -168,12 +168,8 @@ module.exports.register = async (Handlebars) => {
 
   Handlebars.registerHelper('repeat', function (n, block) {
     let accum = '';
-    for(let i = 0; i < n; ++i) {
-      block.data.index = i;
-      block.data.first = i === 0;
-      block.data.last = i === (n - 1);
-      accum += block.fn(this);
-    }
+    for(let i = 0; i < n; ++i)
+      accum += block.fn(i);
     return accum;
   });
 

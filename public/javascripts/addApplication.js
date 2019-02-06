@@ -185,6 +185,7 @@ let removeEs = (data) => {
 let verifyStep = (step, element) => {
   let stop = false;
   switch (step) {
+    // ----------------------------------------- Case 1 ----------------------------------------- //
     case 1:
       if (!('contractType' in application)) {
         notification({
@@ -234,8 +235,8 @@ let verifyStep = (step, element) => {
       element.next().removeClass('disabled');
       nextTab(element);
       break;
+    // ----------------------------------------- Case 2 ----------------------------------------- //
     case 2:
-      console.log('STEP 2 !!!');
       if (application.contractType.name === 'internship' && !('start' in application) && !('end' in application)) {
         notification({
           icon: 'exclamation',
@@ -262,7 +263,6 @@ let verifyStep = (step, element) => {
         stop = true;
       }
       if (application.contractType.name === 'vacation') {
-        if (!('availability' in application)){
           if ($.isEmptyObject(vacationsDates)){
             notification({
               icon: 'exclamation',
@@ -274,16 +274,13 @@ let verifyStep = (step, element) => {
           }
           else
             application.availability = JSON.stringify(vacationsDates);
-        }
-        else {
-
-        }
       }
       if (stop) return false;
       application.selectedES = [];
       element.next().removeClass('disabled');
       nextTab(element);
       break;
+    // ----------------------------------------- Case 3 ----------------------------------------- //
     case 3:
       if (!('selectedES' in application) || application.selectedES.length < 1) {
         notification({
@@ -389,9 +386,10 @@ let addWish = () => {
 
 let getCalendar = (data) => {
   loadTemplate('/static/views/candidates/calendar.hbs', data, (html) => {
-    //console.log(html);
     $("#vacationDate").html(html);
-    //$('#loader').hide();
+    switchCalendar();
+    choosedVacations(vacationsDates);
+    $('#loader').hide();
   });
 }
 
