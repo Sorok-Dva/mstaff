@@ -15,6 +15,8 @@ $('#step1 input[type="checkbox"]').change(function() {
       case 'cdi-cdd':
         application.contractType = {name: checked, value: 'CDI / CDD'};
         delete application.liberal;
+        delete application.availability;
+        delete application.selectedES;
         $('#activityType').show();
         $('#timeType').show();
         $('#liberalType').hide();
@@ -23,6 +25,7 @@ $('#step1 input[type="checkbox"]').change(function() {
         application.contractType = {name: checked, value: 'VACATION'};
         delete application.activityType;
         delete application.timeType;
+        delete application.selectedES;
         $('#liberalType').show();
         resetContract(checked);
         break;
@@ -31,6 +34,8 @@ $('#step1 input[type="checkbox"]').change(function() {
         delete application.activityType;
         delete application.timeType;
         delete application.liberal;
+        delete application.availability;
+        delete application.selectedES;
         $('#liberalType').hide();
         resetContract(checked);
         break;
@@ -184,6 +189,7 @@ let removeEs = (data) => {
 
 let verifyStep = (step, element) => {
   let stop = false;
+  console.log(application);
   switch (step) {
     // ----------------------------------------- Case 1 ----------------------------------------- //
     case 1:
@@ -211,7 +217,8 @@ let verifyStep = (step, element) => {
           $('#cdiDate').hide();
         }
         if (application.contractType.name === 'vacation'){
-          getCalendar(generateDatasCalendar(24));
+          if ($.isEmptyObject(vacationsDates))
+            getCalendar(generateDatasCalendar(24));
           $('#vacationDate').show();
         } else {
           $('#vacationDate').hide();
@@ -313,6 +320,7 @@ let verifyStep = (step, element) => {
         $('#recapHourType').hide();
         $('#recapLiberal').hide().find('h3').html('');
       }
+      $('#finalESList').empty();
       $('#es_selected > div[data-type="es"]').each((i, e) => {
         let name = $(e).find('h5 > span').text();
         let type = $(e).attr('data-es_type');
