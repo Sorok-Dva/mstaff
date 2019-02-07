@@ -2350,7 +2350,7 @@ table.dataTable thead .sorting_desc_disabled:after {
     display: inline-block;
     bottom: 0px;
     right: -7px;
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     opacity: 0.8;
 }
 
@@ -10167,7 +10167,7 @@ star {
 }
 
 .checkbox input[type="checkbox"]:checked + label::after {
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     content: "\f00c";
 }
 
@@ -10245,7 +10245,7 @@ star {
 }
 
 .radio label::before {
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     content: "\f10c";
     font-size: 22px;
     -webkit-font-smoothing: antialiased;
@@ -10260,7 +10260,7 @@ star {
 }
 
 .radio input[type="radio"]:not(:disabled):hover + label::before {
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     content: "\f192";
     color: #66615b;
     opacity: .50;
@@ -10269,7 +10269,7 @@ star {
 .radio label::after {
     display: inline-block;
     position: absolute;
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     content: "\f192";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
