@@ -5,9 +5,15 @@ const UserController = require('../controllers/user');
 const EstablishmentController = require('../controllers/establishment');
 
 /**
- * @Route('/index') GET;
+ * @Route('/needs') GET;
  * Show Index page
  */
-router.get('/index', UserController.ensureIsEs, EstablishmentController.getIndex);
+router.get('/needs', UserController.ensureIsEs, EstablishmentController.getNeeds);
+
+/**
+ * @Route('/need/add') GET;
+ * Show Index page
+ */
+router.get('/need/add', UserController.ensureIsEs, EstablishmentController.addNeed);
 
 module.exports = router;

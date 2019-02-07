@@ -91,10 +91,10 @@ module.exports = {
       Models.User.findOne({
         where: { id: req.user.id },
         attributes: { exclude: ['password'] },
-        include:[{
+        include: [{
           model: Models.Candidate, // Candidate Associations (user.candidate)
           as: 'candidate',
-          include:[{
+          include: [{
             model: Models.Experience, // Experiences Associations (user.candidate.experiences)
             as: 'experiences',
             include: [{
@@ -130,7 +130,7 @@ module.exports = {
     Models.User.findOne({
       where: { id: req.user.id },
       attributes: { exclude: ['password'] },
-      include:[{
+      include: [{
         model: Models.Candidate,
         as: 'candidate'
       }]
@@ -167,7 +167,7 @@ module.exports = {
   getFormationsAndXP: (req, res, next) => {
     Models.Candidate.findOne({
       where: { user_id: req.user.id },
-      include:[{
+      include: [{
         model: Models.Experience, // Experiences Associations (user.candidate.experiences)
         as: 'experiences',
         required: true,
@@ -197,7 +197,7 @@ module.exports = {
     let render = { a: { main: 'knowledges' } };
     Models.Candidate.findOne({
       where: { user_id: req.user.id },
-      include:[{
+      include: [{
         model: Models.CandidateSkill,
         as: 'skills'
       }, {
@@ -411,7 +411,7 @@ module.exports = {
   addRating: (req, res, next) => {
     const errors = validationResult(req);
     let badType = false, type, as;
-    switch(req.params.type) {
+    switch (req.params.type) {
       case 'skill': type = 'CandidateSkill', as = 'skills'; break;
       case 'equipment': type = 'CandidateEquipment', as = 'equipments'; break;
       case 'software': type = 'CandidateSoftware', as = 'softwares'; break;
@@ -421,7 +421,7 @@ module.exports = {
     else if (badType) return res.status(400).send({ body: req.body, error: 'Wrong url parameters.' });
     return Models.Candidate.findOne({
       where: { user_id: req.user.id },
-      include:[{
+      include: [{
         model: Models[type],
         as,
       }],
@@ -437,7 +437,7 @@ module.exports = {
   starsRating: (req, res, next) => {
     const errors = validationResult(req);
     let badType = false, type, as;
-    switch(req.params.type) {
+    switch (req.params.type) {
       case 'skill': type = 'CandidateSkill', as = 'skills'; break;
       case 'equipment': type = 'CandidateEquipment', as = 'equipments'; break;
       case 'software': type = 'CandidateSoftware', as = 'softwares'; break;
@@ -449,7 +449,7 @@ module.exports = {
 
     return Models.Candidate.findOne({
       where: { user_id: req.user.id },
-      include:[{
+      include: [{
         model: Models[type],
         as,
         where: { id: req.params.id }
@@ -464,7 +464,7 @@ module.exports = {
   deleteRating: (req, res, next) => {
     const errors = validationResult(req);
     let badType = false, type, as;
-    switch(req.params.type) {
+    switch (req.params.type) {
       case 'skill': type = 'CandidateSkill', as = 'skills'; break;
       case 'equipment': type = 'CandidateEquipment', as = 'equipments'; break;
       case 'software': type = 'CandidateSoftware', as = 'softwares'; break;
@@ -476,7 +476,7 @@ module.exports = {
 
     return Models.Candidate.findOne({
       where: { user_id: req.user.id },
-      include:[{
+      include: [{
         model: Models[type],
         as,
         where: { id: req.params.id }

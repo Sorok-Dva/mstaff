@@ -17,7 +17,7 @@ module.exports = {
   validate: (method) => {
 
   },
-  index:  (req, res) => {
+  index: (req, res) => {
     let render = { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } };
     Models.User.count().then(count => {
       render.usersCount = count;
@@ -64,14 +64,14 @@ module.exports = {
     }).then(data => {
       render.wishesWeek = data;
       render.usersWeekCount = 0; render.ESWeekCount = 0; render.wishesWeekCount = 0;
-      render.esWeekRegistration.map((data) => (render.ESWeekCount += parseInt(data.dataValues.count)));
-      render.usersWeekRegistration.map((data) => (render.usersWeekCount += parseInt(data.dataValues.count)));
-      render.wishesWeek.map((data) => (render.wishesWeekCount += parseInt(data.dataValues.count)));
+      render.esWeekRegistration.map((data) => render.ESWeekCount += parseInt(data.dataValues.count));
+      render.usersWeekRegistration.map((data) => render.usersWeekCount += parseInt(data.dataValues.count));
+      render.wishesWeek.map((data) => render.wishesWeekCount += parseInt(data.dataValues.count));
       res.render('back-office/index', render);
     });
   },
-  stats:  (req, res) => res.render('back-office/stats', { layout, title: 'Statistiques', a: { main: 'dashboard', sub: 'stats' } }),
-  getUsers:(req, res) => {
+  stats: (req, res) => res.render('back-office/stats', { layout, title: 'Statistiques', a: { main: 'dashboard', sub: 'stats' } }),
+  getUsers: (req, res) => {
     Models.User.findAll({
       attributes: {
         exclude: ['password']
@@ -84,12 +84,12 @@ module.exports = {
         users })
     });
   },
-  getCandidates:(req, res) => {
+  getCandidates: (req, res) => {
     Models.User.findAll({
       where: {
         type: 'candidate'
       },
-      include:[{
+      include: [{
         model: Models.Candidate,
         as: 'candidate'
       }],
@@ -104,7 +104,7 @@ module.exports = {
         users })
     });
   },
-  getESUsers:(req, res, next) => {
+  getESUsers: (req, res, next) => {
     Models.User.findAll({
       where: { type: 'es' },
       attributes: { exclude: ['password'] },
@@ -124,7 +124,7 @@ module.exports = {
         users })
     }).catch(error => next(new Error(error)));
   },
-  getESList:(req, res, next) => {
+  getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
       res.render('back-office/es/list', {
         layout,
@@ -134,7 +134,7 @@ module.exports = {
       })
     }).catch(error => next(new Error(error)));
   },
-  getES:(req, res, next) => {
+  getES: (req, res, next) => {
     Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
       if (_.isNil(data)) {
         req.flash('error', 'Cet établissement n\'existe pas.');
@@ -160,12 +160,12 @@ module.exports = {
       });
     }).catch(error => next(new Error(error)));
   },
-  getUser:(req, res) => {
+  getUser: (req, res) => {
     Models.User.findOne({
       where: {
         id: req.params.id
       },
-      include:[{
+      include: [{
         model: Models.Candidate,
         as: 'candidate'
       }],
@@ -212,7 +212,7 @@ module.exports = {
       });
     }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
   },
-  impersonateUser:(req, res) => {
+  impersonateUser: (req, res) => {
     Models.User.findOne({
       where: { id: req.params.id },
       attributes: { exclude: ['password'] }
@@ -228,7 +228,7 @@ module.exports = {
       res.redirect('/');
     });
   },
-  removeUserImpersonation:(req, res) => {
+  removeUserImpersonation: (req, res) => {
     Models.User.findOne({
       where: { id: req.session.originalUser },
       attributes: { exclude: ['password'] }
@@ -242,7 +242,7 @@ module.exports = {
       res.redirect('/');
     });
   },
-  impersonateRemoveReadOnly:(req, res) => {
+  impersonateRemoveReadOnly: (req, res) => {
     Models.User.findOne({
       where: { id: req.session.originalUser },
       attributes: ['password']
@@ -262,12 +262,12 @@ module.exports = {
       });
     });
   },
-  impersonatePutReadOnly:(req, res) => {
+  impersonatePutReadOnly: (req, res) => {
     req.session.readOnly = true;
     discord(`*Lecture seule ré-activée sur le compte de ${req.user.fullName}.*`, 'infos');
     return res.status(200).json({ status: 'ok' });
   },
-  impersonateRemoveReadOnlyValidation:(req, res) => {
+  impersonateRemoveReadOnlyValidation: (req, res) => {
     let authorized = false;
     if (req.session.pinCode === parseInt(req.body.pinCode)) {
       discord(`*Lecture seule désactivée sur le compte de ${req.user.fullName}.*`, 'infos');
