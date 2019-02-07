@@ -183,6 +183,8 @@ let verifyStep = (step, element) => {
       $(`#esList i.unselectEs`).hide();
       $(`#esList i.selectEs`).show();
       $('#es_selected').empty();
+      $('#selectedEsCount').html(0);
+
 
       element.next().removeClass('disabled');
       nextTab(element);
