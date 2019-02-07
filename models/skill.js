@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Skill = sequelize.define('Skill', {
-    name:  {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     }

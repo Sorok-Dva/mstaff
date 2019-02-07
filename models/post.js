@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define('Post', {
-    name:  {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     }
@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   Post.associate = function (models) {
     Post.belongsTo(models.Experience, {
       foreignKey: 'id',
+      targetKey: 'id',
       onDelete: 'CASCADE'
     });
   };

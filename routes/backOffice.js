@@ -29,10 +29,17 @@ router.get('/users', UserController.ensureIsAdmin, BackOfficeController.getUsers
 router.get('/users/candidates', UserController.ensureIsAdmin, BackOfficeController.getCandidates);
 
 /**
+ * @Route('/back-office/users/es') GET;
+ * Show Users (es type) List page
+ */
+router.get('/users/es', UserController.ensureIsAdmin, BackOfficeController.getESUsers);
+
+/**
  * @Route('/back-office/user/:id/') GET;
  * Show User data
  */
-router.get('/user/:id', UserController.ensureIsAdmin, BackOfficeController.getUser);
+router.get('/user/:id', UserController.ensureIsAdmin, BackOfficeController.getUser)
+  .post('/user/:id/edit', UserController.ensureIsAdmin, BackOfficeController.editCandidate);
 
 /**
  * @Route('/back-office/impersonate/user/:id/') GET;
@@ -58,5 +65,17 @@ router.get('/impersonatePutReadOnly', UserController.ensureIsAdmin, BackOfficeCo
  * Validation of removing read only
  */
 router.post('/impersonateRemoveReadOnly/validate', UserController.ensureIsAdmin, BackOfficeController.impersonateRemoveReadOnlyValidation);
+
+/**
+ * @Route('/back-office/es/') GET;
+ * Show ES List page
+ */
+router.get('/es', UserController.ensureIsAdmin, BackOfficeController.getESList);
+
+/**
+ * @Route('/back-office/es/:id') GET;
+ * Show ES page
+ */
+router.get('/es/:id', UserController.ensureIsAdmin, BackOfficeController.getES);
 
 module.exports = router;

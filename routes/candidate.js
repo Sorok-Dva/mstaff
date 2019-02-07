@@ -9,27 +9,31 @@ const CandidateController = require('../controllers/candidate');
  * Show user profile.
  */
 router.get('/profile', UserController.ensureIsCandidate, CandidateController.getProfile);
+
 /**
  * @Route('/profile/edit') GET | POST;
  * Form for edit user profile.
  */
-router.get('/profile/edit',
-  UserController.ensureIsCandidate,
-  CandidateController.getEditProfile)
-  .post('/profile/edit',
-    UserController.ensureIsCandidate,
-    CandidateController.getEditProfile);
+router.get('/profile/edit', UserController.ensureIsCandidate, CandidateController.getEditProfile)
+  .post('/profile/edit', UserController.ensureIsCandidate, CandidateController.postEditProfile);
 
 /**
  * @Route('/formations') GET;
  * Show Formations and Experiences candidate page
  */
 router.get('/formations', UserController.ensureIsCandidate, CandidateController.getFormationsAndXP);
+
 /**
  * @Route('/knowledges') GET;
  * Show knowledges candidate page
  */
 router.get('/knowledges', UserController.ensureIsCandidate, CandidateController.getKnowledge);
+
+/**
+ * @Route('/documents') GET;
+ * Show documents candidate page
+ */
+router.get('/documents', UserController.ensureIsCandidate, CandidateController.getDocuments);
 
 /**
  * @Route('/applications') GET;
@@ -47,25 +51,27 @@ router.get('/applications/new', UserController.ensureIsCandidate, CandidateContr
  * @Route('/add/Experience') POST;
  * add Candidate Experience.
  */
-router.post('/add/Experience',
+router.post('/add/experience',
   UserController.ensureIsCandidate,
   CandidateController.validate('postAddExperience'),
   CandidateController.postAddExperience
 );
+
 /**
  * @Route('/add/Formation') POST;
  * add Candidate Formation.
  */
-router.post('/add/Formation',
+router.post('/add/formation',
   UserController.ensureIsCandidate,
   CandidateController.validate('postAddFormation'),
   CandidateController.postAddFormation
 );
+
 /**
  * @Route('/add/Diploma') POST;
  * add Candidate Diploma.
  */
-router.post('/add/Diploma',
+router.post('/add/diploma',
   UserController.ensureIsCandidate,
   CandidateController.validate('postAddDiploma'),
   CandidateController.postAddDiploma

@@ -25,22 +25,22 @@ toAutocomplete.forEach((ac) => {
   $(`#addNew${eCapitalize}`).click(() => {
     let name = $(`#${ac}`).val();
     let _csrf = $('#csrfToken').val();
-    $.post(`/api/candidate/${ac}/add`, { name, _csrf }, (data) => {
+    $.post(`/api/candidate/${e}/add`, { name, _csrf }, (data) => {
       switch (ac) {
         case 'skills':
-          messageSuccess = `Cette compétence "${data[e].name}" vient d'être ajoutée à votre liste.`;
+          messageSuccess = `Cette compétence "${data.name}" vient d'être ajoutée à votre liste.`;
           titleSuccess = 'Compétence ajoutée avec succès :';
           break;
         case 'equipments':
-          messageSuccess = `Ce matériel ou produit "${data[e].name}" vient d'être ajouté à votre liste.`;
+          messageSuccess = `Ce matériel ou produit "${data.name}" vient d'être ajouté à votre liste.`;
           titleSuccess = 'Matériel / produit ajouté avec succès :';
           break;
         case 'softwares':
-          messageSuccess = `Ce logiciel "${data[e].name}" vient d'être ajouté à votre liste.`;
+          messageSuccess = `Ce logiciel "${data.name}" vient d'être ajouté à votre liste.`;
           titleSuccess = 'Logiciel ajouté avec succès :';
           break;
       }
-      if (data[e]) {
+      if (data) {
         $(`#${ac}`).val('');
         notification({
           icon: 'check-circle',
@@ -49,13 +49,13 @@ toAutocomplete.forEach((ac) => {
           message: messageSuccess
         });
         $(`#${ac}List`).append($('<tr>')
-          .attr({'data-type': e, 'data-id': data[e].id})
-          .append($('<td>').text(`${data[e].name}`))
+          .attr({'data-type': e, 'data-id': data.id})
+          .append($('<td>').text(`${data.name}`))
           .append($('<td>').append($('<div>').attr({class: 'rating-stars text-center'})
             .append($('<ul>').attr({
               class: 'stars',
               'data-type': e,
-              'data-id': data[e].id
+              'data-id': data.id
             })
               .append($('<li>').attr({class: 'star', title: 'Fair', 'data-value': 1}).html('<i class="fa fa-star"></i>'))
               .append($('<li>').attr({class: 'star', title: 'Good', 'data-value': 2}).html('<i class="fa fa-star"></i>'))
@@ -64,12 +64,13 @@ toAutocomplete.forEach((ac) => {
           .append($('<td>').append($('<button>').attr({
             class: 'btn btn-simple btn-danger btn-icon remove',
             'data-type': e,
-            'data-id': data[e].id
+            'data-id': data.id
           }).html('<i class="fa fa-trash"></i>')))
         );
       }
     }).catch(error => {
-      error = error.responseJSON;
+      console.log(error);
+      let errors = error.responseJSON;
       switch (ac) {
         case 'skills':
           messageError = `Cette compétence est déjà ajoutée à votre profil.`;
@@ -88,7 +89,7 @@ toAutocomplete.forEach((ac) => {
           title: 'Ajout impossible',
           message: messageError
         });
-      } else return errorsHandler(error);
+      } else return errorsHandler(errors || error);
     });
   });
 });

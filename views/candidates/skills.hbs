@@ -63,7 +63,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="skillsList">
-                                        {{#each user.candidate.skills as |skill|}}
+                                        {{#each candidate.skills as |skill|}}
                                             <tr data-type="skill" data-id="{{skill.id}}">
                                                 <td>{{skill.name}}</td>
                                                 <td>
@@ -131,7 +131,7 @@
                                 </tr>
                             </thead>
                             <tbody id="equipmentsList">
-                            {{#each user.candidate.equipments as |equipment|}}
+                            {{#each candidate.equipments as |equipment|}}
                                 <tr data-type="equipment" data-id="{{equipment.id}}">
                                     <td>{{equipment.name}}</td>
                                     <td>
@@ -197,7 +197,7 @@
                                 </tr>
                             </thead>
                             <tbody id="softwaresList">
-                            {{#each user.candidate.softwares as |software|}}
+                            {{#each candidate.softwares as |software|}}
                                 <tr data-type="software" data-id="{{software.id}}">
                                     <td>{{software.name}}</td>
                                     <td>

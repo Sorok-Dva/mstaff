@@ -1,105 +1,134 @@
 <div class="row">
-    <div class="col-lg-4 col-md-5">
-        <div class="card card-user">
-            <div class="image"></div>
-            <div class="content">
-                <div class="author">
-                    <img class="avatar border-white" src="/static/assets/images/face-0.jpg" />
-                    <h4 class="title">{{user.firstName}} {{user.lastName}}<br />
-                    </h4>
-                </div>
-                <p class="description text-center">
-                    {{user.candidate.description}}
-                </p>
-            </div>
-            <hr>
-            <div class="text-center">
-                <div class="row">
-                    <div class="col-md-3 col-md-offset-1">
-                        <h5>{{date user.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
-                    </div>
-                    <div class="col-md-4">
-                        <h5>{{date user.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
-                    </div>
-                    <div class="col-md-3">
-                        <h5>{{user.role}}<br /><small>Role</small></h5>
-                    </div>
-                </div>
-            </div>
+  <div class="col-lg-4 col-md-5">
+    <div class="card card-user">
+      <div class="image"></div>
+      <div class="content">
+        <div class="author">
+          {{log usr}}
+          <img id="candidateAvatar" class="avatar border-white" src="/static/assets/images/face-0.jpg" />
+          <span class="input-group-btn">
+             <span class="btn btn-default btn-file">
+               <i class="fal fa-pencil"></i> <input type="file" id="imgInp">
+             </span>
+          </span>
+          <h4 class="title">{{usr.firstName}} {{usr.lastName}}<br />
+          </h4>
         </div>
-    </div>
-    <div class="col-lg-8 col-md-7">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="title">Modifier le profil</h4>
-            </div>
-            <div class="card-content">
-                <form>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Prénom</label>
-                                <input type="text" class="form-control border-input" placeholder="Prénom" value="{{user.firstName}}">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Nom</label>
-                                <input type="text" class="form-control border-input" placeholder="Nom" value="{{user.lastName}}">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Adresse email</label>
-                                <input type="email" class="form-control border-input" placeholder="Email" value="{{user.email}}">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Date de naissance</label>
-                                <input type="date" class="form-control border-input" placeholder="dd/mm/aaaa" value="{{date user.birthday 'DD/MM/YYYY'}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Address</label>
-                                <input type="text" class="form-control border-input" placeholder="Home Address" value="Melbourne, Australia">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Code Postal</label>
-                                <input type="text" class="form-control border-input" placeholder="Code Postal" value="{{user.postal_code}}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Ville</label>
-                                <input type="text" class="form-control border-input" placeholder="Ville" value="{{user.town}}">
-                            </div>
-                        </div>
-                    </div>
-                    {{#if user.candidate}}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Description candidat</label>
-                                    <textarea rows="5" class="form-control border-input">{{user.candidate.description}}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                    {{/if}}
-                    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-info btn-fill btn-wd">Modifier le profil</button>
-                    </div>
-                    <div class="clearfix"></div>
-                </form>
-            </div>
+        <p class="description text-center">
+          {{usr.candidate.description}}
+        </p>
+      </div>
+      <hr>
+      <div class="text-center">
+        <div class="row">
+          <div class="col-md-3 col-md-offset-1">
+            <h5>{{date usr.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
+          </div>
+          <div class="col-md-4">
+            <h5>{{date usr.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
+          </div>
+          <div class="col-md-3">
+            <h5>{{usr.role}}<br /><small>Role</small></h5>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+  <div class="col-lg-8 col-md-7">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="title">Modifier le profil</h4>
+      </div>
+      <div class="card-content">
+        <form method="post" action="/profile/edit">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Prénom</label>
+                <input type="text" name="firstName" class="form-control border-input" placeholder="Prénom" value="{{usr.firstName}}" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Nom</label>
+                <input type="text" name="lastName" class="form-control border-input" placeholder="Nom" value="{{usr.lastName}}" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Adresse email</label>
+                <input type="email" name="email" class="form-control border-input" placeholder="Email" value="{{usr.email}}" required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Date de naissance</label>
+                <input type="date" name="birthday" class="form-control border-input" placeholder="dd/mm/aaaa" value="{{date usr.birthday 'YYYY-MM-DD'}}" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Code Postal</label>
+                <input type="text" name="postal_code" class="form-control border-input" placeholder="Code Postal" value="{{usr.postal_code}}" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Ville</label>
+                <input type="text" name="town" class="form-control border-input" placeholder="Ville" value="{{usr.town}}" required>
+              </div>
+            </div>
+          </div>
+          {{#if usr.candidate}}
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Description candidat</label>
+                  <textarea rows="5" name="description" class="form-control border-input">{{usr.candidate.description}}</textarea>
+                </div>
+              </div>
+            </div>
+          {{/if}}
+          <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+          <div class="text-center">
+            <button type="submit" class="btn btn-info btn-fill btn-wd">Modifier le profil</button>
+          </div>
+          <div class="clearfix"></div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+<script>
+  $(document).ready(function() {
+    $(document).on('change', '.btn-file :file', function() {
+      var input = $(this),
+          label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+      input.trigger('fileselect', [label]);
+    });
+
+    $('.btn-file :file').on('fileselect', function(event, label) {
+
+      var input = $(this).parents('.input-group').find(':text'),
+          log = label;
+
+    });
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#candidateAvatar').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    $("#imgInp").change(function(){
+      readURL(this);
+    });
+  });
+</script>

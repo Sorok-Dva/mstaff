@@ -19,8 +19,15 @@ module.exports = {
       }
     }
   },
-  getIndex: (req, res, next) => {
-    res.render('index');
+  getNeeds: (req, res, next) => {
+    res.render('establishments/needs');
+  },
+  addNeed: (req, res, next) => {
+    let render = { a: { main: 'needs' } };
+    Models.Post.findAll().then(posts => {
+      render.posts = posts;
+      return res.render('establishments/addNeed', render);
+    }).catch(error => next(new Error(error)));
   },
   /**
    * Create User Method
@@ -40,7 +47,7 @@ module.exports = {
       lastName: req.body.lastName,
       email: req.body.email,
       phone: req.body.phone,
-      type: 'es' // @TODO edit User migration to add type column in user table
+      type: 'es'
     }).then(user => res.render('users/login', { user }))
       .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
   },

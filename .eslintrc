@@ -26,6 +26,9 @@
       }
     ],
     "prefer-destructuring": "warn",
+    "no-extra-semi": "error",
+    "no-extra-parens": "error",
+    "no-invalid-regexp": "error",
     "no-await-in-loop": "warn",
     "no-multi-assign": "warn",
     "no-return-await": "error",
@@ -38,8 +41,8 @@
     "eol-last": "off",
     "eqeqeq": "off",
     "for-direction": "off",
-    "keyword-spacing": "off",
-    "key-spacing": "off",
+    "keyword-spacing": "error",
+    "key-spacing": "error",
     "no-dupe-arg": "off",
     "no-dupe-keys": "off",
     "no-unused-vars": "off",
@@ -69,6 +72,13 @@
         "imports": "always-multiline",
         "exports": "always-multiline",
         "functions": "ignore"
+      }
+    ],
+    "comma-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true
       }
     ],
     "class-methods-use-this": [

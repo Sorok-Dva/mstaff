@@ -1,15 +1,15 @@
 const Models = require('../models/index');
 
 module.exports = {
-  getIndex:     (req, res, next) => {
+  getIndex: (req, res, next) => {
     if (!req.subdomain) {
-      if (req.user && (req.user.type === 'candidate')) {
+      if (req.user && req.user.type === 'candidate') {
         return res.redirect('/profile')
       }
-      if (req.user && (req.user.type === 'es')) {
-        return res.redirect('/index')
+      if (req.user && req.user.type === 'es') {
+        return res.redirect('/needs')
       }
-      if (req.user && (req.user.type === 'admin')) {
+      if (req.user && req.user.type === 'admin') {
         return res.redirect('/back-office')
       }
       return res.render('index', { layout: 'landing' })
@@ -26,10 +26,10 @@ module.exports = {
       });
     }
   },
-  getLogin:     (req, res) => res.render('users/login', { layout: 'onepage' }),
-  postLogin:    (req, res) => res.redirect('/'),
-  getLogout:    (req, res) => req.logout() + req.session.destroy() + res.redirect('/'),
-  getRegister:  (req, res) => {
+  getLogin: (req, res) => res.render('users/login', { layout: 'onepage' }),
+  postLogin: (req, res) => res.redirect('/'),
+  getLogout: (req, res) => req.logout() + req.session.destroy() + res.redirect('/'),
+  getRegister: (req, res) => {
     if (req.params.esCode) {
       Models.Establishment.findOne({
         attributes: ['id', 'name', 'code'],
@@ -49,7 +49,7 @@ module.exports = {
       res.render('users/register', { layout: 'onepage' });
     }
   },
-  getRegisterWizard:  (req, res) => res.render('users/registerWizard'),
+  getRegisterWizard: (req, res) => res.render('users/registerWizard'),
   get404: (req, res) => res.render('error', { error: 'Lien invalide' }),
-  getRegisterDemo:(req, res) => res.render('demo/register')
+  getRegisterDemo: (req, res) => res.render('demo/register')
 };

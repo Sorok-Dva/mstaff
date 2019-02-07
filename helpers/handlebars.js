@@ -2,6 +2,7 @@
  * Handlebars helpers
  */
 const moment = require('moment');
+const _ = require('lodash');
 
 module.exports.register = async (Handlebars) => {
   /**
@@ -94,25 +95,25 @@ module.exports.register = async (Handlebars) => {
   Handlebars.registerHelper('ifCond', (v1, operator, v2, options) => {
     switch (operator) {
       case '==':
-        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        return v1 == v2 ? options.fn(this) : options.inverse(this);
       case '===':
-        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        return v1 === v2 ? options.fn(this) : options.inverse(this);
       case '!=':
-        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        return v1 != v2 ? options.fn(this) : options.inverse(this);
       case '!==':
-        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+        return v1 !== v2 ? options.fn(this) : options.inverse(this);
       case '<':
-        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        return v1 < v2 ? options.fn(this) : options.inverse(this);
       case '<=':
-        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        return v1 <= v2 ? options.fn(this) : options.inverse(this);
       case '>':
-        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        return v1 > v2 ? options.fn(this) : options.inverse(this);
       case '>=':
-        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        return v1 >= v2 ? options.fn(this) : options.inverse(this);
       case '&&':
-        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        return v1 && v2 ? options.fn(this) : options.inverse(this);
       case '||':
-        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        return v1 || v2 ? options.fn(this) : options.inverse(this);
       default:
         return options.inverse(this);
     }
@@ -144,11 +145,41 @@ module.exports.register = async (Handlebars) => {
   });
 
   Handlebars.registerHelper('has_passed', (dateString, options) => {
-    if(moment(dateString).isAfter(moment())) {
+    if (moment(dateString).isAfter(moment())) {
       return options.fn(this);
     } else {
       return options.inverse(this);
     }
+  });
+
+  Handlebars.registerHelper('addDocIcon', (object, type) => {
+    let iClass = 'plus-circle';
+    if (!_.isNil(object)) object.forEach((e, i) => {
+      object[i].type === type ? iClass = 'check-circle' : null
+    });
+    return iClass;
+  });
+
+  Handlebars.registerHelper('countFiles', (object, type) => {
+    let count = 0;
+    if (!_.isNil(object)) object.forEach((e, i) => object[i].type === type ? count++ : null);
+    return count;
+  });
+
+  Handlebars.registerHelper('weekStats', (object) => {
+    let res = [];
+    for (let day = 6; day >= 0; day--) {
+      let date = day === 0 ? moment().format('MMM Do YY') : moment().subtract(day, 'days').format('MMM Do YY');
+      let isNull = true;
+      object.map((user) => {
+        if (date === moment(user.createdAt).format('MMM Do YY')){
+          res.push(user.dataValues.count);
+          isNull = false;
+        }
+      });
+      if (isNull) res.push(0);
+    }
+    return res;
   });
 
   /* eslint-disable no-console */

@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   Service.associate = function (models) {
     Service.belongsTo(models.Experience, {
       foreignKey: 'id',
+      targetKey: 'id',
       onDelete: 'CASCADE'
     });
   };

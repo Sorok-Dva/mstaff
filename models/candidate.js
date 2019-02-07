@@ -20,35 +20,48 @@ module.exports = (sequelize, DataTypes) => {
     });
     Candidate.hasMany(models.Experience, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'experiences'
     });
     Candidate.hasMany(models.Wish, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'wishes'
     });
     Candidate.hasMany(models.Application, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'applications'
     });
     Candidate.hasMany(models.CandidateQualification, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'qualifications'
     });
     Candidate.hasMany(models.CandidateFormation, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'formations'
     });
     Candidate.hasMany(models.CandidateSkill, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'skills'
     });
     Candidate.hasMany(models.CandidateEquipment, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'equipments'
     });
     Candidate.hasMany(models.CandidateSoftware, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'softwares'
+    });
+    Candidate.hasMany(models.CandidateDocument, {
+      foreignKey: 'candidate_id',
+      sourceKey: 'id',
+      as: 'documents'
     });
   };
   return Candidate;

@@ -139,7 +139,10 @@ if (window.File && window.FileList && window.FileReader) {
 
 $('#removeVideo').click(() => {
   $.post('/api/candidate/delete/video', {_csrf}, (data) => {
-    if (data.result === 'deleted') {
+    let video = document.getElementById('video-preview');
+    video.pause();
+    $('#video-preview').removeAttr('src');
+    if (data.result === 'done') {
       output('');
       $('#start').show();
       $('i.fa-video-camera').show();
