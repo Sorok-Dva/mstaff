@@ -575,5 +575,22 @@ module.exports = {
         }
       });
     });
+  },
+  deleteWish: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
+      Models.Wish.findOne({
+        where: { id: req.params.id, candidate_id: candidate.id }
+      }).then(wish => {
+        if (!wish) return res.status(400).send({ body: req.body, error: 'Not exists' });
+        wish.destroy().then(wish => res.status(201).send({ deleted: true, wish }));
+      }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+    });
   }
 };

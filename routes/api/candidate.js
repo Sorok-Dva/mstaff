@@ -49,5 +49,7 @@ router.post('/equipments/add', UserController.ensureIsCandidate, CandidateContro
 router.post('/softwares/add', UserController.ensureIsCandidate, CandidateController.addSoftware);
 
 router.post('/wish/add', UserController.ensureIsCandidate, CandidateController.addWish);
+router.delete('/wish/:id', UserController.ensureIsCandidate, CandidateController.deleteWish);
+
 
 module.exports = router;
