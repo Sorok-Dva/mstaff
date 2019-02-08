@@ -37,6 +37,9 @@ module.exports = {
       case 'removeWish': {
         return [ check('id').isNumeric() ]
       }
+      case 'getWish': {
+        return [ check('id').isNumeric() ]
+      }
     }
   },
   postVideo: (req, res, next) => {
@@ -489,6 +492,24 @@ module.exports = {
       return candidate[as][0].destroy().then(data => res.status(201).send({ deleted: true, data }));
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
+  getWish: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+    return Models.Candidate.findOne( {
+      where: { user_id: req.user.id }
+    }).then( candidate => {
+      Models.Wish.findOne({
+        where: { id: req.params.id }
+      }).then( wish => {
+        if (!wish) return res.status(400).send({ body: req.body, error: 'Not exists' });
+        res.status(201).send({ get: true, wish })
+      })
+    })
+
+  },
   addWish: (req, res, next) => {
     const errors = validationResult(req);
 
@@ -540,7 +561,6 @@ module.exports = {
     return Models.Candidate.findOne({
       where: { user_id: req.user.id }
     }).then(candidate => {
-      console.log(candidate);
       Models.Wish.findOne({
         where: { id: req.params.id, candidate_id: candidate.id }
       }).then(wish => {

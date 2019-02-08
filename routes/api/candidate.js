@@ -53,11 +53,9 @@ router.post('/type/:type/add', UserController.ensureIsCandidate, CandidateContro
 router.post('/rate/:type/:id', UserController.ensureIsCandidate, CandidateController.starsRating);
 router.delete('/type/:type/:id', UserController.ensureIsCandidate, CandidateController.deleteRating);
 
-router.post('/wish/add', UserController.ensureIsCandidate, CandidateController.addWish)
-  .delete('/wish/:id',
-    UserController.ensureIsCandidate,
-    CandidateController.validate('removeWish'),
-    CandidateController.removeWish);
+router.get('/wish/:id', UserController.ensureIsCandidate, CandidateController.validate('getWish'), CandidateController.getWish)
+  .post('/wish/add', UserController.ensureIsCandidate, CandidateController.addWish)
+  .delete('/wish/:id', UserController.ensureIsCandidate, CandidateController.validate('removeWish'), CandidateController.removeWish);
 
 
 module.exports = router;
