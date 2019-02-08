@@ -5,7 +5,7 @@ $('.removeWish').click(function() {
 });
 
 let removeWish = (id) => {
-
+  console.log('ID = '.concat(id));
   let _csrf = $('#csrfToken').val();
   $.delete(`/api/candidate/wish/${id}`, {_csrf}, (data) => {
     if (data.deleted) {

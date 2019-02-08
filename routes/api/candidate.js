@@ -49,12 +49,15 @@ router.get('/formation/:id', UserController.ensureIsCandidate, CandidateControll
 router.get('/diploma/:id', UserController.ensureIsCandidate, CandidateController.getDiplomaById)
   .delete('/diploma/:id', UserController.ensureIsCandidate, CandidateController.removeDiploma);
 
-router.post('/:type/add', UserController.ensureIsCandidate, CandidateController.addRating);
+router.post('/type/:type/add', UserController.ensureIsCandidate, CandidateController.addRating);
 router.post('/rate/:type/:id', UserController.ensureIsCandidate, CandidateController.starsRating);
-router.delete('/:type/:id', UserController.ensureIsCandidate, CandidateController.deleteRating);
+router.delete('/type/:type/:id', UserController.ensureIsCandidate, CandidateController.deleteRating);
 
-router.post('/wish/add', UserController.ensureIsCandidate, CandidateController.addWish);
-router.delete('/wish/:id', UserController.ensureIsCandidate, CandidateController.deleteWish);
+router.post('/wish/add', UserController.ensureIsCandidate, CandidateController.addWish)
+  .delete('/wish/:id',
+    UserController.ensureIsCandidate,
+    CandidateController.validate('removeWish'),
+    CandidateController.removeWish);
 
 
 module.exports = router;

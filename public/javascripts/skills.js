@@ -25,7 +25,7 @@ toAutocomplete.forEach((ac) => {
   $(`#addNew${eCapitalize}`).click(() => {
     let name = $(`#${ac}`).val();
     let _csrf = $('#csrfToken').val();
-    $.post(`/api/candidate/${e}/add`, { name, _csrf }, (data) => {
+    $.post(`/api/candidate/type/${e}/add`, { name, _csrf }, (data) => {
       switch (ac) {
         case 'skills':
           messageSuccess = `Cette compétence "${data.name}" vient d'être ajoutée à votre liste.`;
@@ -113,7 +113,7 @@ let autocompleteTrigger = (elements, contain) => {
 
 let removeSkill = (type, id) => {
   let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/${type}/${id}`, {_csrf}, (data) => {
+  $.delete(`/api/candidate/type/${type}/${id}`, {_csrf}, (data) => {
     if (data.deleted) {
       notification({
         icon: 'check-circle',

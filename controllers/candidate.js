@@ -34,6 +34,9 @@ module.exports = {
       case 'putFormation': {
         return [ check('name').isLength({ min: 10 }) ]
       }
+      case 'removeWish': {
+        return [ check('id').isNumeric() ]
+      }
     }
   },
   postVideo: (req, res, next) => {
@@ -528,7 +531,7 @@ module.exports = {
       });
     });
   },
-  deleteWish: (req, res, next) => {
+  removeWish: (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -537,6 +540,7 @@ module.exports = {
     return Models.Candidate.findOne({
       where: { user_id: req.user.id }
     }).then(candidate => {
+      console.log(candidate);
       Models.Wish.findOne({
         where: { id: req.params.id, candidate_id: candidate.id }
       }).then(wish => {
