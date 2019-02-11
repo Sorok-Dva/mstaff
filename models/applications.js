@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     wish_id: DataTypes.INTEGER,
     candidate_id: DataTypes.INTEGER,
     es_id: DataTypes.INTEGER,
-    finess: DataTypes.INTEGER,
+    ref_es_id: DataTypes.INTEGER,
     percentage: DataTypes.FLOAT,
     accepted: DataTypes.BOOLEAN,
     status: DataTypes.STRING,

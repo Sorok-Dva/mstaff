@@ -46,10 +46,10 @@ module.exports = {
     res.render('error', opts);
   },
   exphbs: exphbs({
-    extname         : 'hbs',
-    defaultLayout   : 'default',
-    layoutsDir      : path.join(__dirname, '/views/layouts'),
-    partialsDir     : path.join(__dirname, '/views/partials')
+    extname: 'hbs',
+    defaultLayout: 'default',
+    layoutsDir: path.join(__dirname, '/views/layouts'),
+    partialsDir: path.join(__dirname, '/views/partials')
   }),
   flash: flash(),
   helmet: helmet(), // secure apps by setting various HTTP headers
@@ -79,7 +79,7 @@ module.exports = {
    */
   readOnlySessionForImpersonation: (req, res, next) => {
     if (req.session && req.session.originalUser) {
-      let isBORoute = ((req.url.split('back-office').length - 1) !== 0);
+      let isBORoute = req.url.split('back-office').length - 1 !== 0;
       if (req.session.readOnly && !isBORoute && req.method !== 'GET') {
         return res.status(403).json('Operation not allowed, session is in read only mode.')
       }
@@ -88,7 +88,7 @@ module.exports = {
   },
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
-    res.locals.readOnly = (req.session.readOnly) ? 'lock' : 'unlock';
+    res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');

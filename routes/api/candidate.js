@@ -6,7 +6,7 @@ const storage = (path, type) => multer.diskStorage({
     cb(null, `./public/uploads/${path}`)
   },
   filename: (req, file, cb) => {
-    let filename = (type === 'video') ? `${req.user.id}${Date.now()}` : `${req.user.id}${Date.now()}_${file.fieldname}`;
+    let filename = type === 'video' ? `${req.user.id}${Date.now()}` : `${req.user.id}${Date.now()}_${file.fieldname}`;
     cb(null, `${filename}.${file.mimetype.split('/')[1]}`)
   }
 });
