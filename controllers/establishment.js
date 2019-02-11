@@ -47,7 +47,7 @@ module.exports = {
       lastName: req.body.lastName,
       email: req.body.email,
       phone: req.body.phone,
-      type: 'es' // @TODO edit User migration to add type column in user table
+      type: 'es'
     }).then(user => res.render('users/login', { user }))
       .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
   },

@@ -101,7 +101,7 @@ module.exports = {
     switch (method) {
       case 'create': {
         return [
-          check('email').isEmail(),
+          check('email').isEmail().normalizeEmail(),
           check('password')
             .isLength({ min: 8 }).withMessage('must be at least 8 chars long')
             .matches(/\d/).withMessage('must contain a number'),
@@ -163,7 +163,7 @@ module.exports = {
           usr = user;
           return Candidate.create({
             user_id: user.id,
-            es_id: (esId) || null
+            es_id: esId || null
           });
         }).then(candidate => {
           res.render(`users/registerWizard`, { layout: 'onepage', user: usr, candidate });
