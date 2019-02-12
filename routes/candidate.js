@@ -77,4 +77,6 @@ router.post('/add/diploma',
   CandidateController.postAddDiploma
 );
 
+router.get('/wish/edit/:id', UserController.ensureIsCandidate, CandidateController.validate('getEditWish'), CandidateController.getEditWish);
+
 module.exports = router;

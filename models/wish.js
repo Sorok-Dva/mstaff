@@ -33,10 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id',
       onDelete: 'CASCADE'
     });
-    Wish.belongsTo(models.Application, {
-      foreignKey: 'id',
-      onDelete: 'CASCADE'
-    });
   };
   return Wish;
 };

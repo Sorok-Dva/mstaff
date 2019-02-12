@@ -1,6 +1,8 @@
 const { check, validationResult } = require('express-validator/check');
 const _ = require('lodash');
 const fs = require('fs');
+const Sequelize = require('sequelize');
+const op = Sequelize.Op;
 
 const Models = require('../models/index');
 
@@ -38,6 +40,9 @@ module.exports = {
         return [ check('id').isNumeric() ]
       }
       case 'getWish': {
+        return [ check('id').isNumeric() ]
+      }
+      case 'getEditWish': {
         return [ check('id').isNumeric() ]
       }
     }
@@ -510,6 +515,44 @@ module.exports = {
     })
 
   },
+  getEditWish: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+    let render = { a: { main: 'applications' } };
+    Models.Candidate.findOne( {
+      attributes: ['user_id'],
+      where: { user_id: req.user.id },
+      include: [{model: Models.Wish,
+        where: { id: req.params.id },
+        as: 'wishes'
+      }, {
+        model: Models.Application,
+        attributes: ['ref_es_id'],
+        where: { wish_id: req.params.id },
+        as: 'applications',
+        // include: {
+        //   model: Models.EstablishmentReference,
+        //   attributes: ['name', 'finess_et'],
+        //   where: [{ finess_et: [op.col]: 'applications.ref_es_id' }]
+        // }
+      }]
+    }).then( candidate => {
+      render.candidate = candidate;
+      render.candidate.applications.forEach(e => {
+        console.log(e.ref_es_id);
+      })
+      return Models.Post.findAll();
+    }).then( posts => {
+      render.posts = posts;
+      // render.candidate.applications.forEach(e => {
+      //   console.log(e.ref_es_id);
+      // })
+      return res.render('candidates/edit-application', render);
+    }).catch(error => next(error));
+  },
   addWish: (req, res, next) => {
     const errors = validationResult(req);
 
@@ -569,4 +612,4 @@ module.exports = {
       }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
     });
   }
-};
+}
