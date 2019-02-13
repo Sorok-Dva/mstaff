@@ -192,6 +192,18 @@ module.exports = {
     }
     );
   },
+  editFormation: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Formation.findOne({ where: { id: req.params.id } }).then(user => {
+      if (req.body.formationId) {
+        console.log('formation ID ok');
+      }
+      user.save();
+    })
+  },
   editCandidate: (req, res, next) => {
     const errors = validationResult(req.body);
 

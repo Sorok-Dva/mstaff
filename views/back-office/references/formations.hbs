@@ -30,6 +30,7 @@
 </div>
 <script type="text/javascript">
     let table = $('#formations-table');
+    let _csrf = $('#csrfToken').val();
 
     operateFormatter = (value, row, index) => {
         return [
@@ -47,8 +48,14 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .edit': (e, value, row, index) => {
-                $(location).attr('href', `/back-office/formations/${row.id}`);
-            },
+                if(prompt('Renommer la formation :')) {
+                    $.put(`api/back-office/formations/${row.id}`, {
+                        _csrf
+                    }, (response) => {
+                        console.log("offrez-moi du Nutella");
+                    })
+                    }
+                },
             'click .remove': (e, value, row, index) => {
                 if(confirm('ATTENTION:\n\n ' +
                         'Cette action est irreversible et supprimera la formation.\n\n' +
