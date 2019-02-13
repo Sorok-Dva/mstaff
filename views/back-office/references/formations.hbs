@@ -47,7 +47,7 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .edit': (e, value, row, index) => {
-                // edit formation here
+                $(location).attr('href', `/back-office/formations/${row.id}`);
             },
             'click .remove': (e, value, row, index) => {
                 if(confirm('ATTENTION:\n\n ' +
