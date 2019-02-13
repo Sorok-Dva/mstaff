@@ -197,11 +197,11 @@ module.exports = {
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
-    return Models.Formation.findOne({ where: { id: req.params.id } }).then(user => {
-      if (req.body.formationId) {
-        console.log('formation ID ok');
+    return Models.Formation.findOne({ where: { id: req.params.id } }).then(formation => {
+      if (req.body.promptInput) {
+        formation.name = req.body.promptInput;
       }
-      user.save();
+      formation.save();
     })
   },
   editCandidate: (req, res, next) => {

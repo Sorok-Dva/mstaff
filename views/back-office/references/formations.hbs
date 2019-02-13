@@ -49,9 +49,12 @@
         window.operateEvents = {
             'click .edit': (e, value, row, index) => {
                 let _csrf = $('#csrfToken').val();
-                if (prompt('Renommer la formation :')) {
+                let promptInput = prompt('Renommer la formation :');
+                console.log(promptInput);
+                if (promptInput) {
                     console.log(_csrf);
                     $.put(`/api/back-office/formations/${row.id}`, {
+                        promptInput,
                         _csrf
                     }, (response) => {
                         console.log("offrez-moi du Nutella");
