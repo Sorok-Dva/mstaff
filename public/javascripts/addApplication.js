@@ -452,7 +452,8 @@ $(document).ready(function() {
 
   $('#selectPostType').on('change', e => {
     let postType = $('#selectPostType').select2('data');
-    application.postType = [];
+    if (!application.postType)
+      application.postType = [];
     postType.forEach((post) => {
       application.postType.push(post.text);
     })

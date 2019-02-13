@@ -1,8 +1,7 @@
 const { check, validationResult } = require('express-validator/check');
 const _ = require('lodash');
 const fs = require('fs');
-const Sequelize = require('sequelize');
-const op = Sequelize.Op;
+const { Sequelize, Op } = require('sequelize');
 
 const Models = require('../models/index');
 
@@ -521,11 +520,13 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
+
     let render = { a: { main: 'applications' } };
     Models.Candidate.findOne( {
       attributes: ['user_id'],
       where: { user_id: req.user.id },
-      include: [{model: Models.Wish,
+      include: [{
+        model: Models.Wish,
         where: { id: req.params.id },
         as: 'wishes'
       }, {
@@ -533,23 +534,21 @@ module.exports = {
         attributes: ['ref_es_id'],
         where: { wish_id: req.params.id },
         as: 'applications',
-        // include: {
-        //   model: Models.EstablishmentReference,
-        //   attributes: ['name', 'finess_et'],
-        //   where: [{ finess_et: [op.col]: 'applications.ref_es_id' }]
-        // }
+        include: {
+          model: Models.EstablishmentReference,
+          attributes: ['name', 'finess_et'],
+          on: { '$applications.ref_es_id$': {
+            [Op.col]: 'applications->EstablishmentReference.finess_et'}
+          }
+        }
       }]
     }).then( candidate => {
       render.candidate = candidate;
-      render.candidate.applications.forEach(e => {
-        console.log(e.ref_es_id);
-      })
+      render.wish = candidate.wishes[0];
+      render.applications = candidate.applications;
       return Models.Post.findAll();
     }).then( posts => {
       render.posts = posts;
-      // render.candidate.applications.forEach(e => {
-      //   console.log(e.ref_es_id);
-      // })
       return res.render('candidates/edit-application', render);
     }).catch(error => next(error));
   },

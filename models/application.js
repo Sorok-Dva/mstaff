@@ -28,8 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Application.hasOne(models.EstablishmentReference, {
-      foreignKey: 'id',
-      onDelete: 'CASCADE'
+      foreignKey: 'finess_et',
+      sourceKey: 'ref_es_id',
+      onDelete: 'CASCADE',
     })
   };
   return Application;

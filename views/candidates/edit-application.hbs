@@ -16,8 +16,11 @@
         margin-bottom: 0 !important;
     }
 </style>
-<div class="row">
 
+{{log wish.liberal_cabinets}}
+{{log wish.posts}}
+
+<div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="wizard">
             <div class="wizard-inner">
@@ -71,7 +74,8 @@
                                 <div id="contracts" class="row sub-step">
                                     <div class="form-group col-sm-4">
                                         <div class="checkbox">
-                                            <input id="cdi-cdd" name="cdi-cdd" type="checkbox">
+                                            <input id="cdi-cdd" name="cdi-cdd" type="checkbox"
+                                            {{#ifCond wish.contract_type '===' 'cdi-cdd'}}checked=""{{/ifCond}}>
                                             <label for="cdi-cdd">
                                                 <h3>CDI / CDD</h3>
                                             </label>
@@ -79,7 +83,8 @@
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <div class="checkbox">
-                                            <input id="vacation" name="vacation" type="checkbox">
+                                            <input id="vacation" name="vacation" type="checkbox"
+                                                   {{#ifCond wish.contract_type '===' 'vacation'}}checked=""{{/ifCond}}>
                                             <label for="vacation">
                                                 <h3>VACATION</h3>
                                             </label>
@@ -87,7 +92,8 @@
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <div class="checkbox">
-                                            <input id="internship" name="internship" type="checkbox">
+                                            <input id="internship" name="internship" type="checkbox"
+                                                   {{#ifCond wish.contract_type '===' 'internship'}}checked=""{{/ifCond}}>
                                             <label for="internship">
                                                 <h3>STAGE</h3>
                                             </label>
@@ -97,7 +103,9 @@
                             </div>
                             <div class="col-md-12"><hr></div>
                         </div>
-                        <div id="activityType" class="row" style="display: none;">
+
+                        {{#ifCond wish.contract_type '===' 'cdi-cdd'}}
+                        <div id="activityType" class="row">
                             <div class="col-sm-3">
                                 <h4 class="text-bold">Type d'activité *:</h4>
                             </div>
@@ -105,7 +113,8 @@
                                 <div id="activity" class="row sub-step">
                                     <div class="form-group col-sm-4">
                                         <div class="checkbox">
-                                            <input id="full_time" name="full_time" type="checkbox">
+                                            <input id="full_time" name="full_time" type="checkbox"
+                                                   {{#ifCond @root.wish.full_time '===' true}}checked=""{{/ifCond}}>
                                             <label for="full_time">
                                                 <h3>Temps plein</h3>
                                             </label>
@@ -113,7 +122,8 @@
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <div class="checkbox">
-                                            <input id="part_time" name="part_time" type="checkbox">
+                                            <input id="part_time" name="part_time" type="checkbox"
+                                                   {{#ifCond @root.wish.part_time '===' true}}checked=""{{/ifCond}}>
                                             <label for="part_time">
                                                 <h3>Temps partiel</h3>
                                             </label>
@@ -123,7 +133,7 @@
                             </div>
                             <div class="col-md-12"><hr></div>
                         </div>
-                        <div id="timeType" class="row" style="display: none;">
+                        <div id="timeType" class="row">
                             <div class="col-sm-3">
                                 <h4 class="text-bold">Aménagement horaire *:</h4>
                             </div>
@@ -131,7 +141,8 @@
                                 <div id="time" class="row sub-step">
                                     <div class="form-group col-sm-4">
                                         <div class="checkbox">
-                                            <input id="daytime" name="daytime" type="checkbox">
+                                            <input id="daytime" name="daytime" type="checkbox"
+                                                   {{#ifCond @root.wish.day_time '===' true}}checked=""{{/ifCond}}>
                                             <label for="daytime">
                                                 <h3>Jour</h3>
                                             </label>
@@ -139,7 +150,8 @@
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <div class="checkbox">
-                                            <input id="nighttime" name="nighttime" type="checkbox">
+                                            <input id="nighttime" name="nighttime" type="checkbox"
+                                                   {{#ifCond @root.wish.night_time '===' true}}checked=""{{/ifCond}}>
                                             <label for="nighttime">
                                                 <h3>Nuit</h3>
                                             </label>
@@ -149,24 +161,30 @@
                             </div>
                             <div class="col-md-12"><hr></div>
                         </div>
-                        <div id="liberalType" class="row" style="display: none;">
+                        {{/ifCond}}
+
+                        {{#ifCond wish.contract_type '===' 'vacation'}}
+                        <div id="liberalType" class="row">
                             <div class="col-sm-3">
                                 <h4 class="text-bold">Cabinets libéraux :</h4>
                             </div>
                             <div class="col-sm-9">
-                                <div id="liberals" class="row sub-step">
-                                    <div class="form-group col-sm-12">
-                                        <div class="checkbox">
-                                            <input id="liberal" name="liberal" type="checkbox">
-                                            <label for="liberal">
-                                                <h3>Je suis interessé(e) par les offres des cabinets libéraux autour de moi (+/-30KM)</h3>
-                                            </label>
+                                    <div id="liberals" class="row sub-step">
+                                        <div class="form-group col-sm-12">
+                                            <div class="checkbox">
+                                                <input id="liberal" name="liberal" type="checkbox"
+                                                       {{#ifCond @root.wish.liberal_cabinets '===' true}}checked=""{{/ifCond}}>
+                                                <label for="liberal">
+                                                    <h3>Je suis interessé(e) par les offres des cabinets libéraux autour de moi (+/-30KM)</h3>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                             </div>
                             <div class="col-md-12"><hr></div>
                         </div>
+                        {{/ifCond}}
+
                         <div id="postType" class="row">
                             <div class="col-sm-3">
                                 <h4 class="text-bold">Type de poste *:</h4>
@@ -418,3 +436,24 @@
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script src="/static/javascripts/addApplication.js"></script>
 <script src="/static/javascripts/calendar.js"></script>
+<script>
+    {{#if wish.contract_type}}application.contractType = '{{wish.contract_type}}'{{/if}}
+
+    {{#if wish.posts}}
+        application.postType = [];
+        {{#each wish.posts as |post|}}
+            application.postType.push('{{post}}');
+        {{/each}}
+    {{/if}}
+
+    let obj = $('#selectPostType option');
+    Object.keys(obj).forEach(key => {
+        let value = obj[key];
+        application.postType.forEach( post => {
+            if (post === value.innerText){
+              console.log(value.value);
+              //TODOOOOOOOOOOOOOO
+            }
+        })
+    })
+</script>
