@@ -97,8 +97,9 @@ toAutocomplete.forEach((ac) => {
 $('body').on('click', '.remove', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   let type = $(event.target).attr('data-type') || $(event.target).parent().attr('data-type');
-  $('#btnRemoveSkill').attr('onclick', `removeSkill('${type}', ${id})`);
-  $("#removeSkillModal").modal();
+  createModal({ id: 'removeSkillModal', modal: 'removeSkill', title: 'Confirmation'}, () => {
+    $('#btnRemoveSkill').attr('onclick', `removeSkill('${type}', ${id})`);
+  })
 });
 
 let autocompleteTrigger = (elements, contain) => {

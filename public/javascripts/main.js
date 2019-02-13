@@ -69,6 +69,18 @@ let errorsHandler = data => {
 };
 
 let loadTemplate = (url, data, callback) => {
+  if (data.partials) {
+    for (let i = 0; i < data.partials.length; i++) {
+      $.ajax({url: `/static/views/partials/${data.partials[i]}.hbs`, cache: true, success: function(source) {
+        Handlebars.registerPartial(`${data.partials[i]}`, source);
+      }});
+    }
+  }
+  if (data.modal) {
+    $.ajax({url: `/static/views/modals/partials/${data.modal}.hbs`, cache: true, success: function(source) {
+        Handlebars.registerPartial(`${data.modal}`, source);
+      }});
+  }
   Handlebars.registerHelper('log', function () {
     console.log(['Values:'].concat(
       Array.prototype.slice.call(arguments, 0, -1)
@@ -109,10 +121,22 @@ let loadTemplate = (url, data, callback) => {
     return accum;
   });
 
+  Handlebars.registerHelper('partial', function (name) {
+    return name;
+  });
   $.ajax({url, cache: true, success: function(source) {
       let template = Handlebars.compile(source);
       return callback(template(data));
     }});
+};
+
+let createModal = (opts, callback) => {
+  $(`#${opts.id}`).remove();
+  loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
+    $('body').append(html);
+    $(`#${opts.id}`).modal();
+    if (callback) return callback();
+  });
 };
 
 let nextTab = elem => $(elem).next().find('a.tabWizard[data-toggle="tab"]').click();
@@ -163,29 +187,3 @@ $(document).ready(function() {
     history.back()
   });
 });
-
-/*
-*     module.exports = {
-  "extends": "standard",
-  "plugins": ["async-await"],
-  "rules": {
-    "async-await/space-after-async": 2,
-    "async-await/space-after-await": 2,
-    "brace-style": "off",
-    "eol-last": "off",
-    "eqeqeq": "off",
-    "for-direction": "off",
-    "indent": ["warn", 2],
-    "keyword-spacing": "off",
-    "key-spacing": "off",
-    "no-dupe-arg": "off",
-    "no-dupe-keys": "off",
-    "no-unused-vars": "off",
-    "no-return-assign": ["warn", "except-parens"],
-    "no-useless-escape": "off",
-    "no-trailing-spaces": "off",
-    "one-var": "off",
-    "semi": "off",
-    "standard/object-curly-even-spacing": "off",
-  }
-};*/

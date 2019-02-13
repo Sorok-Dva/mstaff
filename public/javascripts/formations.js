@@ -190,21 +190,22 @@ $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $.get(`/api/candidate/formation/${id}`, (data) => {
     if (data.formation) {
-      let start = new Date(data.formation.start);
-      let end = data.formation.end === null ? null : new Date(data.formation.end);
+      createModal({ id: 'editFormationModal', modal: 'editFormation', title: '<span class="ti-pencil-alt"></span> Modifier une formation' }, () => {
+        let start = new Date(data.formation.start);
+        let end = data.formation.end === null ? null : new Date(data.formation.end);
 
-      $('#editFName').val(data.formation.name);
-      $('#editFStart').val(`${("0" + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
+        $('#editFName').val(data.formation.name);
+        $('#editFStart').val(`${("0" + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
 
-      if (end === null) {
-        $('#editFEnd').prop('disabled', true);
-      } else {
-        $('#editFEnd').prop('disabled', false);
-        $('#editFEnd').val(`${("0" + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
-      }
-      $("#editFormationModal").modal();
-      $('#editFormationId').val(id);
-      $('#editFormation').attr('onclick', `editFormation(${$('#editFormation').attr('data-id')})`);
+        if (end === null) {
+          $('#editFEnd').prop('disabled', true);
+        } else {
+          $('#editFEnd').prop('disabled', false);
+          $('#editFEnd').val(`${("0" + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
+        }
+        $('#editFormationId').val(id);
+        $('#editFormation').attr('onclick', `editFormation(${$('#editFormation').attr('data-id')})`);
+      });
     }
   }).catch(errors => {
     notification({
@@ -218,19 +219,20 @@ $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $.get(`/api/candidate/diploma/${id}`, (data) => {
     if (data.diploma) {
-      let start = new Date(data.diploma.start);
-      let end = data.diploma.end === null ? null : new Date(data.diploma.end);
+      createModal({ id: 'editDiplomaModal', modal: 'editDiploma', title: '<span class="ti-pencil-alt"></span> Modifier un diplôme' }, () => {
+        let start = new Date(data.diploma.start);
+        let end = data.diploma.end === null ? null : new Date(data.diploma.end);
 
-      $('#editDName').val(data.diploma.name);
-      $('#editDStart').val(`${("0" + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
+        $('#editDName').val(data.diploma.name);
+        $('#editDStart').val(`${("0" + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
 
-      if (end === null) {
-        $('#editDEnd').prop('disabled', true);
-      } else {
-        $('#editDEnd').prop('disabled', false);
-        $('#editDEnd').val(`${("0" + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
-      }
-      $("#editDiplomaModal").modal();
+        if (end === null) {
+          $('#editDEnd').prop('disabled', true);
+        } else {
+          $('#editDEnd').prop('disabled', false);
+          $('#editDEnd').val(`${("0" + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
+        }
+      });
     }
   }).catch(errors => {
     notification({

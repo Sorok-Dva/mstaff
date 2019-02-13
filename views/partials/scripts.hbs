@@ -4,90 +4,94 @@
 <script src="/static/assets/js/timepicker.js"></script>
 <script src="/static/assets/js/jquery.ultima.block.min.js"></script>
 <script>
-    // $(document).ready(() => {
-        // $("[data-toggle=popover]").popover();
-        {{#if sequelizeError}}
-            {{#each sequelizeError.errors as |error|}}
-                $('#{{error.path}}').css('border', '3px solid red');
-            {{/each}}
-        {{/if}}
+  // $(document).ready(() => {
+  // $("[data-toggle=popover]").popover();
+    {{#if sequelizeError}}
+      {{#each sequelizeError.errors as |error|}}
+      $('#{{error.path}}').css('border', '3px solid red');
+      {{/each}}
+    {{/if}}
 
-    // });
+  // });
 
-        {{#if error_msg}}
-            notification({
-                icon: 'exclamation',
-                type: 'danger',
-                title: '{{tr.partials.scripts.notify_error_title}} :',
-                message: `{{error_msg}}`
-            });
-        {{/if}}
-        {{#if success_msg}}
-        notification({
-            icon: 'check-circle',
-            type: 'success',
-            title: '{{tr.partials.scripts.notify_success_title}} :',
-            message: `{{success_msg}}`
+    {{#if error_msg}}
+    notification({
+      icon: 'exclamation',
+      type: 'danger',
+      title: '{{tr.partials.scripts.notify_error_title}} :',
+      message: `{{error_msg}}`
+    });
+    {{/if}}
+    {{#if success_msg}}
+    notification({
+      icon: 'check-circle',
+      type: 'success',
+      title: '{{tr.partials.scripts.notify_success_title}} :',
+      message: `{{success_msg}}`
+    });
+    {{/if}}
+
+    {{#if session.originalUser}}
+    let roState = '{{ readOnly }}';
+    if ('lock' === roState) {
+      $('#bodyContent').block('Compte en lecture seule.');
+    }
+    $('#removeReadOnly').click(() => {
+      if ('lock' === roState) {
+        createModal({
+          id: 'removeReadOnlyModal',
+          modal: 'removeReadOnly',
+          title: 'Confirmation'
         });
-        {{/if}}
-
-        {{#if session.originalUser}}
-            let roState = '{{ readOnly }}';
-            if ('lock' === roState) {
-                $('#bodyContent').block('Compte en lecture seule.');
-            }
-            $('#removeReadOnly').click(() => {
-              if ('lock' === roState) $("#removeReadOnlyModal").modal();
-              else {
-                  $.get('/back-office/impersonatePutReadOnly', (data) => {
-                      if (data.status === 'ok') {
-                          roState = 'lock';
-                          $('#removeReadOnly').attr('class', 'fa fa-lock');
-                          $('#bodyContent').block('Compte en lecture seule.');
-                          notification({
-                              icon: 'check-circle',
-                              type: 'success',
-                              title: 'Activation de la lecture seule validée :',
-                              message: `Vous ne pouvez plus intéragir sur ce compte.`
-                          });
-                      } else {
-                      }
-                  });
-              }
+      }
+      else {
+        $.get('/back-office/impersonatePutReadOnly', (data) => {
+          if (data.status === 'ok') {
+            roState = 'lock';
+            $('#removeReadOnly').attr('class', 'fa fa-lock');
+            $('#bodyContent').block('Compte en lecture seule.');
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Activation de la lecture seule validée :',
+              message: `Vous ne pouvez plus intéragir sur ce compte.`
             });
-            let removeRO = () => {
-                let password = $('#removeROPassword').val();
-                let _csrf = $('#csrfToken').val();
-                $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
-                  if (data.status === 'send') {
-                      $("#removeReadOnlyModal").modal('hide');
-                      let pinCode = prompt('Code PIN envoyé sur discord. Veuillez le saisir ici :');
-                      $.post('/back-office/impersonateRemoveReadOnly/validate', { pinCode, _csrf }, (response) => {
-                        if (response.authorized) {
-                          roState = 'unlock';
-                          $('#removeReadOnly').attr('class', 'fa fa-unlock');
-                          $('#bodyContent').unblock();
-                            notification({
-                                icon: 'check-circle',
-                                type: 'success',
-                                title: 'Désactivation de la lecture seule validée :',
-                                message: `Vous pouvez maintenant intéragir sur ce compte.`
-                            });
-                        }
-                      });
-                  } else {
+          } else {
+          }
+        });
+      }
+    });
+    let removeRO = () => {
+      let password = $('#removeROPassword').val();
+      let _csrf = $('#csrfToken').val();
+      $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
+        if (data.status === 'send') {
+          $("#removeReadOnlyModal").modal('hide');
+          let pinCode = prompt('Code PIN envoyé sur discord. Veuillez le saisir ici :');
+          $.post('/back-office/impersonateRemoveReadOnly/validate', { pinCode, _csrf }, (response) => {
+            if (response.authorized) {
+              roState = 'unlock';
+              $('#removeReadOnly').attr('class', 'fa fa-unlock');
+              $('#bodyContent').unblock();
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Désactivation de la lecture seule validée :',
+                message: `Vous pouvez maintenant intéragir sur ce compte.`
+              });
+            }
+          });
+        } else {
 
-                  }
-                });
-            };
-        {{/if}}
+        }
+      });
+    };
+    {{/if}}
 </script>
 <script type="text/javascript">
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
   (function()
-
       { var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0]; s1.async=true; s1.src='https://embed.tawk.to/59fc72c3bb0c3f433d4c6e60/default'; s1.charset='UTF-8'; s1.setAttribute('crossorigin','*'); s0.parentNode.insertBefore(s1,s0); }
-
   )();
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109194110-3"></script>
