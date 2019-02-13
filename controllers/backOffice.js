@@ -185,6 +185,13 @@ module.exports = {
       })
     });
   },
+  getFormations: (req, res) => {
+    return Models.Formation.findAll().then( formation => {
+      res.render('back-office/references/formations', {
+        layout, formation, a: { main: 'references', sub: 'formations' } })
+    }
+    );
+  },
   editCandidate: (req, res, next) => {
     const errors = validationResult(req.body);
 
