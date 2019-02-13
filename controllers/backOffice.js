@@ -202,6 +202,7 @@ module.exports = {
         formation.name = req.body.promptInput;
       }
       formation.save();
+      return res.status(200).json({ status: 'Modified' });
     })
   },
   editCandidate: (req, res, next) => {
