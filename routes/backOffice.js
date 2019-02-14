@@ -78,11 +78,4 @@ router.get('/es', UserController.ensureIsAdmin, BackOfficeController.getESList);
  */
 router.get('/es/:id', UserController.ensureIsAdmin, BackOfficeController.getES);
 
-/**
- * @Route('/back-office/formations/') GET;
- * Show formations data
- */
-
-router.get('/formations', UserController.ensureIsAdmin, BackOfficeController.getFormations);
-
 module.exports = router;
