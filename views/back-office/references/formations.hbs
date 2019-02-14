@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <button title= "Add" class="btn btn-info pull-right" > <i class="fal fa-plus add" href="javascript:void(0)"></i></button>
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addFormation()> <i class="fal fa-plus"></i></a>
                 </div>
                 <table id="formations-table" class="table">
                     <thead>
@@ -35,10 +35,10 @@
     operateFormatter = (value, row, index) => {
         return [
             '<div class="table-icons">',
-            '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+            '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
             '<i class="ti-pencil-alt"></i>',
             '</a>',
-            '<a rel="tooltip" title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+            '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
             '<i class="ti-close"></i>',
             '</a>',
             '</div>',
@@ -68,18 +68,6 @@
                     table.bootstrapTable('remove', {
                         field: 'id',
                         values: [row.id]
-                    });
-                }
-            },
-            'click .add': (e, value, index) => {
-                let _csrf = $('#csrfToken').val();
-                let promptInput = prompt('Ajouter une formation :');
-                if (promptInput) {
-                    $.post(`/api/back-office/formations/`, {
-                        promptInput,
-                        _csrf
-                    }, (response) => {
-                        console.log("offrez-moi du Nutella");
                     });
                 }
             }
@@ -116,4 +104,17 @@
             table.bootstrapTable('resetView');
         });
     });
+    function addFormation()
+    {
+        let _csrf = $('#csrfToken').val();
+        let promptInput = prompt('Ajouter une formation :');
+        if (promptInput) {
+            $.post(`/api/back-office/formations/`, {
+                promptInput,
+                _csrf
+            }, (response) => {
+                console.log("offrez-moi du Nutella");
+            });
+        }
+    }
 </script>

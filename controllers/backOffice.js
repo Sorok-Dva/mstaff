@@ -205,6 +205,13 @@ module.exports = {
       return res.status(200).json({ status: 'Modified' });
     })
   },
+  addFormation: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() })
+
+    return Models.Formation.
+  },
   editCandidate: (req, res, next) => {
     const errors = validationResult(req.body);
 
