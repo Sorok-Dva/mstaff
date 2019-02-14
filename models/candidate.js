@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     video: DataTypes.STRING,
     status: DataTypes.STRING,
     note: DataTypes.STRING,
-    views: DataTypes.INTEGER,
-    is_available: DataTypes.BOOLEAN
+    views: DataTypes.INTEGER
   }, {});
   Candidate.associate = (models) => {
     Candidate.belongsTo(models.User, {
@@ -26,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     Candidate.hasMany(models.Wish, {
       foreignKey: 'candidate_id',
+      sourceKey: 'id',
       as: 'wishes'
     });
     Candidate.hasMany(models.Application, {
