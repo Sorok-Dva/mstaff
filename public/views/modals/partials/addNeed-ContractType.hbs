@@ -1,0 +1,81 @@
+<form role="form" class="form-horizontal">
+  <div class="row">
+    <div class="col-md-12">
+      <input type="hidden" id="editXPId" value="">
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="editName">Établissement *</label>
+        <div class="col-md-9">
+          <input id="editName" name="name" type="text"
+                 placeholder="Clinique, hopital ..."
+                 class="form-control input-md" value="{{this.body.name}}" required="">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="editPost_id">Poste *</label>
+        <div class="col-md-9">
+          <select class="form-control input-md" name="post_id" id="editPost_id" required="" style="width:75%">
+            {{#each posts as |post|}}
+              <option value="{{post.id}}">{{post.name}}</option>
+            {{/each}}
+          </select>
+          <br>
+          <div class="checkbox">
+            <input id="editInternship" name="internship" type="checkbox">
+            <label for="editInternship">
+              En tant que stagiaire
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="editService_id">Service *</label>
+        <div class="col-md-9">
+          <select class="form-control input-md" name="service_id" id="editService_id" required="" style="width:75%">
+            {{#each services as |service|}}
+              <option value="{{service.id}}">{{service.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="editStart">Début *</label>
+        <div class="col-sm-3 col-md-3">
+          <input id="editStart" name="start" type="text"
+                 class="form-control input-md monthpicker from" required="" autocomplete="false">
+        </div>
+        <label class="col-md-2 control-label" for="editEnd">Fin *</label>
+        <div class="col-sm-3 col-md-3">
+          <input id="editEnd" name="end" type="text"
+                 class="form-control input-md monthpicker to" autocomplete="false">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="col-md-3 control-label"></label>
+        <div class="col-md-9">
+          <div class="checkbox">
+            <input id="editCurrent" name="current" type="checkbox">
+            <label class="control-label" for="editCurrent">
+              J'occupe actuellement ce poste
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

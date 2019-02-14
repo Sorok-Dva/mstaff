@@ -1,0 +1,31 @@
+<div class="modal-body">
+  <form role="form" class="form-horizontal">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="modal-body">
+          <div class="col-md-12">
+            <select class="form-control" name="contractType" id="contractType">
+              <option value="">Séléctionner un type de contrat</option>
+              <option value="cdi-cdd">CDI/CDD</option>
+              <option value="vacation">VACATION</option>
+              <option value="internship">STAGE</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  $('select#contractType').on('change', function() {
+    need.contractType = this.value;
+    $('.modal#contractType').modal('hide');
+    createModal({
+      id: 'timeType',
+      modal: 'addNeed-TimeType',
+      canBeClose: false,
+      title: 'Période',
+      contractType: need.contractType
+    });
+  })
+</script>

@@ -13,6 +13,8 @@ const apiRouter = require('./routes/api/api');
 const apiUserRouter = require('./routes/api/user');
 const apiCandidateRouter = require('./routes/api/candidate');
 
+const apiEsRouter = require('./routes/api/establishment');
+
 const app = express();
 
 const env = conf.ENV || 'development';
@@ -58,6 +60,8 @@ app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
 app.use('/api/user', apiUserRouter);
 app.use('/api/candidate', apiCandidateRouter);
+
+app.use('/api/es', apiEsRouter);
 
 app.use(middleware.errorHandler); // errorHandler always must be in last position.
 
