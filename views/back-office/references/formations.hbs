@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <!--Here you can write extra buttons/actions for the toolbar-->
+                    <button title= "Add" class="btn btn-info pull-right" > <i class="fal fa-plus add" href="javascript:void(0)"></i></button>
                 </div>
                 <table id="formations-table" class="table">
                     <thead>
@@ -16,7 +16,7 @@
                     </thead>
                     <tbody>
                     {{#each formation as |formations|}}
-                        <tr>
+                        <tr data-id="{{formations.id}}">
                             <td></td>
                             <td>{{formations.id}}</td>
                             <td>{{formations.name}}</td>
@@ -50,15 +50,14 @@
             'click .edit': (e, value, row, index) => {
                 let _csrf = $('#csrfToken').val();
                 let promptInput = prompt('Renommer la formation :');
-                console.log(promptInput);
+                let id = $(e.currentTarget).closest('tr').attr('data-id');
                 if (promptInput) {
-                    console.log(_csrf);
                     $.put(`/api/back-office/formations/${row.id}`, {
                         promptInput,
                         _csrf
-                    }, (response) => {
-                        console.log("offrez-moi du Nutella");
-                    })
+                    }, () => {
+                        $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                        });
                     }
                 },
             'click .remove': (e, value, row, index) => {
@@ -69,6 +68,18 @@
                     table.bootstrapTable('remove', {
                         field: 'id',
                         values: [row.id]
+                    });
+                }
+            },
+            'click .add': (e, value, index) => {
+                let _csrf = $('#csrfToken').val();
+                let promptInput = prompt('Ajouter une formation :');
+                if (promptInput) {
+                    $.post(`/api/back-office/formations/`, {
+                        promptInput,
+                        _csrf
+                    }, (response) => {
+                        console.log("offrez-moi du Nutella");
                     });
                 }
             }
