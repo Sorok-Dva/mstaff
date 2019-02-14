@@ -208,11 +208,17 @@ module.exports = {
     const errors = validationResult(req.body);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-
-    return Models.Formation.create({
-      name: req.body.promptInput
-    }).then(formation => {
-      return res.status(200).json({ status: 'Created' });
+    
+    return Models.Formation.findOrCreate({
+      where: {
+        name: req.body.promptInput
+      }
+    }).spread((formation, created) => {
+      if (created) {
+        return res.status(200).json({ status: 'Created', formation });
+      } else {
+        return res.status(200).json({ status: 'Already exists', formation });
+      }
     })
   },
   removeFormation: (req, res, next) => {
