@@ -1,6 +1,6 @@
 let activeBtnLoader;
 
-jQuery.each([ 'put', 'delete' ], function( i, method ) {
+jQuery.each([ 'put', 'patch', 'delete' ], function( i, method ) {
   jQuery[ method ] = function( url, data, callback, type ) {
     if ( jQuery.isFunction( data ) ) {
       type = type || callback;
@@ -13,6 +13,7 @@ jQuery.each([ 'put', 'delete' ], function( i, method ) {
       type: method,
       dataType: type,
       data: data,
+      headers: data.headers,
       success: callback
     });
   };
@@ -35,7 +36,7 @@ let notification = (opts) => {
     },
     offset: 20,
     spacing: 10,
-    z_index: 1031,
+    z_index: 9999999999,
     delay: opts.timer || 5000,
     animate: {
       enter: 'animated fadeInDown',
@@ -58,7 +59,7 @@ let errorsHandler = data => {
   } else {
     let message = (errors && errors.sequelizeError) ?
       `<b>${errors.sequelizeError.name}</b>: ${errors.sequelizeError.original.sqlMessage}`
-      : errors;
+      : errors.responseText || 'Unknown Error';
     notification({
       icon: 'exclamation',
       type: 'danger',
@@ -72,14 +73,9 @@ let loadTemplate = (url, data, callback) => {
   if (data.partials) {
     for (let i = 0; i < data.partials.length; i++) {
       $.ajax({url: `/static/views/partials/${data.partials[i]}.hbs`, cache: true, success: function(source) {
-        Handlebars.registerPartial(`${data.partials[i]}`, source);
-      }});
+          Handlebars.registerPartial(`${data.partials[i]}`, source);
+        }});
     }
-  }
-  if (data.modal) {
-    $.ajax({url: `/static/views/modals/partials/${data.modal}.hbs`, cache: true, success: function(source) {
-        Handlebars.registerPartial(`${data.modal}`, source);
-      }});
   }
   Handlebars.registerHelper('log', function () {
     console.log(['Values:'].concat(
@@ -124,18 +120,31 @@ let loadTemplate = (url, data, callback) => {
   Handlebars.registerHelper('partial', function (name) {
     return name;
   });
+
   $.ajax({url, cache: true, success: function(source) {
+    if (data.modal) {
+      $.ajax({url: `/static/views/modals/partials/${data.modal}.hbs`, cache: true, success: function(modal) {
+        Handlebars.registerPartial(`${data.modal}`, modal);
+        let template = Handlebars.compile(source);
+        return callback(template(data));
+      }});
+    } else {
       let template = Handlebars.compile(source);
       return callback(template(data));
-    }});
+    }
+  }});
 };
 
 let createModal = (opts, callback) => {
   $(`#${opts.id}`).remove();
   loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
+    let modalOpts = (!opts.canBeClose) ? {
+      backdrop: 'static',
+      keyboard: false
+    } : null ;
     $('body').append(html);
-    $(`#${opts.id}`).modal();
-    return callback();
+    $(`#${opts.id}`).modal(modalOpts);
+    if (callback) return callback();
   });
 };
 
