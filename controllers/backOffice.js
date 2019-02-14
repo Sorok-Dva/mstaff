@@ -185,47 +185,6 @@ module.exports = {
       })
     });
   },
-  getFormations: (req, res) => {
-    return Models.Formation.findAll().then( formation => {
-      res.render('back-office/references/formations', {
-        layout, formation, a: { main: 'references', sub: 'formations' } })
-    }
-    );
-  },
-  editFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
-
-    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-
-    return Models.Formation.findOne({ where: { id: req.params.id } }).then(formation => {
-      if (req.body.promptInput) {
-        formation.name = req.body.promptInput;
-      }
-      formation.save();
-      return res.status(200).json({ status: 'Modified' });
-    })
-  },
-  addFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
-
-    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-
-    return Models.Formation.create({
-      name: req.body.promptInput
-    }).then(formation => {
-      return res.status(200).json({ status: 'Created' });
-    })
-  },
-  removeFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
-
-    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-
-    return Models.Formation.findOne({ where: { id: req.params.id } }).then(formation => {
-      if (!formation) return res.status(400).send({ body: req.body, error: 'This formation does not exist' });
-      return formation.destroy().then(data => res.status(201).send({ deleted: true, data }));
-    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
-  },
   editCandidate: (req, res, next) => {
     const errors = validationResult(req.body);
 
