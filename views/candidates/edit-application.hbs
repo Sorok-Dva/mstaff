@@ -446,14 +446,13 @@
         {{/each}}
     {{/if}}
 
-    let obj = $('#selectPostType option');
-    Object.keys(obj).forEach(key => {
-        let value = obj[key];
+    $(document).ready(() => {
+        let selected = [];
         application.postType.forEach( post => {
-            if (post === value.innerText){
-              console.log(value.value);
-              //TODOOOOOOOOOOOOOO
-            }
+            let val = $('#selectPostType').find(`option:contains("${post}")`).val();
+            if (val)
+              selected.push(val);
         })
+        $('#selectPostType').val(selected).trigger('change.select2');
     })
 </script>
