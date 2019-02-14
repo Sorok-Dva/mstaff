@@ -3,29 +3,86 @@
     <div class="row">
       <div class="col-md-12">
         <div class="modal-body">
-          <div class="col-md-12">
-            <select class="form-control" name="contractType" id="contractType">
-              <option value="">Séléctionner un type de contrat</option>
-              <option value="cdi-cdd">CDI/CDD</option>
-              <option value="vacation">VACATION</option>
-              <option value="internship">STAGE</option>
-            </select>
+          <div class="row">
+            <div class="col-md-6">
+              <p class="text-center">Date de début</p>
+              <div id="datePicker-start"></div>
+            </div>
+            <div class="col-md-6">
+              <p class="text-center">Date de fin</p>
+              <div id="datePicker-end"></div>
+            </div>
           </div>
+          {{#ifCond this.contractType '===' 'vacation'}}
+            <h5 class="text-center">Créneau horaire</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <p class="text-center">Heure de début</p>
+                <div id="dateTimePicker-start" style="text-align: center;"></div>
+              </div>
+              <div class="col-md-6">
+                <p class="text-center">Heure de fin</p>
+                <div id="dateTimePicker-end" style="text-align: center;"></div>
+              </div>
+            </div>
+          {{/ifCond}}
         </div>
       </div>
     </div>
   </form>
 </div>
-<script>
-  $('select#contractType').on('change', function() {
-    need.contractType = this.value;
-    $('.modal#contractType').modal('hide');
-    createModal({
-      id: 'timeType',
-      modal: 'addNeed-TimeType',
-      canBeClose: false,
-      title: 'Période',
-      contractType: need.contractType
+<div class="modal-footer timeType" style="display: none">
+  <button type="button" id="searchProfiles" class="btn btn-info pull-right" style="margin-bottom: 5px;">
+    Valider
+  </button>
+</div>
+<script type="text/javascript">
+  $(function () {
+    need.timeType = { dateStart: new Date() };
+
+    $('#datePicker-start').datetimepicker({
+      inline: true,
+      minDate: new moment(),
+      useCurrent: false,
+      format: 'DD/MM/YYYY'
+    }).on('dp.change', (e) => {
+      if (!$('.modal-footer.timeType').is(':visible')) $('.modal-footer.timeType').show();
+      need.timeType.dateStart = new Date(e.date);
+      let incrementDay = moment(new Date(e.date));
+      incrementDay.add(1, 'days');
+      $('#datePicker-end').data('DateTimePicker').minDate(incrementDay);
     });
-  })
+
+    $('#datePicker-end').datetimepicker({
+      inline: true,
+      useCurrent: false,
+      minDate: new moment(),
+      format: 'DD/MM/YYYY'
+    }).on('dp.change', (e) => need.timeType.dateEnd = new Date(e.date));
+
+    $('#dateTimePicker-start').datetimepicker({
+      inline: true,
+      format: 'HH:mm'
+    }).on('dp.change', (e) => {
+      need.timeType.timeStart = new Date(e.date);
+      let incrementDay = moment(new Date(e.date));
+      incrementDay.add(1, 'days');
+      $('#dateTimePicker-end').data('DateTimePicker').minDate(incrementDay);
+    });
+
+    $('#dateTimePicker-end').datetimepicker({
+      inline: true,
+      format: 'HH:mm'
+    }).on('dp.change', (e) => need.timeType.timeEnd = new Date(e.date));
+  });
+  $('button#searchProfiles').on('click', function() {
+    need.firstSearch = false;
+    $('.modal#timeType').modal('hide');
+    let dateRecap = `${moment(need.timeType.dateStart).format('DD/MM/YYYY')}`;
+    if (need.timeType.dateEnd) dateRecap += ` - ${moment(need.timeType.dateEnd).format('DD/MM/YYYY')}`;
+    $('#btnTimeType').html(dateRecap);
+    $.post(`/api/es/1/search/candidates`, need, (data) => {
+      console.log(data);
+    }).catch(error => errorsHandler(error));
+  });
 </script>
