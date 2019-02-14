@@ -104,6 +104,25 @@
           </ul>
         </div>
       </li>
+        <li{{#ifCond a.main '===' 'references'}} class="active"{{/ifCond}}>
+            <a data-toggle="collapse" href="#referencesOverview"
+               aria-expanded="{{#ifCond a.main '===' 'references'}}true{{else}}false{{/ifCond}}">
+                <i class="fal fa-books"></i>
+                <p>Références
+                    <b class="caret"></b>
+                </p>
+            </a>
+            <div class="collapse{{#ifCond a.main '===' 'references'}} in{{/ifCond}}" id="referencesOverview">
+                <ul class="nav">
+                    <li{{#ifCond a.sub '===' 'formations'}} class="active"{{/ifCond}}>
+                        <a href="/back-office/formations">
+                            <i class="fal fa-graduation-cap"></i>
+                            <span class="sidebar-normal">Formations</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
     </ul>
   </div>
 </div>

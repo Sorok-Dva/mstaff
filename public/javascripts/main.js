@@ -1,6 +1,6 @@
 let activeBtnLoader;
 
-jQuery.each([ 'put', 'delete' ], function( i, method ) {
+jQuery.each([ 'put', 'patch', 'delete' ], function( i, method ) {
   jQuery[ method ] = function( url, data, callback, type ) {
     if ( jQuery.isFunction( data ) ) {
       type = type || callback;
@@ -13,6 +13,7 @@ jQuery.each([ 'put', 'delete' ], function( i, method ) {
       type: method,
       dataType: type,
       data: data,
+      headers: data.headers,
       success: callback
     });
   };
