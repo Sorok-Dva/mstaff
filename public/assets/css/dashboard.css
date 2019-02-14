@@ -2350,7 +2350,7 @@ table.dataTable thead .sorting_desc_disabled:after {
     display: inline-block;
     bottom: 0px;
     right: -7px;
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     opacity: 0.8;
 }
 
@@ -5395,7 +5395,6 @@ select.selectpicker {
     border-bottom: 1px solid #E3E3E3;
     font-size: 12px;
     text-transform: uppercase;
-    color: #9A9A9A;
     font-weight: 400;
     padding-bottom: 5px;
     padding-top: 10px;
@@ -5405,9 +5404,6 @@ select.selectpicker {
     cursor: pointer;
 }
 
-.bootstrap-datetimepicker-widget table thead tr:first-child th:hover span, .bootstrap-datetimepicker-widget table thead tr:first-child th.picker-switch:hover {
-    background: #E3E3E3;
-}
 
 .bootstrap-datetimepicker-widget table td > div {
     border-radius: 4px;
@@ -5421,7 +5417,6 @@ select.selectpicker {
     font-size: .8em;
     height: 20px;
     line-height: 20px;
-    color: #cfcfca;
 }
 
 .bootstrap-datetimepicker-widget table td.day > div {
@@ -5432,7 +5427,6 @@ select.selectpicker {
     padding: 0px;
     border-radius: 50%;
     margin: 0 auto;
-    z-index: -1;
     position: relative;
 }
 
@@ -10167,7 +10161,7 @@ star {
 }
 
 .checkbox input[type="checkbox"]:checked + label::after {
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     content: "\f00c";
 }
 
@@ -10245,7 +10239,7 @@ star {
 }
 
 .radio label::before {
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     content: "\f10c";
     font-size: 22px;
     -webkit-font-smoothing: antialiased;
@@ -10260,7 +10254,7 @@ star {
 }
 
 .radio input[type="radio"]:not(:disabled):hover + label::before {
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     content: "\f192";
     color: #66615b;
     opacity: .50;
@@ -10269,7 +10263,7 @@ star {
 .radio label::after {
     display: inline-block;
     position: absolute;
-    font-family: 'FontAwesome';
+    font-family: 'Font Awesome 5 Pro';
     content: "\f192";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
