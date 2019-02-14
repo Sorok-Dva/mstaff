@@ -61,14 +61,19 @@
                     }
                 },
             'click .remove': (e, value, row, index) => {
+                let _csrf = $('#csrfToken').val();
+
                 if (confirm('ATTENTION:\n\n ' +
                         'Cette action est irreversible et supprimera la formation.\n\n' +
                         'Voulez vous continuer ?')) {
-
-                    table.bootstrapTable('remove', {
-                        field: 'id',
-                        values: [row.id]
-                    });
+                    $.delete(`/api/back-office/formations/${row.id}`, {
+                        _csrf
+                    }, () => {
+                        table.bootstrapTable('remove', {
+                            field: 'id',
+                            values: [row.id]
+                        });
+                    })
                 }
             }
         };
