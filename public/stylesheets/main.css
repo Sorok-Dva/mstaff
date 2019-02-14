@@ -415,6 +415,106 @@ span.round-tab:hover {
   display: block;
 }
 
+.searchbar-wrapper-input {
+  /*padding: 30px 25px 25px 35px;*/
+  border-radius: 2px 2px 2px 2px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid #DDD;
+  padding: 12px 10px 10px 40px;
+  height: 62px;
+  background-color: white;
+}
+
+.searchbar-wrapper-input-slim {
+  padding: 0px 0px 0px 35px;
+  border-radius: 2px 2px 2px 2px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid #DDD;
+  height: 62px;
+  background-color: white;
+}
+.searchbar-wrapper-slim:before {
+  font-family: 'Font Awesome 5 Pro';
+  color: #a6a6a6;
+  position: absolute;
+  left: 9px;
+  content: "\f002";
+  top: 4px;
+  font-size: 22px;
+}
+
+.searchbar-wrapper:before {
+  font-family: 'Font Awesome 5 Pro';
+  color: #a6a6a6;
+  position: absolute;
+  left: 24px;
+  content: "\f002";
+  top: 20px;
+  font-size: 22px;
+}
+
+.searchbar-wrapper.focus-input:before {
+  color: #000;
+  top: 15px;
+}
+
+.searchbar-wrapper-label {
+  position: absolute;
+  top: 0;
+  padding: 16px 0 0 24px;
+  transition: all 200ms;
+  opacity: 0.5;
+  left: 25px;
+}
+
+.searchbar-select-mode {
+  padding-left: 5px;
+  margin: 0px;
+  position: absolute;
+  width: 96%;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 0px;
+  z-index: 9999999999;
+}
+
+.searchbar-select-mode-clean {
+  padding-left: 5px;
+  margin: 0px;
+  position: absolute;
+  width: 83%;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 33px;
+  z-index: 9999999999;
+  border: 1px solid #DDD;
+}
+
+
+.searchbar-select-mode li {
+  margin-top: 5px;
+}
+
+.searchbar-select-mode li:hover {
+  background: #F0F0F0;
+  cursor: pointer;
+}
+
+
+.searchbar-wrapper.focus-input .searchbar-wrapper-label{
+  font-size: 11px;
+  transform: translate3d(0, -45%, 0);
+  opacity: 1;
+  color: #a6a6a6;
+}
+
+input#post.ui-autocomplete-input {
+  background-color: white !important;
+  width: 85%;
+}
+
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
   100% { -webkit-transform: rotate(360deg); }
