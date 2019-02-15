@@ -14,6 +14,7 @@ Handlebars.registerHelper('date', (context, format) => {
  * @return {String} Date object formatted in age.
  */
 Handlebars.registerHelper('age', (context, format) => {
+  console.log(context, format);
   return moment().diff(new Date(context), format);
 });
 
