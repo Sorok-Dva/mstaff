@@ -415,6 +415,52 @@ module.exports = {
       return service.destroy().then(data => res.status(201).send({ deleted: true, data }));
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
+  getPosts: (req, res) => {
+    return Models.Post.findAll().then( post => {
+      res.render('back-office/references/posts', {
+        layout, post, a: { main: 'references', sub: 'posts' } })
+    });
+  },
+  editPost: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Post.findOne({ where: { id: req.params.id } }).then(post => {
+      if (req.body.promptInput) {
+        post.name = req.body.promptInput;
+      }
+      post.save();
+      return res.status(200).json({ status: 'Modified' });
+    })
+  },
+  addPost: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Post.findOrCreate({
+      where: {
+        name: req.body.promptInput
+      }
+    }).spread((post, created) => {
+      if (created) {
+        return res.status(200).json({ status: 'Created', post });
+      } else {
+        return res.status(200).json({ status: 'Already exists', post });
+      }
+    })
+  },
+  removePost: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Post.findOne({ where: { id: req.params.id } }).then(post => {
+      if (!post) return res.status(400).send({ body: req.body, error: 'This post does not exist' });
+      return post.destroy().then(data => res.status(201).send({ deleted: true, data }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
   getQualifications: (req, res) => {
     return Models.Qualification.findAll().then( qualification => {
       res.render('back-office/references/qualifications', {
