@@ -1,4 +1,5 @@
 const { src, dest, watch, series, parallel } = require('gulp');
+const gls = require('gulp-live-server');
 const cleanCSS = require('gulp-clean-css');
 const uglifyjs = require('uglify-es');
 const browsersync = require('browser-sync').create();
@@ -14,13 +15,32 @@ const JS_SRC = './src/javascripts/*.js';
 const JS_DST = './public/assets/dist/js';
 
 let browserSync = (done) => {
-  browsersync.init({
-    proxy: {
-      target: 'localhost:3001',
-      ws: true
-    }
+  setTimeout(() => {
+    browsersync.init({
+      proxy: {
+        target: 'localhost:3001',
+        ws: true
+      }
+    });
+    done();
+  }, 1000)
+};
+
+let serve = () => {
+  const server = gls.new('./bin/www');
+  server.start();
+
+  //use gulp.watch to trigger server actions(notify, start or stop)
+  watch(['static/**/*.css', 'static/**/*.js'], function (file) {
+    server.notify.apply(server, [file]);
   });
-  done();
+
+  watch('./bin/www', server.start.bind(server)); //restart my server
+
+  // Note: try wrapping in a function if getting an error like `TypeError: Bad argument at TypeError (native) at ChildProcess.spawn`
+  watch('./bin/www', function () {
+    server.start.bind(server)()
+  });
 };
 
 // Watch changes on all *.css files and trigger buildStyles() at the end.
@@ -57,7 +77,8 @@ let buildScripts = (cb) => {
 };
 
 // Export commands.
-exports.default = parallel(browserSync, watchCss, watchJs); // $ gulp
+exports.default = parallel(serve, browserSync, watchCss, watchJs); // $ gulp
+exports.serve = serve; // $ gulp serve
 exports.css = buildStyles; // $ gulp css
 exports.js = buildScripts; // $ gulp js
 exports.watchCSS = watchCss; // $ gulp watch

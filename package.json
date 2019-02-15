@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint --fix --cache .",
-    "start": "npm run lint && gulp build && { node ./bin/www & gulp & }",
+    "start": "npm run lint && gulp",
     "debug:express": "DEBUG=express:* node ./bin/www",
     "db:migrate": "sequelize db:migrate",
     "db:migrate:undo": "sequelize db:migrate:undo",
@@ -37,6 +37,7 @@
     "express-session": "^1.15.6",
     "express-subdomain": "^1.0.5",
     "express-validator": "^5.3.1",
+    "gulp-live-server": "0.0.31",
     "handlebars": "^4.1.0",
     "handlebars-dateformat": "^1.1.1",
     "hbs": "^4.0.1",
