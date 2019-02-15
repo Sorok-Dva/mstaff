@@ -2,8 +2,8 @@ $('.add').click(function () {
   let stop = false, formData = {}, type = $(this).attr('data-type'), formArray = $(`#${type}`).serializeArray();
   $.each(formArray, (i, field) => formData[field.name] = field.value);
   if (type === 'experience') {
-    formData.current = (formData.current === 'on');
-    formData.internship = (formData.internship === 'on');
+    formData.current = formData.current === 'on';
+    formData.internship = formData.internship === 'on';
   }
   formData.start = new Date(formData.start.split('/')[1], formData.start.split('/')[0] - 1);
   formData.end = new Date(formData.end.split('/')[1], formData.end.split('/')[0] - 1);
@@ -20,7 +20,7 @@ $('.add').click(function () {
     stop = true;
   }
   if (type === 'experience') {
-    if (formData.name === "" || null) {
+    if (formData.name === '' || null) {
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -65,7 +65,7 @@ $('.add').click(function () {
           let end = data.experience.current ? 'maintenant' : moment(new Date(data.experience.end)).format('MM/YYYY');
           let internship = data.experience.internship ? '<small>(stage)</small>' : '';
           if ($('.noXPAvailable').is(':visible')) $('.noXPAvailable').remove();
-          $("#experienceTbody").append($('<tr>')
+          $('#experienceTbody').append($('<tr>')
             .attr('data-xpId', data.experience.id)
             .append($('<td>').html(`${start} - ${end} ${internship}`))
             .append($('<td>').text(`${data.experience.name}`))
@@ -93,7 +93,7 @@ $('.add').click(function () {
           let start = moment(new Date(data.formation.start)).format('MM/YYYY');
           let end = !data.formation.end ? 'maintenant' : moment(new Date(data.formation.end)).format('MM/YYYY');
           if ($('.noFormationAvailable').is(':visible')) $('.noFormationAvailable').remove();
-          $("#formationsTbody").append($('<tr>')
+          $('#formationsTbody').append($('<tr>')
             .attr('data-formationId', data.formation.id)
             .append($('<td>').html(`${start} - ${end}`))
             .append($('<td>').text(`${data.formation.name}`))
@@ -119,7 +119,7 @@ $('.add').click(function () {
           let start = moment(new Date(data.diploma.start)).format('MM/YYYY');
           let end = !data.diploma.end ? 'maintenant' : moment(new Date(data.diploma.end)).format('MM/YYYY');
           if ($('.noDiplomaAvailable').is(':visible')) $('.noDiplomaAvailable').remove();
-          $("#diplomaTbody").append($('<tr>')
+          $('#diplomaTbody').append($('<tr>')
             .attr('data-diplomaId', data.diploma.id)
             .append($('<td>').html(`${start} - ${end}`))
             .append($('<td>').text(`${data.diploma.name}`))
@@ -145,15 +145,15 @@ $('#post_id').select2();
 $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $('#btnRemoveXp').attr('onclick', `removeCandidateExperience(${id})`);
-  $("#removeExperienceModal").modal();
+  $('#removeExperienceModal').modal();
 }).on('click', 'button.removeFormation', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $('#btnRemoveFormation').attr('onclick', `removeCandidateFormation(${id})`);
-  $("#removeFormationModal").modal();
+  $('#removeFormationModal').modal();
 }).on('click', 'button.removeDiploma', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $('#btnRemoveDiploma').attr('onclick', `removeCandidateDiploma(${id})`);
-  $("#removeDiplomaModal").modal();
+  $('#removeDiplomaModal').modal();
 }).on('click', 'button.editXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $.get(`/api/candidate/xp/${id}`, (data) => {
@@ -164,7 +164,7 @@ $('body').on('click', 'button.removeXP', (event) => {
       $('#editName').val(data.experience.name);
       $('#editPost_id').val(data.experience.poste_id);
       $('#editService_id').val(data.experience.service_id);
-      $('#editStart').val(`${("0" + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
+      $('#editStart').val(`${('0' + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
       $('#editInternship').prop('checked', !!data.experience.internship);
       $('#editCurrent').prop('checked', !!data.experience.current);
 
@@ -172,9 +172,9 @@ $('body').on('click', 'button.removeXP', (event) => {
         $('#editEnd').prop('disabled', true);
       } else {
         $('#editEnd').prop('disabled', false);
-        $('#editEnd').val(`${("0" + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
+        $('#editEnd').val(`${('0' + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
       }
-      $("#editXpModal").modal();
+      $('#editXpModal').modal();
       $('#editXPId').val(id);
       $('#editXP').attr('onclick', `editXP(${$('#editXP').attr('data-id')})`);
     }
@@ -195,13 +195,13 @@ $('body').on('click', 'button.removeXP', (event) => {
         let end = data.formation.end === null ? null : new Date(data.formation.end);
 
         $('#editFName').val(data.formation.name);
-        $('#editFStart').val(`${("0" + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
+        $('#editFStart').val(`${('0' + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
 
         if (end === null) {
           $('#editFEnd').prop('disabled', true);
         } else {
           $('#editFEnd').prop('disabled', false);
-          $('#editFEnd').val(`${("0" + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
+          $('#editFEnd').val(`${('0' + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
         }
         $('#editFormationId').val(id);
         $('#editFormation').attr('onclick', `editFormation(${$('#editFormation').attr('data-id')})`);
@@ -224,13 +224,13 @@ $('body').on('click', 'button.removeXP', (event) => {
         let end = data.diploma.end === null ? null : new Date(data.diploma.end);
 
         $('#editDName').val(data.diploma.name);
-        $('#editDStart').val(`${("0" + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
+        $('#editDStart').val(`${('0' + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
 
         if (end === null) {
           $('#editDEnd').prop('disabled', true);
         } else {
           $('#editDEnd').prop('disabled', false);
-          $('#editDEnd').val(`${("0" + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
+          $('#editDEnd').val(`${('0' + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
         }
       });
     }
@@ -246,7 +246,7 @@ $('body').on('click', 'button.removeXP', (event) => {
 
 let removeCandidateExperience = id => {
   let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/xp/${id}`, { _csrf } ,(data) => {
+  $.delete(`/api/candidate/xp/${id}`, { _csrf }, (data) => {
     if (data.done) {
       $(`tr[data-xpId="${id}"]`).remove();
       notification({
@@ -268,7 +268,7 @@ let removeCandidateExperience = id => {
 
 let removeCandidateFormation = id => {
   let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/formation/${id}`, { _csrf } ,(data) => {
+  $.delete(`/api/candidate/formation/${id}`, { _csrf }, (data) => {
     if (data.done) {
       $(`tr[data-formationId="${id}"]`).remove();
       notification({
@@ -290,7 +290,7 @@ let removeCandidateFormation = id => {
 
 let removeCandidateDiploma = id => {
   let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/diploma/${id}`, { _csrf } ,(data) => {
+  $.delete(`/api/candidate/diploma/${id}`, { _csrf }, (data) => {
     if (data.done) {
       $(`tr[data-diplomaId="${id}"]`).remove();
       notification({
