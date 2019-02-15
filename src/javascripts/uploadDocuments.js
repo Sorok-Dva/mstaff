@@ -4,7 +4,7 @@ let fileDragHover = (e) => {
 
   e.stopPropagation();
   e.preventDefault();
-  fileDrag.className = (e.type === 'dragover' ? 'hover' : 'modal-body file-upload');
+  fileDrag.className = e.type === 'dragover' ? 'hover' : 'modal-body file-upload';
 };
 
 let fileSelectHandler = (e) => {
@@ -44,13 +44,13 @@ let parseFile = (f, i) => {
     $('#notgoodfile').show();
     $('#response').hide();
     $('#documents-preview').hide();
-    document.getElementById("file-upload-form").reset();
+    document.getElementById('file-upload-form').reset();
   }
 };
 
 let updateFileProgress = (e) => {
   if (e.lengthComputable)  {
-    (e.lengthComputable) ? $(`#file-progress${e.target.i}`).attr('value', e.loaded) : null;
+    e.lengthComputable ? $(`#file-progress${e.target.i}`).attr('value', e.loaded) : null;
   }
 };
 
@@ -66,8 +66,8 @@ function uploadFile(f, i) {
       xhr.upload.addEventListener('progress', updateFileProgress, false);
       xhr.upload.i = i;
 
-      xhr.onreadystatechange = function(e) {
-        $(`#file-progress${i}`).attr('class', `progress ${(xhr.status === 200 ? "success" : "failure")}`);
+      xhr.onreadystatechange = function (e) {
+        $(`#file-progress${i}`).attr('class', `progress ${(xhr.status === 200 ? 'success' : 'failure')}`);
         $('#start').show();
         if (xhr.readyState === 4 && xhr.status === 200) {
           let response = JSON.parse(xhr.response);
@@ -134,7 +134,7 @@ if (window.File && window.FileList && window.FileReader) {
 }
 
 $('#removeVideo').click(() => {
-  $.post('/api/candidate/delete/video', {_csrf}, (data) => {
+  $.post('/api/candidate/delete/video', { _csrf }, (data) => {
     let video = document.getElementById('video-preview');
     video.pause();
     $('#video-preview').removeAttr('src');
@@ -155,13 +155,13 @@ $('#removeVideo').click(() => {
   })
 });
 
-$('i[data-action="addDoc"]').click(function() {
+$('i[data-action="addDoc"]').click(function () {
   let type = $(this).attr('data-type');
   let fileInput = $('#file-upload');
   let sendButton = $('#file-upload-btn');
 
   $('#response').empty().hide();
-  fileInput.attr({name: type});
+  fileInput.attr({ name: type });
   switch (type) {
     case 'DIP':
       sendButton.html('Selectionnez un ou plusieurs diplômes');

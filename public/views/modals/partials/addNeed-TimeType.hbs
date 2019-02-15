@@ -81,8 +81,6 @@
     let dateRecap = `${moment(need.timeType.dateStart).format('DD/MM/YYYY')}`;
     if (need.timeType.dateEnd) dateRecap += ` - ${moment(need.timeType.dateEnd).format('DD/MM/YYYY')}`;
     $('#btnTimeType').html(dateRecap);
-    $.post(`/api/es/1/search/candidates`, need, (data) => {
-      console.log(data);
-    }).catch(error => errorsHandler(error));
+    return searchCandidates()
   });
 </script>

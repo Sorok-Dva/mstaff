@@ -1,7 +1,7 @@
 let activeBtnLoader;
 
-jQuery.each([ 'put', 'patch', 'delete' ], function( i, method ) {
-  jQuery[ method ] = function( url, data, callback, type ) {
+jQuery.each([ 'put', 'patch', 'delete' ], function ( i, method ) {
+  jQuery[ method ] = function ( url, data, callback, type ) {
     if ( jQuery.isFunction( data ) ) {
       type = type || callback;
       callback = data;
@@ -25,7 +25,7 @@ let notification = (opts) => {
     icon: `fa fa-${opts.icon}`,
     title: `<b>${opts.title}</b>`,
     message: `${opts.message}`,
-  },{
+  }, {
     type: `${opts.type}`,
     allow_dismiss: true,
     newest_on_top: true,
@@ -57,7 +57,7 @@ let errorsHandler = data => {
       });
     });
   } else {
-    let message = (errors && errors.sequelizeError) ?
+    let message = errors && errors.sequelizeError ?
       `<b>${errors.sequelizeError.name}</b>: ${errors.sequelizeError.original.sqlMessage}`
       : errors.responseText || 'Unknown Error';
     notification({
@@ -72,9 +72,9 @@ let errorsHandler = data => {
 let loadTemplate = (url, data, callback) => {
   if (data.partials) {
     for (let i = 0; i < data.partials.length; i++) {
-      $.ajax({url: `/static/views/partials/${data.partials[i]}.hbs`, cache: true, success: function(source) {
-          Handlebars.registerPartial(`${data.partials[i]}`, source);
-        }});
+      $.ajax({ url: `/static/views/partials/${data.partials[i]}.hbs`, cache: true, success: function (source) {
+        Handlebars.registerPartial(`${data.partials[i]}`, source);
+      } });
     }
   }
   Handlebars.registerHelper('log', function () {
@@ -86,25 +86,25 @@ let loadTemplate = (url, data, callback) => {
   Handlebars.registerHelper('ifCond', (v1, operator, v2, options) => {
     switch (operator) {
       case '==':
-        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        return v1 == v2 ? options.fn(this) : options.inverse(this);
       case '===':
-        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        return v1 === v2 ? options.fn(this) : options.inverse(this);
       case '!=':
-        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        return v1 != v2 ? options.fn(this) : options.inverse(this);
       case '!==':
-        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+        return v1 !== v2 ? options.fn(this) : options.inverse(this);
       case '<':
-        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        return v1 < v2 ? options.fn(this) : options.inverse(this);
       case '<=':
-        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        return v1 <= v2 ? options.fn(this) : options.inverse(this);
       case '>':
-        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        return v1 > v2 ? options.fn(this) : options.inverse(this);
       case '>=':
-        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        return v1 >= v2 ? options.fn(this) : options.inverse(this);
       case '&&':
-        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        return v1 && v2 ? options.fn(this) : options.inverse(this);
       case '||':
-        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        return v1 || v2 ? options.fn(this) : options.inverse(this);
       default:
         return options.inverse(this);
     }
@@ -112,7 +112,7 @@ let loadTemplate = (url, data, callback) => {
 
   Handlebars.registerHelper('repeat', function (n, block) {
     let accum = '';
-    for(let i = 0; i < n; ++i)
+    for (let i = 0; i < n; ++i)
       accum += block.fn(i);
     return accum;
   });
@@ -121,24 +121,24 @@ let loadTemplate = (url, data, callback) => {
     return name;
   });
 
-  $.ajax({url, cache: true, success: function(source) {
+  $.ajax({ url, cache: true, success: function (source) {
     if (data.modal) {
-      $.ajax({url: `/static/views/modals/partials/${data.modal}.hbs`, cache: true, success: function(modal) {
+      $.ajax({ url: `/static/views/modals/partials/${data.modal}.hbs`, cache: true, success: function (modal) {
         Handlebars.registerPartial(`${data.modal}`, modal);
         let template = Handlebars.compile(source);
         return callback(template(data));
-      }});
+      } });
     } else {
       let template = Handlebars.compile(source);
       return callback(template(data));
     }
-  }});
+  } });
 };
 
 let createModal = (opts, callback) => {
   $(`#${opts.id}`).remove();
   loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
-    let modalOpts = (!opts.canBeClose) ? {
+    let modalOpts = !opts.canBeClose ? {
       backdrop: 'static',
       keyboard: false
     } : null ;
@@ -151,9 +151,9 @@ let createModal = (opts, callback) => {
 let nextTab = elem => $(elem).next().find('a.tabWizard[data-toggle="tab"]').click();
 let prevTab = elem => $(elem).prev().find('a.tabWizard[data-toggle="tab"]').click();
 
-$(document).ready(function() {
+$(document).ready(function () {
   $('body').prepend('<div id="dialog"></div>');
-  $("#dialog").dialog({
+  $('#dialog').dialog({
     autoOpen: false,
     show: { effect: 'fade' },
     hide: { effect: 'fade' },
@@ -163,7 +163,7 @@ $(document).ready(function() {
     close: (event, ui) => $('#wrap').show(),
     open: (event, ui) => {
       $('.ui-widget-overlay').bind('click', () => {
-        $("#dialog").dialog('close');
+        $('#dialog').dialog('close');
       });
     }
   });
@@ -176,7 +176,7 @@ $(document).ready(function() {
       $this.data('original-text', $this.html());
       $this.html(loadingText);
     }
-    setTimeout(function() {
+    setTimeout(function () {
       $this.html($this.data('original-text'));
     }, 10000);
   });
@@ -192,7 +192,7 @@ $(document).ready(function() {
     }
   });
 
-  $(".stop-step").click(function (e) {
+  $('.stop-step').click(function (e) {
     history.back()
   });
 });

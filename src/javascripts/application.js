@@ -1,4 +1,4 @@
-$('.removeWish').click(function() {
+$('.removeWish').click(function () {
   createModal({ id: 'removeWishModal', modal: 'removeWish', title: 'Confirmation' }, () => {
     let id = $(this).attr('data-id') || $(this).parent().attr('data-id');
     $('#btnRemoveWish').attr('onclick', `removeWish(${id})`);
@@ -7,7 +7,7 @@ $('.removeWish').click(function() {
 
 let removeWish = (id) => {
   let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/wish/${id}`, {_csrf}, (data) => {
+  $.delete(`/api/candidate/wish/${id}`, { _csrf }, (data) => {
     if (data.deleted) {
       notification({
         icon: 'check-circle',
