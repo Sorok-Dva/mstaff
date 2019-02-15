@@ -116,7 +116,7 @@
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'formations'}} class="active"{{/ifCond}}>
               <a href="/back-office/formations">
-                <i class="fal fa-graduation-cap"></i>
+                <i class="fal fa-book"></i>
                 <span class="sidebar-normal">Formations</span>
               </a>
             </li>
@@ -126,6 +126,38 @@
               <a href="/back-office/skills">
                 <i class="fal fa-award"></i>
                 <span class="sidebar-normal">Compétences</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'equipments'}} class="active"{{/ifCond}}>
+              <a href="/back-office/equipments">
+                <i class="fal fa-stethoscope"></i>
+                <span class="sidebar-normal">Matériels</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'softwares'}} class="active"{{/ifCond}}>
+              <a href="/back-office/softwares">
+                <i class="fal fa-save"></i>
+                <span class="sidebar-normal">Logiciels</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'services'}} class="active"{{/ifCond}}>
+              <a href="/back-office/services">
+                <i class="fal fa-heartbeat"></i>
+                <span class="sidebar-normal">Services</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'qualifications'}} class="active"{{/ifCond}}>
+              <a href="/back-office/qualifications">
+                <i class="fal fa-graduation-cap"></i>
+                <span class="sidebar-normal"> Diplôme Universitaires </span>
               </a>
             </li>
           </ul>
