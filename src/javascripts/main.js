@@ -77,50 +77,6 @@ let loadTemplate = (url, data, callback) => {
       } });
     }
   }
-  Handlebars.registerHelper('log', function () {
-    console.log(['Values:'].concat(
-      Array.prototype.slice.call(arguments, 0, -1)
-    ));
-  });
-
-  Handlebars.registerHelper('ifCond', (v1, operator, v2, options) => {
-    switch (operator) {
-      case '==':
-        return v1 == v2 ? options.fn(this) : options.inverse(this);
-      case '===':
-        return v1 === v2 ? options.fn(this) : options.inverse(this);
-      case '!=':
-        return v1 != v2 ? options.fn(this) : options.inverse(this);
-      case '!==':
-        return v1 !== v2 ? options.fn(this) : options.inverse(this);
-      case '<':
-        return v1 < v2 ? options.fn(this) : options.inverse(this);
-      case '<=':
-        return v1 <= v2 ? options.fn(this) : options.inverse(this);
-      case '>':
-        return v1 > v2 ? options.fn(this) : options.inverse(this);
-      case '>=':
-        return v1 >= v2 ? options.fn(this) : options.inverse(this);
-      case '&&':
-        return v1 && v2 ? options.fn(this) : options.inverse(this);
-      case '||':
-        return v1 || v2 ? options.fn(this) : options.inverse(this);
-      default:
-        return options.inverse(this);
-    }
-  });
-
-  Handlebars.registerHelper('repeat', function (n, block) {
-    let accum = '';
-    for (let i = 0; i < n; ++i)
-      accum += block.fn(i);
-    return accum;
-  });
-
-  Handlebars.registerHelper('partial', function (name) {
-    return name;
-  });
-
   $.ajax({ url, cache: true, success: function (source) {
     if (data.modal) {
       $.ajax({ url: `/static/views/modals/partials/${data.modal}.hbs`, cache: true, success: function (modal) {

@@ -14,7 +14,6 @@ Handlebars.registerHelper('date', (context, format) => {
  * @return {String} Date object formatted in age.
  */
 Handlebars.registerHelper('age', (context, format) => {
-  console.log(context, format);
   return moment().diff(new Date(context), format);
 });
 
@@ -163,6 +162,17 @@ Handlebars.registerHelper('weekStats', (object) => {
     if (isNull) res.push(0);
   }
   return res;
+});
+
+Handlebars.registerHelper('repeat', function (n, block) {
+  let accum = '';
+  for (let i = 0; i < n; ++i)
+    accum += block.fn(i);
+  return accum;
+});
+
+Handlebars.registerHelper('partial', function (name) {
+  return name;
 });
 
 /* eslint-disable no-console */
