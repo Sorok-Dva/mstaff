@@ -50,20 +50,20 @@
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'users_all'}} class="active"{{/ifCond}}>
               <a href="/back-office/users/">
-                <span class="sidebar-mini"><i class="fal fa-th-list"></i></span>
+                <span class="sidebar-mini"><i class="fal fa-poll-people"></i></span>
                 <span class="sidebar-normal">Liste complète</span>
               </a>
             </li>
             <li{{#ifCond a.sub '===' 'candidates'}} class="active"{{/ifCond}}>
               <a href="/back-office/users/candidates">
-                <span class="sidebar-mini"><i class="fal fa-user-md"></i></span>
+                <span class="sidebar-mini"><i class="fal fa-user-check"></i></span>
                 <span class="sidebar-normal">Candidats</span>
               </a>
             </li>
             <li{{#ifCond a.sub '===' 'es'}} class="active"{{/ifCond}}>
               <a href="/back-office/users/es">
-                <span class="sidebar-mini"><i class="fal fa-hospitals"></i></span>
-                <span class="sidebar-normal">ES</span>
+                <span class="sidebar-mini"><i class="fal fa-users-crown"></i></span>
+                <span class="sidebar-normal">Comptes ES</span>
               </a>
             </li>
             {{#ifCond a.sub '===' 'profile'}}
