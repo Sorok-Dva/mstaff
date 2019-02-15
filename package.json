@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint --fix --cache .",
-    "start": "npm run lint && { node ./bin/www & gulp & }",
+    "start": "npm run lint && gulp build && { node ./bin/www & gulp & }",
     "debug:express": "DEBUG=express:* node ./bin/www",
     "db:migrate": "sequelize db:migrate",
     "db:migrate:undo": "sequelize db:migrate:undo",
