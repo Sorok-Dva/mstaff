@@ -187,7 +187,7 @@ module.exports = {
   },
   getSkills: (req, res) => {
     return Models.Skill.findAll().then(skill => {
-      res.render('back-office/references/competences', {
+      res.render('back-office/references/skills', {
         layout, skill, a: { main: 'references', sub: 'skills' } })
     });
   },
