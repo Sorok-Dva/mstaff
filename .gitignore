@@ -68,5 +68,5 @@ gen
 # Apache2 logs
 /logs/
 
-/public/assets/main.css
+/public/assets/dist
 /public/uploads
