@@ -114,8 +114,19 @@ module.exports = {
           },
           include: {
             model: Models.Candidate,
+            attributes: { exclude: ['updatedAt', 'createdAt'] },
             where: { is_available: true },
-            required: true
+            required: true,
+            include: {
+              model: Models.User,
+              attributes: { exclude: ['password', 'type', 'role', 'updatedAt', 'createdAt'] },
+              on: {
+                '$Wish->Candidate.user_id$': {
+                  [Op.col]: 'Wish->Candidate->User.id'
+                }
+              },
+              required: true
+            }
           }
         }
       }).then(applications => {
