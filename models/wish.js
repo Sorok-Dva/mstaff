@@ -29,8 +29,9 @@ module.exports = (sequelize, DataTypes) => {
     es_count: DataTypes.INTEGER
   }, {});
   Wish.associate = function (models) {
-    Wish.belongsTo(models.Candidate, {
+    Wish.hasOne(models.Candidate, {
       foreignKey: 'id',
+      sourceKey: 'candidate_id',
       onDelete: 'CASCADE'
     });
   };

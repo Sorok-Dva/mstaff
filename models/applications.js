@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id',
       onDelete: 'CASCADE'
     });
+    Application.hasOne(models.Wish, {
+      foreignKey: 'id',
+      sourceKey: 'wish_id'
+    })
   };
   return Application;
 };
