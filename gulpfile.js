@@ -23,7 +23,7 @@ let browserSync = (done) => {
       }
     });
     done();
-  }, 1000)
+  }, 2500)
 };
 
 let serve = () => {
@@ -68,7 +68,7 @@ let buildStyles = () => {
     .pipe(browsersync.reload({ stream: true }))
 };
 
-let buildScripts = (cb) => {
+let buildScripts = () => {
   return src(JS_SRC)
     .pipe(minify())
     .pipe(rename({ suffix: '.min' }))
