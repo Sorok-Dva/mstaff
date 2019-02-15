@@ -110,6 +110,12 @@ router.get('/services', UserController.ensureIsAdmin, BackOfficeController.getSe
 
 /**
  * @Route('/back-office/formations/') GET;
+ * Show services data
+ */
+router.get('/posts', UserController.ensureIsAdmin, BackOfficeController.getPosts);
+
+/**
+ * @Route('/back-office/formations/') GET;
  * Show qualifications data
  */
 router.get('/qualifications', UserController.ensureIsAdmin, BackOfficeController.getQualifications);

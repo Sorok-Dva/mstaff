@@ -23,6 +23,10 @@ router.put('/services/:id', userController.ensureIsAdmin, backOfficeController.e
   .delete('/services/:id', userController.ensureIsAdmin, backOfficeController.removeService)
   .post('/services/', userController.ensureIsAdmin, backOfficeController.addService);
 
+router.put('/posts/:id', userController.ensureIsAdmin, backOfficeController.editPost)
+  .delete('/posts/:id', userController.ensureIsAdmin, backOfficeController.removePost)
+  .post('/posts/', userController.ensureIsAdmin, backOfficeController.addPost);
+
 router.put('/qualifications/:id', userController.ensureIsAdmin, backOfficeController.editQualification)
   .delete('/qualifications/:id', userController.ensureIsAdmin, backOfficeController.removeQualification)
   .post('/qualifications/', userController.ensureIsAdmin, backOfficeController.addQualification);
