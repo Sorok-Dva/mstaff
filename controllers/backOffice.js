@@ -185,6 +185,52 @@ module.exports = {
       })
     });
   },
+  getSkills: (req, res) => {
+    return Models.Skill.findAll().then(skill => {
+      res.render('back-office/references/competences', {
+        layout, skill, a: { main: 'references', sub: 'skills' } })
+    });
+  },
+  editSkill: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Skill.findOne({ where: { id: req.params.id } }).then(skill => {
+      if (req.body.promptInput) {
+        skill.name = req.body.promptInput;
+      }
+      skill.save();
+      return res.status(200).json({ status: 'Modified' });
+    })
+  },
+  addSkill: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Skill.findOrCreate({
+      where: {
+        name: req.body.promptInput
+      }
+    }).spread((skill, created) => {
+      if (created) {
+        return res.status(200).json({ status: 'Created', skill });
+      } else {
+        return res.status(200).json({ status: 'Already exists', skill });
+      }
+    })
+  },
+  removeSkill: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Skill.findOne({ where: { id: req.params.id } }).then(skill => {
+      if (!skill) return res.status(400).send({ body: req.body, error: 'This skill does not exist' });
+      return skill.destroy().then(data => res.status(201).send({ deleted: true, data }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
   getFormations: (req, res) => {
     return Models.Formation.findAll().then( formation => {
       res.render('back-office/references/formations', {
