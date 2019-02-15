@@ -16,7 +16,7 @@
       <li{{#ifCond a.main '===' 'dashboard'}} class="active"{{/ifCond}}>
         <a data-toggle="collapse" href="#dashboardOverview"
            aria-expanded="{{#ifCond a.main '===' 'dashboard'}}true{{else}}false{{/ifCond}}">
-          <i class="ti-panel"></i>
+          <i class="fal fa-th-list"></i>
           <p>Dashboard
             <b class="caret"></b>
           </p>
@@ -118,6 +118,14 @@
               <a href="/back-office/formations">
                 <i class="fal fa-graduation-cap"></i>
                 <span class="sidebar-normal">Formations</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'skills'}} class="active"{{/ifCond}}>
+              <a href="/back-office/skills">
+                <i class="fal fa-award"></i>
+                <span class="sidebar-normal">Compétences</span>
               </a>
             </li>
           </ul>
