@@ -154,6 +154,14 @@
             </li>
           </ul>
           <ul class="nav">
+            <li{{#ifCond a.sub '===' 'posts'}} class="active"{{/ifCond}}>
+              <a href="/back-office/posts">
+                <i class="fal fa-user-md"></i>
+                <span class="sidebar-normal">Postes</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
             <li{{#ifCond a.sub '===' 'qualifications'}} class="active"{{/ifCond}}>
               <a href="/back-office/qualifications">
                 <i class="fal fa-graduation-cap"></i>
