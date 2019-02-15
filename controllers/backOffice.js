@@ -277,6 +277,190 @@ module.exports = {
       return formation.destroy().then(data => res.status(201).send({ deleted: true, data }));
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
+  getEquipments: (req, res) => {
+    return Models.Equipment.findAll().then( equipment => {
+      res.render('back-office/references/equipments', {
+        layout, equipment, a: { main: 'references', sub: 'equipments' } })
+    });
+  },
+  editEquipment: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Equipment.findOne({ where: { id: req.params.id } }).then(equipment => {
+      if (req.body.promptInput) {
+        equipment.name = req.body.promptInput;
+      }
+      equipment.save();
+      return res.status(200).json({ status: 'Modified' });
+    })
+  },
+  addEquipment: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Equipment.findOrCreate({
+      where: {
+        name: req.body.promptInput
+      }
+    }).spread((equipment, created) => {
+      if (created) {
+        return res.status(200).json({ status: 'Created', equipment });
+      } else {
+        return res.status(200).json({ status: 'Already exists', equipment });
+      }
+    })
+  },
+  removeEquipment: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Equipment.findOne({ where: { id: req.params.id } }).then(equipment => {
+      if (!equipment) return res.status(400).send({ body: req.body, error: 'This equipment does not exist' });
+      return equipment.destroy().then(data => res.status(201).send({ deleted: true, data }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  getSoftwares: (req, res) => {
+    return Models.Software.findAll().then( software => {
+      res.render('back-office/references/softwares', {
+        layout, software, a: { main: 'references', sub: 'softwares' } })
+    });
+  },
+  editSoftware: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Software.findOne({ where: { id: req.params.id } }).then(software => {
+      if (req.body.promptInput) {
+        software.name = req.body.promptInput;
+      }
+      software.save();
+      return res.status(200).json({ status: 'Modified' });
+    })
+  },
+  addSoftware: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Software.findOrCreate({
+      where: {
+        name: req.body.promptInput
+      }
+    }).spread((software, created) => {
+      if (created) {
+        return res.status(200).json({ status: 'Created', software });
+      } else {
+        return res.status(200).json({ status: 'Already exists', software });
+      }
+    })
+  },
+  removeSoftware: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Software.findOne({ where: { id: req.params.id } }).then(software => {
+      if (!software) return res.status(400).send({ body: req.body, error: 'This software does not exist' });
+      return software.destroy().then(data => res.status(201).send({ deleted: true, data }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  getServices: (req, res) => {
+    return Models.Service.findAll().then( service => {
+      res.render('back-office/references/services', {
+        layout, service, a: { main: 'references', sub: 'services' } })
+    });
+  },
+  editService: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Service.findOne({ where: { id: req.params.id } }).then(service => {
+      if (req.body.promptInput) {
+        service.name = req.body.promptInput;
+      }
+      service.save();
+      return res.status(200).json({ status: 'Modified' });
+    })
+  },
+  addService: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Service.findOrCreate({
+      where: {
+        name: req.body.promptInput
+      }
+    }).spread((service, created) => {
+      if (created) {
+        return res.status(200).json({ status: 'Created', service });
+      } else {
+        return res.status(200).json({ status: 'Already exists', service });
+      }
+    })
+  },
+  removeService: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Service.findOne({ where: { id: req.params.id } }).then(service => {
+      if (!service) return res.status(400).send({ body: req.body, error: 'This service does not exist' });
+      return service.destroy().then(data => res.status(201).send({ deleted: true, data }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
+  getQualifications: (req, res) => {
+    return Models.Qualification.findAll().then( qualification => {
+      res.render('back-office/references/qualifications', {
+        layout, qualification, a: { main: 'references', sub: 'qualifications' } })
+    });
+  },
+  editQualification: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Qualification.findOne({ where: { id: req.params.id } }).then(qualification => {
+      if (req.body.promptInput) {
+        qualification.name = req.body.promptInput;
+      }
+      qualification.save();
+      return res.status(200).json({ status: 'Modified' });
+    })
+  },
+  addQualification: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Qualification.findOrCreate({
+      where: {
+        name: req.body.promptInput
+      }
+    }).spread((qualification, created) => {
+      if (created) {
+        return res.status(200).json({ status: 'Created', qualification });
+      } else {
+        return res.status(200).json({ status: 'Already exists', qualification });
+      }
+    })
+  },
+  removeQualification: (req, res, next) => {
+    const errors = validationResult(req.body);
+
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    return Models.Qualification.findOne({ where: { id: req.params.id } }).then(qualification => {
+      if (!qualification) return res.status(400).send({ body: req.body, error: 'This qualification does not exist' });
+      return qualification.destroy().then(data => res.status(201).send({ deleted: true, data }));
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+  },
   editCandidate: (req, res, next) => {
     const errors = validationResult(req.body);
 
