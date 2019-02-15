@@ -15,7 +15,8 @@
     .form-group {
          margin-bottom: 0 !important;
     }
-</style>
+
+    </style>
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="wizard">
@@ -148,24 +149,6 @@
                             </div>
                             <div class="col-md-12"><hr></div>
                         </div>
-                        <div id="liberalType" class="row" style="display: none;">
-                            <div class="col-sm-3">
-                                <h4 class="text-bold">Cabinets libéraux :</h4>
-                            </div>
-                            <div class="col-sm-9">
-                                <div id="liberals" class="row sub-step">
-                                    <div class="form-group col-sm-12">
-                                        <div class="checkbox">
-                                            <input id="liberal" name="liberal" type="checkbox">
-                                            <label for="liberal">
-                                                <h3>Je suis interessé(e) par les offres des cabinets libéraux autour de moi (+/-30KM)</h3>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12"><hr></div>
-                        </div>
                         <div id="postType" class="row">
                             <div class="col-sm-3">
                                 <h4 class="text-bold">Type de poste *:</h4>
@@ -191,12 +174,11 @@
                     <div class="tab-pane" role="tabpanel" id="step2">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h4 class="text-bold">Saisissez vos dates de disponibilités</h4>
+                                <h4 class="text-bold">Votre disponibilité</h4>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
-
                             <div id="internshipDate" style="display:none">
                                 <div class="col-md-6"> <label for="start">Du *</label>
                                     <input id="start" name="start" type="text"
@@ -208,16 +190,6 @@
                                            class="form-control input-md to" autocomplete="off">
                                 </div>
                             </div>
-                            <div id="vacationDate" style="display:none" class="container-fluid">
-                            </div>
-                            <div id="cdiDate" style="display:none">
-                                <div class="col-md-6"> <label for="start">A partir du *</label>
-                                    <input id="start" name="start" type="text"
-                                           class="form-control input-md from" required="" autocomplete="off">
-                                </div>
-                            </div>
-
-
                             <ul class="list-inline pull-right">
                                 <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
                                 <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
@@ -338,16 +310,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="recapLiberal" class="col-md-4">
-                                <div class="panel panel-resume">
-                                    <div class="panel-heading">
-                                        Cabinets libéraux (+/-30KM)
-                                    </div>
-                                    <div class="panel-body text-center">
-                                        <h3></h3>
-                                    </div>
-                                </div>
-                            </div>
                             <div id="recapActivityType" class="col-md-4">
                                 <div class="panel panel-resume">
                                     <div class="panel-heading">
@@ -376,7 +338,7 @@
                                         Mes disponibilités
                                     </div>
                                     <div id="availability" class="panel-body">
-
+                                        <h3></h3>
                                     </div>
                                 </div>
                             </div>
