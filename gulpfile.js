@@ -1,11 +1,9 @@
 const { src, dest, watch, series, parallel } = require('gulp');
-const gls = require('gulp-live-server');
 const del = require('del');
 const cleanCSS = require('gulp-clean-css');
 const uglifyjs = require('uglify-es');
 const browsersync = require('browser-sync').create();
 const rename = require('gulp-rename');
-
 const composer = require('gulp-uglify/composer');
 
 const minify = composer(uglifyjs, console);
@@ -21,34 +19,17 @@ const JS_DST = './public/assets/dist/js';
  * cleans the destination directory of old files
  */
 let clean = (done) => {
-  del([DST_PATH], done)
+  del([DST_PATH], done())
 };
 
-/**
- * @task serve
- * this task starts the express app server and a browserSync proxy server that live-reloads the browser
- * when files change. it also serves as a means for multi-device testing.
- */
-let serve = (done) => {
-  const server = gls.new('./bin/www');
-  server.start();
-
-  //use gulp.watch to trigger server actions(notify, start or stop)
-  watch(['static/**/*.css', 'static/**/*.js'], function (file) {
-    server.notify.apply(server, [file]);
+let browserSync = (done) => {
+  browsersync.init({
+    proxy: {
+      target: 'localhost:3001',
+      ws: true
+    }
   });
-
-  watch('./bin/www', server.start.bind(server)); //restart my server
-
-  setTimeout(() => {
-    browsersync.init({
-      proxy: {
-        target: 'localhost:3001',
-        ws: true
-      }
-    });
-    done();
-  }, 2500)
+  done();
 };
 
 // Watch changes on all *.css files and trigger buildStyles() at the end.
@@ -85,11 +66,10 @@ let buildScripts = () => {
 };
 
 // Export commands.
-exports.default = parallel(serve, clean, watchCss, watchJs); // $ gulp
+exports.default = parallel(browserSync, watchCss, watchJs); // $ gulp
 exports.clean = clean; // $ gulp clean
-exports.serve = serve; // $ gulp serve
 exports.css = buildStyles; // $ gulp css
 exports.js = buildScripts; // $ gulp js
 exports.watchCSS = watchCss; // $ gulp watch
 exports.watchJS = watchJs; // $ gulp watch
-exports.build = series(buildStyles, buildScripts); // $ gulp build
+exports.build = series(clean, buildStyles, buildScripts); // $ gulp build

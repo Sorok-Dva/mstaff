@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint --fix --cache .",
-    "start": "npm run lint && gulp",
+    "start": "npm run lint && gulp build && node ./bin/www",
     "debug:express": "DEBUG=express:* node ./bin/www",
     "db:migrate": "sequelize db:migrate",
     "db:migrate:undo": "sequelize db:migrate:undo",
@@ -38,7 +38,6 @@
     "express-session": "^1.15.6",
     "express-subdomain": "^1.0.5",
     "express-validator": "^5.3.1",
-    "gulp-live-server": "0.0.31",
     "handlebars": "^4.1.0",
     "handlebars-dateformat": "^1.1.1",
     "hbs": "^4.0.1",
@@ -69,7 +68,7 @@
   },
   "devDependencies": {
     "browser-sync": "^2.26.3",
-    "eslint": "^5.12.1",
+    "eslint": "^5.14.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-async-await": "0.0.0",
     "eslint-plugin-import": "^2.16.0",
@@ -78,7 +77,6 @@
     "eslint-plugin-standard": "^4.0.0",
     "gulp": "^4.0.0",
     "gulp-clean-css": "^4.0.0",
-    "gulp-load-plugins": "^1.5.0",
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^3.0.1",
     "nyc": "^13.3.0"
