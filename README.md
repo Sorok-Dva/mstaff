@@ -9,6 +9,7 @@ Install the following software in your computer:
 - [Node.js](https://nodejs.org/en/download/package-manager/) (version 10.4 or higher)
     - NPM
     - N enables the user to switch versions easily (`npm i -g n`)
+    - gulp (tasks manager) (`npm i -g gulp`)
   
 
 ## Run application
