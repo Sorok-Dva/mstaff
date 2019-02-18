@@ -86,6 +86,22 @@ let notify = (error) => {
         message: `Merci de choisir au moins un type de poste.`
       });
       break;
+    case 'noSelectedES':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Erreur :',
+        message: `Veuillez sélectionner au moins un établissement.`
+      });
+      break;
+    case 'missingDate':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir vos dates.`
+      });
+      break;
   }
 }
 
@@ -124,12 +140,7 @@ let verifyStep = (step, element) => {
     case 2:
       if (application.contractType.name === 'internship') {
         if (!('start' in application) || !('end' in application)){
-          notification({
-            icon: 'exclamation',
-            type: 'danger',
-            title: 'Informations manquantes :',
-            message: `Merci de choisir vos dates.`
-          });
+          notify('missingDate');
           stop = true;
         }
       }
@@ -150,12 +161,7 @@ let verifyStep = (step, element) => {
     case 3:
 
       if (!('selectedES' in application) || application.selectedES.length < 1) {
-        notification({
-          icon: 'exclamation',
-          type: 'danger',
-          title: 'Erreur :',
-          message: `Veuillez sélectionner au moins un établissement.`
-        });
+        notify('noSelectedES');
         stop = true;
       }
       if (stop) return false;
