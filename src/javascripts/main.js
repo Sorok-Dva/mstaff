@@ -104,9 +104,6 @@ let createModal = (opts, callback) => {
   });
 };
 
-let nextTab = elem => $(elem).next().find('a.tabWizard[data-toggle="tab"]').click();
-let prevTab = elem => $(elem).prev().find('a.tabWizard[data-toggle="tab"]').click();
-
 $(document).ready(function () {
   $('body').prepend('<div id="dialog"></div>');
   $('#dialog').dialog({

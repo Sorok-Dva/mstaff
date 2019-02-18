@@ -538,7 +538,7 @@ module.exports = {
           model: Models.EstablishmentReference,
           attributes: ['name', 'finess_et'],
           on: { '$applications.ref_es_id$': {
-            [Op.col]: 'applications->EstablishmentReference.finess_et'}
+            [Op.col]: 'applications->EstablishmentReference.finess_et' }
           }
         }
       }]

@@ -5,67 +5,89 @@ let slider = document.getElementById('radius');
 
 // Step #1
 $('#step1 input[type="checkbox"]').change(function () {
-  let checked = $(this).attr('name');
-  let step = $(this).parent().closest('.sub-step').closest('.tab-pane').attr('id');
-  let subStep = $(this).parent().closest('.sub-step').attr('id');
-
-  if (this.checked) {
-    $(`#${subStep}`).find(':input').not(`[name=${checked}]`).prop('checked', false);
-    switch (checked) {
-      case 'cdi-cdd':
-        application.contractType = {name: checked, value: 'CDI / CDD'};
-        delete application.availability;
-        delete application.selectedES;
-        $('#activityType').show();
-        $('#timeType').show();
-        break;
-      case 'vacation':
-        application.contractType = { name: checked, value: 'VACATION' };
-        delete application.activityType;
-        delete application.timeType;
-        delete application.selectedES;
-        resetContract(checked);
-        break;
-      case 'internship':
-        application.contractType = { name: checked, value: 'STAGE' };
-        delete application.activityType;
-        delete application.timeType;
-        delete application.availability;
-        delete application.selectedES;
-        resetContract(checked);
-        break;
-      case 'full_time':
-        application.activityType = { name: checked, value: 'TEMPS PLEIN' } ;
-        break;
-      case 'part_time':
-        application.activityType = { name: checked, value: 'TEMPS PARTIEL' } ;
-        break;
-      case 'daytime':
-        application.timeType = { name: checked, value: 'fa-sun-o' };
-        break;
-      case 'nighttime':
-        application.timeType = { name: checked, value: 'fa-moon-o' };
-        break;
-    }
-  } else {
-    switch (subStep) {
-      case 'contracts':
-        delete application.contractType;
-        delete application.activityType;
-        delete application.timeType;
-        break;
-    }
-    if (checked === 'cdi-cdd') {
-      $(`#${subStep}`).find(':input').prop('checked', false);
+  let selected = $(this).attr('name');
+  let resetAllCheckboxExcept = (name) => {
+    $('#step1').find(':input').not(`[name=${name}]`).prop('checked', false);
+    if (name !== 'cdi-cdd'){
       $('#activityType').hide();
       $('#timeType').hide();
+      delete application.activityType;
+      delete application.timeType;
     }
-    if (checked === 'vacation') {
-      $(`#${subStep}`).find(':input').prop('checked', false);
-    }
+  };
 
-  }
+    switch (selected) {
+      case 'cdi-cdd':
+        resetAllCheckboxExcept(selected);
+        if (this.checked){
+          $('#activityType').show();
+          $('#timeType').show();
+          application.contractType = {name: selected, value: 'CDI / CDD'};
+          application.timeType = {};
+        } else {
+          $('#activityType').hide();
+          $('#timeType').hide();
+          delete application.contractType;
+          delete application.timeType;
+        }
+        break;
+      case 'vacation':
+        resetAllCheckboxExcept(selected);
+        if (this.checked){
+          application.contractType = { name: selected, value: 'VACATION' };
+          delete application.timeType;
+        } else delete application.contractType;
+        break;
+      case 'internship':
+        resetAllCheckboxExcept(selected);
+        if (this.checked){
+          application.contractType = { name: selected, value: 'STAGE' };
+          delete application.timeType;
+        } else delete application.contractType;
+        break;
+      case 'full_time':
+        this.checked ? application.timeType.fullTime = { name: selected, value: 'TEMPS PLEIN' } : delete application.timeType.fullTime;
+        break;
+      case 'part_time':
+        this.checked ? application.timeType.partTime = { name: selected, value: 'TEMPS PARTIEL' } : delete application.timeType.partTime;
+        break;
+      case 'daytime':
+        this.checked ? application.timeType.dayTime = { name: selected, value: 'fa-sun' } : delete application.timeType.dayTime;
+        break;
+      case 'nighttime':
+        this.checked ? application.timeType.nightTime = { name: selected, value: 'fa-moon' } : delete application.timeType.nightTime;
+        break;
+    }
 });
+
+let notify = (error) => {
+  switch(error) {
+    case 'noContractType':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir un type de contrat.`
+      });
+      break;
+    case 'noTimeType':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer le type d'activité et votre aménagement horaire.`
+      });
+      break;
+    case 'noPostType':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir au moins un type de poste.`
+      });
+      break;
+  }
+}
 
 let verifyStep = (step, element) => {
   let stop = false;
@@ -73,21 +95,11 @@ let verifyStep = (step, element) => {
     // ----------------------------------------- Case 1 ----------------------------------------- //
     case 1:
       if (!('contractType' in application)) {
-        notification({
-          icon: 'exclamation',
-          type: 'danger',
-          title: 'Informations manquantes :',
-          message: `Merci de choisir un type de contrat.`
-        });
+        notify('noContractType');
         stop = true;
       } else {
         if (application.contractType.name === 'cdi-cdd' && (!('activityType' in application) || !('timeType' in application))) {
-          notification({
-            icon: 'exclamation',
-            type: 'danger',
-            title: 'Informations manquantes :',
-            message: `Merci d'indiquer le type d'activité et votre aménagement horaire.`
-          });
+          notify('noTimeType');
           stop = true;
         }
         if (application.contractType.name === 'cdi-cdd' || application.contractType.name === 'vacation'){
@@ -101,12 +113,7 @@ let verifyStep = (step, element) => {
         }
       }
       if (!('postType' in application) || application.postType.length === 0) {
-        notification({
-          icon: 'exclamation',
-          type: 'danger',
-          title: 'Informations manquantes :',
-          message: `Merci de choisir au moins un type de poste.`
-        });
+        notify('noPostType');
         stop = true;
       }
       if (stop) return false;
@@ -153,42 +160,44 @@ let verifyStep = (step, element) => {
       }
       if (stop) return false;
 
-      $('#recapContractType').find('h3').html(application.contractType.value);
-      if (application.contractType.name === 'cdi-cdd') {
-        $('#recapActivityType').show().find('h3').html(application.activityType.value);
-        $('#recapHourType').show().find('i').attr('class', `fa ${application.timeType.value} fa-3x`);
-        $('#availability').parent().hide();
-      } else if (application.contractType.name === 'vacation') {
-        $('#recapActivityType').hide().find('h3').html('');
-        $('#recapHourType').hide();
-        $('#availability').empty();
-      } else {
-        $('#recapActivityType').hide().find('h3').html('');
-        $('#recapHourType').hide();
-      }
-      $('#finalESList').empty();
-      $('#es_selected > div[data-type="es"]').each((i, e) => {
-        let name = $(e).find('h5 > span').text();
-        let type = $(e).attr('data-es_type');
-        let town = $(e).find('h6').text();
-        $('#finalESList').append(`<tr><td>${name}</td><td>${type}</td><td>${town}</td></tr>`)
-      });
+      createRecap();
       element.next().removeClass('disabled');
       nextTab(element);
       application.valid = true;
       break;
   }
 };
-$('#radius').on('click', 'li', function () {
-  $('#radius-slider .slider').val($(this).attr('data-step'));
-  highlightLabel(slider.noUiSlider.get());
-});
 
-let resetContract = (checked) => {
-  $('#step1').find(':input').not(`[name=${checked}]`).prop('checked', false);
-  $('#activityType').hide();
-  $('#timeType').hide();
+let goStep = (step) => {
+  console.log(step);
 };
+
+let activateAriaControl = (aria) => {
+  console.log(aria);
+};
+
+let createRecap = () => {
+  $('#recapContractType').find('h3').html(application.contractType.value);
+  if (application.contractType.name === 'cdi-cdd') {
+    $('#recapActivityType').show().find('h3').html(application.activityType.value);
+    $('#recapHourType').show().find('i').attr('class', `fal ${application.timeType.value} fa-5x`);
+    $('#availability').parent().hide();
+  } else if (application.contractType.name === 'vacation') {
+    $('#recapActivityType').hide().find('h3').html('');
+    $('#recapHourType').hide();
+    $('#availability').parent().hide();
+  } else {
+    $('#recapActivityType').hide().find('h3').html('');
+    $('#recapHourType').hide();
+  }
+  $('#finalESList').empty();
+  $('#es_selected > div[data-type="es"]').each((i, e) => {
+    let name = $(e).find('h5 > span').text();
+    let type = $(e).attr('data-es_type');
+    let town = $(e).find('h6').text();
+    $('#finalESList').append(`<tr><td>${name}</td><td>${type}</td><td>${town}</td></tr>`)
+  });
+}
 
 let geoSuccess = (position) => {
   pos = { lat: position.coords.latitude, lng: position.coords.longitude, rayon: 5 };
@@ -349,6 +358,9 @@ let addWish = () => {
   }
 };
 
+let nextTab = elem => $(elem).next().find('a.tabWizard[data-toggle="tab"]').click();
+let prevTab = elem => $(elem).prev().find('a.tabWizard[data-toggle="tab"]').click();
+
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
   highlightLabel(slider.noUiSlider.get());
@@ -438,7 +450,6 @@ $(document).ready(function () {
   $('.prev-step').click(function (e) {
     let $active = $('.wizard .nav-tabs li.active');
     let datastep = $('.wizard .nav-tabs li.active a').attr('aria-controls');
-
     if (datastep === 'step3' && application.contractType.name === 'cdi-cdd' || application.contractType.name === 'vacation')
         $active = $active.prev();
     prevTab($active);
