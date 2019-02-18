@@ -1,12 +1,10 @@
 const { src, dest, watch, series, parallel } = require('gulp');
 const del = require('del');
 const cleanCSS = require('gulp-clean-css');
-const uglifyjs = require('uglify-es');
+const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
 const rename = require('gulp-rename');
-const composer = require('gulp-uglify/composer');
 
-const minify = composer(uglifyjs, console);
 
 const DST_PATH = './public/assets/dist';
 const CSS_SRC = './src/stylesheets/*.css';
@@ -59,12 +57,37 @@ let buildStyles = () => {
 
 let buildScripts = () => {
   return src(JS_SRC)
-    .pipe(minify())
+    .pipe(terser())
     .pipe(rename({ suffix: '.min' }))
     .pipe(dest(JS_DST))
     .pipe(browsersync.reload({ stream: true }));
 };
 
+/*
+*
+// Optimize Images
+function images() {
+  return gulp
+    .src("./assets/img/** /*")
+  .pipe(newer("./_site/assets/img"))
+  .pipe(
+    imagemin([
+      imagemin.gifsicle({ interlaced: true }),
+      imagemin.jpegtran({ progressive: true }),
+      imagemin.optipng({ optimizationLevel: 5 }),
+      imagemin.svgo({
+        plugins: [
+          {
+            removeViewBox: false,
+            collapseGroups: true
+          }
+        ]
+      })
+    ])
+  )
+  .pipe(gulp.dest("./_site/assets/img"));
+}
+*/
 // Export commands.
 exports.default = parallel(browserSync, watchCss, watchJs); // $ gulp
 exports.clean = clean; // $ gulp clean
