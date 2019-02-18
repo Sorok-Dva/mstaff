@@ -22,7 +22,7 @@
       $('select#contractType').addClass('error');
       return false;
     }
-    $('select#contractType').addClass('success');
+    $('select#contractType').removeClass('error').addClass('success');
     need.contractType = this.value;
 
     if (need.contractType !== 'vacation') {

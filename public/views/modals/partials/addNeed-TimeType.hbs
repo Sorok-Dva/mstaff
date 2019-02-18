@@ -1,35 +1,41 @@
 <div class="modal-body">
-  <form role="form" class="form-horizontal">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="modal-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="modal-body">
+        <div class="row" style="display: flex; align-items: center; justify-content: center">
+          <div class="col-md-6">
+            <p class="text-center">Date de début</p>
+            <div id="datePicker-start"></div>
+          </div>
+          <div id="endDate" class="col-md-6">
+            <p class="text-center">Date de fin</p>
+            <div id="datePicker-end"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label class="pull-right">
+              <input type="checkbox" class="disableEndDate">
+              Aucun date de fin
+            </label>
+          </div>
+        </div>
+        {{#ifCond this.contractType '===' 'vacation'}}
+          <h5 class="text-center">Créneau horaire</h5>
           <div class="row">
             <div class="col-md-6">
-              <p class="text-center">Date de début</p>
-              <div id="datePicker-start"></div>
+              <p class="text-center">Heure de début</p>
+              <div id="dateTimePicker-start" style="text-align: center;"></div>
             </div>
             <div class="col-md-6">
-              <p class="text-center">Date de fin</p>
-              <div id="datePicker-end"></div>
+              <p class="text-center">Heure de fin</p>
+              <div id="dateTimePicker-end" style="text-align: center;"></div>
             </div>
           </div>
-          {{#ifCond this.contractType '===' 'vacation'}}
-            <h5 class="text-center">Créneau horaire</h5>
-            <div class="row">
-              <div class="col-md-6">
-                <p class="text-center">Heure de début</p>
-                <div id="dateTimePicker-start" style="text-align: center;"></div>
-              </div>
-              <div class="col-md-6">
-                <p class="text-center">Heure de fin</p>
-                <div id="dateTimePicker-end" style="text-align: center;"></div>
-              </div>
-            </div>
-          {{/ifCond}}
-        </div>
+        {{/ifCond}}
       </div>
     </div>
-  </form>
+  </div>
 </div>
 <div class="modal-footer timeType" style="display: none">
   <button type="button" id="searchProfiles" class="btn btn-info pull-right" style="margin-bottom: 5px;">
@@ -82,5 +88,13 @@
     if (need.timeType.dateEnd) dateRecap += ` - ${moment(need.timeType.dateEnd).format('DD/MM/YYYY')}`;
     $('#btnTimeType').html(dateRecap);
     return searchCandidates()
+  });
+  $('input.disableEndDate').change(function() {
+    if($(this).is(":checked")) {
+      $('#endDate').hide();
+      delete need.timeType.dateEnd;
+      return;
+    }
+    $('#endDate').show();
   });
 </script>

@@ -1,39 +1,46 @@
 {{#each this}}
   <div class="col-md-3">
     <div class="card card-user">
-      <div class="image"></div>
+      <div class="image">
+        <span class="{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available pull-left"></span>
+        <div class="actions pull-right">
+          <i class="fal fa-archive"></i>
+          <i class="fal fa-star"></i>
+        </div>
+      </div>
       <div class="content">
         <div class="author">
-          <img id="candidateAvatar" class="avatar border-white" src="/static/assets/images/face-0.jpg" />
-          <h4 class="title">{{this.Wish.Candidate.User.firstName}} {{this.Wish.Candidate.User.lastName}}<br />
-            <a href="#"><small>{{age this.Whish.Candidate.User.birthday 'years'}} ans</small></a>
-          </h4>
+          <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
+          <div class="rank-label-container">
+            <span class="label label-default rank-label">40%</span>
+          </div>
+          <h5 class="title">{{this.Wish.Candidate.User.firstName}} {{this.Wish.Candidate.User.lastName}},
+            <small>{{age this.Wish.Candidate.User.birthday 'years'}} ans</small>,
+            <small><b><i class="fal fa-map-marker-alt"></i> {{this.Wish.Candidate.User.town}}</b></small>
+          </h5>
         </div>
-        <p class="description text-center">
-          {{usr.candidate.description}}
-          <a href="/profile/edit"><i class="fa fa-pencil"></i></a>
-        </p>
-      </div>
-      <hr>
-      <div class="text-center">
-        <div class="row">
-          <div class="col-md-3 col-md-offset-1">
-            <h5>{{date usr.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
+        <div class="text-center">
+          <hr style="border-color: lightgrey">
+          <div class="row" style="display: flex;justify-content: center;">
+            <div class="col-md-2">
+              <i class="fal fa-phone fa-2x" style="color:lightgreen"></i>
+            </div>
+            <div class="col-md-2">
+              <i class="fal fa-comment fa-2x" style="color:lightpink"></i>
+            </div>
+            <div class="col-md-2">
+              <i class="fal fa-video fa-2x" style="color:deepskyblue"></i>
+            </div>
           </div>
-          <div class="col-md-4">
-            <h5>{{date usr.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
+          <hr style="border-color: lightgrey">
+          <div class="row">
+            {{!--<h5><i class="fal fa-phone"></i> {{this.Wish.Candidate.User.phone}}</h5>
+            <h5><i class="fal fa-envelope"></i> {{this.Wish.Candidate.User.email}}</h5>--}}
+            <div class="col-md-12">Accéder au profil complet</div>
+            <div class="col-md-12">
+              <p class="text-muted"><small>Candidature ajoutée à votre établissement le {{date this.createdAt 'DD/MM/YYYY'}}</small></p>
+            </div>
           </div>
-          <div class="col-md-3">
-            <h5>40%<br /><small>du profil complété</small></h5>
-          </div>
-        </div>
-      </div>
-      <hr>
-      <div class="text-center">
-        <div class="row">
-          <h5><i class="fa fa-phone"></i> {{usr.phone}}</h5>
-          <h5><i class="fa fa-envelope"></i> {{usr.email}}</h5>
-          <h5><i class="fas fa-map-marked-alt"></i> {{usr.postal_code}} {{usr.town}}</h5>
         </div>
       </div>
     </div>
