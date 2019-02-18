@@ -17,29 +17,86 @@
   }
 </style>
 <div class="row">
-  <div class="col-lg-12 col-md-12">
-    <form role="form">
-      <div id="postType" class="row">
-        <div class="col-sm-3">
-          <h4 class="text-bold">Type de poste *:</h4>
+  <div class="col-md-offset-2 col-md-8">
+    <div class="form-group">
+      <div class="searchbar-wrapper">
+        <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
+          <input placeholder="Indiquez le profil recherché" style="border: 0px" id="post" type="text"
+                 class="form-control pull-left" autocomplete="off">
         </div>
-        <div class="col-sm-9">
-          <div class="form-group col-sm-12" style="margin-top: 25px">
-            <label for="selectPostType">
-              <select class="form-control" id="selectPostType" multiple="multiple">
-                {{#each posts as |post|}}
-                  <option value="{{post.id}}">{{post.name}}</option>
-                {{/each}}
-              </select>
-            </label>
-          </div>
-        </div>
-        <div class="col-md-12"><hr></div>
+        <button style="position: absolute;right: 25px;top:10px" id="searchCandidates" class="btn btn-large btn-primary">
+          Rechercher
+        </button>
       </div>
-      <div class="clearfix"></div>
-    </form>
+    </div>
+  </div>
+  <div class="col-md-12" id="criteria" style="display: none">
+    <hr>
+    <div class="col-md-12 text-center">
+      <button class="btn btn-info" data-toggle="modal" data-target="#contractType" data-backdrop="static" data-keyboard="false">
+        Type de Contrat : <span id="btnContractType"></span>
+      </button>
+      <button class="btn btn-info" data-toggle="modal" data-target="#timeType" data-backdrop="static" data-keyboard="false">
+       Période : <span id="btnTimeType"></span>
+      </button>
+    </div>
   </div>
 </div>
+<div class="row">
+  <div id="searchResult" class="col-md-12"></div>
 </div>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script>
+  let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
+  let need = {};
+  need.firstSearch = true;
+  $(`#post`).autocomplete({
+    source: list,
+    minLength: 2,
+    select: (event, ui) => {
+      need.post = ui.item.label;
+      if (need.firstSearch) {
+        createModal({
+          id: 'contractType',
+          modal: 'addNeed-ContractType',
+          canBeClose: false,
+          title: 'Type de contrat souhaité',
+        }, () => {
+          $('#criteria').show();
+        });
+      } else return searchCandidates();
+    },
+  });
+
+  $('#searchCandidates').on('click', function() {
+    if ($('input#post').val().length < 2) {
+      return false;
+    }
+    need.post = $('input#post').val();
+    if (!need.firstSearch) return searchCandidates();
+    createModal({
+      id: 'contractType',
+      modal: 'addNeed-ContractType',
+      canBeClose: false,
+      title: 'Type de contrat souhaité',
+    }, () => {
+      $('#criteria').show();
+    });
+  });
+
+  let searchCandidates = () => {
+    console.log('searching candidates');
+    $.post(`/api/es/1/search/candidates`, need, (data) => {
+      loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
+        console.log(html);
+        $('#searchResult').html(html);
+      });
+      console.log(data);
+    }).catch(error => errorsHandler(error));
+  };
+
+  $(document).ready(() => {
+    need._csrf = _csrf;
+  });
+</script>

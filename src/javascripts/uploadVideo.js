@@ -4,7 +4,7 @@ let fileDragHover = (e) => {
 
   e.stopPropagation();
   e.preventDefault();
-  fileDrag.className = (e.type === 'dragover' ? 'hover' : 'modal-body file-upload');
+  fileDrag.className = e.type === 'dragover' ? 'hover' : 'modal-body file-upload';
 };
 
 let fileSelectHandler = (e) => {
@@ -48,13 +48,13 @@ let parseFile = (f) => {
     $('#notvideo').show();
     $('#response').hide();
     $('#video-preview').hide();
-    document.getElementById("file-upload-form").reset();
+    document.getElementById('file-upload-form').reset();
   }
 };
 
 let updateFileProgress = (e) => {
   if (e.lengthComputable)  {
-    (e.lengthComputable) ? $('#file-progress').attr('value', e.loaded) : null;
+    e.lengthComputable ? $('#file-progress').attr('value', e.loaded) : null;
   }
 };
 
@@ -72,8 +72,8 @@ function uploadFile(f) {
       xhr.upload.addEventListener('progress', updateFileProgress, false);
 
       // File received / failed
-      xhr.onreadystatechange = function(e) {
-        $('#file-progress').attr('class', `progress ${(xhr.status === 200 ? "success" : "failure")}`);
+      xhr.onreadystatechange = function (e) {
+        $('#file-progress').attr('class', `progress ${(xhr.status === 200 ? 'success' : 'failure')}`);
 
         if (xhr.readyState === 4 && xhr.status === 200) {
           $('#removeVideo').show();
@@ -117,7 +117,7 @@ if (window.File && window.FileList && window.FileReader) {
       $('#start').show();
       $('#response').hide();
       $('#video-preview').hide();
-      document.getElementById("file-upload-form").reset();
+      document.getElementById('file-upload-form').reset();
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -138,7 +138,7 @@ if (window.File && window.FileList && window.FileReader) {
 }
 
 $('#removeVideo').click(() => {
-  $.post('/api/candidate/delete/video', {_csrf}, (data) => {
+  $.post('/api/candidate/delete/video', { _csrf }, (data) => {
     let video = document.getElementById('video-preview');
     video.pause();
     $('#video-preview').removeAttr('src');

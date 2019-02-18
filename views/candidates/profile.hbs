@@ -52,14 +52,16 @@
 
           <label for="file-upload" id="file-drag">
             {{#if usr.candidate.video}}
-            <video id="video-preview" style="width:inherit" controls>
-              <source src="/static/uploads/candidates/videos/{{usr.candidate.video}}" id="videoSrc">
+              <video id="video-preview" style="width:inherit" controls>
+                <source src="/static/uploads/candidates/videos/{{usr.candidate.video}}" id="videoSrc">
+              </video>
             {{else}}
-            <video id="video-preview" style="display:none;width:inherit" controls>
-              <source src="" id="videoSrc">
+              <video id="video-preview" style="display:none;width:inherit" controls>
+                <source src="" id="videoSrc">
+              </video>
             {{/if}}
             Your browser does not support HTML5 video.
-          </video>
+
 
             <div id="start" {{#if usr.candidate.video}}style="display: none"{{/if}}>
               <i class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
@@ -89,7 +91,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-8 col-md-7">
+    <div class="col-lg-8 col-md-7">
     <div class="card">
       <div class="card-header">
         <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Expériences</h4>
@@ -318,4 +320,4 @@
     </div>
   </div>
 </div>
-<script src="/static/javascripts/uploadVideo.js"></script>
+<script src="/static/assets/dist/js/uploadVideo.min.js"></script>

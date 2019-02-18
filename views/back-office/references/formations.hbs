@@ -1,0 +1,138 @@
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addFormation()> <i class="fal fa-plus"></i></a>
+        </div>
+
+        <table id="formations-table" class="table">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="name" data-sortable="true">Nom</th>
+
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions</th>
+          </thead>
+          <tbody>
+          {{#each formation as |formations|}}
+            <tr data-id="{{formations.id}}">
+              <td></td>
+              <td>{{formations.id}}</td>
+              <td>{{formations.name}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let table = $('#formations-table');
+
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+      '<i class="ti-pencil-alt"></i>',
+      '</a>',
+      '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<i class="ti-close"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .edit': (e, value, row, index) => {
+        let _csrf = $('#csrfToken').val();
+        let promptInput = prompt('Renommer la formation :');
+        let id = $(e.currentTarget).closest('tr').attr('data-id');
+        if (promptInput) {
+          $.put(`/api/back-office/formations/${row.id}`, {
+            promptInput,
+            _csrf
+          }, () => {
+            $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+          });
+        }
+      },
+      'click .remove': (e, value, row, index) => {
+        let _csrf = $('#csrfToken').val();
+
+        if (confirm('ATTENTION:\n\n ' +
+            'Cette action est irreversible et supprimera la formation.\n\n' +
+            'Voulez vous continuer ?')) {
+          $.delete(`/api/back-office/formations/${row.id}`, {
+            _csrf
+          }, () => {
+            table.bootstrapTable('remove', {
+              field: 'id',
+              values: [row.id]
+            });
+          })
+        }
+      }
+    };
+
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+      showToggle: true,
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10,25,50,100,200,500],
+      formatShowingRows: (pageFrom, pageTo, totalRows) => {
+        //do nothing here, we don't want to show the text "showing x of y from..."
+      },
+      formatRecordsPerPage: (pageNumber) => {
+        return pageNumber + " rows visible";
+      },
+      icons: {
+        toggle: 'fa fa-th-list',
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
+    });
+
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+  function addFormation()
+  {
+    let _csrf = $('#csrfToken').val();
+    let promptInput = prompt('Ajouter une formation :');
+    if (promptInput) {
+      $.post(`/api/back-office/formations/`, {
+        promptInput,
+        _csrf
+      }, (response) => {
+        if (response.status === "Already exists")
+        {
+          alert("Cette formation existe déjà");
+        }
+        else {
+          table.bootstrapTable('insertRow', {
+            index: 0,
+            row: {
+              id: response.formation.id,
+              name: response.formation.name
+            }
+          });
+        }
+      });
+    }
+  }
+</script>

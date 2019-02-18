@@ -1,10 +1,10 @@
-let map, marker, cityCircle, markers = [], filter, pos = {lat: 0, lng: 0, rayon: 5}, selectedAll = false,
+let map, marker, cityCircle, markers = [], filter, pos = { lat: 0, lng: 0, rayon: 5 }, selectedAll = false,
   allEs = [], application = {};
 let kmArray = [1, 2, 5, 10, 15, 20, 30, 50, 70, 100];
 let slider = document.getElementById('radius');
 
 // Step #1
-$('#step1 input[type="checkbox"]').change(function() {
+$('#step1 input[type="checkbox"]').change(function () {
   let checked = $(this).attr('name');
   let step = $(this).parent().closest('.sub-step').closest('.tab-pane').attr('id');
   let subStep = $(this).parent().closest('.sub-step').attr('id');
@@ -20,14 +20,14 @@ $('#step1 input[type="checkbox"]').change(function() {
         $('#timeType').show();
         break;
       case 'vacation':
-        application.contractType = {name: checked, value: 'VACATION'};
+        application.contractType = { name: checked, value: 'VACATION' };
         delete application.activityType;
         delete application.timeType;
         delete application.selectedES;
         resetContract(checked);
         break;
       case 'internship':
-        application.contractType = {name: checked, value: 'STAGE'};
+        application.contractType = { name: checked, value: 'STAGE' };
         delete application.activityType;
         delete application.timeType;
         delete application.availability;
@@ -35,16 +35,16 @@ $('#step1 input[type="checkbox"]').change(function() {
         resetContract(checked);
         break;
       case 'full_time':
-        application.activityType = {name: checked, value: 'TEMPS PLEIN'} ;
+        application.activityType = { name: checked, value: 'TEMPS PLEIN' } ;
         break;
       case 'part_time':
-        application.activityType = {name: checked, value: 'TEMPS PARTIEL'} ;
+        application.activityType = { name: checked, value: 'TEMPS PARTIEL' } ;
         break;
       case 'daytime':
-        application.timeType = {name: checked, value: 'fa-sun-o'};
+        application.timeType = { name: checked, value: 'fa-sun-o' };
         break;
       case 'nighttime':
-        application.timeType = {name: checked, value: 'fa-moon-o'};
+        application.timeType = { name: checked, value: 'fa-moon-o' };
         break;
     }
   } else {
@@ -179,6 +179,10 @@ let verifyStep = (step, element) => {
       break;
   }
 };
+$('#radius').on('click', 'li', function () {
+  $('#radius-slider .slider').val($(this).attr('data-step'));
+  highlightLabel(slider.noUiSlider.get());
+});
 
 let resetContract = (checked) => {
   $('#step1').find(':input').not(`[name=${checked}]`).prop('checked', false);
@@ -187,7 +191,7 @@ let resetContract = (checked) => {
 };
 
 let geoSuccess = (position) => {
-  pos = {lat: position.coords.latitude, lng: position.coords.longitude, rayon: 5};
+  pos = { lat: position.coords.latitude, lng: position.coords.longitude, rayon: 5 };
   getEsList();
 };
 
@@ -217,7 +221,7 @@ let mapInit = () => {
 let addMarker = (es) => {
   let marker = new google.maps.Marker({
     map: map,
-    position: {lat: es.lat, lng: es.lon},
+    position: { lat: es.lat, lng: es.lon },
     icon: {
       url: 'http://maps.gstatic.com/mapfiles/circle.png',
       anchor: new google.maps.Point(10, 10),
@@ -244,12 +248,12 @@ let getEsList = () => {
   mapInit();
   let _csrf = $('#csrfToken').val();
   $('#esCount').empty();
-  $("#esList").html('<div id="loader" class="col-md-12"></div>');
+  $('#esList').html('<div id="loader" class="col-md-12"></div>');
   $('#loader').show();
-  $.post('/api/establishments/findByGeo', {rayon: pos.rayon, lat: pos.lat, lon: pos.lng, filter, _csrf }, (data) => {
+  $.post('/api/establishments/findByGeo', { rayon: pos.rayon, lat: pos.lat, lon: pos.lng, filter, _csrf }, (data) => {
     allEs = data;
     loadTemplate('/static/views/api/findByGeo.hbs', data, (html) => {
-      $("#esList").html(html);
+      $('#esList').html(html);
       $('.esCount').html(data.length);
       $('#loader').hide();
     });
@@ -352,7 +356,7 @@ $("#radius").on("click", "li", function() {
 noUiSlider.create(slider, {
   start: 3,
   step: 1,
-  connect: "lower",
+  connect: 'lower',
   range: {
     'min': 1,
     'max': 10
@@ -363,20 +367,20 @@ noUiSlider.create(slider, {
     }
   }
 });
-slider.noUiSlider.on('change', function(){
+slider.noUiSlider.on('change', function (){
   pos.rayon = kmArray[parseInt(slider.noUiSlider.get()) - 1];
   highlightLabel(parseInt(slider.noUiSlider.get()));
   getEsList()
 });
-slider.noUiSlider.on('slide', function(){
+slider.noUiSlider.on('slide', function (){
   highlightLabel(parseInt(slider.noUiSlider.get()));
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(geoSuccess);
   } else {
-    alert("Geolocation is not supported by this browser.");
+    alert('Geolocation is not supported by this browser.');
   }
 
   $('#selectPostType').select2();

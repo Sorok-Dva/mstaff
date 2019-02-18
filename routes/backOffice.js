@@ -78,4 +78,46 @@ router.get('/es', UserController.ensureIsAdmin, BackOfficeController.getESList);
  */
 router.get('/es/:id', UserController.ensureIsAdmin, BackOfficeController.getES);
 
+/**
+ * @Route('/back-office/formations/') GET;
+ * Show formations data
+ */
+router.get('/formations', UserController.ensureIsAdmin, BackOfficeController.getFormations);
+
+/**
+ * @Route('/back-office/formations/') GET;
+ * Show skills data
+ */
+router.get('/skills', UserController.ensureIsAdmin, BackOfficeController.getSkills);
+
+/**
+ * @Route('/back-office/formations/') GET;
+ * Show equipments data
+ */
+router.get('/equipments', UserController.ensureIsAdmin, BackOfficeController.getEquipments);
+
+/**
+ * @Route('/back-office/formations/') GET;
+ * Show softwares data
+ */
+router.get('/softwares', UserController.ensureIsAdmin, BackOfficeController.getSoftwares);
+
+/**
+ * @Route('/back-office/formations/') GET;
+ * Show services data
+ */
+router.get('/services', UserController.ensureIsAdmin, BackOfficeController.getServices);
+
+/**
+ * @Route('/back-office/formations/') GET;
+ * Show services data
+ */
+router.get('/posts', UserController.ensureIsAdmin, BackOfficeController.getPosts);
+
+/**
+ * @Route('/back-office/formations/') GET;
+ * Show qualifications data
+ */
+router.get('/qualifications', UserController.ensureIsAdmin, BackOfficeController.getQualifications);
+
 module.exports = router;

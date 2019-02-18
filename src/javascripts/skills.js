@@ -49,17 +49,17 @@ toAutocomplete.forEach((ac) => {
           message: messageSuccess
         });
         $(`#${ac}List`).append($('<tr>')
-          .attr({'data-type': e, 'data-id': data.id})
+          .attr({ 'data-type': e, 'data-id': data.id })
           .append($('<td>').text(`${data.name}`))
-          .append($('<td>').append($('<div>').attr({class: 'rating-stars text-center'})
+          .append($('<td>').append($('<div>').attr({ class: 'rating-stars text-center' })
             .append($('<ul>').attr({
               class: 'stars',
               'data-type': e,
               'data-id': data.id
             })
-              .append($('<li>').attr({class: 'star', title: 'Fair', 'data-value': 1}).html('<i class="fa fa-star"></i>'))
-              .append($('<li>').attr({class: 'star', title: 'Good', 'data-value': 2}).html('<i class="fa fa-star"></i>'))
-              .append($('<li>').attr({class: 'star', title: 'Excellent', 'data-value': 3}).html('<i class="fa fa-star"></i>')))
+              .append($('<li>').attr({ class: 'star', title: 'Fair', 'data-value': 1 }).html('<i class="fa fa-star"></i>'))
+              .append($('<li>').attr({ class: 'star', title: 'Good', 'data-value': 2 }).html('<i class="fa fa-star"></i>'))
+              .append($('<li>').attr({ class: 'star', title: 'Excellent', 'data-value': 3 }).html('<i class="fa fa-star"></i>')))
           ))
           .append($('<td>').append($('<button>').attr({
             class: 'btn btn-simple btn-danger btn-icon remove',
@@ -97,7 +97,7 @@ toAutocomplete.forEach((ac) => {
 $('body').on('click', '.remove', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   let type = $(event.target).attr('data-type') || $(event.target).parent().attr('data-type');
-  createModal({ id: 'removeSkillModal', modal: 'removeSkill', title: 'Confirmation'}, () => {
+  createModal({ id: 'removeSkillModal', modal: 'removeSkill', title: 'Confirmation' }, () => {
     $('#btnRemoveSkill').attr('onclick', `removeSkill('${type}', ${id})`);
   })
 });
@@ -114,7 +114,7 @@ let autocompleteTrigger = (elements, contain) => {
 
 let removeSkill = (type, id) => {
   let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/type/${type}/${id}`, {_csrf}, (data) => {
+  $.delete(`/api/candidate/${type}/${id}`, { _csrf }, (data) => {
     if (data.deleted) {
       notification({
         icon: 'check-circle',

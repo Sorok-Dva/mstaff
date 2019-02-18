@@ -7,7 +7,7 @@ $('.removeWish').click(function() {
 
 let removeWish = (id) => {
   let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/wish/${id}`, {_csrf}, (data) => {
+  $.delete(`/api/candidate/wish/${id}`, { _csrf }, (data) => {
     if (data.deleted) {
       notification({
         icon: 'check-circle',

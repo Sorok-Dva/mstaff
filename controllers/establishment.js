@@ -1,5 +1,7 @@
 const { check, validationResult } = require('express-validator/check');
-let sequelize = require('../bin/sequelize');
+const { Op, Sequelize } = require('sequelize');
+
+const sequelize = require('../bin/sequelize');
 const Models = require('../models/index');
 
 module.exports = {
@@ -82,5 +84,54 @@ module.exports = {
         new: true
       });
     }
+  },
+  apiSearchCandidates: (req, res, next) => {
+    console.log(req.body);
+    Models.Establishment.findOne({
+      where: { id: req.params.id },
+      include: {
+        model: Models.ESAccount,
+        where: { user_id: req.user.id }
+      }
+    }).then(es => {
+      if (!es) return res.status(403).send(`You don't have access to this establishment.`);
+      Models.Application.findAll({
+        where: { ref_es_id: es.finess },
+        include: {
+          model: Models.Wish,
+          on: {
+            '$Application.wish_id$': {
+              [Op.col]: 'Wish.id'
+            }
+          },
+          where: {
+            [Op.and]: [
+              { contract_type: req.body.contractType },
+              Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
+                [Op.like]: `%${req.body.post}%`
+              })
+            ]
+          },
+          include: {
+            model: Models.Candidate,
+            attributes: { exclude: ['updatedAt', 'createdAt'] },
+            where: { is_available: true },
+            required: true,
+            include: {
+              model: Models.User,
+              attributes: { exclude: ['password', 'type', 'role', 'updatedAt', 'createdAt'] },
+              on: {
+                '$Wish->Candidate.user_id$': {
+                  [Op.col]: 'Wish->Candidate->User.id'
+                }
+              },
+              required: true
+            }
+          }
+        }
+      }).then(applications => {
+        return res.status(200).send(applications);
+      });
+    });
   }
 };
