@@ -186,7 +186,7 @@ module.exports.register = async (Handlebars) => {
     let percentage = 0;
     if (candidate.User.firstName && candidate.User.lastName && candidate.User.phone && candidate.User.town) percentage += 20;
     if (candidate.photo) percentage += 10;
-    if (candidate.description.length > 10) percentage += 30;
+    if (!_.isNil(candidate.description)) candidate.description.length > 10 ? percentage += 30 : null;
     if (candidate.experiences.length > 0) percentage += 10;
     if (candidate.formations.length > 0) percentage += 10;
     if (candidate.documents.length > 0) {

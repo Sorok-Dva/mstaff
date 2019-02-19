@@ -88,41 +88,43 @@ module.exports = {
   },
   getProfile: (req, res, next) => {
     if (req.user.type === 'candidate') {
-      Models.User.findOne({
-        where: { id: req.user.id },
-        attributes: { exclude: ['password'] },
+      Models.Candidate.findOne({
+        where: { user_id: req.user.id },
         include: [{
-          model: Models.Candidate, // Candidate Associations (user.candidate)
-          as: 'candidate',
+          model: Models.User,
+          attributes: { exclude: ['password'] },
+          required: true
+        }, {
+          model: Models.Experience, // Experiences Associations (user.candidate.experiences)
+          as: 'experiences',
           include: [{
-            model: Models.Experience, // Experiences Associations (user.candidate.experiences)
-            as: 'experiences',
-            include: [{
-              model: Models.Service,
-              as: 'service'
-            }, {
-              model: Models.Post,
-              as: 'poste'
-            }] // Service & Post Associations (user.candidate.experiences.service|post)
+            model: Models.Service,
+            as: 'service'
           }, {
-            model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
-            as: 'qualifications'
-          }, {
-            model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
-            as: 'formations'
-          }, {
-            model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
-            as: 'skills'
-          }, {
-            model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
-            as: 'equipments'
-          }, {
-            model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
-            as: 'softwares'
-          }]
+            model: Models.Post,
+            as: 'poste'
+          }] // Service & Post Associations (user.candidate.experiences.service|post)
+        }, {
+          model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
+          as: 'qualifications'
+        }, {
+          model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
+          as: 'formations'
+        }, {
+          model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
+          as: 'skills'
+        }, {
+          model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
+          as: 'equipments'
+        }, {
+          model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
+          as: 'softwares'
+        }, {
+          model: Models.CandidateDocument, // Softwares Associations (user.candidate.softwares)
+          as: 'documents'
         }]
-      }).then(usr => {
-        return res.render('candidates/profile', { usr, a: { main: 'profile' } })
+      }).then(candidate => {
+        return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
       }).catch(error => next(new Error(error)));
     }
   },

@@ -86,7 +86,6 @@ module.exports = {
     }
   },
   apiSearchCandidates: (req, res, next) => {
-    console.log(req.body);
     Models.Establishment.findOne({
       where: { id: req.params.id },
       include: {
@@ -95,8 +94,9 @@ module.exports = {
       }
     }).then(es => {
       if (!es) return res.status(403).send(`You don't have access to this establishment.`);
-      Models.Application.findAll({
+      let query = {
         where: { ref_es_id: es.finess },
+        attributes: { exclude: ['lat', 'lon'] },
         include: {
           model: Models.Wish,
           on: {
@@ -105,31 +105,40 @@ module.exports = {
             }
           },
           where: {
-            [Op.and]: [
-              { contract_type: req.body.contractType },
-              Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
-                [Op.like]: `%${req.body.post}%`
-              })
-            ]
+            contract_type: req.body.contractType,
+            $and: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
+              [Op.like]: `%${req.body.post.toLowerCase()}%`
+            })
           },
           include: {
             model: Models.Candidate,
             attributes: { exclude: ['updatedAt', 'createdAt'] },
-            where: { is_available: true },
             required: true,
-            include: {
+            include: [{
               model: Models.User,
-              attributes: { exclude: ['password', 'type', 'role', 'updatedAt', 'createdAt'] },
+              attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
               on: {
                 '$Wish->Candidate.user_id$': {
                   [Op.col]: 'Wish->Candidate->User.id'
                 }
               },
               required: true
-            }
+            }, {
+              model: Models.Experience,
+              as: 'experiences',
+            }, {
+              model: Models.CandidateDocument,
+              as: 'documents',
+              attributes: ['candidate_id', 'type'],
+            }, {
+              model: Models.CandidateFormation,
+              as: 'formations',
+            }]
           }
         }
-      }).then(applications => {
+      };
+
+      Models.Application.findAll(query).then(applications => {
         return res.status(200).send(applications);
       });
     });

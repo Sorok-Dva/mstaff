@@ -4,43 +4,43 @@
       <div class="image"></div>
       <div class="content">
         <div class="author">
-          <img id="candidateAvatar" class="avatar border-white" src="/static/assets/images/face-0.jpg" />
-          <h4 class="title">{{usr.firstName}} {{usr.lastName}}<br />
-            <a href="#"><small>{{age usr.birthday 'years'}} ans</small></a>
+          <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
+          <div class="rank-label-container">
+            <span class="label label-default rank-label">{{{candidateProfilePercentage candidate}}}</span>
+          </div>
+          <h4 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
+            <a href="#"><small>{{age candidate.User.birthday 'years'}} ans</small></a>
           </h4>
         </div>
         <p class="description text-center">
-          {{usr.candidate.description}}
+          {{candidate.description}}
           <a href="/profile/edit"><i class="fa fa-pencil"></i></a>
         </p>
       </div>
       <hr>
       <div class="text-center">
         <div class="row">
-          <div class="col-md-3 col-md-offset-1">
-            <h5>{{date usr.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
+          <div class="col-md-5 col-md-offset-1">
+            <h5>{{date candidate.User.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
           </div>
-          <div class="col-md-4">
-            <h5>{{date usr.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
-          </div>
-          <div class="col-md-3">
-            <h5>40%<br /><small>du profil complété</small></h5>
+          <div class="col-md-6">
+            <h5>{{date candidate.User.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
           </div>
         </div>
       </div>
       <hr>
       <div class="text-center">
         <div class="row">
-          <h5><i class="fa fa-phone"></i> {{usr.phone}}</h5>
-          <h5><i class="fa fa-envelope"></i> {{usr.email}}</h5>
-          <h5><i class="fas fa-map-marked-alt"></i> {{usr.postal_code}} {{usr.town}}</h5>
+          <h5><i class="fa fa-phone"></i> {{candidate.User.phone}}</h5>
+          <h5><i class="fa fa-envelope"></i> {{candidate.User.email}}</h5>
+          <h5><i class="fas fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h5>
         </div>
       </div>
     </div>
     <div class="card">
       <div class="card-header">
         <h4 class="card-title"><i class="fa fa-film" aria-hidden="true"></i> Vidéo de présentation</h4>
-        {{#if usr.candidate.video}}
+        {{#if candidate.video}}
           <span id="removeVideo" class="btn btn-danger pull-right"><i class="fa fa-trash"></i></span>
         {{else}}
           <span id="removeVideo" style="display: none" class="btn btn-danger pull-rigt"><i class="fa fa-trash"></i></span>
@@ -51,19 +51,16 @@
           <input id="file-upload" type="file" name="file" accept="video/mp4" />
 
           <label for="file-upload" id="file-drag">
-            {{#if usr.candidate.video}}
+            {{#if candidate.video}}
               <video id="video-preview" style="width:inherit" controls>
-                <source src="/static/uploads/candidates/videos/{{usr.candidate.video}}" id="videoSrc">
+                <source src="/static/uploads/candidates/videos/{{candidate.video}}" id="videoSrc">
               </video>
             {{else}}
               <video id="video-preview" style="display:none;width:inherit" controls>
                 <source src="" id="videoSrc">
               </video>
             {{/if}}
-            Your browser does not support HTML5 video.
-
-
-            <div id="start" {{#if usr.candidate.video}}style="display: none"{{/if}}>
+            <div id="start" {{#if candidate.video}}style="display: none"{{/if}}>
               <i class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
               <div>Choisir une vidéo ou déposer ici</div>
               <div id="notvideo" style="color:red;display:none">Veuillez selectionner un fichier dans un format vidéo traditionnel.</div>
@@ -110,8 +107,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if usr.candidate.experiences}}
-            {{#each usr.candidate.experiences as |xp|}}
+          {{#if candidate.experiences}}
+            {{#each candidate.experiences as |xp|}}
               <tr>
                 <td>
                   {{date xp.start 'MM/YYYY' }} -
@@ -156,8 +153,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if usr.candidate.formations}}
-            {{#each usr.candidate.formations as |diploma|}}
+          {{#if candidate.formations}}
+            {{#each candidate.formations as |diploma|}}
               <tr>
                 <td>
                   {{date diploma.start 'MM/YYYY' }} -
@@ -173,7 +170,7 @@
           {{/if}}
           </tbody>
         </table>
-        {{#if usr.candidate.qualifications}}
+        {{#if candidate.qualifications}}
           <table class="table table-hover">
             <thead>
             <tr class="info">
@@ -182,8 +179,8 @@
             </tr>
             </thead>
             <tbody>
-            {{#if usr.candidate.qualifications}}
-              {{#each usr.candidate.qualifications as |diploma|}}
+            {{#if candidate.qualifications}}
+              {{#each candidate.qualifications as |diploma|}}
                 <tr>
                   <td>
                     {{date diploma.start 'MM/YYYY' }} -
@@ -216,8 +213,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if usr.candidate.skills}}
-            {{#each usr.candidate.skills as |knowledge|}}
+          {{#if candidate.skills}}
+            {{#each candidate.skills as |knowledge|}}
               <tr>
                 <td>{{knowledge.name}}</td>
                 <td>
@@ -252,8 +249,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if usr.candidate.equipments}}
-            {{#each usr.candidate.equipments as |equipment|}}
+          {{#if candidate.equipments}}
+            {{#each candidate.equipments as |equipment|}}
               <tr>
                 <td>{{equipment.name}}</td>
                 <td>
@@ -288,8 +285,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if usr.candidate.softwares}}
-            {{#each usr.candidate.softwares as |software|}}
+          {{#if candidate.softwares}}
+            {{#each candidate.softwares as |software|}}
               <tr>
                 <td>{{software.name}}</td>
                 <td>
