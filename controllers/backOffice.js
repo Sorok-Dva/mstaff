@@ -146,7 +146,7 @@ module.exports = {
           as: 'applications',
           required: true,
           where: {
-            finess: data.dataValues.finess
+            ref_es_id: data.dataValues.finess
           },
         }]
       }).then(candidates => {
@@ -254,7 +254,7 @@ module.exports = {
     const errors = validationResult(req.body);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-    
+
     return Models.Formation.findOrCreate({
       where: {
         name: req.body.promptInput
