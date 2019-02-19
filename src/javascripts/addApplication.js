@@ -131,8 +131,6 @@ let notify = (error) => {
   return true;
 }
 
-
-
 let verifyStep = (step) => {
   let error = false;
   switch (step) {
@@ -164,22 +162,12 @@ let verifyStep = (step) => {
         }
       }
       return error;
-      // application.selectedES = [];
-
-      // //Reset backStep
-      // $(`#esList i.unselectEs`).hide();
-      // $(`#esList i.selectEs`).show();
-      // $('#es_selected').empty();
-      // $('#selectedEsCount').html(0);
-
       break;
     // ----------------------------------------- Case 3 ----------------------------------------- //
     case 'step3':
       if (!('selectedES' in application) || application.selectedES.length < 1)
         error = notify('noSelectedES');
       return error;
-      // createRecap();
-      // application.valid = true;
       break;
   }
 };
@@ -187,8 +175,18 @@ let verifyStep = (step) => {
 let createRecap = () => {
   $('#recapContractType').find('h3').html(application.contractType.value);
   if (application.contractType.name === 'cdi-cdd') {
-    $('#recapActivityType').show().find('h3').html(application.activityType.value);
-    $('#recapHourType').show().find('i').attr('class', `fal ${application.timeType.value} fa-5x`);
+    if ('timeType' in application){
+      $('#recapActivityType').show();
+      $('#recapHourType').show();
+      if('fullTime' in application.timeType)
+        $('#recapActivityType h3').first().html(application.timeType.fullTime.value);
+      if('partTime' in application.timeType)
+        $('#recapActivityType h3').last().html(application.timeType.partTime.value);
+      if('dayTime' in application.timeType)
+        $('#recapHourType i').first().addClass(`fal ${application.timeType.dayTime.value} fa-5x`);
+      if('nightTime' in application.timeType)
+        $('#recapHourType i').last().addClass(`fal ${application.timeType.nightTime.value} fa-5x`);
+    }
     $('#availability').parent().hide();
   } else if (application.contractType.name === 'vacation') {
     $('#recapActivityType').hide().find('h3').html('');
@@ -261,6 +259,14 @@ let removeAllMarker = () => {
   });
 };
 
+
+let highlightLabel = ($this) => {
+  $('#radius-slider .slider-labels li').removeClass('slideActive');
+  let index = parseInt($this);
+  let selector = '#radius-slider .slider-labels li:nth-child(' + index + ')';
+  $(selector).addClass('slideActive');
+};
+
 let getEsList = () => {
   mapInit();
   let _csrf = $('#csrfToken').val();
@@ -277,11 +283,13 @@ let getEsList = () => {
   });
 };
 
-let highlightLabel = ($this) => {
-  $('#radius-slider .slider-labels li').removeClass('slideActive');
-  let index = parseInt($this);
-  let selector = '#radius-slider .slider-labels li:nth-child(' + index + ')';
-  $(selector).addClass('slideActive');
+let resetSelectedES = () => {
+  application.selectedES = [];
+  $(`#esList i.unselectEs`).hide();
+  $(`#esList i.selectEs`).show();
+  $('#es_selected').empty();
+  $('#selectedEsCount').html(0);
+
 };
 
 let addEs = (data) => {
@@ -309,6 +317,7 @@ let removeEs = (data) => {
 
 let selectAll = () => {
   selectedAll = !selectedAll;
+  application.selectedES = [];
   if (selectedAll === true) {
     $(`#esList i.selectEs`).hide();
     $(`#esList i.unselectEs`).show();
@@ -316,16 +325,8 @@ let selectAll = () => {
     allEs.map((es, i) => {
       application.selectedES.push(parseInt(es.finess_et))
     });
-  } else {
-    $(`#esList i.unselectEs`).hide();
-    $(`#esList i.selectEs`).show();
-    $(`#es_selected > .es-card`).remove();
-    allEs.map((es, i) => {
-      let index = application.selectedES.indexOf(parseInt(es.finess_et));
-      if (index !== -1) application.selectedES.splice(index, 1);
-    });
-  }
-  $('#selectedEsCount').html(application.selectedES.length);
+    $('#selectedEsCount').html(application.selectedES.length);
+  } else resetSelectedES();
 };
 
 let addWish = () => {
@@ -333,11 +334,10 @@ let addWish = () => {
     let opts = {
       name: application.name,
       contractType: application.contractType.name,
-      fullTime: (('activityType' in application) && application.activityType.name === 'full_time'),
-      partTime: (('activityType' in application) && application.activityType.name === 'part_time'),
-      dayTime: (('timeType' in application) && application.timeType.name === 'daytime'),
-      nightTime: (('timeType' in application) && application.timeType.name === 'nighttime'),
-      availability: application.availability,
+      fullTime: (('timeType' in application) && application.timeType.fullTime.name === 'full_time'),
+      partTime: (('timeType' in application) && application.timeType.partTime.name === 'part_time'),
+      dayTime: (('timeType' in application) && application.timeType.dayTime.name === 'daytime'),
+      nightTime: (('timeType' in application) && application.timeType.nightTime.name === 'nighttime'),
       start: application.start,
       end: application.end,
       lat: pos.lat,
@@ -358,8 +358,6 @@ let addWish = () => {
 
   }
 };
-
-
 
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
@@ -457,12 +455,15 @@ $(document).ready(function () {
     if (!verifyStep(datastep)){
       switch (datastep) {
         case 'step1':
+          resetSelectedES();
           application.contractType.name === 'internship' ? goStep('step2') : goStep('step3');
           break;
         case 'step2':
           goStep('step3');
           break;
         case 'step3':
+          createRecap();
+          application.valid = true;
           goStep('complete');
           break;
       }
