@@ -11,53 +11,52 @@ $('#step1 input[type="checkbox"]').change(function () {
     if (name !== 'cdi-cdd'){
       $('#activityType').hide();
       $('#timeType').hide();
-      delete application.activityType;
       delete application.timeType;
     }
   };
 
-    switch (selected) {
-      case 'cdi-cdd':
-        resetAllCheckboxExcept(selected);
-        if (this.checked){
-          $('#activityType').show();
-          $('#timeType').show();
-          application.contractType = {name: selected, value: 'CDI / CDD'};
-          application.timeType = {};
-        } else {
-          $('#activityType').hide();
-          $('#timeType').hide();
-          delete application.contractType;
-          delete application.timeType;
-        }
-        break;
-      case 'vacation':
-        resetAllCheckboxExcept(selected);
-        if (this.checked){
-          application.contractType = { name: selected, value: 'VACATION' };
-          delete application.timeType;
-        } else delete application.contractType;
-        break;
-      case 'internship':
-        resetAllCheckboxExcept(selected);
-        if (this.checked){
-          application.contractType = { name: selected, value: 'STAGE' };
-          delete application.timeType;
-        } else delete application.contractType;
-        break;
-      case 'full_time':
-        this.checked ? application.timeType.fullTime = { name: selected, value: 'TEMPS PLEIN' } : delete application.timeType.fullTime;
-        break;
-      case 'part_time':
-        this.checked ? application.timeType.partTime = { name: selected, value: 'TEMPS PARTIEL' } : delete application.timeType.partTime;
-        break;
-      case 'daytime':
-        this.checked ? application.timeType.dayTime = { name: selected, value: 'fa-sun' } : delete application.timeType.dayTime;
-        break;
-      case 'nighttime':
-        this.checked ? application.timeType.nightTime = { name: selected, value: 'fa-moon' } : delete application.timeType.nightTime;
-        break;
-    }
+  switch (selected) {
+    case 'cdi-cdd':
+      resetAllCheckboxExcept(selected);
+      if (this.checked){
+        $('#activityType').show();
+        $('#timeType').show();
+        application.contractType = {name: selected, value: 'CDI / CDD'};
+        application.timeType = {};
+      } else {
+        $('#activityType').hide();
+        $('#timeType').hide();
+        delete application.contractType;
+        delete application.timeType;
+      }
+      break;
+    case 'vacation':
+      resetAllCheckboxExcept(selected);
+      if (this.checked){
+        application.contractType = { name: selected, value: 'VACATION' };
+        delete application.timeType;
+      } else delete application.contractType;
+      break;
+    case 'internship':
+      resetAllCheckboxExcept(selected);
+      if (this.checked){
+        application.contractType = { name: selected, value: 'STAGE' };
+        delete application.timeType;
+      } else delete application.contractType;
+      break;
+    case 'full_time':
+      this.checked ? application.timeType.fullTime = { name: selected, value: 'TEMPS PLEIN' } : delete application.timeType.fullTime;
+      break;
+    case 'part_time':
+      this.checked ? application.timeType.partTime = { name: selected, value: 'TEMPS PARTIEL' } : delete application.timeType.partTime;
+      break;
+    case 'daytime':
+      this.checked ? application.timeType.dayTime = { name: selected, value: 'fa-sun' } : delete application.timeType.dayTime;
+      break;
+    case 'nighttime':
+      this.checked ? application.timeType.nightTime = { name: selected, value: 'fa-moon' } : delete application.timeType.nightTime;
+      break;
+  }
 });
 
 let notify = (error) => {
@@ -76,6 +75,22 @@ let notify = (error) => {
         type: 'danger',
         title: 'Informations manquantes :',
         message: `Merci d'indiquer le type d'activité et votre aménagement horaire.`
+      });
+      break;
+    case 'noActivityType':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer le type d'activité.`
+      });
+      break;
+    case 'noScheduleType':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer votre aménagement horaire.`
       });
       break;
     case 'noPostType':
@@ -102,84 +117,71 @@ let notify = (error) => {
         message: `Merci de choisir vos dates.`
       });
       break;
+    case 'errorAddWish':
+      notification(
+        {
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Une erreur est survenue :',
+          message: `Impossible d'ajouter votre souhait, veuillez réessayer ou contacter notre assistance si le problème persiste.`
+        }
+      );
+      break;
   }
+  return true;
 }
 
-let verifyStep = (step, element) => {
-  let stop = false;
+
+
+let verifyStep = (step) => {
+  let error = false;
   switch (step) {
     // ----------------------------------------- Case 1 ----------------------------------------- //
-    case 1:
-      if (!('contractType' in application)) {
-        notify('noContractType');
-        stop = true;
-      } else {
-        if (application.contractType.name === 'cdi-cdd' && (!('activityType' in application) || !('timeType' in application))) {
-          notify('noTimeType');
-          stop = true;
-        }
-        if (application.contractType.name === 'cdi-cdd' || application.contractType.name === 'vacation'){
-          element = element.next();
-          application.selectedES = [];
-        }
-        if (application.contractType.name === 'internship'){
-          $('#internshipDate').show();
-        } else {
-          $('#internshipDate').hide();
+    case 'step1':
+      if (!('contractType' in application))
+        error = notify('noContractType');
+      else {
+        if (application.contractType.name === 'cdi-cdd') {
+          if (!('timeType' in application))
+            error = notify('noTimeType');
+          else {
+            if (!('fullTime' in application.timeType) && !('partTime' in application.timeType))
+              error = notify('noActivityType');
+            if (!('dayTime' in application.timeType) && !('nightTime' in application.timeType))
+              error = notify('noScheduleType');
+          }
         }
       }
-      if (!('postType' in application) || application.postType.length === 0) {
-        notify('noPostType');
-        stop = true;
-      }
-      if (stop) return false;
-      element.next().removeClass('disabled');
-      nextTab(element);
+      if (!('postType' in application) || application.postType.length === 0)
+        error = notify('noPostType');
+      return error;
       break;
     // ----------------------------------------- Case 2 ----------------------------------------- //
-    case 2:
+    case 'step2':
       if (application.contractType.name === 'internship') {
         if (!('start' in application) || !('end' in application)){
-          notify('missingDate');
-          stop = true;
+          error = notify('missingDate');;
         }
       }
-      if (stop) return false;
-      application.selectedES = [];
+      return error;
+      // application.selectedES = [];
 
-      //Reset backStep
-      $(`#esList i.unselectEs`).hide();
-      $(`#esList i.selectEs`).show();
-      $('#es_selected').empty();
-      $('#selectedEsCount').html(0);
+      // //Reset backStep
+      // $(`#esList i.unselectEs`).hide();
+      // $(`#esList i.selectEs`).show();
+      // $('#es_selected').empty();
+      // $('#selectedEsCount').html(0);
 
-
-      element.next().removeClass('disabled');
-      nextTab(element);
       break;
     // ----------------------------------------- Case 3 ----------------------------------------- //
-    case 3:
-
-      if (!('selectedES' in application) || application.selectedES.length < 1) {
-        notify('noSelectedES');
-        stop = true;
-      }
-      if (stop) return false;
-
-      createRecap();
-      element.next().removeClass('disabled');
-      nextTab(element);
-      application.valid = true;
+    case 'step3':
+      if (!('selectedES' in application) || application.selectedES.length < 1)
+        error = notify('noSelectedES');
+      return error;
+      // createRecap();
+      // application.valid = true;
       break;
   }
-};
-
-let goStep = (step) => {
-  console.log(step);
-};
-
-let activateAriaControl = (aria) => {
-  console.log(aria);
 };
 
 let createRecap = () => {
@@ -203,7 +205,7 @@ let createRecap = () => {
     let town = $(e).find('h6').text();
     $('#finalESList').append(`<tr><td>${name}</td><td>${type}</td><td>${town}</td></tr>`)
   });
-}
+};
 
 let geoSuccess = (position) => {
   pos = { lat: position.coords.latitude, lng: position.coords.longitude, rayon: 5 };
@@ -349,14 +351,7 @@ let addWish = () => {
       if (data.wish) {
         $(location).attr('href', `/applications`);
       } else {
-        notification(
-          {
-            icon: 'exclamation',
-            type: 'danger',
-            title: 'Une erreur est survenue :',
-            message: `Impossible d'ajouter votre souhait, veuillez réessayer ou contacter notre assistance si le problème persiste.`
-          }
-        );
+        notify('errorAddWish');
       }
     });
   } else {
@@ -364,8 +359,7 @@ let addWish = () => {
   }
 };
 
-let nextTab = elem => $(elem).next().find('a.tabWizard[data-toggle="tab"]').click();
-let prevTab = elem => $(elem).prev().find('a.tabWizard[data-toggle="tab"]').click();
+
 
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
@@ -394,6 +388,7 @@ slider.noUiSlider.on('slide', function (){
   highlightLabel(parseInt(slider.noUiSlider.get()));
 });
 
+
 $(document).ready(function () {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(geoSuccess);
@@ -401,9 +396,8 @@ $(document).ready(function () {
     alert('Geolocation is not supported by this browser.');
   }
 
-  $('#selectPostType').select2();
-  $('#geolocationFilter').select2({ dropdownAutoWidth: true });
 
+  $('#selectPostType').select2();
   $('#selectPostType').on('change', e => {
     let postType = $('#selectPostType').select2('data');
     if (!application.postType)
@@ -412,6 +406,8 @@ $(document).ready(function () {
       application.postType.push(post.text);
     })
   });
+
+  $('#geolocationFilter').select2({ dropdownAutoWidth: true });
   $('#geolocationFilter').on('select2:select', e => {
     let data = $('#geolocationFilter').select2('data');
     filter = null;
@@ -447,18 +443,45 @@ $(document).ready(function () {
       application.end = new Date(e.date);
   });
 
-  $('.next-step').click(function (e) {
-    let $active = $('.wizard .nav-tabs li.active');
-    let datastep = $(this).attr('data-step');
-    verifyStep(parseInt(datastep), $active);
+  let goStep = (newstep, prevstep) => {
+    let aria = $(`a.tabWizard[data-toggle="tab"][aria-controls="${newstep}"]`);
+    let toDisable = $(`a.tabWizard[data-toggle="tab"][aria-controls="${prevstep}"]`);
+    if (prevstep)
+      toDisable.parent().addClass('disabled');
+    aria.parent().removeClass('disabled');
+    aria.click();
+  };
+
+  $('.next-step').click(function () {
+    let datastep = $('div .tab-pane.active[role="tabpanel"]').attr('id');
+    if (!verifyStep(datastep)){
+      switch (datastep) {
+        case 'step1':
+          application.contractType.name === 'internship' ? goStep('step2') : goStep('step3');
+          break;
+        case 'step2':
+          goStep('step3');
+          break;
+        case 'step3':
+          goStep('complete');
+          break;
+      }
+    }
   });
 
-  $('.prev-step').click(function (e) {
-    let $active = $('.wizard .nav-tabs li.active');
-    let datastep = $('.wizard .nav-tabs li.active a').attr('aria-controls');
-    if (datastep === 'step3' && application.contractType.name === 'cdi-cdd' || application.contractType.name === 'vacation')
-        $active = $active.prev();
-    prevTab($active);
+  $('.prev-step').click(function () {
+    let datastep = $('div .tab-pane.active[role="tabpanel"]').attr('id');
+    switch (datastep) {
+      case 'step2':
+        goStep('step1', datastep);
+        break;
+      case 'step3':
+        application.contractType.name === 'internship' ? goStep('step2',datastep) : goStep('step1',datastep);
+        break;
+      case 'complete':
+        goStep('step3',datastep);
+        break;
+    }
   });
 
   $('li[role="presentation"]').click(function() {
