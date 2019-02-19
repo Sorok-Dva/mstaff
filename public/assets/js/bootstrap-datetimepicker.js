@@ -91,7 +91,7 @@
           navStep: 100
         }
       ],
-      viewModes = ['days', 'months', 'years', 'decades'],
+      viewModes = ['days', 'months', 'years'],
       verticalModes = ['top', 'bottom', 'auto'],
       horizontalModes = ['left', 'right', 'auto'],
       toolbarPlacements = ['default', 'top', 'bottom'],
@@ -628,10 +628,11 @@
           html = '';
 
         yearsViewHeader.eq(0).find('span').attr('title', options.tooltips.prevDecade);
-        yearsViewHeader.eq(1).attr('title', options.tooltips.selectDecade);
+        // yearsViewHeader.eq(1).attr('title', options.tooltips.selectDecade);
         yearsViewHeader.eq(2).find('span').attr('title', options.tooltips.nextDecade);
 
         yearsView.find('.disabled').removeClass('disabled');
+        yearsViewHeader.eq(1).addClass('disabled');
 
         if (options.minDate && options.minDate.isAfter(startYear, 'y')) {
           yearsViewHeader.eq(0).addClass('disabled');

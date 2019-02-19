@@ -53,8 +53,8 @@ app.use(middleware.readOnlySessionForImpersonation);
 
 // ------ ROUTES
 app.use('/', indexRouter);
-app.use('/', candidateRouter);
-app.use('/', esRouter);
+app.use('/', candidateRouter); //candidate
+app.use('/', esRouter); //recruiter
 app.use('/user', usersRouter);
 app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
