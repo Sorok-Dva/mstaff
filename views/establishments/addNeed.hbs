@@ -30,8 +30,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-12" id="criteria" style="display: none">
-    <hr>
+  <div class="col-md-12" id="criteria" style="display: none; padding-top: 15px;">
     <div class="col-md-12 text-center">
       <button class="btn btn-info" data-toggle="modal" data-target="#contractType" data-backdrop="static" data-keyboard="false">
         Type de Contrat : <span id="btnContractType"></span>
@@ -39,17 +38,20 @@
       <button class="btn btn-info" data-toggle="modal" data-target="#timeType" data-backdrop="static" data-keyboard="false">
        Période : <span id="btnTimeType"></span>
       </button>
+      <button id="saveNeed" class="btn btn-success">
+        <i class="fal fa-save"></i> Enregistrer le besoin
+      </button>
     </div>
   </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 15px">
   <div id="searchResult" class="col-md-12"></div>
 </div>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
-  let need = {};
+  let need = { selectedCandidates: [], favoriteCandidates: []};
   need.firstSearch = true;
   $(`#post`).autocomplete({
     source: list,
@@ -60,7 +62,7 @@
         createModal({
           id: 'contractType',
           modal: 'addNeed-ContractType',
-          canBeClose: false,
+          cantBeClose: true,
           title: 'Type de contrat souhaité',
         }, () => {
           $('#criteria').show();
@@ -78,7 +80,7 @@
     createModal({
       id: 'contractType',
       modal: 'addNeed-ContractType',
-      canBeClose: false,
+      cantBeClose: true,
       title: 'Type de contrat souhaité',
     }, () => {
       $('#criteria').show();
@@ -89,14 +91,69 @@
     console.log('searching candidates');
     $.post(`/api/es/1/search/candidates`, need, (data) => {
       loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
-        console.log(html);
         $('#searchResult').html(html);
       });
       console.log(data);
     }).catch(error => errorsHandler(error));
   };
 
+  let addCandidate = (id, type) => {
+    id = parseInt(id);
+    switch (type) {
+      case 'select':
+        if (need.selectedCandidates.indexOf(id) === -1) {
+          $(`i.selectCandidate[data-id="${id}"]`).hide();
+          $(`i.unselectCandidate[data-id="${id}"]`).show();
+          need.selectedCandidates.push(id);
+          /*$('#selectedEsCount').html(need.selectedCandidates.length);
+          $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
+        }
+        break;
+      case 'favorite':
+        if (need.favoriteCandidates.indexOf(id) === -1) {
+          $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
+          // $(`i.unfavCandidate[data-id="${id}"]`).show();
+          need.favoriteCandidates.push(id);
+          /*$('#selectedEsCount').html(need.selectedCandidates.length);
+          $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
+        }
+        break;
+    }
+  };
+
+  let removeCandidate = (id, type) => {
+    id = parseInt(id);
+    let index;
+    switch (type) {
+      case 'unselect':
+        index = need.selectedCandidates.indexOf(id);
+        if (index !== -1) {
+          $(`i.unselectCandidate[data-id="${id}"]`).hide();
+          $(`i.selectCandidate[data-id="${id}"]`).show();
+          need.selectedCandidates.splice(index, 1);
+          /* $('#selectedEsCount').html(need.selectedCandidates.length);
+           $(`#es_selected > #es${id}`).remove();*/
+        }
+        break;
+      case 'unfav':
+        index = need.favoriteCandidates.indexOf(id);
+        if (index !== -1) {
+          $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
+          need.favoriteCandidates.splice(index, 1);
+        }
+        break;
+    }
+  };
+
   $(document).ready(() => {
     need._csrf = _csrf;
+
+    $('button#saveNeed').click(function() {
+      if (!need.firstSearch && need.post && need.contractType) {
+        $.post('/api/es/')
+      } else {
+        console.log('error occurred : invalid search')
+      }
+    });
   });
 </script>
