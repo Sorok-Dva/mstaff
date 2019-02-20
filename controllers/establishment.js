@@ -21,7 +21,8 @@ module.exports = {
       }
     }).then(es => {
       if (!es) return res.status(403).send(`You don't have access to this establishment.`);
-      next(req, res, es);
+      req.es = es;
+      next();
     });
   },
   /**
@@ -104,9 +105,9 @@ module.exports = {
       });
     }
   },
-  apiSearchCandidates: (req, res, es, next) => {
+  apiSearchCandidates: (req, res, next) => {
     let query = {
-      where: { ref_es_id: es.finess },
+      where: { ref_es_id: req.es.finess },
       attributes: { exclude: ['lat', 'lon'] },
       include: {
         model: Models.Wish,
