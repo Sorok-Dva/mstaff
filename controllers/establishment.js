@@ -159,6 +159,11 @@ module.exports = {
       include: [{
         model: Models.User,
         attributes: { exclude: ['password'] },
+        on: {
+          '$Candidate.user_id$': {
+            [Op.col]: 'User.id'
+          }
+        },
         required: true
       }, {
         model: Models.Experience,

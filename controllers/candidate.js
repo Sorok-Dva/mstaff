@@ -1,4 +1,5 @@
 const { check, validationResult } = require('express-validator/check');
+const { Op } = require('sequelize');
 const _ = require('lodash');
 const fs = require('fs');
 
@@ -92,6 +93,11 @@ module.exports = {
       include: [{
         model: Models.User,
         attributes: { exclude: ['password'] },
+        on: {
+          '$Candidate.user_id$': {
+            [Op.col]: 'User.id'
+          }
+        },
         required: true
       }, {
         model: Models.Experience, // Experiences Associations (user.candidate.experiences)
