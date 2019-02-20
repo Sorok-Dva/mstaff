@@ -17,6 +17,8 @@ const i18n = require('i18n-express');
 const logger = require('morgan');
 const wildcardSubdomains = require('wildcard-subdomains');
 
+const ServerController = require('./controllers/server');
+
 let sessionStore = new MySQLStore({
   host: config.host,
   user: config.username,
@@ -103,6 +105,14 @@ module.exports = {
     store: sessionStore,
     resave: true
   }),
+  verifyMaintenance: (req, res, next) => {
+    ServerController.verifyMaintenance(status => {
+      if (status === 'maintenance') {
+        return res.render('index', { layout: 'maintenance' });
+      }
+      next();
+    });
+  },
   wildcardSubdomains: (req, res, next) => {
     if (!req.subdomains.length || req.subdomains.slice(-1)[0] === 'www') return next();
     // req.subdomain = req.subdomains.slice(-1)[0];

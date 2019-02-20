@@ -44,6 +44,7 @@ app.use(middleware.session);
 app.use(middleware.i18n);
 app.use(middleware.compress);
 app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use(middleware.verifyMaintenance);
 app.use(middleware.passportInit);
 app.use(middleware.passportSession);
 app.use(middleware.flash);
