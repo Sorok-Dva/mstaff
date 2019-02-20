@@ -174,10 +174,10 @@ let verifyStep = (step) => {
 
 let createRecap = () => {
   $('#recapContractType').find('h3').html(application.contractType.value);
+  $('#recapActivityType').hide().find('h3').html('');
+  $('#recapHourType').hide();
+  $('#availability').parent().hide();
   if (application.contractType.name === 'cdi-cdd') {
-    if ('timeType' in application){
-      $('#recapActivityType').show();
-      $('#recapHourType').show();
       if('fullTime' in application.timeType)
         $('#recapActivityType h3').first().html(application.timeType.fullTime.value);
       if('partTime' in application.timeType)
@@ -186,15 +186,12 @@ let createRecap = () => {
         $('#recapHourType i').first().addClass(`fal ${application.timeType.dayTime.value} fa-5x`);
       if('nightTime' in application.timeType)
         $('#recapHourType i').last().addClass(`fal ${application.timeType.nightTime.value} fa-5x`);
-    }
+    $('#recapActivityType').show();
+    $('#recapHourType').show();
     $('#availability').parent().hide();
-  } else if (application.contractType.name === 'vacation') {
-    $('#recapActivityType').hide().find('h3').html('');
-    $('#recapHourType').hide();
-    $('#availability').parent().hide();
-  } else {
-    $('#recapActivityType').hide().find('h3').html('');
-    $('#recapHourType').hide();
+  } else $('#recapContractType').attr('class', 'col-md-12');
+  if (application.contractType.name === 'internship') {
+    $('#availability').parent().show();
   }
   $('#finalESList').empty();
   $('#es_selected > div[data-type="es"]').each((i, e) => {
@@ -258,7 +255,6 @@ let removeAllMarker = () => {
     marker.setMap(null);
   });
 };
-
 
 let highlightLabel = ($this) => {
   $('#radius-slider .slider-labels li').removeClass('slideActive');
