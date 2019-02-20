@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Services', {
+    return queryInterface.createTable('Posts', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,6 +11,16 @@ module.exports = {
       name: {
         allowNull: false,
         type: Sequelize.STRING
+      },
+      categoriesPS_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'CategoriesPostsServices',
+          key: 'id',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE'
+        },
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,
@@ -25,6 +35,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Services');
+    return queryInterface.dropTable('Posts');
   }
 };

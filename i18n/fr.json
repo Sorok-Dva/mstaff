@@ -61,5 +61,10 @@
         "email_taken": "Cette adresse e-mail est déjà utilisée."
       }
     }
+  },
+  "categoriesPostServices": {
+    "medical_category": "Medical",
+    "administrative_category": "Administratif",
+    "mix_category": "Mix"
   }
 }
