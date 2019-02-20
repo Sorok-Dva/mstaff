@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: 'id',
       onDelete: 'CASCADE'
     });
+    Service.belongsTo(models.CategoriesPostsServices, {
+      foreignKey: 'categoriesPS_id',
+      targetKey: 'id',
+      onDelete: 'CASCADE'
+    });
   };
   return Service;
 };

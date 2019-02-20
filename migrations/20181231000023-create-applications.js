@@ -42,9 +42,9 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      finess: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
+      ref_es_id: {
+        type: Sequelize.STRING,
+        allowNull: false,
         references: {
           model: 'EstablishmentReferences',
           key: 'finess_et'
