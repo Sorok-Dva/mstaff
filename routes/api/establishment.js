@@ -14,4 +14,6 @@ router.post('/:esId/get/candidate/:userId',
   EstablishmentController.apiGetCandidate
 );
 
+router.post('/:esId/addNeed', UserController.ensureIsEs && EstablishmentController.verifyEsAccess, EstablishmentController.apiAddNeed);
+
 module.exports = router;
