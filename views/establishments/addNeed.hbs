@@ -63,6 +63,7 @@
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
   let need = { selectedCandidates: [], favoriteCandidates: []};
   need.firstSearch = true;
+  need.notifyCandidates = false;
   $(`#post`).autocomplete({
     source: list,
     minLength: 2,
@@ -166,27 +167,17 @@
     }
   };
 
-  let showCandidateProfile = userId => {
-    $.post(`/api/es/1/get/candidate/${userId}`, { _csrf } , data => {
-      createModal({
-        id: 'viewCandidateProfileModal',
-        modal: 'viewCandidateProfile',
-        size: 'modal-lg',
-        style: 'width:80%',
-        title: `Profil de ${data.User.firstName} ${data.User.lastName}`,
-        candidate: data
-      }, () => {
-
-      });
-    });
-  };
-
   $(document).ready(() => {
     need._csrf = _csrf;
 
     $('button#saveNeed').click(function() {
       if (!need.firstSearch && need.post && need.contractType) {
-        $.post('/api/es/')
+        need._csrf = _csrf;
+        $.post('/api/es/1/addNeed', need, (data) => {
+          if (data.id) {
+            $(location).attr('href', `/need/${data.id}`);
+          }
+        });
       } else {
         console.log('error occurred : invalid search')
       }

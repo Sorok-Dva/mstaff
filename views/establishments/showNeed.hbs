@@ -1,0 +1,323 @@
+<style>
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .drag-list {
+    display: flex;
+    align-items: flex-start;
+  }
+  @media (max-width: 690px) {
+    .drag-list {
+      display: block;
+    }
+  }
+
+  .drag-column {
+    flex: 1;
+    margin: 0 10px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  @media (max-width: 690px) {
+    .drag-column {
+      margin-bottom: 30px;
+    }
+  }
+  .drag-column h5 {
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .drag-column-on-hold .drag-column-header,
+  .drag-column-on-hold .is-moved,
+  .drag-column-on-hold .drag-options {
+    background: #FB7D44;
+  }
+  .drag-column-in-progress .drag-column-header,
+  .drag-column-in-progress .is-moved,
+  .drag-column-in-progress .drag-options {
+    background: #2A92BF;
+  }
+  .drag-column-needs-review .drag-column-header,
+  .drag-column-needs-review .is-moved,
+  .drag-column-needs-review .drag-options {
+    background: #F4CE46;
+  }
+  .drag-column-approved .drag-column-header,
+  .drag-column-approved .is-moved,
+  .drag-column-approved .drag-options {
+    background: #00B961;
+  }
+
+  .drag-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+  }
+
+  .drag-inner-list {
+    min-height: 50px;
+  }
+
+  .drag-item {
+    margin: 10px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .drag-item.is-moving {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .drag-header-more {
+    cursor: pointer;
+  }
+
+  .drag-options {
+    position: absolute;
+    top: 44px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .drag-options.active {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  .drag-options-label {
+    display: block;
+    margin: 0 0 5px 0;
+  }
+  .drag-options-label input {
+    opacity: 0.6;
+  }
+  .drag-options-label span {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin-left: 5px;
+  }
+
+  /* Dragula CSS  */
+  .gu-mirror {
+    position: fixed !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    opacity: 0.8;
+    list-style-type: none;
+  }
+
+  .gu-hide {
+    display: none !important;
+  }
+
+  .gu-unselectable {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+
+  .gu-transit {
+    opacity: 0.2;
+  }
+
+  /* Demo info */
+  .section {
+    padding: 20px;
+    text-align: center;
+  }
+  .section a {
+    color: white;
+    text-decoration: none;
+    font-weight: 300;
+  }
+  .section h4 {
+    font-weight: 400;
+  }
+  .section h4 a {
+    font-weight: 600;
+  }
+</style>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="pull-right">Clôturer le besoin</h5>
+        <h4 class="card-title">{{need.name}}</h4>
+        <div class="label-container">
+          <div class="label label-default">{{need.post}}</div>
+          <div class="label label-warning">
+            {{need.contract_type}}
+          </div>
+          <div class="label label-success ">
+            {{date need.start 'DD/MM/YYYY'}}
+          </div>
+        </div>
+      </div>
+      <div class="card-body" style="margin-top: -10px">
+        <div class="row">
+          <div class="col-md-12" style="padding: 25px;">
+            <div class="drag-container">
+              <ul class="drag-list">
+                <li class="drag-column drag-column-on-hold">
+                  <span class="drag-column-header">
+                    <h5>Pré-séléctionnés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="1">
+                    {{#each need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'pre-selected'}}
+                        <li class="drag-item card">
+                            <div class="card-header">
+                              <i class="fal fa-times pull-right"></i>
+                              <div class="row" style="cursor:pointer;" onclick="showCandidateProfile({{data.Candidate.User.id}})">
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                  <img src="/static/assets/images/face-0.jpg" style="border-radius: 50%;border:3px solid #019ED1; width: 50px;">
+                                </div>
+                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                  <h4 class="text-capitalize ng-binding">
+                                    {{data.Candidate.User.firstName}} {{data.Candidate.User.lastName}}
+                                    (<small>{{age data.Candidate.User.birthday 'years'}} ans</small>)
+                                  </h4>
+                                </h5>
+                                </div>
+                              </div>
+                            </div>
+                        </li>
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+                <li class="drag-column drag-column-in-progress">
+                  <span class="drag-column-header">
+                    <h5>Notifiés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="2">
+                    {{#each need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'notified'}}
+                        <li class="drag-item"></li>
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+                <li class="drag-column drag-column-approved">
+                  <span class="drag-column-header">
+                    <h5>Sélectionnés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="3">
+                    {{#each need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'selected'}}
+                        <li class="drag-item"></li>
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
+<script>
+  dragula([
+    document.getElementById('1'),
+    document.getElementById('2'),
+    document.getElementById('3'),
+    document.getElementById('4'),
+    document.getElementById('5')
+  ])
+
+      .on('drag', function(el) {
+
+        // add 'is-moving' class to element being dragged
+        el.classList.add('is-moving');
+      })
+      .on('dragend', function(el) {
+
+        // remove 'is-moving' class from element after dragging has stopped
+        el.classList.remove('is-moving');
+
+        // add the 'is-moved' class for 600ms then remove it
+        window.setTimeout(function() {
+          el.classList.add('is-moved');
+          window.setTimeout(function() {
+            el.classList.remove('is-moved');
+          }, 600);
+        }, 100);
+      });
+
+
+  var createOptions = (function() {
+    var dragOptions = document.querySelectorAll('.drag-options');
+
+    // these strings are used for the checkbox labels
+    var options = ['Research', 'Strategy', 'Inspiration', 'Execution'];
+
+    // create the checkbox and labels here, just to keep the html clean. append the <label> to '.drag-options'
+    function create() {
+      for (var i = 0; i < dragOptions.length; i++) {
+
+        options.forEach(function(item) {
+          var checkbox = document.createElement('input');
+          var label = document.createElement('label');
+          var span = document.createElement('span');
+          checkbox.setAttribute('type', 'checkbox');
+          span.innerHTML = item;
+          label.appendChild(span);
+          label.insertBefore(checkbox, label.firstChild);
+          label.classList.add('drag-options-label');
+          dragOptions[i].appendChild(label);
+        });
+
+      }
+    }
+
+    return {
+      create: create
+    }
+
+
+  }());
+
+  var showOptions = (function () {
+
+    // the 3 dot icon
+    var more = document.querySelectorAll('.drag-header-more');
+
+    function show() {
+      // show 'drag-options' div when the more icon is clicked
+      var target = this.getAttribute('data-target');
+      var options = document.getElementById(target);
+      options.classList.toggle('active');
+    }
+
+
+    function init() {
+      for (i = 0; i < more.length; i++) {
+        more[i].addEventListener('click', show, false);
+      }
+    }
+
+    return {
+      init: init
+    }
+  }());
+
+  createOptions.create();
+  showOptions.init();
+</script>
+
+{{log need.candidates}}
