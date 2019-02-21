@@ -117,6 +117,14 @@ let notify = (error) => {
         message: `Merci de choisir vos dates.`
       });
       break;
+    case 'wrongEndDate':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir une date de fin ultérieur à la date du jour.`
+      });
+      break;
     case 'errorAddWish':
       notification(
         {
@@ -124,6 +132,16 @@ let notify = (error) => {
           type: 'danger',
           title: 'Une erreur est survenue :',
           message: `Impossible d'ajouter votre souhait, veuillez réessayer ou contacter notre assistance si le problème persiste.`
+        }
+      );
+      break;
+    case 'noValueApplicationName':
+      notification(
+        {
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Une erreur est survenue :',
+          message: `Merci de saisir un nom composé d'au moins un caractères alphabétique ou numérique.`
         }
       );
       break;
@@ -157,8 +175,10 @@ let verifyStep = (step) => {
     // ----------------------------------------- Case 2 ----------------------------------------- //
     case 'step2':
       if (application.contractType.name === 'internship') {
-        if (!('start' in application) || !('end' in application)){
-          error = notify('missingDate');;
+        if (!('start' in application) || !('end' in application))
+          error = notify('missingDate');
+        else if (moment(application.end).isBefore(moment())){
+          error = notify('wrongEndDate');
         }
       }
       return error;
@@ -191,6 +211,9 @@ let createRecap = () => {
     $('#availability').parent().hide();
   } else $('#recapContractType').attr('class', 'col-md-12');
   if (application.contractType.name === 'internship') {
+    let start = moment(application.start).format("DD MMMM YYYY");
+    let end = moment(application.end).format("DD MMMM YYYY");
+    $('#availability h3').html(`${start} - ${end}`);
     $('#availability').parent().show();
   }
   $('#finalESList').empty();
@@ -323,6 +346,23 @@ let selectAll = () => {
     });
     $('#selectedEsCount').html(application.selectedES.length);
   } else resetSelectedES();
+};
+
+let addWishName = () => {
+  createModal({ id: 'addApplicationNameModal', modal: 'addApplicationName', title: 'Nommez votre candidature' }, () => {
+    let regex = new RegExp('[\\w]', 'i');
+    let value;
+
+    $('#btnSaveWish').click(() => {
+      value = $('#wishName').val();
+      if (!$.isEmptyObject(value) && regex.test(value)) {
+        value = value.trim();
+          application.name = `${value}`;
+          $('#addApplicationNameModal').modal('hide');
+          addWish();
+      } else notify('noValueApplicationName');
+    });
+  });
 };
 
 let addWish = () => {
