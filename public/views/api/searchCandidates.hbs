@@ -62,7 +62,7 @@
           <div class="row">
             {{!--<h5><i class="fal fa-phone"></i> {{this.Wish.Candidate.User.phone}}</h5>
             <h5><i class="fal fa-envelope"></i> {{this.Wish.Candidate.User.email}}</h5>--}}
-            <div class="col-md-12">Accéder au profil complet</div>
+            <div class="col-md-12"><button class="btn btn-info" onclick="showCandidateProfile({{this.Wish.Candidate.User.id}})">Accéder au profil complet</button></div>
             <div class="col-md-12">
               <p class="text-muted"><small>Inscrit le {{date this.createdAt 'DD/MM/YYYY'}}</small></p>
             </div>
