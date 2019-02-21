@@ -47,6 +47,16 @@
 <div class="row" style="padding-top: 15px">
   <div id="searchResult" class="col-md-12"></div>
 </div>
+<div class="modal modal-xs fade" id="candidateProfileModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">Profile de</div>
+      <div class="modal-body" id="candidateProfileModalBody"></div>
+      <div class="modal-footer">Fermer</div>
+    </div>
+  </div>
+</div>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
@@ -72,29 +82,40 @@
   });
 
   $('#searchCandidates').on('click', function() {
+    searchCandidates();
+  });
+
+  $('input#post').on('keydown', function(e) {
+    if (e.which === 13) {
+      e.preventDefault();
+      searchCandidates();
+    }
+  });
+
+  let searchCandidates = () => {
     if ($('input#post').val().length < 2) {
       return false;
     }
     need.post = $('input#post').val();
-    if (!need.firstSearch) return searchCandidates();
-    createModal({
-      id: 'contractType',
-      modal: 'addNeed-ContractType',
-      cantBeClose: true,
-      title: 'Type de contrat souhaité',
-    }, () => {
-      $('#criteria').show();
-    });
-  });
-
-  let searchCandidates = () => {
-    console.log('searching candidates');
-    $.post(`/api/es/1/search/candidates`, need, (data) => {
-      loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
-        $('#searchResult').html(html);
+    if (need.firstSearch) {
+      createModal({
+        id: 'contractType',
+        modal: 'addNeed-ContractType',
+        cantBeClose: true,
+        title: 'Type de contrat souhaité',
+      }, () => {
+        $('#criteria').show();
       });
-      console.log(data);
-    }).catch(error => errorsHandler(error));
+    } else {
+      console.log('searching candidates');
+      // @TODO put a esId var instead
+      $.post(`/api/es/1/search/candidates`, need, (data) => {
+        loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
+          $('#searchResult').html(html);
+        });
+        console.log(data);
+      }).catch(error => errorsHandler(error));
+    }
   };
 
   let addCandidate = (id, type) => {
@@ -143,6 +164,21 @@
         }
         break;
     }
+  };
+
+  let showCandidateProfile = userId => {
+    $.post(`/api/es/1/get/candidate/${userId}`, { _csrf } , data => {
+      createModal({
+        id: 'viewCandidateProfileModal',
+        modal: 'viewCandidateProfile',
+        size: 'modal-lg',
+        style: 'width:80%',
+        title: `Profil de ${data.User.firstName} ${data.User.lastName}`,
+        candidate: data
+      }, () => {
+
+      });
+    });
   };
 
   $(document).ready(() => {
