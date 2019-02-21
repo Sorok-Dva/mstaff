@@ -9,7 +9,16 @@ module.exports = (sequelize, DataTypes) => {
     end: DataTypes.DATE
   }, {});
   Need.associate = function (models) {
-    // associations can be defined here
+    Need.hasOne(models.Establishment, {
+      foreignKey: 'id',
+      sourceKey: 'es_id',
+      onDelete: 'CASCADE'
+    });
+
+    Need.hasMany(models.NeedCandidate, {
+      foreignKey: 'need_id',
+      as: 'candidates'
+    });
   };
   return Need;
 };
