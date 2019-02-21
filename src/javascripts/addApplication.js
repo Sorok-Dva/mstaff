@@ -117,12 +117,20 @@ let notify = (error) => {
         message: `Merci de choisir vos dates.`
       });
       break;
-    case 'wrongEndDate':
+    case 'wrongSequenceDate':
       notification({
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci de choisir une date de fin ultérieur à la date du jour.`
+        message: `La date de début doit être ultérieur à la date de fin.`
+      });
+      break;
+    case 'wrongDate':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir des dates ultérieurs au jour actuel.`
       });
       break;
     case 'errorAddWish':
@@ -177,8 +185,10 @@ let verifyStep = (step) => {
       if (application.contractType.name === 'internship') {
         if (!('start' in application) || !('end' in application))
           error = notify('missingDate');
-        else if (moment(application.end).isBefore(moment())){
-          error = notify('wrongEndDate');
+        else if (moment(application.start).isBefore(moment()) || moment(application.end).isBefore(moment()))
+          error = notify('wrongDate');
+        else if (moment(application.start).isAfter(moment(application.end))){
+          error = notify('wrongSequenceDate');
         }
       }
       return error;
