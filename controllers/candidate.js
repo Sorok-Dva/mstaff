@@ -2,8 +2,6 @@ const { check, validationResult } = require('express-validator/check');
 const { Op } = require('sequelize');
 const _ = require('lodash');
 const fs = require('fs');
-const { Sequelize, Op } = require('sequelize');
-
 const Models = require('../models/index');
 
 module.exports = {

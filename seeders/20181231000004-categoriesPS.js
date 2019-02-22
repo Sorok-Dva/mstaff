@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    let Categories = ['none', 'medical_category', 'administrative_category' , 'mix_category'];
+    let Categories = ['none', 'medical_category', 'paramedical_category', 'administrative_technical_category', 'liberal_category', 'mix_category'];
     let records = [];
 
     Categories.forEach((cat) => {

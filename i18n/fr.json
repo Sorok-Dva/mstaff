@@ -64,7 +64,9 @@
   },
   "categoriesPostServices": {
     "medical_category": "Medical",
-    "administrative_category": "Administratif",
+    "paramedical_category": "Paramédical",
+    "administrative_technical_category": "Personnel non soignant",
+    "liberal_category": "Profession libérale",
     "mix_category": "Mix"
   }
 }
