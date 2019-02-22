@@ -176,7 +176,7 @@ $('body').on('click', 'button.removeXP', (event) => {
       }
       $('#editXpModal').modal();
       $('#editXPId').val(id);
-      $('#editXP').attr('onclick', `editXP(${$('#editXP').attr('data-id')})`);
+      $('#editXP').attr('onclick', `editXP(${id})`);
     }
   }).catch(errors => {
     notification({
@@ -310,7 +310,7 @@ let removeCandidateDiploma = id => {
   });
 };
 
-let editXP = (íd) => {
+let editXP = (id) => {
   let _csrf = $('#csrfToken').val();
   let name = $('#editName').val();
   let poste_id = $('#editPost_id').val();
@@ -319,7 +319,7 @@ let editXP = (íd) => {
   let start = new Date(startDate[1], startDate[0] - 1);
   let end = new Date(endDate[1], endDate[0] - 1);
 
-  $.put(`/api/candidate/formation/${$('#editFormationId').val()}`, {
+  $.put(`/api/candidate/xp/${id}`, {
     name: $('#editFName').val(),
     start,
     end,
