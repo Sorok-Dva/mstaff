@@ -7,8 +7,10 @@
     "start": "npm run lint && gulp build && node ./bin/www",
     "debug:express": "DEBUG=express:* node ./bin/www",
     "db:migrate": "sequelize db:migrate",
+    "db:migrate:test": "sequelize db:migrate --env test",
     "db:migrate:undo": "sequelize db:migrate:undo",
     "db:seed": "sequelize db:seed:all",
+    "db:seed:test": "sequelize db:seed:all --env test",
     "dev": "nodemon --exec npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
