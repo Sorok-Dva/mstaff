@@ -540,6 +540,13 @@ span.unavailable {
   border:2px solid #ff2a21;
 }
 
+span.text-available {
+  color: #04e900;
+}
+span.text-unavailable {
+  color: #ff2a21;
+}
+
 input#post.ui-autocomplete-input {
   background-color: white !important;
   width: 85%;

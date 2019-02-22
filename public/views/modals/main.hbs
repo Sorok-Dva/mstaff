@@ -1,8 +1,8 @@
-<div class="modal fade" id="{{this.id}}" role="dialog">
-  <div class="modal-dialog">
+<div class="modal animated pulse fade" id="{{this.id}}" role="dialog">
+  <div class="modal-dialog {{this.size}}" style="{{this.style}}">
     <div class="modal-content">
       <div class="modal-header">
-        {{#if this.canBeClose}} <button type="button" class="close" data-dismiss="modal">&times;</button> {{/if}}
+        {{#unless this.cantBeClose}}<button type="button" class="close" data-dismiss="modal">&times;</button>{{/unless}}
         <h4 class="modal-title text-center">{{{this.title}}}</h4>
       </div>
       {{> (partial this.modal)}}

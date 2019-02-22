@@ -1,10 +1,31 @@
 const { check, validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
+const { _ } = require('lodash');
 
 const sequelize = require('../bin/sequelize');
 const Models = require('../models/index');
 
 module.exports = {
+  /**
+   * Authentication middleware
+   * @param req
+   * @param res
+   * @param next
+   * @description user that the current user belongs to the establishment call in the route.
+   */
+  verifyEsAccess: (req, res, next) => {
+    Models.Establishment.findOne({
+      where: { id: req.params.esId },
+      include: {
+        model: Models.ESAccount,
+        where: { user_id: req.user.id }
+      }
+    }).then(es => {
+      if (!es) return res.status(403).send(`You don't have access to this establishment.`);
+      req.es = es;
+      next();
+    });
+  },
   /**
    * validate MiddleWare
    * @param method
@@ -29,6 +50,34 @@ module.exports = {
     Models.Post.findAll().then(posts => {
       render.posts = posts;
       return res.render('establishments/addNeed', render);
+    }).catch(error => next(new Error(error)));
+  },
+  showNeed: (req, res, next) => {
+    let render = { a: { main: 'needs' } };
+    Models.Need.findOne({
+      where: { id: req.params.id },
+      include: {
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true,
+        include: {
+          model: Models.Candidate,
+          required: true,
+          include: {
+            model: Models.User,
+            attributes: ['id', 'firstName', 'lastName', 'birthday'],
+            on: {
+              '$candidates->Candidate.user_id$': {
+                [Op.col]: 'candidates->Candidate->User.id'
+              }
+            },
+            required: true
+          }
+        }
+      }
+    }).then(need => {
+      render.need = need;
+      return res.render('establishments/showNeed', render);
     }).catch(error => next(new Error(error)));
   },
   /**
@@ -71,7 +120,7 @@ module.exports = {
       if (filterQuery) filter.where.cat = filterQuery;
       Models.EstablishmentReference.findAll(filter).then((es) => {
         return res.status(200).json(es);
-      });
+      }).catch(error => next(new Error(error)));
     });
   },
   addApplication: (body, wish) => {
@@ -86,52 +135,127 @@ module.exports = {
     }
   },
   apiSearchCandidates: (req, res, next) => {
-    console.log(req.body);
-    Models.Establishment.findOne({
-      where: { id: req.params.id },
+    let query = {
+      where: { ref_es_id: req.es.finess },
+      attributes: { exclude: ['lat', 'lon'] },
       include: {
-        model: Models.ESAccount,
-        where: { user_id: req.user.id }
-      }
-    }).then(es => {
-      if (!es) return res.status(403).send(`You don't have access to this establishment.`);
-      Models.Application.findAll({
-        where: { ref_es_id: es.finess },
-        include: {
-          model: Models.Wish,
-          on: {
-            '$Application.wish_id$': {
-              [Op.col]: 'Wish.id'
-            }
-          },
-          where: {
-            [Op.and]: [
-              { contract_type: req.body.contractType },
-              Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
-                [Op.like]: `%${req.body.post}%`
-              })
-            ]
-          },
-          include: {
-            model: Models.Candidate,
-            attributes: { exclude: ['updatedAt', 'createdAt'] },
-            where: { is_available: true },
-            required: true,
-            include: {
-              model: Models.User,
-              attributes: { exclude: ['password', 'type', 'role', 'updatedAt', 'createdAt'] },
-              on: {
-                '$Wish->Candidate.user_id$': {
-                  [Op.col]: 'Wish->Candidate->User.id'
-                }
-              },
-              required: true
-            }
+        model: Models.Wish,
+        on: {
+          '$Application.wish_id$': {
+            [Op.col]: 'Wish.id'
           }
+        },
+        where: {
+          contract_type: req.body.contractType,
+          $and: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
+            [Op.like]: `%${req.body.post.toLowerCase()}%`
+          })
+        },
+        include: {
+          model: Models.Candidate,
+          attributes: { exclude: ['updatedAt', 'createdAt'] },
+          required: true,
+          include: [{
+            model: Models.User,
+            attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+            on: {
+              '$Wish->Candidate.user_id$': {
+                [Op.col]: 'Wish->Candidate->User.id'
+              }
+            },
+            required: true
+          }, {
+            model: Models.Experience,
+            as: 'experiences',
+          }, {
+            model: Models.CandidateDocument,
+            as: 'documents',
+            attributes: ['candidate_id', 'type'],
+          }, {
+            model: Models.CandidateFormation,
+            as: 'formations',
+          }]
         }
-      }).then(applications => {
-        return res.status(200).send(applications);
-      });
+      }
+    };
+
+    Models.Application.findAll(query).then(applications => {
+      return res.status(200).send(applications);
+    }).catch(error => next(new Error(error)));
+  },
+  apiGetCandidate: (req, res, next) => {
+    Models.Candidate.findOne({
+      where: { user_id: req.params.userId },
+      include: [{
+        model: Models.User,
+        attributes: { exclude: ['password'] },
+        on: {
+          '$Candidate.user_id$': {
+            [Op.col]: 'User.id'
+          }
+        },
+        required: true
+      }, {
+        model: Models.Experience,
+        as: 'experiences',
+        include: [{
+          model: Models.Service,
+          as: 'service'
+        }, {
+          model: Models.Post,
+          as: 'poste'
+        }]
+      }, {
+        model: Models.CandidateQualification,
+        as: 'qualifications'
+      }, {
+        model: Models.CandidateFormation,
+        as: 'formations'
+      }, {
+        model: Models.CandidateSkill,
+        as: 'skills'
+      }, {
+        model: Models.CandidateEquipment,
+        as: 'equipments'
+      }, {
+        model: Models.CandidateSoftware,
+        as: 'softwares'
+      }, {
+        model: Models.CandidateDocument,
+        as: 'documents'
+      }]
+    }).then(candidate => {
+      return res.status(200).send(candidate);
+    }).catch(error => next(new Error(error)));
+  },
+  apiAddNeed: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+    Models.Need.create({
+      name: req.body.name || 'Besoin sans nom',
+      es_id: req.params.esId,
+      contract_type: req.body.contractType,
+      post: req.body.post,
+      start: req.body.timeType.dateStart,
+      end: req.body.timeType.dateEnd,
+      createdBy: req.user.id
+    }).then(need => {
+      req.flash('success_msg', `Besoin ajouté avec succès.`);
+      if (!_.isNil(req.body.selectedCandidates)) {
+        req.body.selectedCandidates = JSON.parse(`[${req.body.selectedCandidates}]`);
+
+        for (let i = 0; i < req.body.selectedCandidates.length; i++) {
+          Models.NeedCandidate.create({
+            need_id: need.id,
+            candidate_id: req.body.selectedCandidates[i],
+            notified: req.body.notifyCandidates
+          });
+        }
+      }
+      res.status(201).send(need);
     });
   }
 };

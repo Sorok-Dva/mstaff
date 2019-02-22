@@ -67,6 +67,7 @@
       $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
         if (data.status === 'send') {
           $("#removeReadOnlyModal").modal('hide');
+          $('#removeROPassword').removeClass('error');
           let pinCode = prompt('Code PIN envoyé sur discord. Veuillez le saisir ici :');
           $.post('/back-office/impersonateRemoveReadOnly/validate', { pinCode, _csrf }, (response) => {
             if (response.authorized) {
@@ -82,7 +83,16 @@
             }
           });
         } else {
-
+          $('button#btnRemoveRO').prop('disabled', false);
+          $('#removeROPassword').addClass('error').val('');
+          if (data.error === 'invalid password') {
+            notification({
+              icon: 'exclamation-circle',
+              type: 'danger',
+              title: 'Désactivation de la lecture seule impossible :',
+              message: `Mauvais mot de passe.`
+            });
+          }
         }
       });
     };

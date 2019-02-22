@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" style="padding-top:15px">
   <div class="col-lg-4 col-md-5">
     <div class="card card-user">
       <div class="image"></div>
@@ -6,95 +6,53 @@
         <div class="author">
           <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
           <div class="rank-label-container">
-            <span class="label label-default rank-label">{{{candidateProfilePercentage candidate}}}</span>
+            <span class="label label-default rank-label">{{{candidateProfilePercentage this.candidate}}}</span>
           </div>
-          <h4 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
-            <a href="#"><small>{{age candidate.User.birthday 'years'}} ans</small></a>
+          <h4 class="title">{{this.candidate.User.firstName}} {{this.candidate.User.lastName}}<br />
+            <a href="#"><small>{{age this.candidate.User.birthday 'years'}} ans</small></a>
           </h4>
         </div>
         <p class="description text-center">
-          {{candidate.description}}
-          <a href="/profile/edit"><i class="fa fa-pencil"></i></a>
+          {{this.candidate.description}}
         </p>
       </div>
       <hr>
       <div class="text-center">
         <div class="row">
           <div class="col-md-5 col-md-offset-1">
-            <h5>{{date candidate.User.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
+            <h5>{{date this.candidate.User.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
           </div>
           <div class="col-md-6">
-            <h5>{{date candidate.User.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
+            <h5>{{date this.candidate.User.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
           </div>
         </div>
       </div>
       <hr>
       <div class="text-center">
         <div class="row">
-          <h5><i class="fa fa-phone"></i> {{candidate.User.phone}}</h5>
-          <h5><i class="fa fa-envelope"></i> {{candidate.User.email}}</h5>
-          <h5><i class="fas fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h5>
+          <h5><i class="fa fa-phone"></i> {{this.candidate.User.phone}}</h5>
+          <h5><i class="fa fa-envelope"></i> {{this.candidate.User.email}}</h5>
+          <h5><i class="fas fa-map-marked-alt"></i> {{this.candidate.User.postal_code}} {{this.candidate.User.town}}</h5>
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title"><i class="fa fa-film" aria-hidden="true"></i> Vidéo de présentation</h4>
-        {{#if candidate.video}}
-          <span id="removeVideo" class="btn btn-danger pull-right"><i class="fa fa-trash"></i></span>
-        {{else}}
-          <span id="removeVideo" style="display: none" class="btn btn-danger pull-rigt"><i class="fa fa-trash"></i></span>
-        {{/if}}
+    {{#if this.candidate.video}}
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title"><i class="fa fa-film" aria-hidden="true"></i> Vidéo de présentation</h4>
+        </div>
+        <div class="card-content text-center">
+          <video id="video-preview" style="width:inherit" controls>
+            <source src="/static/uploads/this.candidates/videos/{{this.candidate.video}}" id="videoSrc">
+          </video>
+        </div>
       </div>
-      <div class="card-content text-center">
-        <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/video">
-          <input id="file-upload" type="file" name="file" accept="video/mp4" />
-
-          <label for="file-upload" id="file-drag">
-            {{#if candidate.video}}
-              <video id="video-preview" style="width:inherit" controls>
-                <source src="/static/uploads/candidates/videos/{{candidate.video}}" id="videoSrc">
-              </video>
-            {{else}}
-              <video id="video-preview" style="display:none;width:inherit" controls>
-                <source src="" id="videoSrc">
-              </video>
-            {{/if}}
-            <div id="start" {{#if candidate.video}}style="display: none"{{/if}}>
-              <i class="fa fa-video-camera fa-3x" aria-hidden="true"></i>
-              <div>Choisir une vidéo ou déposer ici</div>
-              <div id="notvideo" style="color:red;display:none">Veuillez selectionner un fichier dans un format vidéo traditionnel.</div>
-              <span id="file-upload-btn" class="btn btn-primary">Selectionnez une vidéo</span>
-              <div id="messages"></div>
-            </div>
-            <div id="response" style="display:none">
-              <progress class="progress" id="file-progress" value="0">
-                <span>0</span>%
-              </progress>
-            </div>
-          </label>
-        </form>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title"><i class="fa fa-heart" aria-hidden="true"></i> Mes candidatures</h4>
-        <button type="button" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
-        </button>
-      </div>
-      <div class="card-content">
-        Soon
-      </div>
-    </div>
+    {{/if}}
   </div>
-    <div class="col-lg-8 col-md-7">
+  <div class="col-lg-8 col-md-7">
     <div class="card">
       <div class="card-header">
         <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Expériences</h4>
-        <a href="/formations" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
-        </a>
       </div>
       <div class="card-content table-responsive table-full-width">
         <table class="table table-hover">
@@ -107,8 +65,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if candidate.experiences}}
-            {{#each candidate.experiences as |xp|}}
+          {{#if this.candidate.experiences}}
+            {{#each this.candidate.experiences as |xp|}}
               <tr>
                 <td>
                   {{date xp.start 'MM/YYYY' }} -
@@ -135,14 +93,9 @@
         </table>
       </div>
     </div>
-  </div>
-  <div class="col-lg-8 col-md-7">
     <div class="card">
       <div class="card-header">
         <h4 class="card-title pull-left"><i class="fa fa-graduation-cap"></i> Formations</h4>
-        <a href="/formations" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
-        </a>
       </div>
       <div class="card-content table-responsive table-full-width">
         <table class="table table-hover">
@@ -153,8 +106,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if candidate.formations}}
-            {{#each candidate.formations as |diploma|}}
+          {{#if this.candidate.formations}}
+            {{#each this.candidate.formations as |diploma|}}
               <tr>
                 <td>
                   {{date diploma.start 'MM/YYYY' }} -
@@ -170,7 +123,7 @@
           {{/if}}
           </tbody>
         </table>
-        {{#if candidate.qualifications}}
+        {{#if this.candidate.qualifications}}
           <table class="table table-hover">
             <thead>
             <tr class="info">
@@ -179,8 +132,8 @@
             </tr>
             </thead>
             <tbody>
-            {{#if candidate.qualifications}}
-              {{#each candidate.qualifications as |diploma|}}
+            {{#if this.candidate.qualifications}}
+              {{#each this.candidate.qualifications as |diploma|}}
                 <tr>
                   <td>
                     {{date diploma.start 'MM/YYYY' }} -
@@ -195,14 +148,9 @@
         {{/if}}
       </div>
     </div>
-  </div>
-  <div class="col-lg-8 col-md-7">
     <div class="card">
       <div class="card-header">
         <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Compétences</h4>
-        <a href="/knowledges" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
-        </a>
       </div>
       <div class="card-content table-responsive table-full-width">
         <table class="table table-hover">
@@ -213,8 +161,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if candidate.skills}}
-            {{#each candidate.skills as |knowledge|}}
+          {{#if this.candidate.skills}}
+            {{#each this.candidate.skills as |knowledge|}}
               <tr>
                 <td>{{knowledge.name}}</td>
                 <td>
@@ -249,8 +197,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if candidate.equipments}}
-            {{#each candidate.equipments as |equipment|}}
+          {{#if this.candidate.equipments}}
+            {{#each this.candidate.equipments as |equipment|}}
               <tr>
                 <td>{{equipment.name}}</td>
                 <td>
@@ -285,8 +233,8 @@
           </tr>
           </thead>
           <tbody>
-          {{#if candidate.softwares}}
-            {{#each candidate.softwares as |software|}}
+          {{#if this.candidate.softwares}}
+            {{#each this.candidate.softwares as |software|}}
               <tr>
                 <td>{{software.name}}</td>
                 <td>
@@ -317,4 +265,3 @@
     </div>
   </div>
 </div>
-<script src="/static/assets/dist/js/uploadVideo.min.js"></script>

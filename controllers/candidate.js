@@ -1,4 +1,5 @@
 const { check, validationResult } = require('express-validator/check');
+const { Op } = require('sequelize');
 const _ = require('lodash');
 const fs = require('fs');
 const { Sequelize, Op } = require('sequelize');
@@ -97,44 +98,49 @@ module.exports = {
     });
   },
   getProfile: (req, res, next) => {
-    if (req.user.type === 'candidate') {
-      Models.User.findOne({
-        where: { id: req.user.id },
+    Models.Candidate.findOne({
+      where: { user_id: req.user.id },
+      include: [{
+        model: Models.User,
         attributes: { exclude: ['password'] },
+        on: {
+          '$Candidate.user_id$': {
+            [Op.col]: 'User.id'
+          }
+        },
+        required: true
+      }, {
+        model: Models.Experience, // Experiences Associations (user.candidate.experiences)
+        as: 'experiences',
         include: [{
-          model: Models.Candidate, // Candidate Associations (user.candidate)
-          as: 'candidate',
-          include: [{
-            model: Models.Experience, // Experiences Associations (user.candidate.experiences)
-            as: 'experiences',
-            include: [{
-              model: Models.Service,
-              as: 'service'
-            }, {
-              model: Models.Post,
-              as: 'poste'
-            }] // Service & Post Associations (user.candidate.experiences.service|post)
-          }, {
-            model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
-            as: 'qualifications'
-          }, {
-            model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
-            as: 'formations'
-          }, {
-            model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
-            as: 'skills'
-          }, {
-            model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
-            as: 'equipments'
-          }, {
-            model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
-            as: 'softwares'
-          }]
-        }]
-      }).then(usr => {
-        return res.render('candidates/profile', { usr, a: { main: 'profile' } })
-      }).catch(error => next(new Error(error)));
-    }
+          model: Models.Service,
+          as: 'service'
+        }, {
+          model: Models.Post,
+          as: 'poste'
+        }] // Service & Post Associations (user.candidate.experiences.service|post)
+      }, {
+        model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
+        as: 'qualifications'
+      }, {
+        model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
+        as: 'formations'
+      }, {
+        model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
+        as: 'skills'
+      }, {
+        model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
+        as: 'equipments'
+      }, {
+        model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
+        as: 'softwares'
+      }, {
+        model: Models.CandidateDocument, // Softwares Associations (user.candidate.softwares)
+        as: 'documents'
+      }]
+    }).then(candidate => {
+      return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
+    }).catch(error => next(new Error(error)));
   },
   getEditProfile: (req, res, next) => {
     Models.User.findOne({

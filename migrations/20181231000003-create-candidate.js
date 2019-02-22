@@ -40,6 +40,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      is_available: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: 0
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

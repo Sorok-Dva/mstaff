@@ -1,26 +1,52 @@
+<style>
+  .list-inline>li {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+</style>
 {{#each this}}
   <div class="col-md-3">
     <div class="card card-user">
       <div class="image">
-        <span class="{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available pull-left"></span>
+        <div class="pull-left">
+          <span class="{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available pull-left"></span>
+          <span class="text-{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
+            {{#if this.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
+          </span>
+        </div>
         <div class="actions pull-right">
-          <i class="fal fa-archive"></i>
-          <i class="fal fa-star"></i>
+          <ul class="list-inline">
+            <li>
+              <i class="selectCandidate fal fa-square" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
+              <i class="unselectCandidate fal fa-check-square" data-id="{{this.Wish.Candidate.id}}" onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: lightgreen"></i>
+            </li>
+            <li>
+              <i class="fal fa-star favCandidate" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"></i>
+            </li>
+            <li>
+              <i class="fal fa-archive"></i>
+            </li>
+          </ul>
+
         </div>
       </div>
       <div class="content">
         <div class="author">
           <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
           <div class="rank-label-container">
-            <span class="label label-default rank-label">40%</span>
+            <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate}}}</span>
           </div>
           <h5 class="title">{{this.Wish.Candidate.User.firstName}} {{this.Wish.Candidate.User.lastName}},
             <small>{{age this.Wish.Candidate.User.birthday 'years'}} ans</small>,
             <small><b><i class="fal fa-map-marker-alt"></i> {{this.Wish.Candidate.User.town}}</b></small>
           </h5>
+          <h5 class="text-muted">
+            <i class="fal fa-sun"{{#if this.Wish.day_time}} style="color: #04e900"{{/if}}></i>
+            <i class="fal fa-moon"{{#if this.Wish.night_time}} style="color: #04e900"{{/if}}></i>
+          </h5>
         </div>
         <div class="text-center">
-          <hr style="border-color: lightgrey">
+          {{!--<hr style="border-color: lightgrey">
           <div class="row" style="display: flex;justify-content: center;">
             <div class="col-md-2">
               <i class="fal fa-phone fa-2x" style="color:lightgreen"></i>
@@ -32,13 +58,13 @@
               <i class="fal fa-video fa-2x" style="color:deepskyblue"></i>
             </div>
           </div>
-          <hr style="border-color: lightgrey">
+          <hr style="border-color: lightgrey">--}}
           <div class="row">
             {{!--<h5><i class="fal fa-phone"></i> {{this.Wish.Candidate.User.phone}}</h5>
             <h5><i class="fal fa-envelope"></i> {{this.Wish.Candidate.User.email}}</h5>--}}
-            <div class="col-md-12">Accéder au profil complet</div>
+            <div class="col-md-12"><button class="btn btn-info" onclick="showCandidateProfile({{this.Wish.Candidate.User.id}})">Accéder au profil complet</button></div>
             <div class="col-md-12">
-              <p class="text-muted"><small>Candidature ajoutée à votre établissement le {{date this.createdAt 'DD/MM/YYYY'}}</small></p>
+              <p class="text-muted"><small>Inscrit le {{date this.createdAt 'DD/MM/YYYY'}}</small></p>
             </div>
           </div>
         </div>
@@ -46,3 +72,17 @@
     </div>
   </div>
 {{/each}}
+{{#unless this}}
+  <h3>Aucun candidats ne répond à vos critères, essayez une nouvelle recherche.</h3>
+{{/unless}}
+<script>
+    {{#if this}}
+      $('button#saveNeed').removeAttr('disabled').show();
+    {{else}}
+      $('button#saveNeed').attr('disabled', 'disabled').hide();
+    {{/if}}
+  need.selectedCandidates.forEach(e => {
+    $(`i.selectCandidate[data-id="${e}"]`).hide();
+    $(`i.unselectCandidate[data-id="${e}"]`).show();
+  })
+</script>

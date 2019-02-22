@@ -68,6 +68,13 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: true
       },
+      renewed: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
+      last_renew: {
+        type: Sequelize.DATE,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

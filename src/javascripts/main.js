@@ -22,7 +22,7 @@ jQuery.each([ 'put', 'patch', 'delete' ], function ( i, method ) {
 let notification = (opts) => {
   $.notify({
     // options
-    icon: `fa fa-${opts.icon}`,
+    icon: `fal fa-${opts.icon}`,
     title: `<b>${opts.title}</b>`,
     message: `${opts.message}`,
   }, {

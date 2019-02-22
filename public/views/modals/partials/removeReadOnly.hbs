@@ -20,3 +20,12 @@
     Valider
   </button>
 </div>
+<script>
+  $('input#removeROPassword').on('keydown', function(e) {
+    if (e.which === 13) {
+      e.preventDefault();
+      $('button#btnRemoveRO').prop('disabled', true);
+      removeRO();
+    }
+  });
+</script>
