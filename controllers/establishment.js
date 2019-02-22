@@ -281,14 +281,50 @@ module.exports = {
     }
 
     Models.NeedCandidate.findOne({
-      where: { need_id: req.params.id, candidate_id: req.params.candidateId }
+      where: { need_id: req.params.id, candidate_id: req.params.candidateId },
+      include: [{
+        model: Models.Need,
+        required: true,
+        on: {
+          'id': {
+            [Op.col]: 'NeedCandidate.need_id'
+          }
+        },
+        include: {
+          model: Models.Establishment,
+          required: true
+        }
+      }, {
+        model: Models.Candidate,
+        required: true,
+        include: {
+          model: Models.User,
+          required: true,
+          on: {
+            '$Candidate.user_id$': {
+              [Op.col]: 'Candidate->User.id'
+            }
+          },
+          attributes: ['id']
+        }
+      }]
     }).then(needCandidate => {
-      if (_.isNil(needCandidate)) return res.json(200).send('No candidate found');
-      needCandidate.status = 'notified';
-      needCandidate.notified = true;
-      needCandidate.save().then(result => {
-        return res.status(201).send(result);
-      })
+      if (_.isNil(needCandidate)) res.json(200).send('No candidate found');
+      else {
+        Models.Notification.create({
+          fromUser: req.user.id,
+          fromEs: needCandidate.Need.Establishment.id,
+          to: needCandidate.Candidate.User.id,
+          title: 'Un établissement est intéressé par votre profil !',
+          message: req.body.message
+        }).then(notification => {
+          needCandidate.status = 'notified';
+          needCandidate.notified = true;
+          needCandidate.save().then(result => {
+            res.status(201).send(result);
+          })
+        })
+      }
     })
   },
 };

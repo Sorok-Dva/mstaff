@@ -330,7 +330,7 @@
       }
     }, () => {
       $('button#notifyCandidate').click(function() {
-        let message = $('textarea.notifyMessage').val();
+        let message = $('textarea#notifyMessage').val();
         $.post(`/api/es/{{need.es_id}}/need/${needId}/notify/candidate/${cID}`, { _csrf, message }, result => {
           if (result.notified) {
             $('#showNotifyCandidateModal').modal('hide');
