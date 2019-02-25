@@ -4,6 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    categoriesPS_id: {
+      type: DataTypes.INTEGER
     }
   }, {});
   Service.associate = function (models) {

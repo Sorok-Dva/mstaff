@@ -405,6 +405,25 @@ let addWish = () => {
   }
 };
 
+let deactivateChoice = (disable) => {
+  Object.keys(disable).forEach( key => {
+    if ($.isNumeric(parseInt(key))){
+      let value = disable[key];
+      value.disabled = true;
+    }
+  });
+};
+
+let activateChoice = (activate) => {
+  Object.keys(activate).forEach( key => {
+    if ($.isNumeric(parseInt(key))){
+      let value = activate[key];
+      console.log(value);
+      // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+    }
+  });
+};
+
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
   highlightLabel(slider.noUiSlider.get());
@@ -440,16 +459,46 @@ $(document).ready(function () {
     alert('Geolocation is not supported by this browser.');
   }
 
+  let selectPostType = $('#selectPostType');
+  let selectServiceType = $('#selectServiceType');
 
-  $('#selectPostType').select2();
-  $('#selectPostType').on('change', e => {
-    let postType = $('#selectPostType').select2('data');
-    if (!application.postType)
-      application.postType = [];
+  selectPostType.select2({
+    maximumSelectionLength: 1
+  });
+  selectServiceType.select2();
+
+  selectPostType.on('change', () => {
+    let postType = selectPostType.select2('data');
+    let selectedCategorie = $('#selectPostType option:selected').attr('data-categorie');
+    let disableServices = $(`#selectServiceType [data-categorie!="${selectedCategorie}"]`);
+    let disabledChoice = $('#selectServiceType option:disabled');
+
+    application.postType = [];
     postType.forEach((post) => {
       application.postType.push(post.text);
-    })
+    });
+    if (postType.length !== 0){
+      selectServiceType.prop('disabled', false);
+      deactivateChoice(disableServices);
+    }
+    else {
+      activateChoice(disabledChoice);
+      selectServiceType.val(null).trigger('change');
+      selectServiceType.prop('disabled', true);
+      application.serviceType = [];
+    }
+
   });
+
+  selectServiceType.on('change', () => {
+    let serviceType = selectServiceType.select2('data');
+    application.serviceType = [];
+    serviceType.forEach((service) => {
+      application.serviceType.push(service.text);
+    });
+  });
+
+
 
   $('#geolocationFilter').select2({ dropdownAutoWidth: true });
   $('#geolocationFilter').on('select2:select', e => {
