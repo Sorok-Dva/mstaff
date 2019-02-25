@@ -5,6 +5,12 @@ const UserController = require('../controllers/user');
 const EstablishmentController = require('../controllers/establishment');
 
 /**
+ * @Route('/select/es') GET;
+ * Show Select Establishments Page
+ */
+router.get('/select/es', UserController.ensureIsEs, EstablishmentController.getSelectEs);
+
+/**
  * @Route('/needs') GET;
  * Show Index page
  */

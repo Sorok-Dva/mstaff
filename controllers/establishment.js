@@ -42,6 +42,18 @@ module.exports = {
       }
     }
   },
+  getSelectEs: (req, res, next) => {
+    Models.ESAccount.findAll({
+      where: { user_id: req.user.id },
+      include: {
+        model: Models.Establishment,
+        required: true
+      }
+    }).then(esAccounts => {
+      req.session.currentEs = esAccounts[0].es_id;
+      res.render('establishments/selectEs', { esAccounts });
+    }).catch(error => next(new Error(error)));
+  },
   getNeeds: (req, res, next) => {
     res.render('establishments/needs');
   },
@@ -56,7 +68,7 @@ module.exports = {
     let render = { a: { main: 'needs' } };
     Models.Need.findOne({
       where: { id: req.params.id },
-      include: {
+      include: [{
         model: Models.NeedCandidate,
         as: 'candidates',
         required: true,
@@ -74,7 +86,10 @@ module.exports = {
             required: true
           }
         }
-      }
+      }, {
+        model: Models.Establishment,
+        required: true
+      }]
     }).then(need => {
       render.need = need;
       return res.render('establishments/showNeed', render);
@@ -257,5 +272,59 @@ module.exports = {
       }
       res.status(201).send(need);
     });
-  }
+  },
+  apiNotifyCandidate: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.NeedCandidate.findOne({
+      where: { need_id: req.params.id, candidate_id: req.params.candidateId },
+      include: [{
+        model: Models.Need,
+        required: true,
+        on: {
+          'id': {
+            [Op.col]: 'NeedCandidate.need_id'
+          }
+        },
+        include: {
+          model: Models.Establishment,
+          required: true
+        }
+      }, {
+        model: Models.Candidate,
+        required: true,
+        include: {
+          model: Models.User,
+          required: true,
+          on: {
+            '$Candidate.user_id$': {
+              [Op.col]: 'Candidate->User.id'
+            }
+          },
+          attributes: ['id']
+        }
+      }]
+    }).then(needCandidate => {
+      if (_.isNil(needCandidate)) res.json(200).send('No candidate found');
+      else {
+        Models.Notification.create({
+          fromUser: req.user.id,
+          fromEs: needCandidate.Need.Establishment.id,
+          to: needCandidate.Candidate.User.id,
+          title: 'Un établissement est intéressé par votre profil !',
+          message: req.body.message
+        }).then(notification => {
+          needCandidate.status = 'notified';
+          needCandidate.notified = true;
+          needCandidate.save().then(result => {
+            res.status(201).send(result);
+          })
+        })
+      }
+    })
+  },
 };

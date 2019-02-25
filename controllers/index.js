@@ -7,7 +7,11 @@ module.exports = {
         return res.redirect('/profile')
       }
       if (req.user && req.user.type === 'es') {
-        return res.redirect('/needs')
+        if (req.session.currentEs) {
+          return res.redirect('/needs')
+        } else {
+          return res.redirect('/select/es');
+        }
       }
       if (req.user && req.user.type === 'admin') {
         return res.redirect('/back-office')
