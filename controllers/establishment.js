@@ -369,18 +369,29 @@ module.exports = {
       return res.status(400).send({ body: req.body, errors: errors.array() });
     }
 
-    Models.FavoriteCandidate.findOrCreate({
-      where: {
-        es_id: req.params.esId,
-        candidate_id: req.params.candidateId,
-        added_by: req.user.id
-      }
-    }).spread((fav, created) => {
-      if (created) {
-        res.status(200).json({ status: 'Created', fav });
-      } else {
-        res.status(200).json({ status: 'Already exists', fav });
-      }
-    });
+    let where = {
+      es_id: req.params.esId,
+      candidate_id: req.params.candidateId,
+      added_by: req.user.id
+    };
+
+    switch (req.params.action) {
+      case 'fav':
+        Models.FavoriteCandidate.findOrCreate({ where }).spread((fav, created) => {
+          if (created) {
+            res.status(201).send({ status: 'Created', fav });
+          } else {
+            res.status(200).send({ status: 'Already exists', fav });
+          }
+        });
+        break;
+      case 'unfav':
+        Models.FavoriteCandidate.findOne({ where }).then(fav => {
+          fav.destroy().then(result => {
+            res.status(200).send({ status: 'deleted', result })
+          })
+        });
+        break;
+    }
   },
 };

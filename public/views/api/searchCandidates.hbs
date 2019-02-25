@@ -3,6 +3,9 @@
     padding-right: 0 !important;
     padding-left: 0 !important;
   }
+  .fa-1d3x {
+    font-size: 1.3em;
+  }
 </style>
 {{#each this}}
   <div class="col-md-3">
@@ -10,24 +13,20 @@
       <div class="image">
         <div class="pull-left">
           <span class="{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available pull-left"></span>
-          <span class="text-{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
-            {{#if this.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
+          <span class="pull-right" style="margin: 5px">
+            <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
+            <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
           </span>
         </div>
         <div class="actions pull-right">
           <ul class="list-inline">
             <li>
-              <i class="selectCandidate fal fa-square" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
-              <i class="unselectCandidate fal fa-check-square" data-id="{{this.Wish.Candidate.id}}" onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: lightgreen"></i>
+              <i class="fal fa-archive fa-1d3x"></i>
             </li>
             <li>
-              <i class="fal fa-star favCandidate" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"></i>
-            </li>
-            <li>
-              <i class="fal fa-archive"></i>
+              <i class="fal fa-star favCandidate fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"></i>
             </li>
           </ul>
-
         </div>
       </div>
       <div class="content">
@@ -36,6 +35,11 @@
           <div class="rank-label-container">
             <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate}}}</span>
           </div>
+          <h6>
+            <span class="text-{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
+              {{#if this.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
+            </span>
+          </h6>
           <h5 class="title">{{this.Wish.Candidate.User.firstName}} {{this.Wish.Candidate.User.lastName}},
             <small>{{age this.Wish.Candidate.User.birthday 'years'}} ans</small>,
             <small><b><i class="fal fa-map-marker-alt"></i> {{this.Wish.Candidate.User.town}}</b></small>

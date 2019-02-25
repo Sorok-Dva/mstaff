@@ -139,7 +139,19 @@
           $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
           need.favoriteCandidates.push(id);
           $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
-            console.log(data);
+            if (data.status === 'Created') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat ajouté au favoris.'
+              })
+            } else {
+              notification({
+                icon: 'exclamation-circle',
+                type: 'warning',
+                title: 'Ce candidat est déjà dans vos favoris.'
+              })
+            }
           });
         }
         break;
@@ -165,6 +177,15 @@
         if (index !== -1) {
           $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
           need.favoriteCandidates.splice(index, 1);
+          $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
+            if (data.status === 'deleted') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat supprimé de vos favoris.'
+              })
+            }
+          });
         }
         break;
     }
