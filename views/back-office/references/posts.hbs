@@ -10,7 +10,51 @@
                         title: 'Ajouter un poste',
                         modal: 'back-office/addPost'
                     }, () => {
-
+                        $('button#validatePost').click(function () {
+                             if (($('input#postValue').val() != '') && ($('select#postCategory').val() != '')) {
+                                 let _csrf = $('#csrfToken').val();
+                                 let promptInput = $('input#postValue').val();
+                                 let categoryInput = $('select#postCategory').val();
+                                 $.post(`/api/back-office/posts/`, {
+                                     promptInput,
+                                     categoryInput,
+                                     _csrf
+                                 }, (response) => {
+                                     if (response.status === 'Already exists') {
+                                        notification({
+                                            icon: 'exclamation',
+                                            type: 'danger',
+                                            title: 'Ce poste existe déjà.',
+                                            message: ``
+                                            });
+                                    }
+                                     else {
+                                         table.bootstrapTable('insertRow', {
+                                             index: 0,
+                                             row: {
+                                              id: response.post.id,
+                                              name: response.post.name
+                                         }
+                                         })
+                                     }
+                                 });
+                                 $('#addPostModal').modal('hide');
+                             }
+                             else {
+                                if ($('input#postValue').val() == '') {
+                                    $('input#postValue').addClass('error');
+                                    setTimeout(function() {
+                                        $('input#postValue').removeClass('error');
+                                    }, 750)
+                                }
+                                if ($('select#postCategory').val() == '') {
+                                    $('select#postCategory').addClass('error');
+                                    setTimeout(function() {
+                                        $('select#postCategory').removeClass('error');
+                                    }, 750)
+                                }
+                             }
+                        })
                     })">
                     <i class="fal fa-plus"></i></a>
                 </div>
@@ -20,6 +64,7 @@
                     <th data-field="state" data-checkbox="true"></th>
                     <th data-field="id" class="text-center">ID</th>
                     <th data-field="name" data-sortable="true">Nom</th>
+                    <th data-field="category" data-sortable="true">Categorie</th>
 
                     <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
                         data-formatter="operateFormatter">Actions</th>
@@ -119,32 +164,4 @@
             table.bootstrapTable('resetView');
         });
     });
-    function addPost()
-    {
-        let addPostModalObject = {
-
-        }
-     //   let _csrf = $('#csrfToken').val();
-     //   let promptInput = prompt('Ajouter un poste :');
-     //   if (promptInput) {
-     //       $.post(`/api/back-office/posts/`, {
-     //           promptInput,
-     //           _csrf
-     //       }, (response) => {
-     //           if (response.status === "Already exists")
-     //           {
-     //               alert("Ce poste existe déjà");
-     //           }
-     //           else {
-     //               table.bootstrapTable('insertRow', {
-     //                   index: 0,
-     //                   row: {
-     //                       id: response.post.id,
-     //                       name: response.post.name
-     //                   }
-     //               });
-     //           }
-     //       });
-     //   }
-    }
 </script>
