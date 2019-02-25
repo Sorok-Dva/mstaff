@@ -3,6 +3,7 @@ const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 
 const sequelize = require('../bin/sequelize');
+const mailer = require('../bin/mailer');
 const Models = require('../models/index');
 
 module.exports = {
@@ -91,6 +92,10 @@ module.exports = {
         required: true
       }]
     }).then(need => {
+      if (_.isNil(need)) {
+        req.flash('error', 'Ce besoin n\'existe pas.');
+        return res.redirect('/needs');
+      }
       render.need = need;
       return res.render('establishments/showNeed', render);
     }).catch(error => next(new Error(error)));
@@ -273,7 +278,7 @@ module.exports = {
       res.status(201).send(need);
     });
   },
-  apiNotifyCandidate: (req, res, next) => {
+  apiNeedCandidate: (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -305,25 +310,53 @@ module.exports = {
               [Op.col]: 'Candidate->User.id'
             }
           },
-          attributes: ['id']
+          attributes: ['id', 'email']
         }
       }]
     }).then(needCandidate => {
       if (_.isNil(needCandidate)) res.json(200).send('No candidate found');
       else {
-        Models.Notification.create({
-          fromUser: req.user.id,
-          fromEs: needCandidate.Need.Establishment.id,
-          to: needCandidate.Candidate.User.id,
-          title: 'Un établissement est intéressé par votre profil !',
-          message: req.body.message
-        }).then(notification => {
-          needCandidate.status = 'notified';
-          needCandidate.notified = true;
-          needCandidate.save().then(result => {
-            res.status(201).send(result);
-          })
-        })
+        switch (req.params.action) {
+          case 'notify':
+            Models.Notification.create({
+              fromUser: req.user.id,
+              fromEs: needCandidate.Need.Establishment.id,
+              to: needCandidate.Candidate.User.id,
+              title: 'Un établissement est intéressé par votre profil !',
+              message: req.body.message
+            }).then(notification => {
+              needCandidate.status = 'notified';
+              needCandidate.notified = true;
+              needCandidate.save().then(result => {
+                mailer.sendEmail({
+                  to: needCandidate.Candidate.User.email,
+                  subject: 'Un établissement est intéressé par votre profil !',
+                  template: 'candidate/es_notified',
+                  context: {
+                    notification,
+                    needCandidate
+                  }
+                });
+                res.status(201).send(result);
+              })
+            });
+            break;
+          case 'select':
+            needCandidate.status = 'selected';
+            needCandidate.notified = true;
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
+          case 'delete':
+            needCandidate.status = 'deleted';
+            needCandidate.notified = false;
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
+          default: return res.status(400).send('no action provided');
+        }
       }
     })
   },
