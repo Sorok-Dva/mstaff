@@ -60,6 +60,7 @@
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
+  let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
   let need = { selectedCandidates: [], favoriteCandidates: []};
   need.firstSearch = true;
@@ -136,10 +137,10 @@
       case 'favorite':
         if (need.favoriteCandidates.indexOf(id) === -1) {
           $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
-          // $(`i.unfavCandidate[data-id="${id}"]`).show();
           need.favoriteCandidates.push(id);
-          /*$('#selectedEsCount').html(need.selectedCandidates.length);
-          $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
+          $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
+            console.log(data);
+          });
         }
         break;
     }

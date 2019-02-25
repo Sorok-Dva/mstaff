@@ -362,4 +362,25 @@ module.exports = {
       }
     })
   },
+  apiFavCandidate: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.FavoriteCandidate.findOrCreate({
+      where: {
+        es_id: req.params.esId,
+        candidate_id: req.params.candidateId,
+        added_by: req.user.id
+      }
+    }).spread((fav, created) => {
+      if (created) {
+        res.status(200).json({ status: 'Created', fav });
+      } else {
+        res.status(200).json({ status: 'Already exists', fav });
+      }
+    });
+  },
 };

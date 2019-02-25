@@ -21,4 +21,9 @@ router.post('/:esId/need/:id/:action/candidate/:candidateId',
   EstablishmentController.apiNeedCandidate
 );
 
+router.post('/:esId/candidate/:candidateId/:action',
+  UserController.ensureIsEs && EstablishmentController.verifyEsAccess,
+  EstablishmentController.apiFavCandidate
+);
+
 module.exports = router;
