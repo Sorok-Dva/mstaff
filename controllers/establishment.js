@@ -158,8 +158,10 @@ module.exports = {
     let query = {
       where: { ref_es_id: req.es.finess },
       attributes: { exclude: ['lat', 'lon'] },
+      group: ['Wish->Candidate.id'],
       include: {
         model: Models.Wish,
+        required: true,
         on: {
           '$Application.wish_id$': {
             [Op.col]: 'Wish.id'

@@ -44,7 +44,7 @@
     </div>
   </div>
 </div>
-<div class="row" style="padding-top: 15px">
+<div class="row" style="padding-top: 30px">
   <div id="searchResult" class="col-md-12"></div>
 </div>
 <div class="modal modal-xs fade" id="candidateProfileModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -83,12 +83,14 @@
   });
 
   $('#searchCandidates').on('click', function() {
+    need.post = $('input#post').val();
     searchCandidates();
   });
 
   $('input#post').on('keydown', function(e) {
     if (e.which === 13) {
       e.preventDefault();
+      need.post = $('input#post').val();
       searchCandidates();
     }
   });
@@ -97,7 +99,7 @@
     if ($('input#post').val().length < 2) {
       return false;
     }
-    need.post = $('input#post').val();
+    need.post = need.post || $('input#post').val();
     if (need.firstSearch) {
       createModal({
         id: 'contractType',
