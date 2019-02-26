@@ -63,7 +63,16 @@ migrate.users = () => {
             data.createdAt = candidate.created_at || new Date();
             data.updatedAt = candidate.updated_at || new Date();
           }
-          con.query('INSERT INTO Users SET ?', data);
+          con.query('INSERT INTO Users SET ?', data, (err, res) => {
+            if (err) {
+              if (err.code === 'ER_DUP_ENTRY') {
+                console.log('[DUPLICATION] ', err.sqlMessage)
+              }
+              if (err.code === 'ER_BAD_NULL_ERROR') {
+                console.log('[MISSING DATA] ', err.sqlMessage, err.sql)
+              }
+            }
+          });
         });
       }
     });
@@ -74,6 +83,7 @@ let userType = (type) => {
   if (type === 'CANDIDAT') return 'candidate';
   if (type === 'ETABLISSEMENT') return 'es';
   if (type === 'PERSONNEL_INTERNE') return '';
+  console.log(type); return '';
 };
 
 migrate.users();
