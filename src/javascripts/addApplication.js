@@ -405,24 +405,16 @@ let addWish = () => {
   }
 };
 
-let deactivateChoice = (disable) => {
-  Object.keys(disable).forEach( key => {
-    if ($.isNumeric(parseInt(key))){
-      let value = disable[key];
-      value.disabled = true;
-    }
-  });
-};
-
-let activateChoice = (activate) => {
-  Object.keys(activate).forEach( key => {
-    if ($.isNumeric(parseInt(key))){
-      let value = activate[key];
-      console.log(value);
-      // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-    }
-  });
-};
+// let activateChoice = (activate) => {
+//   Object.keys(activate).forEach( key => {
+//     if ($.isNumeric(parseInt(key))){
+//       let value = activate[key];
+//       console.log(value);
+//       $(value).prop('disabled', false);
+//       // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+//     }
+//   });
+// };
 
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
@@ -469,23 +461,26 @@ $(document).ready(function () {
 
   selectPostType.on('change', () => {
     let postType = selectPostType.select2('data');
-    let selectedCategorie = $('#selectPostType option:selected').attr('data-categorie');
-    let disableServices = $(`#selectServiceType [data-categorie!="${selectedCategorie}"]`);
-    let disabledChoice = $('#selectServiceType option:disabled');
+    let selectedCategorie = selectPostType.find(':selected').attr('data-categorie');
+    let wrongServices = $(`#selectServiceType [data-categorie!="${selectedCategorie}"]`);
+    let disabledChoices = $('#selectServiceType option:disabled');
 
     application.postType = [];
     postType.forEach((post) => {
       application.postType.push(post.text);
     });
-    if (postType.length !== 0){
-      selectServiceType.prop('disabled', false);
-      deactivateChoice(disableServices);
+    if (postType.length === 0){
+      console.log('ON REACTIVE !');
+      console.log(disabledChoices);
+      // disabledChoices.prop('disabled', false);
+      // selectServiceType.val(null).trigger('change');
+      // selectServiceType.prop('disabled', true);
+      application.serviceType = [];
     }
     else {
-      activateChoice(disabledChoice);
-      selectServiceType.val(null).trigger('change');
-      selectServiceType.prop('disabled', true);
-      application.serviceType = [];
+      console.log(wrongServices);
+      wrongServices.hide();
+      // selectServiceType.prop('disabled', false);
     }
 
   });

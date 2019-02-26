@@ -1,4 +1,4 @@
-    <style>
+ <style>
     .checkbox label::before {
         content: "";
         margin-top: 20px;
@@ -176,7 +176,7 @@
                             <div class="col-sm-9">
                                 <div class="form-group col-sm-12" style="margin-top: 25px">
                                     <label for="selectServiceType">
-                                        <select class="form-control" id="selectServiceType" disabled="disabled" multiple="multiple">
+                                        <select class="form-control" id="selectServiceType"  multiple="multiple">
                                             {{#each services as |service|}}
                                                 <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
                                             {{/each}}
