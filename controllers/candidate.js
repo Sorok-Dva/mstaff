@@ -590,12 +590,15 @@ module.exports = {
         res.status(201).send({ wish });
         req.body.es = JSON.parse(`[${req.body.es}]`);
         for (let i = 0; i < req.body.es.length; i++) {
-          Models.Application.create({
-            name: req.body.name || 'Candidature sans nom',
-            wish_id: wish.id,
-            candidate_id: candidate.id,
-            ref_es_id: req.body.es[i],
-            new: true
+          Models.Establishment.findOne({ where: { finess: req.body.es[i] } }).then(es => {
+            Models.Application.create({
+              name: req.body.name || 'Candidature sans nom',
+              wish_id: wish.id,
+              candidate_id: candidate.id,
+              ref_es_id: req.body.es[i],
+              es_id: es.id,
+              new: true
+            });
           });
         }
       });
