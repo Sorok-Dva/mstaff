@@ -2,7 +2,6 @@ const { check, validationResult } = require('express-validator/check');
 const { Op } = require('sequelize');
 const _ = require('lodash');
 const fs = require('fs');
-
 const Models = require('../models/index');
 
 module.exports = {
@@ -86,6 +85,9 @@ module.exports = {
         return res.status(400).send('Document of same type with same name already exist.')
       }
     });
+  },
+  uploadAvatar: (req, res, next) => {
+    console.log(req.file);
   },
   getProfile: (req, res, next) => {
     Models.Candidate.findOne({
@@ -523,12 +525,15 @@ module.exports = {
         res.status(201).send({ wish });
         req.body.es = JSON.parse(`[${req.body.es}]`);
         for (let i = 0; i < req.body.es.length; i++) {
-          Models.Application.create({
-            name: req.body.name || 'Candidature sans nom',
-            wish_id: wish.id,
-            candidate_id: candidate.id,
-            ref_es_id: req.body.es[i],
-            new: true
+          Models.Establishment.findOne({ where: { finess: req.body.es[i] } }).then(es => {
+            Models.Application.create({
+              name: req.body.name || 'Candidature sans nom',
+              wish_id: wish.id,
+              candidate_id: candidate.id,
+              ref_es_id: req.body.es[i],
+              es_id: es.id,
+              new: true
+            });
           });
         }
       });
