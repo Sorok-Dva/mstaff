@@ -19,7 +19,8 @@
                                      promptInput,
                                      categoryInput,
                                      _csrf
-                                 }, (response) => {
+                                 }
+                                 , (response) => {
                                      if (response.status === 'Already exists') {
                                         notification({
                                             icon: 'exclamation',
@@ -34,8 +35,14 @@
                                              row: {
                                               id: response.post.id,
                                               name: response.post.name
-                                         }
-                                         })
+                                            }
+                                         });
+                                         notification({
+                                            icon: 'check-circle',
+                                            type: 'success',
+                                            title: 'Poste créé.',
+                                            message: ``
+                                         });
                                      }
                                  });
                                  $('#addPostModal').modal('hide');
@@ -120,6 +127,12 @@
                                 let id = $(e.currentTarget).closest('tr').attr('data-id');
                                 $('#editPostModal').modal('hide');
                                 $(`tr[data-id="${id}"] td`).last().prev().prev().text(promptInput);
+                                notification({
+                                    icon: 'check-circle',
+                                    type: 'success',
+                                    title: 'Poste modifié.',
+                                    message: ``
+                                });
                             });
                         }
                         else {
@@ -153,6 +166,12 @@
                             table.bootstrapTable('remove', {
                                 field: 'id',
                                 values: [row.id]
+                            });
+                            notification({
+                                icon: 'check-circle',
+                                type: 'success',
+                                title: 'Poste supprimé.',
+                                message: ``
                             });
                         });
                     });
