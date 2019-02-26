@@ -13,7 +13,7 @@ exports.connect = (done) => {
     host: conf.MYSQL_DATABASE_URL,
     user: conf.MYSQL_DATABASE_USER,
     password: conf.MYSQL_DATABASE_PASS,
-    database: 'AN_Site'
+    database: 'mstaff_development'
   });
 
   this.get('site', (err, res) => done(err, res));

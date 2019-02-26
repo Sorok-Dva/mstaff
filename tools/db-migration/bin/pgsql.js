@@ -4,11 +4,11 @@ const pg = require('pg');
 const state = { pool: null };
 
 const config = {
-  user: 'postgres',
-  database: 'Allods_Nova',
-  password: 'hyzMQs7c9J6pJ7cH',
-  host: '176.31.254.218',
-  port: 5432,
+  user: 'mstaff',
+  database: 'mstaff',
+  password: 'eMsKZpe0jTleTqXhBq5z',
+  host: '127.0.0.1',
+  port: 5433,
   max: 10, // max number of clients in the pool
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
