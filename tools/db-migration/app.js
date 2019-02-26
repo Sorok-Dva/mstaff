@@ -46,18 +46,23 @@ migrate.users = () => {
         pgsql.get({
           name: 'get-candidate', text: 'SELECT * FROM candidat WHERE utilisateur_id = $1', values: [user.id]
         }, (err, candidat) => {
-          console.log(user);
-          user.candidate = candidat.rows[0];
           let data = {
             email: user.email,
             password: user.password,
             type: userType(user.type),
-            firstName: user.prenom || user.candidate ? user.candidate.prenom : null,
-            lastName: user.nom || user.candidate ? user.candidate.nom : null,
-            birthday: user.candidate ? user.candidate.date_naissance : null,
+            firstName: user.prenom,
+            lastName: user.nom,
             createdAt: user.created_at,
-            updatedAt: user.updated_at
+            updatedAt: user.updated_at,
           };
+          if (candidat.rows.length === 1) {
+            let candidate = candidat.rows[0];
+            data.firstName = candidate.prenom;
+            data.lastName = candidate.nom;
+            data.birthday = candidate.date_naissance;
+            data.createdAt = candidate.created_at;
+            data.updatedAt = candidate.updated_at;
+          }
           con.query('INSERT INTO Users SET ?', data);
         });
       }
