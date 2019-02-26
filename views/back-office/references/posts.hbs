@@ -33,7 +33,8 @@
                                            index: 0,
                                            row: {
                                               id: response.post.id,
-                                              name: response.post.name
+                                              name: response.post.name,
+                                              category: response.post.categoriesPS_id
                                           }
                                        });
                                        notification({
@@ -70,7 +71,7 @@
                    <th data-field="state" data-checkbox="true"></th>
                    <th data-field="id" class="text-center">ID</th>
                    <th data-field="name" data-sortable="true">Nom</th>
-                   <th data-field="category" data-sortable="true">Categorie</th>
+                   <th data-field="category" data-sortable="true">Catégorie</th>
 
                    <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
                        data-formatter="operateFormatter">Actions</th>
@@ -81,7 +82,7 @@
                            <td></td>
                            <td>{{posts.id}}</td>
                            <td>{{posts.name}}</td>
-                           <td>{{posts.categoriesPS_id}}
+                           <td>{{posts.categoriesPS_id}}</td>
                        </tr>
                    {{/each}}
                    </tbody>
@@ -119,13 +120,16 @@
                         if (($('input#postValueEdit').val() != '') && ($('select#postCategoryEdit').val() != '')) {
                             let _csrf = $('#csrfToken').val();
                             let promptInput = $('input#postValueEdit').val();
+                            let categoryInput = $('select#postCategoryEdit').val();
                             $.put(`/api/back-office/posts/${row.id}`, {
                                 promptInput,
+                                categoryInput,
                                 _csrf
-                            }, () => {
+                            }, (response) => {
                                 let id = $(e.currentTarget).closest('tr').attr('data-id');
                                 $('#editPostModal').modal('hide');
                                 $(`tr[data-id="${id}"] td`).last().prev().prev().text(promptInput);
+                                $(`tr[data-id="${id}"] td`).last().prev().text(categoryInput);
                                 notification({
                                     icon: 'check-circle',
                                     type: 'success',

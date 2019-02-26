@@ -427,8 +427,9 @@ module.exports = {
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
     return Models.Post.findOne({ where: { id: req.params.id } }).then(post => {
-      if (req.body.promptInput) {
+      if (req.body.promptInput && req.body.categoryInput) {
         post.name = req.body.promptInput;
+        post.categoriesPS_id = req.body.categoryInput;
       }
       post.save();
       return res.status(200).json({ status: 'Modified' });
@@ -441,7 +442,8 @@ module.exports = {
 
     return Models.Post.findOrCreate({
       where: {
-        name: req.body.promptInput
+        name: req.body.promptInput,
+        categoriesPS_id: req.body.categoryInput
       }
     }).spread((post, created) => {
       if (created) {
