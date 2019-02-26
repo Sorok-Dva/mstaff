@@ -103,33 +103,60 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .edit': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-                let promptInput = prompt('Renommer le poste :');
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                if (promptInput) {
-                    $.put(`/api/back-office/posts/${row.id}`, {
-                        promptInput,
-                        _csrf
-                    }, () => {
-                        $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                createModal({
+                    id: 'editPostModal',
+                    title: 'Modifier un poste',
+                    modal: 'back-office/editPost'
+                }, () => {
+                    console.log($('input#postValueEdit').val());
+                    $('button#btnEditPost').click(function () {
+                        if (($('input#postValueEdit').val() != '') && ($('select#postCategoryEdit').val() != '')) {
+                            let _csrf = $('#csrfToken').val();
+                            let promptInput = $('input#postValueEdit').val();
+                            $.put(`/api/back-office/posts/${row.id}`, {
+                                promptInput,
+                                _csrf
+                            }, () => {
+                                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                                $('#editPostModal').modal('hide');
+                                $(`tr[data-id="${id}"] td`).last().prev().prev().text(promptInput);
+                            });
+                        }
+                        else {
+                            if ($('input#postValueEdit').val() == '') {
+                                $('input#postValueEdit').addClass('error');
+                                setTimeout(function() {
+                                    $('input#postValueEdit').removeClass('error');
+                                }, 750)
+                            }
+                            if ($('select#postCategoryEdit').val() == '') {
+                                $('select#postCategoryEdit').addClass('error');
+                                setTimeout(function() {
+                                    $('select#postCategoryEdit').removeClass('error');
+                                }, 750)
+                            }
+                        }
                     });
-                }
+                });
             },
             'click .remove': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-
-                if (confirm('ATTENTION:\n\n ' +
-                        'Cette action est irreversible et supprimera le poste.\n\n' +
-                        'Voulez vous continuer ?')) {
-                    $.delete(`/api/back-office/posts/${row.id}`, {
-                        _csrf
-                    }, () => {
-                        table.bootstrapTable('remove', {
-                            field: 'id',
-                            values: [row.id]
+                createModal({
+                    id: 'removePostModal',
+                    title: 'Supprimer un poste',
+                    modal: 'back-office/removePost'
+                }, () => {
+                    let _csrf = $('#csrfToken').val();
+                    $('button#btnRemovePost').click(function () {
+                        $.delete(`/api/back-office/posts/${row.id}`, {
+                            _csrf
+                        }, () => {
+                            table.bootstrapTable('remove', {
+                                field: 'id',
+                                values: [row.id]
+                            });
                         });
-                    })
-                }
+                    });
+                });
             }
         };
 
