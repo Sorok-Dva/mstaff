@@ -52,16 +52,16 @@ migrate.users = () => {
             type: userType(user.type),
             firstName: user.prenom,
             lastName: user.nom,
-            createdAt: user.created_at,
-            updatedAt: user.updated_at,
+            createdAt: user.created_at || new Date(),
+            updatedAt: user.updated_at || new Date(),
           };
           if (candidat.rows.length === 1) {
             let candidate = candidat.rows[0];
             data.firstName = candidate.prenom;
             data.lastName = candidate.nom;
             data.birthday = candidate.date_naissance;
-            data.createdAt = candidate.created_at;
-            data.updatedAt = candidate.updated_at;
+            data.createdAt = candidate.created_at || new Date();
+            data.updatedAt = candidate.updated_at || new Date();
           }
           con.query('INSERT INTO Users SET ?', data);
         });
