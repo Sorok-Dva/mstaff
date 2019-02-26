@@ -1,6 +1,5 @@
 const conf = require('dotenv').config().parsed;
 const mysql = require('mysql');
-const async = require('async');
 
 const state = {
   pool: null,
@@ -27,13 +26,4 @@ exports.get = (db, done) => {
     if (err) return done(err);
     done(null, connection);
   })
-};
-
-exports.drop = function (tables, done) {
-  let { pool } = state;
-  if (!pool) return done(new Error('Missing database connection.'));
-
-  async.each(tables, function (name, cb) {
-    pool.query('DELETE * FROM ' + name, cb)
-  }, done);
 };
