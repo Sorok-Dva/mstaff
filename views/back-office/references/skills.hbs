@@ -4,7 +4,56 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addSkill()> <i class="fal fa-plus"></i></a>
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addSkillModal',
+                       title: 'Ajouter une compétence',
+                       modal: 'back-office/addSkill'
+                   }, () => {
+                       $('button#validateSkill').click(function () {
+                           if ($('input#skillValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#skillValue').val();
+                               $.post(`/api/back-office/skills/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Cette compétence existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.skill.id,
+                                   name: response.skill.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: 'Compétence créée.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addSkillModal').modal('hide');
+               }
+               else {
+                   if ($('input#skillValue').val() == '') {
+                       $('input#skillValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#skillValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
                 </div>
 
                 <table id="skills-table" class="table">
@@ -110,29 +159,4 @@
             table.bootstrapTable('resetView');
         });
     });
-    function addSkill()
-    {
-        let _csrf = $('#csrfToken').val();
-        let promptInput = prompt('Ajouter une compétence :');
-        if (promptInput) {
-            $.post(`/api/back-office/skills/`, {
-                promptInput,
-                _csrf
-            }, (response) => {
-                if (response.status === "Already exists")
-                {
-                    alert("Cette compétence existe déjà");
-                }
-                else {
-                    table.bootstrapTable('insertRow', {
-                        index: 0,
-                        row: {
-                            id: response.skill.id,
-                            name: response.skill.name
-                        }
-                    });
-                }
-            });
-        }
-    }
 </script>

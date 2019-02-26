@@ -1,34 +1,83 @@
 <div class="row">
 
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-content">
-        <div class="toolbar">
-          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addFormation()> <i class="fal fa-plus"></i></a>
+   <div class="col-md-12">
+       <div class="card">
+           <div class="card-content">
+               <div class="toolbar">
+                   <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addFormationModal',
+                       title: 'Ajouter une formation',
+                       modal: 'back-office/addFormation'
+                   }, () => {
+                       $('button#validateFormation').click(function () {
+                           if ($('input#formationValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#formationValue').val();
+                               $.post(`/api/back-office/formations/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Cette formation existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.formation.id,
+                                   name: response.formation.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: 'Formation créée.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addFormationModal').modal('hide');
+               }
+               else {
+                   if ($('input#formationValue').val() == '') {
+                       $('input#formationValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#formationValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
+       </div>
+
+       <table id="formations-table" class="table">
+         <thead>
+         <th data-field="state" data-checkbox="true"></th>
+         <th data-field="id" class="text-center">ID</th>
+         <th data-field="name" data-sortable="true">Nom</th>
+
+         <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+             data-formatter="operateFormatter">Actions</th>
+         </thead>
+         <tbody>
+         {{#each formation as |formations|}}
+           <tr data-id="{{formations.id}}">
+             <td></td>
+             <td>{{formations.id}}</td>
+             <td>{{formations.name}}</td>
+           </tr>
+         {{/each}}
+         </tbody>
+       </table>
+     </div>
         </div>
-
-        <table id="formations-table" class="table">
-          <thead>
-          <th data-field="state" data-checkbox="true"></th>
-          <th data-field="id" class="text-center">ID</th>
-          <th data-field="name" data-sortable="true">Nom</th>
-
-          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
-              data-formatter="operateFormatter">Actions</th>
-          </thead>
-          <tbody>
-          {{#each formation as |formations|}}
-            <tr data-id="{{formations.id}}">
-              <td></td>
-              <td>{{formations.id}}</td>
-              <td>{{formations.name}}</td>
-            </tr>
-          {{/each}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+   </div>
 </div>
 <script type="text/javascript">
   let table = $('#formations-table');
@@ -110,29 +159,4 @@
       table.bootstrapTable('resetView');
     });
   });
-  function addFormation()
-  {
-    let _csrf = $('#csrfToken').val();
-    let promptInput = prompt('Ajouter une formation :');
-    if (promptInput) {
-      $.post(`/api/back-office/formations/`, {
-        promptInput,
-        _csrf
-      }, (response) => {
-        if (response.status === "Already exists")
-        {
-          alert("Cette formation existe déjà");
-        }
-        else {
-          table.bootstrapTable('insertRow', {
-            index: 0,
-            row: {
-              id: response.formation.id,
-              name: response.formation.name
-            }
-          });
-        }
-      });
-    }
-  }
 </script>

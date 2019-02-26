@@ -4,7 +4,56 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addQualification()> <i class="fal fa-plus"></i></a>
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addQualificationModal',
+                       title: 'Ajouter un diplôme',
+                       modal: 'back-office/addQualification'
+                   }, () => {
+                       $('button#validateQualification').click(function () {
+                           if ($('input#qualificationValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#qualificationValue').val();
+                               $.post(`/api/back-office/qualifications/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Ce diplôme existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.qualification.id,
+                                   name: response.qualification.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: ' Diplôme complémentaires créé.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addQualificationModal').modal('hide');
+               }
+               else {
+                   if ($('input#qualificationValue').val() == '') {
+                       $('input#qualificationValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#qualificationValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
                 </div>
 
                 <table id="qualifications-table" class="table">
@@ -110,29 +159,4 @@
             table.bootstrapTable('resetView');
         });
     });
-    function addQualification()
-    {
-        let _csrf = $('#csrfToken').val();
-        let promptInput = prompt('Ajouter une diplome universitaire :');
-        if (promptInput) {
-            $.post(`/api/back-office/qualifications/`, {
-                promptInput,
-                _csrf
-            }, (response) => {
-                if (response.status === "Already exists")
-                {
-                    alert("Ce diplome universitaire existe déjà");
-                }
-                else {
-                    table.bootstrapTable('insertRow', {
-                        index: 0,
-                        row: {
-                            id: response.qualification.id,
-                            name: response.qualification.name
-                        }
-                    });
-                }
-            });
-        }
-    }
 </script>

@@ -4,7 +4,56 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addService()> <i class="fal fa-plus"></i></a>
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addServiceModal',
+                       title: 'Ajouter un service',
+                       modal: 'back-office/addService'
+                   }, () => {
+                       $('button#validateService').click(function () {
+                           if ($('input#serviceValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#serviceValue').val();
+                               $.post(`/api/back-office/services/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Ce service existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.service.id,
+                                   name: response.service.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: 'Service créé.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addServiceModal').modal('hide');
+               }
+               else {
+                   if ($('input#serviceValue').val() == '') {
+                       $('input#serviceValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#serviceValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
                 </div>
 
                 <table id="services-table" class="table">
@@ -110,29 +159,4 @@
             table.bootstrapTable('resetView');
         });
     });
-    function addService()
-    {
-        let _csrf = $('#csrfToken').val();
-        let promptInput = prompt('Ajouter un service :');
-        if (promptInput) {
-            $.post(`/api/back-office/services/`, {
-                promptInput,
-                _csrf
-            }, (response) => {
-                if (response.status === "Already exists")
-                {
-                    alert("Ce service existe déjà");
-                }
-                else {
-                    table.bootstrapTable('insertRow', {
-                        index: 0,
-                        row: {
-                            id: response.service.id,
-                            name: response.service.name
-                        }
-                    });
-                }
-            });
-        }
-    }
 </script>

@@ -4,7 +4,56 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addSoftware()> <i class="fal fa-plus"></i></a>
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addSoftwareModal',
+                       title: 'Ajouter un logiciel',
+                       modal: 'back-office/addSoftware'
+                   }, () => {
+                       $('button#validateSoftware').click(function () {
+                           if ($('input#softwareValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#softwareValue').val();
+                               $.post(`/api/back-office/softwares/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Ce logiciel existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.software.id,
+                                   name: response.software.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: 'Logiciel créé.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addSoftwareModal').modal('hide');
+               }
+               else {
+                   if ($('input#softwareValue').val() == '') {
+                       $('input#softwareValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#softwareValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
                 </div>
 
                 <table id="softwares-table" class="table">
@@ -110,29 +159,4 @@
             table.bootstrapTable('resetView');
         });
     });
-    function addSoftware()
-    {
-        let _csrf = $('#csrfToken').val();
-        let promptInput = prompt('Ajouter un logiciel :');
-        if (promptInput) {
-            $.post(`/api/back-office/softwares/`, {
-                promptInput,
-                _csrf
-            }, (response) => {
-                if (response.status === "Already exists")
-                {
-                    alert("Cet logiciel déjà");
-                }
-                else {
-                    table.bootstrapTable('insertRow', {
-                        index: 0,
-                        row: {
-                            id: response.software.id,
-                            name: response.software.name
-                        }
-                    });
-                }
-            });
-        }
-    }
 </script>
