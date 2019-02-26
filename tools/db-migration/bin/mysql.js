@@ -9,14 +9,14 @@ const state = {
 exports.connect = (done) => {
   state.pool = mysql.createPoolCluster();
 
-  state.pool.add('site', {
+  state.pool.add('mstaff', {
     host: conf.MYSQL_DATABASE_URL,
     user: conf.MYSQL_DATABASE_USER,
     password: conf.MYSQL_DATABASE_PASS,
-    database: 'mstaff_development'
+    database: 'mstaff_migration'
   });
 
-  this.get('site', (err, res) => done(err, res));
+  this.get('mstaff', (err, res) => done(err, res));
 };
 
 exports.get = (db, done) => {
