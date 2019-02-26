@@ -98,35 +98,67 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .edit': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-                let promptInput = prompt('Renommer le diplome universitaire :');
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                if (promptInput) {
-                    $.put(`/api/back-office/qualifications/${row.id}`, {
-                        promptInput,
-                        _csrf
-                    }, () => {
-                        $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                createModal({
+                    id: 'editQualificationModal',
+                    title: 'Modifier un diplome',
+                    modal: 'back-office/editQualification'
+                }, () => {
+                    $('button#btnEditQualification').click(function () {
+                        if ($('input#qualificationValueEdit').val() != '') {
+                            let _csrf = $('#csrfToken').val();
+                            let promptInput = $('input#qualificationValueEdit').val();
+                            $.put(`/api/back-office/qualifications/${row.id}`, {
+                                promptInput,
+                                _csrf
+                            }, () => {
+                                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                                $('#editQualificationModal').modal('hide');
+                                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                                notification({
+                                    icon: 'check-circle',
+                                    type: 'success',
+                                    title: 'Diplome modifié.',
+                                    message: ``
+                                });
+                            });
+                        } else {
+                            if ($('input#qualificationValueEdit').val() == '') {
+                                $('input#qualificationValueEdit').addClass('error');
+                                setTimeout(function () {
+                                    $('input#qualificationValueEdit').removeClass('error');
+                                }, 750)
+                            }
+                        }
                     });
-                }
+                });
             },
             'click .remove': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-
-                if (confirm('ATTENTION:\n\n ' +
-                        'Cette action est irreversible et supprimera le diplome universitaire.\n\n' +
-                        'Voulez vous continuer ?')) {
-                    $.delete(`/api/back-office/qualifications/${row.id}`, {
-                        _csrf
-                    }, () => {
-                        table.bootstrapTable('remove', {
-                            field: 'id',
-                            values: [row.id]
+                createModal({
+                    id: 'removeQualificationModal',
+                    title: 'Supprimer une qualification',
+                    modal: 'back-office/removeQualification'
+                }, () => {
+                    let _csrf = $('#csrfToken').val();
+                    $('button#btnRemoveQualification').click(function () {
+                        $.delete(`/api/back-office/qualifications/${row.id}`, {
+                            _csrf
+                        }, () => {
+                            table.bootstrapTable('remove', {
+                                field: 'id',
+                                values: [row.id]
+                            });
+                            notification({
+                                icon: 'check-circle',
+                                type: 'success',
+                                title: 'Qualification supprimée.',
+                                message: ``
+                            });
                         });
-                    })
-                }
+                    });
+                });
             }
         };
+
 
         table.bootstrapTable({
             toolbar: ".toolbar",

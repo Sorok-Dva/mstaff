@@ -81,6 +81,7 @@
                            <td></td>
                            <td>{{posts.id}}</td>
                            <td>{{posts.name}}</td>
+                           <td>{{posts.categoriesPS_id}}
                        </tr>
                    {{/each}}
                    </tbody>
@@ -114,7 +115,6 @@
                     title: 'Modifier un poste',
                     modal: 'back-office/editPost'
                 }, () => {
-                    console.log($('input#postValueEdit').val());
                     $('button#btnEditPost').click(function () {
                         if (($('input#postValueEdit').val() != '') && ($('select#postCategoryEdit').val() != '')) {
                             let _csrf = $('#csrfToken').val();
