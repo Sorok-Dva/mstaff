@@ -76,4 +76,6 @@ let userType = (type) => {
   if (type === 'PERSONNEL_INTERNE') return '';
 };
 
+migrate.users();
+
 module.exports = app;
