@@ -100,7 +100,7 @@
             'click .edit': (e, value, row, index) => {
                 createModal({
                     id: 'editQualificationModal',
-                    title: 'Modifier un diplome',
+                    title: 'Modifier un diplôme complémentaire',
                     modal: 'back-office/editQualification'
                 }, () => {
                     $('button#btnEditQualification').click(function () {
@@ -117,7 +117,7 @@
                                 notification({
                                     icon: 'check-circle',
                                     type: 'success',
-                                    title: 'Diplome modifié.',
+                                    title: 'Diplôme modifié.',
                                     message: ``
                                 });
                             });
@@ -135,7 +135,7 @@
             'click .remove': (e, value, row, index) => {
                 createModal({
                     id: 'removeQualificationModal',
-                    title: 'Supprimer une qualification',
+                    title: 'Supprimer un diplôme',
                     modal: 'back-office/removeQualification'
                 }, () => {
                     let _csrf = $('#csrfToken').val();
@@ -150,7 +150,7 @@
                             notification({
                                 icon: 'check-circle',
                                 type: 'success',
-                                title: 'Qualification supprimée.',
+                                title: 'Diplôme supprimé.',
                                 message: ``
                             });
                         });
