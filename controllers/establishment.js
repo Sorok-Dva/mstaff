@@ -56,7 +56,16 @@ module.exports = {
     }).catch(error => next(new Error(error)));
   },
   getNeeds: (req, res, next) => {
-    res.render('establishments/needs');
+    Models.Need.findAll({
+      where: { es_id: req.session.currentEs },
+      include: {
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true
+      }
+    }).then(needs => {
+      res.render('establishments/needs', { needs });
+    }).catch(error => next(new Error(error)));
   },
   addNeed: (req, res, next) => {
     let render = { a: { main: 'needs' } };
