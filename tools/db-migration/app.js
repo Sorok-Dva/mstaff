@@ -68,9 +68,9 @@ migrate.users = () => {
               if (err.code === 'ER_DUP_ENTRY') {
                 console.log('[DUPLICATION] ', err.sqlMessage)
               }
-              if (err.code === 'ER_BAD_NULL_ERROR') {
+              else if (err.code === 'ER_BAD_NULL_ERROR') {
                 console.log('[MISSING DATA] ', err.sqlMessage, err.sql)
-              }
+              } else console.log(err);
             }
           });
         });
