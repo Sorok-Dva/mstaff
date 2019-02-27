@@ -62,8 +62,9 @@ mysql.get('mstaff', (err, con) => {
                   if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
                 } else {
                   if (candidat.rows.length === 1) {
-                    migrate.insertCandidate(candidat, userRes, (candidateId) => {
-                      migrate.searchCandidateData(candidat.rows[0].id, candidateId);
+                    migrate.insertCandidate(candidat, userRes, (candidateId, err) => {
+                      if (!_.isNil(candidateId)) migrate.searchCandidateData(candidat.rows[0].id, candidateId);
+                      else console.log(err);
                     });
                   }
                 }
@@ -110,7 +111,7 @@ mysql.get('mstaff', (err, con) => {
       updatedAt: candidate.updated_at || new Date()
     };
     con.query('INSERT INTO Candidates SET ?', CandidateData, (err, candidateRes) => {
-      return callback(candidateRes.insertId);
+      return callback(candidateRes.insertId, err);
     });
   };
 
