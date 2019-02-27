@@ -121,7 +121,7 @@ mysql.get('mstaff', (err, con) => {
   migrate.candidateSoftwares = (oldId, newId) => {
     log(`GET PgSQL Candidate Softwares Data ("candidat_logiciels" table) of candidate id ${oldId}`);
     pgsql.get({
-      name: 'get-candidateSoft', text: 'SELECT * FROM candidat_logiciels WHERE candidate_id = $1', values: [oldId]
+      name: 'get-candidateSoft', text: 'SELECT * FROM candidat_logiciels WHERE candidat_id = $1', values: [oldId]
     }, (err, candidatLogiciels) => {
       let candidateSoftwares = candidatLogiciels.rows[0];
 
