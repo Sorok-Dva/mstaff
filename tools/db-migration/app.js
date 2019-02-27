@@ -40,7 +40,7 @@ migrate.users = () => {
     if (err) console.log(err);
     mysql.get('mstaff', (err, con) => {
       if (err) console.log(err);
-      for (let i = 0; i < users.rows.length; i++) {
+      for (let i = 0; i < 25; i++) {
         let user = users.rows[i];
         // get candidate associated to user
         pgsql.get({
@@ -68,9 +68,10 @@ migrate.users = () => {
               if (err.code === 'ER_DUP_ENTRY') {
                 console.log('[DUPLICATION] ', err.sqlMessage)
               }
-              else if (err.code === 'ER_BAD_NULL_ERROR') {
-                console.log('[MISSING DATA] ', err.sqlMessage, err.sql)
-              } else console.log(err);
+            } else {
+              if (candidat.rows.length === 1) {
+               console.log(candidat.rows);
+              }
             }
           });
         });
