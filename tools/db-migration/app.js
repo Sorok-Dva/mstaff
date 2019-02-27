@@ -46,7 +46,8 @@ migrate.users = () => {
         pgsql.get({
           name: 'get-candidate', text: 'SELECT * FROM candidat WHERE utilisateur_id = $1', values: [user.id]
         }, (err, candidat) => {
-          let data = {
+          let candidate = candidat.rows[0];
+          let UserData = {
             email: user.email,
             password: user.password,
             type: userType(user.type),
@@ -56,21 +57,33 @@ migrate.users = () => {
             updatedAt: user.updated_at || new Date(),
           };
           if (candidat.rows.length === 1) {
-            let candidate = candidat.rows[0];
-            data.firstName = candidate.prenom;
-            data.lastName = candidate.nom;
-            data.birthday = candidate.date_naissance;
-            data.createdAt = candidate.created_at || new Date();
-            data.updatedAt = candidate.updated_at || new Date();
+            UserData.firstName = candidate.prenom;
+            UserData.lastName = candidate.nom;
+            UserData.birthday = candidate.date_naissance;
+            UserData.postal_code = candidate.code_postal;
+            UserData.town = candidate.ville;
+            UserData.phone = candidate.telephone;
+            UserData.createdAt = candidate.created_at || new Date();
+            UserData.updatedAt = candidate.updated_at || new Date();
           }
-          con.query('INSERT INTO Users SET ?', data, (err, res) => {
+          con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
             if (err) {
-              if (err.code === 'ER_DUP_ENTRY') {
-                console.log('[DUPLICATION] ', err.sqlMessage)
-              }
+              if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
             } else {
               if (candidat.rows.length === 1) {
-               console.log(candidat.rows);
+                let CandidateData = {
+                  user_id: userRes.insertId,
+                  description: candidate.description,
+                  photo: candidate.photo,
+                  video: candidate.video,
+                  status: candidate.status,
+                  views: candidate.vue,
+                  createdAt: candidate.created_at || null,
+                  updatedAt: candidate.updated_at || null
+                };
+                con.query('INSERT INTO Candidates SET ?', CandidateData, (err, candidateRes) => {
+
+                });
               }
             }
           });
