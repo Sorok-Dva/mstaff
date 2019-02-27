@@ -78,8 +78,8 @@ migrate.users = () => {
                   video: candidate.video,
                   status: candidate.status,
                   views: candidate.vue,
-                  createdAt: candidate.created_at || null,
-                  updatedAt: candidate.updated_at || null
+                  createdAt: candidate.created_at || new Date(),
+                  updatedAt: candidate.updated_at || new Date()
                 };
                 con.query('INSERT INTO Candidates SET ?', CandidateData, (err, candidateRes) => {
 
