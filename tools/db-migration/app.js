@@ -110,7 +110,7 @@ mysql.get('mstaff', (err, con) => {
       updatedAt: candidate.updated_at || new Date()
     };
     con.query('INSERT INTO Candidates SET ?', CandidateData, (err, candidateRes) => {
-      return callback(candidateRes.insertId, err);
+      return callback(!_.isNil(candidateRes) ? candidateRes.insertId : null, err);
     });
   };
 
@@ -160,7 +160,7 @@ mysql.get('mstaff', (err, con) => {
       candidateSoftwares.forEach(e => {
         con.query('INSERT INTO CandidateSoftwares SET ?', {
           name: e.libelle,
-          stars: e.score - 1,
+          stars: e.score === 0 ? 0 : e.score - 1,
           candidate_id: newId
         });
       });
@@ -180,7 +180,7 @@ mysql.get('mstaff', (err, con) => {
           pgsql.get({ name: 'get-skillName', text: 'SELECT * FROM competence WHERE id = $1', values: [e.competence_id]},
             (err, skill) => data = { name: !_.isNil(skill.rows[0]) ? skill.rows[0].libelle : ' - ', stars: e.score - 1, candidate_id: newId })
         } else {
-          data = { name: e.libelle, stars: e.score - 1, candidate_id: newId };
+          data = { name: e.libelle, stars: e.score === 0 ? 0 : e.score - 1, candidate_id: newId };
         }
         con.query('INSERT INTO CandidateSkills SET ?', data);
       });
@@ -196,7 +196,7 @@ mysql.get('mstaff', (err, con) => {
       candidateEquipments.forEach(e => {
         con.query('INSERT INTO CandidateEquipments SET ?', {
           name: e.libelle,
-          stars: e.score - 1,
+          stars: e.score === 0 ? 0 : e.score - 1,
           candidate_id: newId
         });
       });
