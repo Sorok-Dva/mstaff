@@ -50,7 +50,7 @@ migrate.users = () => {
             if (err) {
               if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
             } else {
-              if (candidat.rows.length === 1) {
+              if (candidateRows === 1) {
                 let CandidateData = {
                   user_id: userRes.insertId,
                   description: candidate.description,
@@ -98,7 +98,7 @@ migrate.candidates = (user, callback) => {
       UserData.createdAt = candidate.created_at || new Date();
       UserData.updatedAt = candidate.updated_at || new Date();
     }
-    return callback(UserData);
+    return callback(UserData, candidat.rows.length);
   });
 };
 
