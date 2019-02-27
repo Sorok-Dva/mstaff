@@ -127,9 +127,8 @@ mysql.get('mstaff', (err, con) => {
     }, (err, experiences) => {
       let candidateExperiences = experiences.rows;
       candidateExperiences.forEach(e => {
-        con.query('INSERT INTO Experiences SET ?', {
+        let data = {
           candidate_id: newId,
-          name: e.etablissement_custom_libelle,
           poste_id: e.poste_id,
           service_id: e.service_id,
           internship: e.is_stage,
@@ -138,7 +137,15 @@ mysql.get('mstaff', (err, con) => {
           current: e.poste_actuel,
           createdAt: new Date(),
           updatedAt:  new Date()
-        });
+        };
+        if (!e.etablissement_custom_libelle) {
+          pgsql.get({ name: 'get-skillName', text: 'SELECT libelle FROM etablissement_gouv WHERE id = $1', values: [e.etablissement_gouv_id]},
+            (err, es) => data.name =  es.rows[0].libelle )
+        } else {
+          data.name = e.etablissement_custom_libelle;
+        }
+        console.log(data);
+        con.query('INSERT INTO Experiences SET ?', data);
       });
     });
   };
@@ -164,16 +171,17 @@ mysql.get('mstaff', (err, con) => {
     pgsql.get({
       name: 'get-candidateSkills', text: 'SELECT * FROM candidat_competences WHERE candidat_id = $1', values: [oldId]
     }, (err, candidatCompetences) => {
+      if (err) console.log(err);
       let candidateSkills = candidatCompetences.rows;
       candidateSkills.forEach(e => {
+        let data;
         if (!e.libelle) {
           pgsql.get({ name: 'get-skillName', text: 'SELECT libelle FROM competence WHERE id = $1', values: [e.competence_id]},
-            (err, skill) => {
-              con.query('INSERT INTO CandidateSkills SET ?', { name: skill.rows[0].libelle, stars: e.score - 1, candidate_id: newId });
-            })
+            (err, skill) => data = { name: skill.rows[0].libelle, stars: e.score - 1, candidate_id: newId })
         } else {
-          con.query('INSERT INTO CandidateSkills SET ?', { name: e.libelle, stars: e.score - 1, candidate_id: newId });
+          data = { name: e.libelle, stars: e.score - 1, candidate_id: newId };
         }
+        con.query('INSERT INTO CandidateSkills SET ?', data);
       });
     });
   };
