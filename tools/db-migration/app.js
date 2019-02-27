@@ -45,7 +45,7 @@ migrate.users = () => {
       for (let i = 0; i < 25; i++) {
         let user = users.rows[i];
         // get candidate associated to user
-        this.candidates(user, (UserData) => {
+        migrate.candidates(user, (UserData) => {
           con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
             if (err) {
               if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
