@@ -54,7 +54,7 @@ mysql.get('mstaff', (err, con) => {
             updatedAt: user.updated_at || new Date(),
           };
           if (userType(user.type) === 'candidate') {
-            migrate.candidates(user, (UserData, candidat) => {
+            migrate.candidates(UserData, (UserData, candidat) => {
               delete UserData.id;
               con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
                 if (err) {
