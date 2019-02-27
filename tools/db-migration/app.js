@@ -62,7 +62,7 @@ mysql.get('mstaff', (err, con) => {
                 } else {
                   if (candidat.rows.length === 1) {
                     migrate.insertCandidate(candidat, userRes, (candidateId) => {
-
+                      migrate.searchCandidateData(candidat.id, candidateId);
                     });
                   }
                 }
@@ -110,6 +110,30 @@ mysql.get('mstaff', (err, con) => {
     };
     con.query('INSERT INTO Candidates SET ?', CandidateData, (err, candidateRes) => {
       return callback(candidateRes.insertId);
+    });
+  };
+
+  migrate.searchCandidateData = (oldId, newId) => {
+   log(`Searching Candidate Data of candidate_id ${oldId} (old id) to insert for candidate_id ${newId} (new id)`);
+   migrate.candidateSoftwares(oldId, newId);
+  };
+
+  migrate.candidateSoftwares = (oldId, newId) => {
+    log(`GET PgSQL Candidate Softwares Data ("candidat_logiciels" table) of candidate id ${oldId}`);
+    pgsql.get({
+      name: 'get-candidateSoft', text: 'SELECT * FROM candidat_logiciels WHERE candidate_id = $1', values: [oldId]
+    }, (err, candidatLogiciels) => {
+      let candidateSoftwares = candidatLogiciels.rows[0];
+
+      candidateSoftwares.forEach(e => {
+        con.query('INSERT INTO CandidateSoftwares SET ?', {
+          name: e.libelle,
+          stars: e.score,
+          candidate_id: newId
+        }, (err, csRes) => {
+          console.log(err, csRes);
+        });
+      });
     });
   };
 
