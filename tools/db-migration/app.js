@@ -55,6 +55,7 @@ mysql.get('mstaff', (err, con) => {
           };
           if (userType(user.type) === 'candidate') {
             migrate.candidates(user, (UserData, candidat) => {
+              delete UserData.id;
               con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
                 if (err) {
                   if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
@@ -76,7 +77,6 @@ mysql.get('mstaff', (err, con) => {
 
   migrate.candidates = (UserData, callback) => {
     let userId = UserData.id;
-    delete UserData.id;
     log(`GET PgSQL Candidate Data ("candidat" table) of user id ${userId}`);
     pgsql.get({
       name: 'get-candidate', text: 'SELECT * FROM candidat WHERE utilisateur_id = $1', values: [userId]
