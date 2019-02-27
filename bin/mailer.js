@@ -1,6 +1,18 @@
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 const env = require('dotenv').config().parsed;
 const Mailer = {};
+
+const options = {
+  viewEngine: {
+    extname: '.hbs',
+    layoutsDir: 'views/layouts/',
+    defaultLayout: 'mail_template',
+    partialsDir: 'views/partials/'
+  },
+  viewPath: 'views/email/',
+  extName: '.hbs'
+};
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -10,36 +22,22 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-Mailer.sendEmail = (to, subject, text) => {
+transporter.use('compile', hbs(options));
+
+Mailer.sendEmail = (opts) => {
   transporter.sendMail({
     from: `"${env.SITE_TITLE}" \<${env.GMAIL_EMAIL}\>`,
-    to,
-    subject,
-    html: putText2Template(subject, text)
+    to: opts.to,
+    subject: opts.subject,
+    template: opts.template,
+    context: opts.context
   }, (error, info) => {
-    if (error) {
-      throw new Error(error);
-    }
+    transporter.close();
+    /* eslint-disable no-console */
+    if (error) return console.log(error);
+    if (info) return console.log(`[MAIL_INFO]`, JSON.stringify(info));
+    /* eslint-enable no-console */
   });
-};
-
-Mailer.sendValidationMail = (nickname, to, key) => {
-  let text = ``;
-
-  transporter.sendMail({
-    from: `"${env.SITE_TITLE}" \<${env.GMAIL_EMAIL}\>`,
-    to,
-    subject: '',
-    html: putText2Template('', text)
-  }, (error, info) => {
-    if (error) {
-      throw new Error(error);
-    }
-  });
-};
-
-const putText2Template = (title, text) => {
-  return `${title}${text}`;
 };
 
 module.exports = Mailer;

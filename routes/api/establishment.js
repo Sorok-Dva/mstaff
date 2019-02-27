@@ -16,9 +16,14 @@ router.post('/:esId/get/candidate/:userId',
 
 router.post('/:esId/addNeed', UserController.ensureIsEs && EstablishmentController.verifyEsAccess, EstablishmentController.apiAddNeed);
 
-router.post('/:esId/need/:id/notify/candidate/:candidateId',
+router.post('/:esId/need/:id/:action/candidate/:candidateId',
   UserController.ensureIsEs && EstablishmentController.verifyEsAccess,
-  EstablishmentController.apiNotifyCandidate
+  EstablishmentController.apiNeedCandidate
+);
+
+router.post('/:esId/candidate/:candidateId/:action',
+  UserController.ensureIsEs && EstablishmentController.verifyEsAccess,
+  EstablishmentController.apiFavCandidate
 );
 
 module.exports = router;

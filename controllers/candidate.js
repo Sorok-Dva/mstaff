@@ -95,6 +95,9 @@ module.exports = {
       }
     });
   },
+  uploadAvatar: (req, res, next) => {
+    console.log(req.file);
+  },
   getProfile: (req, res, next) => {
     Models.Candidate.findOne({
       where: { user_id: req.user.id },

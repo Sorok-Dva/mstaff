@@ -24,7 +24,7 @@ let notification = (opts) => {
     // options
     icon: `fal fa-${opts.icon}`,
     title: `<b>${opts.title}</b>`,
-    message: `${opts.message}`,
+    message: `${opts.message || ''}`,
   }, {
     type: `${opts.type}`,
     allow_dismiss: true,

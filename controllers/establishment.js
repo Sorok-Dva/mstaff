@@ -3,6 +3,7 @@ const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 
 const sequelize = require('../bin/sequelize');
+const mailer = require('../bin/mailer');
 const Models = require('../models/index');
 
 module.exports = {
@@ -55,7 +56,16 @@ module.exports = {
     }).catch(error => next(new Error(error)));
   },
   getNeeds: (req, res, next) => {
-    res.render('establishments/needs');
+    Models.Need.findAll({
+      where: { es_id: req.session.currentEs },
+      include: {
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true
+      }
+    }).then(needs => {
+      res.render('establishments/needs', { needs });
+    }).catch(error => next(new Error(error)));
   },
   addNeed: (req, res, next) => {
     let render = { a: { main: 'needs' } };
@@ -91,6 +101,10 @@ module.exports = {
         required: true
       }]
     }).then(need => {
+      if (_.isNil(need)) {
+        req.flash('error', 'Ce besoin n\'existe pas.');
+        return res.redirect('/needs');
+      }
       render.need = need;
       return res.render('establishments/showNeed', render);
     }).catch(error => next(new Error(error)));
@@ -153,8 +167,10 @@ module.exports = {
     let query = {
       where: { ref_es_id: req.es.finess },
       attributes: { exclude: ['lat', 'lon'] },
+      group: ['Wish->Candidate.id'],
       include: {
         model: Models.Wish,
+        required: true,
         on: {
           '$Application.wish_id$': {
             [Op.col]: 'Wish.id'
@@ -273,7 +289,7 @@ module.exports = {
       res.status(201).send(need);
     });
   },
-  apiNotifyCandidate: (req, res, next) => {
+  apiNeedCandidate: (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -305,26 +321,86 @@ module.exports = {
               [Op.col]: 'Candidate->User.id'
             }
           },
-          attributes: ['id']
+          attributes: ['id', 'email']
         }
       }]
     }).then(needCandidate => {
       if (_.isNil(needCandidate)) res.json(200).send('No candidate found');
       else {
-        Models.Notification.create({
-          fromUser: req.user.id,
-          fromEs: needCandidate.Need.Establishment.id,
-          to: needCandidate.Candidate.User.id,
-          title: 'Un établissement est intéressé par votre profil !',
-          message: req.body.message
-        }).then(notification => {
-          needCandidate.status = 'notified';
-          needCandidate.notified = true;
-          needCandidate.save().then(result => {
-            res.status(201).send(result);
-          })
-        })
+        switch (req.params.action) {
+          case 'notify':
+            Models.Notification.create({
+              fromUser: req.user.id,
+              fromEs: needCandidate.Need.Establishment.id,
+              to: needCandidate.Candidate.User.id,
+              title: 'Un établissement est intéressé par votre profil !',
+              message: req.body.message
+            }).then(notification => {
+              needCandidate.status = 'notified';
+              needCandidate.notified = true;
+              needCandidate.save().then(result => {
+                mailer.sendEmail({
+                  to: needCandidate.Candidate.User.email,
+                  subject: 'Un établissement est intéressé par votre profil !',
+                  template: 'candidate/es_notified',
+                  context: {
+                    notification,
+                    needCandidate
+                  }
+                });
+                res.status(201).send(result);
+              })
+            });
+            break;
+          case 'select':
+            needCandidate.status = 'selected';
+            needCandidate.notified = true;
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
+          case 'delete':
+            needCandidate.status = 'deleted';
+            needCandidate.notified = false;
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
+          default: return res.status(400).send('no action provided');
+        }
       }
     })
+  },
+  apiFavCandidate: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    let where = {
+      es_id: req.params.esId,
+      candidate_id: req.params.candidateId,
+      added_by: req.user.id
+    };
+
+    switch (req.params.action) {
+      case 'fav':
+        Models.FavoriteCandidate.findOrCreate({ where }).spread((fav, created) => {
+          if (created) {
+            res.status(201).send({ status: 'Created', fav });
+          } else {
+            res.status(200).send({ status: 'Already exists', fav });
+          }
+        });
+        break;
+      case 'unfav':
+        Models.FavoriteCandidate.findOne({ where }).then(fav => {
+          fav.destroy().then(result => {
+            res.status(200).send({ status: 'deleted', result })
+          })
+        });
+        break;
+    }
   },
 };

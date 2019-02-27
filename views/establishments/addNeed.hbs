@@ -44,7 +44,7 @@
     </div>
   </div>
 </div>
-<div class="row" style="padding-top: 15px">
+<div class="row" style="padding-top: 30px">
   <div id="searchResult" class="col-md-12"></div>
 </div>
 <div class="modal modal-xs fade" id="candidateProfileModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -60,6 +60,7 @@
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
+  let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
   let need = { selectedCandidates: [], favoriteCandidates: []};
   need.firstSearch = true;
@@ -83,12 +84,14 @@
   });
 
   $('#searchCandidates').on('click', function() {
+    need.post = $('input#post').val();
     searchCandidates();
   });
 
   $('input#post').on('keydown', function(e) {
     if (e.which === 13) {
       e.preventDefault();
+      need.post = $('input#post').val();
       searchCandidates();
     }
   });
@@ -97,7 +100,7 @@
     if ($('input#post').val().length < 2) {
       return false;
     }
-    need.post = $('input#post').val();
+    need.post = need.post || $('input#post').val();
     if (need.firstSearch) {
       createModal({
         id: 'contractType',
@@ -134,10 +137,22 @@
       case 'favorite':
         if (need.favoriteCandidates.indexOf(id) === -1) {
           $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
-          // $(`i.unfavCandidate[data-id="${id}"]`).show();
           need.favoriteCandidates.push(id);
-          /*$('#selectedEsCount').html(need.selectedCandidates.length);
-          $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
+          $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
+            if (data.status === 'Created') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat ajouté au favoris.'
+              })
+            } else {
+              notification({
+                icon: 'exclamation-circle',
+                type: 'warning',
+                title: 'Ce candidat est déjà dans vos favoris.'
+              })
+            }
+          });
         }
         break;
     }
@@ -162,6 +177,15 @@
         if (index !== -1) {
           $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
           need.favoriteCandidates.splice(index, 1);
+          $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
+            if (data.status === 'deleted') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat supprimé de vos favoris.'
+              })
+            }
+          });
         }
         break;
     }

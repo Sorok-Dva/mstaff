@@ -1,0 +1,25 @@
+{
+  "name": "mstaff-db-migrate",
+  "version": "1.0.0",
+  "description": "Mstaff Tool to migrate mstaff db",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "start debug": "DEBUG=mstaff-db-migrate:* npm start",
+    "dev": "nodemon --exec npm start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "bower install"
+  },
+  "author": "Llyam Garcia",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.3",
+    "md5": "^2.2.1",
+    "mysql": "^2.15.0",
+    "pg": "^7.4.1",
+    "promise-mysql": "^3.2.1",
+    "request": "^2.85.0",
+    "sha1": "^1.1.1"
+  }
+}

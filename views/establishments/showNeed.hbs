@@ -192,28 +192,7 @@
                   <ul class="drag-inner-list" id="1">
                     {{#each need.candidates as |data|}}
                       {{#ifCond data.status '===' 'pre-selected'}}
-                        <li class="drag-item card" data-status="{{data.status}}" data-needid="{{@root.need.id}}"
-                            data-candidateId="{{data.Candidate.id}}">
-                          <div class="card-header">
-                            <i class="fal fa-times pull-right"></i>
-                            <div class="row" style="cursor:pointer;"
-                                 onclick="showCandidateProfile({{data.Candidate.User.id}})">
-                              <div class="col-md-3 col-sm-3 col-xs-3">
-                                <img src="/static/assets/images/face-0.jpg"
-                                     style="border-radius: 50%;border:3px solid #019ED1; width: 50px;">
-                              </div>
-                              <div class="col-md-9 col-sm-9 col-xs-9">
-                                <h4 class="text-capitalize ng-binding">
-                                  {{data.Candidate.User.firstName}} {{data.Candidate.User.lastName}}
-                                  (
-                                  <small>{{age data.Candidate.User.birthday 'years'}} ans</small>
-                                  )
-                                </h4>
-                                </h5>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                        {{> es/kanban-card data}}
                       {{/ifCond}}
                     {{/each}}
                   </ul>
@@ -225,28 +204,7 @@
                   <ul class="drag-inner-list" id="2">
                     {{#each need.candidates as |data|}}
                       {{#ifCond data.status '===' 'notified'}}
-                        <li class="drag-item card" data-status="{{data.status}}" data-needid="{{@root.need.id}}"
-                            data-candidateId="{{data.Candidate.id}}">
-                          <div class="card-header">
-                            <i class="fal fa-times pull-right"></i>
-                            <div class="row" style="cursor:pointer;"
-                                 onclick="showCandidateProfile({{data.Candidate.User.id}})">
-                              <div class="col-md-3 col-sm-3 col-xs-3">
-                                <img src="/static/assets/images/face-0.jpg"
-                                     style="border-radius: 50%;border:3px solid #019ED1; width: 50px;">
-                              </div>
-                              <div class="col-md-9 col-sm-9 col-xs-9">
-                                <h4 class="text-capitalize ng-binding">
-                                  {{data.Candidate.User.firstName}} {{data.Candidate.User.lastName}}
-                                  (
-                                  <small>{{age data.Candidate.User.birthday 'years'}} ans</small>
-                                  )
-                                </h4>
-                                </h5>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                        {{> es/kanban-card data}}
                       {{/ifCond}}
                     {{/each}}
                   </ul>
@@ -258,28 +216,7 @@
                   <ul class="drag-inner-list" id="3">
                     {{#each need.candidates as |data|}}
                       {{#ifCond data.status '===' 'selected'}}
-                        <li class="drag-item card" data-status="{{data.status}}" data-needid="{{@root.need.id}}"
-                            data-candidateId="{{data.Candidate.id}}">
-                          <div class="card-header">
-                            <i class="fal fa-times pull-right"></i>
-                            <div class="row" style="cursor:pointer;"
-                                 onclick="showCandidateProfile({{data.Candidate.User.id}})">
-                              <div class="col-md-3 col-sm-3 col-xs-3">
-                                <img src="/static/assets/images/face-0.jpg"
-                                     style="border-radius: 50%;border:3px solid #019ED1; width: 50px;">
-                              </div>
-                              <div class="col-md-9 col-sm-9 col-xs-9">
-                                <h4 class="text-capitalize ng-binding">
-                                  {{data.Candidate.User.firstName}} {{data.Candidate.User.lastName}}
-                                  (
-                                  <small>{{age data.Candidate.User.birthday 'years'}} ans</small>
-                                  )
-                                </h4>
-                                </h5>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                        {{> es/kanban-card data }}
                       {{/ifCond}}
                     {{/each}}
                   </ul>
@@ -294,91 +231,22 @@
 </div>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
 <script>
-  dragula([
-    document.getElementById('1'),
-    document.getElementById('2'),
-    document.getElementById('3')
-  ], {
-    accepts: (el, target, source) =>
-        !(($(source).attr('id') === '2' && $(target).attr('id') === '1') || $(source).attr('id') === '3')
-    }).on('drag', (el, item) => el.classList.add('is-moving'))
-      .on('dragend', (el) => {
-        // remove 'is-moving' class from element after dragging has stopped
-        el.classList.remove('is-moving');
-
-        // add the 'is-moved' class for 1000ms then remove it
-        window.setTimeout(function () {
-          el.classList.add('is-moved');
-          window.setTimeout(function () {
-            el.classList.remove('is-moved');
-          }, 600);
-        }, 100);
-      })
-      .on('drop', (item, target, _source, _currentSibling) => {
-        let trg = $(target).attr('id');
-        let src = $(_source).attr('id');
-        let showWarning = localStorage.getItem('showWarningNotifyCandidate') || 'true';
-        if (src === '1' && trg === '2') {
-          if (showWarning === 'true') {
-            createModal({
-              id: 'warningNotifyCandidateModal',
-              modal: 'warningNotifyCandidate',
-              cantBeClose: true,
-              title: 'Vous êtes sur le point de notifier un candidat'
-            }, () => {
-              $('button#notifyCandidate').click(function () {
-                $('#warningNotifyCandidateModal').modal('hide');
-                if ($('input#showWarningNotifyCandidate').prop('checked')) {
-                  localStorage.setItem('showWarningNotifyCandidate', 'false');
-                }
-                showNotifyCandidateModal(item, target);
-              });
-              $('button#cancelNotifyCandidate').click(function () {
-                $(target).children(item).remove();
-                $(_source).append(item);
-              });
-            });
-          } else {
-            showNotifyCandidateModal(item, target);
-          }
-        }
-      });
-  let showNotifyCandidateModal = (item, target) => {
-    let needId = $(item).attr('data-needid');
-    let cID = $(item).attr('data-candidateid');
-    createModal({
-      id: 'showNotifyCandidateModal',
-      modal: 'showNotifyCandidate',
-      cantBeClose: true,
-      title: '<img src="{{need.Establishment.logo}}" />',
-      Establishment: {
-        address: '{{need.Establishment.address}}',
-        postal_code: '{{need.Establishment.postal_code}}',
-        town: '{{need.Establishment.town}}',
-      },
-      Need: {
-        contractType: '{{need.contract_type}}',
-        start: '{{need.start}}',
-        end: '{{need.end}}'
-      }
-    }, () => {
-      $('button#notifyCandidate').click(function () {
-        let message = $('textarea#notifyMessage').val();
-        $.post(`/api/es/{{need.es_id}}/need/${needId}/notify/candidate/${cID}`, { _csrf, message }, result => {
-          if (result.notified) {
-            $('#showNotifyCandidateModal').modal('hide');
-            notification({
-              icon: 'check-circle',
-              type: 'success',
-              title: 'Candidat notifié :',
-              message: `Le candidat vient d'être notifié.`
-            });
-          }
-          $(target).attr('data-status', result.status);
-        });
-      });
-    });
-  }
+  let showNotifyModalObject = {
+    id: 'showNotifyCandidateModal',
+    modal: 'es/showNotifyCandidate',
+    cantBeClose: true,
+    title: '<img src="{{need.Establishment.logo}}" />',
+    Establishment: {
+      address: '{{need.Establishment.address}}',
+      postal_code: '{{need.Establishment.postal_code}}',
+      town: '{{need.Establishment.town}}',
+    },
+    Need: {
+      contractType: '{{need.contract_type}}',
+      start: '{{need.start}}',
+      end: '{{need.end}}'
+    }
+  };
+  let esId = {{need.es_id}};
 </script>
-
-{{log session.currentes}}
+<script src="/static/assets/dist/js/showNeed.es.min.js"></script>
