@@ -571,11 +571,13 @@ module.exports = {
     return Models.Candidate.findOne({
       where: { user_id: req.user.id }
     }).then(candidate => {
+      console.log('test');
       Models.Wish.create({
         candidate_id: candidate.id,
         name: req.body.name || 'Candidature sans nom',
         contract_type: req.body.contractType,
         posts: req.body.posts,
+        services: !_.isNil(req.body.services) ? req.body.services : null,
         full_time: req.body.fullTime,
         part_time: req.body.partTime,
         day_time: req.body.dayTime,
@@ -599,13 +601,13 @@ module.exports = {
               wish_id: wish.id,
               candidate_id: candidate.id,
               ref_es_id: req.body.es[i],
-              es_id: es.id,
+              es_id: !_.isNil(es) ? es.id : null,
               new: true
-            });
-          });
+            }).catch(error => next(new Error(error)));
+          }).catch(error => next(new Error(error)));
         }
-      });
-    });
+      }).catch(error => next(new Error(error)));
+    }).catch(error => next(new Error(error)));
   },
   removeWish: (req, res, next) => {
     const errors = validationResult(req);
@@ -621,7 +623,7 @@ module.exports = {
       }).then(wish => {
         if (!wish) return res.status(400).send({ body: req.body, error: 'Not exists' });
         wish.destroy().then(wish => res.status(201).send({ deleted: true, wish }));
-      }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
-    });
+      }).catch(error => next(new Error(error)));
+    }).catch(error => next(new Error(error)));
   }
 }

@@ -15,11 +15,8 @@
     .form-group {
          margin-bottom: 0 !important;
     }
+ </style>
 
-    </style>
-    {{#each services as |service|}}
-        {{log service}}
-    {{/each}}
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="wizard">
@@ -176,7 +173,8 @@
                             <div class="col-sm-9">
                                 <div class="form-group col-sm-12" style="margin-top: 25px">
                                     <label for="selectServiceType">
-                                        <select class="form-control" id="selectServiceType"  multiple="multiple">
+                                        <select class=selectpicker" id="selectServiceType" multiple data-live-search="true"
+                                                title="Services" disabled>
                                             {{#each services as |service|}}
                                                 <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
                                             {{/each}}

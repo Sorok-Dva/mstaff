@@ -391,30 +391,19 @@ let addWish = () => {
       es: application.selectedES.toString(),
       es_count: application.selectedES.length,
       posts: application.postType,
+      services: application.serviceType,
       _csrf
     };
     $.post('/api/candidate/wish/add', opts, (data) => {
+      console.log('cestok');
       if (data.wish) {
         $(location).attr('href', `/applications`);
       } else {
         notify('errorAddWish');
       }
     });
-  } else {
-
   }
 };
-
-// let activateChoice = (activate) => {
-//   Object.keys(activate).forEach( key => {
-//     if ($.isNumeric(parseInt(key))){
-//       let value = activate[key];
-//       console.log(value);
-//       $(value).prop('disabled', false);
-//       // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-//     }
-//   });
-// };
 
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
@@ -453,43 +442,50 @@ $(document).ready(function () {
 
   let selectPostType = $('#selectPostType');
   let selectServiceType = $('#selectServiceType');
+  let allServiceType = $('#selectServiceType option');
 
   selectPostType.select2({
     maximumSelectionLength: 1
   });
-  selectServiceType.select2();
+  selectServiceType.selectpicker();
+  allServiceType.prop('disabled', true);
+  allServiceType.hide();
 
   selectPostType.on('change', () => {
     let postType = selectPostType.select2('data');
     let selectedCategorie = selectPostType.find(':selected').attr('data-categorie');
-    let wrongServices = $(`#selectServiceType [data-categorie!="${selectedCategorie}"]`);
-    let disabledChoices = $('#selectServiceType option:disabled');
+    let goodServices = $(`#selectServiceType [data-categorie="${selectedCategorie}"]`);
+      if (selectedCategorie === '3')
+        goodServices = $(`#selectServiceType [data-categorie="3"],[data-categorie="2"]`);
+    let wrongServices = $('#selectServiceType option:disabled');
 
     application.postType = [];
     postType.forEach((post) => {
       application.postType.push(post.text);
     });
-    if (postType.length === 0){
-      console.log('ON REACTIVE !');
-      console.log(disabledChoices);
-      // disabledChoices.prop('disabled', false);
-      // selectServiceType.val(null).trigger('change');
-      // selectServiceType.prop('disabled', true);
+    if (postType.length > 0){
+      goodServices.prop('disabled', false);
+      goodServices.show();
+      selectServiceType.prop('disabled', false);
+      selectServiceType.selectpicker('refresh');
       application.serviceType = [];
     }
     else {
-      console.log(wrongServices);
-      wrongServices.hide();
-      // selectServiceType.prop('disabled', false);
+      wrongServices.prop('disabled', false);
+      allServiceType.hide();
+      selectServiceType.val(null).trigger('change');
+      selectServiceType.prop('disabled', true);
+      selectServiceType.selectpicker('refresh');
     }
 
   });
 
   selectServiceType.on('change', () => {
-    let serviceType = selectServiceType.select2('data');
+    let serviceType = selectServiceType.selectpicker('val');
     application.serviceType = [];
-    serviceType.forEach((service) => {
-      application.serviceType.push(service.text);
+    serviceType.forEach((value) => {
+      let data = $(`#selectServiceType [value="${value}"]`).text();
+      application.serviceType.push(data);
     });
   });
 

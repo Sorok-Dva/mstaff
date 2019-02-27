@@ -12,7 +12,7 @@ const conf = require('dotenv').config().parsed;
 mysql.connect(err => {
   if (err) {
     console.log('%s An error has occured while connecting to Mysql database.', chalk.green('x'));
-    process.exit(1)
+    // process.exit(1)
   } else {
     console.log('%s Mysql server is connected to the application. (host: %s)', chalk.green('✓'), conf.MYSQL_DATABASE_URL);
   }
@@ -24,7 +24,7 @@ mysql.connect(err => {
 pgsql.connect(err => {
   if (err) {
     console.log('%s An error has occured while connecting to Postgres database.', chalk.green('x'));
-    process.exit(1)
+    // process.exit(1)
   } else {
     console.log('%s Postgres server is connected to the application.', chalk.green('✓'));
   }
