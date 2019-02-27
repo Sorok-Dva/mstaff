@@ -166,11 +166,14 @@ mysql.get('mstaff', (err, con) => {
     }, (err, candidatCompetences) => {
       let candidateSkills = candidatCompetences.rows;
       candidateSkills.forEach(e => {
-        con.query('INSERT INTO CandidateSkills SET ?', {
-          name: e.libelle,
-          stars: e.score - 1,
-          candidate_id: newId
-        });
+        if (!e.libelle) {
+          pgsql.get({ name: 'get-skillName', text: 'SELECT libelle FROM competence WHERE id = $1', values: [e.competence_id]},
+            (err, skill) => {
+              con.query('INSERT INTO CandidateSkills SET ?', { name: skill.rows[0].libelle, stars: e.score - 1, candidate_id: newId });
+            })
+        } else {
+          con.query('INSERT INTO CandidateSkills SET ?', { name: e.libelle, stars: e.score - 1, candidate_id: newId });
+        }
       });
     });
   };
