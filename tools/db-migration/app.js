@@ -5,6 +5,7 @@ const mysql = require('./bin/mysql');
 const pgsql = require('./bin/pgsql');
 const app = require('express')();
 const conf = require('dotenv').config().parsed;
+const _ = require('lodash');
 
 /**
  * Connect to Mysql.
@@ -138,9 +139,9 @@ mysql.get('mstaff', (err, con) => {
           createdAt: new Date(),
           updatedAt:  new Date()
         };
-        if (!e.etablissement_custom_libelle) {
+        if (_.isNil(e.etablissement_custom_libelle)) {
           pgsql.get({ name: 'get-skillName', text: 'SELECT libelle FROM etablissement_gouv WHERE id = $1', values: [e.etablissement_gouv_id]},
-            (err, es) => data.name =  es.rows[0].libelle )
+            (err, es) => data.name =  !_.isNil(es.rows[0]) ? es.rows[0].libelle : ' - ')
         } else {
           data.name = e.etablissement_custom_libelle;
         }
@@ -175,9 +176,9 @@ mysql.get('mstaff', (err, con) => {
       let candidateSkills = candidatCompetences.rows;
       candidateSkills.forEach(e => {
         let data;
-        if (!e.libelle) {
-          pgsql.get({ name: 'get-skillName', text: 'SELECT libelle FROM competence WHERE id = $1', values: [e.competence_id]},
-            (err, skill) => data = { name: skill.rows[0].libelle, stars: e.score - 1, candidate_id: newId })
+        if (_.isNil(e.libelle)) {
+          pgsql.get({ name: 'get-skillName', text: 'SELECT * FROM competence WHERE id = $1', values: [e.competence_id]},
+            (err, skill) => data = { name: !_.isNil(skill.rows[0]) ? skill.rows[0].libelle : ' - ', stars: e.score - 1, candidate_id: newId })
         } else {
           data = { name: e.libelle, stars: e.score - 1, candidate_id: newId };
         }
