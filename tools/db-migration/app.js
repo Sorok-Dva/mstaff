@@ -42,8 +42,7 @@ mysql.get('mstaff', (err, con) => {
     }, (err, users) => {
         if (err) console.log(err);
         log(`${users.rows.length} rows founded.`);
-        for (let i = 0; i < 25; i++) {
-          let user = users.rows[i];
+        users.rows.forEach((user, i) => {
           let UserData = {
             id: user.id,
             email: user.email,
@@ -73,7 +72,7 @@ mysql.get('mstaff', (err, con) => {
           } else {
             con.query('INSERT INTO Users SET ?', UserData);
           }
-        }
+        });
       });
   };
 
