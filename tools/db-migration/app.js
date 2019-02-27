@@ -162,11 +162,11 @@ mysql.get('mstaff', (err, con) => {
   migrate.candidateSkills = (oldId, newId) => {
     log(`GET PgSQL Candidate Skills Data ("candidat_competence" table) of candidate id ${oldId}`);
     pgsql.get({
-      name: 'get-candidateSkills', text: 'SELECT * FROM candidat_competence WHERE candidat_id = $1', values: [oldId]
-    }, (err, candidatLogiciels) => {
-      let candidateSoftwares = candidatLogiciels.rows;
-      candidateSoftwares.forEach(e => {
-        con.query('INSERT INTO CandidateSoftwares SET ?', {
+      name: 'get-candidateSkills', text: 'SELECT * FROM candidat_competences WHERE candidat_id = $1', values: [oldId]
+    }, (err, candidatCompetences) => {
+      let candidateSkills = candidatCompetences.rows;
+      candidateSkills.forEach(e => {
+        con.query('INSERT INTO CandidateSkills SET ?', {
           name: e.libelle,
           stars: e.score - 1,
           candidate_id: newId
