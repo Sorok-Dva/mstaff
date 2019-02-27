@@ -45,12 +45,13 @@ migrate.users = () => {
       for (let i = 0; i < 25; i++) {
         let user = users.rows[i];
         // get candidate associated to user
-        migrate.candidates(user, (UserData, candidateRows) => {
+        migrate.candidates(user, (UserData, candidat) => {
           con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
             if (err) {
               if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
             } else {
-              if (candidateRows === 1) {
+              if (candidat.rows.length === 1) {
+                let candidate = candidat.rows[0];
                 let CandidateData = {
                   user_id: userRes.insertId,
                   description: candidate.description,
@@ -98,7 +99,7 @@ migrate.candidates = (user, callback) => {
       UserData.createdAt = candidate.created_at || new Date();
       UserData.updatedAt = candidate.updated_at || new Date();
     }
-    return callback(UserData, candidat.rows.length);
+    return callback(UserData, candidat);
   });
 };
 
