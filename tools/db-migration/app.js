@@ -62,7 +62,7 @@ mysql.get('mstaff', (err, con) => {
                 } else {
                   if (candidat.rows.length === 1) {
                     migrate.insertCandidate(candidat, userRes, (candidateId) => {
-                      migrate.searchCandidateData(candidat.id, candidateId);
+                      migrate.searchCandidateData(candidat.rows[0].id, candidateId);
                     });
                   }
                 }
@@ -115,7 +115,32 @@ mysql.get('mstaff', (err, con) => {
 
   migrate.searchCandidateData = (oldId, newId) => {
    log(`Searching Candidate Data of candidate_id ${oldId} (old id) to insert for candidate_id ${newId} (new id)`);
+   migrate.candidateExperiences(oldId, newId);
    migrate.candidateSoftwares(oldId, newId);
+   migrate.candidateSkills(oldId, newId);
+  };
+
+  migrate.candidateExperiences = (oldId, newId) => {
+    log(`GET PgSQL Candidate Experiences Data ("candidat_experiences" table) of candidate id ${oldId}`);
+    pgsql.get({
+      name: 'get-candidateXP', text: 'SELECT * FROM experience WHERE candidat_id = $1', values: [oldId]
+    }, (err, experiences) => {
+      let candidateExperiences = experiences.rows;
+      candidateExperiences.forEach(e => {
+        con.query('INSERT INTO Experiences SET ?', {
+          candidate_id: newId,
+          name: e.etablissement_custom_libelle,
+          poste_id: e.poste_id,
+          service_id: e.service_id,
+          internship: e.is_stage,
+          start: e.date_debut,
+          end: e.date_fin,
+          current: e.poste_actuel,
+          createdAt: new Date(),
+          updatedAt:  new Date()
+        });
+      });
+    });
   };
 
   migrate.candidateSoftwares = (oldId, newId) => {
@@ -123,20 +148,48 @@ mysql.get('mstaff', (err, con) => {
     pgsql.get({
       name: 'get-candidateSoft', text: 'SELECT * FROM candidat_logiciels WHERE candidat_id = $1', values: [oldId]
     }, (err, candidatLogiciels) => {
-      let candidateSoftwares = candidatLogiciels.rows[0];
-
+      let candidateSoftwares = candidatLogiciels.rows;
       candidateSoftwares.forEach(e => {
         con.query('INSERT INTO CandidateSoftwares SET ?', {
           name: e.libelle,
-          stars: e.score,
+          stars: e.score - 1,
           candidate_id: newId
-        }, (err, csRes) => {
-          console.log(err, csRes);
         });
       });
     });
   };
 
+  migrate.candidateSkills = (oldId, newId) => {
+    log(`GET PgSQL Candidate Skills Data ("candidat_competence" table) of candidate id ${oldId}`);
+    pgsql.get({
+      name: 'get-candidateSkills', text: 'SELECT * FROM candidat_competence WHERE candidat_id = $1', values: [oldId]
+    }, (err, candidatLogiciels) => {
+      let candidateSoftwares = candidatLogiciels.rows;
+      candidateSoftwares.forEach(e => {
+        con.query('INSERT INTO CandidateSoftwares SET ?', {
+          name: e.libelle,
+          stars: e.score - 1,
+          candidate_id: newId
+        });
+      });
+    });
+  };
+
+  migrate.candidateEquipments = (oldId, newId) => {
+    log(`GET PgSQL Candidate Softwares Data ("candidat_logiciels" table) of candidate id ${oldId}`);
+    pgsql.get({
+      name: 'get-candidateEquipment', text: 'SELECT * FROM candidat_materiels WHERE candidat_id = $1', values: [oldId]
+    }, (err, candidatEquipments) => {
+      let candidateEquipments = candidatEquipments.rows;
+      candidateEquipments.forEach(e => {
+        con.query('INSERT INTO CandidateEquipments SET ?', {
+          name: e.libelle,
+          stars: e.score - 1,
+          candidate_id: newId
+        });
+      });
+    });
+  };
   log('Starting DBs Migration');
   migrate.users();
 
