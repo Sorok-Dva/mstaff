@@ -15,10 +15,16 @@ const options = {
 };
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
+    type: 'OAuth2',
     user: env.GMAIL_EMAIL,
-    pass: env.GMAIL_PASS
+    clientId: env.GMAIL_CLIENT_ID,
+    clientSecret: env.GMAIL_CLIENT_SECRET,
+    refreshToken: env.GMAIL_REFRESH_TOKEN,
+    accessToken: env.GMAIL_ACCESS_TOKEN
   }
 });
 
