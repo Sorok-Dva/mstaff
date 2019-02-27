@@ -44,6 +44,7 @@ mysql.get('mstaff', (err, con) => {
         for (let i = 0; i < 25; i++) {
           let user = users.rows[i];
           let UserData = {
+            id: user.id,
             email: user.email,
             password: user.password,
             type: userType(user.type),
@@ -74,9 +75,11 @@ mysql.get('mstaff', (err, con) => {
   };
 
   migrate.candidates = (UserData, callback) => {
-    log(`GET PgSQL Candidate Data ("candidat" table) of user id ${user.id}`);
+    let userId = UserData.id;
+    delete UserData.id;
+    log(`GET PgSQL Candidate Data ("candidat" table) of user id ${userId}`);
     pgsql.get({
-      name: 'get-candidate', text: 'SELECT * FROM candidat WHERE utilisateur_id = $1', values: [user.id]
+      name: 'get-candidate', text: 'SELECT * FROM candidat WHERE utilisateur_id = $1', values: [userId]
     }, (err, candidat) => {
       let candidate = candidat.rows[0];
       if (candidat.rows.length === 1) {
