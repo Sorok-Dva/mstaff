@@ -7,6 +7,7 @@ const layout = 'admin';
 
 const UserController = require('./user');
 const discord = require('../bin/discord-bot');
+const mailer = require('../bin/mailer');
 
 module.exports = {
   /**
@@ -15,7 +16,13 @@ module.exports = {
    * @description Form Validator. Each form validation must be created in new case.
    */
   validate: (method) => {
-
+    switch (method) {
+      case 'sendCandidateVerifEmail': {
+        return [
+          check('email').isEmail()
+        ]
+      }
+    }
   },
   index: (req, res) => {
     let render = { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } };
@@ -533,6 +540,25 @@ module.exports = {
         return res.redirect('/back-office/users');
       });
     }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+  },
+  sendCandidateVerifEmail: (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+    Models.User.findOne({
+      where: { email: req.body.email },
+      attributes: [ 'id', 'firstName', 'lastName', 'key' ]
+    }).then(user => {
+      if (_.isNil(user)) return res.status(400).send('User not found.');
+      mailer.sendEmail({
+        to: req.body.email,
+        subject: 'Création de votre compte sur Mstaff.',
+        template: 'candidate/emailValidation',
+        context: { user }
+      });
+      return res.status(200).send('Send')
+    });
   },
   impersonateUser: (req, res) => {
     Models.User.findOne({

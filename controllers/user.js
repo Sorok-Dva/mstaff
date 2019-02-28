@@ -1,6 +1,8 @@
 const { check, validationResult } = require('express-validator/check');
 const { User, Candidate, Establishment } = require('../models/index');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const mailer = require('../bin/mailer');
 
 module.exports = {
   /**
@@ -158,14 +160,21 @@ module.exports = {
           town: req.body.town,
           phone: req.body.phone,
           role: 'User',
-          type: 'candidate'
+          type: 'candidate',
+          key: crypto.randomBytes(20).toString('hex')
         }).then(user => {
           usr = user;
           return Candidate.create({
             user_id: user.id,
             es_id: esId || null
-          });
+          })
         }).then(candidate => {
+          mailer.sendEmail({
+            to: req.body.email,
+            subject: 'Création de votre compte sur Mstaff.',
+            template: 'candidate/emailValidation',
+            context: { user: usr }
+          });
           res.render(`users/registerWizard`, { layout: 'onepage', user: usr, candidate });
         }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
       });
