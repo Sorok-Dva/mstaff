@@ -17,9 +17,6 @@
     }
 </style>
 
-{{log wish.liberal_cabinets}}
-{{log wish.posts}}
-
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="wizard">
@@ -163,28 +160,6 @@
                         </div>
                         {{/ifCond}}
 
-                        {{#ifCond wish.contract_type '===' 'vacation'}}
-                        <div id="liberalType" class="row">
-                            <div class="col-sm-3">
-                                <h4 class="text-bold">Cabinets libéraux :</h4>
-                            </div>
-                            <div class="col-sm-9">
-                                    <div id="liberals" class="row sub-step">
-                                        <div class="form-group col-sm-12">
-                                            <div class="checkbox">
-                                                <input id="liberal" name="liberal" type="checkbox"
-                                                       {{#ifCond @root.wish.liberal_cabinets '===' true}}checked=""{{/ifCond}}>
-                                                <label for="liberal">
-                                                    <h3>Je suis interessé(e) par les offres des cabinets libéraux autour de moi (+/-30KM)</h3>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                            </div>
-                            <div class="col-md-12"><hr></div>
-                        </div>
-                        {{/ifCond}}
-
                         <div id="postType" class="row">
                             <div class="col-sm-3">
                                 <h4 class="text-bold">Type de poste *:</h4>
@@ -194,7 +169,25 @@
                                     <label for="selectPostType">
                                         <select class="form-control" id="selectPostType" multiple="multiple">
                                             {{#each posts as |post|}}
-                                                <option value="{{post.id}}">{{post.name}}</option>
+                                                <option value="{{post.id}}" data-categorie="{{post.categoriesPS_id}}">{{post.name}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        <div id="serviceType" class="row">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Préférence de service (facultatif) :</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group col-sm-12" style="margin-top: 25px">
+                                    <label for="selectServiceType">
+                                        <select class=selectpicker" id="selectServiceType" multiple data-live-search="true"
+                                                title="Services">
+                                            {{#each services as |service|}}
+                                                <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
                                             {{/each}}
                                         </select>
                                     </label>
@@ -210,13 +203,12 @@
                     <div class="tab-pane" role="tabpanel" id="step2">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h4 class="text-bold">Saisissez vos dates de stage</h4>
+                                <h4 class="text-bold">Votre disponibilité</h4>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
-
-                            <div id="internshipDate" style="display:none">
+                            <div id="internshipDate">
                                 <div class="col-md-6"> <label for="start">Du *</label>
                                     <input id="start" name="start" type="text"
                                            class="form-control input-md from" required="" autocomplete="off">
@@ -227,13 +219,6 @@
                                            class="form-control input-md to" autocomplete="off">
                                 </div>
                             </div>
-                            <div id="vacationDate" style="display:none" class="container-fluid">
-                            </div>
-                            <div id="cdiDate" style="display:none">
-                                //TODO CALENDAR => Only start
-                            </div>
-
-
                             <ul class="list-inline pull-right">
                                 <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
                                 <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
@@ -354,22 +339,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="recapLiberal" class="col-md-4">
-                                <div class="panel panel-resume">
-                                    <div class="panel-heading">
-                                        Cabinets libéraux (+/-30KM)
-                                    </div>
-                                    <div class="panel-body text-center">
-                                        <h3></h3>
-                                    </div>
-                                </div>
-                            </div>
                             <div id="recapActivityType" class="col-md-4">
                                 <div class="panel panel-resume">
                                     <div class="panel-heading">
                                         Type d'activité
                                     </div>
                                     <div class="panel-body text-center">
+                                        <h3></h3>
                                         <h3></h3>
                                     </div>
                                 </div>
@@ -380,7 +356,8 @@
                                         Amenagement horaire
                                     </div>
                                     <div class="panel-body text-center">
-                                        <i class="fa fa-sun-o fa-3x"></i>
+                                        <i></i>
+                                        <i></i>
                                     </div>
                                 </div>
                             </div>
@@ -391,8 +368,8 @@
                                     <div class="panel-heading">
                                         Mes disponibilités
                                     </div>
-                                    <div id="availability" class="panel-body">
-
+                                    <div id="availability" class="panel-body text-center">
+                                        <h3></h3>
                                     </div>
                                 </div>
                             </div>
@@ -423,7 +400,7 @@
                         <ul class="list-inline pull-right">
                             <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
                             <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
-                            <li><button type="button" class="btn btn-success btn-info-full" onclick="addWish()">Valider et sauvegarder</button></li>
+                            <li><button type="button" class="btn btn-success btn-info-full" onclick="addWishName()">Valider et sauvegarder</button></li>
                         </ul>
                     </div>
                     <div class="clearfix"></div>
@@ -432,27 +409,21 @@
         </div>
     </div>
 </div>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
-<script src="/static/javascripts/addApplication.js"></script>
-<script src="/static/javascripts/calendar.js"></script>
-<script>
-    {{#if wish.contract_type}}application.contractType = '{{wish.contract_type}}'{{/if}}
+<script src="/static/assets/dist/js/addApplication.min.js"></script>
 
-    {{#if wish.posts}}
-        application.postType = [];
-        {{#each wish.posts as |post|}}
-            application.postType.push('{{post}}');
+<script>
+    application.contractType = '{{wish.contract_type}}';
+    application.postType = "{{{wish.posts}}}";
+    application.serviceType = [];
+    {{#if wish.services}}
+        {{#each wish.services as |service|}}
+        application.serviceType.push('{{{service}}}');
         {{/each}}
     {{/if}}
 
-    $(document).ready(() => {
-        let selected = [];
-        application.postType.forEach( post => {
-            let val = $('#selectPostType').find(`option:contains("${post}")`).val();
-            if (val)
-              selected.push(val);
-        })
-        $('#selectPostType').val(selected).trigger('change.select2');
-    })
 </script>
+
+<script src="/static/assets/dist/js/editApplication.min.js"></script>

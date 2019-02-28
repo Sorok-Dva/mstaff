@@ -559,8 +559,11 @@ module.exports = {
       return Models.Post.findAll();
     }).then( posts => {
       render.posts = posts;
+      return Models.Service.findAll();
+    }).then(services => {
+      render.services = services;
       return res.render('candidates/edit-application', render);
-    }).catch(error => next(error));
+    }).catch(error => next(new Error(error)));
   },
   addWish: (req, res, next) => {
     const errors = validationResult(req);

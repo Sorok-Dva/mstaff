@@ -453,9 +453,9 @@ $(document).ready(function () {
 
   selectPostType.on('change', () => {
     let postType = selectPostType.select2('data');
-    let selectedCategorie = selectPostType.find(':selected').attr('data-categorie');
-    let goodServices = $(`#selectServiceType [data-categorie="${selectedCategorie}"]`);
-      if (selectedCategorie === '3')
+    let selectedCategories = selectPostType.find(':selected').attr('data-categorie');
+    let goodServices = $(`#selectServiceType [data-categorie="${selectedCategories}"]`);
+      if (selectedCategories === '3')
         goodServices = $(`#selectServiceType [data-categorie="3"],[data-categorie="2"]`);
     let wrongServices = $('#selectServiceType option:disabled');
 
