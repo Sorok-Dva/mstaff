@@ -71,9 +71,11 @@ module.exports = {
     }).then(data => {
       render.wishesWeek = data;
       render.usersWeekCount = 0; render.ESWeekCount = 0; render.wishesWeekCount = 0;
+      /* eslint-disable no-return-assign */
       render.esWeekRegistration.map((data) => render.ESWeekCount += parseInt(data.dataValues.count));
       render.usersWeekRegistration.map((data) => render.usersWeekCount += parseInt(data.dataValues.count));
       render.wishesWeek.map((data) => render.wishesWeekCount += parseInt(data.dataValues.count));
+      /* eslint-enable no-return-assign */
       res.render('back-office/index', render);
     });
   },
