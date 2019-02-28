@@ -531,7 +531,7 @@ module.exports = {
               wish_id: wish.id,
               candidate_id: candidate.id,
               ref_es_id: req.body.es[i],
-              es_id: es.id,
+              es_id: !_.isNil(es) ? es.id : null,
               new: true
             });
           });
