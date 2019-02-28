@@ -44,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     key: {
       type: DataTypes.STRING
+    },
+    validated: {
+      type: DataTypes.BOOLEAN
     }
   });
   User.associate = function (models) {
