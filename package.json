@@ -25,6 +25,7 @@
     "url": "https://github.com/Sorok-Dva/mstaff/issues"
   },
   "dependencies": {
+    "@sentry/node": "^4.6.4",
     "bcryptjs": "*",
     "chalk": "^2.4.2",
     "compression": "^1.7.3",

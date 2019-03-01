@@ -16,8 +16,11 @@ const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
 const wildcardSubdomains = require('wildcard-subdomains');
+const Sentry = require('@sentry/node');
 
 const ServerController = require('./controllers/server');
+
+Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -90,6 +93,8 @@ module.exports = {
       next();
     } else next();
   },
+  sentryErrorHandler: () => Sentry.Handlers.errorHandler(),
+  sentryRequestHandler: () => Sentry.Handlers.requestHandler(),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';

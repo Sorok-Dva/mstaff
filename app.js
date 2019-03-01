@@ -34,6 +34,7 @@ if (env !== 'development') {
 app.set('view engine', 'hbs');
 
 // ------ MIDDLEWARES
+app.use(middleware.sentryRequestHandler());
 app.engine('hbs', middleware.exphbs);
 app.use(middleware.helmet);
 app.use(express.json({ limit: '150mb' }));
@@ -64,6 +65,7 @@ app.use('/api/candidate', apiCandidateRouter);
 app.use('/api/back-office', apiBackOfficeRouter);
 app.use('/api/es', apiEsRouter);
 
+app.use(middleware.sentryErrorHandler());
 app.use(middleware.errorHandler); // errorHandler always must be in last position.
 
 module.exports = app;
