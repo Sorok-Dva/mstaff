@@ -40,6 +40,7 @@
     "express-hbs": "^2.0.2",
     "express-messages": "*",
     "express-mysql-session": "^2.1.0",
+    "express-rate-limit": "^3.4.0",
     "express-session": "^1.15.6",
     "express-subdomain": "^1.0.5",
     "express-validator": "^5.3.1",

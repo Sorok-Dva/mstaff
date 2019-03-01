@@ -2,9 +2,16 @@ const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
 const middleware = require('../middlewares');
+const rateLimit = require('express-rate-limit');
 
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 min window
+  max: 5, // start blocking after 5 requests
+  handler: (req, res, next) => next(new Error('Too many login request from this IP, please try again after 15 min')),
+});
 
 /**
  * @Route('/') GET;
@@ -20,6 +27,7 @@ router.get('/login',
   UserController.ensureIsNotAuthenticated,
   IndexController.getLogin)
   .post('/login',
+    loginLimiter,
     UserController.ensureIsNotAuthenticated,
     middleware.passportAuthentication,
     IndexController.postLogin);
