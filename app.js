@@ -1,3 +1,4 @@
+const Sentry = require('@sentry/node');
 const conf = require('dotenv').config().parsed;
 const path = require('path');
 
@@ -19,6 +20,8 @@ const app = express();
 
 const env = conf.ENV || 'development';
 
+Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
+
 if (env === 'development' || env === 'local') {
   app.use(middleware.loggerDev);
 }
@@ -34,7 +37,7 @@ if (env !== 'development') {
 app.set('view engine', 'hbs');
 
 // ------ MIDDLEWARES
-app.use(middleware.sentryRequestHandler());
+app.use(Sentry.Handlers.requestHandler());
 app.engine('hbs', middleware.exphbs);
 app.use(middleware.helmet);
 app.use(express.json({ limit: '150mb' }));
@@ -65,7 +68,7 @@ app.use('/api/candidate', apiCandidateRouter);
 app.use('/api/back-office', apiBackOfficeRouter);
 app.use('/api/es', apiEsRouter);
 
-app.use(middleware.sentryErrorHandler());
+app.use(Sentry.Handlers.errorHandler());
 app.use(middleware.errorHandler); // errorHandler always must be in last position.
 
 module.exports = app;
