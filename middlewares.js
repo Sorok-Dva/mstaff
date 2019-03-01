@@ -5,19 +5,19 @@ const config = require(`./config/config.json`)[env];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
-const fileUpload = require('express-fileupload');
 const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
 const cookieParser = require('cookie-parser');
-const handlebars = require('./helpers/index').register(require('handlebars'));
+const handlebars = require('./helpers/handlebars').register(require('handlebars'));
 const flash = require('connect-flash');
 const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
-const sassMiddleware = require('node-sass-middleware');
 const wildcardSubdomains = require('wildcard-subdomains');
+
+const ServerController = require('./controllers/server');
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -38,7 +38,6 @@ module.exports = {
   csurf: csurf({ cookie: true }), // enable crsf token middleware
   errorHandler: (err, req, res, next) => { // error handler
     let opts = {};
-    console.log(err);
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = env === 'development' ? err : {};
@@ -49,12 +48,11 @@ module.exports = {
     res.render('error', opts);
   },
   exphbs: exphbs({
-    extname         : 'hbs',
-    defaultLayout   : 'default',
-    layoutsDir      : path.join(__dirname, '/views/layouts'),
-    partialsDir     : path.join(__dirname, '/views/partials')
+    extname: 'hbs',
+    defaultLayout: 'default',
+    layoutsDir: path.join(__dirname, '/views/layouts'),
+    partialsDir: path.join(__dirname, '/views/partials')
   }),
-  fileUpload: fileUpload(),
   flash: flash(),
   helmet: helmet(), // secure apps by setting various HTTP headers
   i18n: i18n({
@@ -73,18 +71,31 @@ module.exports = {
     failureRedirect: '/login?error=login',
     failureFlash: true
   }),
-  sass: sassMiddleware({
-    src: path.join(__dirname, 'public'),
-    dest: path.join(__dirname, 'public/assets/css'),
-    indentedSyntax: false, // true = .sass and false = .scss
-    sourceMap: true
-  }),
+  /**
+   * readOnlySessionForImpersonation middleware : security method that ensure that the current impersonate session
+   *                                              can't access to CUD routes if the session is in read only mode.
+   * @param req
+   * @param res
+   * @param next
+   * @returns {*}
+   */
+  readOnlySessionForImpersonation: (req, res, next) => {
+    if (req.session && req.session.originalUser) {
+      let isBORoute = req.url.split('back-office').length - 1 !== 0;
+      if (req.session.readOnly && !isBORoute && req.method !== 'GET') {
+        return res.status(403).json('Operation not allowed, session is in read only mode.')
+      }
+      next();
+    } else next();
+  },
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
+    res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
+    res.locals.session = req.session || null;
     res.locals.csrfToken = req.csrfToken();
     next();
   },
@@ -94,10 +105,17 @@ module.exports = {
     store: sessionStore,
     resave: true
   }),
+  verifyMaintenance: (req, res, next) => {
+    ServerController.verifyMaintenance(status => {
+      if (status === 'maintenance') {
+        return res.render('index', { layout: 'maintenance' });
+      }
+      next();
+    });
+  },
   wildcardSubdomains: (req, res, next) => {
-    console.log(req.subdomains);
     if (!req.subdomains.length || req.subdomains.slice(-1)[0] === 'www') return next();
-    req.subdomain = req.subdomains.slice(-1)[0];
+    // req.subdomain = req.subdomains.slice(-1)[0];
     next();
   }
 };

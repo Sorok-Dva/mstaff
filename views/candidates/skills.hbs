@@ -1,0 +1,233 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"><i class="fa fa-question-circle" aria-hidden="true"></i> Légende</h5>
+            </div>
+            <div class="card-body" style="padding-top: 0px;">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <span class="fa fa-star checked"></span>
+                        <h5 class="inline text-bold">Je sais faire avec tutorat</h5>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <h5 class="inline text-bold">Je sais faire en autonomie</h5>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <h5 class="inline text-bold">Je sais former</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 card-competence">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</h5>
+            </div>
+            <div class="card-body">
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group col-md-9">
+                            <input class="form-control form-control-sm" placeholder="Ajouter une nouvelle compétence"
+                                   id="skills" type="text">
+                        </div>
+                        <button type="button" id="addNewSkill" class="btn btn-primary mb-3" disabled>
+                            <i class="fa fa-plus"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="col-md-12 text-center" id="skillAlreadyInList" style="display: none">
+                        <b class="alert-danger">
+                            Cette compétence est déjà présente dans votre liste de compétences.
+                        </b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr style="background-color: #FFF;">
+                                            <th style="width: 65%">Compétences</th>
+                                            <th>Niveau</th>
+                                            <th style="width:5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="skillsList">
+                                        {{#each candidate.skills as |skill|}}
+                                            <tr data-type="skill" data-id="{{skill.id}}">
+                                                <td>{{skill.name}}</td>
+                                                <td>
+                                                    <div class="rating-stars text-center">
+                                                        <ul class="stars" data-type="skill" data-id="{{skill.id}}">
+                                                            <li class="star {{rating skill.stars 1}}" title="Fair" data-value="1">
+                                                                <i class="fa fa-star"></i>
+                                                            </li>
+                                                            <li class="star {{rating skill.stars 2}}" title="Good" data-value='2'>
+                                                                <i class="fa fa-star"></i>
+                                                            </li>
+                                                            <li class="star {{rating skill.stars 3}}" title="Excellent" data-value='3'>
+                                                                <i class="fa fa-star"></i>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-simple btn-danger btn-icon remove" data-type="skill" data-id="{{skill.id}}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 card-competence">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"><i class="fa fa-stethoscope" aria-hidden="true"></i> Materiels et Produits</h5>
+            </div>
+            <div class="card-body">
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group col-md-9">
+                            <input class="form-control form-control-sm" id="equipments" type="text"
+                                   placeholder="Ajouter un materiel/produit">
+                        </div>
+                        <button type="button" class="btn btn-primary mb-3" id="addNewEquipment" disabled>
+                            <i class="fa fa-plus"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="col-md-12 text-center" id="equipmentAlreadyInList" style="display: none">
+                        <b class="alert-danger">
+                            Ce materiel/produit est déjà présent dans votre liste.
+                        </b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr style="background-color: #FFF;">
+                                    <th style="width: 65%">Matériel</th>
+                                    <th>Niveau</th>
+                                    <th style="width:5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="equipmentsList">
+                            {{#each candidate.equipments as |equipment|}}
+                                <tr data-type="equipment" data-id="{{equipment.id}}">
+                                    <td>{{equipment.name}}</td>
+                                    <td>
+                                        <div class="rating-stars text-center">
+                                            <ul class="stars" data-type="equipment" data-id="{{equipment.id}}">
+                                                <li class="star {{rating equipment.stars 1}}" title="Fair" data-value="1">
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li class="star {{rating equipment.stars 2}}" title="Good" data-value='2'>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li class="star {{rating equipment.stars 3}}" title="Excellent" data-value='3'>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-simple btn-danger btn-icon remove" data-type="equipment" data-id="{{equipment.id}}">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 card-competence">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"><i class="fa fa-save" aria-hidden="true"></i> Logiciels</h5>
+            </div>
+            <div class="card-body">
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group col-md-9">
+                            <input class="form-control form-control-sm" id="softwares" type="text"
+                                   placeholder="Ajouter un nouveau logiciel">
+                        </div>
+                        <button type="button" class="btn btn-primary mb-3" id="addNewSoftware" disabled>
+                            <i class="fa fa-plus"></i> Ajouter
+                        </button>
+                    </div>
+                    <div class="col-md-12 text-center" id="softwareAlreadyInList" style="display: none">
+                        <b class="alert-danger">
+                            Ce logiciel est déjà présent dans votre liste.
+                        </b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr style="background-color: #FFF;">
+                                    <th style="width: 65%">Logiciel</th>
+                                    <th>Niveau</th>
+                                    <th style="width:5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="softwaresList">
+                            {{#each candidate.softwares as |software|}}
+                                <tr data-type="software" data-id="{{software.id}}">
+                                    <td>{{software.name}}</td>
+                                    <td>
+                                        <div class="rating-stars text-center">
+                                            <ul class="stars" data-type="software" data-id="{{software.id}}">
+                                                <li class="star {{rating software.stars 1}}" title="Fair" data-value="1">
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li class="star {{rating software.stars 2}}" title="Good" data-value='2'>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li class="star {{rating software.stars 3}}" title="Excellent" data-value='3'>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-simple btn-danger btn-icon remove" data-type="software" data-id="{{software.id}}">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/assets/dist/js/skills.min.js"></script>

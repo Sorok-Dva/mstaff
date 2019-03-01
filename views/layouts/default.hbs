@@ -20,16 +20,15 @@
         <link href="/static/assets/css/jquery-ui.css" rel="stylesheet" />
         <!--<link href="/static/assets/css/jquery-ui.theme.css" rel="stylesheet" />-->
         <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="/static/assets/css/dashboard.css" rel="stylesheet"/>
+        <link href="/static/assets/dist/css/dashboard.min.css" rel="stylesheet"/>
         <link href="/static/assets/css/animate.min.css" rel="stylesheet"/>
         <link href="/static/assets/css/star-rating.min.css" rel="stylesheet"/>
-        <link rel="stylesheet" href="/static/assets/main.css">
+        <link rel="stylesheet" href="/static/assets/dist/css/main.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" />
 
         <!--  Fonts and icons -->
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.5.0/css/all.css"
-              integrity="sha384-j8y0ITrvFafF4EkV1mPW0BKm6dp3c+J9Fky22Man50Ofxo2wNe5pT1oZejDH9/Dt" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.7.0/css/all.css"
+            integrity="sha384-6jHF7Z3XI3fF4XZixAuSu0gGKrXwoX/w3uFPxC56OtjChio7wtTGJWRW53Nhx6Ev" crossorigin="anonymous">
         <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
         <link href="/static/assets/css/themify-icons.css" rel="stylesheet">
 
@@ -43,17 +42,30 @@
         <script src="/static/assets/js/moment.js"></script>
         <script src="/static/assets/js/bootstrap-datetimepicker.js"></script>
         <script src="/static/assets/js/bootstrap-selectpicker.js"></script>
+        <script src="/static/assets/js/nouislider.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <script src="/static/assets/dist/js/main.min.js"></script>
+        <script src="/static/assets/dist/js/handlebars.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+        {{#ifCond user.type '===' 'es'}}
+          <script src="/static/assets/dist/js/main.es.min.js"></script>
+        {{/ifCond}}
     </head>
 
     <body>
         <div class="wrapper">
             {{> sidebar}}
             <div class="main-panel">
+                {{#if session.originalUser}}
+                    <div class="col-md-12 alert alert-warning" style="position:fixed;z-index: 5;">
+                        Vous être en train d'utiliser Mstaff en tant que <b>{{user.email}}</b>
+                        <i id="removeReadOnly" class="fa fa-{{readOnly}}"></i>
+                        - <a href="/back-office/removeImpersonation"> Retour </a>
+                    </div>
+                {{/if}}
                 {{> header}}
-
-                <div class="content">
+                <div id="bodyContent" class="content">
                     <div class="container-fluid">
                         {{> flash}}
                         {{{body}}}

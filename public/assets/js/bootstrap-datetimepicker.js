@@ -91,7 +91,7 @@
           navStep: 100
         }
       ],
-      viewModes = ['days', 'months', 'years', 'decades'],
+      viewModes = ['days', 'months', 'years'],
       verticalModes = ['top', 'bottom', 'auto'],
       horizontalModes = ['left', 'right', 'auto'],
       toolbarPlacements = ['default', 'top', 'bottom'],
@@ -628,10 +628,11 @@
           html = '';
 
         yearsViewHeader.eq(0).find('span').attr('title', options.tooltips.prevDecade);
-        yearsViewHeader.eq(1).attr('title', options.tooltips.selectDecade);
+        // yearsViewHeader.eq(1).attr('title', options.tooltips.selectDecade);
         yearsViewHeader.eq(2).find('span').attr('title', options.tooltips.nextDecade);
 
         yearsView.find('.disabled').removeClass('disabled');
+        yearsViewHeader.eq(1).addClass('disabled');
 
         if (options.minDate && options.minDate.isAfter(startYear, 'y')) {
           yearsViewHeader.eq(0).addClass('disabled');
@@ -2474,20 +2475,20 @@
     maxDate: false,
     useCurrent: true,
     collapse: true,
-    locale: moment.locale(),
+    locale: 'fr',
     defaultDate: false,
     disabledDates: false,
     enabledDates: false,
     icons: {
-      time: 'glyphicon glyphicon-time',
-      date: 'glyphicon glyphicon-calendar',
-      up: 'glyphicon glyphicon-chevron-up',
-      down: 'glyphicon glyphicon-chevron-down',
-      previous: 'glyphicon glyphicon-chevron-left',
-      next: 'glyphicon glyphicon-chevron-right',
-      today: 'glyphicon glyphicon-screenshot',
-      clear: 'glyphicon glyphicon-trash',
-      close: 'glyphicon glyphicon-remove'
+      time: 'fal fa-clock',
+      date: 'fal fa-calendar',
+      up: 'fal fa-chevron-up',
+      down: 'fal fa-chevron-down',
+      previous: 'fal fa-chevron-left',
+      next: 'fal fa-chevron-right',
+      today: 'fal fa-screenshot',
+      clear: 'fal fa-trash',
+      close: 'fal fa-remove'
     },
     tooltips: {
       today: 'Go to today',
