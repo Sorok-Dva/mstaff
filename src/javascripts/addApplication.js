@@ -263,6 +263,26 @@ let mapInit = () => {
   }
 };
 
+let resizemap = () => {
+  let around = $('#aroundMe');
+  let allover = $('#allOver');
+  let map = $('.map');
+  let resultList = $('.resultList');
+
+  allover.click( () => {
+    map.hide();
+    resultList.removeClass('col-md-7');
+    resultList.addClass('col-md-12');
+  });
+
+  around.click( () => {
+    map.show();
+    resultList.removeClass('col-md-12');
+    resultList.addClass('col-md-7');
+  });
+
+}
+
 let addMarker = (es) => {
   let marker = new google.maps.Marker({
     map: map,
@@ -434,11 +454,15 @@ slider.noUiSlider.on('slide', function (){
 
 
 $(document).ready(function () {
+
+
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(geoSuccess);
-  } else {
-    alert('Geolocation is not supported by this browser.');
+    navigator.geolocation.getCurrentPosition(geoSuccess, () => {
+      console.log('Geolocation is not supported by this browser.');
+    });
   }
+
+  resizemap();
 
   let selectPostType = $('#selectPostType');
   let selectServiceType = $('#selectServiceType');
