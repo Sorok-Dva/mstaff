@@ -51,6 +51,9 @@ module.exports = {
         values: ['admin', 'candidate', 'es', 'demo'],
         allowNull: false
       },
+      key: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

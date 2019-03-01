@@ -36,6 +36,8 @@ router.get('/register/:esCode?',
     UserController.validate('create'),
     UserController.create);
 
+router.get('/validate/:key', UserController.ensureIsNotAuthenticated, IndexController.getValidateAccount);
+
 /**
  * @Route('/register/complete/profile') GET + POST;
  * Show Register Wizard for profile completion

@@ -71,6 +71,7 @@ module.exports = {
     if (Object.keys(req.files).length === 0) {
       return res.status(400).send('No files were uploaded.');
     }
+    /* eslint-disable-next-line prefer-destructuring */
     let file = Object.values(req.files)[0][0];
     let candidate;
     Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {

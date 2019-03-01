@@ -1,34 +1,36 @@
 const express = require('express');
 const router = express.Router();
-const backOfficeController = require('../../controllers/backOffice');
-const userController = require('../../controllers/user');
+const BackOfficeController = require('../../controllers/backOffice');
+const UserController = require('../../controllers/user');
 
-router.put('/formations/:id', userController.ensureIsAdmin, backOfficeController.editFormation)
-  .delete('/formations/:id', userController.ensureIsAdmin, backOfficeController.removeFormation)
-  .post('/formations/', userController.ensureIsAdmin, backOfficeController.addFormation);
+router.post('/candidates/sendVerifEmail/', UserController.ensureIsAdmin, BackOfficeController.sendCandidateVerifEmail);
 
-router.put('/skills/:id', userController.ensureIsAdmin, backOfficeController.editSkill)
-  .delete('/skills/:id', userController.ensureIsAdmin, backOfficeController.removeSkill)
-  .post('/skills/', userController.ensureIsAdmin, backOfficeController.addSkill);
+router.put('/formations/:id', UserController.ensureIsAdmin, BackOfficeController.editFormation)
+  .delete('/formations/:id', UserController.ensureIsAdmin, BackOfficeController.removeFormation)
+  .post('/formations/', UserController.ensureIsAdmin, BackOfficeController.addFormation);
 
-router.put('/equipments/:id', userController.ensureIsAdmin, backOfficeController.editEquipment)
-  .delete('/equipments/:id', userController.ensureIsAdmin, backOfficeController.removeEquipment)
-  .post('/equipments/', userController.ensureIsAdmin, backOfficeController.addEquipment);
+router.put('/skills/:id', UserController.ensureIsAdmin, BackOfficeController.editSkill)
+  .delete('/skills/:id', UserController.ensureIsAdmin, BackOfficeController.removeSkill)
+  .post('/skills/', UserController.ensureIsAdmin, BackOfficeController.addSkill);
 
-router.put('/softwares/:id', userController.ensureIsAdmin, backOfficeController.editSoftware)
-  .delete('/softwares/:id', userController.ensureIsAdmin, backOfficeController.removeSoftware)
-  .post('/softwares/', userController.ensureIsAdmin, backOfficeController.addSoftware);
+router.put('/equipments/:id', UserController.ensureIsAdmin, BackOfficeController.editEquipment)
+  .delete('/equipments/:id', UserController.ensureIsAdmin, BackOfficeController.removeEquipment)
+  .post('/equipments/', UserController.ensureIsAdmin, BackOfficeController.addEquipment);
 
-router.put('/services/:id', userController.ensureIsAdmin, backOfficeController.editService)
-  .delete('/services/:id', userController.ensureIsAdmin, backOfficeController.removeService)
-  .post('/services/', userController.ensureIsAdmin, backOfficeController.addService);
+router.put('/softwares/:id', UserController.ensureIsAdmin, BackOfficeController.editSoftware)
+  .delete('/softwares/:id', UserController.ensureIsAdmin, BackOfficeController.removeSoftware)
+  .post('/softwares/', UserController.ensureIsAdmin, BackOfficeController.addSoftware);
 
-router.put('/posts/:id', userController.ensureIsAdmin, backOfficeController.editPost)
-  .delete('/posts/:id', userController.ensureIsAdmin, backOfficeController.removePost)
-  .post('/posts/', userController.ensureIsAdmin, backOfficeController.addPost);
+router.put('/services/:id', UserController.ensureIsAdmin, BackOfficeController.editService)
+  .delete('/services/:id', UserController.ensureIsAdmin, BackOfficeController.removeService)
+  .post('/services/', UserController.ensureIsAdmin, BackOfficeController.addService);
 
-router.put('/qualifications/:id', userController.ensureIsAdmin, backOfficeController.editQualification)
-  .delete('/qualifications/:id', userController.ensureIsAdmin, backOfficeController.removeQualification)
-  .post('/qualifications/', userController.ensureIsAdmin, backOfficeController.addQualification);
+router.put('/posts/:id', UserController.ensureIsAdmin, BackOfficeController.editPost)
+  .delete('/posts/:id', UserController.ensureIsAdmin, BackOfficeController.removePost)
+  .post('/posts/', UserController.ensureIsAdmin, BackOfficeController.addPost);
+
+router.put('/qualifications/:id', UserController.ensureIsAdmin, BackOfficeController.editQualification)
+  .delete('/qualifications/:id', UserController.ensureIsAdmin, BackOfficeController.removeQualification)
+  .post('/qualifications/', UserController.ensureIsAdmin, BackOfficeController.addQualification);
 
 module.exports = router;

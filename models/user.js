@@ -41,6 +41,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['admin', 'candidate', 'es', 'demo'],
       allowNull: false
+    },
+    key: {
+      type: DataTypes.STRING
+    },
+    validated: {
+      type: DataTypes.BOOLEAN
     }
   });
   User.associate = function (models) {
