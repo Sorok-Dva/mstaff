@@ -9,8 +9,11 @@ const IndexController = require('../controllers/index');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
-  max: 5, // start blocking after 5 requests
-  handler: (req, res, next) => next(new Error('Too many login request from this IP, please try again after 15 min')),
+  max: 3, // start blocking after 3 requests
+  handler: (req, res, next) => {
+    req.flash('error_msg', 'Too many login request from this IP, please try again after 15 min');
+    return res.redirect('/login');
+  },
 });
 
 /**
