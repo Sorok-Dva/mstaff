@@ -46,7 +46,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     validated: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      defaultValue: 0,
+      allowNull: false
     }
   });
   User.associate = function (models) {
