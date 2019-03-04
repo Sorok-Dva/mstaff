@@ -1,5 +1,7 @@
 const { check, validationResult } = require('express-validator/check');
 const { Op } = require('sequelize');
+const { BackError } = require('../helpers/back.error');
+const httpStatus = require('http-status');
 const _ = require('lodash');
 const fs = require('fs');
 const Models = require('../models/index');
@@ -133,7 +135,7 @@ module.exports = {
       }]
     }).then(candidate => {
       return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getEditProfile: (req, res, next) => {
     Models.User.findOne({
@@ -198,9 +200,9 @@ module.exports = {
       Models.Post.findAll().then(posts => {
         Models.Service.findAll().then(services => {
           return res.render('candidates/formations', { candidate, posts, services, a: { main: 'cv' } })
-        }).catch(error => next(new Error(error)));
-      }).catch(error => next(new Error(error)));
-    }).catch(error => next(new Error(error)));
+        }).catch(error => next(new BackError(error)));
+      }).catch(error => next(new BackError(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getKnowledge: (req, res, next) => {
     let render = { a: { main: 'knowledges' } };
@@ -228,7 +230,7 @@ module.exports = {
     }).then(softwares => {
       render.softwares = softwares;
       return res.render('candidates/skills', render)
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getDocuments: (req, res, next) => {
     let render = { a: { main: 'documents' } };
@@ -242,14 +244,14 @@ module.exports = {
     }).then(candidate => {
       render.candidate = candidate;
       return res.render('candidates/documents', render)
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   addApplication: (req, res, next) => {
     let render = { a: { main: 'applications' } };
     Models.Post.findAll().then(posts => {
       render.posts = posts;
       return res.render('candidates/add-application', render)
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getWishes: (req, res, next) => {
     let render = { a: { main: 'applications' } };
@@ -259,7 +261,7 @@ module.exports = {
     }).then(wishes => {
       render.wishes = wishes;
       return res.render('candidates/applications', render)
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getXpById: (req, res, next) => {
     return Models.Candidate.findOne({
