@@ -19,6 +19,7 @@ const wildcardSubdomains = require('wildcard-subdomains');
 
 const ServerController = require('./controllers/server');
 
+
 let sessionStore = new MySQLStore({
   host: config.host,
   user: config.username,
@@ -39,9 +40,11 @@ module.exports = {
   errorHandler: (err, req, res, next) => { // error handler
     let opts = {};
     // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = env === 'development' ? err : {};
-
+    if (env === 'development') {
+      opts.error = err;
+    } else {
+      res.locals.error_msg = err.message;
+    }
     // render the error page
     res.status(err.status || 500);
     if (!req.user) opts.layout = 'onepage';
