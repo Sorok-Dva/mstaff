@@ -133,7 +133,7 @@ module.exports = {
         title: 'Liste des utilisateurs ES',
         a: { main: 'users', sub: 'es' },
         users })
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
@@ -143,7 +143,7 @@ module.exports = {
         a: { main: 'es', sub: 'es_all' },
         data
       })
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getES: (req, res, next) => {
     Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
@@ -169,7 +169,7 @@ module.exports = {
           data
         })
       });
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getUser: (req, res) => {
     Models.User.findOne({
