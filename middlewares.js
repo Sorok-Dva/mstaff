@@ -19,6 +19,7 @@ const wildcardSubdomains = require('wildcard-subdomains');
 
 const ServerController = require('./controllers/server');
 
+
 let sessionStore = new MySQLStore({
   host: config.host,
   user: config.username,
