@@ -2,6 +2,7 @@ let map, marker, cityCircle, markers = [], filter, pos = { lat: 0, lng: 0, rayon
   allEs = [], application = {};
 let kmArray = [1, 2, 5, 10, 15, 20, 30, 50, 70, 100];
 let slider = document.getElementById('radius');
+let geoActivate = false;
 
 // Step #1
 $('#step1 input[type="checkbox"]').change(function () {
@@ -30,6 +31,7 @@ $('#step1 input[type="checkbox"]').change(function () {
         delete application.timeType;
       }
       break;
+
     case 'vacation':
       resetAllCheckboxExcept(selected);
       if (this.checked){
@@ -236,8 +238,21 @@ let createRecap = () => {
 };
 
 let geoSuccess = (position) => {
+  geoActivate = true;
   pos = { lat: position.coords.latitude, lng: position.coords.longitude, rayon: 5 };
   getEsList();
+};
+
+let geoError = (error) => {
+  geoActivate = false;
+  if (error.PERMISSION_DENIED){
+    alert('Geolocation permission is actually denied or not supported by your browser.');
+  }
+};
+
+let activateGeoLoc = () => {
+  if (navigator.geolocation)
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
 };
 
 let mapInit = () => {
@@ -263,7 +278,7 @@ let mapInit = () => {
   }
 };
 
-let resizemap = () => {
+let resizeMap = () => {
   let around = $('#aroundMe');
   let allover = $('#allOver');
   let map = $('.map');
@@ -329,6 +344,24 @@ let getEsList = () => {
       $('.esCount').html(data.length);
       $('#loader').hide();
     });
+  });
+};
+
+let getEsListCity = () => {
+  let _csrf = $('#csrfToken').val();
+  $('#esCount').empty();
+  $('#esList').html('<div id="loader" class="col-md-12"></div>');
+  $('#loader').show();
+
+  let city = '01300';
+  // console.log(`Input ${input}`);
+  $.get(`/api/establishments/findByCity/${city}`, _csrf, (data) => {
+    let es = data;
+
+    // TODOOOOOOOOOOOOOOOO
+    console.log(es);
+    $('#loader').hide();
+
   });
 };
 
@@ -452,17 +485,14 @@ slider.noUiSlider.on('slide', function (){
   highlightLabel(parseInt(slider.noUiSlider.get()));
 });
 
-
 $(document).ready(function () {
 
+  activateGeoLoc();
+  resizeMap();
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(geoSuccess, () => {
-      console.log('Geolocation is not supported by this browser.');
-    });
-  }
-
-  resizemap();
+  $('#seekCity').click(() => {
+    getEsListCity();
+  });
 
   let selectPostType = $('#selectPostType');
   let selectServiceType = $('#selectServiceType');
@@ -566,7 +596,11 @@ $(document).ready(function () {
       switch (datastep) {
         case 'step1':
           resetSelectedES();
-          application.contractType.name === 'internship' ? goStep('step2') : goStep('step3');
+          if (application.contractType.name === 'internship')
+            goStep('step2')
+          else {
+            goStep('step3');
+          }
           break;
         case 'step2':
           goStep('step3');

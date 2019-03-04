@@ -152,6 +152,16 @@ module.exports = {
       }).catch(error => next(new Error(error)));
     });
   },
+  findByCity: (req, res, next) => {
+    console.log(req.body.city);
+    return Models.EstablishmentReference.findAll({
+      where: {
+        address_town: { [Op.like]: `%${req.params.city}%` }
+      }
+    }).then( es => {
+      return res.status(200).json(es);
+    }).catch(error => next(new Error(error)));
+  },
   addApplication: (body, wish) => {
     for (let i = 0; i < body.es.length; i++) {
       Models.Application.create({

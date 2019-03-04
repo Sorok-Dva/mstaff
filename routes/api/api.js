@@ -9,5 +9,6 @@ router.get('/skills/all', ApiController.getSkillsList);
 router.get('/equipments/all', ApiController.getEquipmentsList);
 router.get('/softwares/all', ApiController.getSoftwaresList);
 router.post('/establishments/findByGeo', ESController.findByGeo);
+router.get('/establishments/findByCity/:city', ESController.findByCity);
 
 module.exports = router;
