@@ -38,6 +38,7 @@ module.exports = {
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
   errorHandler: (err, req, res, next) => { // error handler
+
     let opts = {};
     // set locals, only providing error in development
     if (env === 'development') {
