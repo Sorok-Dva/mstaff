@@ -427,9 +427,14 @@ module.exports = {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
   getPosts: (req, res) => {
+    let render = { a: { main: 'references', sub: 'posts' } };
     return Models.Post.findAll().then( post => {
-      res.render('back-office/references/posts', {
-        layout, post, a: { main: 'references', sub: 'posts' } })
+      render.post = post;
+      return Models.CategoriesPostsServices.findAll()
+    }).then( categories => {
+      render.categories = categories;
+      return res.render('back-office/references/posts', {
+        layout, render })
     });
   },
   editPost: (req, res, next) => {
@@ -438,8 +443,9 @@ module.exports = {
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
     return Models.Post.findOne({ where: { id: req.params.id } }).then(post => {
-      if (req.body.promptInput) {
+      if (req.body.promptInput && req.body.categoryInput) {
         post.name = req.body.promptInput;
+        post.categoriesPS_id = req.body.categoryInput;
       }
       post.save();
       return res.status(200).json({ status: 'Modified' });
@@ -452,7 +458,8 @@ module.exports = {
 
     return Models.Post.findOrCreate({
       where: {
-        name: req.body.promptInput
+        name: req.body.promptInput,
+        categoriesPS_id: req.body.categoryInput
       }
     }).spread((post, created) => {
       if (created) {

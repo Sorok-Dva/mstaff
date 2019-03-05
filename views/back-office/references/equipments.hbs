@@ -4,7 +4,56 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addEquipment()> <i class="fal fa-plus"></i></a>
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addEquipmentModal',
+                       title: 'Ajouter une compétence',
+                       modal: 'back-office/addEquipment'
+                   }, () => {
+                       $('button#validateEquipment').click(function () {
+                           if ($('input#equipmentValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#equipmentValue').val();
+                               $.post(`/api/back-office/equipments/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Cette compétence existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.equipment.id,
+                                   name: response.equipment.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: 'Compétence créée.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addEquipmentModal').modal('hide');
+               }
+               else {
+                   if ($('input#equipmentValue').val() == '') {
+                       $('input#equipmentValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#equipmentValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
                 </div>
 
                 <table id="equipments-table" class="table">
@@ -49,33 +98,64 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .edit': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-                let promptInput = prompt('Renommer la compétence (matériel) :');
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                if (promptInput) {
-                    $.put(`/api/back-office/equipments/${row.id}`, {
-                        promptInput,
-                        _csrf
-                    }, () => {
-                        $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                createModal({
+                    id: 'editEquipmentModal',
+                    title: 'Modifier une equipment',
+                    modal: 'back-office/editEquipment'
+                }, () => {
+                    $('button#btnEditEquipment').click(function () {
+                        if ($('input#equipmentValueEdit').val() != '') {
+                            let _csrf = $('#csrfToken').val();
+                            let promptInput = $('input#equipmentValueEdit').val();
+                            $.put(`/api/back-office/equipments/${row.id}`, {
+                                promptInput,
+                                _csrf
+                            }, () => {
+                                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                                $('#editEquipmentModal').modal('hide');
+                                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                                notification({
+                                    icon: 'check-circle',
+                                    type: 'success',
+                                    title: 'Compétence modifiée.',
+                                    message: ``
+                                });
+                            });
+                        } else {
+                            if ($('input#equipmentValueEdit').val() == '') {
+                                $('input#equipmentValueEdit').addClass('error');
+                                setTimeout(function () {
+                                    $('input#equipmentValueEdit').removeClass('error');
+                                }, 750)
+                            }
+                        }
                     });
-                }
+                });
             },
             'click .remove': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-
-                if (confirm('ATTENTION:\n\n ' +
-                        'Cette action est irreversible et supprimera cette compétence.\n\n' +
-                        'Voulez vous continuer ?')) {
-                    $.delete(`/api/back-office/equipments/${row.id}`, {
-                        _csrf
-                    }, () => {
-                        table.bootstrapTable('remove', {
-                            field: 'id',
-                            values: [row.id]
+                createModal({
+                    id: 'removeEquipmentModal',
+                    title: 'Supprimer une compétence',
+                    modal: 'back-office/removeEquipment'
+                }, () => {
+                    let _csrf = $('#csrfToken').val();
+                    $('button#btnRemoveEquipment').click(function () {
+                        $.delete(`/api/back-office/equipments/${row.id}`, {
+                            _csrf
+                        }, () => {
+                            table.bootstrapTable('remove', {
+                                field: 'id',
+                                values: [row.id]
+                            });
+                            notification({
+                                icon: 'check-circle',
+                                type: 'success',
+                                title: 'Compétence supprimée.',
+                                message: ``
+                            });
                         });
-                    })
-                }
+                    });
+                });
             }
         };
 
@@ -110,29 +190,4 @@
             table.bootstrapTable('resetView');
         });
     });
-    function addEquipment()
-    {
-        let _csrf = $('#csrfToken').val();
-        let promptInput = prompt('Ajouter une compétence (matériel) :');
-        if (promptInput) {
-            $.post(`/api/back-office/equipments/`, {
-                promptInput,
-                _csrf
-            }, (response) => {
-                if (response.status === "Already exists")
-                {
-                    alert("Cette compétence existe déjà");
-                }
-                else {
-                    table.bootstrapTable('insertRow', {
-                        index: 0,
-                        row: {
-                            id: response.equipment.id,
-                            name: response.equipment.name
-                        }
-                    });
-                }
-            });
-        }
-    }
 </script>
