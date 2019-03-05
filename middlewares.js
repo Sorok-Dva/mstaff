@@ -5,6 +5,7 @@ const config = require(`./config/config.json`)[env];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
+const methodOverride = require('method-override');
 const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
@@ -68,6 +69,7 @@ module.exports = {
     textsVarName: 'tr'
   }),
   loggerDev: logger('dev'),
+  methodOverride: methodOverride(),
   passportInit: passport.initialize(),
   passportSession: passport.session(),
   passportAuthentication: passport.authenticate('local', {

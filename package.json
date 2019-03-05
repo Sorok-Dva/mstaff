@@ -55,6 +55,7 @@
     "jsonwebtoken": "^8.5.0",
     "lodash": "^4.17.11",
     "md5": "^2.2.1",
+    "method-override": "^3.0.0",
     "moment": "^2.24.0",
     "moment-countdown": "0.0.3",
     "morgan": "^1.9.0",
