@@ -11,8 +11,11 @@ const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
   max: 3, // start blocking after 3 requests
   handler: (req, res, next) => {
-    req.flash('error_msg', 'Too many login request from this IP, please try again after 15 min');
+    req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réessayer dans 15 minutes.');
     return res.redirect('/login');
+  },
+  keyGenerator: (req) => {
+    return req.body.email;
   },
 });
 
