@@ -25,17 +25,26 @@ var mobile_menu_visible = 0,
 var param_sidebar_mini = false;
 
 (function(){
+
+  var demo_sidebar_mini = getUrlParameter('demo_sidebar_mini');
+
+  try {
+    if(demo_sidebar_mini != undefined && demo_sidebar_mini == "active"){
+      $('body').addClass('sidebar-mini');
+    }
+  } catch (e) {
+    console.log('error with sidebar-mini:' + e);
+  }
+
   isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
 
   if (isWindows){
     // if we are on windows OS we activate the perfectScrollbar function
     var $sidebar_wrapper = document.getElementsByClassName('sidebar-wrapper')[0];
     var $main_panel = document.getElementsByClassName('main-panel')[0];
-    var $wfp = document.getElementsByClassName('wrapper-full-page')[0];
 
     var ps = new PerfectScrollbar($sidebar_wrapper);
     ps = new PerfectScrollbar($main_panel);
-    ps = new PerfectScrollbar($('.full-page'));
 
     $('html').addClass('perfect-scrollbar-on');
   } else {
