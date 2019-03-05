@@ -36,7 +36,7 @@ server.listen(port, () => {
     console.log('[SEQUELIZE] %s Connection has been established successfully.', chalk.green('✓'));
   }).catch(err => {
     console.log('[SEQUELIZE] %s Unable to connect to the database.', chalk.red('✗'), err.message);
-    process.exit(1);
+    // process.exit(1);
   });
   if (conf.ENV === 'local' || conf.ENV === 'development') {
     const gulp = spawn('gulp');
