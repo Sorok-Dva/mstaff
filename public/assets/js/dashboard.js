@@ -131,7 +131,6 @@ $(document).ready(function(){
 // activate collapse right menu when the windows is resized
 $(window).resize(function(){
   pdp.initSidebarsCheck();
-
 });
 
 pdp = {
@@ -166,11 +165,12 @@ pdp = {
         $('body').removeClass('sidebar-mini');
         $btn.html('<i class="ti-more-alt"></i>');
         pdp.misc.sidebar_mini_active = false;
-
-      }else{
+        localStorage.setItem('sidebarMini', 'false');
+      } else {
         $('body').addClass('sidebar-mini');
         $btn.html('<i class="ti-menu-alt"></i>');
         pdp.misc.sidebar_mini_active = true;
+        localStorage.setItem('sidebarMini', 'true');
       }
 
       // we simulate the window Resize so the charts will get updated in realtime.
