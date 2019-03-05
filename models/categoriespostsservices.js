@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const CategoriesPostsServices = sequelize.define('CategoriesPostsServices', {
-    category: DataTypes.STRING
+    name: DataTypes.STRING
   }, {});
   CategoriesPostsServices.associate = function (models) {
     CategoriesPostsServices.hasMany(models.Post, {

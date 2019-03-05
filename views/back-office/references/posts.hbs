@@ -5,10 +5,12 @@
            <div class="card-content">
                <div class="toolbar">
                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                           $.get
                    createModal({
                        id: 'addPostModal',
                        title: 'Ajouter un poste',
-                       modal: 'back-office/addPost'
+                       modal: 'back-office/addPost',
+                       categories: '{{render.categories}}'
                    }, () => {
                        $('button#validatePost').click(function () {
                            if (($('input#postValue').val() != '') && ($('select#postCategory').val() != '')) {
@@ -77,12 +79,12 @@
                        data-formatter="operateFormatter">Actions</th>
                    </thead>
                    <tbody>
-                   {{#each post as |posts|}}
+                   {{#each render.post as |posts|}}
                        <tr data-id="{{posts.id}}">
                            <td></td>
                            <td>{{posts.id}}</td>
                            <td>{{posts.name}}</td>
-                           <td>{{posts.categoriesPS_id}}</td>
+                           <td>{{showCategory posts.categoriesPS_id}}</td>
                        </tr>
                    {{/each}}
                    </tbody>

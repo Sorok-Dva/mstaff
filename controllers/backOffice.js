@@ -416,9 +416,14 @@ module.exports = {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
   getPosts: (req, res) => {
+    let render = { a: { main: 'references', sub: 'posts' } };
     return Models.Post.findAll().then( post => {
-      res.render('back-office/references/posts', {
-        layout, post, a: { main: 'references', sub: 'posts' } })
+      render.post = post;
+      return Models.CategoriesPostsServices.findAll()
+    }).then( categories => {
+      render.categories = categories;
+      return res.render('back-office/references/posts', {
+        layout, render })
     });
   },
   editPost: (req, res, next) => {

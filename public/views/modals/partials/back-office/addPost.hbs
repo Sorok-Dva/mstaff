@@ -6,13 +6,20 @@
      <div class="form-group">
          <label for="postCategory"> Catégorie de poste </label>
          <select class="form-control" id="postCategory">
-          <option categoryID="" value=""> Choisir une catégorie </option>
-          <option categoryID="2" value="2"> Médical </option>
-          <option categoryID="3" value="3"> Paramédical </option>
-          <option categoryID="4" value="4"> Personnel non soignant </option>
+          <option value=""> Choisir une catégorie </option>
          </select>
      </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" id="validatePost"> Ajouter un poste </button>
 </div>
+<script>
+    $.get('/api/categoriesPostsServices/all', function(data) {
+        $.each(data.categories, function (i, category) {
+            $('#postCategory').append($('<option>', {
+                value: category.id,
+                text : category.name
+            }));
+        });
+    });
+</script>

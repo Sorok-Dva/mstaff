@@ -220,4 +220,22 @@ module.exports.register = async (Handlebars) => {
   });
   /* eslint-enable no-console */
 
+  Handlebars.registerHelper('showCategory', function (categoryPS_id) {
+    switch (categoryPS_id) {
+      case 1:
+        return 'None';
+      case 2:
+        return 'Médical';
+      case 3:
+        return 'Paramédical';
+      case 4:
+        return 'Administratif';
+      case 5:
+        return 'Libéral';
+      case 6:
+        return 'Mix';
+      default:
+        return '';
+    }
+  })
 };
