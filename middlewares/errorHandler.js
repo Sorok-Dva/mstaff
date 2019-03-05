@@ -83,6 +83,6 @@ module.exports = {
     if (err.type) body.type = err.type;
     if (err.errors) body.errors = err.errors;
 
-    return sendError(req, res, status, err);
+    return sendError(req, res, status, body);
   }
 };
