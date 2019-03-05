@@ -1,45 +1,49 @@
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 const env = require('dotenv').config().parsed;
 const Mailer = {};
 
+const options = {
+  viewEngine: {
+    extname: '.hbs',
+    layoutsDir: 'views/layouts/',
+    defaultLayout: 'mail_template',
+    partialsDir: 'views/partials/'
+  },
+  viewPath: 'views/email/',
+  extName: '.hbs'
+};
+
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
+    type: 'OAuth2',
     user: env.GMAIL_EMAIL,
-    pass: env.GMAIL_PASS
+    clientId: env.GMAIL_CLIENT_ID,
+    clientSecret: env.GMAIL_CLIENT_SECRET,
+    refreshToken: env.GMAIL_REFRESH_TOKEN,
+    accessToken: env.GMAIL_ACCESS_TOKEN
   }
 });
 
-Mailer.sendEmail = (to, subject, text) => {
+transporter.use('compile', hbs(options));
+
+Mailer.sendEmail = (opts) => {
   transporter.sendMail({
     from: `"${env.SITE_TITLE}" \<${env.GMAIL_EMAIL}\>`,
-    to,
-    subject,
-    html: putText2Template(subject, text)
+    to: opts.to,
+    subject: opts.subject,
+    template: opts.template,
+    context: opts.context
   }, (error, info) => {
-    if (error) {
-      console.log(error);
-    }
+    transporter.close();
+    /* eslint-disable no-console */
+    if (error) return console.log(error);
+    if (info) return console.log(`[MAIL_INFO]`, JSON.stringify(info));
+    /* eslint-enable no-console */
   });
-};
-
-Mailer.sendValidationMail = (nickname, to, key) => {
-  let text = ``;
-
-  transporter.sendMail({
-    from: `"${env.SITE_TITLE}" \<${env.GMAIL_EMAIL}\>`,
-    to,
-    subject: '',
-    html: putText2Template('', text)
-  }, (error, info) => {
-    if (error) {
-      console.log('Mailer error :' + error, info);
-    }
-  });
-};
-
-const putText2Template = (title, text) => {
-  return `${title}${text}`;
 };
 
 module.exports = Mailer;

@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     Establishment.hasOne(models.Demo, {
       foreignKey: 'es_name',
       as: 'demo'
-    })
+    });
+    Establishment.hasMany(models.ESAccount, {
+      foreignKey: 'es_id',
+      sourceKey: 'id'
+    });
   };
   return Establishment;
 };

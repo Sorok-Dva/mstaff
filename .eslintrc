@@ -1,0 +1,125 @@
+{
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "ecmaVersion": 8,
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "rules": {
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1,
+        "FunctionDeclaration": {
+          "parameters": "first"
+        }
+      }
+    ],
+    "prefer-destructuring": "warn",
+    "no-extra-semi": "error",
+    "no-extra-parens": "error",
+    "no-invalid-regexp": "error",
+    "no-await-in-loop": "warn",
+    "no-multi-assign": "warn",
+    "no-return-await": "error",
+    "no-loop-func": "warn",
+    "no-buffer-constructor": "off",
+    "function-paren-newline": "off",
+    "object-curly-newline": "off",
+    "no-restricted-globals": "error",
+    "brace-style": "off",
+    "eol-last": "off",
+    "eqeqeq": "off",
+    "for-direction": "off",
+    "keyword-spacing": "error",
+    "key-spacing": "error",
+    "no-dupe-arg": "off",
+    "no-dupe-keys": "off",
+    "no-unused-vars": "off",
+    "no-return-assign": ["warn", "except-parens"],
+    "no-useless-escape": "off",
+    "no-trailing-spaces": "off",
+    "one-var": "off",
+    "semi": "off",
+    "standard/object-curly-even-spacing": "off",
+    "spaced-comment": "off",
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never"
+      }
+    ],
+    "object-curly-spacing": [
+      1,
+      "always"
+    ],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "only-multiline",
+        "objects": "only-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "ignore"
+      }
+    ],
+    "comma-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "class-methods-use-this": [
+      "off"
+    ],
+    "no-bitwise": [
+      "off"
+    ],
+    "import/prefer-default-export": [
+      "off"
+    ],
+    "no-underscore-dangle": [
+      "off"
+    ],
+    "no-restricted-syntax": [
+      "off",
+      "ForOfStatement"
+    ],
+    "no-use-before-define": [
+      "off"
+    ],
+    "max-len": [
+      "error",
+      150
+    ],
+    "no-continue": [
+      "off"
+    ],
+    "no-process-exit": [
+      "error"
+    ],
+    "no-console": [
+      "warn"
+    ],
+    "quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      }
+    ]
+  }
+}

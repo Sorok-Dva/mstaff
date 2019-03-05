@@ -20,10 +20,12 @@ module.exports = (sequelize, DataTypes) => {
     });
     Experience.hasOne(models.Service, {
       foreignKey: 'id',
-      as: 'service'
+      sourceKey: 'service_id',
+      as: 'service',
     });
     Experience.hasOne(models.Post, {
       foreignKey: 'id',
+      sourceKey: 'poste_id',
       as: 'poste'
     });
   };

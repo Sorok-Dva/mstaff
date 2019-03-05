@@ -1,69 +1,139 @@
 <script src="/static/assets/js/perfect-scrollbar.min.js" type="text/javascript"></script>
 <script src="/static/assets/js/star-rating.min.js" type="text/javascript"></script>
 <script src="/static/assets/js/dashboard.js"></script>
-<script src="/static/javascripts/main.js"></script>
-<script src="/static/javascripts/timepicker.js"></script>
+<script src="/static/assets/js/timepicker.js"></script>
+<script src="/static/assets/js/jquery.ultima.block.min.js"></script>
 <script>
-    // $(document).ready(() => {
-        // $("[data-toggle=popover]").popover();
-        {{#if sequelizeError}}
-            {{#each sequelizeError.errors as |error|}}
-                $('#{{error.path}}').css('border', '3px solid red');
-            {{/each}}
-        {{/if}}
+  $(document).ready(() => {
+    let sidebarMini = localStorage.getItem('sidebarMini') || 'false';
+    if (sidebarMini === 'true') {
+      $('#minimizeSidebar').trigger('click');
+    }
+  });
+  // $(document).ready(() => {
+  // $("[data-toggle=popover]").popover();
+    {{#if sequelizeError}}
+      {{#each sequelizeError.errors as |error|}}
+      $('#{{error.path}}').css('border', '3px solid red');
+      {{/each}}
+    {{/if}}
 
-    // });
+  // });
 
     {{#if error_msg}}
-        $.notify({
-            // options
-            icon: 'fa fa-exclamation',
-            title: '{{tr.partials.scripts.notify_error_title}} :',
-            message: '{{error_msg}}',
-        },{
-            type: 'danger',
-            allow_dismiss: true,
-            newest_on_top: false,
-            showProgressbar: false,
-            placement: {
-                from: 'bottom',
-                align: 'left'
-            },
-            offset: 20,
-            spacing: 10,
-            z_index: 1031,
-            delay: 5000,
-            timer: 15000,
-            animate: {
-                enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
-            }
+    notification({
+      icon: 'exclamation',
+      type: 'danger',
+      title: '{{tr.partials.scripts.notify_error_title}} :',
+      message: `{{error_msg}}`
+    });
+    {{/if}}
+    {{#if success_msg}}
+    notification({
+      icon: 'check-circle',
+      type: 'success',
+      title: '{{tr.partials.scripts.notify_success_title}} :',
+      message: `{{success_msg}}`
+    });
+    {{/if}}
+
+    {{#if session.originalUser}}
+    let roState = '{{ readOnly }}';
+    if ('lock' === roState) {
+      $('#bodyContent').block('Compte en lecture seule.');
+    }
+    $('#removeReadOnly').click(() => {
+      if ('lock' === roState) {
+        createModal({
+          id: 'removeReadOnlyModal',
+          modal: 'removeReadOnly',
+          title: 'Confirmation'
         });
-        {{/if}}
-        {{#if success_msg}}
-        $.notify({
-            // options
-            icon: 'fa fa-check-circle',
-            title: '{{tr.partials.scripts.notify_success_title}} :',
-            message: '{{success_msg}}',
-        },{
-            type: 'success',
-            allow_dismiss: true,
-            newest_on_top: false,
-            showProgressbar: false,
-            placement: {
-                from: 'bottom',
-                align: 'left'
-            },
-            offset: 20,
-            spacing: 10,
-            z_index: 1031,
-            delay: 5000,
-            timer: 15000,
-            animate: {
-                enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
-            }
+      }
+      else {
+        $.get('/back-office/impersonatePutReadOnly', (data) => {
+          if (data.status === 'ok') {
+            roState = 'lock';
+            $('#removeReadOnly').attr('class', 'fa fa-lock');
+            $('#bodyContent').block('Compte en lecture seule.');
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Activation de la lecture seule validée :',
+              message: `Vous ne pouvez plus intéragir sur ce compte.`
+            });
+          } else {
+          }
         });
-        {{/if}}
+      }
+    });
+    let removeRO = () => {
+      let password = $('#removeROPassword').val();
+      let _csrf = $('#csrfToken').val();
+      $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
+        if (data.status === 'send') {
+          $("#removeReadOnlyModal").modal('hide');
+          $('#removeROPassword').removeClass('error');
+          let pinCode = prompt('Code PIN envoyé sur discord. Veuillez le saisir ici :');
+          $.post('/back-office/impersonateRemoveReadOnly/validate', { pinCode, _csrf }, (response) => {
+            if (response.authorized) {
+              roState = 'unlock';
+              $('#removeReadOnly').attr('class', 'fa fa-unlock');
+              $('#bodyContent').unblock();
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Désactivation de la lecture seule validée :',
+                message: `Vous pouvez maintenant intéragir sur ce compte.`
+              });
+            }
+          });
+        } else {
+          $('button#btnRemoveRO').prop('disabled', false);
+          $('#removeROPassword').addClass('error').val('');
+          if (data.error === 'invalid password') {
+            notification({
+              icon: 'exclamation-circle',
+              type: 'danger',
+              title: 'Désactivation de la lecture seule impossible :',
+              message: `Mauvais mot de passe.`
+            });
+          }
+        }
+      });
+    };
+    {{/if}}
+</script>
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function()
+      { var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0]; s1.async=true; s1.src='https://embed.tawk.to/59fc72c3bb0c3f433d4c6e60/default'; s1.charset='UTF-8'; s1.setAttribute('crossorigin','*'); s0.parentNode.insertBefore(s1,s0); }
+  )();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-109194110-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag()
+
+  {dataLayer.push(arguments);}
+
+  gtag('js', new Date());
+
+  gtag('config', 'UA-109194110-3');
+</script>
+<script>
+  (function(h,o,t,j,a,r){
+    h.hj=h.hj||function()
+
+    {(h.hj.q=h.hj.q||[]).push(arguments)}
+    ;
+    h._hjSettings=
+
+        {hjid:820945,hjsv:6}
+    ;
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
 </script>

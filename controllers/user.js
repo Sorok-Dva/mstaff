@@ -1,8 +1,8 @@
 const { check, validationResult } = require('express-validator/check');
-const User = require('../models/index').User;
-const Candidate = require('../models/index').Candidate;
-const Establishment = require('../models/index').Establishment;
+const { User, Candidate, Establishment } = require('../models/index');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const mailer = require('../bin/mailer');
 
 module.exports = {
   /**
@@ -47,7 +47,7 @@ module.exports = {
    */
   ensureIsAdmin: (req, res, next) => {
     if (req.isAuthenticated()) {
-      if (['Admin'].includes(req.user.role)) {
+      if (['Admin'].includes(req.user.role) || ['Admin'].includes(req.session.role)) {
         next();
       } else {
         res.redirect('/');
@@ -76,27 +76,46 @@ module.exports = {
     }
   },
   /**
+   * ensureIsEs MiddleWare
+   * @param req
+   * @param res
+   * @param next
+   * @returns {*}
+   * @description Ensure that the current user is an es
+   */
+  ensureIsEs: (req, res, next) => {
+    if (req.isAuthenticated()) {
+      if (['es'].includes(req.user.type)) {
+        next();
+      } else {
+        res.redirect('/');
+      }
+    } else {
+      res.redirect('/');
+    }
+  },
+  /**
    * validate MiddleWare
    * @param method
    * @description Form Validator. Each form validation must be created in new case.
    */
   validate: (method) => {
     switch (method) {
-    case 'create': {
-      return [
-        check('email').isEmail(),
-        check('password')
-          .isLength({ min: 8 }).withMessage('must be at least 8 chars long')
-          .matches(/\d/).withMessage('must contain a number'),
-        check('firstName').exists(),
-        check('lastName').exists()
-      ]
-    }
-    case 'ApiVerifyEmailAvailability': {
-      return [
-        check('email').isEmail()
-      ]
-    }
+      case 'create': {
+        return [
+          check('email').isEmail().normalizeEmail(),
+          check('password')
+            .isLength({ min: 3 }).withMessage('must be at least 8 chars long')
+            .matches(/\d/).withMessage('must contain a number'),
+          check('firstName').exists(),
+          check('lastName').exists()
+        ]
+      }
+      case 'ApiVerifyEmailAvailability': {
+        return [
+          check('email').isEmail()
+        ]
+      }
     }
   },
   /**
@@ -108,8 +127,8 @@ module.exports = {
    */
   create: (req, res) => {
     const errors = validationResult(req);
-    let password = req.body.password;
-    let esCode = req.params.esCode;
+    let { password } = req.body;
+    let { esCode } = req.params;
     let esId = null;
 
     if (!errors.isEmpty()) {
@@ -129,29 +148,34 @@ module.exports = {
       });
     }
     let usr;
-    bcrypt.genSalt(10).then(salt => {
-      bcrypt.hash(password, salt).then(hash => {
-        User.create({
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          password: hash,
-          birthday: new Date(req.body.birthday),
-          postal_code: req.body.postal_code,
-          town: req.body.town,
-          phone: req.body.phone,
-          role: 'User',
-          type: 'candidate'
-        }).then(user => {
-          usr = user;
-          return Candidate.create({
-            user_id: user.id,
-            es_id: (esId) || null
-          });
-        }).then(candidate => {
-          res.render(`users/registerWizard`, { layout: 'onepage', user: usr, candidate });
-        }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
-      });
+    bcrypt.hash(password, 10).then(hash => {
+      User.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: hash,
+        birthday: new Date(req.body.birthday),
+        postal_code: req.body.postal_code,
+        town: req.body.town,
+        phone: req.body.phone,
+        role: 'User',
+        type: 'candidate',
+        key: crypto.randomBytes(20).toString('hex')
+      }).then(user => {
+        usr = user;
+        return Candidate.create({
+          user_id: user.id,
+          es_id: esId || null
+        })
+      }).then(candidate => {
+        mailer.sendEmail({
+          to: req.body.email,
+          subject: 'Création de votre compte sur Mstaff.',
+          template: 'candidate/emailValidation',
+          context: { user: usr }
+        });
+        res.render(`users/registerWizard`, { layout: 'onepage', user: usr, candidate });
+      }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
     });
   },
   /**

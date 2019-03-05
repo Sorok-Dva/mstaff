@@ -1,0 +1,18 @@
+<li{{#ifCond @root.a.main '===' 'needs'}} class="active"{{/ifCond}}>
+    <a href="/needs">
+        <i class="ti-search"></i>
+        <p>Mes besoins</p>
+    </a>
+</li>
+<li{{#ifCond @root.a.main '===' 'es'}} class="active"{{/ifCond}}>
+    <a href="/es">
+        <i class="fal fa-hospital"></i>
+        <p>Mon établissment</p>
+    </a>
+</li>
+<li{{#ifCond @root.a.main '===' 'cvtheque'}} class="active"{{/ifCond}}>
+    <a href="/cvtheque">
+        <i class="fal fa-file-archive"></i>
+        <p>Ma CVthèque</p>
+    </a>
+</li>

@@ -1,0 +1,385 @@
+<div class="row">
+  <div class="col-lg-12 col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title pull-left"><i class="fal fa-copy-o"></i> Mes documents</h4>
+        <hr style="width:85%; margin-top: 14px;">
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/document" style="display: none">
+            <input id="file-upload" type="file" accept="application/pdf, image/png, image/jpeg, image/jpg"/>
+            <label for="file-upload" id="file-drag">
+              <div id="start">
+                <i class="fal fa-times pull-right closeUploader" aria-hidden="true"></i>
+                <i class="fal fa-file-upload fa-3x" aria-hidden="true"></i>
+                <div id="notgoodfile" style="color:red;display:none">Format non autorisé (pdf, png & jpeg)</div>
+                <div>Choisir un ou plusieurs fichiers ou déposer ici</div>
+                <span id="file-upload-btn" class="btn btn-primary"></span>
+              </div>
+              <div id="response" style="display:none"></div>
+            </label>
+          </form>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-content center-block">
+                <div class="col-md-12">
+                  <div class="icon-big icon-info text-center">
+                    <i class="fal fa-graduation-cap"></i>
+                  </div>
+                  <div class="text-center">
+                    <small class="text-center">Diplôme (ou Attestation de jeune diplômé)</small>
+                    <br><br>
+                    <i class="fal fa-{{addDocIcon candidate.documents 'DIP'}} fa-2x" style="cursor: pointer"
+                       data-action="addDoc" data-type="DIP"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <div class="pull-right" style="position:relative; display:inline-block;">
+                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                       data-original-title=""></i>
+                  </div>
+                  <span onclick="showFiles('DIP');" style="cursor: pointer">
+                      <small id="DIPCount">{{countFiles candidate.documents 'DIP'}}</small>
+                      <i class="fal fa-copy"></i>
+                    </span>
+                  <div id="DIPList" style="display: none">
+                    <ul>
+                      {{#each candidate.documents as |document|}}
+                        {{#ifCond document.type '===' 'DIP'}}
+                          <li>
+                            <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
+                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          </li>
+                        {{/ifCond}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-content center-block">
+                <div class="col-md-12">
+                  <div class="icon-big icon-info text-center">
+                    <i class="fal fa-id-card"></i>
+                  </div>
+                  <div class="text-center">
+                    <small class="text-center">Pièce d'identité</small>
+                    <br><br>
+                    <i class="fal fa-{{addDocIcon candidate.documents 'CNI'}} fa-2x" style="cursor: pointer"
+                       data-action="addDoc" data-type="CNI"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <div class="pull-right" style="position:relative; display:inline-block;">
+                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                       data-original-title=""></i>
+                  </div>
+                  <span onclick="showFiles('CNI');" style="cursor: pointer">
+                      <small id="CNICount">{{countFiles candidate.documents 'CNI'}}</small>
+                      <i class="fal fa-copy"></i>
+                    </span>
+                  <div id="CNIList" style="display: none">
+                    <ul>
+                      {{#each candidate.documents as |document|}}
+                        {{#ifCond document.type '===' 'CNI'}}
+                          <li>
+                            <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
+                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          </li>
+                        {{/ifCond}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-content center-block">
+                <div class="col-md-12">
+                  <div class="icon-big icon-info text-center">
+                    <i class="fal fa-file-certificate"></i>
+                  </div>
+                  <div class="text-center">
+                    <small class="text-center">Justificatif de référencement ADELI</small>
+                    <br><br>
+                    <i class="fal fa-{{addDocIcon candidate.documents 'ADELI'}} fa-2x" style="cursor: pointer"
+                       data-action="addDoc" data-type="ADELI"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <div class="pull-right" style="position:relative; display:inline-block;">
+                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                       data-original-title=""></i>
+                  </div>
+                  <span onclick="showFiles('ADELI');" style="cursor: pointer">
+                      <small id="ADELICount">{{countFiles candidate.documents 'ADELI'}}</small>
+                      <i class="fal fa-copy"></i>
+                    </span>
+                  <div id="ADELIList" style="display: none">
+                    <ul>
+                      {{#each candidate.documents as |document|}}
+                        {{#ifCond document.type '===' 'ADELI'}}
+                          <li>
+                            <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
+                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          </li>
+                        {{/ifCond}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-content center-block">
+                <div class="col-md-12">
+                  <div class="icon-big icon-info text-center">
+                    <i class="fal fa-shield-alt"></i>
+                  </div>
+                  <div class="text-center">
+                    <small class="text-center">Carte Vitale ou Attestation de Protection Santé</small>
+                    <br><br>
+                    <i class="fal fa-{{addDocIcon candidate.documents 'VIT'}} fa-2x" style="cursor: pointer"
+                       data-action="addDoc" data-type="VIT"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <div class="pull-right" style="position:relative; display:inline-block;">
+                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                       data-original-title=""></i>
+                  </div>
+                  <span onclick="showFiles('VIT');" style="cursor: pointer">
+                      <small id="VITCount">{{countFiles candidate.documents 'VIT'}}</small>
+                      <i class="fal fa-copy"></i>
+                    </span>
+                  <div id="VITList" style="display: none">
+                    <ul>
+                      {{#each candidate.documents as |document|}}
+                        {{#ifCond document.type '===' 'VIT'}}
+                          <li>
+                            <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
+                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          </li>
+                        {{/ifCond}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-content center-block">
+                <div class="col-md-12">
+                  <div class="icon-big icon-info text-center">
+                    <i class="fal fa-university"></i>
+                  </div>
+                  <div class="text-center">
+                    <small class="text-center">Relevé d'Identité Bancaire (RIB)</small>
+                    <br><br>
+                    <i class="fal fa-{{addDocIcon candidate.documents 'RIB'}} fa-2x" style="cursor: pointer"
+                       data-action="addDoc" data-type="RIB"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <div class="pull-right" style="position:relative; display:inline-block;">
+                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                       data-original-title=""></i>
+                  </div>
+                  <span onclick="showFiles('RIB');" style="cursor: pointer">
+                    <small id="RIBCount">{{countFiles candidate.documents 'RIB'}}</small>
+                    <i class="fal fa-copy"></i>
+                  </span>
+                  <div id="RIBList" style="display: none">
+                    <ul>
+                      {{#each candidate.documents as |document|}}
+                        {{#ifCond document.type '===' 'RIB'}}
+                          <li>
+                            <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
+                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          </li>
+                        {{/ifCond}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-content center-block">
+                <div class="col-md-12">
+                  <div class="icon-big icon-info text-center">
+                    <i class="fal fa-user-md"></i>
+                  </div>
+                  <div class="text-center">
+                    <small class="text-center">Attestation d'inscription à l'Ordre National</small>
+                    <br><br>
+                    <i class="fal fa-{{addDocIcon candidate.documents 'OrNa'}} fa-2x" style="cursor: pointer"
+                       data-action="addDoc" data-type="OrNa"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <div class="pull-right" style="position:relative; display:inline-block;">
+                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                       data-original-title=""></i>
+                  </div>
+                  <span onclick="showFiles('OrNa');" style="cursor: pointer">
+                    <small id="OrNaCount">{{countFiles candidate.documents 'OrNa'}}</small>
+                    <i class="fal fa-copy"></i>
+                  </span>
+                  <div id="OrNaList" style="display: none">
+                    <ul>
+                      {{#each candidate.documents as |document|}}
+                        {{#ifCond document.type '===' 'OrNa'}}
+                          <li>
+                            <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
+                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          </li>
+                        {{/ifCond}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-content center-block">
+                <div class="col-md-12">
+                  <div class="icon-big icon-info text-center">
+                    <i class="fal fa-file-user"></i>
+                  </div>
+                  <div class="text-center">
+                    <small class="text-center">CV</small>
+                    <br><br>
+                    <i class="fal fa-{{addDocIcon candidate.documents 'CV'}} fa-2x" style="cursor: pointer"
+                       data-action="addDoc" data-type="CV"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <div class="pull-right" style="position:relative; display:inline-block;">
+                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                       data-original-title=""></i>
+                  </div>
+                  <span onclick="showFiles('CV');" style="cursor: pointer">
+                    <small id="CVCount">{{countFiles candidate.documents 'CV'}}</small>
+                    <i class="fal fa-copy"></i>
+                  </span>
+                  <div id="CVList" style="display: none">
+                    <ul>
+                      {{#each candidate.documents as |document|}}
+                        {{#ifCond document.type '===' 'CV'}}
+                          <li>
+                            <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
+                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          </li>
+                        {{/ifCond}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="card-content center-block">
+                <div class="col-md-12">
+                  <div class="icon-big icon-info text-center">
+                    <i class="fal fa-file-signature"></i>
+                  </div>
+                  <div class="text-center">
+                    <small class="text-center">Lettre de motivation</small>
+                    <br><br>
+                    <i class="fal fa-{{addDocIcon candidate.documents 'LM'}} fa-2x" style="cursor: pointer"
+                       data-action="addDoc" data-type="LM"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <div class="pull-right" style="position:relative; display:inline-block;">
+                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
+                       data-original-title=""></i>
+                  </div>
+                  <span onclick="showFiles('LM');" style="cursor: pointer">
+                    <small id="LMCount">{{countFiles candidate.documents 'LM'}}</small>
+                    <i class="fal fa-copy"></i>
+                  </span>
+                  <div id="LMList" style="display: none">
+                    <ul>
+                      {{#each candidate.documents as |document|}}
+                        {{#ifCond document.type '===' 'LM'}}
+                          <li>
+                            <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
+                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                          </li>
+                        {{/ifCond}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/static/assets/dist/js/uploadDocuments.min.js"></script>
+<script>
+  let showFiles = (type) => {
+    createModal({ id: 'showFileListModal', modal: 'showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
+      let content = ($(`#${type}List ul>li`).length < 1) ? 'Aucun documents' : $(`#${type}List`).clone().show();
+      $('.showFileListModalBody').html(content);
+    });
+  };
+
+  $('.closeUploader').click(function(e) {
+    e.preventDefault();
+    $('.uploader').hide();
+  });
+</script>

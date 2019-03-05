@@ -1,0 +1,210 @@
+<style>
+  .checkbox label::before {
+    content: "";
+    margin-top: 20px;
+    transform: scale(1.5);
+  }
+  .checkbox label::after {
+    top: 19px;
+    font-size: 21px;
+  }
+  h3, .h3 {
+    font-size: 1.825em;
+    line-height: 2.2 !important;
+  }
+  .form-group {
+    margin-bottom: 0 !important;
+  }
+</style>
+<div class="row">
+  <div class="col-md-offset-2 col-md-8">
+    <div class="form-group">
+      <div class="searchbar-wrapper">
+        <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
+          <input placeholder="Indiquez le profil recherché" style="border: 0px" id="post" type="text"
+                 class="form-control pull-left" autocomplete="off">
+        </div>
+        <button style="position: absolute;right: 25px;top:10px" id="searchCandidates" class="btn btn-large btn-primary">
+          Rechercher
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12" id="criteria" style="display: none; padding-top: 15px;">
+    <div class="col-md-12 text-center">
+      <button class="btn btn-info" data-toggle="modal" data-target="#contractType" data-backdrop="static" data-keyboard="false">
+        Type de Contrat : <span id="btnContractType"></span>
+      </button>
+      <button class="btn btn-info" data-toggle="modal" data-target="#timeType" data-backdrop="static" data-keyboard="false">
+       Période : <span id="btnTimeType"></span>
+      </button>
+      <button id="saveNeed" class="btn btn-success">
+        <i class="fal fa-save"></i> Enregistrer le besoin
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row" style="padding-top: 30px">
+  <div id="searchResult" class="col-md-12"></div>
+</div>
+<div class="modal modal-xs fade" id="candidateProfileModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">Profile de</div>
+      <div class="modal-body" id="candidateProfileModalBody"></div>
+      <div class="modal-footer">Fermer</div>
+    </div>
+  </div>
+</div>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script>
+  let esId = {{session.currentEs}};
+  let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
+  let need = { selectedCandidates: [], favoriteCandidates: []};
+  need.firstSearch = true;
+  need.notifyCandidates = false;
+  $(`#post`).autocomplete({
+    source: list,
+    minLength: 2,
+    select: (event, ui) => {
+      need.post = ui.item.label;
+      if (need.firstSearch) {
+        createModal({
+          id: 'contractType',
+          modal: 'addNeed-ContractType',
+          cantBeClose: true,
+          title: 'Type de contrat souhaité',
+        }, () => {
+          $('#criteria').show();
+        });
+      } else return searchCandidates();
+    },
+  });
+
+  $('#searchCandidates').on('click', function() {
+    need.post = $('input#post').val();
+    searchCandidates();
+  });
+
+  $('input#post').on('keydown', function(e) {
+    if (e.which === 13) {
+      e.preventDefault();
+      need.post = $('input#post').val();
+      searchCandidates();
+    }
+  });
+
+  let searchCandidates = () => {
+    if ($('input#post').val().length < 2) {
+      return false;
+    }
+    need.post = need.post || $('input#post').val();
+    if (need.firstSearch) {
+      createModal({
+        id: 'contractType',
+        modal: 'addNeed-ContractType',
+        cantBeClose: true,
+        title: 'Type de contrat souhaité',
+      }, () => {
+        $('#criteria').show();
+      });
+    } else {
+      console.log('searching candidates');
+      // @TODO put a esId var instead
+      $.post(`/api/es/1/search/candidates`, need, (data) => {
+        loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
+          $('#searchResult').html(html);
+        });
+        console.log(data);
+      }).catch(error => errorsHandler(error));
+    }
+  };
+
+  let addCandidate = (id, type) => {
+    id = parseInt(id);
+    switch (type) {
+      case 'select':
+        if (need.selectedCandidates.indexOf(id) === -1) {
+          $(`i.selectCandidate[data-id="${id}"]`).hide();
+          $(`i.unselectCandidate[data-id="${id}"]`).show();
+          need.selectedCandidates.push(id);
+          /*$('#selectedEsCount').html(need.selectedCandidates.length);
+          $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
+        }
+        break;
+      case 'favorite':
+        if (need.favoriteCandidates.indexOf(id) === -1) {
+          $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
+          need.favoriteCandidates.push(id);
+          $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
+            if (data.status === 'Created') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat ajouté au favoris.'
+              })
+            } else {
+              notification({
+                icon: 'exclamation-circle',
+                type: 'warning',
+                title: 'Ce candidat est déjà dans vos favoris.'
+              })
+            }
+          });
+        }
+        break;
+    }
+  };
+
+  let removeCandidate = (id, type) => {
+    id = parseInt(id);
+    let index;
+    switch (type) {
+      case 'unselect':
+        index = need.selectedCandidates.indexOf(id);
+        if (index !== -1) {
+          $(`i.unselectCandidate[data-id="${id}"]`).hide();
+          $(`i.selectCandidate[data-id="${id}"]`).show();
+          need.selectedCandidates.splice(index, 1);
+          /* $('#selectedEsCount').html(need.selectedCandidates.length);
+           $(`#es_selected > #es${id}`).remove();*/
+        }
+        break;
+      case 'unfav':
+        index = need.favoriteCandidates.indexOf(id);
+        if (index !== -1) {
+          $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
+          need.favoriteCandidates.splice(index, 1);
+          $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
+            if (data.status === 'deleted') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat supprimé de vos favoris.'
+              })
+            }
+          });
+        }
+        break;
+    }
+  };
+
+  $(document).ready(() => {
+    need._csrf = _csrf;
+
+    $('button#saveNeed').click(function() {
+      if (!need.firstSearch && need.post && need.contractType) {
+        need._csrf = _csrf;
+        $.post('/api/es/1/addNeed', need, (data) => {
+          if (data.id) {
+            $(location).attr('href', `/need/${data.id}`);
+          }
+        });
+      } else {
+        console.log('error occurred : invalid search')
+      }
+    });
+  });
+</script>

@@ -1,0 +1,194 @@
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-content">
+                <div class="toolbar">
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addSoftwareModal',
+                       title: 'Ajouter un logiciel',
+                       modal: 'back-office/addSoftware'
+                   }, () => {
+                       $('button#validateSoftware').click(function () {
+                           if ($('input#softwareValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#softwareValue').val();
+                               $.post(`/api/back-office/softwares/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Ce logiciel existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.software.id,
+                                   name: response.software.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: 'Logiciel créé.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addSoftwareModal').modal('hide');
+               }
+               else {
+                   if ($('input#softwareValue').val() == '') {
+                       $('input#softwareValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#softwareValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
+                </div>
+
+                <table id="softwares-table" class="table">
+                    <thead>
+                    <th data-field="state" data-checkbox="true"></th>
+                    <th data-field="id" class="text-center">ID</th>
+                    <th data-field="name" data-sortable="true">Nom</th>
+
+                    <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+                        data-formatter="operateFormatter">Actions</th>
+                    </thead>
+                    <tbody>
+                    {{#each software as |softwares|}}
+                        <tr data-id="{{softwares.id}}">
+                            <td></td>
+                            <td>{{softwares.id}}</td>
+                            <td>{{softwares.name}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    let table = $('#softwares-table');
+
+    operateFormatter = (value, row, index) => {
+        return [
+            '<div class="table-icons">',
+            '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+            '<i class="ti-pencil-alt"></i>',
+            '</a>',
+            '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+            '<i class="ti-close"></i>',
+            '</a>',
+            '</div>',
+        ].join('');
+    };
+
+    $(document).ready(() => {
+        window.operateEvents = {
+            'click .edit': (e, value, row, index) => {
+                createModal({
+                    id: 'editSoftwareModal',
+                    title: 'Modifier un logiciel',
+                    modal: 'back-office/editSoftware'
+                }, () => {
+                    $('button#btnEditSoftware').click(function () {
+                        if ($('input#softwareValueEdit').val() != '') {
+                            let _csrf = $('#csrfToken').val();
+                            let promptInput = $('input#softwareValueEdit').val();
+                            $.put(`/api/back-office/softwares/${row.id}`, {
+                                promptInput,
+                                _csrf
+                            }, () => {
+                                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                                $('#editSoftwareModal').modal('hide');
+                                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                                notification({
+                                    icon: 'check-circle',
+                                    type: 'success',
+                                    title: 'Logiciel modifié.',
+                                    message: ``
+                                });
+                            });
+                        } else {
+                            if ($('input#softwareValueEdit').val() == '') {
+                                $('input#softwareValueEdit').addClass('error');
+                                setTimeout(function () {
+                                    $('input#softwareValueEdit').removeClass('error');
+                                }, 750)
+                            }
+                        }
+                    });
+                });
+            },
+            'click .remove': (e, value, row, index) => {
+                createModal({
+                    id: 'removeSoftwareModal',
+                    title: 'Supprimer un logiciel',
+                    modal: 'back-office/removeSoftware'
+                }, () => {
+                    let _csrf = $('#csrfToken').val();
+                    $('button#btnRemoveSoftware').click(function () {
+                        $.delete(`/api/back-office/softwares/${row.id}`, {
+                            _csrf
+                        }, () => {
+                            table.bootstrapTable('remove', {
+                                field: 'id',
+                                values: [row.id]
+                            });
+                            notification({
+                                icon: 'check-circle',
+                                type: 'success',
+                                title: 'Logiciel supprimé.',
+                                message: ``
+                            });
+                        });
+                    });
+                });
+            }
+        };
+
+
+        table.bootstrapTable({
+            toolbar: ".toolbar",
+            search: true,
+            showToggle: true,
+            showColumns: true,
+            pagination: true,
+            searchAlign: 'left',
+            pageSize: 25,
+            clickToSelect: true,
+            pageList: [10,25,50,100,200,500],
+            formatShowingRows: (pageFrom, pageTo, totalRows) => {
+                //do nothing here, we don't want to show the text "showing x of y from..."
+            },
+            formatRecordsPerPage: (pageNumber) => {
+                return pageNumber + " rows visible";
+            },
+            icons: {
+                toggle: 'fa fa-th-list',
+                columns: 'fa fa-columns',
+                detailOpen: 'fa fa-plus-circle',
+                detailClose: 'ti-close'
+            }
+        });
+
+        //activate the tooltips after the data table is initialized
+        $('[rel="tooltip"]').tooltip();
+
+        $(window).resize(() => {
+            table.bootstrapTable('resetView');
+        });
+    });
+</script>

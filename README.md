@@ -9,6 +9,7 @@ Install the following software in your computer:
 - [Node.js](https://nodejs.org/en/download/package-manager/) (version 10.4 or higher)
     - NPM
     - N enables the user to switch versions easily (`npm i -g n`)
+    - gulp (tasks manager) (`npm i -g gulp`)
   
 
 ## Run application
@@ -43,3 +44,25 @@ Run test :
 curl http://localhost:3001/api/
 ```
 It should read `{"message":"welcome"}`
+
+## ORM Commands
+
+Create new model (exemple) :  
+```bash
+node_modules/.bin/sequelize model:generate --name TableName --attributes column1:integer,column2:string,column3:date
+``` 
+
+Create new seed :  
+```bash
+node_modules/.bin/sequelize seed:generate --name seed-name
+``` 
+
+## Some useful documentations
+
+- [Express.js (4.x)](http://expressjs.com/fr/api.html)
+- [Sequelize Model Definition](http://docs.sequelizejs.com/manual/tutorial/models-definition.html)
+- [Sequelize Model Usage](http://docs.sequelizejs.com/manual/tutorial/models-usage.html)
+- [Sequelize Querying](http://docs.sequelizejs.com/manual/tutorial/querying.html)
+- [Handlebars](https://handlebarsjs.com/)
+- [Jquery](https://api.jquery.com/)
+- [Lodash](https://lodash.com/docs/4.17.11)

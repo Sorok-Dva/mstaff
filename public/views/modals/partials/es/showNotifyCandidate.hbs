@@ -1,0 +1,30 @@
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-12">
+      <h5 class="text-center"><i class="fal fa-map-marker-alt"></i></h5>
+      {{#if this.Establishment.address}}
+        <p class="text-center">{{this.Establishment.address}},</p>
+      {{/if}}
+      {{#if this.Establishment.postal_code}}
+        <p class="text-center">{{this.Establishment.postal_code}} {{this.Establishment.town}}</p>
+      {{/if}}
+      <h5 class="text-center"><i class="fal fa-clock"></i></h5>
+      <p class="text-center">{{this.Need.contractType}},
+        {{#unless this.Need.end}}à partir du {{/unless}} {{date this.Need.start 'DD/MM/YYYY'}}
+        {{#if this.Need.end}} - {{date this.Need.end 'DD/MM/YYYY'}}{{/if}}
+      </p>
+      <p class="text-center"><hr></p>
+      <p class="text-center"></p>
+      <div class="form-group col-md-12">
+        <textarea class="form-control rounded-0"
+                  placeholder="Vous pouvez indiquer ici les précisions nécessaires au candidat (facultatif)"
+                  id="notifyMessage" rows="10"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="notifyCandidate" class="btn btn-info pull-right" style="margin-bottom: 5px;">
+    Envoyer la notification
+  </button>
+</div>

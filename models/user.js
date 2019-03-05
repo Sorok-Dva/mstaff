@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
+      validate: { isEmail: true }
     },
     password: {
       type: DataTypes.STRING,
@@ -40,12 +41,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['admin', 'candidate', 'es', 'demo'],
       allowNull: false
-    }
-  }, {
-    getterMethods: {
-      fullName: () => {
-        return `${this.firstName} ${this.lastName}`;
-      }
+    },
+    key: {
+      type: DataTypes.STRING
+    },
+    validated: {
+      type: DataTypes.BOOLEAN
     }
   });
   User.associate = function (models) {
@@ -56,6 +57,10 @@ module.exports = (sequelize, DataTypes) => {
     User.hasOne(models.Demo, {
       foreignKey: 'email',
       as: 'demo'
+    });
+    User.hasMany(models.ESAccount, {
+      foreignKey: 'user_id',
+      sourceKey: 'id'
     });
   };
   return User;
