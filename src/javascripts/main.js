@@ -24,7 +24,7 @@ let notification = (opts) => {
     // options
     icon: `fal fa-${opts.icon}`,
     title: `<b>${opts.title}</b>`,
-    message: `${opts.message}`,
+    message: `${opts.message || ''}`,
   }, {
     type: `${opts.type}`,
     allow_dismiss: true,
@@ -46,9 +46,9 @@ let notification = (opts) => {
 };
 
 let errorsHandler = data => {
-  let errors = data === undefined ? null : data;
-  if (errors && errors.responseJSON && errors.responseJSON.errors) {
-    errors.responseJSON.errors.forEach((e, i) => {
+  let error = data === undefined ? null : data.responseJSON;
+  if (error.errors) {
+    error.errors.forEach((e, i) => {
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -57,9 +57,9 @@ let errorsHandler = data => {
       });
     });
   } else {
-    let message = errors && errors.sequelizeError ?
+    let message = error.sequelizeError ?
       `<b>${errors.sequelizeError.name}</b>: ${errors.sequelizeError.original.sqlMessage}`
-      : errors.responseText || 'Unknown Error';
+      : error.message || 'Unknown Error';
     notification({
       icon: 'exclamation',
       type: 'danger',

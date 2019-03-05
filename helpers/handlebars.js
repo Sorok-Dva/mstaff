@@ -166,6 +166,12 @@ module.exports.register = async (Handlebars) => {
     return count;
   });
 
+  Handlebars.registerHelper('countInObject', (object, property, search) => {
+    let count = 0;
+    if (!_.isNil(object)) object.forEach((e, i) => object[i][property] === search ? count++ : null);
+    return count;
+  });
+
   Handlebars.registerHelper('weekStats', (object) => {
     let res = [];
     for (let day = 6; day >= 0; day--) {
@@ -219,7 +225,6 @@ module.exports.register = async (Handlebars) => {
     ));
   });
   /* eslint-enable no-console */
-
   Handlebars.registerHelper('showCategory', function (categoryPS_id) {
     switch (categoryPS_id) {
       case 1:

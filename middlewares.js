@@ -5,6 +5,7 @@ const config = require(`./config/config.json`)[env];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
+const methodOverride = require('method-override');
 const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
@@ -18,6 +19,7 @@ const logger = require('morgan');
 const wildcardSubdomains = require('wildcard-subdomains');
 
 const ServerController = require('./controllers/server');
+
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -37,11 +39,14 @@ module.exports = {
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
   errorHandler: (err, req, res, next) => { // error handler
+
     let opts = {};
     // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = env === 'development' ? err : {};
-
+    if (env === 'development') {
+      opts.error = err;
+    } else {
+      res.locals.error_msg = err.message;
+    }
     // render the error page
     res.status(err.status || 500);
     if (!req.user) opts.layout = 'onepage';
@@ -64,6 +69,7 @@ module.exports = {
     textsVarName: 'tr'
   }),
   loggerDev: logger('dev'),
+  methodOverride: methodOverride(),
   passportInit: passport.initialize(),
   passportSession: passport.session(),
   passportAuthentication: passport.authenticate('local', {

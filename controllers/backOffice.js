@@ -1,5 +1,7 @@
 const { check, validationResult } = require('express-validator/check');
 const { Sequelize, Op } = require('sequelize');
+const { BackError } = require('../helpers/back.error');
+const httpStatus = require('http-status');
 const _ = require('lodash');
 const moment = require('moment');
 const Models = require('../models/index');
@@ -7,6 +9,7 @@ const layout = 'admin';
 
 const UserController = require('./user');
 const discord = require('../bin/discord-bot');
+const mailer = require('../bin/mailer');
 
 module.exports = {
   /**
@@ -15,7 +18,13 @@ module.exports = {
    * @description Form Validator. Each form validation must be created in new case.
    */
   validate: (method) => {
-
+    switch (method) {
+      case 'sendCandidateVerifEmail': {
+        return [
+          check('email').isEmail()
+        ]
+      }
+    }
   },
   index: (req, res) => {
     let render = { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } };
@@ -64,9 +73,11 @@ module.exports = {
     }).then(data => {
       render.wishesWeek = data;
       render.usersWeekCount = 0; render.ESWeekCount = 0; render.wishesWeekCount = 0;
+      /* eslint-disable no-return-assign */
       render.esWeekRegistration.map((data) => render.ESWeekCount += parseInt(data.dataValues.count));
       render.usersWeekRegistration.map((data) => render.usersWeekCount += parseInt(data.dataValues.count));
       render.wishesWeek.map((data) => render.wishesWeekCount += parseInt(data.dataValues.count));
+      /* eslint-enable no-return-assign */
       res.render('back-office/index', render);
     });
   },
@@ -122,7 +133,7 @@ module.exports = {
         title: 'Liste des utilisateurs ES',
         a: { main: 'users', sub: 'es' },
         users })
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
@@ -132,7 +143,7 @@ module.exports = {
         a: { main: 'es', sub: 'es_all' },
         data
       })
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getES: (req, res, next) => {
     Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
@@ -158,7 +169,7 @@ module.exports = {
           data
         })
       });
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getUser: (req, res) => {
     Models.User.findOne({
@@ -540,6 +551,25 @@ module.exports = {
         return res.redirect('/back-office/users');
       });
     }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+  },
+  sendCandidateVerifEmail: (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+    Models.User.findOne({
+      where: { email: req.body.email },
+      attributes: [ 'id', 'firstName', 'lastName', 'key' ]
+    }).then(user => {
+      if (_.isNil(user)) return res.status(400).send('User not found.');
+      mailer.sendEmail({
+        to: req.body.email,
+        subject: 'Création de votre compte sur Mstaff.',
+        template: 'candidate/emailValidation',
+        context: { user }
+      });
+      return res.status(200).send('Send')
+    });
   },
   impersonateUser: (req, res) => {
     Models.User.findOne({
