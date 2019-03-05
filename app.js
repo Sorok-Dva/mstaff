@@ -30,15 +30,16 @@ if (Env.isProd) app.set('view cache', true);
 
 // ------ MIDDLEWARES
 app.engine('hbs', middleware.exphbs);
-app.use(middleware.helmet);
 app.use(express.json({ limit: '150mb' }));
 app.use(express.urlencoded({ extended: true, limit: '150mb' }));
-app.use(middleware.cookieParser);
 app.use(middleware.compress);
+app.use(middleware.methodOverride);
+app.use(middleware.helmet);
+app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use(middleware.cookieParser);
 app.use(middleware.csurf);
 app.use(middleware.session);
 app.use(middleware.i18n);
-app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use(middleware.verifyMaintenance);
 app.use(middleware.passportInit);
 app.use(middleware.passportSession);
@@ -59,6 +60,7 @@ app.use('/api/candidate', apiCandidateRouter);
 app.use('/api/back-office', apiBackOfficeRouter);
 app.use('/api/es', apiEsRouter);
 
+app.use(ErrorHandler.notFoundError);
 app.use(ErrorHandler.converter);
 app.use(ErrorHandler.client);
 app.use(ErrorHandler.log);

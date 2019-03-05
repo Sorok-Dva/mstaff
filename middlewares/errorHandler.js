@@ -10,11 +10,17 @@ const getStatus = (err) => {
   return err.status;
 };
 
+const sendError = (req, res, status, err) => {
+  err.status = status;
+  if (req.xhr) return res.status(status).json(err);
+  else return res.status(status).render('error', { error: err });
+};
+
 module.exports = {
   getStatus,
   client: (err, req, res, next) => {
     if (err.errorCode && err.name && err.message) {
-      res.status(err.errorCode).send({ name: err.name, message: err.message });
+      sendError(req, res, err.errorCode, { name: err.name, message: err.message });
     }
     next(err);
   },
@@ -34,6 +40,7 @@ module.exports = {
     }
     next(err);
   },
+  notFoundError: (req, res, next) => next(new BackError('Not Found', httpStatus.NOT_FOUND)),
   sentrySenderErrorHandler: (err, req, res, next) => {
     let status = err.status || err.statusCode || 500;
     if (status < 400) status = 500;
@@ -54,19 +61,18 @@ module.exports = {
     let status = err.status || err.statusCode || 500;
     if (status < 400) status = 500;
 
-    if (err instanceof BackError && status >= 500) return res.status(status).json(err);
+    if (err instanceof BackError && status >= 500) return sendError(req, res, status, err);
 
     const body = { status };
 
     // show the stacktrace when not in production
     if (Env.current !== 'production') {
       body.stack = err.stack;
-      debug(err.stack);
     }
     // internal server errors
     if (status >= 500) {
       body.message = statuses[status];
-      return res.status(status).json(body);
+      return sendError(req, res, status, body);
     }
 
     // client errors
@@ -77,6 +83,6 @@ module.exports = {
     if (err.type) body.type = err.type;
     if (err.errors) body.errors = err.errors;
 
-    return res.status(status).render('error', { error: body });
+    return sendError(req, res, status, err);
   }
 };
