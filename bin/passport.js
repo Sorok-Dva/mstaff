@@ -6,12 +6,12 @@ const UserController = require('../controllers/user');
 
 let attributes = ['id', 'email', 'firstName', 'lastName', 'type', 'role'];
 
-passport.use(new LocalStrategy((email, password, done) => {
+passport.use(new LocalStrategy({ passReqToCallback: true }, (req, email, password, done) => {
   Models.User.findOne({
     where: { email },
     attributes: ['id', 'password', 'email', 'role']
   }).then(user => {
-    if (!user) return done(null, false, { message: 'Utilisateur inconnu' });
+    if (!user) return done(null, false, req.flash('error_msg', 'Utilisateur inconnu.'));
     UserController.comparePassword(password, user.dataValues.password, (err, isMatch) => {
       if (err) return done(null, false, err);
       if (isMatch) {
@@ -22,7 +22,7 @@ passport.use(new LocalStrategy((email, password, done) => {
         };
         return done(null, session);
       } else {
-        return done(null, false, { message: 'Mot de passe invalide.' });
+        return done(null, false, req.flash('error_msg', 'Mot de passe invalide.'));
       }
     })
   }).catch(err => {

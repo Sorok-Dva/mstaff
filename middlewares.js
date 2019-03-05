@@ -74,7 +74,7 @@ module.exports = {
   passportSession: passport.session(),
   passportAuthentication: passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/login?error=login',
+    failureRedirect: '/login',
     failureFlash: true
   }),
   /**
