@@ -74,6 +74,12 @@
   <script src="/static/assets/js/dashboard.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109194110-3"></script>
   <script>
+    $(document).ready(() => {
+      let sidebarMini = localStorage.getItem('sidebarMini') || 'false';
+      if (sidebarMini === 'true') {
+        $('#minimizeSidebar').trigger('click');
+      }
+    });
     window.dataLayer = window.dataLayer || [];
     function gtag()
 
