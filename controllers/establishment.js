@@ -100,9 +100,7 @@ module.exports = {
       }
     };
 
-    Models.Applications.findAll({
-
-    }).then(needs => {
+    Models.Applications.findAll({}).then(needs => {
       res.render('establishments/needs', { needs });
     }).catch(error => next(new BackError(error)));
   },
@@ -140,7 +138,7 @@ module.exports = {
         required: true
       }]
     }).then(need => {
-      if (_.isNil(need)) return next (new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND))
+      if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND))
       render.need = need;
       return res.render('establishments/showNeed', render);
     }).catch(error => next(new BackError(error)));
@@ -204,7 +202,7 @@ module.exports = {
       where: { ref_es_id: req.es.finess },
       attributes: { exclude: ['lat', 'lon'] },
       group: ['Wish->Candidate.id'],
-      include: {
+      include: [{
         model: Models.Wish,
         required: true,
         on: {
@@ -243,7 +241,38 @@ module.exports = {
             as: 'formations',
           }]
         }
-      }
+      }, {
+        model: Models.Establishment,
+        attributes: ['id'],
+        on: {
+          '$Application.es_id$': {
+            [Op.col]: 'Establishment.id'
+          }
+        },
+        include: [{
+          model: Models.FavoriteCandidate,
+          attributes: ['added_by', 'candidate_id'],
+          on: {
+            '$Establishment.id$': {
+              [Op.col]: 'Establishment->FavoriteCandidates.es_id'
+            },
+            '$Wish->Candidate.id$': {
+              [Op.col]: 'Establishment->FavoriteCandidates.candidate_id'
+            }
+          },
+        }, {
+          model: Models.ArchivedCandidate,
+          attributes: ['added_by', 'candidate_id'],
+          on: {
+            '$Establishment.id$': {
+              [Op.col]: 'Establishment->ArchivedCandidates.es_id'
+            },
+            '$Wish->Candidate.id$': {
+              [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
+            }
+          },
+        }]
+      }]
     };
 
     Models.Application.findAll(query).then(applications => {
@@ -361,7 +390,8 @@ module.exports = {
         }
       }]
     }).then(needCandidate => {
-      if (_.isNil(needCandidate)) res.json(200).send('No candidate found');
+      if (_.isNil(needCandidate))
+        return next(new BackError(`Candidate ${req.params.candidateId} or Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
       else {
         switch (req.params.action) {
           case 'notify':
@@ -402,7 +432,8 @@ module.exports = {
               res.status(201).send(result);
             });
             break;
-          default: return res.status(400).send('no action provided');
+          default:
+            return res.status(400).send('no action provided');
         }
       }
     })
@@ -433,6 +464,22 @@ module.exports = {
       case 'unfav':
         Models.FavoriteCandidate.findOne({ where }).then(fav => {
           fav.destroy().then(result => {
+            res.status(200).send({ status: 'deleted', result })
+          })
+        });
+        break;
+      case 'archive':
+        Models.ArchivedCandidate.findOrCreate({ where }).spread((archive, created) => {
+          if (created) {
+            res.status(201).send({ status: 'Created', archive });
+          } else {
+            res.status(200).send({ status: 'Already exists', archive });
+          }
+        });
+        break;
+      case 'unarchive':
+        Models.ArchivedCandidate.findOne({ where }).then(archive => {
+          archive.destroy().then(result => {
             res.status(200).send({ status: 'deleted', result })
           })
         });
