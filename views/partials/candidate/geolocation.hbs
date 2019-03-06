@@ -3,7 +3,7 @@
     <div class="tab-pane active" id="gps">
         <div class="row" style="margin-bottom: 40px;">
             <div class="col-md-offset-2 col-md-8 text-center " style="color: #02AED7">
-                <strong style="color: #02AED7">Je souhaite postuler autour de mon domicile</strong>
+                <strong style="color: #02AED7">J'indique un rayon kilométrique</strong>
                 <div id="radius-slider" class="no-ui-slider" style="margin-top:15px">
                     <div id="radius" class="slider slider-info"></div>
                     <ul class="slider-labels ten-columns">
@@ -19,6 +19,14 @@
                         <li data-step="10">100km</li>
                     </ul>
                 </div>
+            </div >
+            <div id="myAddress" class="col-md-offset-2 col-md-8 text-center" style="display: none;">
+                    <div class="row" style="margin-top: 10px;">
+                        <input id="searchAddress" type="text" class="form-control" placeholder="Saisir votre adresse">
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <button type="button" class="btn btn-info" onclick="generateByAddress()">Rechercher</button>
+                    </div>
             </div>
         </div>
     </div>
@@ -27,14 +35,13 @@
         <div class="row" style="margin-bottom: 40px;">
             <form class="form-inline">
                 <div class="form-group col-md-10">
-                    <input type="text" class="form-control" placeholder="VILLE ou CODE POSTAL">
+                    <input id="searchCity" type="text" class="form-control"
+                           placeholder="Renseigner ici un établissement, une ville ou un code postal">
                 </div>
                 <div class="form-group col-md-1">
-                    <button id='seekCity' type="button" class="btn btn-info">Rechercher</button>
+                    <button type="button" class="btn btn-info" onclick="generateAllOver()">Rechercher</button>
                 </div>
             </form>
-
-
         </div>
     </div>
 

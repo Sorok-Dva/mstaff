@@ -1,4 +1,4 @@
-let map, marker, cityCircle, markers = [], filter, pos = { lat: 0, lng: 0, rayon: 5 }, selectedAll = false,
+let map, marker, cityCircle, markers, geocoder = [], filter, pos = { lat: 0, lng: 0, rayon: 5 }, selectedAll = false,
   allEs = [], application = {};
 let kmArray = [1, 2, 5, 10, 15, 20, 30, 50, 70, 100];
 let slider = document.getElementById('radius');
@@ -237,23 +237,9 @@ let createRecap = () => {
   });
 };
 
-let geoSuccess = (position) => {
-  geoActivate = true;
-  pos = { lat: position.coords.latitude, lng: position.coords.longitude, rayon: 5 };
-  getEsList();
-};
 
-let geoError = (error) => {
-  geoActivate = false;
-  if (error.PERMISSION_DENIED){
-    alert('Geolocation permission is actually denied or not supported by your browser.');
-  }
-};
 
-let activateGeoLoc = () => {
-  if (navigator.geolocation)
-    navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
-};
+// ----------------------------------------- MAP ----------------------------------------- //
 
 let mapInit = () => {
   if (document.getElementById('map')) {
@@ -275,28 +261,22 @@ let mapInit = () => {
       center: pos,
       radius: pos.rayon*1000 || 10000
     });
+    geocoder = new google.maps.Geocoder();
   }
 };
 
-let resizeMap = () => {
-  let around = $('#aroundMe');
-  let allover = $('#allOver');
-  let map = $('.map');
-  let resultList = $('.resultList');
-
-  allover.click( () => {
-    map.hide();
-    resultList.removeClass('col-md-7');
-    resultList.addClass('col-md-12');
-  });
-
-  around.click( () => {
-    map.show();
-    resultList.removeClass('col-md-12');
-    resultList.addClass('col-md-7');
-  });
-
-}
+let geocodeAddress = (geocoder, resultMap) => {
+  let address = $('#searchAddress').val();
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status === 'OK') {
+      resultMap.setCenter(results[0].geometry.location);
+      let marker = new google.maps.Marker({
+        map: resultMap,
+        position: results[0].geometry.location
+      });
+    } else alert('Geocode was not successful for the following reason: ' + status);
+  })
+};
 
 let addMarker = (es) => {
   let marker = new google.maps.Marker({
@@ -331,38 +311,125 @@ let highlightLabel = ($this) => {
   $(selector).addClass('slideActive');
 };
 
-let getEsList = () => {
-  mapInit();
-  let _csrf = $('#csrfToken').val();
-  $('#esCount').empty();
+// ------------------------------------- GEOLOCATION ------------------------------------- //
+
+let activateGeoLoc = () => {
+  if (navigator.geolocation)
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+};
+
+let geoSuccess = (position) => {
+  geoActivate = true;
+  pos = { lat: position.coords.latitude, lng: position.coords.longitude, rayon: 5 };
+  generateAroundMe();
+};
+
+let geoError = (error) => {
+  geoActivate = false;
+  if (error.PERMISSION_DENIED){
+    alert('Geolocation permission is actually denied or not supported by your browser.');
+  }
+};
+
+// --------------------------------------- ES LIST --------------------------------------- //
+
+let resetEsList = () => {
+  $('#esList').empty();
+  $('.esCount').empty();
+};
+
+let loading = () => {
   $('#esList').html('<div id="loader" class="col-md-12"></div>');
   $('#loader').show();
-  $.post('/api/establishments/findByGeo', { rayon: pos.rayon, lat: pos.lat, lon: pos.lng, filter, _csrf }, (data) => {
+};
+
+// ------------------------------- GENERATE SEARCH SCREEN ------------------------------- //
+
+let generateAroundMe = () => {
+  let query = { type: 'aroundMe', position: { rayon: pos.rayon, lat: pos.lat, lon: pos.lng, filter} };
+
+  mapInit();
+  loading();
+  getEsList(query).then( data => {
     allEs = data;
-    loadTemplate('/static/views/api/findByGeo.hbs', data, (html) => {
-      $('#esList').html(html);
-      $('.esCount').html(data.length);
-      $('#loader').hide();
-    });
+    loadResult(data);
   });
 };
 
-let getEsListCity = () => {
-  let _csrf = $('#csrfToken').val();
-  $('#esCount').empty();
-  $('#esList').html('<div id="loader" class="col-md-12"></div>');
-  $('#loader').show();
+let generateAllOver = () => {
+  let query = { type: 'allOver', data: $('#searchCity').val() };
 
-  let city = '01300';
-  // console.log(`Input ${input}`);
-  $.get(`/api/establishments/findByCity/${city}`, _csrf, (data) => {
-    let es = data;
+  loading();
+  getEsList(query).then( data => {
+    allEs = data;
+    loadResult(data);
+  })
+};
 
-    // TODOOOOOOOOOOOOOOOO
-    console.log(es);
+let generateByAddress = () => {
+  let query = { type: 'byAddress'};
+
+  mapInit();
+  geocodeAddress(geocoder, map);
+  loading();
+
+};
+
+let displaySelection = () => {
+
+  let myAddressInput = $('#myAddress');
+  let myMap = $('.map');
+  let resultList = $('.resultList');
+
+  $('#tabsStep3').click( function(e) {
+
+    resetEsList();
+    myMap.show();
+    myAddressInput.hide();
+    resultList.removeClass('col-md-12').addClass('col-md-7');
+
+    switch (e.target.id) {
+      case 'searchAroundMe':
+        generateAroundMe();
+        break;
+      case 'searchByAddress':
+        myAddressInput.show();
+        break;
+      case 'searchAllOver':
+        myMap.hide();
+        resultList.removeClass('col-md-7').addClass('col-md-12');
+        break;
+    }
+  })
+};
+
+
+let loadResult = (list) => {
+  loadTemplate('/static/views/api/findByGeo.hbs', list, (html) => {
+    $('#esList').html(html);
+    $('.esCount').html(list.length);
     $('#loader').hide();
-
   });
+};
+
+let getEsList = (query) => {
+  let _csrf = $('#csrfToken').val();
+
+  if (query.type === 'aroundMe'){
+    let p = query.position;
+    return new Promise(resolve => {
+      $.post('/api/establishments/findByGeo', { rayon: p['rayon'], lat: p['lat'],lon: p['lon'], filter, _csrf }).then(
+        data => resolve(data)
+      );
+    });
+  }
+  else if (query.type === 'allOver') {
+    return new Promise(resolve => {
+      $.get(`/api/establishments/findByCity/${query.data}`, _csrf).then(
+        data => resolve(data)
+      );
+    });
+  }
 };
 
 let resetSelectedES = () => {
@@ -448,7 +515,6 @@ let addWish = () => {
       _csrf
     };
     $.post('/api/candidate/wish/add', opts, (data) => {
-      console.log('cestok');
       if (data.wish) {
         $(location).attr('href', `/applications`);
       } else {
@@ -457,6 +523,7 @@ let addWish = () => {
     });
   }
 };
+
 
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
@@ -479,7 +546,7 @@ noUiSlider.create(slider, {
 slider.noUiSlider.on('change', function (){
   pos.rayon = kmArray[parseInt(slider.noUiSlider.get()) - 1];
   highlightLabel(parseInt(slider.noUiSlider.get()));
-  getEsList()
+  generateAroundMe()
 });
 slider.noUiSlider.on('slide', function (){
   highlightLabel(parseInt(slider.noUiSlider.get()));
@@ -488,11 +555,7 @@ slider.noUiSlider.on('slide', function (){
 $(document).ready(function () {
 
   activateGeoLoc();
-  resizeMap();
-
-  $('#seekCity').click(() => {
-    getEsListCity();
-  });
+  displaySelection();
 
   let selectPostType = $('#selectPostType');
   let selectServiceType = $('#selectServiceType');
@@ -533,7 +596,6 @@ $(document).ready(function () {
     }
 
   });
-
   selectServiceType.on('change', () => {
     let serviceType = selectServiceType.selectpicker('val');
     application.serviceType = [];
@@ -542,8 +604,6 @@ $(document).ready(function () {
       application.serviceType.push(data);
     });
   });
-
-
 
   $('#geolocationFilter').select2({ dropdownAutoWidth: true });
   $('#geolocationFilter').on('select2:select', e => {
@@ -555,7 +615,7 @@ $(document).ready(function () {
         filter.push(parseInt(e.id))
       });
     }
-    return getEsList();
+    return generateAroundMe();
   }).on('select2:unselect', e => {
     let data = $('#geolocationFilter').select2('data');
     if (filter.length > 0) {
@@ -563,7 +623,7 @@ $(document).ready(function () {
       data.forEach((e, i) => {
         filter.push(parseInt(e.id))
       });
-      return getEsList();
+      return generateAroundMe();
     }
   });
 
