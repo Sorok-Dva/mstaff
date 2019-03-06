@@ -25,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'es_id',
       sourceKey: 'id'
     });
+    Establishment.hasMany(models.FavoriteCandidate, {
+      foreignKey: 'es_id',
+      sourceKey: 'id'
+    });
+    Establishment.hasMany(models.ArchivedCandidate, {
+      foreignKey: 'es_id',
+      sourceKey: 'id'
+    });
   };
   return Establishment;
 };
