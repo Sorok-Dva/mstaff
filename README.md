@@ -6,7 +6,7 @@
 Install the following software in your computer:
 
 - XCode and command line tools by Apple if you're on MacOs
-- [Node.js](https://nodejs.org/en/download/package-manager/) (version 10.4 or higher)
+- Node.js (version 10.4 or higher) (`sudo n stable`)
     - NPM
     - N enables the user to switch versions easily (`npm i -g n`)
     - gulp (tasks manager) (`npm i -g gulp`)

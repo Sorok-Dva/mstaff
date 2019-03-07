@@ -112,8 +112,7 @@
       });
     } else {
       console.log('searching candidates');
-      // @TODO put a esId var instead
-      $.post(`/api/es/1/search/candidates`, need, (data) => {
+      $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
         loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
           $('#searchResult').html(html);
         });
@@ -134,26 +133,53 @@
           $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
         }
         break;
-      case 'favorite':
-        if (need.favoriteCandidates.indexOf(id) === -1) {
-          $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
-          need.favoriteCandidates.push(id);
-          $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
-            if (data.status === 'Created') {
-              notification({
-                icon: 'check-circle',
-                type: 'success',
-                title: 'Candidat ajouté au favoris.'
-              })
-            } else {
-              notification({
-                icon: 'exclamation-circle',
-                type: 'warning',
-                title: 'Ce candidat est déjà dans vos favoris.'
-              })
-            }
+        case 'favorite':
+          if (need.favoriteCandidates.indexOf(id) === -1) {
+            $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
+            need.favoriteCandidates.push(id);
+            $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
+              if (data.status === 'Created') {
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Candidat ajouté au favoris.'
+                })
+              } else {
+                notification({
+                  icon: 'exclamation-circle',
+                  type: 'warning',
+                  title: 'Ce candidat est déjà dans vos favoris.'
+                })
+              }
+            });
+          }
+          break;
+        case 'archive':
+          createModal({
+            id: 'archivateCandidateModal',
+            modal: 'es/showArchivateCandidate',
+            title: 'Archiver un candidat',
+          }, () => {
+            $('#archivateCandidate').click(function() {
+              $('#archivateCandidateModal').modal('hide');
+              $.post(`/api/es/${esId}/candidate/${id}/archive/`, { _csrf }, (data) => {
+                $(`div[data-card-user="${id}"]`).remove();
+                if (data.status === 'Created') {
+                  notification({
+                    icon: 'check-circle',
+                    type: 'success',
+                    title: 'Candidat archivé avec succès.'
+                  })
+                } else {
+                  notification({
+                    icon: 'exclamation-circle',
+                    type: 'warning',
+                    title: 'Ce candidat est déjà archivé.'
+                  })
+                }
+              });
+            });
           });
-        }
         break;
     }
   };
@@ -172,21 +198,21 @@
            $(`#es_selected > #es${id}`).remove();*/
         }
         break;
-      case 'unfav':
-        index = need.favoriteCandidates.indexOf(id);
-        if (index !== -1) {
-          $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
-          need.favoriteCandidates.splice(index, 1);
-          $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
-            if (data.status === 'deleted') {
-              notification({
-                icon: 'check-circle',
-                type: 'success',
-                title: 'Candidat supprimé de vos favoris.'
-              })
-            }
-          });
-        }
+        case 'unfav':
+          index = need.favoriteCandidates.indexOf(id);
+          if (index !== -1) {
+            $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
+            need.favoriteCandidates.splice(index, 1);
+            $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
+              if (data.status === 'deleted') {
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Candidat supprimé de vos favoris.'
+                })
+              }
+            });
+          }
         break;
     }
   };
@@ -197,7 +223,7 @@
     $('button#saveNeed').click(function() {
       if (!need.firstSearch && need.post && need.contractType) {
         need._csrf = _csrf;
-        $.post('/api/es/1/addNeed', need, (data) => {
+        $.post(`/api/es/${esId}/addNeed`, need, (data) => {
           if (data.id) {
             $(location).attr('href', `/need/${data.id}`);
           }

@@ -4,7 +4,56 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addSkill()> <i class="fal fa-plus"></i></a>
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addSkillModal',
+                       title: 'Ajouter une compétence',
+                       modal: 'back-office/addSkill'
+                   }, () => {
+                       $('button#validateSkill').click(function () {
+                           if ($('input#skillValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#skillValue').val();
+                               $.post(`/api/back-office/skills/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Cette compétence existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.skill.id,
+                                   name: response.skill.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: 'Compétence créée.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addSkillModal').modal('hide');
+               }
+               else {
+                   if ($('input#skillValue').val() == '') {
+                       $('input#skillValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#skillValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
                 </div>
 
                 <table id="skills-table" class="table">
@@ -49,35 +98,67 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .edit': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-                let promptInput = prompt('Renommer la compétence :');
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                if (promptInput) {
-                    $.put(`/api/back-office/skills/${row.id}`, {
-                        promptInput,
-                        _csrf
-                    }, () => {
-                        $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                createModal({
+                    id: 'editSkillModal',
+                    title: 'Modifier une compétence',
+                    modal: 'back-office/editSkill'
+                }, () => {
+                    $('button#btnEditSkill').click(function () {
+                        if ($('input#skillValueEdit').val() != '') {
+                            let _csrf = $('#csrfToken').val();
+                            let promptInput = $('input#skillValueEdit').val();
+                            $.put(`/api/back-office/skills/${row.id}`, {
+                                promptInput,
+                                _csrf
+                            }, () => {
+                                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                                $('#editSkillModal').modal('hide');
+                                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                                notification({
+                                    icon: 'check-circle',
+                                    type: 'success',
+                                    title: 'Compétence modifiée.',
+                                    message: ``
+                                });
+                            });
+                        } else {
+                            if ($('input#skillValueEdit').val() == '') {
+                                $('input#skillValueEdit').addClass('error');
+                                setTimeout(function () {
+                                    $('input#skillValueEdit').removeClass('error');
+                                }, 750)
+                            }
+                        }
                     });
-                }
+                });
             },
             'click .remove': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-
-                if (confirm('ATTENTION:\n\n ' +
-                        'Cette action est irreversible et supprimera la compétence.\n\n' +
-                        'Voulez vous continuer ?')) {
-                    $.delete(`/api/back-office/skills/${row.id}`, {
-                        _csrf
-                    }, () => {
-                        table.bootstrapTable('remove', {
-                            field: 'id',
-                            values: [row.id]
+                createModal({
+                    id: 'removeSkillModal',
+                    title: 'Supprimer une skill',
+                    modal: 'back-office/removeSkill'
+                }, () => {
+                    let _csrf = $('#csrfToken').val();
+                    $('button#btnRemoveSkill').click(function () {
+                        $.delete(`/api/back-office/skills/${row.id}`, {
+                            _csrf
+                        }, () => {
+                            table.bootstrapTable('remove', {
+                                field: 'id',
+                                values: [row.id]
+                            });
+                            notification({
+                                icon: 'check-circle',
+                                type: 'success',
+                                title: 'Compétence supprimée.',
+                                message: ``
+                            });
                         });
-                    })
-                }
+                    });
+                });
             }
         };
+
 
         table.bootstrapTable({
             toolbar: ".toolbar",
@@ -110,29 +191,4 @@
             table.bootstrapTable('resetView');
         });
     });
-    function addSkill()
-    {
-        let _csrf = $('#csrfToken').val();
-        let promptInput = prompt('Ajouter une compétence :');
-        if (promptInput) {
-            $.post(`/api/back-office/skills/`, {
-                promptInput,
-                _csrf
-            }, (response) => {
-                if (response.status === "Already exists")
-                {
-                    alert("Cette compétence existe déjà");
-                }
-                else {
-                    table.bootstrapTable('insertRow', {
-                        index: 0,
-                        row: {
-                            id: response.skill.id,
-                            name: response.skill.name
-                        }
-                    });
-                }
-            });
-        }
-    }
 </script>

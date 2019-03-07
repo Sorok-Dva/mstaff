@@ -1,6 +1,8 @@
 const { check, validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
+const { BackError } = require('../helpers/back.error');
+const httpStatus = require('http-status');
 
 const sequelize = require('../bin/sequelize');
 const mailer = require('../bin/mailer');
@@ -53,7 +55,7 @@ module.exports = {
     }).then(esAccounts => {
       req.session.currentEs = esAccounts[0].es_id;
       res.render('establishments/selectEs', { esAccounts });
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getNeeds: (req, res, next) => {
     Models.Need.findAll({
@@ -65,14 +67,49 @@ module.exports = {
       }
     }).then(needs => {
       res.render('establishments/needs', { needs });
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
+  },
+  getCVs: (req, res, next) => {
+    let query = {
+      where: { es_id: req.session.currentEs },
+      group: ['candidate_id'],
+      include: {
+        model: Models.Candidate,
+        attributes: { exclude: ['updatedAt', 'createdAt'] },
+        required: true,
+        include: [{
+          model: Models.User,
+          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+          on: {
+            '$Wish->Candidate.user_id$': {
+              [Op.col]: 'Wish->Candidate->User.id'
+            }
+          },
+          required: true
+        }, {
+          model: Models.Experience,
+          as: 'experiences',
+        }, {
+          model: Models.CandidateDocument,
+          as: 'documents',
+          attributes: ['candidate_id', 'type'],
+        }, {
+          model: Models.CandidateFormation,
+          as: 'formations',
+        }]
+      }
+    };
+
+    Models.Applications.findAll({}).then(needs => {
+      res.render('establishments/needs', { needs });
+    }).catch(error => next(new BackError(error)));
   },
   addNeed: (req, res, next) => {
     let render = { a: { main: 'needs' } };
     Models.Post.findAll().then(posts => {
       render.posts = posts;
       return res.render('establishments/addNeed', render);
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   showNeed: (req, res, next) => {
     let render = { a: { main: 'needs' } };
@@ -101,13 +138,10 @@ module.exports = {
         required: true
       }]
     }).then(need => {
-      if (_.isNil(need)) {
-        req.flash('error', 'Ce besoin n\'existe pas.');
-        return res.redirect('/needs');
-      }
+      if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND))
       render.need = need;
       return res.render('establishments/showNeed', render);
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   /**
    * Create User Method
@@ -149,7 +183,7 @@ module.exports = {
       if (filterQuery) filter.where.cat = filterQuery;
       Models.EstablishmentReference.findAll(filter).then((es) => {
         return res.status(200).json(es);
-      }).catch(error => next(new Error(error)));
+      }).catch(error => next(new BackError(error)));
     });
   },
   findByCity: (req, res, next) => {
@@ -178,7 +212,7 @@ module.exports = {
       where: { ref_es_id: req.es.finess },
       attributes: { exclude: ['lat', 'lon'] },
       group: ['Wish->Candidate.id'],
-      include: {
+      include: [{
         model: Models.Wish,
         required: true,
         on: {
@@ -217,12 +251,43 @@ module.exports = {
             as: 'formations',
           }]
         }
-      }
+      }, {
+        model: Models.Establishment,
+        attributes: ['id'],
+        on: {
+          '$Application.es_id$': {
+            [Op.col]: 'Establishment.id'
+          }
+        },
+        include: [{
+          model: Models.FavoriteCandidate,
+          attributes: ['added_by', 'candidate_id'],
+          on: {
+            '$Establishment.id$': {
+              [Op.col]: 'Establishment->FavoriteCandidates.es_id'
+            },
+            '$Wish->Candidate.id$': {
+              [Op.col]: 'Establishment->FavoriteCandidates.candidate_id'
+            }
+          },
+        }, {
+          model: Models.ArchivedCandidate,
+          attributes: ['added_by', 'candidate_id'],
+          on: {
+            '$Establishment.id$': {
+              [Op.col]: 'Establishment->ArchivedCandidates.es_id'
+            },
+            '$Wish->Candidate.id$': {
+              [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
+            }
+          },
+        }]
+      }]
     };
 
     Models.Application.findAll(query).then(applications => {
       return res.status(200).send(applications);
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   apiGetCandidate: (req, res, next) => {
     Models.Candidate.findOne({
@@ -267,7 +332,7 @@ module.exports = {
       }]
     }).then(candidate => {
       return res.status(200).send(candidate);
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   apiAddNeed: (req, res, next) => {
     const errors = validationResult(req);
@@ -335,7 +400,8 @@ module.exports = {
         }
       }]
     }).then(needCandidate => {
-      if (_.isNil(needCandidate)) res.json(200).send('No candidate found');
+      if (_.isNil(needCandidate))
+        return next(new BackError(`Candidate ${req.params.candidateId} or Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
       else {
         switch (req.params.action) {
           case 'notify':
@@ -376,7 +442,8 @@ module.exports = {
               res.status(201).send(result);
             });
             break;
-          default: return res.status(400).send('no action provided');
+          default:
+            return res.status(400).send('no action provided');
         }
       }
     })
@@ -407,6 +474,22 @@ module.exports = {
       case 'unfav':
         Models.FavoriteCandidate.findOne({ where }).then(fav => {
           fav.destroy().then(result => {
+            res.status(200).send({ status: 'deleted', result })
+          })
+        });
+        break;
+      case 'archive':
+        Models.ArchivedCandidate.findOrCreate({ where }).spread((archive, created) => {
+          if (created) {
+            res.status(201).send({ status: 'Created', archive });
+          } else {
+            res.status(200).send({ status: 'Already exists', archive });
+          }
+        });
+        break;
+      case 'unarchive':
+        Models.ArchivedCandidate.findOne({ where }).then(archive => {
+          archive.destroy().then(result => {
             res.status(200).send({ status: 'deleted', result })
           })
         });

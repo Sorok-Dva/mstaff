@@ -25,5 +25,10 @@ module.exports = {
     Models.Software.findAll().then(softwares => {
       res.status(200).send({ softwares });
     }).catch(error => next(error));
-  }
+  },
+  getCategoriesList: (req, res, next) => {
+    Models.CategoriesPostsServices.findAll().then(categories => {
+      res.status(200).send({ categories });
+    }).catch(error => next(new Error(error)));
+  },
 };

@@ -4,7 +4,56 @@
         <div class="card">
             <div class="card-content">
                 <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick=addQualification()> <i class="fal fa-plus"></i></a>
+                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+                   createModal({
+                       id: 'addQualificationModal',
+                       title: 'Ajouter un diplôme',
+                       modal: 'back-office/addQualification'
+                   }, () => {
+                       $('button#validateQualification').click(function () {
+                           if ($('input#qualificationValue').val() != '') {
+                               let _csrf = $('#csrfToken').val();
+                               let promptInput = $('input#qualificationValue').val();
+                               $.post(`/api/back-office/qualifications/`, {
+                                   promptInput,
+                                   _csrf
+                               }, (response) => {
+                               if (response.status === 'Already exists') {
+                                   notification({
+                                   icon: 'exclamation',
+                                   type: 'danger',
+                                   title: 'Ce diplôme existe déjà.',
+                                   message: ``
+                               });
+                           }
+                       else {
+                           table.bootstrapTable('insertRow', {
+                               index: 0,
+                               row: {
+                                   id: response.qualification.id,
+                                   name: response.qualification.name
+                               }
+                           });
+                           notification({
+                               icon: 'check-circle',
+                               type: 'success',
+                               title: ' Diplôme complémentaires créé.',
+                               message: ``
+                           });
+                       }
+                   });
+                   $('#addQualificationModal').modal('hide');
+               }
+               else {
+                   if ($('input#qualificationValue').val() == '') {
+                       $('input#qualificationValue').addClass('error');
+                       setTimeout(function() {
+                           $('input#qualificationValue').removeClass('error');
+                       }, 750)
+                   }
+               }
+           })
+       })"> <i class="fal fa-plus"></i></a>
                 </div>
 
                 <table id="qualifications-table" class="table">
@@ -49,35 +98,67 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .edit': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-                let promptInput = prompt('Renommer le diplome universitaire :');
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                if (promptInput) {
-                    $.put(`/api/back-office/qualifications/${row.id}`, {
-                        promptInput,
-                        _csrf
-                    }, () => {
-                        $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                createModal({
+                    id: 'editQualificationModal',
+                    title: 'Modifier un diplôme complémentaire',
+                    modal: 'back-office/editQualification'
+                }, () => {
+                    $('button#btnEditQualification').click(function () {
+                        if ($('input#qualificationValueEdit').val() != '') {
+                            let _csrf = $('#csrfToken').val();
+                            let promptInput = $('input#qualificationValueEdit').val();
+                            $.put(`/api/back-office/qualifications/${row.id}`, {
+                                promptInput,
+                                _csrf
+                            }, () => {
+                                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                                $('#editQualificationModal').modal('hide');
+                                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                                notification({
+                                    icon: 'check-circle',
+                                    type: 'success',
+                                    title: 'Diplôme modifié.',
+                                    message: ``
+                                });
+                            });
+                        } else {
+                            if ($('input#qualificationValueEdit').val() == '') {
+                                $('input#qualificationValueEdit').addClass('error');
+                                setTimeout(function () {
+                                    $('input#qualificationValueEdit').removeClass('error');
+                                }, 750)
+                            }
+                        }
                     });
-                }
+                });
             },
             'click .remove': (e, value, row, index) => {
-                let _csrf = $('#csrfToken').val();
-
-                if (confirm('ATTENTION:\n\n ' +
-                        'Cette action est irreversible et supprimera le diplome universitaire.\n\n' +
-                        'Voulez vous continuer ?')) {
-                    $.delete(`/api/back-office/qualifications/${row.id}`, {
-                        _csrf
-                    }, () => {
-                        table.bootstrapTable('remove', {
-                            field: 'id',
-                            values: [row.id]
+                createModal({
+                    id: 'removeQualificationModal',
+                    title: 'Supprimer un diplôme',
+                    modal: 'back-office/removeQualification'
+                }, () => {
+                    let _csrf = $('#csrfToken').val();
+                    $('button#btnRemoveQualification').click(function () {
+                        $.delete(`/api/back-office/qualifications/${row.id}`, {
+                            _csrf
+                        }, () => {
+                            table.bootstrapTable('remove', {
+                                field: 'id',
+                                values: [row.id]
+                            });
+                            notification({
+                                icon: 'check-circle',
+                                type: 'success',
+                                title: 'Diplôme supprimé.',
+                                message: ``
+                            });
                         });
-                    })
-                }
+                    });
+                });
             }
         };
+
 
         table.bootstrapTable({
             toolbar: ".toolbar",
@@ -110,29 +191,4 @@
             table.bootstrapTable('resetView');
         });
     });
-    function addQualification()
-    {
-        let _csrf = $('#csrfToken').val();
-        let promptInput = prompt('Ajouter une diplome universitaire :');
-        if (promptInput) {
-            $.post(`/api/back-office/qualifications/`, {
-                promptInput,
-                _csrf
-            }, (response) => {
-                if (response.status === "Already exists")
-                {
-                    alert("Ce diplome universitaire existe déjà");
-                }
-                else {
-                    table.bootstrapTable('insertRow', {
-                        index: 0,
-                        row: {
-                            id: response.qualification.id,
-                            name: response.qualification.name
-                        }
-                    });
-                }
-            });
-        }
-    }
 </script>

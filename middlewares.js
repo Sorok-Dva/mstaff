@@ -5,6 +5,7 @@ const config = require(`./config/config.json`)[env];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
+const methodOverride = require('method-override');
 const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
@@ -38,6 +39,7 @@ module.exports = {
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
   errorHandler: (err, req, res, next) => { // error handler
+
     let opts = {};
     // set locals, only providing error in development
     if (env === 'development') {
@@ -67,11 +69,12 @@ module.exports = {
     textsVarName: 'tr'
   }),
   loggerDev: logger('dev'),
+  methodOverride: methodOverride(),
   passportInit: passport.initialize(),
   passportSession: passport.session(),
   passportAuthentication: passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/login?error=login',
+    failureRedirect: '/login',
     failureFlash: true
   }),
   /**

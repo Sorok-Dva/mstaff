@@ -1,5 +1,7 @@
 const { check, validationResult } = require('express-validator/check');
 const { Op } = require('sequelize');
+const { BackError } = require('../helpers/back.error');
+const httpStatus = require('http-status');
 const _ = require('lodash');
 const fs = require('fs');
 const Models = require('../models/index');
@@ -33,15 +35,6 @@ module.exports = {
       }
       case 'putFormation': {
         return [ check('name').isLength({ min: 10 }) ]
-      }
-      case 'removeWish': {
-        return [ check('id').isNumeric() ]
-      }
-      case 'getWish': {
-        return [ check('id').isNumeric() ]
-      }
-      case 'getEditWish': {
-        return [ check('id').isNumeric() ]
       }
     }
   },
@@ -142,7 +135,7 @@ module.exports = {
       }]
     }).then(candidate => {
       return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getEditProfile: (req, res, next) => {
     Models.User.findOne({
@@ -207,9 +200,9 @@ module.exports = {
       Models.Post.findAll().then(posts => {
         Models.Service.findAll().then(services => {
           return res.render('candidates/formations', { candidate, posts, services, a: { main: 'cv' } })
-        }).catch(error => next(new Error(error)));
-      }).catch(error => next(new Error(error)));
-    }).catch(error => next(new Error(error)));
+        }).catch(error => next(new BackError(error)));
+      }).catch(error => next(new BackError(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getKnowledge: (req, res, next) => {
     let render = { a: { main: 'knowledges' } };
@@ -237,7 +230,7 @@ module.exports = {
     }).then(softwares => {
       render.softwares = softwares;
       return res.render('candidates/skills', render)
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getDocuments: (req, res, next) => {
     let render = { a: { main: 'documents' } };
@@ -251,17 +244,14 @@ module.exports = {
     }).then(candidate => {
       render.candidate = candidate;
       return res.render('candidates/documents', render)
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   addApplication: (req, res, next) => {
     let render = { a: { main: 'applications' } };
-    return Models.Post.findAll().then(posts => {
+    Models.Post.findAll().then(posts => {
       render.posts = posts;
-      return Models.Service.findAll();
-    }).then( services => {
-      render.services = services;
       return res.render('candidates/add-application', render)
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getWishes: (req, res, next) => {
     let render = { a: { main: 'applications' } };
@@ -271,7 +261,7 @@ module.exports = {
     }).then(wishes => {
       render.wishes = wishes;
       return res.render('candidates/applications', render)
-    }).catch(error => next(new Error(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getXpById: (req, res, next) => {
     return Models.Candidate.findOne({
@@ -507,6 +497,51 @@ module.exports = {
       return candidate[as][0].destroy().then(data => res.status(201).send({ deleted: true, data }));
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
+  addWish: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
+      Models.Wish.create({
+        candidate_id: candidate.id,
+        name: req.body.name || 'Candidature sans nom',
+        contract_type: req.body.contractType,
+        posts: req.body.posts,
+        full_time: req.body.fullTime,
+        part_time: req.body.partTime,
+        day_time: req.body.dayTime,
+        night_time: req.body.nightTime,
+        liberal_cabinets: req.body.liberal,
+        availability: req.body.availability,
+        start: req.body.start,
+        end: req.body.end,
+        lat: req.body.lat,
+        lon: req.body.lon,
+        geolocation: !!req.body.lat,
+        es_count: req.body.es_count
+      }).then(wish => {
+        req.flash('success_msg', `Souhait ajouté avec succès auprès de ${req.body.es_count} établissements.`);
+        res.status(201).send({ wish });
+        req.body.es = JSON.parse(`[${req.body.es}]`);
+        for (let i = 0; i < req.body.es.length; i++) {
+          Models.Establishment.findOne({ where: { finess: req.body.es[i] } }).then(es => {
+            Models.Application.create({
+              name: req.body.name || 'Candidature sans nom',
+              wish_id: wish.id,
+              candidate_id: candidate.id,
+              ref_es_id: req.body.es[i],
+              es_id: !_.isNil(es) ? es.id : null,
+              new: true
+            });
+          });
+        }
+      });
+    });
+  },
   getWish: (req, res, next) => {
     const errors = validationResult(req);
 
@@ -630,4 +665,4 @@ module.exports = {
       }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
   }
-}
+};

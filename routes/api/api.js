@@ -8,6 +8,7 @@ router.get('/', (req, res) => res.json({ message: 'welcome' }));
 router.get('/skills/all', ApiController.getSkillsList);
 router.get('/equipments/all', ApiController.getEquipmentsList);
 router.get('/softwares/all', ApiController.getSoftwaresList);
+router.get('/categoriesPostsServices/all', ApiController.getCategoriesList);
 router.post('/establishments/findByGeo', ESController.findByGeo);
 router.get('/establishments/findByCity/:city', ESController.findByCity);
 
