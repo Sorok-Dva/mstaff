@@ -39,7 +39,7 @@ server.listen(port, () => {
       console.log('[SEQUELIZE] %s Unable to connect to the database.', chalk.red('✗'), err.message);
       // process.exit(1);
     });
-    if (conf.ENV === 'local' || conf.ENV === 'development') {
+    if (conf.ENV === 'local' || conf.ENV === 'development' || conf.ENV === 'dev_test') {
       const gulp = spawn('gulp');
       gulp.stdout.setEncoding('utf8');
       gulp.stdout.on('data', chunk => {

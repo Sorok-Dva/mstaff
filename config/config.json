@@ -26,15 +26,6 @@
     "operatorsAliases": false,
     "logging": true
   },
-  "dev_test": {
-    "username": "mstaff",
-    "password": "Mstaff2019*",
-    "database": "mstaff_dev_test",
-    "host": "91.121.79.166",
-    "dialect": "mysql",
-    "operatorsAliases": false,
-    "logging": true
-  },
   "production": {
     "username": "mstaff",
     "password": "Mstaff2019*",

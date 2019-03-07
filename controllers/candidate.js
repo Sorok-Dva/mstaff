@@ -36,6 +36,15 @@ module.exports = {
       case 'putFormation': {
         return [ check('name').isLength({ min: 10 }) ]
       }
+      case 'removeWish': {
+        return [ check('id').isNumeric() ]
+      }
+      case 'getWish': {
+        return [ check('id').isNumeric() ]
+      }
+      case 'getEditWish': {
+        return [ check('id').isNumeric() ]
+      }
     }
   },
   postVideo: (req, res, next) => {
