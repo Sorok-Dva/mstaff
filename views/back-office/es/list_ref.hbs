@@ -32,7 +32,7 @@
     $.post(`/api/back-office/establishmentsReferences/info/${id}`, { _csrf } , data => {
       createModal({
         id: 'viewESProfileModal',
-        modal: 'back-office/viewEsProfile',
+        modal: 'back-office/viewESProfile',
         size: 'modal-lg',
         style: 'width:80%',
         title: `Établissement ${data.name}`,
