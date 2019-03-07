@@ -37,7 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     es_id: DataTypes.INTEGER
   }, {});
   EstablishmentReference.associate = function (models) {
-    // associations can be defined here
+    EstablishmentReference.hasMany(models.Application, {
+      foreignKey: 'ref_es_id',
+      sourceKey: 'finess_et'
+    });
   };
   return EstablishmentReference;
 };

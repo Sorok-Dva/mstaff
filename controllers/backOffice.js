@@ -180,7 +180,34 @@ module.exports = {
   },
   APIgetEstablishmentInfo: (req, res, next) => {
     Models.EstablishmentReference.findOne({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
+      include: {
+        model: Models.Application,
+        include: [{
+          model: Models.Wish,
+          required: true,
+          on: {
+            '$Applications.wish_id$': {
+              [Op.col]: 'Applications->Wish.id'
+            }
+          },
+          include: {
+            model: Models.Candidate,
+            attributes: { exclude: ['updatedAt', 'createdAt'] },
+            required: true,
+            include: [{
+              model: Models.User,
+              attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+              on: {
+                '$Applications->Wish->Candidate.user_id$': {
+                  [Op.col]: 'Applications->Wish->Candidate->User.id'
+                }
+              },
+              required: true
+            }]
+          }
+        }]
+      }
     }).then(es => {
       if (_.isNil(es)) return next(new BackError(`Establishment ${req.params.id} not found`, httpStatus.NOT_FOUND));
       return res.status(200).send(es);

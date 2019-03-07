@@ -63,28 +63,22 @@
           <tr class="info">
             <th>Date</th>
             <th>Candidat</th>
+            <th>Contrat</th>
             <th>Poste</th>
             <th>Service</th>
           </tr>
           </thead>
           <tbody>
-          {{#if this.candidate.experiences}}
-            {{#each this.candidate.experiences as |xp|}}
+          {{#if this.es.Applications}}
+            {{#each this.es.Applications as |application|}}
               <tr>
                 <td>
-                  {{date xp.start 'MM/YYYY' }} -
-                  {{#if xp.end}}
-                    {{date xp.end 'MM/YYYY' }}
-                  {{else}}
-                    maintenant
-                  {{/if}}
-                  {{#if xp.internship}}
-                    <small>(stage)</small>
-                  {{/if}}
+                  {{date application.createdAt 'DD/MM/YYYY H:mm' }}
                 </td>
-                <td>{{xp.name}}</td>
-                <td>{{xp.poste.name}}</td>
-                <td>{{xp.service.name}}</td>
+                <td>{{application.Wish.Candidate.User.firstName}} {{application.Wish.Candidate.User.lastName}}</td>
+                <td>{{application.Wish.contract_type}}</td>
+                <td>{{application.poste.name}}</td>
+                <td>{{application.service.name}}</td>
               </tr>
             {{/each}}
           {{else}}
