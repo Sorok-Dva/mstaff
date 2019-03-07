@@ -31,6 +31,7 @@
                 <a href="/back-office/es/{{account.Establishment.id}}">{{account.Establishment.name}}</a>,
                 {{/each}}]
               </td>
+              <td></td>
             </tr>
           {{/each}}
           </tbody>
@@ -83,21 +84,16 @@
     table.bootstrapTable({
       toolbar: ".toolbar",
       search: true,
-      showToggle: true,
       showColumns: true,
       pagination: true,
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
       pageList: [10,25,50,100,200,500],
-      formatShowingRows: (pageFrom, pageTo, totalRows) => {
-        //do nothing here, we don't want to show the text "showing x of y from..."
-      },
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " rows visible";
       },
       icons: {
-        toggle: 'fa fa-th-list',
         columns: 'fa fa-columns',
         detailOpen: 'fa fa-plus-circle',
         detailClose: 'ti-close'
