@@ -2,10 +2,10 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-content">
-                <div class="toolbar">
+                <div id="toolbar">
                     <!--Here you can write extra buttons/actions for the toolbar-->
                 </div>
-                <table id="users-table" class="table">
+                <table id="users-table" class="table table-borderless table-condensed table-hover">
                     <thead>
                         <th data-field="state" data-checkbox="true"></th>
                         <th data-field="id" class="text-center" data-sortable="true">ID</th>
@@ -82,21 +82,17 @@
         table.bootstrapTable({
             toolbar: ".toolbar",
             search: true,
-            showToggle: true,
             showColumns: true,
+            showExport: true,
             pagination: true,
             searchAlign: 'left',
             pageSize: 25,
             clickToSelect: true,
             pageList: [10,25,50,100,200,500],
-            formatShowingRows: (pageFrom, pageTo, totalRows) => {
-                //do nothing here, we don't want to show the text "showing x of y from..."
-            },
             formatRecordsPerPage: (pageNumber) => {
-                return pageNumber + " rows visible";
+                return pageNumber + " résultats visible";
             },
             icons: {
-                toggle: 'fa fa-th-list',
                 columns: 'fa fa-columns',
                 detailOpen: 'fa fa-plus-circle',
                 detailClose: 'ti-close'
