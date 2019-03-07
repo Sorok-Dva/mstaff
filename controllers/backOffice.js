@@ -160,11 +160,19 @@ module.exports = {
     };
     Models.EstablishmentReference.findAll({ attributes: ['id'], where }).then(allEs => {
       Models.EstablishmentReference.findAll({
+        where,
+        attributes: [
+          'id', 'name', 'finess_et', 'address_dpt_name', 'address_town',
+          [Sequelize.literal(
+            '(SELECT COUNT(*) FROM Applications WHERE `EstablishmentReference`.`finess_et` = `Applications`.`ref_es_id`)'
+          ), 'applications']
+        ],
         offset: _.isNaN(req.query.offset) ? 0 : parseInt(req.query.offset),
         limit: _.isNaN(req.query.limit) ? 100 : parseInt(req.query.limit),
-        order: [[_.isNil(req.query.sort) ? 'id' : req.query.sort, req.query.order]],
-        attributes: ['id', 'name', 'finess_et', 'address_dpt_name', 'address_town'],
-        where
+        order: [[
+          _.isNil(req.query.sort) ? 'id' : req.query.sort === 'applications' ? Sequelize.literal('applications') : req.query.sort,
+          req.query.order
+        ]]
       }).then(data => {
         res.status(200).send({ total: allEs.length, rows: data });
       }).catch(error => next(new BackError(error)));
