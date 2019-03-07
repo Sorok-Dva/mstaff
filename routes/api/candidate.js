@@ -11,6 +11,7 @@ const storage = (path, type) => multer.diskStorage({
   }
 });
 const videoUpload = multer({ storage: storage('candidates/videos/', 'video') }).single('file');
+const avatarUpload = multer({ storage: storage('candidates/images/', 'photo') }).single('file');
 const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).fields(
   [
     { name: 'CNI', maxCount: 1 }, // carte natinale d'identité
@@ -34,6 +35,8 @@ const CandidateController = require('../../controllers/candidate');
 router.post('/:action/video', UserController.ensureIsCandidate, videoUpload, CandidateController.postVideo);
 
 router.post('/add/document', UserController.ensureIsCandidate, docsUpload, CandidateController.uploadDocument);
+
+router.post('/add/photo', UserController.ensureIsCandidate, avatarUpload, CandidateController.uploadAvatar);
 
 router.get('/xp/:id', UserController.ensureIsCandidate, CandidateController.getXpById)
   .delete('/xp/:id', UserController.ensureIsCandidate, CandidateController.removeXP);
