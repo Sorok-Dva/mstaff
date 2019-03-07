@@ -1,0 +1,123 @@
+<div class="row" style="padding-top:15px; margin: auto !important;">
+  <div class="col-lg-4 col-md-5 ml-1">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title text-center">
+          <i class="fal fa-hospital" aria-hidden="true"></i>
+          {{this.es.category_name}}
+        </h4>
+      </div>
+      <div class="card-content text-center">
+        <table class="table">
+          <tbody>
+          <tr>
+            <td>Nom SPH</td>
+            <td>{{this.es.name_sph}}</td>
+          </tr>
+          <tr>
+            <td>Nom MFT</td>
+            <td>{{this.es.name_mft}}</td>
+          </tr>
+          </tbody>
+        </table>
+        <table class="table">
+          <tbody>
+          <tr>
+            <td>Numéro Finess (ET)</td>
+            <td>{{this.es.finess_et}}</td>
+          </tr>
+          <tr>
+            <td>Numéro Finess (EJ)</td>
+            <td>{{this.es.finess_ej}}</td>
+          </tr>
+          <tr>
+            <td>Numéro Siret</td>
+            <td>{{this.es.siret}}</td>
+          </tr>
+          <tr>
+            <td>Téléphone</td>
+            <td>+33 {{this.es.phone}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title text-center"><i class="fal fa-location-arrow" aria-hidden="true"></i> Localisation</h4>
+        <h5 class="text-center" style="margin-bottom: -10px">{{this.es.address_dpt_name}} - {{this.es.address_town}}</h5>
+      </div>
+      <div class="card-content text-center">
+        <div id="map" style="height: 450px;width: 100%;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8 col-md-7">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Candidatures dans cet établissement</h4>
+      </div>
+      <div class="card-content table-responsive table-full-width">
+        <table class="table table-hover">
+          <thead>
+          <tr class="info">
+            <th>Date</th>
+            <th>Candidat</th>
+            <th>Poste</th>
+            <th>Service</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#if this.candidate.experiences}}
+            {{#each this.candidate.experiences as |xp|}}
+              <tr>
+                <td>
+                  {{date xp.start 'MM/YYYY' }} -
+                  {{#if xp.end}}
+                    {{date xp.end 'MM/YYYY' }}
+                  {{else}}
+                    maintenant
+                  {{/if}}
+                  {{#if xp.internship}}
+                    <small>(stage)</small>
+                  {{/if}}
+                </td>
+                <td>{{xp.name}}</td>
+                <td>{{xp.poste.name}}</td>
+                <td>{{xp.service.name}}</td>
+              </tr>
+            {{/each}}
+          {{else}}
+            <tr class="text-center">
+              <td colspan="4">Aucune donnée disponible</td>
+            </tr>
+          {{/if}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  if (document.getElementById('map')) {
+    let pos = { lat: {{this.es.lat}}, lng: {{this.es.lon}}, rayon: 5 };
+    let map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: pos
+    });
+    marker = new google.maps.Marker({
+      position: pos,
+      map: map
+    });
+    cityCircle = new google.maps.Circle({
+      strokeColor: '#337AB7',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#5BBBE5',
+      fillOpacity: 0.35,
+      map: map,
+      center: pos,
+      radius: pos.rayon*1000 || 10000
+    });
+  }
+</script>

@@ -67,6 +67,12 @@ router.get('/impersonatePutReadOnly', UserController.ensureIsAdmin, BackOfficeCo
 router.post('/impersonateRemoveReadOnly/validate', UserController.ensureIsAdmin, BackOfficeController.impersonateRemoveReadOnlyValidation);
 
 /**
+ * @Route('/back-office/establishments/') GET;
+ * Show establishments referential
+ */
+router.get('/establishments', UserController.ensureIsAdmin, BackOfficeController.getEstablishmentsList);
+
+/**
  * @Route('/back-office/es/') GET;
  * Show ES List page
  */

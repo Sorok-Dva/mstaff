@@ -135,6 +135,49 @@ module.exports = {
         users })
     }).catch(error => next(new BackError(error)));
   },
+  getEstablishmentsList: (req, res, next) => {
+    res.render('back-office/es/list_ref', {
+      layout,
+      title: 'Liste des Établissements dans le référentiel',
+      a: { main: 'references', sub: 'establishments' }
+    });
+  },
+  APIgetEstablishmentsList: (req, res, next) => {
+    let where = _.isNil(req.query.search) ? null : {
+      [Op.or]: [{
+        name: Sequelize.where(Sequelize.fn('lower', Sequelize.col('name')), {
+          [Op.like]: `%${req.query.search.toLowerCase()}%`
+        })
+      }, {
+        finess_et: Sequelize.where(Sequelize.fn('lower', Sequelize.col('finess_et')), {
+          [Op.like]: `%${req.query.search.toLowerCase()}%`
+        })
+      }, {
+        address_town: Sequelize.where(Sequelize.fn('lower', Sequelize.col('address_town')), {
+          [Op.like]: `%${req.query.search.toLowerCase()}%`
+        })
+      }],
+    };
+    Models.EstablishmentReference.findAll({ attributes: ['id'], where }).then(allEs => {
+      Models.EstablishmentReference.findAll({
+        offset: _.isNaN(req.query.offset) ? 0 : parseInt(req.query.offset),
+        limit: _.isNaN(req.query.limit) ? 100 : parseInt(req.query.limit),
+        order: [[_.isNil(req.query.sort) ? 'id' : req.query.sort, req.query.order]],
+        attributes: ['id', 'name', 'finess_et', 'address_dpt_name', 'address_town'],
+        where
+      }).then(data => {
+        res.status(200).send({ total: allEs.length, rows: data });
+      }).catch(error => next(new BackError(error)));
+    }).catch(error => next(new BackError(error)));
+  },
+  APIgetEstablishmentInfo: (req, res, next) => {
+    Models.EstablishmentReference.findOne({
+      where: { id: req.params.id }
+    }).then(es => {
+      if (_.isNil(es)) return next(new BackError(`Establishment ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      return res.status(200).send(es);
+    }).catch(error => next(new BackError(error)));
+  },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
       res.render('back-office/es/list', {
@@ -148,7 +191,7 @@ module.exports = {
   getES: (req, res, next) => {
     Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
       if (_.isNil(data)) {
-        req.flash('error', 'Cet établissement n\'existe pas.');
+        req.flash('error_msg', 'Cet établissement n\'existe pas.');
         return res.redirect('/back-office/es');
       }
       Models.Candidate.findAll({
@@ -185,7 +228,7 @@ module.exports = {
       }
     }).then(user => {
       if (_.isNil(user)) {
-        req.flash('error', 'Cet utilisateur n\'existe pas.');
+        req.flash('error_msg', 'Cet utilisateur n\'existe pas.');
         return res.redirect('/back-office/users');
       }
       res.render('back-office/users/show', {
