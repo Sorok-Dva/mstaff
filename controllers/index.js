@@ -44,7 +44,7 @@ module.exports = {
         }
       }).then(es => {
         if (!es) {
-          req.flash('error', 'Code ES invalide.');
+          req.flash('error_msg', 'Code ES invalide.');
           return res.redirect('/register');
         } else {
           es = es.dataValues;
