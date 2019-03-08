@@ -7,37 +7,6 @@ const fs = require('fs');
 const Models = require('../models/index');
 
 module.exports = {
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'postAddExperience': {
-        return [
-          check('name').isLength({ min: 3 }),
-          check('post_id').isNumeric(),
-          check('service_id').isNumeric(),
-          check('internship').isBoolean(),
-          check('current').isBoolean()
-        ]
-      }
-      case 'postAddFormation': {
-        return [
-          check('name').isLength({ min: 3 })
-        ]
-      }
-      case 'postAddDiploma': {
-        return [
-          check('name').isLength({ min: 3 })
-        ]
-      }
-      case 'putFormation': {
-        return [ check('name').isLength({ min: 10 }) ]
-      }
-    }
-  },
   postVideo: (req, res, next) => {
     if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
     let video = { filename: null };

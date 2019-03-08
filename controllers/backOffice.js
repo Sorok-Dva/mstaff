@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { Sequelize, Op } = require('sequelize');
 const { BackError } = require('../helpers/back.error');
 const httpStatus = require('http-status');
@@ -12,20 +12,6 @@ const discord = require('../bin/discord-bot');
 const mailer = require('../bin/mailer');
 
 module.exports = {
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'sendCandidateVerifEmail': {
-        return [
-          check('email').isEmail()
-        ]
-      }
-    }
-  },
   index: (req, res) => {
     let render = { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } };
     Models.User.count().then(count => {

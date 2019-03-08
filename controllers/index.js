@@ -62,7 +62,7 @@ module.exports = {
         attributes: ['key', 'id', 'firstName', 'email', 'validated']
       }).then(user => {
         if (_.isNil(user)) {
-          req.flash('error_msg', 'Clé de validation invalide.');
+          req.flash('error_msg', 'Clé de HTTPValidation invalide.');
           return res.render('/', { layout: 'landing' });
         }
         user.validated = true;
@@ -78,7 +78,7 @@ module.exports = {
         })
       });
     } else {
-      req.flash('error_msg', 'Clé de validation invalide.');
+      req.flash('error_msg', 'Clé de HTTPValidation invalide.');
       res.redirect('/');
     }
   },

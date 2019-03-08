@@ -1,23 +1,7 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { Demo } = require('../models/index').Demo;
 
 module.exports = {
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'createDemo': {
-        return [check('email').isEmail(),
-          check('phone').isMobilePhone(),
-          check('type').exists(),
-          check('nameEs').exists()
-        ]
-      }
-    }
-  },
   /**
    * Create Demo Method
    * @param req

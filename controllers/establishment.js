@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require('../helpers/back.error');
@@ -9,42 +9,6 @@ const mailer = require('../bin/mailer');
 const Models = require('../models/index');
 
 module.exports = {
-  /**
-   * Authentication middleware
-   * @param req
-   * @param res
-   * @param next
-   * @description user that the current user belongs to the establishment call in the route.
-   */
-  verifyEsAccess: (req, res, next) => {
-    Models.Establishment.findOne({
-      where: { id: req.params.esId },
-      include: {
-        model: Models.ESAccount,
-        where: { user_id: req.user.id }
-      }
-    }).then(es => {
-      if (!es) return res.status(403).send(`You don't have access to this establishment.`);
-      req.es = es;
-      next();
-    });
-  },
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'create': {
-        return [
-          check('email').isEmail(),
-          check('firstName').exists(),
-          check('lastName').exists()
-        ]
-      }
-    }
-  },
   getSelectEs: (req, res, next) => {
     Models.ESAccount.findAll({
       where: { user_id: req.user.id },
