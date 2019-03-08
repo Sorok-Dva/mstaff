@@ -93,3 +93,5 @@ Authentication.ensureIsEs = (req, res, next) => {
     res.redirect('/');
   }
 };
+
+module.exports = Authentication;
