@@ -1,4 +1,4 @@
-const { Authentication } = require('../../middlewares/index');
+const { Authentication, HTTPValidation } = require('../../middlewares/index');
 const CandidateController = require('../../controllers/candidate');
 const express = require('express');
 const router = express.Router();
@@ -45,7 +45,7 @@ router.get('/formation/:id', Authentication.ensureIsCandidate, CandidateControll
   .delete('/formation/:id', Authentication.ensureIsCandidate, CandidateController.removeFormation)
   .put('/formation/:id',
     Authentication.ensureIsCandidate,
-    CandidateController.validate('putFormation'),
+    HTTPValidation.CandidateController.putFormation,
     CandidateController.putFormation
   );
 

@@ -1,10 +1,8 @@
+const { Authentication, Express, HTTPValidation } = require('../middlewares');
 const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
-const middleware = require('../middlewares');
 const rateLimit = require('express-rate-limit');
-
-const Authentication = require('../middlewares/authentication');
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
 
@@ -15,7 +13,7 @@ const loginLimiter = rateLimit({
     req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réesayer dans 15 minutes.');
     return res.redirect('/login');
   },
-  keyGenerator: function(req /*, res*/) {
+  keyGenerator: function (req /*, res*/) {
     return req.body.email;
   },
 });
@@ -36,7 +34,8 @@ router.get('/login',
   .post('/login',
     loginLimiter,
     Authentication.ensureIsNotAuthenticated,
-    middleware.passportAuthentication,
+    HTTPValidation.IndexController.login,
+    Express.passportAuthentication,
     IndexController.postLogin);
 
 /**
@@ -48,7 +47,7 @@ router.get('/register/:esCode?',
   IndexController.getRegister)
   .post('/register/:esCode?',
     Authentication.ensureIsNotAuthenticated,
-    UserController.validate('create'),
+    HTTPValidation.UserController.create,
     UserController.create);
 
 router.get('/validate/:key', Authentication.ensureIsNotAuthenticated, IndexController.getValidateAccount);

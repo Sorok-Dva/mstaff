@@ -1,4 +1,4 @@
-const { Authentication } = require('../middlewares/index');
+const { Authentication, HTTPValidation } = require('../middlewares/index');
 const CandidateController = require('../controllers/candidate');
 const express = require('express');
 const router = express.Router();
@@ -52,7 +52,7 @@ router.get('/applications/new', Authentication.ensureIsCandidate, CandidateContr
  */
 router.post('/add/experience',
   Authentication.ensureIsCandidate,
-  CandidateController.validate('postAddExperience'),
+  HTTPValidation.CandidateController.postAddExperience,
   CandidateController.postAddExperience
 );
 
@@ -62,7 +62,7 @@ router.post('/add/experience',
  */
 router.post('/add/formation',
   Authentication.ensureIsCandidate,
-  CandidateController.validate('postAddFormation'),
+  HTTPValidation.CandidateController.postAddFormation,
   CandidateController.postAddFormation
 );
 
@@ -72,7 +72,7 @@ router.post('/add/formation',
  */
 router.post('/add/diploma',
   Authentication.ensureIsCandidate,
-  CandidateController.validate('postAddDiploma'),
+  HTTPValidation.CandidateController.postAddDiploma,
   CandidateController.postAddDiploma
 );
 

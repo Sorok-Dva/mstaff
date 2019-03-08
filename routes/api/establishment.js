@@ -4,24 +4,24 @@ const express = require('express');
 const router = express.Router();
 
 router.post('/:esId/search/candidates',
-  Authentication.ensureIsEs && EstablishmentController.verifyEsAccess,
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
   EstablishmentController.apiSearchCandidates
 );
 
 router.post('/:esId/get/candidate/:userId',
-  Authentication.ensureIsEs && EstablishmentController.verifyEsAccess,
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
   EstablishmentController.apiGetCandidate
 );
 
-router.post('/:esId/addNeed', Authentication.ensureIsEs && EstablishmentController.verifyEsAccess, EstablishmentController.apiAddNeed);
+router.post('/:esId/addNeed', Authentication.ensureIsEs && Authentication.verifyEsAccess, EstablishmentController.apiAddNeed);
 
 router.post('/:esId/need/:id/:action/candidate/:candidateId',
-  Authentication.ensureIsEs && EstablishmentController.verifyEsAccess,
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
   EstablishmentController.apiNeedCandidate
 );
 
 router.post('/:esId/candidate/:candidateId/:action',
-  Authentication.ensureIsEs && EstablishmentController.verifyEsAccess,
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
   EstablishmentController.apiFavCandidate
 );
 
