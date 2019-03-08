@@ -1,7 +1,7 @@
 const conf = require('dotenv').config().parsed;
 const path = require('path');
 const env = 'development';
-const config = require(`./config/config.json`)[env];
+const config = require(`../config/config.json`)[env];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
@@ -10,16 +10,18 @@ const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
 const cookieParser = require('cookie-parser');
-const handlebars = require('./helpers/handlebars').register(require('handlebars'));
+const handlebars = require('../helpers/handlebars').register(require('handlebars'));
 const flash = require('connect-flash');
 const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
 const wildcardSubdomains = require('wildcard-subdomains');
+// const Sentry = require('@sentry/node');
 
-const ServerController = require('./controllers/server');
+const ServerController = require('../controllers/server');
 
+// Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -55,13 +57,13 @@ module.exports = {
   exphbs: exphbs({
     extname: 'hbs',
     defaultLayout: 'default',
-    layoutsDir: path.join(__dirname, '/views/layouts'),
-    partialsDir: path.join(__dirname, '/views/partials')
+    layoutsDir: path.join(__dirname, '../views/layouts'),
+    partialsDir: path.join(__dirname, '../views/partials')
   }),
   flash: flash(),
   helmet: helmet(), // secure apps by setting various HTTP headers
   i18n: i18n({
-    translationsPath: path.join(__dirname, 'i18n'),
+    translationsPath: path.join(__dirname, '../i18n'),
     cookieLangName: 'mstaff_lang',
     browserEnable: true,
     defaultLang: 'fr',
@@ -94,6 +96,8 @@ module.exports = {
       next();
     } else next();
   },
+  sentryErrorHandler: () => Sentry.Handlers.errorHandler(),
+  sentryRequestHandler: () => Sentry.Handlers.requestHandler(),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';
