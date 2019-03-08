@@ -1,3 +1,4 @@
+const Models = require('../models');
 const Authentication = {};
 
 /**
@@ -92,6 +93,27 @@ Authentication.ensureIsEs = (req, res, next) => {
   } else {
     res.redirect('/');
   }
+};
+
+/**
+ * Authentication middleware
+ * @param req
+ * @param res
+ * @param next
+ * @description user that the current user belongs to the establishment call in the route.
+ */
+Authentication.verifyEsAccess = (req, res, next) => {
+  Models.Establishment.findOne({
+    where: { id: req.params.esId },
+    include: {
+      model: Models.ESAccount,
+      where: { user_id: req.user.id }
+    }
+  }).then(es => {
+    if (!es) return res.status(403).send(`You don't have access to this establishment.`);
+    req.es = es;
+    next();
+  });
 };
 
 module.exports = Authentication;
