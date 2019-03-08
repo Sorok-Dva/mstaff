@@ -30,6 +30,10 @@ module.exports = {
         type: Sequelize.JSON,
         allowNull: false
       },
+      services: {
+        type: Sequelize.JSON,
+        allowNull: true
+      },
       full_time: {
         type: Sequelize.BOOLEAN,
         allowNull: true
