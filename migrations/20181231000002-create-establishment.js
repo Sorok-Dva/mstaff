@@ -74,6 +74,18 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      contact_identity: {
+        type: Sequelize.STRING
+      },
+      contact_post: {
+        type: Sequelize.STRING
+      },
+      contact_email: {
+        type: Sequelize.STRING
+      },
+      contact_phone: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -17,7 +17,11 @@ module.exports = (sequelize, DataTypes) => {
     logo: DataTypes.STRING,
     domain_name: DataTypes.STRING,
     domain_enable: DataTypes.BOOLEAN,
-    salaries_count: DataTypes.INTEGER
+    salaries_count: DataTypes.INTEGER,
+    contact_identity: DataTypes.STRING,
+    contact_post: DataTypes.STRING,
+    contact_email: DataTypes.STRING,
+    contact_phone: DataTypes.STRING
   }, {});
   Establishment.associate = function (models) {
     Establishment.hasOne(models.Demo, {
