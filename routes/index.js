@@ -1,10 +1,10 @@
-const { Authentication } = require('../middlewares/index');
 const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
-const middleware = require('../middlewares.js');
+const middleware = require('../middlewares');
 const rateLimit = require('express-rate-limit');
 
+const Authentication = require('../middlewares/authentication');
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
 
@@ -12,10 +12,10 @@ const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
   max: 3, // start blocking after 3 requests
   handler: (req, res, next) => {
-    req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réessayer dans 15 minutes.');
+    req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réesayer dans 15 minutes.');
     return res.redirect('/login');
   },
-  keyGenerator: (req) => {
+  keyGenerator: function(req /*, res*/) {
     return req.body.email;
   },
 });
@@ -51,7 +51,7 @@ router.get('/register/:esCode?',
     UserController.validate('create'),
     UserController.create);
 
-router.get('/validate/:key', UserController.ensureIsNotAuthenticated, IndexController.getValidateAccount);
+router.get('/validate/:key', Authentication.ensureIsNotAuthenticated, IndexController.getValidateAccount);
 
 /**
  * @Route('/register/complete/profile') GET + POST;
