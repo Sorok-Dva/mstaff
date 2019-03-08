@@ -1,9 +1,7 @@
 const { Env } = require('./helpers/helpers');
+const { ErrorHandler, Express } = require('./middlewares');
 const path = require('path');
-
 const express = require('express');
-const middleware = require('./middlewares');
-const ErrorHandler = require('./middlewares/errorHandler');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -18,7 +16,7 @@ const apiEsRouter = require('./routes/api/establishment');
 
 const app = express();
 
-if (Env.isLocal || Env.isDev) app.use(middleware.loggerDev);
+if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
 
 // express config
 app.set('env', Env.current);
@@ -28,25 +26,26 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 if (Env.isProd) app.set('view cache', true);
 
-// ------ MIDDLEWARES
-app.engine('hbs', middleware.exphbs);
+// ------ Express
+// app.use(Express.sentryRequestHandler);
+app.engine('hbs', Express.exphbs);
 app.use(express.json({ limit: '150mb' }));
 app.use(express.urlencoded({ extended: true, limit: '150mb' }));
-app.use(middleware.compress);
-app.use(middleware.methodOverride);
-app.use(middleware.helmet);
+app.use(Express.compress);
+app.use(Express.methodOverride);
+app.use(Express.helmet);
 app.use('/static', express.static(path.join(__dirname, 'public')));
-app.use(middleware.cookieParser);
-app.use(middleware.csurf);
-app.use(middleware.session);
-app.use(middleware.i18n);
-app.use(middleware.verifyMaintenance);
-app.use(middleware.passportInit);
-app.use(middleware.passportSession);
-app.use(middleware.flash);
-app.use(middleware.setLocals);
-app.use(middleware.wildcardSubdomains);
-app.use(middleware.readOnlySessionForImpersonation);
+app.use(Express.cookieParser);
+app.use(Express.csurf);
+app.use(Express.session);
+app.use(Express.i18n);
+app.use(Express.verifyMaintenance);
+app.use(Express.passportInit);
+app.use(Express.passportSession);
+app.use(Express.flash);
+app.use(Express.setLocals);
+app.use(Express.wildcardSubdomains);
+app.use(Express.readOnlySessionForImpersonation);
 
 // ------ ROUTES
 app.use('/', indexRouter);
@@ -67,6 +66,6 @@ app.use(ErrorHandler.log);
 // app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
 
-app.use(middleware.errorHandler); // errorHandler always must be in last position.
+app.use(Express.errorHandler); // errorHandler always must be in last position.
 
 module.exports = app;
