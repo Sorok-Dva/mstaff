@@ -1,4 +1,4 @@
-let map, marker, cityCircle, markers, geocoder = [], filter, pos = { lat: 0, lng: 0, rayon: 5 }, selectedAll = false,
+let map, marker, cityCircle, markers = [], geocoder, filter, pos = { lat: 0, lng: 0, rayon: 5 }, selectedAll = false,
   allEs = [], application = {};
 let kmArray = [1, 2, 5, 10, 15, 20, 30, 50, 70, 100];
 let slider = document.getElementById('radius');
@@ -265,15 +265,19 @@ let mapInit = () => {
   }
 };
 
-let geocodeAddress = (geocoder, resultMap) => {
-  let address = $('#searchAddress').val();
-  geocoder.geocode({'address': address}, function(results, status) {
+let displayMap = (currentMap, newpos) => {
+  currentMap.setCenter(newpos);
+  marker.setPosition(newpos);
+  cityCircle.setCenter(newpos);
+};
+
+let geocodeAddress = (geocoder, currentMap) => {
+  // let address = $('#searchAddress').val();
+  geocoder.geocode({'address': application.searchAddress}, function(results, status) {
     if (status === 'OK') {
-      resultMap.setCenter(results[0].geometry.location);
-      let marker = new google.maps.Marker({
-        map: resultMap,
-        position: results[0].geometry.location
-      });
+      let lat = results[0].geometry.location.lat();
+      let lng = results[0].geometry.location.lng();
+      displayMap(currentMap, { lat:lat, lng:lng });
     } else alert('Geocode was not successful for the following reason: ' + status);
   })
 };
@@ -315,7 +319,7 @@ let highlightLabel = ($this) => {
 
 let activateGeoLoc = () => {
   if (navigator.geolocation)
-    navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, { enableHighAccuracy: true});
 };
 
 let geoSuccess = (position) => {
@@ -348,12 +352,20 @@ let loading = () => {
 let generateAroundMe = () => {
   let query = { type: 'aroundMe', position: { rayon: pos.rayon, lat: pos.lat, lon: pos.lng, filter} };
 
-  mapInit();
+  displayMap(map, pos);
   loading();
   getEsList(query).then( data => {
     allEs = data;
     loadResult(data);
   });
+};
+
+let generateByAddress = () => {
+  let query = { type: 'byAddress'};
+
+  application.searchAddress = $('#searchAddress').val();
+  geocodeAddress(geocoder, map);
+  loading();
 };
 
 let generateAllOver = () => {
@@ -364,15 +376,6 @@ let generateAllOver = () => {
     allEs = data;
     loadResult(data);
   })
-};
-
-let generateByAddress = () => {
-  let query = { type: 'byAddress'};
-
-  mapInit();
-  geocodeAddress(geocoder, map);
-  loading();
-
 };
 
 let displaySelection = () => {
@@ -394,6 +397,8 @@ let displaySelection = () => {
         break;
       case 'searchByAddress':
         myAddressInput.show();
+        if ('searchAddress' in application)
+          geocodeAddress(geocoder, map);
         break;
       case 'searchAllOver':
         myMap.hide();
@@ -402,7 +407,6 @@ let displaySelection = () => {
     }
   })
 };
-
 
 let loadResult = (list) => {
   loadTemplate('/static/views/api/findByGeo.hbs', list, (html) => {
@@ -555,6 +559,7 @@ slider.noUiSlider.on('slide', function (){
 $(document).ready(function () {
 
   activateGeoLoc();
+  mapInit();
   displaySelection();
 
   let selectPostType = $('#selectPostType');
