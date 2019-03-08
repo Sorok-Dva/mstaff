@@ -1,10 +1,12 @@
 const { Authentication } = require('../middlewares/index');
-const IndexController = require('../controllers/index');
 const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
 const middleware = require('../middlewares');
 const rateLimit = require('express-rate-limit');
+
+const UserController = require('../controllers/user');
+const IndexController = require('../controllers/index');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
@@ -46,10 +48,10 @@ router.get('/register/:esCode?',
   IndexController.getRegister)
   .post('/register/:esCode?',
     Authentication.ensureIsNotAuthenticated,
-    Authentication.validate('create'),
-    Authentication.create);
+    UserController.validate('create'),
+    UserController.create);
 
-router.get('/validate/:key', Authentication.ensureIsNotAuthenticated, IndexController.getValidateAccount);
+router.get('/validate/:key', UserController.ensureIsNotAuthenticated, IndexController.getValidateAccount);
 
 /**
  * @Route('/register/complete/profile') GET + POST;
