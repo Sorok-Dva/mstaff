@@ -7,7 +7,6 @@
         </div>
         <table id="users-table" class="table">
           <thead>
-          <th data-field="state" data-checkbox="true"></th>
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
           <th data-field="finess" data-sortable="true">Finess</th>
@@ -20,13 +19,13 @@
           <tbody>
           {{#each data as |es|}}
             <tr>
-              <td></td>
               <td>{{es.id}}</td>
               <td>{{es.name}}</td>
               <td>{{es.finess}}</td>
               <td>{{es.sector}}</td>
               <td>{{es.status}}</td>
               <td>{{es.url}}</td>
+              <td></td>
             </tr>
           {{/each}}
           </tbody>
@@ -79,21 +78,16 @@
     table.bootstrapTable({
       toolbar: ".toolbar",
       search: true,
-      showToggle: true,
       showColumns: true,
       pagination: true,
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
       pageList: [10,25,50,100,200,500],
-      formatShowingRows: (pageFrom, pageTo, totalRows) => {
-        //do nothing here, we don't want to show the text "showing x of y from..."
-      },
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " rows visible";
       },
       icons: {
-        toggle: 'fa fa-th-list',
         columns: 'fa fa-columns',
         detailOpen: 'fa fa-plus-circle',
         detailClose: 'ti-close'

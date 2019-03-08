@@ -114,6 +114,14 @@
         </a>
         <div class="collapse{{#ifCond a.main '===' 'references'}} in{{/ifCond}}" id="referencesOverview">
           <ul class="nav">
+            <li{{#ifCond a.sub '===' 'establishments'}} class="active"{{/ifCond}}>
+              <a href="/back-office/establishments">
+                <i class="fal fa-hospital"></i>
+                <span class="sidebar-normal">Établissements</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
             <li{{#ifCond a.sub '===' 'formations'}} class="active"{{/ifCond}}>
               <a href="/back-office/formations">
                 <i class="fal fa-user-graduate"></i>

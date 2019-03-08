@@ -135,6 +135,84 @@ module.exports = {
         users })
     }).catch(error => next(new BackError(error)));
   },
+  getEstablishmentsList: (req, res, next) => {
+    res.render('back-office/es/list_ref', {
+      layout,
+      title: 'Liste des Établissements dans le référentiel',
+      a: { main: 'references', sub: 'establishments' }
+    });
+  },
+  APIgetEstablishmentsList: (req, res, next) => {
+    let where = _.isNil(req.query.search) ? null : {
+      [Op.or]: [{
+        name: Sequelize.where(Sequelize.fn('lower', Sequelize.col('name')), {
+          [Op.like]: `%${req.query.search.toLowerCase()}%`
+        })
+      }, {
+        finess_et: Sequelize.where(Sequelize.fn('lower', Sequelize.col('finess_et')), {
+          [Op.like]: `%${req.query.search.toLowerCase()}%`
+        })
+      }, {
+        address_town: Sequelize.where(Sequelize.fn('lower', Sequelize.col('address_town')), {
+          [Op.like]: `%${req.query.search.toLowerCase()}%`
+        })
+      }],
+    };
+    Models.EstablishmentReference.findAll({ attributes: ['id'], where }).then(allEs => {
+      Models.EstablishmentReference.findAll({
+        where,
+        attributes: [
+          'id', 'name', 'finess_et', 'address_dpt_name', 'address_town',
+          [Sequelize.literal(
+            '(SELECT COUNT(*) FROM Applications WHERE `EstablishmentReference`.`finess_et` = `Applications`.`ref_es_id`)'
+          ), 'applications']
+        ],
+        offset: _.isNaN(req.query.offset) ? 0 : parseInt(req.query.offset),
+        limit: _.isNaN(req.query.limit) ? 100 : parseInt(req.query.limit),
+        order: [[
+          _.isNil(req.query.sort) ? 'id' : req.query.sort === 'applications' ? Sequelize.literal('applications') : req.query.sort,
+          req.query.order
+        ]]
+      }).then(data => {
+        res.status(200).send({ total: allEs.length, rows: data });
+      }).catch(error => next(new BackError(error)));
+    }).catch(error => next(new BackError(error)));
+  },
+  APIgetEstablishmentInfo: (req, res, next) => {
+    Models.EstablishmentReference.findOne({
+      where: { id: req.params.id },
+      include: {
+        model: Models.Application,
+        include: [{
+          model: Models.Wish,
+          required: true,
+          on: {
+            '$Applications.wish_id$': {
+              [Op.col]: 'Applications->Wish.id'
+            }
+          },
+          include: {
+            model: Models.Candidate,
+            attributes: { exclude: ['updatedAt', 'createdAt'] },
+            required: true,
+            include: [{
+              model: Models.User,
+              attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+              on: {
+                '$Applications->Wish->Candidate.user_id$': {
+                  [Op.col]: 'Applications->Wish->Candidate->User.id'
+                }
+              },
+              required: true
+            }]
+          }
+        }]
+      }
+    }).then(es => {
+      if (_.isNil(es)) return next(new BackError(`Establishment ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      return res.status(200).send(es);
+    }).catch(error => next(new BackError(error)));
+  },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
       res.render('back-office/es/list', {
@@ -148,7 +226,7 @@ module.exports = {
   getES: (req, res, next) => {
     Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
       if (_.isNil(data)) {
-        req.flash('error', 'Cet établissement n\'existe pas.');
+        req.flash('error_msg', 'Cet établissement n\'existe pas.');
         return res.redirect('/back-office/es');
       }
       Models.Candidate.findAll({
@@ -185,7 +263,7 @@ module.exports = {
       }
     }).then(user => {
       if (_.isNil(user)) {
-        req.flash('error', 'Cet utilisateur n\'existe pas.');
+        req.flash('error_msg', 'Cet utilisateur n\'existe pas.');
         return res.redirect('/back-office/users');
       }
       res.render('back-office/users/show', {

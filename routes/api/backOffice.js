@@ -3,6 +3,9 @@ const router = express.Router();
 const BackOfficeController = require('../../controllers/backOffice');
 const UserController = require('../../controllers/user');
 
+router.get('/establishmentsReferences', UserController.ensureIsAdmin, BackOfficeController.APIgetEstablishmentsList);
+router.post('/establishmentsReferences/info/:id', UserController.ensureIsAdmin, BackOfficeController.APIgetEstablishmentInfo);
+
 router.post('/candidates/sendVerifEmail/', UserController.ensureIsAdmin, BackOfficeController.sendCandidateVerifEmail);
 
 router.put('/formations/:id', UserController.ensureIsAdmin, BackOfficeController.editFormation)

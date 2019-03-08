@@ -121,7 +121,7 @@ let removeCandidate = (needId, cID) => {
       });
       $(`li[data-candidateid="${cID}"]`).remove();
     }
-  }).catch(err => errorsHandler(err));;
+  }).catch(err => errorsHandler(err));
 };
 
 $(document).ready(() => {

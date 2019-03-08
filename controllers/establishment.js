@@ -66,7 +66,7 @@ module.exports = {
         required: true
       }
     }).then(needs => {
-      res.render('establishments/needs', { needs });
+      res.render('establishments/needs', { needs,  a: { main: 'needs' } });
     }).catch(error => next(new BackError(error)));
   },
   getCVs: (req, res, next) => {
@@ -105,7 +105,7 @@ module.exports = {
     }).catch(error => next(new BackError(error)));
   },
   addNeed: (req, res, next) => {
-    let render = { a: { main: 'needs' } };
+    let render = { a: { main: 'candidates' } };
     Models.Post.findAll().then(posts => {
       render.posts = posts;
       return res.render('establishments/addNeed', render);

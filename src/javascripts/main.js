@@ -59,7 +59,8 @@ let errorsHandler = data => {
   } else {
     let message = error.sequelizeError ?
       `<b>${errors.sequelizeError.name}</b>: ${errors.sequelizeError.original.sqlMessage}`
-      : error.message || 'Unknown Error';
+      : error.message || error || 'Unknown Error';
+    message = (typeof message === 'object') ? message.name : message;
     notification({
       icon: 'exclamation',
       type: 'danger',

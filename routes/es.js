@@ -11,16 +11,16 @@ const EstablishmentController = require('../controllers/establishment');
 router.get('/select/es', UserController.ensureIsEs, EstablishmentController.getSelectEs);
 
 /**
- * @Route('/needs') GET;
- * Show Index page
+ * @Route('/candidates') GET;
+ * Show Candidates Index page
  */
-router.get('/needs', UserController.ensureIsEs, EstablishmentController.getNeeds);
+router.get('/candidates', UserController.ensureIsEs, EstablishmentController.addNeed);
 
 /**
- * @Route('/need/add') GET;
- * Show Add Need page
+ * @Route('/needs') GET;
+ * Show Needs Index page
  */
-router.get('/need/add', UserController.ensureIsEs, EstablishmentController.addNeed);
+router.get('/needs', UserController.ensureIsEs, EstablishmentController.getNeeds);
 
 /**
  * @Route('/need/:id') GET;

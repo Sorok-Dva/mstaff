@@ -1,0 +1,104 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content clusterize">
+        <div class="toolbar">
+          <!--Here you can write extra buttons/actions for the toolbar-->
+        </div>
+        <table id="esref-table" class="table">
+          <thead>
+          <th data-field="name" data-sortable="true">Nom</th>
+          <th data-field="finess_et" data-sortable="true">Finess</th>
+          <th data-field="address_dpt_name" data-sortable="true">Département</th>
+          <th data-field="address_town" data-sortable="true">Adresse</th>
+          <th data-field="applications" data-sortable="true">Candidatures</th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions</th>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script type="text/javascript">
+  let table = $('#esref-table');
+
+  let showEsInfo = id => {
+    let _csrf = $('#csrfToken').val();
+    $.post(`/api/back-office/establishmentsReferences/info/${id}`, { _csrf } , data => {
+      createModal({
+        id: 'viewESProfileModal',
+        modal: 'back-office/viewESProfile',
+        size: 'modal-lg',
+        style: 'width:80%',
+        title: `Établissement ${data.name}`,
+        es: data
+      }, () => {
+
+      });
+    });
+  };
+
+  function refreshTable() {
+    table.bootstrapTable('refreshOptions', {
+      paginationSuccessivelySize: 5,
+      paginationPagesBySide: 3,
+      paginationUseIntermediate: true
+    })
+  }
+
+  $(function() {
+    $('.toolbar input').change(refreshTable)
+  });
+
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a rel="tooltip" title="Informations" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
+      '<i class="fal fa-info fa-2x"></i>',
+      '</a>',
+      '<a rel="tooltip" title="Ajouter à Mstaff" class="btn btn-simple btn-success btn-icon table-action add" href="javascript:void(0)">',
+      '<i class="fal fa-plus-circle fa-2x"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .view': (e, value, row, index) => {
+        showEsInfo(row.id);
+      },
+      'click .add': (e, value, row, index) => {
+      }
+    };
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      toogle: 'table',
+      search: true,
+      showColumns: true,
+      pagination: true,
+      sidePagination: 'server',
+      url: '/api/back-office/establishmentsReferences',
+      searchAlign: 'left',
+      pageSize: 100,
+      pageList: [25,50,100,200,500],
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      },
+      onRefreshOptions: function (options) {
+        return false;
+      },
+    });
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+</script>
