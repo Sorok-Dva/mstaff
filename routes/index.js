@@ -2,7 +2,7 @@ const { Authentication } = require('../middlewares/index');
 const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
-const middleware = require('../middlewares');
+const middleware = require('../middlewares.js');
 const rateLimit = require('express-rate-limit');
 
 const UserController = require('../controllers/user');
