@@ -1,7 +1,7 @@
 const { Env } = require('./helpers/helpers');
 const { ErrorHandler, Express } = require('./middlewares');
 const path = require('path');
-const express = require('express')();
+const express = require('express');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -14,7 +14,7 @@ const apiCandidateRouter = require('./routes/api/candidate');
 const apiBackOfficeRouter = require('./routes/api/backOffice');
 const apiEsRouter = require('./routes/api/establishment');
 
-const app = express;
+const app = express();
 
 if (Env.isProd) app.use(Express.sentryRequestHandler);
 if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
@@ -64,7 +64,7 @@ app.use(ErrorHandler.notFoundError);
 app.use(ErrorHandler.converter);
 app.use(ErrorHandler.client);
 app.use(ErrorHandler.log);
-if (Env.isProd) app.use(ErrorHandler.sentrySenderErrorHandler);
+// if (Env.isProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
 
 app.use(Express.errorHandler); // errorHandler always must be in last position.
