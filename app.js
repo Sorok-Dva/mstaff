@@ -27,7 +27,7 @@ app.set('view engine', 'hbs');
 if (Env.isProd) app.set('view cache', true);
 
 // ------ Express
-// app.use(Express.sentryRequestHandler);
+if (Env.isProd || Env.isPreProd) app.use(Express.sentryRequestHandler);
 app.engine('hbs', Express.exphbs);
 app.use(express.json({ limit: '150mb' }));
 app.use(express.urlencoded({ extended: true, limit: '150mb' }));
@@ -63,7 +63,7 @@ app.use(ErrorHandler.notFoundError);
 app.use(ErrorHandler.converter);
 app.use(ErrorHandler.client);
 app.use(ErrorHandler.log);
-// app.use(ErrorHandler.sentrySenderErrorHandler);
+if (Env.isProd || Env.isPreProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
 
 app.use(Express.errorHandler); // errorHandler always must be in last position.
