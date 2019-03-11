@@ -1,5 +1,5 @@
-let map, marker, cityCircle, markers = [], geocoder, filter, pos = { lat: 0, lng: 0, rayon: 5 }, selectedAll = false,
-  allEs = [], application = {};
+let map, marker, cityCircle, markers = [], geocoder, filter, pos = { lat: 0, lng: 0, rayon: 5 }, myPos,
+  selectedAll = false, allEs = [], application = {};
 let kmArray = [1, 2, 5, 10, 15, 20, 30, 50, 70, 100];
 let slider = document.getElementById('radius');
 let geoActivate = false;
@@ -154,6 +154,15 @@ let notify = (error) => {
           message: `Merci de saisir un nom composé d'au moins un caractères alphabétique ou numérique.`
         }
       );
+    case 'noAddress':
+      notification(
+        {
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Une erreur est survenue :',
+          message: `Merci de saisir une adresse.`
+        }
+      );
       break;
   }
   return true;
@@ -237,8 +246,6 @@ let createRecap = () => {
   });
 };
 
-
-
 // ----------------------------------------- MAP ----------------------------------------- //
 
 let mapInit = () => {
@@ -269,17 +276,6 @@ let displayMap = (currentMap, newpos) => {
   currentMap.setCenter(newpos);
   marker.setPosition(newpos);
   cityCircle.setCenter(newpos);
-};
-
-let geocodeAddress = (geocoder, currentMap) => {
-  // let address = $('#searchAddress').val();
-  geocoder.geocode({'address': application.searchAddress}, function(results, status) {
-    if (status === 'OK') {
-      let lat = results[0].geometry.location.lat();
-      let lng = results[0].geometry.location.lng();
-      displayMap(currentMap, { lat:lat, lng:lng });
-    } else alert('Geocode was not successful for the following reason: ' + status);
-  })
 };
 
 let addMarker = (es) => {
@@ -324,7 +320,7 @@ let activateGeoLoc = () => {
 
 let geoSuccess = (position) => {
   geoActivate = true;
-  pos = { lat: position.coords.latitude, lng: position.coords.longitude, rayon: 5 };
+  myPos = { lat: position.coords.latitude, lng: position.coords.longitude };
   generateAroundMe();
 };
 
@@ -335,7 +331,121 @@ let geoError = (error) => {
   }
 };
 
+let geocodeAddress = (geocoder, currentMap) => {
+  return new Promise(
+    resolve => {
+      geocoder.geocode({'address': application.searchAddress}, function(results, status) {
+        if (status === 'OK') {
+          pos.lat = results[0].geometry.location.lat();
+          pos.lng = results[0].geometry.location.lng();
+          displayMap(currentMap, { lat:pos.lat, lng:pos.lng });
+          resolve();
+        }
+      })
+    },
+    reject => {
+      alert('Geocode was not successful for the following reason: ' + status);
+      reject();
+    });
+};
+
 // --------------------------------------- ES LIST --------------------------------------- //
+
+let loadResult = (list) => {
+  loadTemplate('/static/views/api/findByGeo.hbs', list, (html) => {
+    $('#esList').html(html);
+    $('.esCount').html(list.length);
+    $('#loader').hide();
+    if (!$.isEmptyObject(application.selectedESId)){
+      console.log('ETABLISSEMENT SELECT PRESENT');
+      application.selectedESId.forEach(id => {
+        $(`#esList i.selectEs[data-id="${id}"]`).hide();
+        $(`#esList i.unselectEs[data-id="${id}"]`).show();
+      });
+    }
+  });
+};
+
+let getEsList = (query) => {
+  let _csrf = $('#csrfToken').val();
+
+  if (query.type === 'aroundMe'){
+    let p = query.position;
+    return new Promise(resolve => {
+      $.post('/api/establishments/findByGeo', { rayon: p['rayon'], lat: p['lat'],lon: p['lon'], filter, _csrf }).then(
+        data => resolve(data)
+      );
+    });
+  }
+  else if (query.type === 'byAddress') {
+    let p = query.position;
+    return new Promise(resolve => {
+      $.post('/api/establishments/findByGeo', { rayon: p['rayon'], lat: p['lat'],lon: p['lon'], filter, _csrf }).then(
+        data => resolve(data)
+      );
+    });
+  }
+  else if (query.type === 'allOver') {
+    return new Promise(resolve => {
+      $.get(`/api/establishments/findByCity/${query.data}`, _csrf).then(
+        data => resolve(data)
+      );
+    });
+  }
+};
+
+let resetSelectedES = () => {
+  application.selectedES = [];
+  application.selectedESId = [];
+  $(`#esList i.unselectEs`).hide();
+  $(`#esList i.selectEs`).show();
+  $('#es_selected').empty();
+  $('#selectedEsCount').html(0);
+
+};
+
+let addEs = (data) => {
+  let finess = parseInt(data.finess_et);
+  let esId = parseInt(data.id);
+
+  if (application.selectedES.indexOf(finess) === -1) {
+    $(`i.selectEs[data-id="${data.id}"]`).hide();
+    $(`i.unselectEs[data-id="${data.id}"]`).show();
+    application.selectedES.push(finess);
+    application.selectedESId.push(esId);
+    $('#selectedEsCount').html(application.selectedES.length);
+    $('#es_selected').append($(`#es${data.id}`).clone().attr('class', 'col-md-3'));
+  }
+};
+
+let removeEs = (data) => {
+  let finess = parseInt(data.finess_et);
+  let index = application.selectedES.indexOf(finess);
+  if (index !== -1) {
+    $(`i.unselectEs[data-id="${data.id}"]`).hide();
+    $(`i.selectEs[data-id="${data.id}"]`).show();
+    application.selectedES.splice(index, 1);
+    application.selectedESId.splice(index, 1);
+    $('#selectedEsCount').html(application.selectedES.length);
+    $(`#es_selected > #es${data.id}`).remove();
+  }
+};
+
+let selectAll = () => {
+  selectedAll = !selectedAll;
+  application.selectedES = [];
+  application.selectedESId = [];
+  if (selectedAll === true) {
+    $(`#esList i.selectEs`).hide();
+    $(`#esList i.unselectEs`).show();
+    $('#es_selected').append($(`#esList .es-card`).clone().attr('class', 'col-md-3'));
+    allEs.map((es, i) => {
+      application.selectedES.push(parseInt(es.finess_et))
+      application.selectedESId.push(parseInt(es.id))
+    });
+    $('#selectedEsCount').html(application.selectedES.length);
+  } else resetSelectedES();
+};
 
 let resetEsList = () => {
   $('#esList').empty();
@@ -350,8 +460,9 @@ let loading = () => {
 // ------------------------------- GENERATE SEARCH SCREEN ------------------------------- //
 
 let generateAroundMe = () => {
-  let query = { type: 'aroundMe', position: { rayon: pos.rayon, lat: pos.lat, lon: pos.lng, filter} };
+  let query = { type: 'aroundMe', position: { rayon: pos.rayon, lat: myPos.lat, lon: myPos.lng, filter} };
 
+  pos = { lat: myPos.lat, lng: myPos.lng, rayon: pos.rayon };
   displayMap(map, pos);
   loading();
   getEsList(query).then( data => {
@@ -361,11 +472,21 @@ let generateAroundMe = () => {
 };
 
 let generateByAddress = () => {
-  let query = { type: 'byAddress'};
+  let addressValue = $('#searchAddress').val();
 
-  application.searchAddress = $('#searchAddress').val();
-  geocodeAddress(geocoder, map);
-  loading();
+  if(!$.isEmptyObject(addressValue)) {
+      application.searchAddress = addressValue;
+    loading();
+    geocodeAddress(geocoder, map).then(() => {
+      let query = { type: 'byAddress', position: { rayon: pos.rayon, lat: pos.lat, lon: pos.lng, filter} };
+      getEsList(query).then( data => {
+        allEs = data;
+        loadResult(data);
+      });
+    });
+  }
+  else
+    notify('noAddress');
 };
 
 let generateAllOver = () => {
@@ -397,8 +518,9 @@ let displaySelection = () => {
         break;
       case 'searchByAddress':
         myAddressInput.show();
-        if ('searchAddress' in application)
+        if (!$.isEmptyObject(application.searchAddress)){
           geocodeAddress(geocoder, map);
+        }
         break;
       case 'searchAllOver':
         myMap.hide();
@@ -408,79 +530,39 @@ let displaySelection = () => {
   })
 };
 
-let loadResult = (list) => {
-  loadTemplate('/static/views/api/findByGeo.hbs', list, (html) => {
-    $('#esList').html(html);
-    $('.esCount').html(list.length);
-    $('#loader').hide();
-  });
-};
-
-let getEsList = (query) => {
-  let _csrf = $('#csrfToken').val();
-
-  if (query.type === 'aroundMe'){
-    let p = query.position;
-    return new Promise(resolve => {
-      $.post('/api/establishments/findByGeo', { rayon: p['rayon'], lat: p['lat'],lon: p['lon'], filter, _csrf }).then(
-        data => resolve(data)
-      );
-    });
+$("#radius").on("click", "li", function() {
+  $('#radius-slider .slider').val($(this).attr('data-step'));
+  highlightLabel(slider.noUiSlider.get());
+});
+noUiSlider.create(slider, {
+  start: 3,
+  step: 1,
+  connect: 'lower',
+  range: {
+    'min': 1,
+    'max': 10
+  },
+  serialization: {
+    format: {
+      decimals: 0
+    }
   }
-  else if (query.type === 'allOver') {
-    return new Promise(resolve => {
-      $.get(`/api/establishments/findByCity/${query.data}`, _csrf).then(
-        data => resolve(data)
-      );
-    });
-  }
-};
+});
+slider.noUiSlider.on('change', function (){
+  let activeId = $('#tabsStep3 li.active a').attr('id');
+  pos.rayon = kmArray[parseInt(slider.noUiSlider.get()) - 1];
+  cityCircle.setRadius(pos.rayon * 1000);
+  highlightLabel(parseInt(slider.noUiSlider.get()));
+  if (activeId === 'searchAroundMe')
+    generateAroundMe();
+  else if (activeId === 'searchByAddress' && !$.isEmptyObject(application.searchAddress))
+    generateByAddress();
+});
+slider.noUiSlider.on('slide', function (){
+  highlightLabel(parseInt(slider.noUiSlider.get()));
+});
 
-let resetSelectedES = () => {
-  application.selectedES = [];
-  $(`#esList i.unselectEs`).hide();
-  $(`#esList i.selectEs`).show();
-  $('#es_selected').empty();
-  $('#selectedEsCount').html(0);
-
-};
-
-let addEs = (data) => {
-  let finess = parseInt(data.finess_et);
-  if (application.selectedES.indexOf(finess) === -1) {
-    $(`i.selectEs[data-id="${data.id}"]`).hide();
-    $(`i.unselectEs[data-id="${data.id}"]`).show();
-    application.selectedES.push(finess);
-    $('#selectedEsCount').html(application.selectedES.length);
-    $('#es_selected').append($(`#es${data.id}`).clone().attr('class', 'col-md-3'));
-  }
-};
-
-let removeEs = (data) => {
-  let finess = parseInt(data.finess_et);
-  let index = application.selectedES.indexOf(finess);
-  if (index !== -1) {
-    $(`i.unselectEs[data-id="${data.id}"]`).hide();
-    $(`i.selectEs[data-id="${data.id}"]`).show();
-    application.selectedES.splice(index, 1);
-    $('#selectedEsCount').html(application.selectedES.length);
-    $(`#es_selected > #es${data.id}`).remove();
-  }
-};
-
-let selectAll = () => {
-  selectedAll = !selectedAll;
-  application.selectedES = [];
-  if (selectedAll === true) {
-    $(`#esList i.selectEs`).hide();
-    $(`#esList i.unselectEs`).show();
-    $('#es_selected').append($(`#esList .es-card`).clone().attr('class', 'col-md-3'));
-    allEs.map((es, i) => {
-      application.selectedES.push(parseInt(es.finess_et))
-    });
-    $('#selectedEsCount').html(application.selectedES.length);
-  } else resetSelectedES();
-};
+// ------------------------------------- FINAL STEP ------------------------------------- //
 
 let addWishName = () => {
   createModal({ id: 'addApplicationNameModal', modal: 'addApplicationName', title: 'Nommez votre candidature' }, () => {
@@ -527,34 +609,6 @@ let addWish = () => {
     });
   }
 };
-
-
-$("#radius").on("click", "li", function() {
-  $('#radius-slider .slider').val($(this).attr('data-step'));
-  highlightLabel(slider.noUiSlider.get());
-});
-noUiSlider.create(slider, {
-  start: 3,
-  step: 1,
-  connect: 'lower',
-  range: {
-    'min': 1,
-    'max': 10
-  },
-  serialization: {
-    format: {
-      decimals: 0
-    }
-  }
-});
-slider.noUiSlider.on('change', function (){
-  pos.rayon = kmArray[parseInt(slider.noUiSlider.get()) - 1];
-  highlightLabel(parseInt(slider.noUiSlider.get()));
-  generateAroundMe()
-});
-slider.noUiSlider.on('slide', function (){
-  highlightLabel(parseInt(slider.noUiSlider.get()));
-});
 
 $(document).ready(function () {
 
