@@ -64,7 +64,7 @@ app.use(ErrorHandler.notFoundError);
 app.use(ErrorHandler.converter);
 app.use(ErrorHandler.client);
 app.use(ErrorHandler.log);
-if (Env.isProd) app.use(ErrorHandler.sentrySenderErrorHandler);
+// if (Env.isProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
 
 app.use(Express.errorHandler); // errorHandler always must be in last position.
