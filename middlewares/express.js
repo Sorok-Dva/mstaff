@@ -20,8 +20,9 @@ const wildcardSubdomains = require('wildcard-subdomains');
 
 const ServerController = require('../controllers/server');
 
-if (Env.isProd || Env.isPreProd) {
-  const Sentry = require('@sentry/node');
+let Sentry = null;
+if (Env.isProd) {
+  Sentry = require('@sentry/node');
   Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
 }
 
@@ -46,7 +47,7 @@ module.exports = {
 
     let opts = {};
     // set locals, only providing error in development
-    if (env === 'development') {
+    if (Env.current === 'development') {
       opts.error = err;
     } else {
       res.locals.error_msg = err.message;
@@ -98,8 +99,12 @@ module.exports = {
       next();
     } else next();
   },
-  sentryErrorHandler: () => Sentry.Handlers.errorHandler(),
-  sentryRequestHandler: () => Sentry.Handlers.requestHandler(),
+  sentryErrorHandler: () => {
+    if (Env.isProd && Sentry) Sentry.Handlers.errorHandler()
+  },
+  sentryRequestHandler: () => {
+    if (Env.isProd && Sentry) Sentry.Handlers.requestHandler();
+  },
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';
