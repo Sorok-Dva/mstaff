@@ -53,7 +53,7 @@ module.exports = {
       },
       extra: err.extraContextForSentry,
     };
-    // Sentry.send(err, context);
+    Sentry.send(err, context);
 
     next(err);
   },
