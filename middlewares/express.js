@@ -96,8 +96,8 @@ module.exports = {
       next();
     } else next();
   },
-  sentryErrorHandler: () => Sentry.Handlers.errorHandler(),
-  sentryRequestHandler: () => Sentry.Handlers.requestHandler(),
+  // sentryErrorHandler: () => Sentry.Handlers.errorHandler(),
+  // sentryRequestHandler: () => Sentry.Handlers.requestHandler(),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';

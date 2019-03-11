@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     value: DataTypes.STRING,
     edit_by: DataTypes.INTEGER
   }, {});
-  ServerParameter.associate = function(models) {
+  ServerParameter.associate = function (models) {
     // associations can be defined here
   };
   return ServerParameter;
