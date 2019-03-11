@@ -12,6 +12,7 @@ const getStatus = (err) => {
 
 const sendError = (req, res, status, err) => {
   err.status = status;
+  if (Env.current === 'production') delete err.stack;
   if (req.xhr) return res.status(status).json(err);
   else return res.status(status).render('error', { error: err });
 };
