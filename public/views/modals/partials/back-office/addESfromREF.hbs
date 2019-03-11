@@ -36,7 +36,7 @@
         </div>
         <div class="form-group col-md-3">
           <label for="newESAddressTown">Code postal et ville</label>
-          <input type="text" class="form-control" id="newESAddressTown" name="add_town" placeholder="75000 PARIS" value="{{this.es.address_town}}">
+          <input type="text" class="form-control" id="newESAddressTown" name="addr_town" placeholder="75000 PARIS" value="{{this.es.address_town}}">
         </div>
         <div class="form-group col-md-2">
           <label for="newESPhone">Numéro de téléphone</label>
@@ -86,11 +86,27 @@
   $('#createES{{this.es.id}}').click(function() {
     let data = {};
     $.each($('#createNewESForm').serializeArray(), function(_, kv) {
-      paramObj[kv.name] = kv.value;
+      data[kv.name] = kv.value;
     });
-    data._csrf = _csrf;
+    data.address = `${data.addr_num} ${data.addr_type} ${data.addr_name}`;
+    data._csrf = $('#csrfToken').val();
+    delete data.addr_num;
+    delete data.addr_type;
+    delete data.addr_name;
     $.post('/api/back-office/establishment/create', data, (data) => {
-
+      if (data.status === 'Created') {
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Établissement créer avec succès.'
+        })
+      } else {
+        notification({
+          icon: 'exclamation-circle',
+          type: 'warning',
+          title: 'Cet établissement est déjà branché à Mstaff.'
+        })
+      }
     }).catch(error => errorsHandler(error));
   });
 </script>

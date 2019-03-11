@@ -214,7 +214,31 @@ module.exports = {
     }).catch(error => next(new BackError(error)));
   },
   APICreateEstablishment: (req, res, next) => {
+    const errors = validationResult(req.body);
 
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    Models.Establishment.findOrCreate({
+      where: { finess: req.body.finess_et },
+      defaults: {
+        name: req.body.name,
+        finess_ej: req.body.finess_ej,
+        siret: req.body.siret,
+        phone: req.body.phone,
+        address: req.body.address,
+        town: req.body.addr_town,
+        contact_identity: req.body.contactIdentity,
+        contact_post: req.body.contactPost,
+        contact_email: req.body.contactEmail,
+        contact_phone: req.body.contactPhone,
+      }
+    }).spread((es, created) => {
+      if (created) {
+        return res.status(200).json({ status: 'Created', es });
+      } else {
+        return res.status(200).json({ status: 'Already exists', es });
+      }
+    }).catch(errors => next(new BackError(errors)));
   },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
