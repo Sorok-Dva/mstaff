@@ -4,7 +4,7 @@
         <div class="row" style="margin-bottom: 40px;">
             <div class="col-md-offset-2 col-md-8 text-center " style="color: #02AED7">
                 <strong style="color: #02AED7">J'indique un rayon kilométrique</strong>
-                <div id="radius-slider" class="no-ui-slider" style="margin-top:15px">
+                <div id="radius-slider" class="no-ui-slider" style="margin-top:15px; margin-bottom: 50px">
                     <div id="radius" class="slider slider-info"></div>
                     <ul class="slider-labels ten-columns">
                         <li data-step="1">1km</li>
@@ -18,6 +18,15 @@
                         <li data-step="9">70km</li>
                         <li data-step="10">100km</li>
                     </ul>
+                </div>
+                <strong style="color: #02AED7">Catégorie d'établissement</strong>
+                <div style="margin-top:15px">
+                    <select class="geolocationFilter form-control" id="geolocationFilter" style="width:100%;">
+                        <option label="Etablissements MCO / SSR " value="3" selected>Etablissements MCO / SSR </option>
+                        <option label="Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)" value="4">Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)</option>
+                        <option label="Centres de Santé" value="2">Centres de Santé</option>
+                        <option label="Etab. Médico-psychologique pour Personnes handicapés" value="1">Etab. Médico-psychologique pour Personnes handicapés</option>
+                    </select>
                 </div>
             </div >
             <div id="myAddress" class="col-md-offset-2 col-md-8 text-center" style="display: none;">
@@ -69,14 +78,7 @@
                                     Tout sélectionner
                                 </button>
                             </div>
-                            <div class="col-md-10">
-                                <select class="geolocationFilter form-control" id="geolocationFilter" multiple="multiple" style="width:100%;">
-                                    <option label="Etab. Médico-psychologique pour Personnes handicapés" value="1">Etab. Médico-psychologique pour Personnes handicapés</option>
-                                    <option label="Centres de Santé" value="2">Centres de Santé</option>
-                                    <option label="Etablissements MCO / SSR " value="3">Etablissements MCO / SSR </option>
-                                    <option label="Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)" value="4">Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)</option>
-                                </select>
-                            </div>
+
                             <div id="esList" class="col-md-12 animate-bottom"></div>
                             <div class="row">
                                 <div class="col-md-6">

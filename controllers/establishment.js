@@ -151,10 +151,12 @@ module.exports = {
     });
   },
   findByCity: (req, res, next) => {
-    console.log(req.body.city);
     return Models.EstablishmentReference.findAll({
       where: {
-        address_town: { [Op.like]: `%${req.params.city}%` }
+        [Op.or]: [
+          { address_town: { [Op.like]: `%${req.params.city}%` } },
+          { name: { [Op.like]: `%${req.params.city}%` } }
+        ]
       }
     }).then( es => {
       return res.status(200).json(es);

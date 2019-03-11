@@ -1,4 +1,4 @@
-let map, marker, cityCircle, markers = [], geocoder, filter, pos = { lat: 0, lng: 0, rayon: 5 }, myPos,
+let map, marker, cityCircle, markers = [], geocoder, filter = 3, pos = { lat: 0, lng: 0, rayon: 5 }, myPos,
   selectedAll = false, allEs = [], application = {};
 let kmArray = [1, 2, 5, 10, 15, 20, 30, 50, 70, 100];
 let slider = document.getElementById('radius');
@@ -164,6 +164,16 @@ let notify = (error) => {
         }
       );
       break;
+    case 'noAllOverValue':
+      notification(
+        {
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Une erreur est survenue :',
+          message: `Merci de saisir une nom d'établissement, de ville ou un code postal.`
+        }
+      );
+      break;
   }
   return true;
 }
@@ -249,27 +259,31 @@ let createRecap = () => {
 // ----------------------------------------- MAP ----------------------------------------- //
 
 let mapInit = () => {
-  if (document.getElementById('map')) {
-    map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 10,
-      center: pos
+  return new Promise(
+    resolve => {
+      if (document.getElementById('map')) {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: pos
+        });
+        marker = new google.maps.Marker({
+          position: pos,
+          map: map
+        });
+        cityCircle = new google.maps.Circle({
+          strokeColor: '#337AB7',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#5BBBE5',
+          fillOpacity: 0.35,
+          map: map,
+          center: pos,
+          radius: pos.rayon*1000 || 10000
+        });
+        geocoder = new google.maps.Geocoder();
+        resolve();
+      }
     });
-    marker = new google.maps.Marker({
-      position: pos,
-      map: map
-    });
-    cityCircle = new google.maps.Circle({
-      strokeColor: '#337AB7',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#5BBBE5',
-      fillOpacity: 0.35,
-      map: map,
-      center: pos,
-      radius: pos.rayon*1000 || 10000
-    });
-    geocoder = new google.maps.Geocoder();
-  }
 };
 
 let displayMap = (currentMap, newpos) => {
@@ -331,10 +345,10 @@ let geoError = (error) => {
   }
 };
 
-let geocodeAddress = (geocoder, currentMap) => {
+let geocodeAddress = (geoCoder, currentMap) => {
   return new Promise(
     resolve => {
-      geocoder.geocode({'address': application.searchAddress}, function(results, status) {
+      geoCoder.geocode({'address': application.searchAddress}, function(results, status) {
         if (status === 'OK') {
           pos.lat = results[0].geometry.location.lat();
           pos.lng = results[0].geometry.location.lng();
@@ -357,7 +371,6 @@ let loadResult = (list) => {
     $('.esCount').html(list.length);
     $('#loader').hide();
     if (!$.isEmptyObject(application.selectedESId)){
-      console.log('ETABLISSEMENT SELECT PRESENT');
       application.selectedESId.forEach(id => {
         $(`#esList i.selectEs[data-id="${id}"]`).hide();
         $(`#esList i.unselectEs[data-id="${id}"]`).show();
@@ -372,7 +385,7 @@ let getEsList = (query) => {
   if (query.type === 'aroundMe'){
     let p = query.position;
     return new Promise(resolve => {
-      $.post('/api/establishments/findByGeo', { rayon: p['rayon'], lat: p['lat'],lon: p['lon'], filter, _csrf }).then(
+      $.post('/api/establishments/findByGeo', { rayon: p['rayon'], lat: p['lat'],lon: p['lon'], filterQuery:filter, _csrf }).then(
         data => resolve(data)
       );
     });
@@ -380,7 +393,7 @@ let getEsList = (query) => {
   else if (query.type === 'byAddress') {
     let p = query.position;
     return new Promise(resolve => {
-      $.post('/api/establishments/findByGeo', { rayon: p['rayon'], lat: p['lat'],lon: p['lon'], filter, _csrf }).then(
+      $.post('/api/establishments/findByGeo', { rayon: p['rayon'], lat: p['lat'],lon: p['lon'], filterQuery:filter, _csrf }).then(
         data => resolve(data)
       );
     });
@@ -475,7 +488,7 @@ let generateByAddress = () => {
   let addressValue = $('#searchAddress').val();
 
   if(!$.isEmptyObject(addressValue)) {
-      application.searchAddress = addressValue;
+    application.searchAddress = addressValue;
     loading();
     geocodeAddress(geocoder, map).then(() => {
       let query = { type: 'byAddress', position: { rayon: pos.rayon, lat: pos.lat, lon: pos.lng, filter} };
@@ -484,19 +497,19 @@ let generateByAddress = () => {
         loadResult(data);
       });
     });
-  }
-  else
-    notify('noAddress');
+  } else notify('noAddress');
 };
 
 let generateAllOver = () => {
-  let query = { type: 'allOver', data: $('#searchCity').val() };
-
-  loading();
-  getEsList(query).then( data => {
-    allEs = data;
-    loadResult(data);
-  })
+  let value = $('#searchCity').val();
+  if (!$.isEmptyObject(value)){
+    let query = { type: 'allOver', data: value };
+    loading();
+    getEsList(query).then( data => {
+      allEs = data;
+      loadResult(data);
+    });
+  } else notify('noAllOverValue');
 };
 
 let displaySelection = () => {
@@ -613,12 +626,12 @@ let addWish = () => {
 $(document).ready(function () {
 
   activateGeoLoc();
-  mapInit();
-  displaySelection();
+  mapInit().then( () => displaySelection());
 
   let selectPostType = $('#selectPostType');
   let selectServiceType = $('#selectServiceType');
   let allServiceType = $('#selectServiceType option');
+  let geoLocFilter = $('#geolocationFilter');
 
   selectPostType.select2({
     maximumSelectionLength: 1
@@ -626,6 +639,7 @@ $(document).ready(function () {
   selectServiceType.selectpicker();
   allServiceType.prop('disabled', true);
   allServiceType.hide();
+  geoLocFilter.selectpicker();
 
   selectPostType.on('change', () => {
     let postType = selectPostType.select2('data');
@@ -664,26 +678,13 @@ $(document).ready(function () {
     });
   });
 
-  $('#geolocationFilter').select2({ dropdownAutoWidth: true });
-  $('#geolocationFilter').on('select2:select', e => {
-    let data = $('#geolocationFilter').select2('data');
-    filter = null;
-    if (data.length > 0) {
-      filter = [];
-      data.forEach((e, i) => {
-        filter.push(parseInt(e.id))
-      });
-    }
-    return generateAroundMe();
-  }).on('select2:unselect', e => {
-    let data = $('#geolocationFilter').select2('data');
-    if (filter.length > 0) {
-      filter = [];
-      data.forEach((e, i) => {
-        filter.push(parseInt(e.id))
-      });
+
+  geoLocFilter.on('change', () => {
+    let activeId = $('#tabsStep3 li.active a').attr('id');
+
+    filter = parseInt(geoLocFilter.selectpicker('val'));
+    if (activeId === 'searchAroundMe')
       return generateAroundMe();
-    }
   });
 
   $('.from').on('dp.change', (e) => {
