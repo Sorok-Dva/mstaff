@@ -3,18 +3,25 @@ module.exports = (sequelize, DataTypes) => {
   const Establishment = sequelize.define('Establishment', {
     name: DataTypes.STRING,
     finess: DataTypes.STRING,
+    finess_ej: DataTypes.STRING,
+    siret: DataTypes.STRING,
     code: DataTypes.STRING,
     type: DataTypes.STRING,
     sector: DataTypes.STRING,
     address: DataTypes.STRING,
-    postal_code: DataTypes.STRING,
     town: DataTypes.STRING,
+    phone: DataTypes.STRING,
     status: DataTypes.STRING,
     url: DataTypes.STRING,
     description: DataTypes.STRING,
     logo: DataTypes.STRING,
     domain_name: DataTypes.STRING,
-    domain_enable: DataTypes.BOOLEAN
+    domain_enable: DataTypes.BOOLEAN,
+    salaries_count: DataTypes.INTEGER,
+    contact_identity: DataTypes.STRING,
+    contact_post: DataTypes.STRING,
+    contact_email: DataTypes.STRING,
+    contact_phone: DataTypes.STRING
   }, {});
   Establishment.associate = function (models) {
     Establishment.hasOne(models.Demo, {

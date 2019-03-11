@@ -10,14 +10,18 @@
       <div class="card-content text-center">
         <table class="table">
           <tbody>
-          <tr>
-            <td>Nom SPH</td>
-            <td>{{this.es.name_sph}}</td>
-          </tr>
-          <tr>
-            <td>Nom MFT</td>
-            <td>{{this.es.name_mft}}</td>
-          </tr>
+          {{#if this.es.name_sph}}
+            <tr>
+              <td>Nom SPH</td>
+              <td>{{this.es.name_sph}}</td>
+            </tr>
+          {{/if}}
+          {{#if this.es.name_mft}}
+            <tr>
+              <td>Nom MFT</td>
+              <td>{{this.es.name_mft}}</td>
+            </tr>
+          {{/if}}
           </tbody>
         </table>
         <table class="table">
@@ -83,7 +87,7 @@
             {{/each}}
           {{else}}
             <tr class="text-center">
-              <td colspan="4">Aucune donnée disponible</td>
+              <td colspan="5">Aucune donnée disponible</td>
             </tr>
           {{/if}}
           </tbody>

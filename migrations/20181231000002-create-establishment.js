@@ -19,6 +19,21 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      finess_ej: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
+      siret: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
+      phone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
       code: {
         type: Sequelize.STRING,
         allowNull: false
@@ -31,9 +46,6 @@ module.exports = {
         type: Sequelize.STRING
       },
       address: {
-        type: Sequelize.STRING
-      },
-      postal_code: {
         type: Sequelize.STRING
       },
       town: {
@@ -57,6 +69,22 @@ module.exports = {
       domain_enable: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
+      },
+      salaries_count: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      contact_identity: {
+        type: Sequelize.STRING
+      },
+      contact_post: {
+        type: Sequelize.STRING
+      },
+      contact_email: {
+        type: Sequelize.STRING
+      },
+      contact_phone: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

@@ -1,9 +1,8 @@
+const { Authentication, Express, HTTPValidation } = require('../middlewares');
 const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
-const middleware = require('../middlewares');
 const rateLimit = require('express-rate-limit');
-
 const UserController = require('../controllers/user');
 const IndexController = require('../controllers/index');
 
@@ -11,10 +10,10 @@ const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
   max: 3, // start blocking after 3 requests
   handler: (req, res, next) => {
-    req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réessayer dans 15 minutes.');
+    req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réesayer dans 15 minutes.');
     return res.redirect('/login');
   },
-  keyGenerator: (req) => {
+  keyGenerator: function (req /*, res*/) {
     return req.body.email;
   },
 });
@@ -30,12 +29,13 @@ router.get('/', IndexController.getIndex);
  * Show Login Page + Send Login Form
  */
 router.get('/login',
-  UserController.ensureIsNotAuthenticated,
+  Authentication.ensureIsNotAuthenticated,
   IndexController.getLogin)
   .post('/login',
     loginLimiter,
-    UserController.ensureIsNotAuthenticated,
-    middleware.passportAuthentication,
+    Authentication.ensureIsNotAuthenticated,
+    HTTPValidation.IndexController.login,
+    Express.passportAuthentication,
     IndexController.postLogin);
 
 /**
@@ -43,21 +43,21 @@ router.get('/login',
  * Show Register Page + Send Register Form (for new candidates)
  */
 router.get('/register/:esCode?',
-  UserController.ensureIsNotAuthenticated,
+  Authentication.ensureIsNotAuthenticated,
   IndexController.getRegister)
   .post('/register/:esCode?',
-    UserController.ensureIsNotAuthenticated,
-    UserController.validate('create'),
+    Authentication.ensureIsNotAuthenticated,
+    HTTPValidation.UserController.create,
     UserController.create);
 
-router.get('/validate/:key', UserController.ensureIsNotAuthenticated, IndexController.getValidateAccount);
+router.get('/validate/:key', Authentication.ensureIsNotAuthenticated, IndexController.getValidateAccount);
 
 /**
  * @Route('/register/complete/profile') GET + POST;
  * Show Register Wizard for profile completion
  */
 router.get('/register/complete/profile',
-  UserController.ensureIsNotAuthenticated,
+  Authentication.ensureIsNotAuthenticated,
   IndexController.getRegisterWizard);
 
 /**
@@ -65,14 +65,14 @@ router.get('/register/complete/profile',
  * Show Register Page + Send Register Form (for new establishments)
  */
 router.get('/demo/register',
-  UserController.ensureIsNotAuthenticated,
+  Authentication.ensureIsNotAuthenticated,
   IndexController.getRegisterDemo);
 
 /**
  * @Route('/logout') GET;
  * Logout user
  */
-router.get('/logout', UserController.ensureAuthenticated, IndexController.getLogout);
+router.get('/logout', Authentication.ensureAuthenticated, IndexController.getLogout);
 
 /**
  * @Route('/404') GET;

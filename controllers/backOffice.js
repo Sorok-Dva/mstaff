@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { Sequelize, Op } = require('sequelize');
 const { BackError } = require('../helpers/back.error');
 const httpStatus = require('http-status');
@@ -12,20 +12,6 @@ const discord = require('../bin/discord-bot');
 const mailer = require('../bin/mailer');
 
 module.exports = {
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'sendCandidateVerifEmail': {
-        return [
-          check('email').isEmail()
-        ]
-      }
-    }
-  },
   index: (req, res) => {
     let render = { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } };
     Models.User.count().then(count => {
@@ -135,14 +121,14 @@ module.exports = {
         users })
     }).catch(error => next(new BackError(error)));
   },
-  getEstablishmentsList: (req, res, next) => {
+  getEstablishmentsRefList: (req, res, next) => {
     res.render('back-office/es/list_ref', {
       layout,
       title: 'Liste des Établissements dans le référentiel',
       a: { main: 'references', sub: 'establishments' }
     });
   },
-  APIgetEstablishmentsList: (req, res, next) => {
+  APIgetEstablishmentsRefList: (req, res, next) => {
     let where = _.isNil(req.query.search) ? null : {
       [Op.or]: [{
         name: Sequelize.where(Sequelize.fn('lower', Sequelize.col('name')), {
@@ -178,7 +164,7 @@ module.exports = {
       }).catch(error => next(new BackError(error)));
     }).catch(error => next(new BackError(error)));
   },
-  APIgetEstablishmentInfo: (req, res, next) => {
+  APIgetEstablishmentRefInfo: (req, res, next) => {
     Models.EstablishmentReference.findOne({
       where: { id: req.params.id },
       include: {
@@ -212,6 +198,23 @@ module.exports = {
       if (_.isNil(es)) return next(new BackError(`Establishment ${req.params.id} not found`, httpStatus.NOT_FOUND));
       return res.status(200).send(es);
     }).catch(error => next(new BackError(error)));
+  },
+  APIgetEstablishmentRefInfoToCreate: (req, res, next) => {
+    let transporter;
+    Models.EstablishmentReference.findOne({
+      where: { id: req.params.id },
+    }).then(es => {
+      if (_.isNil(es)) return next(new BackError(`Establishment ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      transporter = es;
+      return Models.Establishment.findOne({ where: { finess: es.finess_et } });
+    }).then(mstaffEs => {
+      if (!_.isNil(mstaffEs))
+        return next(new BackError(`Establishment with finess ${transporter.finess_et} already added in Mstaff.`, httpStatus.CONFLICT));
+      return res.status(200).send(transporter);
+    }).catch(error => next(new BackError(error)));
+  },
+  APICreateEstablishment: (req, res, next) => {
+
   },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
