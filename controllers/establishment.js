@@ -161,6 +161,18 @@ module.exports = {
       }).catch(error => next(new BackError(error)));
     });
   },
+  findByCity: (req, res, next) => {
+    return Models.EstablishmentReference.findAll({
+      where: {
+        [Op.or]: [
+          { address_town: { [Op.like]: `%${req.params.city}%` } },
+          { name: { [Op.like]: `%${req.params.city}%` } }
+        ]
+      }
+    }).then( es => {
+      return res.status(200).json(es);
+    }).catch(error => next(new Error(error)));
+  },
   addApplication: (body, wish) => {
     for (let i = 0; i < body.es.length; i++) {
       Models.Application.create({

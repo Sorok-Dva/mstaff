@@ -21,6 +21,16 @@ HTTPValidation.putFormation = [
   check('name').isLength({ min: 10 })
 ];
 
+HTTPValidation.getWish = [
+  check('id').isNumeric()
+];
 
+HTTPValidation.removeWish = [
+  check('id').isNumeric()
+];
+
+HTTPValidation.getEditWish = [
+  check('id').isNumeric()
+];
 
 module.exports = HTTPValidation;

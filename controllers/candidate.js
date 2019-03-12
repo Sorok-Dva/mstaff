@@ -7,6 +7,7 @@ const fs = require('fs');
 const Models = require('../models/index');
 
 module.exports = {
+
   postVideo: (req, res, next) => {
     if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
     let video = { filename: null };
@@ -217,8 +218,11 @@ module.exports = {
   },
   addApplication: (req, res, next) => {
     let render = { a: { main: 'applications' } };
-    Models.Post.findAll().then(posts => {
+    return Models.Post.findAll().then(posts => {
       render.posts = posts;
+      return Models.Service.findAll();
+    }).then( services => {
+      render.services = services;
       return res.render('candidates/add-application', render)
     }).catch(error => next(new BackError(error)));
   },
@@ -467,11 +471,6 @@ module.exports = {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
   addWish: (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ body: req.body, errors: errors.array() });
-    }
     return Models.Candidate.findOne({
       where: { user_id: req.user.id }
     }).then(candidate => {
@@ -480,6 +479,7 @@ module.exports = {
         name: req.body.name || 'Candidature sans nom',
         contract_type: req.body.contractType,
         posts: req.body.posts,
+        services: !_.isNil(req.body.services) ? req.body.services : null,
         full_time: req.body.fullTime,
         part_time: req.body.partTime,
         day_time: req.body.dayTime,
@@ -506,9 +506,79 @@ module.exports = {
               es_id: !_.isNil(es) ? es.id : null,
               new: true
             });
-          });
+          }).catch(error => next(new BackError(error)));
         }
-      });
-    });
+      }).catch(error => next(new BackError(error)));
+    }).catch(error => next(new BackError(error)));
+  },
+  getWish: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+    return Models.Candidate.findOne( {
+      where: { user_id: req.user.id }
+    }).then( candidate => {
+      Models.Wish.findOne({
+        where: { id: req.params.id }
+      }).then( wish => {
+        if (!wish) return res.status(400).send({ body: req.body, error: 'Not exists' });
+        res.status(201).send({ get: true, wish })
+      })
+    })
+
+  },
+  getEditWish: (req, res, next) => {
+    let render = { a: { main: 'applications' } };
+    Models.Candidate.findOne( {
+      attributes: ['user_id'],
+      where: { user_id: req.user.id },
+      include: [{
+        model: Models.Wish,
+        where: { id: req.params.id },
+        as: 'wishes'
+      }, {
+        model: Models.Application,
+        attributes: ['ref_es_id'],
+        where: { wish_id: req.params.id },
+        as: 'applications',
+        include: {
+          model: Models.EstablishmentReference,
+          attributes: ['name', 'finess_et'],
+          on: { '$applications.ref_es_id$': {
+            [Op.col]: 'applications->EstablishmentReference.finess_et' }
+          }
+        }
+      }]
+    }).then( candidate => {
+      render.candidate = candidate;
+      render.wish = candidate.wishes[0];
+      render.applications = candidate.applications;
+      return Models.Post.findAll();
+    }).then( posts => {
+      render.posts = posts;
+      return Models.Service.findAll();
+    }).then(services => {
+      render.services = services;
+      return res.render('candidates/edit-application', render);
+    }).catch(error => next(new Error(error)));
+  },
+  removeWish: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+    return Models.Candidate.findOne({
+      where: { user_id: req.user.id }
+    }).then(candidate => {
+      Models.Wish.findOne({
+        where: { id: req.params.id, candidate_id: candidate.id }
+      }).then(wish => {
+        if (!wish) return res.status(400).send({ body: req.body, error: 'Not exists' });
+        wish.destroy().then(wish => res.status(201).send({ deleted: true, wish }));
+      }).catch(error => next(new Error(error)));
+    }).catch(error => next(new Error(error)));
   }
 };

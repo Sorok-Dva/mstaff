@@ -9,12 +9,13 @@
     "logging": true
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "username": "mstaff",
+    "password": "Mstaff2019*",
+    "database": "mstaff_test",
+    "host": "91.121.79.166",
     "dialect": "mysql",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "logging": true
   },
   "dev_test": {
     "username": "mstaff",

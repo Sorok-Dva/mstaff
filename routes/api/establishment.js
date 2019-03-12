@@ -25,4 +25,6 @@ router.post('/:esId/candidate/:candidateId/:action',
   EstablishmentController.apiFavCandidate
 );
 
+router.get('/')
+
 module.exports = router;

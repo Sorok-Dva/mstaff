@@ -1,0 +1,429 @@
+  <style>
+    .checkbox label::before {
+        content: "";
+        margin-top: 20px;
+        transform: scale(1.5);
+    }
+    .checkbox label::after {
+        top: 19px;
+        font-size: 21px;
+    }
+    h3, .h3 {
+        font-size: 1.825em;
+        line-height: 2.2 !important;
+    }
+    .form-group {
+        margin-bottom: 0 !important;
+    }
+  </style>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="wizard">
+            <div class="wizard-inner">
+                <div class="connecting-line"></div>
+                <ul class="nav nav-tabs nav-tabs-wizard" role="tablist">
+                    <li role="presentation" class="active">
+                        <a class="tabWizard" href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Contrat">
+                            <span class="round-tab">
+                                <i class="fal fa-handshake"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li role="presentation" class="disabled">
+                        <a class="tabWizard" href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Disponibilités">
+                            <span class="round-tab">
+                                <i class="fal fa-calendar-check"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li role="presentation" class="disabled">
+                        <a class="tabWizard" href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Établissements">
+                            <span class="round-tab">
+                                <i class="fal fa-hospital"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li role="presentation" class="disabled">
+                        <a class="tabWizard" href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Validation">
+                            <span class="round-tab">
+                                <i class="fal fa-check"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <form role="form">
+                <div class="tab-content" style="padding:30px">
+                    <div class="tab-pane active" role="tabpanel" id="step1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="text-bold">Sélectionnez votre type de contrat</h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="contractType" class="row">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Type de contrat *:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="contracts" class="row sub-step">
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="cdi-cdd" name="cdi-cdd" type="checkbox"
+                                            {{#ifCond wish.contract_type '===' 'cdi-cdd'}}checked=""{{/ifCond}}>
+                                            <label for="cdi-cdd">
+                                                <h3>CDI / CDD</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="vacation" name="vacation" type="checkbox"
+                                                   {{#ifCond wish.contract_type '===' 'vacation'}}checked=""{{/ifCond}}>
+                                            <label for="vacation">
+                                                <h3>VACATION</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="internship" name="internship" type="checkbox"
+                                                   {{#ifCond wish.contract_type '===' 'internship'}}checked=""{{/ifCond}}>
+                                            <label for="internship">
+                                                <h3>STAGE</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+
+                        {{#ifCond wish.contract_type '===' 'cdi-cdd'}}
+                        <div id="activityType" class="row">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Type d'activité *:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="activity" class="row sub-step">
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="full_time" name="full_time" type="checkbox"
+                                                   {{#ifCond @root.wish.full_time '===' true}}checked=""{{/ifCond}}>
+                                            <label for="full_time">
+                                                <h3>Temps plein</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="part_time" name="part_time" type="checkbox"
+                                                   {{#ifCond @root.wish.part_time '===' true}}checked=""{{/ifCond}}>
+                                            <label for="part_time">
+                                                <h3>Temps partiel</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        <div id="timeType" class="row">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Aménagement horaire *:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="time" class="row sub-step">
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="daytime" name="daytime" type="checkbox"
+                                                   {{#ifCond @root.wish.day_time '===' true}}checked=""{{/ifCond}}>
+                                            <label for="daytime">
+                                                <h3>Jour</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <div class="checkbox">
+                                            <input id="nighttime" name="nighttime" type="checkbox"
+                                                   {{#ifCond @root.wish.night_time '===' true}}checked=""{{/ifCond}}>
+                                            <label for="nighttime">
+                                                <h3>Nuit</h3>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        {{/ifCond}}
+
+                        <div id="postType" class="row">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Type de poste *:</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group col-sm-12" style="margin-top: 25px">
+                                    <label for="selectPostType">
+                                        <select class="form-control" id="selectPostType" multiple="multiple">
+                                            {{#each posts as |post|}}
+                                                <option value="{{post.id}}" data-categorie="{{post.categoriesPS_id}}">{{post.name}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        <div id="serviceType" class="row">
+                            <div class="col-sm-3">
+                                <h4 class="text-bold">Préférence de service (facultatif) :</h4>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="form-group col-sm-12" style="margin-top: 25px">
+                                    <label for="selectServiceType">
+                                        <select class=selectpicker" id="selectServiceType" multiple data-live-search="true"
+                                                title="Services">
+                                            {{#each services as |service|}}
+                                                <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12"><hr></div>
+                        </div>
+                        <ul class="list-inline pull-right">
+                            <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
+                            <li><button type="button" data-step="1" class="btn btn-primary next-step">Continuer</button></li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="step2">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="text-bold">Votre disponibilité</h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div id="internshipDate">
+                                <div class="col-md-6"> <label for="start">Du *</label>
+                                    <input id="start" name="start" type="text"
+                                           class="form-control input-md from" required="" autocomplete="off">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="end">Au *</label>
+                                    <input id="end" name="end" type="text"
+                                           class="form-control input-md to" autocomplete="off">
+                                </div>
+                            </div>
+                            <ul class="list-inline pull-right">
+                                <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
+                                <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
+                                <li><button type="button" data-step="2" class="btn btn-primary next-step">Continuer</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="step3">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="text-bold">Où souhaitez-vous postuler ?</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="searchES" style="padding: 20px;">
+                                    <div>
+                                        <div class="animate-show-hide">
+                                            <div class="row" style="margin-bottom: 40px;">
+                                                <div class="col-md-offset-2 col-md-8 text-center " style="color: #02AED7">
+                                                    <strong style="color: #02AED7">Je souhaite postuler autour de mon domicile</strong>
+                                                    <div id="radius-slider" class="no-ui-slider" style="margin-top:15px">
+                                                        <div id="radius" class="slider slider-info"></div>
+                                                        <ul class="slider-labels ten-columns">
+                                                            <li data-step="1">1km</li>
+                                                            <li data-step="2">2km</li>
+                                                            <li class="slideActive" data-step="3">5km</li>
+                                                            <li data-step="4">10km</li>
+                                                            <li data-step="5">15km</li>
+                                                            <li data-step="6">20km</li>
+                                                            <li data-step="7">30km</li>
+                                                            <li data-step="8">50km</li>
+                                                            <li data-step="9">70km</li>
+                                                            <li data-step="10">100km</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="nav-tabs-navigation">
+                                                    <div class="nav-tabs-wrapper">
+                                                        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                                                            <li class="active"><a href="#result" data-toggle="tab" aria-expanded="true">Résultat de la recherche <span class="esCount"></span></a></li>
+                                                            <li><a href="#es_selected" data-toggle="tab" aria-expanded="false">Établissement(s) séléctionné(s) <span id="selectedEsCount"></span></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div id="my-tab-content" class="tab-content text-center">
+                                                    <div class="tab-pane active" id="result">
+                                                        <div class="col-md-7">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-2">
+                                                                            <button type="button" class="btn btn-default btn-sm pull-left" onclick="selectAll()">
+                                                                                Tout sélectionner
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="col-md-10">
+                                                                            <select class="geolocationFilter form-control" id="geolocationFilter" multiple="multiple" style="width:100%;">
+                                                                                <option label="Etab. Médico-psychologique pour Personnes handicapés" value="1">Etab. Médico-psychologique pour Personnes handicapés</option>
+                                                                                <option label="Centres de Santé" value="2">Centres de Santé</option>
+                                                                                <option label="Etablissements MCO / SSR " value="3">Etablissements MCO / SSR </option>
+                                                                                <option label="Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)" value="4">Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div id="esList" class="col-md-12 animate-bottom"></div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <div class="pull-left">
+                                                                                    <span class="esCount"></span> établissement(s) trouvé(s)
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="pull-right">
+                                                                                    <div style="display: inline-block;width:16px;height: 16px;background-color: #019ED1"></div>
+                                                                                    <h5 style="display: inline-block;">Etablissements MSTAFF </h5>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div id="map" style="height: 544px;width: 100%;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tab-pane" id="es_selected">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-inline pull-right">
+                            <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
+                            <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
+                            <li><button type="button" data-step="3" class="btn btn-info btn-info-full next-step">Continuer</button></li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="complete">
+                        <div class="row">
+                            <div class="col-sm-12 text-center">
+                                <h3>Récapitulatif</h3>
+                                <hr>
+                            </div>
+                            <div id="recapContractType" class="col-md-4">
+                                <div class="panel panel-resume">
+                                    <div class="panel-heading">
+                                        Type de contrat souhaité
+                                    </div>
+                                    <div class="panel-body text-center">
+                                        <h3></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="recapActivityType" class="col-md-4">
+                                <div class="panel panel-resume">
+                                    <div class="panel-heading">
+                                        Type d'activité
+                                    </div>
+                                    <div class="panel-body text-center">
+                                        <h3></h3>
+                                        <h3></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="recapHourType" class="col-md-4">
+                                <div class="panel panel-resume">
+                                    <div class="panel-heading">
+                                        Amenagement horaire
+                                    </div>
+                                    <div class="panel-body text-center">
+                                        <i></i>
+                                        <i></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel panel-resume">
+                                    <div class="panel-heading">
+                                        Mes disponibilités
+                                    </div>
+                                    <div id="availability" class="panel-body text-center">
+                                        <h3></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-resume">
+                                        <div class="panel-heading">
+                                            Etablissement(s) choisi(s)
+                                        </div>
+                                        <div class="panel-body" style="min-height:500px;max-height: 500px;overflow-y: scroll;overflow-x: hidden">
+
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th>ES</th>
+                                                    <th>Type d'ES</th>
+                                                    <th>Région</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="finalESList">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-inline pull-right">
+                            <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
+                            <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
+                            <li><button type="button" class="btn btn-success btn-info-full" onclick="addWishName()">Valider et sauvegarder</button></li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script src="/static/assets/dist/js/addApplication.min.js"></script>
+
+<script>
+    application.contractType = '{{wish.contract_type}}';
+    application.postType = "{{{wish.posts}}}";
+    application.serviceType = [];
+    {{#if wish.services}}
+        {{#each wish.services as |service|}}
+        application.serviceType.push('{{{service}}}');
+        {{/each}}
+    {{/if}}
+
+</script>
+
+<script src="/static/assets/dist/js/editApplication.min.js"></script>
