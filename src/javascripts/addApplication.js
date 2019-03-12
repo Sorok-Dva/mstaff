@@ -335,6 +335,11 @@ let highlightLabel = ($this) => {
   $(selector).addClass('slideActive');
 };
 
+let deactivateScrollBody = () => {
+  // TODOOOOOOOOOOOOOOOOOOOOOOOO
+  console.log($('body'));
+};
+
 // ------------------------------------- GEOLOCATION ------------------------------------- //
 
 let activateGeoLoc = () => {
@@ -636,8 +641,10 @@ let addWish = () => {
 
 $(document).ready(function () {
 
-  activateGeoLoc();
-  mapInit().then( () => displaySelection());
+  mapInit().then( () => {
+    activateGeoLoc();
+    displaySelection();
+  });
 
   let selectPostType = $('#selectPostType');
   let selectServiceType = $('#selectServiceType');
@@ -689,13 +696,14 @@ $(document).ready(function () {
     });
   });
 
-
   geoLocFilter.on('change', () => {
     let activeId = $('#tabsStep3 li.active a').attr('id');
 
     filter = parseInt(geoLocFilter.selectpicker('val'));
     if (activeId === 'searchAroundMe')
       return generateAroundMe();
+    else if (activeId === 'searchByAddress' && !$.isEmptyObject(application.searchAddress))
+      generateByAddress();
   });
 
   $('.from').on('dp.change', (e) => {
