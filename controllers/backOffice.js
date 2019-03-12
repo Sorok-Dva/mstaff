@@ -271,7 +271,7 @@ module.exports = {
           candidates,
           title: `Établissement ${data.dataValues.name}`,
           a: { main: 'es', sub: 'es_one' },
-          data
+          es: data
         })
       });
     }).catch(error => next(new BackError(error)));

@@ -3,7 +3,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(module.filename);
 const conf = require('dotenv').config().parsed;
-const env = conf.ENV || 'development';
+const env = conf.ENV;
 const config = require(`${__dirname}/../config/config.json`)[env];
 const db = {};
 

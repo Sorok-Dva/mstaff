@@ -22,7 +22,7 @@ module.exports = {
       'Savoir réaliser un pansement de pace maker', 'Aider à la pose du Fémostop et réaliser la surveillance', 'Savoir surveiller le pansement de la contre pulsion aortique',
       'Savoir gérer les pansements TERUMO', 'Poser et retirer une VNI', 'Poser et retirer une aiguille de Huber', 'Connaître et réaliser le pansement d’un portacath',
       'Connaître et réaliser le pansement d’un piccline', "Connaître les conduites à tenir en cas d' extravasation", 'Savoir monter une aspiration murale',
-      'Savoir prendre en charge une trachéotomie(pansement et soins locaux)', 'Appliquer les bonnes pratiques de l’administration de chimiothérapies (hygiène, double contrôle, identito-vigilance, validation en temps réel)',
+      'Savoir prendre en charge une trachéotomie(pansement et soins locaux)', 'Appliquer les bonnes pratiques de l’administration de chimiothérapies (hygiène, double contrôle, identito-vigilance, HTTPValidation en temps réel)',
       'Savoir réaliser un pansement simple', 'Savoir réaliser un pansement d’escarre', 'Identifier les anomalies : urines, selles, muqueuses, téguments.',
       'Préparer et poser une perfusion IV ou sous-cutanée', 'Identifier le type de douleur', 'Savoir utiliser les différentes échelles de la douleur',
       'Savoir mettre en place un TENS', 'Savoir poser un plâtre', 'Savoir poser une résine', 'Savoir réaliser un strapping', 'Savoir installer un respirateur',

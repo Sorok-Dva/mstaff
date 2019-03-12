@@ -8095,10 +8095,6 @@ form label.radio, form label.checkbox {
     cursor: pointer;
 }
 
-.form-group {
-    position: relative;
-}
-
 .form-horizontal .checkbox,
 .form-horizontal .radio {
     padding-top: 0;

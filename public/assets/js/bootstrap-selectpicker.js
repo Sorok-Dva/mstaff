@@ -472,7 +472,7 @@
               },
               'shown.bs.select': function () {
                 that.$element
-                  .val(that.$element.val()) // set the value to hide the validation message in Chrome when menu is opened
+                  .val(that.$element.val()) // set the value to hide the HTTPValidation message in Chrome when menu is opened
                   .off('shown.bs.select');
               },
               'rendered.bs.select': function () {
