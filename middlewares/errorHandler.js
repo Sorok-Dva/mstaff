@@ -12,6 +12,7 @@ const getStatus = (err) => {
 
 const sendError = (req, res, status, err) => {
   err.status = status;
+  if (Env.current === 'production') delete err.stack;
   if (req.xhr) return res.status(status).json(err);
   else return res.status(status).render('error', { error: err });
 };
@@ -41,7 +42,7 @@ module.exports = {
     next(err);
   },
   notFoundError: (req, res, next) => next(new BackError('Not Found', httpStatus.NOT_FOUND)),
-  sentrySenderErrorHandler: (err, req, res, next) => {
+  /*  sentrySenderErrorHandler: (err, req, res, next) => {
     let status = err.status || err.statusCode || 500;
     if (status < 400) status = 500;
 
@@ -53,10 +54,10 @@ module.exports = {
       },
       extra: err.extraContextForSentry,
     };
-    // Sentry.send(err, context);
+    Sentry.send(err, context);
 
     next(err);
-  },
+  },*/
   api: (err, req, res, next) => { // eslint-disable-line no-unused-vars
     let status = err.status || err.statusCode || 500;
     if (status < 400) status = 500;

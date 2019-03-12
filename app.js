@@ -16,6 +16,7 @@ const apiEsRouter = require('./routes/api/establishment');
 
 const app = express();
 
+if (Env.isProd) app.use(Express.sentryRequestHandler);
 if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
 
 // express config
@@ -27,7 +28,6 @@ app.set('view engine', 'hbs');
 if (Env.isProd) app.set('view cache', true);
 
 // ------ Express
-// app.use(Express.sentryRequestHandler);
 app.engine('hbs', Express.exphbs);
 app.use(express.json({ limit: '150mb' }));
 app.use(express.urlencoded({ extended: true, limit: '150mb' }));
@@ -59,11 +59,12 @@ app.use('/api/candidate', apiCandidateRouter);
 app.use('/api/back-office', apiBackOfficeRouter);
 app.use('/api/es', apiEsRouter);
 
+if (Env.isProd) app.use(Express.sentryErrorHandler);
 app.use(ErrorHandler.notFoundError);
 app.use(ErrorHandler.converter);
 app.use(ErrorHandler.client);
 app.use(ErrorHandler.log);
-// app.use(ErrorHandler.sentrySenderErrorHandler);
+// if (Env.isProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
 
 app.use(Express.errorHandler); // errorHandler always must be in last position.

@@ -1,7 +1,7 @@
 const conf = require('dotenv').config().parsed;
 const path = require('path');
-const env = 'development';
-const config = require(`../config/config.json`)[env];
+const { Env } = require('../helpers/helpers');
+const config = require(`../config/config.json`)[Env.current];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
@@ -17,11 +17,13 @@ const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
 const wildcardSubdomains = require('wildcard-subdomains');
-// const Sentry = require('@sentry/node');
 
 const ServerController = require('../controllers/server');
 
-// Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
+let Sentry =  require('@sentry/node');
+if (Env.isProd) {
+  Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
+}
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -44,7 +46,7 @@ module.exports = {
 
     let opts = {};
     // set locals, only providing error in development
-    if (env === 'development') {
+    if (Env.current === 'development') {
       opts.error = err;
     } else {
       res.locals.error_msg = err.message;
@@ -96,8 +98,8 @@ module.exports = {
       next();
     } else next();
   },
-  // sentryErrorHandler: () => Sentry.Handlers.errorHandler(),
-  // sentryRequestHandler: () => Sentry.Handlers.requestHandler(),
+  sentryErrorHandler: Sentry.Handlers.errorHandler(),
+  sentryRequestHandler: Sentry.Handlers.requestHandler(),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';

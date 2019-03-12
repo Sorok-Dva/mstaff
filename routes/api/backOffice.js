@@ -1,4 +1,4 @@
-const { Authentication } = require('../../middlewares/index');
+const { Authentication, HTTPValidation } = require('../../middlewares/index');
 const BackOfficeController = require('../../controllers/backOffice');
 const express = require('express');
 const router = express.Router();
@@ -7,7 +7,10 @@ router.get('/establishmentsReferences', Authentication.ensureIsAdmin, BackOffice
 router.post('/establishmentsReferences/info/:id', Authentication.ensureIsAdmin, BackOfficeController.APIgetEstablishmentRefInfo);
 router.post('/establishmentsReferences/info/:id/toCreate', Authentication.ensureIsAdmin, BackOfficeController.APIgetEstablishmentRefInfoToCreate);
 
-router.post('/establishment/create', Authentication.ensureIsAdmin, BackOfficeController.APICreateEstablishment);
+router.post('/establishment/create',
+  Authentication.ensureIsAdmin,
+  HTTPValidation.BackOfficeController.createEstablishmentFromReference,
+  BackOfficeController.APICreateEstablishment);
 
 router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, BackOfficeController.sendCandidateVerifEmail);
 
