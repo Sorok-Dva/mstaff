@@ -21,6 +21,17 @@ module.exports = {
       res.render('establishments/selectEs', { esAccounts });
     }).catch(error => next(new BackError(error)));
   },
+  findBySubdomain: (req, res, next) => {
+    Models.Establishment.findOne({
+      where: {
+        domain_name: req.subdomains[0],
+        domain_enable: true
+      }
+    }).then(es => {
+      if (_.isNil(es)) return res.redirect('https://mstaff.co');
+      else next(es);
+    })
+  },
   getNeeds: (req, res, next) => {
     Models.Need.findAll({
       where: { es_id: req.session.currentEs },
