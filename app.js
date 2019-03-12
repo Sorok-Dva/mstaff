@@ -6,6 +6,7 @@ const express = require('express');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const esRouter = require('./routes/es');
+const esSubDomainRouter = require('./routes/esSubdomain');
 const candidateRouter = require('./routes/candidate');
 const boRouter = require('./routes/backOffice');
 const apiRouter = require('./routes/api/api');
@@ -51,6 +52,7 @@ app.use(Express.readOnlySessionForImpersonation);
 app.use('/', indexRouter);
 app.use('/', candidateRouter); //candidate
 app.use('/', esRouter); //recruiter
+app.use('/esDomain', esSubDomainRouter);
 app.use('/user', usersRouter);
 app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
