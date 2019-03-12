@@ -1,4 +1,4 @@
-let map, marker, cityCircle, markers = [], geocoder, filter = 3, pos = { lat: 0, lng: 0, rayon: 5 }, myPos,
+let map, marker, cityCircle, markers = [], geocoder, autocomplete, filter = 3, pos = { lat: 0, lng: 0, rayon: 5 }, myPos,
   selectedAll = false, allEs = [], application = {};
 let kmArray = [1, 2, 5, 10, 15, 20, 30, 50, 70, 100];
 let slider = document.getElementById('radius');
@@ -281,6 +281,16 @@ let mapInit = () => {
           radius: pos.rayon*1000 || 10000
         });
         geocoder = new google.maps.Geocoder();
+        autocomplete = new google.maps.places.Autocomplete(document.getElementById('searchAddress'));
+
+        autocomplete.setFields(['address_components', 'geometry', 'icon', 'name']);
+        autocomplete.addListener('place_changed', function() {
+          let place = autocomplete.getPlace();
+          application.searchAddress = place;
+          if (!place.geometry) {
+            window.alert("No details available for input: '" + place.name + "'");
+          }
+        });
         resolve();
       }
     });
@@ -532,7 +542,7 @@ let displaySelection = () => {
       case 'searchByAddress':
         myAddressInput.show();
         if (!$.isEmptyObject(application.searchAddress)){
-          geocodeAddress(geocoder, map);
+          generateByAddress();
         }
         break;
       case 'searchAllOver':
@@ -614,9 +624,7 @@ let addWish = () => {
       _csrf
     };
 
-    console.log(opts);
     $.post('/api/candidate/wish/add', opts, (data) => {
-      console.log('retour de data');
       if (data.wish) {
         $(location).attr('href', `/applications`);
       } else {
