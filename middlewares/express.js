@@ -128,7 +128,7 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (req.url.search('static') !== -1 || req.subdomains.length === 0) return next();
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2') return next();
     EstablishmentController.findBySubdomain(req, res, (data) => {
       req.url = `/esDomain${req.url}`;
       next();
