@@ -11,6 +11,7 @@ const getStatus = (err) => {
 };
 
 const sendError = (req, res, status, err) => {
+  if (res.headersSent) return;
   err.status = status;
   if (Env.current === 'production') delete err.stack;
   if (req.xhr) return res.status(status).json(err);
