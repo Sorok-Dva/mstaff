@@ -530,12 +530,6 @@ module.exports = {
 
   },
   getEditWish: (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ body: req.body, errors: errors.array() });
-    }
-
     let render = { a: { main: 'applications' } };
     Models.Candidate.findOne( {
       attributes: ['user_id'],
