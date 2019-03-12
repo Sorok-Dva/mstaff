@@ -218,8 +218,11 @@ module.exports = {
   },
   addApplication: (req, res, next) => {
     let render = { a: { main: 'applications' } };
-    Models.Post.findAll().then(posts => {
+    return Models.Post.findAll().then(posts => {
       render.posts = posts;
+      return Models.Service.findAll();
+    }).then( services => {
+      render.services = services;
       return res.render('candidates/add-application', render)
     }).catch(error => next(new BackError(error)));
   },
@@ -468,11 +471,6 @@ module.exports = {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
   addWish: (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ body: req.body, errors: errors.array() });
-    }
     return Models.Candidate.findOne({
       where: { user_id: req.user.id }
     }).then(candidate => {
@@ -481,6 +479,7 @@ module.exports = {
         name: req.body.name || 'Candidature sans nom',
         contract_type: req.body.contractType,
         posts: req.body.posts,
+        services: !_.isNil(req.body.services) ? req.body.services : null,
         full_time: req.body.fullTime,
         part_time: req.body.partTime,
         day_time: req.body.dayTime,
@@ -507,10 +506,10 @@ module.exports = {
               es_id: !_.isNil(es) ? es.id : null,
               new: true
             });
-          });
+          }).catch(error => next(new BackError(error)));
         }
-      });
-    });
+      }).catch(error => next(new BackError(error)));
+    }).catch(error => next(new BackError(error)));
   },
   getWish: (req, res, next) => {
     const errors = validationResult(req);
@@ -569,53 +568,6 @@ module.exports = {
     }).then(services => {
       render.services = services;
       return res.render('candidates/edit-application', render);
-    }).catch(error => next(new Error(error)));
-  },
-  addWish: (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ body: req.body, errors: errors.array() });
-    }
-    return Models.Candidate.findOne({
-      where: { user_id: req.user.id }
-    }).then(candidate => {
-      console.log('test');
-      Models.Wish.create({
-        candidate_id: candidate.id,
-        name: req.body.name || 'Candidature sans nom',
-        contract_type: req.body.contractType,
-        posts: req.body.posts,
-        services: !_.isNil(req.body.services) ? req.body.services : null,
-        full_time: req.body.fullTime,
-        part_time: req.body.partTime,
-        day_time: req.body.dayTime,
-        night_time: req.body.nightTime,
-        liberal_cabinets: req.body.liberal,
-        availability: req.body.availability,
-        start: req.body.start,
-        end: req.body.end,
-        lat: req.body.lat,
-        lon: req.body.lon,
-        geolocation: !!req.body.lat,
-        es_count: req.body.es_count
-      }).then(wish => {
-        req.flash('success_msg', `Souhait ajouté avec succès auprès de ${req.body.es_count} établissements.`);
-        res.status(201).send({ wish });
-        req.body.es = JSON.parse(`[${req.body.es}]`);
-        for (let i = 0; i < req.body.es.length; i++) {
-          Models.Establishment.findOne({ where: { finess: req.body.es[i] } }).then(es => {
-            Models.Application.create({
-              name: req.body.name || 'Candidature sans nom',
-              wish_id: wish.id,
-              candidate_id: candidate.id,
-              ref_es_id: req.body.es[i],
-              es_id: !_.isNil(es) ? es.id : null,
-              new: true
-            }).catch(error => next(new Error(error)));
-          }).catch(error => next(new Error(error)));
-        }
-      }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
   },
   removeWish: (req, res, next) => {

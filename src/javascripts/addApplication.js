@@ -613,7 +613,10 @@ let addWish = () => {
       services: application.serviceType,
       _csrf
     };
+
+    console.log(opts);
     $.post('/api/candidate/wish/add', opts, (data) => {
+      console.log('retour de data');
       if (data.wish) {
         $(location).attr('href', `/applications`);
       } else {

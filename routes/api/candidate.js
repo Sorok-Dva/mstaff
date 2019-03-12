@@ -52,11 +52,9 @@ router.get('/formation/:id', Authentication.ensureIsCandidate, CandidateControll
 router.get('/diploma/:id', Authentication.ensureIsCandidate, CandidateController.getDiplomaById)
   .delete('/diploma/:id', Authentication.ensureIsCandidate, CandidateController.removeDiploma);
 
-router.post('/:type/add', Authentication.ensureIsCandidate, CandidateController.addRating);
+router.post('/type/:type/add', Authentication.ensureIsCandidate, CandidateController.addRating);
 router.post('/rate/:type/:id', Authentication.ensureIsCandidate, CandidateController.starsRating);
-router.delete('/:type/:id', Authentication.ensureIsCandidate, CandidateController.deleteRating);
-
-router.post('/wish/add', Authentication.ensureIsCandidate, CandidateController.addWish);
+router.delete('/type/:type/:id', Authentication.ensureIsCandidate, CandidateController.deleteRating);
 
 router.get('/wish/:id',
   Authentication.ensureIsCandidate,
