@@ -19,6 +19,7 @@ const logger = require('morgan');
 const wildcardSubdomains = require('wildcard-subdomains');
 
 const ServerController = require('../controllers/server');
+const EstablishmentController = require('../controllers/establishment');
 
 let Sentry =  require('@sentry/node');
 if (Env.isProd) {
@@ -118,6 +119,7 @@ module.exports = {
     resave: true
   }),
   verifyMaintenance: (req, res, next) => {
+    if (req.url.search('static') !== -1) return next();
     ServerController.verifyMaintenance(status => {
       if (status === 'maintenance') {
         return res.render('index', { layout: 'maintenance' });
@@ -126,8 +128,10 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (!req.subdomains.length || req.subdomains.slice(-1)[0] === 'www') return next();
-    // req.subdomain = req.subdomains.slice(-1)[0];
-    next();
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0) return next();
+    EstablishmentController.findBySubdomain(req, res, (data) => {
+      req.url = `/esDomain${req.url}`;
+      next();
+    });
   }
 };
