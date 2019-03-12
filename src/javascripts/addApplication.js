@@ -337,7 +337,6 @@ let highlightLabel = ($this) => {
 
 let deactivateScrollBody = () => {
   // TODOOOOOOOOOOOOOOOOOOOOOOOO
-  console.log($('body'));
 };
 
 // ------------------------------------- GEOLOCATION ------------------------------------- //
