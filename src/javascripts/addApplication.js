@@ -649,6 +649,8 @@ $(document).ready(function () {
   let selectServiceType = $('#selectServiceType');
   let allServiceType = $('#selectServiceType option');
   let geoLocFilter = $('#geolocationFilter');
+  let searchCity = $('#searchCity');
+  const keyEnter = 13;
 
   selectPostType.select2({
     maximumSelectionLength: 1
@@ -657,6 +659,11 @@ $(document).ready(function () {
   allServiceType.prop('disabled', true);
   allServiceType.hide();
   geoLocFilter.selectpicker();
+  searchCity.keydown( (e) => {
+    if (e.which === keyEnter)
+      generateAllOver();
+  });
+
 
   selectPostType.on('change', () => {
     let postType = selectPostType.select2('data');
