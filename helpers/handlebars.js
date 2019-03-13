@@ -250,5 +250,8 @@ module.exports.register = async (Handlebars) => {
       default:
         return '';
     }
-  })
+  });
+  Handlebars.registerHelper('json', function (context) {
+    return JSON.stringify(context);
+  });
 };

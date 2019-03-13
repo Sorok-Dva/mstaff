@@ -3,6 +3,7 @@ let map, marker, cityCircle, markers = [], geocoder, autocomplete, filter = 3, p
 let kmArray = [1, 2, 5, 10, 15, 20, 30, 50, 70, 100];
 let slider = document.getElementById('radius');
 let geoActivate = false;
+let ApplicationIsAddMode = true;
 
 // Step #1
 $('#step1 input[type="checkbox"]').change(function () {
@@ -726,7 +727,7 @@ $(document).ready(function () {
     if (!verifyStep(datastep)){
       switch (datastep) {
         case 'step1':
-          resetSelectedES();
+          ApplicationIsAddMode ? resetSelectedES() : null;
           if (application.contractType.name === 'internship')
             goStep('step2')
           else {

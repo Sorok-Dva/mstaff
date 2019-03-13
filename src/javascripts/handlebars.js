@@ -171,6 +171,10 @@ Handlebars.registerHelper('repeat', function (n, block) {
   return accum;
 });
 
+Handlebars.registerHelper('json', function (context) {
+  return JSON.stringify(context);
+});
+
 Handlebars.registerHelper('partial', function (name) {
   return name;
 });

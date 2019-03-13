@@ -227,96 +227,25 @@
                         </div>
                     </div>
                     <div class="tab-pane" role="tabpanel" id="step3">
+
                         <div class="row">
                             <div class="col-sm-12">
                                 <h4 class="text-bold">Où souhaitez-vous postuler ?</h4>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="searchES" style="padding: 20px;">
-                                    <div>
-                                        <div class="animate-show-hide">
-                                            <div class="row" style="margin-bottom: 40px;">
-                                                <div class="col-md-offset-2 col-md-8 text-center " style="color: #02AED7">
-                                                    <strong style="color: #02AED7">Je souhaite postuler autour de mon domicile</strong>
-                                                    <div id="radius-slider" class="no-ui-slider" style="margin-top:15px">
-                                                        <div id="radius" class="slider slider-info"></div>
-                                                        <ul class="slider-labels ten-columns">
-                                                            <li data-step="1">1km</li>
-                                                            <li data-step="2">2km</li>
-                                                            <li class="slideActive" data-step="3">5km</li>
-                                                            <li data-step="4">10km</li>
-                                                            <li data-step="5">15km</li>
-                                                            <li data-step="6">20km</li>
-                                                            <li data-step="7">30km</li>
-                                                            <li data-step="8">50km</li>
-                                                            <li data-step="9">70km</li>
-                                                            <li data-step="10">100km</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="row">
-                                                <div class="nav-tabs-navigation">
-                                                    <div class="nav-tabs-wrapper">
-                                                        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-                                                            <li class="active"><a href="#result" data-toggle="tab" aria-expanded="true">Résultat de la recherche <span class="esCount"></span></a></li>
-                                                            <li><a href="#es_selected" data-toggle="tab" aria-expanded="false">Établissement(s) séléctionné(s) <span id="selectedEsCount"></span></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div id="my-tab-content" class="tab-content text-center">
-                                                    <div class="tab-pane active" id="result">
-                                                        <div class="col-md-7">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="row">
-                                                                        <div class="col-md-2">
-                                                                            <button type="button" class="btn btn-default btn-sm pull-left" onclick="selectAll()">
-                                                                                Tout sélectionner
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="col-md-10">
-                                                                            <select class="geolocationFilter form-control" id="geolocationFilter" multiple="multiple" style="width:100%;">
-                                                                                <option label="Etab. Médico-psychologique pour Personnes handicapés" value="1">Etab. Médico-psychologique pour Personnes handicapés</option>
-                                                                                <option label="Centres de Santé" value="2">Centres de Santé</option>
-                                                                                <option label="Etablissements MCO / SSR " value="3">Etablissements MCO / SSR </option>
-                                                                                <option label="Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)" value="4">Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)</option>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div id="esList" class="col-md-12 animate-bottom"></div>
-                                                                        <div class="row">
-                                                                            <div class="col-md-6">
-                                                                                <div class="pull-left">
-                                                                                    <span class="esCount"></span> établissement(s) trouvé(s)
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-6">
-                                                                                <div class="pull-right">
-                                                                                    <div style="display: inline-block;width:16px;height: 16px;background-color: #019ED1"></div>
-                                                                                    <h5 style="display: inline-block;">Etablissements MSTAFF </h5>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <div id="map" style="height: 544px;width: 100%;"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="tab-pane" id="es_selected">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul id="tabsStep3" class="nav nav-tabs" data-tabs="tabs">
+                                    <li class="active"><a id="searchAroundMe" href="#gps"  data-toggle="tab" aria-expanded="true">Autour de moi</a></li>
+                                    <li><a id="searchByAddress" href="#gps" data-toggle="tab" aria-expanded="false">A partir d'une adresse</a></li>
+                                    <li><a id="searchAllOver" href="#nogps" data-toggle="tab" aria-expanded="false">Partout en France</a></li>
+                                </ul>
                             </div>
                         </div>
+
+                        {{>candidate/geolocation}}
+
                         <ul class="list-inline pull-right">
                             <li><button type="button" class="btn btn-default prev-step">Précédent</button></li>
                             <li><button type="button" class="btn btn-danger stop-step">Annuler</button></li>
@@ -415,12 +344,24 @@
 <script src="/static/assets/dist/js/addApplication.min.js"></script>
 
 <script>
+
     application.contractType = '{{wish.contract_type}}';
     application.postType = "{{{wish.posts}}}";
     application.serviceType = [];
     {{#if wish.services}}
         {{#each wish.services as |service|}}
         application.serviceType.push('{{{service}}}');
+        {{/each}}
+    {{/if}}
+
+    application.selectedESInfo = [];
+    application.selectedES = [];
+    application.selectedESId = [];
+    {{#if applications}}
+        {{#each applications as |application|}}
+            application.selectedESInfo.push({{{json application.EstablishmentReference}}});
+            application.selectedES.push({{{application.ref_es_id}}});
+            application.selectedESId.push('{{{application.EstablishmentReference.id}}}');
         {{/each}}
     {{/if}}
 

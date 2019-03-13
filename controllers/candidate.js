@@ -545,7 +545,6 @@ module.exports = {
         as: 'applications',
         include: {
           model: Models.EstablishmentReference,
-          attributes: ['name', 'finess_et'],
           on: { '$applications.ref_es_id$': {
             [Op.col]: 'applications->EstablishmentReference.finess_et' }
           }
