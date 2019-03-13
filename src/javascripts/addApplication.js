@@ -283,13 +283,9 @@ let mapInit = () => {
         geocoder = new google.maps.Geocoder();
         autocomplete = new google.maps.places.Autocomplete(document.getElementById('searchAddress'));
 
-        autocomplete.setFields(['address_components', 'geometry', 'icon', 'name']);
+        autocomplete.setFields(['formatted_address']);
         autocomplete.addListener('place_changed', function() {
-          let place = autocomplete.getPlace();
-          application.searchAddress = place;
-          if (!place.geometry) {
-            window.alert("No details available for input: '" + place.name + "'");
-          }
+          application.searchAddress = autocomplete.getPlace();
         });
         resolve();
       }
@@ -649,6 +645,7 @@ $(document).ready(function () {
   let selectServiceType = $('#selectServiceType');
   let allServiceType = $('#selectServiceType option');
   let geoLocFilter = $('#geolocationFilter');
+  let searchAddress = $('#searchAddress');
   let searchCity = $('#searchCity');
   const keyEnter = 13;
 
@@ -659,6 +656,10 @@ $(document).ready(function () {
   allServiceType.prop('disabled', true);
   allServiceType.hide();
   geoLocFilter.selectpicker();
+  searchAddress.keydown( (e) => {
+    if (e.which === keyEnter)
+      generateByAddress();
+  });
   searchCity.keydown( (e) => {
     if (e.which === keyEnter)
       generateAllOver();
