@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     url: DataTypes.STRING,
     description: DataTypes.STRING,
     logo: DataTypes.STRING,
+    banner: DataTypes.STRING,
     domain_name: DataTypes.STRING,
     domain_enable: DataTypes.BOOLEAN,
     salaries_count: DataTypes.INTEGER,

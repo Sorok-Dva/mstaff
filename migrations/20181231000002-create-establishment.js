@@ -60,6 +60,9 @@ module.exports = {
       logo: {
         type: Sequelize.STRING
       },
+      banner: {
+        type: Sequelize.STRING
+      },
       domain_name: {
         type: Sequelize.STRING
       },
