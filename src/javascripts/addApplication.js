@@ -283,13 +283,9 @@ let mapInit = () => {
         geocoder = new google.maps.Geocoder();
         autocomplete = new google.maps.places.Autocomplete(document.getElementById('searchAddress'));
 
-        autocomplete.setFields(['address_components', 'geometry', 'icon', 'name']);
+        autocomplete.setFields(['formatted_address']);
         autocomplete.addListener('place_changed', function() {
-          let place = autocomplete.getPlace();
-          application.searchAddress = place;
-          if (!place.geometry) {
-            window.alert("No details available for input: '" + place.name + "'");
-          }
+          application.searchAddress = autocomplete.getPlace();
         });
         resolve();
       }
@@ -553,6 +549,11 @@ let displaySelection = () => {
   })
 };
 
+let activatePerfectScrollbar = () => {
+  if (!$('html').hasClass('perfect-scrollbar-on'))
+    $('html').addClass('perfect-scrollbar-on');
+};
+
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
   highlightLabel(slider.noUiSlider.get());
@@ -636,13 +637,18 @@ let addWish = () => {
 
 $(document).ready(function () {
 
-  activateGeoLoc();
-  mapInit().then( () => displaySelection());
+  mapInit().then( () => {
+    activateGeoLoc();
+    displaySelection();
+  });
 
   let selectPostType = $('#selectPostType');
   let selectServiceType = $('#selectServiceType');
   let allServiceType = $('#selectServiceType option');
   let geoLocFilter = $('#geolocationFilter');
+  let searchAddress = $('#searchAddress');
+  let searchCity = $('#searchCity');
+  const keyEnter = 13;
 
   selectPostType.select2({
     maximumSelectionLength: 1
@@ -651,6 +657,15 @@ $(document).ready(function () {
   allServiceType.prop('disabled', true);
   allServiceType.hide();
   geoLocFilter.selectpicker();
+  searchAddress.keydown( (e) => {
+    if (e.which === keyEnter)
+      generateByAddress();
+  });
+  searchCity.keydown( (e) => {
+    if (e.which === keyEnter)
+      generateAllOver();
+  });
+
 
   selectPostType.on('change', () => {
     let postType = selectPostType.select2('data');
@@ -689,13 +704,14 @@ $(document).ready(function () {
     });
   });
 
-
   geoLocFilter.on('change', () => {
     let activeId = $('#tabsStep3 li.active a').attr('id');
 
     filter = parseInt(geoLocFilter.selectpicker('val'));
     if (activeId === 'searchAroundMe')
       return generateAroundMe();
+    else if (activeId === 'searchByAddress' && !$.isEmptyObject(application.searchAddress))
+      generateByAddress();
   });
 
   $('.from').on('dp.change', (e) => {
@@ -724,6 +740,7 @@ $(document).ready(function () {
   $('.next-step').click(function () {
     let datastep = $('div .tab-pane.active[role="tabpanel"]').attr('id');
     if (!verifyStep(datastep)){
+      activatePerfectScrollbar();
       switch (datastep) {
         case 'step1':
           resetSelectedES();
@@ -731,10 +748,12 @@ $(document).ready(function () {
             goStep('step2')
           else {
             goStep('step3');
+              $('html').removeClass('perfect-scrollbar-on');
           }
           break;
         case 'step2':
           goStep('step3');
+          $('html').removeClass('perfect-scrollbar-on');
           break;
         case 'step3':
           createRecap();
@@ -747,6 +766,7 @@ $(document).ready(function () {
 
   $('.prev-step').click(function () {
     let datastep = $('div .tab-pane.active[role="tabpanel"]').attr('id');
+    activatePerfectScrollbar();
     switch (datastep) {
       case 'step2':
         goStep('step1', datastep);
@@ -756,6 +776,7 @@ $(document).ready(function () {
         break;
       case 'complete':
         goStep('step3',datastep);
+        $('html').removeClass('perfect-scrollbar-on');
         break;
     }
   });
