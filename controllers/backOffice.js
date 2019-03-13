@@ -233,7 +233,7 @@ module.exports = {
         contact_post: req.body.contactPost,
         contact_email: req.body.contactEmail,
         contact_phone: req.body.contactPhone,
-        domain_enable: req.body.domain_enable,
+        domain_enable: req.body.domain_enable !== '0',
         domain_name: req.body.domain_name,
         logo: req.body.logo,
         banner: req.body.banner
