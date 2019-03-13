@@ -10,7 +10,7 @@ const Models = require('../models/index');
 
 module.exports = {
   getIndex: (req, res, next) => {
-    return res.render('index', { layout: 'landing' })
+    return res.render('establishment/site/index', { layout: 'establishment' })
   },
   getRegister: (req, res, next) => {
     return res.render('users/register', { layout: 'onepage' })
