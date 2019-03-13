@@ -35,7 +35,7 @@ class BackError extends ExtendableError {
     if (this.status < 500) {
       obj.name = this.name;
     }
-    if (config.ENV !== 'production' || 'pre-prod') {
+    if (config.ENV !== 'production' && 'pre-prod') {
       obj.stack = this.stack;
     }
     return obj;

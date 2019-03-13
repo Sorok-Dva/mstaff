@@ -13,7 +13,7 @@ const getStatus = (err) => {
 const sendError = (req, res, status, err) => {
   if (res.headersSent) return;
   err.status = status;
-  if (Env.current === 'production' || 'pre-prod') delete err.stack;
+  if (Env.current === 'production' || Env.current === 'pre-prod') delete err.stack;
   if (req.xhr) return res.status(status).json(err);
   else return res.status(status).render('error', { error: err });
 };
@@ -68,7 +68,7 @@ module.exports = {
     const body = { status };
 
     // show the stacktrace when not in production
-    if (Env.current !== 'production' || 'pre-prod') {
+    if (Env.current !== 'production' && 'pre-prod') {
       body.stack = err.stack;
     }
     // internal server errors
