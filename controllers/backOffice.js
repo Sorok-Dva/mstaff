@@ -227,10 +227,16 @@ module.exports = {
         phone: req.body.phone,
         address: req.body.address,
         town: req.body.addr_town,
+        sector: req.body.sector,
+        salaries_count: req.body.salaries_count,
         contact_identity: req.body.contactIdentity,
         contact_post: req.body.contactPost,
         contact_email: req.body.contactEmail,
         contact_phone: req.body.contactPhone,
+        domain_enable: req.body.domain_enable,
+        domain_name: req.body.domain_name,
+        logo: req.body.logo,
+        banner: req.body.banner
       }
     }).spread((es, created) => {
       if (created) {
