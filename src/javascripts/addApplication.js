@@ -331,10 +331,6 @@ let highlightLabel = ($this) => {
   $(selector).addClass('slideActive');
 };
 
-let deactivateScrollBody = () => {
-  // TODOOOOOOOOOOOOOOOOOOOOOOOO
-};
-
 // ------------------------------------- GEOLOCATION ------------------------------------- //
 
 let activateGeoLoc = () => {
@@ -553,6 +549,11 @@ let displaySelection = () => {
   })
 };
 
+let activatePerfectScrollbar = () => {
+  if (!$('html').hasClass('perfect-scrollbar-on'))
+    $('html').addClass('perfect-scrollbar-on');
+};
+
 $("#radius").on("click", "li", function() {
   $('#radius-slider .slider').val($(this).attr('data-step'));
   highlightLabel(slider.noUiSlider.get());
@@ -739,6 +740,7 @@ $(document).ready(function () {
   $('.next-step').click(function () {
     let datastep = $('div .tab-pane.active[role="tabpanel"]').attr('id');
     if (!verifyStep(datastep)){
+      activatePerfectScrollbar();
       switch (datastep) {
         case 'step1':
           resetSelectedES();
@@ -746,10 +748,12 @@ $(document).ready(function () {
             goStep('step2')
           else {
             goStep('step3');
+              $('html').removeClass('perfect-scrollbar-on');
           }
           break;
         case 'step2':
           goStep('step3');
+          $('html').removeClass('perfect-scrollbar-on');
           break;
         case 'step3':
           createRecap();
@@ -762,6 +766,7 @@ $(document).ready(function () {
 
   $('.prev-step').click(function () {
     let datastep = $('div .tab-pane.active[role="tabpanel"]').attr('id');
+    activatePerfectScrollbar();
     switch (datastep) {
       case 'step2':
         goStep('step1', datastep);
@@ -771,6 +776,7 @@ $(document).ready(function () {
         break;
       case 'complete':
         goStep('step3',datastep);
+        $('html').removeClass('perfect-scrollbar-on');
         break;
     }
   });
