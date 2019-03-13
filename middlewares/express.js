@@ -22,7 +22,7 @@ const ServerController = require('../controllers/server');
 const EstablishmentController = require('../controllers/establishment');
 
 let Sentry =  require('@sentry/node');
-if (Env.isProd) {
+if (Env.isProd || Env.isPreProd) {
   Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
 }
 
