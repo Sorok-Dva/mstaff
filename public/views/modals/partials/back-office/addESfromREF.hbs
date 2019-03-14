@@ -1,6 +1,6 @@
 <div class="row" style="padding-top:15px; margin: auto !important;">
   <div class="col-md-12">
-    <form id="createNewESForm" style="padding: 15px">
+    <form id="createNewESForm" style="padding: 15px" autocomplete="off">
       <fieldset>
         <legend>
           <h5 style="text-align: center">Informations de base</h5>
@@ -8,11 +8,11 @@
         <div class="form-row">
           <div class="form-group col-md-3">
             <label for="newESName">Nom</label>
-            <input type="text" class="form-control" id="newESName" name="name" placeholder="Nom de l'établissement" value="{{this.es.name}}">
+            <input type="text" class="form-control" id="newESName" name="name" placeholder="Nom de l'établissement" value="{{this.es.name}}" required>
           </div>
           <div class="form-group col-md-3">
             <label for="newESFinessEt">Finess ET</label>
-            <input type="text" class="form-control" id="newESFinessEt" name="finess_et" placeholder="Numéro Finess ET" value="{{this.es.finess_et}}">
+            <input type="text" class="form-control" id="newESFinessEt" name="finess_et" placeholder="Numéro Finess ET" value="{{this.es.finess_et}}" required>
           </div>
           <div class="form-group col-md-3">
             <label for="newESFinessEj">Finess EJ</label>
@@ -24,7 +24,7 @@
           </div>
           <div class="form-group col-md-2">
             <label for="newESAddressNum">Numéro d'adresse</label>
-            <input type="number" class="form-control" id="newESAddressNum" name="addr_num" placeholder="12" value="{{this.es.address_num}}">
+            <input type="text" class="form-control" id="newESAddressNum" name="addr_num" placeholder="12" value="{{this.es.address_num}}" autocomplete="fckgooglechromeandhisbadautocompletesystem">
           </div>
           <div class="form-group col-md-2">
             <label for="newESAddressType">Type d'adresse</label>
@@ -36,7 +36,7 @@
           </div>
           <div class="form-group col-md-3">
             <label for="newESAddressTown">Code postal et ville</label>
-            <input type="text" class="form-control" id="newESAddressTown" name="addr_town" placeholder="75000 PARIS" value="{{this.es.address_town}}">
+            <input type="text" class="form-control" id="newESAddressTown" name="addr_town" placeholder="75000 PARIS" value="{{this.es.address_town}}" required>
           </div>
           <div class="form-group col-md-2">
             <label for="newESPhone">Numéro de téléphone</label>
@@ -44,7 +44,7 @@
           </div>
           <div class="form-group col-md-2">
             <label for="salaries_count">Nombre d'employés</label>
-            <input class="form-control" name="salaries_count" type="number" value="{{es.salaries_count}}" id="salaries_count">
+            <input class="form-control" name="salaries_count" type="number" value="0" id="salaries_count" required>
           </div>
           <div class="form-group col-md-3">
             <label for="secteur">Secteur</label>
@@ -60,6 +60,10 @@
           <div class="form-group col-md-2">
             <label for="banner">Bannière</label>
             <input class="form-control" name="banner" type="text" id="banner">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="bienIci">Lien BienIci</label>
+            <input class="form-control" name="bienIci" type="text" id="bienIci">
           </div>
         </div>
       </fieldset>
@@ -103,8 +107,8 @@
           <div class="form-group col-md-3">
             <label for="secteur">Domaine</label>
             <select class="form-control" id="secteur" name="domaine_enable">
-              <option value="0" selected="selected">Actif</option>
-              <option value="1">Inactif</option>
+              <option value="1">Actif</option>
+              <option value="0" selected="selected">Inactif</option>
             </select>
           </div>
           <div class="form-group col-md-3">
@@ -128,6 +132,7 @@
 <script>
   $('#createES{{this.es.id}}').click(function() {
     let data = {};
+    console.log($('#createNewESForm').serializeArray());
     $.each($('#createNewESForm').serializeArray(), function(_, kv) {
       data[kv.name] = kv.value;
     });

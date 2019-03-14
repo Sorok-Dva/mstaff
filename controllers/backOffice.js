@@ -233,14 +233,20 @@ module.exports = {
         contact_post: req.body.contactPost,
         contact_email: req.body.contactEmail,
         contact_phone: req.body.contactPhone,
-        domain_enable: req.body.domain_enable !== '0',
+        domain_enable: parseInt(req.body.domain_enable),
         domain_name: req.body.domain_name,
         logo: req.body.logo,
         banner: req.body.banner
       }
     }).spread((es, created) => {
       if (created) {
-        return res.status(200).json({ status: 'Created', es });
+        Models.EstablishmentReference.findOne({
+          where: { finess_et: es.finess }
+        }).then(ref => {
+          ref.es_id = es.id;
+          ref.save();
+          return res.status(200).json({ status: 'Created', es });
+        }).catch(errors => next(new BackError(errors)));
       } else {
         return res.status(200).json({ status: 'Already exists', es });
       }
