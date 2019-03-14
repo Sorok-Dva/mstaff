@@ -69,6 +69,4 @@ app.use(ErrorHandler.log);
 // if (Env.isProd || Env.isPreProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
 
-app.use(Express.errorHandler); // errorHandler always must be in last position.
-
 module.exports = app;

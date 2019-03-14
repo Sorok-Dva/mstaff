@@ -44,20 +44,6 @@ module.exports = {
   cookieParser: cookieParser(conf.SECRET),
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
-  errorHandler: (err, req, res, next) => { // error handler
-
-    let opts = {};
-    // set locals, only providing error in development
-    if (Env.current === 'development') {
-      opts.error = err;
-    } else {
-      res.locals.error_msg = err.message;
-    }
-    // render the error page
-    res.status(err.status || 500);
-    if (!req.user) opts.layout = 'onepage';
-    res.render('error', opts);
-  },
   exphbs: exphbs({
     extname: 'hbs',
     defaultLayout: 'default',
