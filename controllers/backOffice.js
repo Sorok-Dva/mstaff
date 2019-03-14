@@ -214,8 +214,7 @@ module.exports = {
     }).catch(error => next(new BackError(error)));
   },
   APICreateEstablishment: (req, res, next) => {
-    const errors = validationResult(req.body);
-
+    const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
     Models.Establishment.findOrCreate({
@@ -320,7 +319,7 @@ module.exports = {
     });
   },
   editSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -333,7 +332,7 @@ module.exports = {
     })
   },
   addSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -350,7 +349,7 @@ module.exports = {
     })
   },
   removeSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -366,7 +365,7 @@ module.exports = {
     });
   },
   editFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -379,7 +378,7 @@ module.exports = {
     })
   },
   addFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -396,7 +395,7 @@ module.exports = {
     })
   },
   removeFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -412,7 +411,7 @@ module.exports = {
     });
   },
   editEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -425,7 +424,7 @@ module.exports = {
     })
   },
   addEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -442,7 +441,7 @@ module.exports = {
     })
   },
   removeEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -458,7 +457,7 @@ module.exports = {
     });
   },
   editSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -471,7 +470,7 @@ module.exports = {
     })
   },
   addSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -488,7 +487,7 @@ module.exports = {
     })
   },
   removeSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -504,7 +503,7 @@ module.exports = {
     });
   },
   editService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -517,7 +516,7 @@ module.exports = {
     })
   },
   addService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -534,7 +533,7 @@ module.exports = {
     })
   },
   removeService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -555,7 +554,7 @@ module.exports = {
     });
   },
   editPost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -569,7 +568,7 @@ module.exports = {
     })
   },
   addPost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -587,7 +586,7 @@ module.exports = {
     })
   },
   removePost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -603,7 +602,7 @@ module.exports = {
     });
   },
   editQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -616,7 +615,7 @@ module.exports = {
     })
   },
   addQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -633,7 +632,7 @@ module.exports = {
     })
   },
   removeQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -643,7 +642,7 @@ module.exports = {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
   editCandidate: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
