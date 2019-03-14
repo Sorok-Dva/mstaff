@@ -214,8 +214,7 @@ module.exports = {
     }).catch(error => next(new BackError(error)));
   },
   APICreateEstablishment: (req, res, next) => {
-    const errors = validationResult(req.body);
-
+    const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
     Models.Establishment.findOrCreate({
@@ -227,14 +226,26 @@ module.exports = {
         phone: req.body.phone,
         address: req.body.address,
         town: req.body.addr_town,
+        sector: req.body.sector,
+        salaries_count: req.body.salaries_count,
         contact_identity: req.body.contactIdentity,
         contact_post: req.body.contactPost,
         contact_email: req.body.contactEmail,
         contact_phone: req.body.contactPhone,
+        domain_enable: parseInt(req.body.domain_enable),
+        domain_name: req.body.domain_name,
+        logo: req.body.logo,
+        banner: req.body.banner
       }
     }).spread((es, created) => {
       if (created) {
-        return res.status(200).json({ status: 'Created', es });
+        Models.EstablishmentReference.findOne({
+          where: { finess_et: es.finess }
+        }).then(ref => {
+          ref.es_id = es.id;
+          ref.save();
+          return res.status(200).json({ status: 'Created', es });
+        }).catch(errors => next(new BackError(errors)));
       } else {
         return res.status(200).json({ status: 'Already exists', es });
       }
@@ -271,7 +282,7 @@ module.exports = {
           candidates,
           title: `Établissement ${data.dataValues.name}`,
           a: { main: 'es', sub: 'es_one' },
-          data
+          es: data
         })
       });
     }).catch(error => next(new BackError(error)));
@@ -308,7 +319,7 @@ module.exports = {
     });
   },
   editSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -321,7 +332,7 @@ module.exports = {
     })
   },
   addSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -338,7 +349,7 @@ module.exports = {
     })
   },
   removeSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -354,7 +365,7 @@ module.exports = {
     });
   },
   editFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -367,7 +378,7 @@ module.exports = {
     })
   },
   addFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -384,7 +395,7 @@ module.exports = {
     })
   },
   removeFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -400,7 +411,7 @@ module.exports = {
     });
   },
   editEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -413,7 +424,7 @@ module.exports = {
     })
   },
   addEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -430,7 +441,7 @@ module.exports = {
     })
   },
   removeEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -446,7 +457,7 @@ module.exports = {
     });
   },
   editSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -459,7 +470,7 @@ module.exports = {
     })
   },
   addSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -476,7 +487,7 @@ module.exports = {
     })
   },
   removeSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -492,7 +503,7 @@ module.exports = {
     });
   },
   editService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -505,7 +516,7 @@ module.exports = {
     })
   },
   addService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -522,7 +533,7 @@ module.exports = {
     })
   },
   removeService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -543,7 +554,7 @@ module.exports = {
     });
   },
   editPost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -557,7 +568,7 @@ module.exports = {
     })
   },
   addPost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -575,7 +586,7 @@ module.exports = {
     })
   },
   removePost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -591,7 +602,7 @@ module.exports = {
     });
   },
   editQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -604,7 +615,7 @@ module.exports = {
     })
   },
   addQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -621,7 +632,7 @@ module.exports = {
     })
   },
   removeQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -631,7 +642,7 @@ module.exports = {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
   editCandidate: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 

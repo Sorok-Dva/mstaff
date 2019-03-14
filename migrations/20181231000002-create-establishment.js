@@ -21,8 +21,7 @@ module.exports = {
       },
       finess_ej: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
       siret: {
         type: Sequelize.STRING,
@@ -35,12 +34,10 @@ module.exports = {
         unique: true
       },
       code: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       type: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       sector: {
         type: Sequelize.STRING
@@ -61,6 +58,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       logo: {
+        type: Sequelize.STRING
+      },
+      banner: {
         type: Sequelize.STRING
       },
       domain_name: {

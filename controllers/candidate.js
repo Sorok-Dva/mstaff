@@ -7,7 +7,6 @@ const fs = require('fs');
 const Models = require('../models/index');
 
 module.exports = {
-
   postVideo: (req, res, next) => {
     if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
     let video = { filename: null };
@@ -120,7 +119,7 @@ module.exports = {
     }).catch(error => next(error));
   },
   postEditProfile: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });
@@ -373,7 +372,7 @@ module.exports = {
     })
   },
   putFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).send({ body: req.body, errors: errors.array() });

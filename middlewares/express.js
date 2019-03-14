@@ -1,4 +1,5 @@
 const conf = require('dotenv').config().parsed;
+const packageJson = require('../package');
 const path = require('path');
 const { Env } = require('../helpers/helpers');
 const config = require(`../config/config.json`)[Env.current];
@@ -22,7 +23,7 @@ const ServerController = require('../controllers/server');
 const EstablishmentController = require('../controllers/establishment');
 
 let Sentry =  require('@sentry/node');
-if (Env.isProd) {
+if (Env.isProd || Env.isPreProd) {
   Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
 }
 
@@ -43,20 +44,6 @@ module.exports = {
   cookieParser: cookieParser(conf.SECRET),
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
-  errorHandler: (err, req, res, next) => { // error handler
-
-    let opts = {};
-    // set locals, only providing error in development
-    if (Env.current === 'development') {
-      opts.error = err;
-    } else {
-      res.locals.error_msg = err.message;
-    }
-    // render the error page
-    res.status(err.status || 500);
-    if (!req.user) opts.layout = 'onepage';
-    res.render('error', opts);
-  },
   exphbs: exphbs({
     extname: 'hbs',
     defaultLayout: 'default',
@@ -109,6 +96,7 @@ module.exports = {
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
     res.locals.session = req.session || null;
+    res.locals.v = packageJson.version;
     res.locals.csrfToken = req.csrfToken();
     next();
   },
@@ -130,6 +118,7 @@ module.exports = {
   wildcardSubdomains: (req, res, next) => {
     if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2') return next();
     EstablishmentController.findBySubdomain(req, res, (data) => {
+      res.locals.es = data;
       req.url = `/esDomain${req.url}`;
       next();
     });

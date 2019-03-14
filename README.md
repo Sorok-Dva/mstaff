@@ -68,6 +68,11 @@ Create new seed :
 node_modules/.bin/sequelize seed:generate --name seed-name
 ``` 
 
+Execute seed file alone :  
+```bash
+sequelize db:seed:generate --seed [path]
+``` 
+
 ## Some useful documentations
 
 - [Express.js (4.x)](http://expressjs.com/fr/api.html)

@@ -28,16 +28,12 @@ class Env {
     return 'development' === Env.current
   }
 
+  static get isPreProd() {
+    return 'pre-prod' === Env.current
+  }
+
   static get isProd() {
     return 'production' === Env.current
-  }
-
-  static get isSentryEnabled() {
-    return !(Env.isTest || Env.isLocal)
-  }
-
-  static get isPreProd() {
-    return !Env.isSentryEnabled || Env.isDev
   }
 }
 

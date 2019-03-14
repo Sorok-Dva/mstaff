@@ -17,7 +17,7 @@ const apiEsRouter = require('./routes/api/establishment');
 
 const app = express();
 
-if (Env.isProd) app.use(Express.sentryRequestHandler);
+if (Env.isProd || Env.isPreProd) app.use(Express.sentryRequestHandler);
 if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
 
 // express config
@@ -61,14 +61,12 @@ app.use('/api/candidate', apiCandidateRouter);
 app.use('/api/back-office', apiBackOfficeRouter);
 app.use('/api/es', apiEsRouter);
 
-if (Env.isProd) app.use(Express.sentryErrorHandler);
+if (Env.isProd || Env.isPreProd) app.use(Express.sentryErrorHandler);
 app.use(ErrorHandler.notFoundError);
 app.use(ErrorHandler.converter);
 app.use(ErrorHandler.client);
 app.use(ErrorHandler.log);
-// if (Env.isProd) app.use(ErrorHandler.sentrySenderErrorHandler);
+// if (Env.isProd || Env.isPreProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
-
-app.use(Express.errorHandler); // errorHandler always must be in last position.
 
 module.exports = app;
