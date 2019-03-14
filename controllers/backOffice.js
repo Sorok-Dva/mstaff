@@ -218,39 +218,43 @@ module.exports = {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
-    Models.Establishment.findOrCreate({
-      where: { finess: req.body.finess_et },
-      defaults: {
-        name: req.body.name,
-        finess_ej: req.body.finess_ej,
-        siret: req.body.siret,
-        phone: req.body.phone,
-        address: req.body.address,
-        town: req.body.addr_town,
-        sector: req.body.sector,
-        salaries_count: req.body.salaries_count,
-        contact_identity: req.body.contactIdentity,
-        contact_post: req.body.contactPost,
-        contact_email: req.body.contactEmail,
-        contact_phone: req.body.contactPhone,
-        domain_enable: parseInt(req.body.domain_enable),
-        domain_name: req.body.domain_name,
-        logo: req.body.logo,
-        banner: req.body.banner
-      }
-    }).spread((es, created) => {
-      if (created) {
-        Models.EstablishmentReference.findOne({
-          where: { finess_et: es.finess }
-        }).then(ref => {
-          ref.es_id = es.id;
-          ref.save();
-          return res.status(200).json({ status: 'Created', es });
-        }).catch(errors => next(new BackError(errors)));
-      } else {
-        return res.status(200).json({ status: 'Already exists', es });
-      }
-    }).catch(errors => next(new BackError(errors)));
+    try {
+      Models.Establishment.findOrCreate({
+        where: { finess: req.body.finess_et },
+        defaults: {
+          name: req.body.name,
+          finess_ej: req.body.finess_ej,
+          siret: req.body.siret,
+          phone: req.body.phone,
+          address: req.body.address,
+          town: req.body.addr_town,
+          sector: req.body.sector,
+          salaries_count: req.body.salaries_count,
+          contact_identity: req.body.contactIdentity,
+          contact_post: req.body.contactPost,
+          contact_email: req.body.contactEmail,
+          contact_phone: req.body.contactPhone,
+          domain_enable: parseInt(req.body.domain_enable),
+          domain_name: req.body.domain_name,
+          logo: req.body.logo,
+          banner: req.body.banner
+        }
+      }).spread((es, created) => {
+        if (created) {
+          Models.EstablishmentReference.findOne({
+            where: { finess_et: es.finess }
+          }).then(ref => {
+            ref.es_id = es.id;
+            ref.save();
+            return res.status(200).json({ status: 'Created', es });
+          }).catch(errors => next(new BackError(errors)));
+        } else {
+          return res.status(200).json({ status: 'Already exists', es });
+        }
+      })
+    } catch (errors) {
+      return next(new BackError(errors));
+    }
   },
   APIAddUserInEstablishment: (req, res, next) => {
     const errors = validationResult(req);
