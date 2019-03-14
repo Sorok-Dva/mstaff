@@ -12,6 +12,11 @@ router.post('/establishment/create',
   HTTPValidation.BackOfficeController.createEstablishmentFromReference,
   BackOfficeController.APICreateEstablishment);
 
+router.post('/establishment/:id/add/user',
+  Authentication.ensureIsAdmin,
+  HTTPValidation.BackOfficeController.addUserInEstablishment,
+  BackOfficeController.APIAddUserInEstablishment);
+
 router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, BackOfficeController.sendCandidateVerifEmail);
 
 router.put('/formations/:id', Authentication.ensureIsAdmin, BackOfficeController.editFormation)
