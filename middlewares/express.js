@@ -1,4 +1,5 @@
 const conf = require('dotenv').config().parsed;
+const packageJson = require('../package');
 const path = require('path');
 const { Env } = require('../helpers/helpers');
 const config = require(`../config/config.json`)[Env.current];
@@ -109,6 +110,7 @@ module.exports = {
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
     res.locals.session = req.session || null;
+    res.locals.v = packageJson.version;
     res.locals.csrfToken = req.csrfToken();
     next();
   },

@@ -134,15 +134,24 @@
     text-align: center;
   }
 
-  .profile-page .profile img {
-    max-width: 160px;
-    width: 100%;
+  .profile-page .profile #avatar {
+    /*max-width: 160px;*/
+    /*width: 100%;*/
     margin: 0 auto;
     -webkit-transform: translate3d(0, -50%, 0);
     -moz-transform: translate3d(0, -50%, 0);
     -o-transform: translate3d(0, -50%, 0);
     -ms-transform: translate3d(0, -50%, 0);
     transform: translate3d(0, -50%, 0);
+  }
+
+  #avatar {
+    background-image: url('{{es.logo}}');
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: top center;
+    border-radius: 50%;
   }
 
   .img-raised {
@@ -446,7 +455,7 @@
           <div class="profile">
             <div class="avatar">
               {{#if es.logo}}
-                <img src="{{es.logo}}" alt="Logo établissement" class="img-raised rounded-circle img-fluid">
+                <div id="avatar" class="img-raised rounded-circle img-fluid"></div>
               {{else}}
 
               {{/if}}
@@ -467,7 +476,7 @@
         <div class="col-md-8">
           <div class="col-md-4" style="padding: 10px">
             <div class="col-md-1">
-              <h3><i class="fal fa-search-location"></i></h3>
+              <h3 style="padding:15px"><i class="fal fa-map-marker fa-2x"></i></h3>
             </div>
             <div class="col-md-10" style="padding: 20px;">
               <h3 class="text-center">{{es.address}}</h3>
