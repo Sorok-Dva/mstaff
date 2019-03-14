@@ -341,11 +341,11 @@
 
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
-<script src="/static/assets/dist/js/addApplication.min.js?v={{v}}"></script>
+<script src="/static/assets/dist/js/application.min.js?v={{v}}"></script>
 
 <script>
-
-    application.contractType = '{{wish.contract_type}}';
+    application.wish = [];
+    application.wish.push({{{json wish}}});
     application.postType = "{{{wish.posts}}}";
     application.serviceType = [];
     {{#if wish.services}}
@@ -364,7 +364,6 @@
             application.selectedESId.push('{{{application.EstablishmentReference.id}}}');
         {{/each}}
     {{/if}}
-
 </script>
 
 <script src="/static/assets/dist/js/editApplication.min.js?v={{v}}"></script>

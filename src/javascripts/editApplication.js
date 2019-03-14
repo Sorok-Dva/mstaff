@@ -1,3 +1,28 @@
+ApplicationIsAddMode = false;
+
+let editWish = () => {
+  console.log('Edition d un souhait');
+};
+
+let rewriteContractType = () => {
+  switch (application.wish[0].contract_type) {
+    case 'cdi-cdd':
+      application.contractType = {name: 'cdi-cdd', value: 'CDI / CDD'};
+      application.timeType = {};
+      application.wish[0].full_time ? application.timeType.fullTime = { name: 'full_time', value: 'TEMPS PLEIN' } : null;
+      application.wish[0].part_time ? application.timeType.partTime = { name: 'part_time', value: 'TEMPS PARTIEL' } : null;
+      application.wish[0].full_time ? application.timeType.dayTime = { name: 'daytime', value: 'fa-sun' } : null;
+      application.wish[0].full_time ? application.timeType.nightTime = { name: 'nighttime', value: 'fa-moon' } : null;
+      break;
+    case 'vacation':
+      application.contractType = {name: 'vacation', value: 'VACATION'};
+      break;
+    case 'internship':
+      application.contractType = {name: 'internship', value: 'STAGE'};
+      break;
+  }
+};
+
 let rewritePosts = () => {
   let sPostType = $('#selectPostType');
 
@@ -34,8 +59,9 @@ let rewriteSelectedES = () => {
 };
 
 $(document).ready(() => {
-  ApplicationIsAddMode = false;
+  rewriteContractType();
   rewritePosts();
   rewriteServices();
   rewriteSelectedES();
+
 });
