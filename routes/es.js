@@ -9,6 +9,8 @@ const router = express.Router();
  */
 router.get('/select/es', Authentication.ensureIsEs, EstablishmentController.getSelectEs);
 
+router.get('/select/es/:currentEsId', Authentication.ensureIsEs, EstablishmentController.APISelectEs);
+
 /**
  * @Route('/candidates') GET;
  * Show Candidates Index page

@@ -17,8 +17,20 @@ module.exports = {
         required: true
       }
     }).then(esAccounts => {
-      req.session.currentEs = esAccounts[0].es_id;
       res.render('establishments/selectEs', { esAccounts });
+    }).catch(error => next(new BackError(error)));
+  },
+  APISelectEs: (req, res, next) => {
+    Models.ESAccount.findOne({
+      where: { user_id: req.user.id, es_id: req.params.currentEsId },
+      include: {
+        model: Models.Establishment,
+        required: true
+      }
+    }).then(esAccount => {
+      if (_.isNil(esAccount)) return next(new BackError('Compte établissement introuvable.', httpStatus.NOT_FOUND));
+      req.session.currentEs = esAccount.es_id;
+      return res.redirect('/needs');
     }).catch(error => next(new BackError(error)));
   },
   findBySubdomain: (req, res, next) => {
