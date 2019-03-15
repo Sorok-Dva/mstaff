@@ -114,8 +114,13 @@
             </legend>
             <ul id="esUsers">
               {{#each es.ESAccounts as |esAccount|}}
-                <li>
-                  <h5>{{esAccount.User.firstName}} {{esAccount.User.lastName}} [{{esAccount.role}}]</h5>
+                <li id="{{esAccount.user_id}}">
+                  <h5>
+                    {{esAccount.User.firstName}} {{esAccount.User.lastName}}
+                    <span class="role">
+                      [{{esAccount.role}} <i style="color: dodgerblue; cursor: pointer" class="fal fa-pencil editESRole" data-uid="{{esAccount.User.id}}"></i>]
+                    </span>
+                  </h5>
                 </li>
               {{/each}}
             </ul>
@@ -144,6 +149,17 @@
       title: 'Ajouter un nouvel utilisateur à cet établissement',
       esId: '{{es.id}}'
     }, () => { let userExists = false })
+  });
+
+  $('.editESRole').click(function() {
+    let userId = $(this).attr('data-uid');
+    createModal({
+      id: 'editESRoleModal',
+      modal: 'back-office/editUserESRole',
+      title: 'Modifier le role d\'un utilisateur pour cet établissement',
+      esId: '{{es.id}}',
+      userId
+    });
   });
 
   $('#showNeeds').click(function() {
