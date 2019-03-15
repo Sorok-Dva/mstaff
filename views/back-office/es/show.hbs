@@ -120,6 +120,7 @@
                     <span class="role">
                       [{{esAccount.role}} <i style="color: dodgerblue; cursor: pointer" class="fal fa-pencil editESRole" data-uid="{{esAccount.User.id}}"></i>]
                     </span>
+                    <i style="color: red; cursor: pointer" class="fal fa-times removeUserFromES" data-uid="{{esAccount.User.id}}"></i>
                   </h5>
                 </li>
               {{/each}}
@@ -160,6 +161,31 @@
       esId: '{{es.id}}',
       userId
     });
+  });
+
+  $('.removeUserFromES').click(function() {
+    let userId = $(this).attr('data-uid');
+    if (confirm('Voulez-vous vraiment supprimer cet utilisateur de cet établissement ?')) {
+      $.post(`/api/back-office/establishment/{{es.id}}/remove/user/${userId}`, {
+        _csrf: $('#csrfToken').val()
+      }, (data) => {
+        if (data.user_id !== parseInt(userId)) {
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Une erreur est survenue :',
+            message: 'Impossible de supprimer cet utilisateur.'
+          });
+        } else {
+          $(`#esUsers > li#${data.user_id}`).remove();
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Utilisateur supprimé de cet établissement avec succès.'
+          });
+        }
+      })
+    }
   });
 
   $('#showNeeds').click(function() {
