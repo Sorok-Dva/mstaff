@@ -346,8 +346,10 @@
 <script>
     application.wish = [];
     application.wish.push({{{json wish}}});
-    application.postType = "{{{wish.posts}}}";
+    application.postType = [];
+    application.postType.push("{{{wish.posts}}}");
     application.serviceType = [];
+
     {{#if wish.services}}
         {{#each wish.services as |service|}}
         application.serviceType.push('{{{service}}}');

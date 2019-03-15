@@ -145,6 +145,16 @@ let notify = (error) => {
         }
       );
       break;
+    case 'errorEditWish':
+      notification(
+        {
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Une erreur est survenue :',
+          message: `Impossible de modifier votre souhait, veuillez réessayer ou contacter notre assistance si le problème persiste.`
+        }
+      );
+      break;
     case 'noValueApplicationName':
       notification(
         {
@@ -669,6 +679,7 @@ $(document).ready(function () {
   });
   selectServiceType.on('change', () => {
     let serviceType = selectServiceType.selectpicker('val');
+
     application.serviceType = [];
     serviceType.forEach((value) => {
       let data = $(`#selectServiceType [value="${value}"]`).text();
