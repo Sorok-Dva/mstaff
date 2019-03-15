@@ -247,7 +247,7 @@
         {{#if account.Establishment.banner}}
           <div class="cardheader" style="background: url({{account.Establishment.banner}});"></div>
         {{else}}
-          <div class="cardheader" style="background: url(https://www.lenouveleconomiste.fr/wp-content/uploads/2018/02/hopital-826x459.jpg);"></div>
+          <div class="cardheader" style="background: url(/static/assets/images/cover-es.jpg);"></div>
         {{/if}}
         <div class="avatar">
           {{#if account.Establishment.logo}}
@@ -262,7 +262,7 @@
           </div>
           {{#if account.Establishment.domain_enable}}
             <div class="desc">
-              (<a target="_blank" href="https://{{account.Establishment.domain_name}}.{{domain}}">
+              (<a target="_blank" href="https://{{account.Establishment.domain_name}}.{{@root.domain}}">
                 https://{{account.Establishment.domain_name}}.{{@root.domain}}
               </a>)
             </div>
