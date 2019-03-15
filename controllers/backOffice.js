@@ -369,7 +369,22 @@ module.exports = {
     }).catch(error => next(new BackError(error)));
   },
   getES: (req, res, next) => {
-    Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
+    Models.Establishment.findOne({
+      where: { id: req.params.id },
+      include: {
+        model: Models.ESAccount,
+        where: { es_id: req.params.id },
+        include: {
+          model: Models.User,
+          required: true,
+          on: {
+            '$ESAccounts.user_id$': {
+              [Op.col]: 'ESAccounts->User.id'
+            }
+          },
+        }
+      }
+    }).then(data => {
       if (_.isNil(data)) {
         req.flash('error_msg', 'Cet établissement n\'existe pas.');
         return res.redirect('/back-office/es');
