@@ -298,6 +298,27 @@ module.exports = {
       return next(new BackError(errors));
     }
   },
+  APIEditUserEstablishmentRole: (req, res, next) => {
+    Models.User.findOne({
+      where: { id: req.params.userId },
+      attributes: ['id', 'firstName', 'lastName'],
+      include: {
+        model: Models.ESAccount,
+        required: true,
+        where: {
+          user_id: req.params.userId,
+          es_id: req.params.id
+        }
+      }
+    }).then(esAccount => {
+      esAccount.ESAccounts[0].role = req.body.newRole;
+      esAccount.ESAccounts[0].save({
+        include: [ Models.ESAccount ]
+      }).then(newResult => {
+        return res.status(200).send(newResult);
+      });
+    }).catch(errors => next(new BackError(errors)));
+  },
   APIshowESNeeds: (req, res, next) => {
     Models.Need.findAll({
       where: { es_id: req.params.esId },
