@@ -586,7 +586,7 @@ module.exports = {
         wish.es_count = req.body.es_count,
         wish.save().then(() => {
           req.body.es = JSON.parse(`[${req.body.es}]`);
-          // for (let i = 0; i < parseInt(req.body.es.length); i++) {
+          // TODO HERE ADD THE NEW ONE AND DELETE THE NON EXISTANT
           Models.Application.destroy({
             where: {
               wish_id: req.params.id,
@@ -595,7 +595,6 @@ module.exports = {
           }).then( () => {
             return res.status(200).send({ result: 'updated' });
           });
-          // }
         });
       })
     }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
