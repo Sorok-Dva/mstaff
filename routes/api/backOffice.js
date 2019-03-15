@@ -17,6 +17,8 @@ router.post('/establishment/:id/add/user',
   HTTPValidation.BackOfficeController.addUserInEstablishment,
   BackOfficeController.APIAddUserInEstablishment);
 
+router.get('/establishment/:esId/needs', Authentication.ensureIsAdmin, BackOfficeController.APIshowESNeeds);
+router.get('/establishment/:esId/need/:id', Authentication.ensureIsAdmin, BackOfficeController.APIshowESNeed);
 router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, BackOfficeController.sendCandidateVerifEmail);
 
 router.put('/formations/:id', Authentication.ensureIsAdmin, BackOfficeController.editFormation)
