@@ -92,7 +92,7 @@
         });
       } else {
         $('#addUserInESModal').modal('hide');
-        $('#esUsers').append(`<li>${data.user.firstName} ${data.user.lastName} [${data.esaccount.role}]`);
+        $('#esUsers').append(`<li><h5>${data.user.firstName} ${data.user.lastName} [${data.esaccount.role}]</h5></li>`);
         notification({
           icon: 'check-circle',
           type: 'success',
