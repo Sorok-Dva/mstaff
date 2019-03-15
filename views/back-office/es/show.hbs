@@ -105,15 +105,30 @@
     </form>
   </div>
   <div class="col-md-4">
-    <div class="card" style="padding: 15px">
-      <fieldset>
-        <legend>
-          <h5 style="text-align: center">Utilisateurs  <span id="addUser" class="btn btn-success"><i class="fal fa-plus-circle"></i></span></h5>
-        </legend>
-        <ul id="esUsers">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card" style="padding: 15px">
+          <fieldset>
+            <legend>
+              <h5 style="text-align: center">Utilisateurs  <span id="addUser" class="btn btn-success"><i class="fal fa-plus-circle"></i></span></h5>
+            </legend>
+            <ul id="esUsers">
 
-        </ul>
-      </fieldset>
+            </ul>
+          </fieldset>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="card" style="padding: 15px">
+          <fieldset>
+            <legend>
+              <h5 style="text-align: center">Données</h5>
+            </legend>
+            <button class="btn btn-info" id="showNeeds">Voir les besoins</button>
+            <button class="btn btn-info" id="showOffers">Voir les offres</button>
+          </fieldset>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -126,4 +141,45 @@
       esId: '{{es.id}}'
     }, () => { let userExists = false })
   });
+
+  $('#showNeeds').click(function() {
+    $.get('/api/back-office/establishment/{{es.id}}/needs', needs => {
+      createModal({
+        id: 'showNeedsModal',
+        modal: 'back-office/showNeeds',
+        title: 'Les besoins de cet établissement',
+        size: 'modal-lg',
+        style: 'width:60%',
+        esId: '{{es.id}}',
+        needs
+      }, () => {
+
+      })
+    }).catch(errors => errorsHandler(errors));
+
+  });
+
+  $('#showOffers').click(function() {
+    createModal({
+      id: 'addUserInESModal',
+      modal: 'back-office/addUserInES',
+      title: 'Les offres de cet établissement',
+      esId: '{{es.id}}'
+    }, () => { let userExists = false })
+  });
+
+  let showCandidateProfile = userId => {
+    $.post(`/api/back-office/candidate/${userId}`, { _csrf: $('#csrfToken').val() } , data => {
+      createModal({
+        id: 'viewCandidateProfileModal',
+        modal: 'es/viewCandidateProfile',
+        size: 'modal-lg',
+        style: 'width:80%',
+        title: `Profil de ${data.User.firstName} ${data.User.lastName}`,
+        candidate: data
+      }, () => {
+
+      });
+    });
+  };
 </script>
