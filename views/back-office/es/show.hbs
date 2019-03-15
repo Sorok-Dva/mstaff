@@ -1,7 +1,6 @@
 <div class="row">
-  <div class="col-md-4"></div>
-  <div class="col-md-8 card">
-    <form id="createESForm" style="padding: 15px">
+  <div class="col-md-8">
+    <form id="createESForm" class="card" style="padding: 15px">
       <fieldset>
         <legend>
           <h5 style="text-align: center">Informations de base</h5>
@@ -105,4 +104,26 @@
       </fieldset>
     </form>
   </div>
+  <div class="col-md-4">
+    <div class="card" style="padding: 15px">
+      <fieldset>
+        <legend>
+          <h5 style="text-align: center">Utilisateurs  <span id="addUser" class="btn btn-success"><i class="fal fa-plus-circle"></i></span></h5>
+        </legend>
+        <ul id="esUsers">
+
+        </ul>
+      </fieldset>
+    </div>
+  </div>
 </div>
+<script>
+  $('#addUser').click(function() {
+    createModal({
+      id: 'addUserInESModal',
+      modal: 'back-office/addUserInES',
+      title: 'Ajouter un nouvel utilisateur à cet établissement',
+      esId: '{{es.id}}'
+    }, () => { let userExists = false })
+  });
+</script>

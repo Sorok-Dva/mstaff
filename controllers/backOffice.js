@@ -4,6 +4,7 @@ const { BackError } = require('../helpers/back.error');
 const httpStatus = require('http-status');
 const _ = require('lodash');
 const moment = require('moment');
+const crypto = require('crypto');
 const Models = require('../models/index');
 const layout = 'admin';
 
@@ -217,39 +218,85 @@ module.exports = {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
-    Models.Establishment.findOrCreate({
-      where: { finess: req.body.finess_et },
-      defaults: {
-        name: req.body.name,
-        finess_ej: req.body.finess_ej,
-        siret: req.body.siret,
-        phone: req.body.phone,
-        address: req.body.address,
-        town: req.body.addr_town,
-        sector: req.body.sector,
-        salaries_count: req.body.salaries_count,
-        contact_identity: req.body.contactIdentity,
-        contact_post: req.body.contactPost,
-        contact_email: req.body.contactEmail,
-        contact_phone: req.body.contactPhone,
-        domain_enable: parseInt(req.body.domain_enable),
-        domain_name: req.body.domain_name,
-        logo: req.body.logo,
-        banner: req.body.banner
-      }
-    }).spread((es, created) => {
-      if (created) {
-        Models.EstablishmentReference.findOne({
-          where: { finess_et: es.finess }
-        }).then(ref => {
-          ref.es_id = es.id;
-          ref.save();
-          return res.status(200).json({ status: 'Created', es });
-        }).catch(errors => next(new BackError(errors)));
-      } else {
-        return res.status(200).json({ status: 'Already exists', es });
-      }
-    }).catch(errors => next(new BackError(errors)));
+    try {
+      Models.Establishment.findOrCreate({
+        where: { finess: req.body.finess_et },
+        defaults: {
+          name: req.body.name,
+          finess_ej: req.body.finess_ej,
+          siret: req.body.siret,
+          phone: req.body.phone,
+          address: req.body.address,
+          town: req.body.addr_town,
+          sector: req.body.sector,
+          salaries_count: req.body.salaries_count,
+          contact_identity: req.body.contactIdentity,
+          contact_post: req.body.contactPost,
+          contact_email: req.body.contactEmail,
+          contact_phone: req.body.contactPhone,
+          domain_enable: parseInt(req.body.domain_enable),
+          domain_name: req.body.domain_name,
+          logo: req.body.logo,
+          banner: req.body.banner
+        }
+      }).spread((es, created) => {
+        if (created) {
+          Models.EstablishmentReference.findOne({
+            where: { finess_et: es.finess }
+          }).then(ref => {
+            ref.es_id = es.id;
+            ref.save();
+            return res.status(200).json({ status: 'Created', es });
+          }).catch(errors => next(new BackError(errors)));
+        } else {
+          return res.status(200).json({ status: 'Already exists', es });
+        }
+      })
+    } catch (errors) {
+      return next(new BackError(errors));
+    }
+  },
+  APIAddUserInEstablishment: (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    try {
+      Models.User.findOrCreate({
+        where: { email: req.body.email },
+        attributes: ['firstName', 'lastName', 'type', 'id'],
+        defaults: {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          phone: req.body.phone,
+          password: 'TODEFINE',
+          birthday: '1900-01-01 23:00:00',
+          postal_code: '-',
+          town: '-',
+          type: 'es',
+          key: crypto.randomBytes(20).toString('hex')
+        }
+      }).spread((user, created) => {
+        if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
+        Models.ESAccount.findOrCreate({
+          where: {
+            user_id: user.id,
+            es_id: req.params.id
+          },
+          defaults: {
+            role: req.body.role,
+          }
+        }).spread((esaccount, esCreated) => {
+          if (created) {
+            return res.status(201).json({ status: 'Created and added to es', user, esaccount });
+          } else {
+            if (esCreated) return res.status(201).json({ status: 'Added to es', user, esaccount });
+            return res.status(200).json({ status: 'Already exists', user, esaccount });
+          }
+        });
+      });
+    } catch (errors) {
+      return next(new BackError(errors));
+    }
   },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {

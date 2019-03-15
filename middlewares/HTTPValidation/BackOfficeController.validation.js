@@ -5,6 +5,10 @@ HTTPValidation.sendCandidateVerifEmail = [
   check('email').isEmail().normalizeEmail(),
 ];
 
+HTTPValidation.addUserInEstablishment = [
+  check('email').isEmail().normalizeEmail(),
+];
+
 HTTPValidation.createEstablishmentFromReference = [
   check('name').exists().isLength({ min: 5 }),
   check('finess_et').isNumeric().isLength({ min: 7, max: 9 }),

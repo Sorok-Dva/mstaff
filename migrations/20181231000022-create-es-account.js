@@ -28,6 +28,10 @@ module.exports = {
         },
         allowNull: false
       },
+      role: {
+        type: Sequelize.STRING,
+        defaultValue: 'User'
+      },
       last_use: {
         type: Sequelize.DATE
       },
