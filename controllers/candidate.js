@@ -585,7 +585,17 @@ module.exports = {
         wish.geolocation = !!req.body.lat,
         wish.es_count = req.body.es_count,
         wish.save().then(() => {
-          return res.status(200).send({ result: 'updated' });
+          req.body.es = JSON.parse(`[${req.body.es}]`);
+          // for (let i = 0; i < parseInt(req.body.es.length); i++) {
+          Models.Application.destroy({
+            where: {
+              wish_id: req.params.id,
+              ref_es_id: { [Op.notIn]: req.body.es }
+            }
+          }).then( () => {
+            return res.status(200).send({ result: 'updated' });
+          });
+          // }
         });
       })
     }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))

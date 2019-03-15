@@ -21,7 +21,7 @@ let editWish = () => {
     };
     $.put(`/api/candidate/wish/${application.wish[0].id}`, opts, (data) => {
       if (data.result === 'updated')
-          $(location).attr('href', `/applications`);
+        $(location).attr('href', `/applications`);
       else
         notify('errorEditWish');
     });
