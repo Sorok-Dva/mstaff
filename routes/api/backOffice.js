@@ -17,6 +17,11 @@ router.post('/establishment/:id/add/user',
   HTTPValidation.BackOfficeController.addUserInEstablishment,
   BackOfficeController.APIAddUserInEstablishment);
 
+router.post('/establishment/:id/remove/user/:userId',
+  Authentication.ensureIsAdmin,
+  HTTPValidation.BackOfficeController.addUserInEstablishment,
+  BackOfficeController.APIRemoveUserFromEstablishment);
+
 router.post('/establishment/:id/edit/user/:userId',
   Authentication.ensureIsAdmin,
   BackOfficeController.APIEditUserEstablishmentRole);

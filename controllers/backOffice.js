@@ -317,6 +317,24 @@ module.exports = {
       });
     }).catch(errors => next(new BackError(errors)));
   },
+  APIRemoveUserFromEstablishment: (req, res, next) => {
+    Models.User.findOne({
+      where: { id: req.params.userId },
+      attributes: ['id', 'firstName', 'lastName'],
+      include: {
+        model: Models.ESAccount,
+        required: true,
+        where: {
+          user_id: req.params.userId,
+          es_id: req.params.id
+        }
+      }
+    }).then(esAccount => {
+      esAccount.ESAccounts[0].destroy().then(destroyedESAccount => {
+        return res.status(200).send(destroyedESAccount);
+      }).catch(errors => next(new BackError(errors)));
+    }).catch(errors => next(new BackError(errors)));
+  },
   APIshowESNeeds: (req, res, next) => {
     Models.Need.findAll({
       where: { es_id: req.params.esId },
