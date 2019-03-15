@@ -113,7 +113,11 @@
               <h5 style="text-align: center">Utilisateurs  <span id="addUser" class="btn btn-success"><i class="fal fa-plus-circle"></i></span></h5>
             </legend>
             <ul id="esUsers">
-
+              {{#each es.ESAccounts as |esAccount|}}
+                <li>
+                  <h5>{{esAccount.User.firstName}} {{esAccount.User.lastName}} [{{esAccount.role}}]</h5>
+                </li>
+              {{/each}}
             </ul>
           </fieldset>
         </div>
@@ -160,12 +164,13 @@
   });
 
   $('#showOffers').click(function() {
-    createModal({
+    alert('soon');
+    /*createModal({
       id: 'addUserInESModal',
       modal: 'back-office/addUserInES',
       title: 'Les offres de cet établissement',
-      esId: '{{es.id}}'
-    }, () => { let userExists = false })
+      esId: '{{!--{{es.id}}--}}'
+    }, () => { let userExists = false })*/
   });
 
   let showCandidateProfile = userId => {
