@@ -312,9 +312,7 @@ module.exports = {
       }
     }).then(esAccount => {
       esAccount.ESAccounts[0].role = req.body.newRole;
-      esAccount.ESAccounts[0].save({
-        include: [ Models.ESAccount ]
-      }).then(newResult => {
+      esAccount.ESAccounts[0].save().then(newResult => {
         return res.status(200).send(newResult);
       });
     }).catch(errors => next(new BackError(errors)));
