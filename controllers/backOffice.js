@@ -298,6 +298,66 @@ module.exports = {
       return next(new BackError(errors));
     }
   },
+  APIshowESNeeds: (req, res, next) => {
+    Models.Need.findAll({
+      where: { es_id: req.params.esId },
+      include: [{
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true,
+        include: {
+          model: Models.Candidate,
+          required: true,
+          include: {
+            model: Models.User,
+            attributes: ['id', 'firstName', 'lastName', 'birthday'],
+            on: {
+              '$candidates->Candidate.user_id$': {
+                [Op.col]: 'candidates->Candidate->User.id'
+              }
+            },
+            required: true
+          }
+        }
+      }, {
+        model: Models.Establishment,
+        required: true
+      }]
+    }).then(need => {
+      if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      return res.status(200).send(need);
+    }).catch(error => next(new BackError(error)));
+  },
+  APIshowESNeed: (req, res, next) => {
+    Models.Need.findOne({
+      where: { id: req.params.id },
+      include: [{
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true,
+        include: {
+          model: Models.Candidate,
+          required: true,
+          include: {
+            model: Models.User,
+            attributes: ['id', 'firstName', 'lastName', 'birthday'],
+            on: {
+              '$candidates->Candidate.user_id$': {
+                [Op.col]: 'candidates->Candidate->User.id'
+              }
+            },
+            required: true
+          }
+        }
+      }, {
+        model: Models.Establishment,
+        required: true
+      }]
+    }).then(need => {
+      if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      return res.status(200).send(need);
+    }).catch(error => next(new BackError(error)));
+  },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
       res.render('back-office/es/list', {
