@@ -103,10 +103,9 @@ let rewriteSelectedES = () => {
 $(document).ready(() => {
   rewriteContractType();
   rewritePosts();
-  rewriteServices(); // ICI SERVICES SE BARRE
+  rewriteServices();
   if (application.wish[0].contract_type === 'internship')
     rewriteDates();
   rewriteSelectedES();
   application.name = application.wish[0].name;
-  // console.log(application.wish[0].name);
 });
