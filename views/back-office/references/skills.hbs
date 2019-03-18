@@ -108,7 +108,7 @@
             if ($('input#skillValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#skillValueEdit').val();
-              $.put(`/api/back-office/skills/${row.id}`, {
+              $.put(`/api/back-office/references/skills/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -141,7 +141,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveSkill').click(function () {
-            $.delete(`/api/back-office/skills/${row.id}`, {
+            $.delete(`/api/back-office/references/skills/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

@@ -124,7 +124,7 @@
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#postValueEdit').val();
               let categoryInput = $('select#postCategoryEdit').val();
-              $.put(`/api/back-office/posts/${row.id}`, {
+              $.put(`/api/back-office/references/posts/${row.id}`, {
                 promptInput,
                 categoryInput,
                 _csrf
@@ -166,7 +166,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemovePost').click(function () {
-            $.delete(`/api/back-office/posts/${row.id}`, {
+            $.delete(`/api/back-office/references/posts/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

@@ -107,7 +107,7 @@
             if ($('input#equipmentValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#equipmentValueEdit').val();
-              $.put(`/api/back-office/equipments/${row.id}`, {
+              $.put(`/api/back-office/references/equipments/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -140,7 +140,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveEquipment').click(function () {
-            $.delete(`/api/back-office/equipments/${row.id}`, {
+            $.delete(`/api/back-office/references/equipments/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

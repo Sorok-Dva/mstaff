@@ -107,7 +107,7 @@
             if ($('input#serviceValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#serviceValueEdit').val();
-              $.put(`/api/back-office/services/${row.id}`, {
+              $.put(`/api/back-office/references/services/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -140,7 +140,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveService').click(function () {
-            $.delete(`/api/back-office/services/${row.id}`, {
+            $.delete(`/api/back-office/references/services/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

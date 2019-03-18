@@ -108,7 +108,7 @@
             if ($('input#qualificationValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#qualificationValueEdit').val();
-              $.put(`/api/back-office/qualifications/${row.id}`, {
+              $.put(`/api/back-office/references/qualifications/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -141,7 +141,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveQualification').click(function () {
-            $.delete(`/api/back-office/qualifications/${row.id}`, {
+            $.delete(`/api/back-office/references/qualifications/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

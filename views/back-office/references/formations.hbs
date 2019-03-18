@@ -108,7 +108,7 @@
             if ($('input#formationValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#formationValueEdit').val();
-              $.put(`/api/back-office/formations/${row.id}`, {
+              $.put(`/api/back-office/references/formations/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -141,7 +141,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveFormation').click(function () {
-            $.delete(`/api/back-office/formations/${row.id}`, {
+            $.delete(`/api/back-office/references/formations/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

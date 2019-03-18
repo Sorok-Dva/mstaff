@@ -108,7 +108,7 @@
             if ($('input#softwareValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#softwareValueEdit').val();
-              $.put(`/api/back-office/softwares/${row.id}`, {
+              $.put(`/api/back-office/references/softwares/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -141,7 +141,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveSoftware').click(function () {
-            $.delete(`/api/back-office/softwares/${row.id}`, {
+            $.delete(`/api/back-office/references/softwares/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {
