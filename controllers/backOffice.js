@@ -287,6 +287,12 @@ module.exports = {
           }
         }).spread((esaccount, esCreated) => {
           if (created) {
+            mailer.sendEmail({
+              to: user.email,
+              subject: 'Bienvenue sur Mstaff !',
+              template: 'es/new_user',
+              context: { user }
+            });
             return res.status(201).json({ status: 'Created and added to es', user, esaccount });
           } else {
             if (esCreated) return res.status(201).json({ status: 'Added to es', user, esaccount });
@@ -862,17 +868,17 @@ module.exports = {
       res.redirect('/');
     });
   },
-  removeUserImpersonation: (req, res) => {
+  removeUserImpersonation: (req, res, next) => {
     Models.User.findOne({
       where: { id: req.session.originalUser },
       attributes: { exclude: ['password'] }
     }).then(user => {
       if (_.isNil(user)) return res.status(400).send('User not found.');
-      discord(`**${user.dataValues.email}** vient de se déconnecter du compte de **${req.user.fullName}**.`, 'infos');
       delete req.session.originalUser;
       delete req.session.role;
       delete req.session.readOnly;
-      req.logIn(user, (err) => new Error(err));
+      discord(`**${user.dataValues.email}** vient de se déconnecter du compte de **${req.user.fullName}**.`, 'infos');
+      req.logIn(user, (err) => next(new BackError(err)));
       res.redirect('/');
     });
   },
