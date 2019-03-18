@@ -17,7 +17,7 @@
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#postValue').val();
               let categoryInput = $('select#postCategory').val();
-              $.post(`/api/back-office/posts/`, {
+              $.post(`/api/back-office/references/posts/`, {
               promptInput,
               categoryInput,
               _csrf
@@ -34,9 +34,9 @@
               table.bootstrapTable('insertRow', {
               index: 0,
               row: {
-              id: response.post.id,
-              name: response.post.name,
-              category: response.post.categoriesPS_id
+              id: response.reference.id,
+              name: response.reference.name,
+              category: response.reference.categoriesPS_id
               }
               });
               notification({

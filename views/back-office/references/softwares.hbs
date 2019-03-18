@@ -14,7 +14,7 @@
                            if ($('input#softwareValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#softwareValue').val();
-                               $.post(`/api/back-office/softwares/`, {
+                               $.post(`/api/back-office/references/softwares/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -30,8 +30,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.software.id,
-                                   name: response.software.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({

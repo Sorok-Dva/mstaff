@@ -42,7 +42,7 @@
         if ($('input#skillValue').val() != '') {
           let _csrf = $('#csrfToken').val();
           let promptInput = $('input#skillValue').val();
-          $.post(`/api/back-office/skills/`, {
+          $.post(`/api/back-office/references/skills/`, {
             promptInput,
             _csrf
           }, (response) => {
@@ -58,8 +58,8 @@
               table.bootstrapTable('insertRow', {
                 index: 0,
                 row: {
-                  id: response.skill.id,
-                  name: response.skill.name
+                  id: response.reference.id,
+                  name: response.reference.name
                 }
               });
               notification({

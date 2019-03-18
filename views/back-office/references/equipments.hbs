@@ -14,7 +14,7 @@
                            if ($('input#equipmentValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#equipmentValue').val();
-                               $.post(`/api/back-office/equipments/`, {
+                               $.post(`/api/back-office/references/equipments/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -30,8 +30,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.equipment.id,
-                                   name: response.equipment.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({

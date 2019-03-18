@@ -14,7 +14,7 @@
                            if ($('input#qualificationValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#qualificationValue').val();
-                               $.post(`/api/back-office/qualifications/`, {
+                               $.post(`/api/back-office/references/qualifications/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -30,8 +30,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.qualification.id,
-                                   name: response.qualification.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({

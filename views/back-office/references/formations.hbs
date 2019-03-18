@@ -14,7 +14,7 @@
                            if ($('input#formationValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#formationValue').val();
-                               $.post(`/api/back-office/formations/`, {
+                               $.post(`/api/back-office/references/formations/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -30,8 +30,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.formation.id,
-                                   name: response.formation.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({

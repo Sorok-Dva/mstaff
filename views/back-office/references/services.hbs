@@ -13,7 +13,7 @@
                            if ($('input#serviceValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#serviceValue').val();
-                               $.post(`/api/back-office/services/`, {
+                               $.post(`/api/back-office/references/services/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -29,8 +29,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.service.id,
-                                   name: response.service.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({
