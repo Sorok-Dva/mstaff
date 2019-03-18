@@ -125,4 +125,20 @@ router.get('/posts', Authentication.ensureIsAdmin, BackOfficeController.getPosts
  */
 router.get('/qualifications', Authentication.ensureIsAdmin, BackOfficeController.getQualifications);
 
+/**
+ * @Route('/back-office/users/groups/') GET;
+ * Show services data
+ */
+router.get('/users/groups', Authentication.ensureIsAdmin, BackOfficeController.getGroups);
+
+/**
+ * @Route('/back-office/users/super-groups/') GET;
+ * Show services data
+ */
+router.get('/users/super-groups', Authentication.ensureIsAdmin, BackOfficeController.getSuperGroups);
+
+/**
+ * @Route('/back-office/formations/') GET;
+ * Show qualifications data
+ */
 module.exports = router;
