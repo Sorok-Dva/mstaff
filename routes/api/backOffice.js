@@ -3,9 +3,20 @@ const BackOfficeController = require('../../controllers/backOffice');
 const express = require('express');
 const router = express.Router();
 
-router.get('/establishmentsReferences', Authentication.ensureIsAdmin, BackOfficeController.APIgetEstablishmentsRefList);
-router.post('/establishmentsReferences/info/:id', Authentication.ensureIsAdmin, BackOfficeController.APIgetEstablishmentRefInfo);
-router.post('/establishmentsReferences/info/:id/toCreate', Authentication.ensureIsAdmin, BackOfficeController.APIgetEstablishmentRefInfoToCreate);
+router.get(
+  '/establishmentsReferences',
+  Authentication.ensureIsAdmin,
+  BackOfficeController.BackOffice.Establishment.getRefList);
+
+router.post(
+  '/establishmentsReferences/info/:id',
+  Authentication.ensureIsAdmin,
+  BackOfficeController.BackOffice.Establishment.getRefInfo);
+
+router.post(
+  '/establishmentsReferences/info/:id/toCreate',
+  Authentication.ensureIsAdmin,
+  BackOfficeController.BackOffice.Establishment.getRefInfoToCreate);
 
 router.post('/establishment/create',
   Authentication.ensureIsAdmin,

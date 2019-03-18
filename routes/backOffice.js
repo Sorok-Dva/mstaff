@@ -19,26 +19,32 @@ router.get('/stats', Authentication.ensureIsAdmin, BackOfficeController.stats);
  * @Route('/back-office/users/') GET;
  * Show Users List page
  */
-router.get('/users', Authentication.ensureIsAdmin, BackOfficeController.getUsers);
+router.get(
+  '/users',
+  Authentication.ensureIsAdmin,
+  BackOfficeController.BackOffice.User.getAll);
 
 /**
  * @Route('/back-office/users/candidates') GET;
  * Show Users (candidates type) List page
  */
-router.get('/users/candidates', Authentication.ensureIsAdmin, BackOfficeController.getCandidates);
-
-/**
- * @Route('/back-office/users/es') GET;
- * Show Users (es type) List page
- */
-router.get('/users/es', Authentication.ensureIsAdmin, BackOfficeController.getESUsers);
+router.get(
+  '/users/:type',
+  Authentication.ensureIsAdmin,
+  BackOfficeController.BackOffice.User.getList);
 
 /**
  * @Route('/back-office/user/:id/') GET;
  * Show User data
  */
-router.get('/user/:id', Authentication.ensureIsAdmin, BackOfficeController.getUser)
-  .post('/user/:id/edit', Authentication.ensureIsAdmin, BackOfficeController.editCandidate);
+router.get(
+  '/user/:id',
+  Authentication.ensureIsAdmin,
+  BackOfficeController.getUser
+).post(
+  '/user/:id',
+  Authentication.ensureIsAdmin,
+  BackOfficeController.editCandidate);
 
 /**
  * @Route('/back-office/impersonate/user/:id/') GET;
