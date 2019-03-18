@@ -14,6 +14,14 @@ module.exports = {
         primaryKey: true,
         unique: true
       },
+      group_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Groups',
+          key: 'id'
+        }
+      },
       finess: {
         type: Sequelize.STRING,
         allowNull: false,

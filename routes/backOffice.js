@@ -115,10 +115,22 @@ router.get('/softwares', UserController.ensureIsAdmin, BackOfficeController.getS
 router.get('/services', UserController.ensureIsAdmin, BackOfficeController.getServices);
 
 /**
- * @Route('/back-office/formations/') GET;
+ * @Route('/back-office/posts/') GET;
  * Show services data
  */
 router.get('/posts', UserController.ensureIsAdmin, BackOfficeController.getPosts);
+
+/**
+ * @Route('/back-office/users/groups/') GET;
+ * Show services data
+ */
+router.get('/users/groups', UserController.ensureIsAdmin, BackOfficeController.getGroups);
+
+/**
+ * @Route('/back-office/users/super-groups/') GET;
+ * Show services data
+ */
+router.get('/users/super-groups', UserController.ensureIsAdmin, BackOfficeController.getSuperGroups);
 
 /**
  * @Route('/back-office/formations/') GET;

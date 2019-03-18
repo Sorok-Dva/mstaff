@@ -36,4 +36,12 @@ router.put('/qualifications/:id', UserController.ensureIsAdmin, BackOfficeContro
   .delete('/qualifications/:id', UserController.ensureIsAdmin, BackOfficeController.removeQualification)
   .post('/qualifications/', UserController.ensureIsAdmin, BackOfficeController.addQualification);
 
+router.put('/groups/:id', UserController.ensureIsAdmin, BackOfficeController.editGroups)
+  .delete('/groups/:id', UserController.ensureIsAdmin, BackOfficeController.removeGroups)
+  .post('/groups/', UserController.ensureIsAdmin, BackOfficeController.addGroups);
+
+router.put('/super-groups/:id', UserController.ensureIsAdmin, BackOfficeController.editSuperGroups)
+  .delete('/super-groups/:id', UserController.ensureIsAdmin, BackOfficeController.removeSuperGroups)
+  .post('/super-groups/', UserController.ensureIsAdmin, BackOfficeController.addSuperGroups);
+
 module.exports = router;

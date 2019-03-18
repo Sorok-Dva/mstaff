@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Establishment = sequelize.define('Establishment', {
     name: DataTypes.STRING,
+    group_id: DataTypes.INTEGER,
     finess: DataTypes.STRING,
     code: DataTypes.STRING,
     type: DataTypes.STRING,
@@ -24,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     Establishment.hasMany(models.ESAccount, {
       foreignKey: 'es_id',
       sourceKey: 'id'
+    });
+    Establishment.belongsTo(models.Groups, {
+      foreignKey: 'id'
     });
     Establishment.hasMany(models.FavoriteCandidate, {
       foreignKey: 'es_id',
