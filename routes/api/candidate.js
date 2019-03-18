@@ -65,6 +65,10 @@ router.get('/wish/:id',
     Authentication.ensureIsCandidate,
     HTTPValidation.CandidateController.removeWish,
     CandidateController.removeWish
+  )
+  .put('/wish/:id',
+    Authentication.ensureIsCandidate,
+    CandidateController.editWish
   );
 
 

@@ -544,7 +544,6 @@ module.exports = {
         as: 'applications',
         include: {
           model: Models.EstablishmentReference,
-          attributes: ['name', 'finess_et'],
           on: { '$applications.ref_es_id$': {
             [Op.col]: 'applications->EstablishmentReference.finess_et' }
           }
@@ -562,6 +561,53 @@ module.exports = {
       render.services = services;
       return res.render('candidates/edit-application', render);
     }).catch(error => next(new Error(error)));
+  },
+  editWish: (req, res, next) => {
+    return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+      Models.Wish.findOne({
+        where: { id: req.params.id }
+      }).then(wish => {
+        if (!wish) return res.status(400).send({ errors: 'Wish not found' });
+        wish.name = req.body.name,
+        wish.contract_type = req.body.contractType,
+        wish.posts = req.body.posts,
+        wish.services = !_.isNil(req.body.services) ? req.body.services : null,
+        wish.full_time = req.body.fullTime,
+        wish.part_time = req.body.partTime,
+        wish.day_time = req.body.dayTime,
+        wish.night_time = req.body.nightTime,
+        wish.liberal_cabinets = req.body.liberal,
+        wish.availability = req.body.availability,
+        wish.start = req.body.start,
+        wish.end = req.body.end,
+        wish.lat = req.body.lat,
+        wish.lon = req.body.lon,
+        wish.geolocation = !!req.body.lat,
+        wish.es_count = req.body.es_count,
+        wish.save().then(() => {
+          req.body.es = JSON.parse(`[${req.body.es}]`);
+          Models.Application.destroy({
+            where: {
+              wish_id: req.params.id,
+            }
+          }).then( () => {
+            for (let i = 0; i < req.body.es.length; i++) {
+              Models.Establishment.findOne({ where: { finess: req.body.es[i] } }).then(es => {
+                Models.Application.create({
+                  name: req.body.name || 'Candidature sans nom',
+                  wish_id: wish.id,
+                  candidate_id: candidate.id,
+                  ref_es_id: req.body.es[i],
+                  es_id: !_.isNil(es) ? es.id : null,
+                  new: true
+                });
+              }).catch(error => next(new BackError(error)));
+            }
+            return res.status(200).send({ result: 'updated' });
+          })
+        });
+      })
+    }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
   },
   removeWish: (req, res, next) => {
     const errors = validationResult(req);
