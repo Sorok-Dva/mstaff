@@ -51,6 +51,8 @@ router.get('/register/:esCode?',
     UserController.create);
 
 router.get('/validate/:key', Authentication.ensureIsNotAuthenticated, IndexController.getValidateAccount);
+router.get('/new/password/:key', Authentication.ensureIsNotAuthenticated, IndexController.resetPassword)
+  .post('/new/password/:key', Authentication.ensureIsNotAuthenticated, HTTPValidation.UserController.resetPassword, UserController.resetPassword);
 
 /**
  * @Route('/register/complete/profile') GET + POST;

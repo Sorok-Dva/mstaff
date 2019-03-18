@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator/check');
 const { User, Candidate, Establishment } = require('../models/index');
+const { BackError } = require('../helpers/back.error');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const mailer = require('../bin/mailer');
@@ -64,6 +65,31 @@ module.exports = {
         res.render(`users/registerWizard`, { layout: 'onepage', user: usr, candidate });
       }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
     });
+  },
+  resetPassword: (req, res, next) => {
+    const errors = validationResult(req);
+    let { password } = req.body;
+    let { key } = req.params;
+
+    if (!errors.isEmpty()) {
+      return res.render('users/reset_password', { layout: 'onepage', body: req.body, errors: errors.array() });
+    }
+
+    User.findOne({
+      where: { key },
+      attributes: ['id', 'password', 'key']
+    }).then(user => {
+      if (!user) {
+        req.flash('error_msg', 'Utilisateur inconnu.');
+        return res.redirect('/');
+      }
+      bcrypt.hash(password, 10).then(hash => {
+        user.password = hash;
+        user.key = crypto.randomBytes(20).toString('hex');
+        user.save();
+        return res.redirect('/login');
+      });
+    }).catch(err => next(new BackError(err)));
   },
   /**
    * ComparePassword Method
