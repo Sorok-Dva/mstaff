@@ -603,6 +603,9 @@ let addWishName = () => {
     let regex = new RegExp('[\\w]', 'i');
     let value;
 
+    if (!ApplicationIsAddMode && application.name)
+      $('#wishName').val(application.name)
+
     $('#btnSaveWish').click(() => {
       value = $('#wishName').val();
       if (!$.isEmptyObject(value) && regex.test(value)) {

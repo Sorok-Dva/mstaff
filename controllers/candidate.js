@@ -586,15 +586,25 @@ module.exports = {
         wish.es_count = req.body.es_count,
         wish.save().then(() => {
           req.body.es = JSON.parse(`[${req.body.es}]`);
-          // TODO HERE ADD THE NEW ONE AND DELETE THE NON EXISTANT
           Models.Application.destroy({
             where: {
               wish_id: req.params.id,
-              ref_es_id: { [Op.notIn]: req.body.es }
             }
           }).then( () => {
+            for (let i = 0; i < req.body.es.length; i++) {
+              Models.Establishment.findOne({ where: { finess: req.body.es[i] } }).then(es => {
+                Models.Application.create({
+                  name: req.body.name || 'Candidature sans nom',
+                  wish_id: wish.id,
+                  candidate_id: candidate.id,
+                  ref_es_id: req.body.es[i],
+                  es_id: !_.isNil(es) ? es.id : null,
+                  new: true
+                });
+              }).catch(error => next(new BackError(error)));
+            }
             return res.status(200).send({ result: 'updated' });
-          });
+          })
         });
       })
     }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
