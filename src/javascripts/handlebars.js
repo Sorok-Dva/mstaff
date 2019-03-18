@@ -202,6 +202,12 @@ Handlebars.registerHelper('candidateProfilePercentage', (candidate) => {
   return percentage === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage}%`;
 });
 
+Handlebars.registerHelper('countInObject', (object, property, search) => {
+  let count = 0;
+  if (!_.isNil(object)) object.forEach((e, i) => object[i][property] === search ? count++ : null);
+  return count;
+});
+
 /* eslint-disable no-console */
 Handlebars.registerHelper('debug', function () {
   console.log('Context:', this);

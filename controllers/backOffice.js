@@ -298,6 +298,103 @@ module.exports = {
       return next(new BackError(errors));
     }
   },
+  APIEditUserEstablishmentRole: (req, res, next) => {
+    Models.User.findOne({
+      where: { id: req.params.userId },
+      attributes: ['id', 'firstName', 'lastName'],
+      include: {
+        model: Models.ESAccount,
+        required: true,
+        where: {
+          user_id: req.params.userId,
+          es_id: req.params.id
+        }
+      }
+    }).then(esAccount => {
+      esAccount.ESAccounts[0].role = req.body.newRole;
+      esAccount.ESAccounts[0].save().then(newResult => {
+        return res.status(200).send(newResult);
+      });
+    }).catch(errors => next(new BackError(errors)));
+  },
+  APIRemoveUserFromEstablishment: (req, res, next) => {
+    Models.User.findOne({
+      where: { id: req.params.userId },
+      attributes: ['id', 'firstName', 'lastName'],
+      include: {
+        model: Models.ESAccount,
+        required: true,
+        where: {
+          user_id: req.params.userId,
+          es_id: req.params.id
+        }
+      }
+    }).then(esAccount => {
+      esAccount.ESAccounts[0].destroy().then(destroyedESAccount => {
+        return res.status(200).send(destroyedESAccount);
+      }).catch(errors => next(new BackError(errors)));
+    }).catch(errors => next(new BackError(errors)));
+  },
+  APIshowESNeeds: (req, res, next) => {
+    Models.Need.findAll({
+      where: { es_id: req.params.esId },
+      include: [{
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true,
+        include: {
+          model: Models.Candidate,
+          required: true,
+          include: {
+            model: Models.User,
+            attributes: ['id', 'firstName', 'lastName', 'birthday'],
+            on: {
+              '$candidates->Candidate.user_id$': {
+                [Op.col]: 'candidates->Candidate->User.id'
+              }
+            },
+            required: true
+          }
+        }
+      }, {
+        model: Models.Establishment,
+        required: true
+      }]
+    }).then(need => {
+      if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      return res.status(200).send(need);
+    }).catch(error => next(new BackError(error)));
+  },
+  APIshowESNeed: (req, res, next) => {
+    Models.Need.findOne({
+      where: { id: req.params.id },
+      include: [{
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true,
+        include: {
+          model: Models.Candidate,
+          required: true,
+          include: {
+            model: Models.User,
+            attributes: ['id', 'firstName', 'lastName', 'birthday'],
+            on: {
+              '$candidates->Candidate.user_id$': {
+                [Op.col]: 'candidates->Candidate->User.id'
+              }
+            },
+            required: true
+          }
+        }
+      }, {
+        model: Models.Establishment,
+        required: true
+      }]
+    }).then(need => {
+      if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      return res.status(200).send(need);
+    }).catch(error => next(new BackError(error)));
+  },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
       res.render('back-office/es/list', {
@@ -309,7 +406,22 @@ module.exports = {
     }).catch(error => next(new BackError(error)));
   },
   getES: (req, res, next) => {
-    Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
+    Models.Establishment.findOne({
+      where: { id: req.params.id },
+      include: {
+        model: Models.ESAccount,
+        where: { es_id: req.params.id },
+        include: {
+          model: Models.User,
+          required: true,
+          on: {
+            '$ESAccounts.user_id$': {
+              [Op.col]: 'ESAccounts->User.id'
+            }
+          },
+        }
+      }
+    }).then(data => {
       if (_.isNil(data)) {
         req.flash('error_msg', 'Cet établissement n\'existe pas.');
         return res.redirect('/back-office/es');

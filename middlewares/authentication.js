@@ -1,4 +1,5 @@
 const Models = require('../models');
+const _ = require('lodash');
 const Authentication = {};
 
 /**
@@ -86,6 +87,7 @@ Authentication.ensureIsCandidate = (req, res, next) => {
 Authentication.ensureIsEs = (req, res, next) => {
   if (req.isAuthenticated()) {
     if (['es'].includes(req.user.type)) {
+      if (_.isNil(req.session.currentEs) && req.url.search('/select/es') === -1) return res.redirect('/select/es');
       next();
     } else {
       res.redirect('/');
@@ -100,7 +102,7 @@ Authentication.ensureIsEs = (req, res, next) => {
  * @param req
  * @param res
  * @param next
- * @description user that the current user belongs to the establishment call in the route.
+ * @description ensure that the current user belongs to the establishment call in the route.
  */
 Authentication.verifyEsAccess = (req, res, next) => {
   Models.Establishment.findOne({

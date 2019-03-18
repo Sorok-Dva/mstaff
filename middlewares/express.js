@@ -97,6 +97,7 @@ module.exports = {
     res.locals.user = req.user || null;
     res.locals.session = req.session || null;
     res.locals.v = packageJson.version;
+    res.locals.domain = conf.DOMAIN;
     res.locals.csrfToken = req.csrfToken();
     next();
   },

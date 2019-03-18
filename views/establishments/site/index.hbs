@@ -134,7 +134,7 @@
     text-align: center;
   }
 
-  .profile-page .profile #avatar {
+  .profile-page .profile #logo {
     /*max-width: 160px;*/
     /*width: 100%;*/
     margin: 0 auto;
@@ -145,8 +145,12 @@
     transform: translate3d(0, -50%, 0);
   }
 
-  #avatar {
-    background-image: url('{{es.logo}}');
+  #logo {
+    {{#if es.logo}}
+      background-image: url('{{es.logo}}');
+    {{else}}
+      background-image: url(/static/assets/images/default_hospital.jpg);
+    {{/if}}
     width: 200px;
     height: 200px;
     background-size: cover;
@@ -429,8 +433,8 @@
 <nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg" id="sectionsNav">
   <div class="container">
     <div class="navbar-translate">
-      <a class="navbar-brand" href="https://mstaff.co"><img src="/static/assets/images/LOGO_WEB_118_PX.png"
-                                                            alt="Mstaff"></a>
+      <a class="navbar-brand" href="https://mstaff.co">
+        <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
               aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -453,12 +457,8 @@
       <div class="row">
         <div class="col-md-4">
           <div class="profile">
-            <div class="avatar">
-              {{#if es.logo}}
-                <div id="avatar" class="img-raised rounded-circle img-fluid"></div>
-              {{else}}
-
-              {{/if}}
+            <div class="logo">
+              <div id="logo" class="img-raised rounded-circle img-fluid"></div>
             </div>
             <div class="name">
               <div class="col-md-12">

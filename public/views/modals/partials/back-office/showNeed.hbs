@@ -1,37 +1,15 @@
-<style>
-  /* Demo info */
-  .section {
-    padding: 20px;
-    text-align: center;
-  }
-
-  .section a {
-    color: white;
-    text-decoration: none;
-    font-weight: 300;
-  }
-
-  .section h4 {
-    font-weight: 400;
-  }
-
-  .section h4 a {
-    font-weight: 600;
-  }
-</style>
 <div class="row">
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
-        <h5 class="pull-right">Clôturer le besoin</h5>
-        <h4 class="card-title">{{need.name}}</h4>
+        <h4 class="card-title">{{this.need.name}}</h4>
         <div class="label-container">
-          <div class="label label-default">{{need.post}}</div>
+          <div class="label label-default">{{this.need.post}}</div>
           <div class="label label-warning">
-            {{need.contract_type}}
+            {{this.need.contract_type}}
           </div>
           <div class="label label-success ">
-            {{date need.start 'DD/MM/YYYY'}}
+            {{date this.need.start 'DD/MM/YYYY'}}
           </div>
         </div>
       </div>
@@ -45,9 +23,9 @@
                     <h5>Pré-séléctionnés</h5>
                   </span>
                   <ul class="drag-inner-list" id="1">
-                    {{#each need.candidates as |data|}}
+                    {{#each this.need.candidates as |data|}}
                       {{#ifCond data.status '===' 'pre-selected'}}
-                        {{> es/kanban-card data}}
+                        {{> kanban-card data}}
                       {{/ifCond}}
                     {{/each}}
                   </ul>
@@ -57,9 +35,9 @@
                     <h5>Notifiés</h5>
                   </span>
                   <ul class="drag-inner-list" id="2">
-                    {{#each need.candidates as |data|}}
+                    {{#each this.need.candidates as |data|}}
                       {{#ifCond data.status '===' 'notified'}}
-                        {{> es/kanban-card data}}
+                        {{> kanban-card data}}
                       {{/ifCond}}
                     {{/each}}
                   </ul>
@@ -69,9 +47,9 @@
                     <h5>Sélectionnés</h5>
                   </span>
                   <ul class="drag-inner-list" id="3">
-                    {{#each need.candidates as |data|}}
+                    {{#each this.need.candidates as |data|}}
                       {{#ifCond data.status '===' 'selected'}}
-                        {{> es/kanban-card data }}
+                        {{> kanban-card data }}
                       {{/ifCond}}
                     {{/each}}
                   </ul>
@@ -84,24 +62,6 @@
     </div>
   </div>
 </div>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
-<script>
-  let showNotifyModalObject = {
-    id: 'showNotifyCandidateModal',
-    modal: 'es/showNotifyCandidate',
-    cantBeClose: true,
-    title: '<img src="{{need.Establishment.logo}}" />',
-    Establishment: {
-      address: '{{need.Establishment.address}}',
-      postal_code: '{{need.Establishment.postal_code}}',
-      town: '{{need.Establishment.town}}',
-    },
-    Need: {
-      contractType: '{{need.contract_type}}',
-      start: '{{need.start}}',
-      end: '{{need.end}}'
-    }
-  };
-  let esId = {{need.es_id}};
-</script>
-<script src="/static/assets/dist/js/showNeed.es.min.js"></script>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-default btn-default pull-right" data-dismiss="modal">Fermer</button>
+</div>
