@@ -21,7 +21,7 @@ router.post(
 router.post('/establishment/create',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.createEstablishmentFromReference,
-  BackOfficeController.APICreateEstablishment);
+  BackOfficeController.BackOffice.Establishment.create);
 
 router.post('/establishment/:id/add/user',
   Authentication.ensureIsAdmin,
