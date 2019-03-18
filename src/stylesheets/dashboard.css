@@ -6641,6 +6641,10 @@ strong {
     transition: all 150ms linear;
 }
 
+/*.btn-default {*/
+    /*border-radius: 5px;*/
+/*}*/
+
 .btn:hover, .btn:focus, .btn:active, .btn.active, .btn:active:focus, .btn:active:hover,
 .open > .btn.dropdown-toggle,
 .open > .btn.dropdown-toggle:focus,
@@ -8089,10 +8093,6 @@ form label.radio, form label.checkbox {
     font-size: 14px;
     text-transform: none;
     cursor: pointer;
-}
-
-.form-group {
-    position: relative;
 }
 
 .form-horizontal .checkbox,

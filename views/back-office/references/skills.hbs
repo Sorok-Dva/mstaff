@@ -96,68 +96,6 @@
     ].join('');
   };
 
-<<<<<<< Updated upstream
-    $(document).ready(() => {
-        window.operateEvents = {
-            'click .edit': (e, value, row, index) => {
-                createModal({
-                    id: 'editSkillModal',
-                    title: 'Modifier une compétence',
-                    modal: 'back-office/editSkill'
-                }, () => {
-                    $('button#btnEditSkill').click(function () {
-                        if ($('input#skillValueEdit').val() != '') {
-                            let _csrf = $('#csrfToken').val();
-                            let promptInput = $('input#skillValueEdit').val();
-                            $.put(`/api/back-office/skills/${row.id}`, {
-                                promptInput,
-                                _csrf
-                            }, () => {
-                                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                                $('#editSkillModal').modal('hide');
-                                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
-                                notification({
-                                    icon: 'check-circle',
-                                    type: 'success',
-                                    title: 'Compétence modifiée.',
-                                    message: ``
-                                });
-                            });
-                        } else {
-                            if ($('input#skillValueEdit').val() == '') {
-                                $('input#skillValueEdit').addClass('error');
-                                setTimeout(function () {
-                                    $('input#skillValueEdit').removeClass('error');
-                                }, 750)
-                            }
-                        }
-                    });
-                });
-            },
-            'click .remove': (e, value, row, index) => {
-                createModal({
-                    id: 'removeSkillModal',
-                    title: 'Supprimer une compétence',
-                    modal: 'back-office/removeSkill'
-                }, () => {
-                    let _csrf = $('#csrfToken').val();
-                    $('button#btnRemoveSkill').click(function () {
-                        $.delete(`/api/back-office/skills/${row.id}`, {
-                            _csrf
-                        }, () => {
-                            table.bootstrapTable('remove', {
-                                field: 'id',
-                                values: [row.id]
-                            });
-                            notification({
-                                icon: 'check-circle',
-                                type: 'success',
-                                title: 'Compétence supprimée.',
-                                message: ``
-                            });
-                        });
-                    });
-=======
   $(document).ready(() => {
     window.operateEvents = {
       'click .edit': (e, value, row, index) => {
@@ -182,7 +120,6 @@
                   type: 'success',
                   title: 'Compétence modifiée.',
                   message: ``
->>>>>>> Stashed changes
                 });
               });
             } else {

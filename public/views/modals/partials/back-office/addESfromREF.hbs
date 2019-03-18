@@ -1,0 +1,160 @@
+<div class="row" style="padding-top:15px; margin: auto !important;">
+  <div class="col-md-12">
+    <form id="createNewESForm" style="padding: 15px" autocomplete="off">
+      <fieldset>
+        <legend>
+          <h5 style="text-align: center">Informations de base</h5>
+        </legend>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="newESName">Nom</label>
+            <input type="text" class="form-control" id="newESName" name="name" placeholder="Nom de l'établissement" value="{{this.es.name}}" required>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="newESFinessEt">Finess ET</label>
+            <input type="text" class="form-control" id="newESFinessEt" name="finess_et" placeholder="Numéro Finess ET" value="{{this.es.finess_et}}" required>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="newESFinessEj">Finess EJ</label>
+            <input type="text" class="form-control" id="newESFinessEj" name="finess_ej" placeholder="Numéro Finess EJ" value="{{this.es.finess_ej}}">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="newESSiret">Siret</label>
+            <input type="text" class="form-control" id="newESSiret" name="siret" placeholder="Numéro Siret" value="{{this.es.siret}}">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="newESAddressNum">Numéro d'adresse</label>
+            <input type="text" class="form-control" id="newESAddressNum" name="addr_num" placeholder="12" value="{{this.es.address_num}}" autocomplete="fckgooglechromeandhisbadautocompletesystem">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="newESAddressType">Type d'adresse</label>
+            <input type="text" class="form-control" id="newESAddressType" name="addr_type" placeholder="Avenue, Chemin, Rue, etc" value="{{this.es.address_type}}">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="newESAddressName">Nom de l'adresse</label>
+            <input type="text" class="form-control" id="newESAddressName" name="addr_name" placeholder="De la liberté" value="{{this.es.address_name}}">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="newESAddressTown">Code postal et ville</label>
+            <input type="text" class="form-control" id="newESAddressTown" name="addr_town" placeholder="75000 PARIS" value="{{this.es.address_town}}" required>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="newESPhone">Numéro de téléphone</label>
+            <input type="text" class="form-control" id="newESPhone" name="phone" placeholder="+331020304" value="+ {{this.es.phone}}">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="salaries_count">Nombre d'employés</label>
+            <input class="form-control" name="salaries_count" type="number" value="0" id="salaries_count" required>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="secteur">Secteur</label>
+            <select class="form-control" id="secteur" name="sector">
+              <option value="private" selected="selected">PRIVE</option>
+              <option value="public">PUBLIC</option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="logo">Logo</label>
+            <input class="form-control" name="logo" type="text" id="logo">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="banner">Bannière</label>
+            <input class="form-control" name="banner" type="text" id="banner">
+          </div>
+          <div class="form-group col-md-2">
+            <label for="bienIci">Lien BienIci</label>
+            <input class="form-control" name="bienIci" type="text" id="bienIci">
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>
+          <h5 style="text-align: center">Informations du référent</h5>
+        </legend>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="newESContactName">Nom</label>
+            <input type="text" class="form-control" id="newESContactName" name="contactIdentity" placeholder="Jean Dupont">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="newESContactPost">Poste</label>
+            <input type="text" class="form-control" id="newESContactPost" name="contactPost" placeholder="DRH">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="newESContactEmail">Email</label>
+            <input type="text" class="form-control" id="newESContactEmail" name="contactEmail" placeholder="jean.dupont@etablissement.org">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="newESContactPhone">Numéro de téléphone</label>
+            <input type="text" class="form-control" id="newESContactPhone" name="contactPhone" placeholder="0601020304">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <h5 style="text-align: center">Configuration dans Mstaff</h5>
+        </legend>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="ESMstaffCat">Catégorie Mstaff</label>
+            <input type="text" class="form-control" id="ESMstaffCat" name="mstaff_category">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="ESGroup">Groupe</label>
+            <input type="text" class="form-control" id="ESGroup" name="group">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="secteur">Domaine</label>
+            <select class="form-control" id="secteur" name="domaine_enable">
+              <option value="1">Actif</option>
+              <option value="0" selected="selected">Inactif</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="domain_name">Nom de domaine</label>
+            <div class="row">
+              <div class="col-md-8">
+                <input class="form-control col-md-8" placeholder="établissement" name="domain_name" type="text">
+              </div>
+              <div class="col-md-4" style="margin-left: -26px;"><h4>.mstaff.co</h4></div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal">Annuler</button>
+  <button type="submit" id="createES{{this.es.id}}" class="btn btn-primary pull-right">Brancher l'établissement</button>
+</div>
+<script>
+  $('#createES{{this.es.id}}').click(function() {
+    let data = {};
+    console.log($('#createNewESForm').serializeArray());
+    $.each($('#createNewESForm').serializeArray(), function(_, kv) {
+      data[kv.name] = kv.value;
+    });
+    data.address = `${data.addr_num} ${data.addr_type} ${data.addr_name}`;
+    data._csrf = $('#csrfToken').val();
+    delete data.addr_num;
+    delete data.addr_type;
+    delete data.addr_name;
+    $.post('/api/back-office/establishment/create', data, (data) => {
+      if (data.status === 'Created') {
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Établissement créer avec succès.'
+        })
+      } else {
+        notification({
+          icon: 'exclamation-circle',
+          type: 'warning',
+          title: 'Cet établissement est déjà branché à Mstaff.'
+        })
+      }
+    }).catch(error => errorsHandler(error));
+  });
+</script>

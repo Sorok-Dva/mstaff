@@ -1,7 +1,8 @@
 const conf = require('dotenv').config().parsed;
+const packageJson = require('../package');
 const path = require('path');
-const env = 'development';
-const config = require(`./config/config.json`)[env];
+const { Env } = require('../helpers/helpers');
+const config = require(`../config/config.json`)[Env.current];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
@@ -10,7 +11,7 @@ const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
 const cookieParser = require('cookie-parser');
-const handlebars = require('./helpers/handlebars').register(require('handlebars'));
+const handlebars = require('../helpers/handlebars').register(require('handlebars'));
 const flash = require('connect-flash');
 const passport = require('passport');
 const helmet = require('helmet');
@@ -18,8 +19,13 @@ const i18n = require('i18n-express');
 const logger = require('morgan');
 const wildcardSubdomains = require('wildcard-subdomains');
 
-const ServerController = require('./controllers/server');
+const ServerController = require('../controllers/server');
+const EstablishmentController = require('../controllers/establishment');
 
+let Sentry =  require('@sentry/node');
+if (Env.isProd || Env.isPreProd) {
+  Sentry.init({ dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846' });
+}
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -38,30 +44,16 @@ module.exports = {
   cookieParser: cookieParser(conf.SECRET),
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
-  errorHandler: (err, req, res, next) => { // error handler
-
-    let opts = {};
-    // set locals, only providing error in development
-    if (env === 'development') {
-      opts.error = err;
-    } else {
-      res.locals.error_msg = err.message;
-    }
-    // render the error page
-    res.status(err.status || 500);
-    if (!req.user) opts.layout = 'onepage';
-    res.render('error', opts);
-  },
   exphbs: exphbs({
     extname: 'hbs',
     defaultLayout: 'default',
-    layoutsDir: path.join(__dirname, '/views/layouts'),
-    partialsDir: path.join(__dirname, '/views/partials')
+    layoutsDir: path.join(__dirname, '../views/layouts'),
+    partialsDir: path.join(__dirname, '../views/partials')
   }),
   flash: flash(),
   helmet: helmet(), // secure apps by setting various HTTP headers
   i18n: i18n({
-    translationsPath: path.join(__dirname, 'i18n'),
+    translationsPath: path.join(__dirname, '../i18n'),
     cookieLangName: 'mstaff_lang',
     browserEnable: true,
     defaultLang: 'fr',
@@ -94,6 +86,8 @@ module.exports = {
       next();
     } else next();
   },
+  sentryErrorHandler: Sentry.Handlers.errorHandler(),
+  sentryRequestHandler: Sentry.Handlers.requestHandler(),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';
@@ -102,6 +96,8 @@ module.exports = {
     res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
     res.locals.session = req.session || null;
+    res.locals.v = packageJson.version;
+    res.locals.domain = conf.DOMAIN;
     res.locals.csrfToken = req.csrfToken();
     next();
   },
@@ -112,6 +108,7 @@ module.exports = {
     resave: true
   }),
   verifyMaintenance: (req, res, next) => {
+    if (req.url.search('static') !== -1) return next();
     ServerController.verifyMaintenance(status => {
       if (status === 'maintenance') {
         return res.render('index', { layout: 'maintenance' });
@@ -120,8 +117,11 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (!req.subdomains.length || req.subdomains.slice(-1)[0] === 'www') return next();
-    // req.subdomain = req.subdomains.slice(-1)[0];
-    next();
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2') return next();
+    EstablishmentController.findBySubdomain(req, res, (data) => {
+      res.locals.es = data;
+      req.url = `/esDomain${req.url}`;
+      next();
+    });
   }
 };

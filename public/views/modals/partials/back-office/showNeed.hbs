@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">{{this.need.name}}</h4>
+        <div class="label-container">
+          <div class="label label-default">{{this.need.post}}</div>
+          <div class="label label-warning">
+            {{this.need.contract_type}}
+          </div>
+          <div class="label label-success ">
+            {{date this.need.start 'DD/MM/YYYY'}}
+          </div>
+        </div>
+      </div>
+      <div class="card-body" style="margin-top: -10px">
+        <div class="row">
+          <div class="col-md-12" style="padding: 25px;">
+            <div class="drag-container">
+              <ul class="drag-list">
+                <li class="drag-column drag-column-on-hold">
+                  <span class="drag-column-header">
+                    <h5>Pré-séléctionnés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="1">
+                    {{#each this.need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'pre-selected'}}
+                        {{> kanban-card data}}
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+                <li class="drag-column drag-column-in-progress">
+                  <span class="drag-column-header">
+                    <h5>Notifiés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="2">
+                    {{#each this.need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'notified'}}
+                        {{> kanban-card data}}
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+                <li class="drag-column drag-column-approved">
+                  <span class="drag-column-header">
+                    <h5>Sélectionnés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="3">
+                    {{#each this.need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'selected'}}
+                        {{> kanban-card data }}
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-default btn-default pull-right" data-dismiss="modal">Fermer</button>
+</div>

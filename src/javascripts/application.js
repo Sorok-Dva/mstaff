@@ -1,4 +1,4 @@
-$('.removeWish').click(function () {
+$('.removeWish').click(function() {
   createModal({ id: 'removeWishModal', modal: 'removeWish', title: 'Confirmation' }, () => {
     let id = $(this).attr('data-id') || $(this).parent().attr('data-id');
     $('#btnRemoveWish').attr('onclick', `removeWish(${id})`);

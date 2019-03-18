@@ -1,0 +1,83 @@
+<div class="row">
+  <div class="col-md-12 table-responsive table-full-width">
+    <table class="table table-hover">
+      <thead>
+      <tr class="info">
+        <th>Besoin</th>
+        <th>Détail du contrat</th>
+        <th>Candidats</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody id="applicationTbody">
+      {{#if this.needs}}
+        {{#each this.needs as |need|}}
+          <tr data-applicationId="{{need.id}}">
+            <td>{{need.name}}</td>
+            <td>
+              <div class="label-container">
+                <div class="label label-default">{{need.post}}</div>
+                <div class="label label-warning">
+                  {{need.contract_type}}
+                </div>
+                <div class="label label-success ">
+                  {{date need.start 'DD/MM/YYYY'}}
+                </div>
+              </div>
+            </td>
+            <td>
+              <button class="btn btn-info">
+                <i class="fal fa-user" aria-hidden="true"></i>
+                {{countInObject need.candidates 'status' 'pre-selected'}}
+              </button>
+              <button class="btn btn-warning">
+                <i class="fal fa-clock" aria-hidden="true"></i>
+                {{countInObject need.candidates 'status' 'notified'}}
+              </button>
+              <button class="btn btn-success">
+                <i class="fal fa-check-circle" aria-hidden="true"></i>
+                {{countInObject need.candidates 'status' 'selected'}}
+              </button>
+              <button class="btn btn-danger">
+                <i class="fal fa-ban" aria-hidden="true"></i>
+                {{countInObject need.candidates 'status' 'deleted'}}
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-simple btn-success btn-icon viewNeed" data-need-id="{{need.id}}">
+                <i class="fal fa-eye"></i>
+              </button>
+            </td>
+          </tr>
+        {{/each}}
+      {{else}}
+        <tr class="text-center noNeeds">
+          <td colspan="5">Aucune donnée disponible</td>
+        </tr>
+      {{/if}}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-default btn-default pull-right" data-dismiss="modal">Fermer</button>
+</div>
+<script>
+  $('button.viewNeed').click(function() {
+    let id = $(this).attr('data-need-id');
+    $.get(`/api/back-office/establishment/{{this.esId}}/need/${id}/`, need => {
+      createModal({
+        id: 'showNeedModal',
+        modal: 'back-office/showNeed',
+        title: 'Voir un besoin de cet établissement',
+        size: 'modal-lg',
+        style: 'width:60%',
+        esId: '{{es.id}}',
+        partials: ['kanban-card'],
+        need
+      }, () => {
+
+      })
+    }).catch(errors => errorsHandler(errors));
+  });
+</script>

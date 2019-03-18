@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const { BackError } = require('../helpers/back.error');
 const Models = require('../models/index');
 const mailer = require('../bin/mailer');
 
@@ -33,6 +34,18 @@ module.exports = {
     }
   },
   getLogin: (req, res) => res.render('users/login', { layout: 'onepage' }),
+  resetPassword: (req, res, next) => {
+    Models.User.findOne({
+      where: { key: req.params.key },
+      attributes: ['id', 'password', 'key']
+    }).then(user => {
+      if (!user) {
+        req.flash('error_msg', 'Utilisateur inconnu.');
+        return res.redirect('/');
+      }
+      res.render('users/reset_password', { layout: 'onepage' })
+    }).catch(err => next(new BackError(err)));
+  },
   postLogin: (req, res) => res.redirect('/'),
   getLogout: (req, res) => req.logout() + req.session.destroy() + res.redirect('/'),
   getRegister: (req, res) => {
@@ -79,7 +92,7 @@ module.exports = {
       });
     } else {
       req.flash('error_msg', 'Clé de validation invalide.');
-      res.redirect('/');
+      return res.redirect('/');
     }
   },
   getRegisterWizard: (req, res) => res.render('users/registerWizard'),

@@ -37,10 +37,22 @@
         style: 'width:80%',
         title: `Établissement ${data.name}`,
         es: data
-      }, () => {
-
       });
-    });
+    }).catch(error => errorsHandler(error));
+  };
+
+  let addES = id => {
+    let _csrf = $('#csrfToken').val();
+    $.post(`/api/back-office/establishmentsReferences/info/${id}/toCreate`, { _csrf } , data => {
+      createModal({
+        id: 'addESfromREFModal',
+        modal: 'back-office/addESfromREF',
+        size: 'modal-lg',
+        style: 'width:80%',
+        title: `Brancher l'établissement ${data.name} à Mstaff`,
+        es: data
+      }, () => {});
+    }).catch(error => errorsHandler(error));
   };
 
   function refreshTable() {
@@ -70,11 +82,8 @@
 
   $(document).ready(() => {
     window.operateEvents = {
-      'click .view': (e, value, row, index) => {
-        showEsInfo(row.id);
-      },
-      'click .add': (e, value, row, index) => {
-      }
+      'click .view': (e, value, row, index) => showEsInfo(row.id),
+      'click .add': (e, value, row, index) => addES(row.id)
     };
     table.bootstrapTable({
       toolbar: ".toolbar",

@@ -1,123 +1,11 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { User, Candidate, Establishment } = require('../models/index');
+const { BackError } = require('../helpers/back.error');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const mailer = require('../bin/mailer');
 
 module.exports = {
-  /**
-   * ensureIsNotAuthenticated MiddleWare
-   * @param req
-   * @param res
-   * @param next
-   * @returns {*}
-   * @description Ensure that the current user is logged-out
-   */
-  ensureIsNotAuthenticated: (req, res, next) => {
-    if (!req.isAuthenticated()) {
-      return next();
-    } else {
-      req.flash('error_msg', 'Vous êtes déjà connecté.');
-      res.redirect('/');
-    }
-  },
-  /**
-   * ensureAuthenticated MiddleWare
-   * @param req
-   * @param res
-   * @param next
-   * @returns {*}
-   * @description Ensure that the current user is logged-in
-   */
-  ensureAuthenticated: (req, res, next) => {
-    if (req.isAuthenticated()) {
-      return next();
-    } else {
-      req.flash('error_msg', 'You are not logged');
-      res.redirect('/');
-    }
-  },
-  /**
-   * ensureIsAdmin MiddleWare
-   * @param req
-   * @param res
-   * @param next
-   * @returns {*}
-   * @description Ensure that the current user is an admin
-   */
-  ensureIsAdmin: (req, res, next) => {
-    if (req.isAuthenticated()) {
-      if (['Admin'].includes(req.user.role) || ['Admin'].includes(req.session.role)) {
-        next();
-      } else {
-        res.redirect('/');
-      }
-    } else {
-      res.redirect('/');
-    }
-  },
-  /**
-   * ensureIsCandidate MiddleWare
-   * @param req
-   * @param res
-   * @param next
-   * @returns {*}
-   * @description Ensure that the current user is a candidate
-   */
-  ensureIsCandidate: (req, res, next) => {
-    if (req.isAuthenticated()) {
-      if (['candidate'].includes(req.user.type)) {
-        next();
-      } else {
-        res.redirect('/');
-      }
-    } else {
-      res.redirect('/');
-    }
-  },
-  /**
-   * ensureIsEs MiddleWare
-   * @param req
-   * @param res
-   * @param next
-   * @returns {*}
-   * @description Ensure that the current user is an es
-   */
-  ensureIsEs: (req, res, next) => {
-    if (req.isAuthenticated()) {
-      if (['es'].includes(req.user.type)) {
-        next();
-      } else {
-        res.redirect('/');
-      }
-    } else {
-      res.redirect('/');
-    }
-  },
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'create': {
-        return [
-          check('email').isEmail().normalizeEmail(),
-          check('password')
-            .isLength({ min: 3 }).withMessage('must be at least 8 chars long')
-            .matches(/\d/).withMessage('must contain a number'),
-          check('firstName').exists(),
-          check('lastName').exists()
-        ]
-      }
-      case 'ApiVerifyEmailAvailability': {
-        return [
-          check('email').isEmail()
-        ]
-      }
-    }
-  },
   /**
    * Create User Method
    * @param req
@@ -177,6 +65,31 @@ module.exports = {
         res.render(`users/registerWizard`, { layout: 'onepage', user: usr, candidate });
       }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
     });
+  },
+  resetPassword: (req, res, next) => {
+    const errors = validationResult(req);
+    let { password } = req.body;
+    let { key } = req.params;
+
+    if (!errors.isEmpty()) {
+      return res.render('users/reset_password', { layout: 'onepage', body: req.body, errors: errors.array() });
+    }
+
+    User.findOne({
+      where: { key },
+      attributes: ['id', 'password', 'key']
+    }).then(user => {
+      if (!user) {
+        req.flash('error_msg', 'Utilisateur inconnu.');
+        return res.redirect('/');
+      }
+      bcrypt.hash(password, 10).then(hash => {
+        user.password = hash;
+        user.key = crypto.randomBytes(20).toString('hex');
+        user.save();
+        return res.redirect('/login');
+      });
+    }).catch(err => next(new BackError(err)));
   },
   /**
    * ComparePassword Method

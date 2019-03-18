@@ -225,6 +225,14 @@ module.exports.register = async (Handlebars) => {
     ));
   });
   /* eslint-enable no-console */
+
+  Handlebars.registerHelper('repeat', function (n, block) {
+    let accum = '';
+    for (let i = 0; i < n; ++i)
+      accum += block.fn(i);
+    return accum;
+  });
+
   Handlebars.registerHelper('showCategory', function (categoryPS_id) {
     switch (categoryPS_id) {
       case 1:

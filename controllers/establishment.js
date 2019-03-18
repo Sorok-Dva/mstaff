@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require('../helpers/back.error');
@@ -9,42 +9,6 @@ const mailer = require('../bin/mailer');
 const Models = require('../models/index');
 
 module.exports = {
-  /**
-   * Authentication middleware
-   * @param req
-   * @param res
-   * @param next
-   * @description user that the current user belongs to the establishment call in the route.
-   */
-  verifyEsAccess: (req, res, next) => {
-    Models.Establishment.findOne({
-      where: { id: req.params.esId },
-      include: {
-        model: Models.ESAccount,
-        where: { user_id: req.user.id }
-      }
-    }).then(es => {
-      if (!es) return res.status(403).send(`You don't have access to this establishment.`);
-      req.es = es;
-      next();
-    });
-  },
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'create': {
-        return [
-          check('email').isEmail(),
-          check('firstName').exists(),
-          check('lastName').exists()
-        ]
-      }
-    }
-  },
   getSelectEs: (req, res, next) => {
     Models.ESAccount.findAll({
       where: { user_id: req.user.id },
@@ -53,9 +17,32 @@ module.exports = {
         required: true
       }
     }).then(esAccounts => {
-      req.session.currentEs = esAccounts[0].es_id;
       res.render('establishments/selectEs', { esAccounts });
     }).catch(error => next(new BackError(error)));
+  },
+  APISelectEs: (req, res, next) => {
+    Models.ESAccount.findOne({
+      where: { user_id: req.user.id, es_id: req.params.currentEsId },
+      include: {
+        model: Models.Establishment,
+        required: true
+      }
+    }).then(esAccount => {
+      if (_.isNil(esAccount)) return next(new BackError('Compte établissement introuvable.', httpStatus.NOT_FOUND));
+      req.session.currentEs = esAccount.es_id;
+      return res.redirect('/needs');
+    }).catch(error => next(new BackError(error)));
+  },
+  findBySubdomain: (req, res, next) => {
+    Models.Establishment.findOne({
+      where: {
+        domain_name: req.subdomains[0],
+        domain_enable: true
+      }
+    }).then(es => {
+      if (_.isNil(es)) return res.redirect('https://mstaff.co');
+      else next(es);
+    })
   },
   getNeeds: (req, res, next) => {
     Models.Need.findAll({
@@ -185,6 +172,18 @@ module.exports = {
         return res.status(200).json(es);
       }).catch(error => next(new BackError(error)));
     });
+  },
+  findByCity: (req, res, next) => {
+    return Models.EstablishmentReference.findAll({
+      where: {
+        [Op.or]: [
+          { address_town: { [Op.like]: `%${req.params.city}%` } },
+          { name: { [Op.like]: `%${req.params.city}%` } }
+        ]
+      }
+    }).then( es => {
+      return res.status(200).json(es);
+    }).catch(error => next(new Error(error)));
   },
   addApplication: (body, wish) => {
     for (let i = 0; i < body.es.length; i++) {

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const conf = require('dotenv').config().parsed;
-const env = conf.ENV || 'development';
+const env = conf.ENV;
 const config = require(`${__dirname}/../config/config.json`)[env];
 
 module.exports = new Sequelize(

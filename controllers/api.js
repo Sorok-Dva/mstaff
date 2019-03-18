@@ -1,16 +1,8 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 
 const Models = require('../models/index');
 
 module.exports = {
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-
-  },
   getSkillsList: (req, res, next) => {
     Models.Skill.findAll().then(skills => {
       res.status(200).send({ skills });

@@ -24,7 +24,13 @@
               <td>{{es.finess}}</td>
               <td>{{es.sector}}</td>
               <td>{{es.status}}</td>
-              <td>{{es.url}}</td>
+              <td>
+                {{#if es.domain_enable}}
+                  <a href="https://{{es.domain_name}}.mstaff.co/">https://{{es.domain_name}}.mstaff.co</a>
+                {{else}}
+                  -
+                {{/if}}
+              </td>
               <td></td>
             </tr>
           {{/each}}
@@ -41,9 +47,6 @@
   operateFormatter = (value, row, index) => {
     return [
       '<div class="table-icons">',
-      '<a rel="tooltip" title="View" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
-      '<i class="ti-image"></i>',
-      '</a>',
       '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
       '<i class="ti-pencil-alt"></i>',
       '</a>',
@@ -56,9 +59,6 @@
 
   $(document).ready(() => {
     window.operateEvents = {
-      'click .view': (e, value, row, index) => {
-        $(location).attr('href', `${row.url}`);
-      },
       'click .edit': (e, value, row, index) => {
         $(location).attr('href', `/back-office/es/${row.id}`);
       },
@@ -66,6 +66,7 @@
         if(confirm('ATTENTION:\n\n ' +
             'Cette action est irreversible et supprimera toutes les données liées à l\'établissement.\n\n' +
             'Voulez vous continuer ?')) {
+          $.delete('/')
 
           table.bootstrapTable('remove', {
             field: 'id',

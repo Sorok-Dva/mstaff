@@ -2,20 +2,27 @@
 module.exports = (sequelize, DataTypes) => {
   const Establishment = sequelize.define('Establishment', {
     name: DataTypes.STRING,
-    group_id: DataTypes.INTEGER,
     finess: DataTypes.STRING,
+    finess_ej: DataTypes.STRING,
+    siret: DataTypes.STRING,
     code: DataTypes.STRING,
     type: DataTypes.STRING,
     sector: DataTypes.STRING,
     address: DataTypes.STRING,
-    postal_code: DataTypes.STRING,
     town: DataTypes.STRING,
+    phone: DataTypes.STRING,
     status: DataTypes.STRING,
     url: DataTypes.STRING,
     description: DataTypes.STRING,
     logo: DataTypes.STRING,
+    banner: DataTypes.STRING,
     domain_name: DataTypes.STRING,
-    domain_enable: DataTypes.BOOLEAN
+    domain_enable: DataTypes.BOOLEAN,
+    salaries_count: DataTypes.INTEGER,
+    contact_identity: DataTypes.STRING,
+    contact_post: DataTypes.STRING,
+    contact_email: DataTypes.STRING,
+    contact_phone: DataTypes.STRING
   }, {});
   Establishment.associate = function (models) {
     Establishment.hasOne(models.Demo, {
@@ -25,9 +32,6 @@ module.exports = (sequelize, DataTypes) => {
     Establishment.hasMany(models.ESAccount, {
       foreignKey: 'es_id',
       sourceKey: 'id'
-    });
-    Establishment.belongsTo(models.Groups, {
-      foreignKey: 'id'
     });
     Establishment.hasMany(models.FavoriteCandidate, {
       foreignKey: 'es_id',

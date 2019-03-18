@@ -1,4 +1,3 @@
-
 # Mstaff Project
 
 ## Prerequisites
@@ -26,6 +25,17 @@ Create local database:
 mysql> CREATE DATABASE mstaff;
 ```
 
+Recreate development database:
+
+`DROP all mstaff_developement tables`
+
+```bash
+npm run db:migrate;
+```
+`Execute EstablishmentReferencesINSERTseeds.sql (/sql/) on database`
+```bash
+npm run db:seed;
+```
 Run migrations and seeds:
 
 ```bash
@@ -55,6 +65,11 @@ node_modules/.bin/sequelize model:generate --name TableName --attributes column1
 Create new seed :  
 ```bash
 node_modules/.bin/sequelize seed:generate --name seed-name
+``` 
+
+Execute seed file alone :  
+```bash
+sequelize db:seed:generate --seed [path]
 ``` 
 
 ## Some useful documentations

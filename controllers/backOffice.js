@@ -1,9 +1,10 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { Sequelize, Op } = require('sequelize');
 const { BackError } = require('../helpers/back.error');
 const httpStatus = require('http-status');
 const _ = require('lodash');
 const moment = require('moment');
+const crypto = require('crypto');
 const Models = require('../models/index');
 const layout = 'admin';
 
@@ -12,20 +13,6 @@ const discord = require('../bin/discord-bot');
 const mailer = require('../bin/mailer');
 
 module.exports = {
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'sendCandidateVerifEmail': {
-        return [
-          check('email').isEmail()
-        ]
-      }
-    }
-  },
   index: (req, res) => {
     let render = { layout, title: 'Tableau de bord', a: { main: 'dashboard', sub: 'overview' } };
     Models.User.count().then(count => {
@@ -135,14 +122,14 @@ module.exports = {
         users })
     }).catch(error => next(new BackError(error)));
   },
-  getEstablishmentsList: (req, res, next) => {
+  getEstablishmentsRefList: (req, res, next) => {
     res.render('back-office/es/list_ref', {
       layout,
       title: 'Liste des Établissements dans le référentiel',
       a: { main: 'references', sub: 'establishments' }
     });
   },
-  APIgetEstablishmentsList: (req, res, next) => {
+  APIgetEstablishmentsRefList: (req, res, next) => {
     let where = _.isNil(req.query.search) ? null : {
       [Op.or]: [{
         name: Sequelize.where(Sequelize.fn('lower', Sequelize.col('name')), {
@@ -178,7 +165,7 @@ module.exports = {
       }).catch(error => next(new BackError(error)));
     }).catch(error => next(new BackError(error)));
   },
-  APIgetEstablishmentInfo: (req, res, next) => {
+  APIgetEstablishmentRefInfo: (req, res, next) => {
     Models.EstablishmentReference.findOne({
       where: { id: req.params.id },
       include: {
@@ -213,6 +200,207 @@ module.exports = {
       return res.status(200).send(es);
     }).catch(error => next(new BackError(error)));
   },
+  APIgetEstablishmentRefInfoToCreate: (req, res, next) => {
+    let transporter;
+    Models.EstablishmentReference.findOne({
+      where: { id: req.params.id },
+    }).then(es => {
+      if (_.isNil(es)) return next(new BackError(`Establishment ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      transporter = es;
+      return Models.Establishment.findOne({ where: { finess: es.finess_et } });
+    }).then(mstaffEs => {
+      if (!_.isNil(mstaffEs))
+        return next(new BackError(`Establishment with finess ${transporter.finess_et} already added in Mstaff.`, httpStatus.CONFLICT));
+      return res.status(200).send(transporter);
+    }).catch(error => next(new BackError(error)));
+  },
+  APICreateEstablishment: (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    try {
+      Models.Establishment.findOrCreate({
+        where: { finess: req.body.finess_et },
+        defaults: {
+          name: req.body.name,
+          finess_ej: req.body.finess_ej,
+          siret: req.body.siret,
+          phone: req.body.phone,
+          address: req.body.address,
+          town: req.body.addr_town,
+          sector: req.body.sector,
+          salaries_count: req.body.salaries_count,
+          contact_identity: req.body.contactIdentity,
+          contact_post: req.body.contactPost,
+          contact_email: req.body.contactEmail,
+          contact_phone: req.body.contactPhone,
+          domain_enable: parseInt(req.body.domain_enable),
+          domain_name: req.body.domain_name,
+          logo: req.body.logo,
+          banner: req.body.banner
+        }
+      }).spread((es, created) => {
+        if (created) {
+          Models.EstablishmentReference.findOne({
+            where: { finess_et: es.finess }
+          }).then(ref => {
+            ref.es_id = es.id;
+            ref.save();
+            return res.status(200).json({ status: 'Created', es });
+          }).catch(errors => next(new BackError(errors)));
+        } else {
+          return res.status(200).json({ status: 'Already exists', es });
+        }
+      })
+    } catch (errors) {
+      return next(new BackError(errors));
+    }
+  },
+  APIAddUserInEstablishment: (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+    try {
+      Models.User.findOrCreate({
+        where: { email: req.body.email },
+        attributes: ['firstName', 'lastName', 'type', 'id'],
+        defaults: {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          phone: req.body.phone,
+          password: 'TODEFINE',
+          birthday: '1900-01-01 23:00:00',
+          postal_code: '-',
+          town: '-',
+          type: 'es',
+          key: crypto.randomBytes(20).toString('hex')
+        }
+      }).spread((user, created) => {
+        if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
+        Models.ESAccount.findOrCreate({
+          where: {
+            user_id: user.id,
+            es_id: req.params.id
+          },
+          defaults: {
+            role: req.body.role,
+          }
+        }).spread((esaccount, esCreated) => {
+          if (created) {
+            mailer.sendEmail({
+              to: user.email,
+              subject: 'Bienvenue sur Mstaff !',
+              template: 'es/new_user',
+              context: { user }
+            });
+            return res.status(201).json({ status: 'Created and added to es', user, esaccount });
+          } else {
+            if (esCreated) return res.status(201).json({ status: 'Added to es', user, esaccount });
+            return res.status(200).json({ status: 'Already exists', user, esaccount });
+          }
+        });
+      });
+    } catch (errors) {
+      return next(new BackError(errors));
+    }
+  },
+  APIEditUserEstablishmentRole: (req, res, next) => {
+    Models.User.findOne({
+      where: { id: req.params.userId },
+      attributes: ['id', 'firstName', 'lastName'],
+      include: {
+        model: Models.ESAccount,
+        required: true,
+        where: {
+          user_id: req.params.userId,
+          es_id: req.params.id
+        }
+      }
+    }).then(esAccount => {
+      esAccount.ESAccounts[0].role = req.body.newRole;
+      esAccount.ESAccounts[0].save().then(newResult => {
+        return res.status(200).send(newResult);
+      });
+    }).catch(errors => next(new BackError(errors)));
+  },
+  APIRemoveUserFromEstablishment: (req, res, next) => {
+    Models.User.findOne({
+      where: { id: req.params.userId },
+      attributes: ['id', 'firstName', 'lastName'],
+      include: {
+        model: Models.ESAccount,
+        required: true,
+        where: {
+          user_id: req.params.userId,
+          es_id: req.params.id
+        }
+      }
+    }).then(esAccount => {
+      esAccount.ESAccounts[0].destroy().then(destroyedESAccount => {
+        return res.status(200).send(destroyedESAccount);
+      }).catch(errors => next(new BackError(errors)));
+    }).catch(errors => next(new BackError(errors)));
+  },
+  APIshowESNeeds: (req, res, next) => {
+    Models.Need.findAll({
+      where: { es_id: req.params.esId },
+      include: [{
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true,
+        include: {
+          model: Models.Candidate,
+          required: true,
+          include: {
+            model: Models.User,
+            attributes: ['id', 'firstName', 'lastName', 'birthday'],
+            on: {
+              '$candidates->Candidate.user_id$': {
+                [Op.col]: 'candidates->Candidate->User.id'
+              }
+            },
+            required: true
+          }
+        }
+      }, {
+        model: Models.Establishment,
+        required: true
+      }]
+    }).then(need => {
+      if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      return res.status(200).send(need);
+    }).catch(error => next(new BackError(error)));
+  },
+  APIshowESNeed: (req, res, next) => {
+    Models.Need.findOne({
+      where: { id: req.params.id },
+      include: [{
+        model: Models.NeedCandidate,
+        as: 'candidates',
+        required: true,
+        include: {
+          model: Models.Candidate,
+          required: true,
+          include: {
+            model: Models.User,
+            attributes: ['id', 'firstName', 'lastName', 'birthday'],
+            on: {
+              '$candidates->Candidate.user_id$': {
+                [Op.col]: 'candidates->Candidate->User.id'
+              }
+            },
+            required: true
+          }
+        }
+      }, {
+        model: Models.Establishment,
+        required: true
+      }]
+    }).then(need => {
+      if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      return res.status(200).send(need);
+    }).catch(error => next(new BackError(error)));
+  },
   getESList: (req, res, next) => {
     Models.Establishment.findAll().then(data => {
       res.render('back-office/es/list', {
@@ -224,7 +412,22 @@ module.exports = {
     }).catch(error => next(new BackError(error)));
   },
   getES: (req, res, next) => {
-    Models.Establishment.findOne({ where: { id: req.params.id } }).then(data => {
+    Models.Establishment.findOne({
+      where: { id: req.params.id },
+      include: {
+        model: Models.ESAccount,
+        where: { es_id: req.params.id },
+        include: {
+          model: Models.User,
+          required: true,
+          on: {
+            '$ESAccounts.user_id$': {
+              [Op.col]: 'ESAccounts->User.id'
+            }
+          },
+        }
+      }
+    }).then(data => {
       if (_.isNil(data)) {
         req.flash('error_msg', 'Cet établissement n\'existe pas.');
         return res.redirect('/back-office/es');
@@ -244,7 +447,7 @@ module.exports = {
           candidates,
           title: `Établissement ${data.dataValues.name}`,
           a: { main: 'es', sub: 'es_one' },
-          data
+          es: data
         })
       });
     }).catch(error => next(new BackError(error)));
@@ -281,7 +484,7 @@ module.exports = {
     });
   },
   editSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -294,7 +497,7 @@ module.exports = {
     })
   },
   addSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -311,7 +514,7 @@ module.exports = {
     })
   },
   removeSkill: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -327,7 +530,7 @@ module.exports = {
     });
   },
   editFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -340,7 +543,7 @@ module.exports = {
     })
   },
   addFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -357,7 +560,7 @@ module.exports = {
     })
   },
   removeFormation: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -373,7 +576,7 @@ module.exports = {
     });
   },
   editEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -386,7 +589,7 @@ module.exports = {
     })
   },
   addEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -403,7 +606,7 @@ module.exports = {
     })
   },
   removeEquipment: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -419,7 +622,7 @@ module.exports = {
     });
   },
   editSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -432,7 +635,7 @@ module.exports = {
     })
   },
   addSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -449,7 +652,7 @@ module.exports = {
     })
   },
   removeSoftware: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -465,7 +668,7 @@ module.exports = {
     });
   },
   editService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -478,7 +681,7 @@ module.exports = {
     })
   },
   addService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -495,7 +698,7 @@ module.exports = {
     })
   },
   removeService: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -516,7 +719,7 @@ module.exports = {
     });
   },
   editPost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -530,7 +733,7 @@ module.exports = {
     })
   },
   addPost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -548,7 +751,7 @@ module.exports = {
     })
   },
   removePost: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -564,7 +767,7 @@ module.exports = {
     });
   },
   editQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -577,7 +780,7 @@ module.exports = {
     })
   },
   addQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -686,7 +889,7 @@ module.exports = {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
   removeQualification: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -696,7 +899,7 @@ module.exports = {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },
   editCandidate: (req, res, next) => {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -757,17 +960,17 @@ module.exports = {
       res.redirect('/');
     });
   },
-  removeUserImpersonation: (req, res) => {
+  removeUserImpersonation: (req, res, next) => {
     Models.User.findOne({
       where: { id: req.session.originalUser },
       attributes: { exclude: ['password'] }
     }).then(user => {
       if (_.isNil(user)) return res.status(400).send('User not found.');
-      discord(`**${user.dataValues.email}** vient de se déconnecter du compte de **${req.user.fullName}**.`, 'infos');
       delete req.session.originalUser;
       delete req.session.role;
       delete req.session.readOnly;
-      req.logIn(user, (err) => new Error(err));
+      discord(`**${user.dataValues.email}** vient de se déconnecter du compte de **${req.user.fullName}**.`, 'infos');
+      req.logIn(user, (err) => next(new BackError(err)));
       res.redirect('/');
     });
   },

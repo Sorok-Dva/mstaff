@@ -13,6 +13,18 @@ module.exports = (sequelize, DataTypes) => {
         this.setDataValue('posts', JSON.stringify(data));
       }
     },
+    services: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('services'))
+      },
+      set(data) {
+        if (data === null)
+          this.setDataValue('services', data);
+        else
+          this.setDataValue('services', JSON.stringify(data));
+      }
+    },
     full_time: DataTypes.BOOLEAN,
     part_time: DataTypes.BOOLEAN,
     day_time: DataTypes.BOOLEAN,
