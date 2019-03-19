@@ -52,7 +52,9 @@ router.get('/register/:esCode?',
 router.get('/validate/:key',
   Authentication.ensureIsNotAuthenticated,
   User.Main.ValidateAccount);
-router.get('/new/password/:key', Authentication.ensureIsNotAuthenticated, IndexController.resetPassword)
+router.get('/new/password/:key',
+  Authentication.ensureIsNotAuthenticated,
+  Render.View.resetPassword)
   .post('/new/password/:key',
     Authentication.ensureIsNotAuthenticated,
     HTTPValidation.UserController.resetPassword,

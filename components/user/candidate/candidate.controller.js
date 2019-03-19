@@ -1,6 +1,7 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator/check');
-const { BackError, mkdirIfNotExists } = require(`${__}/helpers`);
+const { check, validationResult } = require('express-validator/check');
+const { BackError } = require(`${__}/helpers/back.error`);
+const { mkdirIfNotExists } = require(`${__}/helpers/helpers`);
 const { Op } = require('sequelize');
 const _ = require('lodash');
 const fs = require('fs');
@@ -572,7 +573,7 @@ User_Candidate.getEditWish = (req, res, next) => {
       include: {
         model: Models.EstablishmentReference,
         on: { '$applications.ref_es_id$': {
-            [Op.col]: 'applications->EstablishmentReference.finess_et' }
+          [Op.col]: 'applications->EstablishmentReference.finess_et' }
         }
       }
     }]
