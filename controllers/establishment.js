@@ -4,7 +4,6 @@ const { _ } = require('lodash');
 const { BackError } = require('../helpers/back.error');
 const httpStatus = require('http-status');
 
-const sequelize = require('../bin/sequelize');
 const mailer = require('../bin/mailer');
 const Models = require('../models/index');
 
@@ -152,7 +151,7 @@ module.exports = {
                 mailer.sendEmail({
                   to: needCandidate.Candidate.User.email,
                   subject: 'Un établissement est intéressé par votre profil !',
-                  template: 'candidate/es_notified',
+                  template: 'user/es_notified',
                   context: {
                     notification,
                     needCandidate

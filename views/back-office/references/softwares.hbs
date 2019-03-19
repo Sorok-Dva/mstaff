@@ -14,7 +14,7 @@
                            if ($('input#softwareValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#softwareValue').val();
-                               $.post(`/api/back-office/softwares/`, {
+                               $.post(`/api/back-office/references/softwares/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -30,8 +30,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.software.id,
-                                   name: response.software.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({
@@ -66,7 +66,7 @@
               data-formatter="operateFormatter">Actions</th>
           </thead>
           <tbody>
-          {{#each software as |softwares|}}
+          {{#each references as |softwares|}}
             <tr data-id="{{softwares.id}}">
               <td></td>
               <td>{{softwares.id}}</td>
@@ -108,7 +108,7 @@
             if ($('input#softwareValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#softwareValueEdit').val();
-              $.put(`/api/back-office/softwares/${row.id}`, {
+              $.put(`/api/back-office/references/softwares/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -141,7 +141,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveSoftware').click(function () {
-            $.delete(`/api/back-office/softwares/${row.id}`, {
+            $.delete(`/api/back-office/references/softwares/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

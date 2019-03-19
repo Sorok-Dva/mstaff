@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
 const rateLimit = require('express-rate-limit');
-const UserController = require('../controllers/user');
+const { User } = require('../components');
 const IndexController = require('../controllers/index');
 
 const loginLimiter = rateLimit({
@@ -48,11 +48,14 @@ router.get('/register/:esCode?',
   .post('/register/:esCode?',
     Authentication.ensureIsNotAuthenticated,
     HTTPValidation.UserController.create,
-    UserController.create);
+    User.Main.create);
 
 router.get('/validate/:key', Authentication.ensureIsNotAuthenticated, IndexController.getValidateAccount);
 router.get('/new/password/:key', Authentication.ensureIsNotAuthenticated, IndexController.resetPassword)
-  .post('/new/password/:key', Authentication.ensureIsNotAuthenticated, HTTPValidation.UserController.resetPassword, UserController.resetPassword);
+  .post('/new/password/:key',
+    Authentication.ensureIsNotAuthenticated,
+    HTTPValidation.UserController.resetPassword,
+    User.Main.resetPassword);
 
 /**
  * @Route('/register/complete/profile') GET + POST;

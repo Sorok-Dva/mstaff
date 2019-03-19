@@ -8,7 +8,7 @@ router.post('/:esId/search/candidates',
   Controller.Establishment.Application.getCandidates
 );
 
-router.post('/:esId/get/candidate/:userId',
+router.post('/:esId/get/user/:userId',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Controller.apiGetCandidate
 );
@@ -17,12 +17,12 @@ router.post('/:esId/addNeed',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Controller.Establishment.Need.Create);
 
-router.post('/:esId/need/:id/:action/candidate/:candidateId',
+router.post('/:esId/need/:id/:action/user/:candidateId',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Controller.apiNeedCandidate
 );
 
-router.post('/:esId/candidate/:candidateId/:action',
+router.post('/:esId/user/:candidateId/:action',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Controller.apiFavCandidate
 );

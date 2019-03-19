@@ -1,5 +1,5 @@
 const { Authentication } = require('../middlewares/index');
-const Controller = require('../controllers/establishment');
+const { Establishment } = require('../components');
 const express = require('express');
 const router = express.Router();
 
@@ -9,11 +9,11 @@ const router = express.Router();
  */
 router.get('/select/es',
   Authentication.ensureIsEs,
-  Controller.Establishment.Main.ViewAccounts);
+  Establishment.Main.ViewAccounts);
 
 router.get('/select/es/:currentEsId',
   Authentication.ensureIsEs,
-  Controller.Establishment.Main.Select);
+  Establishment.Main.Select);
 
 /**
  * @Route('/candidates') GET;
@@ -21,7 +21,7 @@ router.get('/select/es/:currentEsId',
  */
 router.get('/candidates',
   Authentication.ensureIsEs,
-  Controller.Establishment.Need.ViewCreate);
+  Establishment.Need.ViewCreate);
 
 /**
  * @Route('/needs') GET;
@@ -29,7 +29,7 @@ router.get('/candidates',
  */
 router.get('/needs',
   Authentication.ensureIsEs,
-  Controller.Establishment.Need.ViewAll);
+  Establishment.Need.ViewAll);
 
 /**
  * @Route('/need/:id') GET;
@@ -37,6 +37,6 @@ router.get('/needs',
  */
 router.get('/need/:id',
   Authentication.ensureIsEs,
-  Controller.Establishment.Need.View);
+  Establishment.Need.View);
 
 module.exports = router;
