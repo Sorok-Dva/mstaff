@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const Mailer = require(`${__}/components/mailer`);
 const mailer = require(`${__}/bin/mailer`);
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 
 const User = {};
 

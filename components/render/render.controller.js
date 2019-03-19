@@ -1,6 +1,6 @@
 const __ = process.cwd();
 const { BackError } = require(`${__}/helpers/back.error`);
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 
 const Render = {};
 

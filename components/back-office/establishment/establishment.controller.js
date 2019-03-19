@@ -7,7 +7,7 @@ const httpStatus = require('http-status');
 const crypto = require('crypto');
 
 const mailer = require(`${__}/bin/mailer`);
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
 
 const BackOffice_Establishment = {};

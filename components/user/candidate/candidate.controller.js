@@ -5,7 +5,7 @@ const { mkdirIfNotExists } = require(`${__}/helpers/helpers`);
 const { Op } = require('sequelize');
 const _ = require('lodash');
 const fs = require('fs');
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 
 const User_Candidate = {};
 

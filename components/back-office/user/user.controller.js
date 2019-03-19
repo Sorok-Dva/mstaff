@@ -2,7 +2,7 @@ const __ = process.cwd();
 const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
 const { validationResult } = require('express-validator/check');
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 const Mailer = require(`${__}/components/mailer`);
 
 const layout = 'admin';

@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator/check');
-const Models = require('../models/index');
+const Models = require('../orm/models/index');
 const layout = 'admin';
 
 module.exports = {

@@ -5,7 +5,7 @@ const { BackError } = require('../helpers/back.error');
 const httpStatus = require('http-status');
 
 const mailer = require('../bin/mailer');
-const Models = require('../models/index');
+const Models = require('../orm/models/index');
 
 const Establishment = require('../components/establishment');
 

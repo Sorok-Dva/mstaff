@@ -7,7 +7,7 @@ const httpStatus = require('http-status');
 
 const sequelize = require(`${__}/bin/sequelize`);
 const mailer = require(`${__}/bin/mailer`);
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 
 const Establishment_Application = {};
 
