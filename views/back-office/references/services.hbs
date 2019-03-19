@@ -13,7 +13,7 @@
                            if ($('input#serviceValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#serviceValue').val();
-                               $.post(`/api/back-office/services/`, {
+                               $.post(`/api/back-office/references/services/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -29,8 +29,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.service.id,
-                                   name: response.service.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({
@@ -65,7 +65,7 @@
               data-formatter="operateFormatter">Actions</th>
           </thead>
           <tbody>
-          {{#each service as |services|}}
+          {{#each references as |services|}}
             <tr data-id="{{services.id}}">
               <td></td>
               <td>{{services.id}}</td>
@@ -107,7 +107,7 @@
             if ($('input#serviceValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#serviceValueEdit').val();
-              $.put(`/api/back-office/services/${row.id}`, {
+              $.put(`/api/back-office/references/services/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -140,7 +140,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveService').click(function () {
-            $.delete(`/api/back-office/services/${row.id}`, {
+            $.delete(`/api/back-office/references/services/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

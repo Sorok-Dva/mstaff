@@ -1,5 +1,6 @@
-const { Authentication, HTTPValidation } = require('../../middlewares/index');
-const CandidateController = require('../../controllers/candidate');
+const __ = process.cwd();
+const { Authentication, HTTPValidation } = require(`${__}/middlewares/index`);
+const { User } = require(`${__}/components`);
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -29,46 +30,75 @@ const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).
 
 
 /**
- * @Route('/api/candidate/:action/video') POST;
+ * @Route('/api/user/:action/video') POST;
  * Candidate upload video/ delete to his profile.
  */
-router.post('/:action/video', Authentication.ensureIsCandidate, videoUpload, CandidateController.postVideo);
+router.post('/:action/video',
+  Authentication.ensureIsCandidate,
+  videoUpload,
+  User.Candidate.addVideo);
 
-router.post('/add/document', Authentication.ensureIsCandidate, docsUpload, CandidateController.uploadDocument);
+router.post('/add/document',
+  Authentication.ensureIsCandidate,
+  docsUpload,
+  User.Candidate.uploadDocument);
 
-router.post('/add/photo', Authentication.ensureIsCandidate, avatarUpload, CandidateController.uploadAvatar);
+router.post('/add/photo',
+  Authentication.ensureIsCandidate,
+  avatarUpload,
+  User.Candidate.uploadAvatar);
 
-router.get('/xp/:id', Authentication.ensureIsCandidate, CandidateController.getXpById)
-  .delete('/xp/:id', Authentication.ensureIsCandidate, CandidateController.removeXP);
+router.get('/xp/:id',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getXpById
+).delete('/xp/:id',
+  Authentication.ensureIsCandidate,
+  User.Candidate.removeXP);
 
-router.get('/formation/:id', Authentication.ensureIsCandidate, CandidateController.getFormationById)
-  .delete('/formation/:id', Authentication.ensureIsCandidate, CandidateController.removeFormation)
+router.get('/formation/:id',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getFormationById)
+  .delete('/formation/:id',
+    Authentication.ensureIsCandidate,
+    User.Candidate.removeFormation)
   .put('/formation/:id',
     Authentication.ensureIsCandidate,
     HTTPValidation.CandidateController.putFormation,
-    CandidateController.putFormation
+    User.Candidate.putFormation
   );
 
-router.get('/diploma/:id', Authentication.ensureIsCandidate, CandidateController.getDiplomaById)
-  .delete('/diploma/:id', Authentication.ensureIsCandidate, CandidateController.removeDiploma);
+router.get('/diploma/:id',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getDiplomaById)
+  .delete('/diploma/:id',
+    Authentication.ensureIsCandidate,
+    User.Candidate.removeDiploma);
 
-router.post('/type/:type/add', Authentication.ensureIsCandidate, CandidateController.addRating);
-router.post('/rate/:type/:id', Authentication.ensureIsCandidate, CandidateController.starsRating);
-router.delete('/type/:type/:id', Authentication.ensureIsCandidate, CandidateController.deleteRating);
+router.post('/type/:type/add',
+  Authentication.ensureIsCandidate,
+  User.Candidate.addRating);
+router.post('/rate/:type/:id',
+  Authentication.ensureIsCandidate,
+  User.Candidate.starsRating);
+router.delete('/type/:type/:id',
+  Authentication.ensureIsCandidate,
+  User.Candidate.deleteRating);
 
 router.get('/wish/:id',
   Authentication.ensureIsCandidate,
   HTTPValidation.CandidateController.getWish,
-  CandidateController.getWish)
-  .post('/wish/add', Authentication.ensureIsCandidate, CandidateController.addWish)
+  User.Candidate.getWish)
+  .post('/wish/add',
+    Authentication.ensureIsCandidate,
+    User.Candidate.addWish)
   .delete('/wish/:id',
     Authentication.ensureIsCandidate,
     HTTPValidation.CandidateController.removeWish,
-    CandidateController.removeWish
+    User.Candidate.removeWish
   )
   .put('/wish/:id',
     Authentication.ensureIsCandidate,
-    CandidateController.editWish
+    User.Candidate.editWish
   );
 
 

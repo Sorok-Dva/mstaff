@@ -2,7 +2,7 @@ const conf = require('dotenv').config().parsed;
 const packageJson = require('../package');
 const path = require('path');
 const { Env } = require('../helpers/helpers');
-const config = require(`../config/config.json`)[Env.current];
+const config = require(`../orm/config/config`)[Env.current];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const exphbs = require('express-handlebars');
@@ -118,7 +118,7 @@ module.exports = {
   },
   wildcardSubdomains: (req, res, next) => {
     if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2') return next();
-    EstablishmentController.findBySubdomain(req, res, (data) => {
+    EstablishmentController.Establishment.Main.findBySubdomain(req, res, (data) => {
       res.locals.es = data;
       req.url = `/esDomain${req.url}`;
       next();

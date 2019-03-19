@@ -1,5 +1,5 @@
 const { Authentication, HTTPValidation } = require('../middlewares/index');
-const CandidateController = require('../controllers/candidate');
+const { User } = require('../components');
 const express = require('express');
 const router = express.Router();
 
@@ -7,44 +7,61 @@ const router = express.Router();
  * @Route('/profile') GET;
  * Show user profile.
  */
-router.get('/profile', Authentication.ensureIsCandidate, CandidateController.getProfile);
+router.get('/profile',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getProfile);
 
 /**
  * @Route('/profile/edit') GET | POST;
  * Form for edit user profile.
  */
-router.get('/profile/edit', Authentication.ensureIsCandidate, CandidateController.getEditProfile)
-  .post('/profile/edit', Authentication.ensureIsCandidate, CandidateController.postEditProfile);
+router.get(
+  '/profile/edit', Authentication.ensureIsCandidate,
+  User.Candidate.ViewEditProfile
+).post(
+  '/profile/edit',
+  Authentication.ensureIsCandidate,
+  User.Candidate.EditProfile);
 
 /**
  * @Route('/formations') GET;
- * Show Formations and Experiences candidate page
+ * Show Formations and Experiences user page
  */
-router.get('/formations', Authentication.ensureIsCandidate, CandidateController.getFormationsAndXP);
+router.get('/formations',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getFormationsAndXP);
 
 /**
  * @Route('/knowledges') GET;
- * Show knowledges candidate page
+ * Show knowledges user page
  */
-router.get('/knowledges', Authentication.ensureIsCandidate, CandidateController.getKnowledge);
+router.get('/knowledges',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getKnowledge);
 
 /**
  * @Route('/documents') GET;
- * Show documents candidate page
+ * Show documents user page
  */
-router.get('/documents', Authentication.ensureIsCandidate, CandidateController.getDocuments);
+router.get('/documents',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getDocuments);
 
 /**
  * @Route('/applications') GET;
- * Show applications candidate page
+ * Show applications user page
  */
-router.get('/applications', Authentication.ensureIsCandidate, CandidateController.getWishes);
+router.get('/applications',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getWishes);
 
 /**
  * @Route('/applications/new') GET;
  * Show new application form page
  */
-router.get('/applications/new', Authentication.ensureIsCandidate, CandidateController.addApplication);
+router.get('/applications/new',
+  Authentication.ensureIsCandidate,
+  User.Candidate.addApplication);
 
 /**
  * @Route('/add/Experience') POST;
@@ -53,7 +70,7 @@ router.get('/applications/new', Authentication.ensureIsCandidate, CandidateContr
 router.post('/add/experience',
   Authentication.ensureIsCandidate,
   HTTPValidation.CandidateController.postAddExperience,
-  CandidateController.postAddExperience
+  User.Candidate.AddExperience
 );
 
 /**
@@ -63,7 +80,7 @@ router.post('/add/experience',
 router.post('/add/formation',
   Authentication.ensureIsCandidate,
   HTTPValidation.CandidateController.postAddFormation,
-  CandidateController.postAddFormation
+  User.Candidate.AddFormation
 );
 
 /**
@@ -73,12 +90,12 @@ router.post('/add/formation',
 router.post('/add/diploma',
   Authentication.ensureIsCandidate,
   HTTPValidation.CandidateController.postAddDiploma,
-  CandidateController.postAddDiploma
+  User.Candidate.AddDiploma
 );
 
 router.get('/wish/edit/:id',
   Authentication.ensureIsCandidate,
   HTTPValidation.CandidateController.getEditWish,
-  CandidateController.getEditWish);
+  User.Candidate.getEditWish);
 
 module.exports = router;

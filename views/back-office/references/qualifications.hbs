@@ -14,7 +14,7 @@
                            if ($('input#qualificationValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#qualificationValue').val();
-                               $.post(`/api/back-office/qualifications/`, {
+                               $.post(`/api/back-office/references/qualifications/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -30,8 +30,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.qualification.id,
-                                   name: response.qualification.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({
@@ -66,7 +66,7 @@
               data-formatter="operateFormatter">Actions</th>
           </thead>
           <tbody>
-          {{#each qualification as |qualifications|}}
+          {{#each references as |qualifications|}}
             <tr data-id="{{qualifications.id}}">
               <td></td>
               <td>{{qualifications.id}}</td>
@@ -108,7 +108,7 @@
             if ($('input#qualificationValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#qualificationValueEdit').val();
-              $.put(`/api/back-office/qualifications/${row.id}`, {
+              $.put(`/api/back-office/references/qualifications/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -141,7 +141,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveQualification').click(function () {
-            $.delete(`/api/back-office/qualifications/${row.id}`, {
+            $.delete(`/api/back-office/references/qualifications/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

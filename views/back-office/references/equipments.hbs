@@ -14,7 +14,7 @@
                            if ($('input#equipmentValue').val() != '') {
                                let _csrf = $('#csrfToken').val();
                                let promptInput = $('input#equipmentValue').val();
-                               $.post(`/api/back-office/equipments/`, {
+                               $.post(`/api/back-office/references/equipments/`, {
                                    promptInput,
                                    _csrf
                                }, (response) => {
@@ -30,8 +30,8 @@
                            table.bootstrapTable('insertRow', {
                                index: 0,
                                row: {
-                                   id: response.equipment.id,
-                                   name: response.equipment.name
+                                   id: response.reference.id,
+                                   name: response.reference.name
                                }
                            });
                            notification({
@@ -65,7 +65,7 @@
               data-formatter="operateFormatter">Actions</th>
           </thead>
           <tbody>
-          {{#each equipment as |equipments|}}
+          {{#each references as |equipments|}}
             <tr data-id="{{equipments.id}}">
               <td></td>
               <td>{{equipments.id}}</td>
@@ -107,7 +107,7 @@
             if ($('input#equipmentValueEdit').val() != '') {
               let _csrf = $('#csrfToken').val();
               let promptInput = $('input#equipmentValueEdit').val();
-              $.put(`/api/back-office/equipments/${row.id}`, {
+              $.put(`/api/back-office/references/equipments/${row.id}`, {
                 promptInput,
                 _csrf
               }, () => {
@@ -140,7 +140,7 @@
         }, () => {
           let _csrf = $('#csrfToken').val();
           $('button#btnRemoveEquipment').click(function () {
-            $.delete(`/api/back-office/equipments/${row.id}`, {
+            $.delete(`/api/back-office/references/equipments/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {

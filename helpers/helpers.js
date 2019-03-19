@@ -112,7 +112,7 @@ module.exports = {
   },
   isEqualOrBeforeDate: (date, referenceDate) => moment(date).isSameOrBefore(referenceDate, 'day'),
   mkdirIfNotExists: (dir) => {
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   },
   // this is used to debug sequelize
   getIncludes: (opts) => {
