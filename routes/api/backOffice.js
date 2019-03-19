@@ -39,7 +39,7 @@ router.post('/establishment/:id/edit/user/:userId',
 
 router.get('/establishment/:esId/needs', Authentication.ensureIsAdmin, Controller.BackOffice.Establishment.getNeeds);
 router.get('/establishment/:esId/need/:id', Authentication.ensureIsAdmin, Controller.BackOffice.Establishment.getNeed);
-router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, Controller.sendCandidateVerifEmail);
+router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, Controller.BackOffice.User.sendVerificationEmail);
 
 /**
  * @Route('/back-office/references/:type') POST;

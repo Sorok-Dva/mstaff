@@ -48,32 +48,43 @@ router.get(
 ).post(
   '/user/:id',
   Authentication.ensureIsAdmin,
-  Controller.editCandidate);
+  Controller.BackOffice.User.edit);
 
 /**
  * @Route('/back-office/impersonate/user/:id/') GET;
  * Impersonate User Session
  */
-router.get('/impersonate/user/:id', Authentication.ensureIsAdmin, Controller.impersonateUser);
+router.get('/impersonate/user/:id',
+  Authentication.ensureIsAdmin,
+  Controller.BackOffice.Impersonation.User);
 
 /**
  * @Route('/back-office/removeImpersonation/') GET;
  * Remove Impersonation
  */
-router.get('/removeImpersonation', Authentication.ensureIsAdmin, Controller.removeUserImpersonation);
+router.get('/removeImpersonation',
+  Authentication.ensureIsAdmin,
+  Controller.BackOffice.Impersonation.Remove);
 
 /**
  * @Route('/back-office/impersonateRemoveReadOnly/') GET;
  * Generate PinCode for Remove Read Only
  */
-router.post('/impersonateRemoveReadOnly', Authentication.ensureIsAdmin, Controller.impersonateRemoveReadOnly);
-router.get('/impersonatePutReadOnly', Authentication.ensureIsAdmin, Controller.impersonatePutReadOnly);
+router.post('/impersonateRemoveReadOnly',
+  Authentication.ensureIsAdmin,
+  Controller.BackOffice.Impersonation.removeReadOnly);
+
+router.get('/impersonatePutReadOnly',
+  Authentication.ensureIsAdmin,
+  Controller.BackOffice.Impersonation.PutReadOnly);
 
 /**
  * @Route('/back-office/impersonateRemoveReadOnly/validate/') GET;
  * Validation of removing read only
  */
-router.post('/impersonateRemoveReadOnly/validate', Authentication.ensureIsAdmin, Controller.impersonateRemoveReadOnlyValidation);
+router.post('/impersonateRemoveReadOnly/validate',
+  Authentication.ensureIsAdmin,
+  Controller.BackOffice.Impersonation.RemoveReadOnlyValidation);
 
 /**
  * @Route('/back-office/establishments/') GET;
@@ -111,12 +122,12 @@ router.get('/references/:type',
  * @Route('/back-office/users/groups/') GET;
  * Show services data
  */
-router.get('/users/groups', Authentication.ensureIsAdmin, Controller.getGroups);
+router.get('/groups', Authentication.ensureIsAdmin, Controller.getGroups);
 
 /**
  * @Route('/back-office/users/super-groups/') GET;
  * Show services data
  */
-router.get('/users/super-groups', Authentication.ensureIsAdmin, Controller.getSuperGroups);
+router.get('/super-groups', Authentication.ensureIsAdmin, Controller.getSuperGroups);
 
 module.exports = router;
