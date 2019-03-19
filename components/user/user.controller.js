@@ -57,6 +57,34 @@ User.create =(req, res, next) => {
   });
 };
 
+User.ValidateAccount = (req, res) => {
+  if (req.params.key) {
+    Models.User.findOne({
+      where: { key: req.params.key },
+      attributes: ['key', 'id', 'firstName', 'email', 'validated']
+    }).then(user => {
+      if (_.isNil(user)) {
+        req.flash('error_msg', 'Clé de validation invalide.');
+        return res.render('/', { layout: 'landing' });
+      }
+      user.validated = true;
+      user.save().then(result => {
+        req.flash('success_msg', 'Compte validé avec succès. Vous pouvez désormais vous connecter.');
+        mailer.sendEmail({
+          to: user.email,
+          subject: 'Votre inscription est confirmée.',
+          template: 'candidate/emailValidated',
+          context: { user: user }
+        });
+        res.redirect('/login');
+      })
+    });
+  } else {
+    req.flash('error_msg', 'Clé de validation invalide.');
+    return res.redirect('/');
+  }
+};
+
 User.resetPassword = (req, res, next) => {
   const errors = validationResult(req);
   let { password } = req.body;
