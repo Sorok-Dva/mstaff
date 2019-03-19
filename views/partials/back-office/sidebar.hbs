@@ -1,7 +1,7 @@
 <div class="sidebar" data-background-color="white" data-active-color="success">
   <!--
-      Tip 1: you can change the color of the sidebar's background using: data-background-color="white | brown"
-      Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+      Tip 1: you can change the color of the sidebar's background using: orm-background-color="white | brown"
+      Tip 2: you can change the color of the active button using the orm-active-color="primary | info | success | warning | danger"
   -->
   <div class="logo">
     <a href="#" class="simple-text logo-mini">
@@ -67,13 +67,13 @@
               </a>
             </li>
             <li{{#ifCond a.sub '===' 'groups'}} class="active"{{/ifCond}}>
-              <a href="/back-office/users/groups">
+              <a href="/back-office/groups">
                 <span class="sidebar-mini"><i class="fal fa-hospital-user"></i></span>
                 <span class="sidebar-normal">Groupes</span>
               </a>
             </li>
             <li{{#ifCond a.sub '===' 'superGroups'}} class="active"{{/ifCond}}>
-              <a href="/back-office/users/super-groups">
+              <a href="/back-office/super-groups">
                 <span class="sidebar-mini"><i class="fal fa-hospital-user"></i></span>
                 <span class="sidebar-normal">Super Groupes</span>
               </a>
@@ -135,7 +135,7 @@
           </ul>
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'formations'}} class="active"{{/ifCond}}>
-              <a href="/back-office/formations">
+              <a href="/back-office/references/formations">
                 <i class="fal fa-user-graduate"></i>
                 <span class="sidebar-normal">Formations</span>
               </a>
@@ -143,7 +143,7 @@
           </ul>
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'skills'}} class="active"{{/ifCond}}>
-              <a href="/back-office/skills">
+              <a href="/back-office/references/skills">
                 <i class="fal fa-award"></i>
                 <span class="sidebar-normal">Compétences</span>
               </a>
@@ -151,7 +151,7 @@
           </ul>
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'equipments'}} class="active"{{/ifCond}}>
-              <a href="/back-office/equipments">
+              <a href="/back-office/references/equipments">
                 <i class="fal fa-stethoscope"></i>
                 <span class="sidebar-normal">Matériels</span>
               </a>
@@ -159,7 +159,7 @@
           </ul>
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'softwares'}} class="active"{{/ifCond}}>
-              <a href="/back-office/softwares">
+              <a href="/back-office/references/softwares">
                 <i class="fal fa-save"></i>
                 <span class="sidebar-normal">Logiciels</span>
               </a>
@@ -167,7 +167,7 @@
           </ul>
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'services'}} class="active"{{/ifCond}}>
-              <a href="/back-office/services">
+              <a href="/back-office/references/services">
                 <i class="fal fa-heartbeat"></i>
                 <span class="sidebar-normal">Services</span>
               </a>
@@ -175,7 +175,7 @@
           </ul>
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'posts'}} class="active"{{/ifCond}}>
-              <a href="/back-office/posts">
+              <a href="/back-office/references/posts">
                 <i class="fal fa-user-md"></i>
                 <span class="sidebar-normal">Postes</span>
               </a>
@@ -183,7 +183,7 @@
           </ul>
           <ul class="nav">
             <li{{#ifCond a.sub '===' 'qualifications'}} class="active"{{/ifCond}}>
-              <a href="/back-office/qualifications">
+              <a href="/back-office/references/qualifications">
                 <i class="fal fa-graduation-cap"></i>
                 <span class="sidebar-normal"> Diplômes Complémentaires </span>
               </a>
