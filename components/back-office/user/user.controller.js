@@ -1,7 +1,10 @@
 const __ = process.cwd();
 const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
+const { validationResult } = require('express-validator/check');
 const Models = require(`${__}/models/index`);
+const Mailer = require(`${__}/components/mailer`);
+
 const layout = 'admin';
 
 const BackOffice_Users = {};
@@ -28,6 +31,49 @@ BackOffice_Users.findOne = (req, res, next) => {
       a: { main: 'users', sub: 'profile' },
       user
     })
+  });
+};
+
+BackOffice_Users.edit = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+  return Models.User.findOne({ where: { id: req.params.id } }).then(user => {
+    if (req.body.candidateId) {
+      Models.Candidate.findOne({ where: { user_id: req.params.id } }).then(candidate => {
+        candidate.description = req.body.description;
+        candidate.save();
+      });
+    }
+    user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
+    user.email = req.body.email;
+    user.birthday = req.body.birthday;
+    user.postal_code = req.body.postal_code;
+    user.town = req.body.town;
+    user.role = req.body.role;
+    user.type = req.body.type;
+    // user.phone = req.body.phone;
+    user.save().then(() => {
+      req.flash('success_msg', 'Informations sauvegardées.');
+      return res.redirect('/back-office/users');
+    });
+  }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+};
+
+BackOffice_Users.sendVerificationEmail = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
+  Models.User.findOne({
+    where: { email: req.body.email },
+    attributes: [ 'id', 'firstName', 'lastName', 'key', 'type', 'email' ]
+  }).then(user => {
+    if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
+    Mailer.Main.sendUserVerificationEmail(user);
+    return res.status(200).send('Send');
   });
 };
 
