@@ -20,7 +20,7 @@ Establishment_Website.getRegister = (req, res, next) => {
 };
 
 Establishment_Website.getAts = (req, res, next) => {
-  return res.render('establishments/site/ats', { layout: 'establishment', landing: 'ats'})
+  return res.render('establishments/site/ats', { layout: 'establishment', landing: 'ats' })
 };
 
 module.exports = Establishment_Website;
