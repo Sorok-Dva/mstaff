@@ -56,11 +56,12 @@
   <link rel="stylesgeet" href="https://rawgit.com/creativetimofficial/material-kit/master/assets/css/material-kit.css">
 </head>
 
+{{#ifCond landing '===' 'main'}}
 <body class="profile-page">
   <div class="page-header header-filter" data-parallax="true"
-       style="background-image:url('{{#if es.banner}}{{es.banner}}{{else}}/static/assets/images/cover-es.jpg{{/if}}');">
+       style="background-image:url('{{#if @root.es.banner}}{{@root.es.banner}}{{else}}/static/assets/images/cover-es.jpg{{/if}}');">
     <div class="col-md-12">
-      <h1 class="text-center" style="color:white;">{{es.name}}</h1>
+      <h1 class="text-center" style="color:white;">{{@root.es.name}}</h1>
     </div>
   </div>
 
@@ -70,17 +71,33 @@
       <div id="bodyContent" class="col-md-12 content">
         <div class="container-fluid">
           {{> flash}}
-          {{{body}}}
+          {{{@root.body}}}
         </div>
       </div>
     </div>
-    <input id="csrfToken" type="text" value="{{csrfToken}}" class="hidden">
+    <input id="csrfToken" type="text" value="{{@root.csrfToken}}" class="hidden">
   </div>
 
   <footer class="footer text-center">
     <p>&copy; 2019, Copyright Mstaff</p>
   </footer>
 </body>
+{{/ifCond}}
+
+{{#ifCond landing '===' 'ats'}}
+  <body class="ats">
+  <div class="container-fluid">
+    {{> header}}
+    <div id="bodyContent" class="col-md-12 content">
+      <div class="container-fluid">
+        {{> flash}}
+        {{{@root.body}}}
+      </div>
+    </div>
+  </div>
+  </body>
+{{/ifCond}}
+
 <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
 </html>

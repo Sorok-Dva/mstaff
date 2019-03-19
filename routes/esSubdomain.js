@@ -10,4 +10,8 @@ router.get('/register',
   Authentication.ensureIsNotAuthenticated,
   Establishment.Website.getRegister);
 
+router.get('/ats',
+  Authentication.ensureIsNotAuthenticated,
+  Establishment.Website.getAts);
+
 module.exports = router;

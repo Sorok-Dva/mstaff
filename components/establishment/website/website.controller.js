@@ -12,11 +12,15 @@ const Models = require(`${__}/models/index`);
 const Establishment_Website = {};
 
 Establishment_Website.getIndex = (req, res, next) => {
-  return res.render('establishments/site/index', { layout: 'establishment' })
+  return res.render('establishments/site/index', { layout: 'establishment', landing: 'main' })
 };
 
 Establishment_Website.getRegister = (req, res, next) => {
   return res.render('users/register', { layout: 'onepage' })
+};
+
+Establishment_Website.getAts = (req, res, next) => {
+  return res.render('establishments/site/ats', { layout: 'establishment', landing: 'ats'})
 };
 
 module.exports = Establishment_Website;
