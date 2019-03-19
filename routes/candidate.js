@@ -18,25 +18,25 @@ router.get('/profile/edit', Authentication.ensureIsCandidate, CandidateControlle
 
 /**
  * @Route('/formations') GET;
- * Show Formations and Experiences candidate page
+ * Show Formations and Experiences user page
  */
 router.get('/formations', Authentication.ensureIsCandidate, CandidateController.getFormationsAndXP);
 
 /**
  * @Route('/knowledges') GET;
- * Show knowledges candidate page
+ * Show knowledges user page
  */
 router.get('/knowledges', Authentication.ensureIsCandidate, CandidateController.getKnowledge);
 
 /**
  * @Route('/documents') GET;
- * Show documents candidate page
+ * Show documents user page
  */
 router.get('/documents', Authentication.ensureIsCandidate, CandidateController.getDocuments);
 
 /**
  * @Route('/applications') GET;
- * Show applications candidate page
+ * Show applications user page
  */
 router.get('/applications', Authentication.ensureIsCandidate, CandidateController.getWishes);
 

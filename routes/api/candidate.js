@@ -29,7 +29,7 @@ const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).
 
 
 /**
- * @Route('/api/candidate/:action/video') POST;
+ * @Route('/api/user/:action/video') POST;
  * Candidate upload video/ delete to his profile.
  */
 router.post('/:action/video', Authentication.ensureIsCandidate, videoUpload, CandidateController.postVideo);

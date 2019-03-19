@@ -1,45 +1,46 @@
 const { Authentication, HTTPValidation } = require('../../middlewares/index');
 const Controller = require('../../controllers/backOffice');
+const { BackOffice } = require('../../components');
 const express = require('express');
 const router = express.Router();
 
 router.get(
   '/establishmentsReferences',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Establishment.getRefList);
+  BackOffice.Establishment.getRefList);
 
 router.post(
   '/establishmentsReferences/info/:id',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Establishment.getRefInfo);
+  BackOffice.Establishment.getRefInfo);
 
 router.post(
   '/establishmentsReferences/info/:id/toCreate',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Establishment.getRefInfoToCreate);
+  BackOffice.Establishment.getRefInfoToCreate);
 
 router.post('/establishment/create',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.createEstablishmentFromReference,
-  Controller.BackOffice.Establishment.create);
+  BackOffice.Establishment.create);
 
 router.post('/establishment/:id/add/user',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.addUserInEstablishment,
-  Controller.BackOffice.Establishment.addUser);
+  BackOffice.Establishment.addUser);
 
 router.post('/establishment/:id/remove/user/:userId',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.addUserInEstablishment,
-  Controller.BackOffice.Establishment.removeUser);
+  BackOffice.Establishment.removeUser);
 
 router.post('/establishment/:id/edit/user/:userId',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Establishment.editUserRole);
+  BackOffice.Establishment.editUserRole);
 
-router.get('/establishment/:esId/needs', Authentication.ensureIsAdmin, Controller.BackOffice.Establishment.getNeeds);
-router.get('/establishment/:esId/need/:id', Authentication.ensureIsAdmin, Controller.BackOffice.Establishment.getNeed);
-router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, Controller.BackOffice.User.sendVerificationEmail);
+router.get('/establishment/:esId/needs', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeeds);
+router.get('/establishment/:esId/need/:id', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeed);
+router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, BackOffice.User.sendVerificationEmail);
 
 /**
  * @Route('/back-office/references/:type') POST;
@@ -47,13 +48,13 @@ router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, Control
  */
 router.post('/references/:type',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Reference.Add
+  BackOffice.Reference.Add
 ).put('/references/:type/:id',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Reference.Edit
+  BackOffice.Reference.Edit
 ).delete('/references/:type/:id',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Reference.Delete);
+  BackOffice.Reference.Delete);
 
 router.put('/groups/:id', Authentication.ensureIsAdmin, Controller.editGroups)
   .delete('/groups/:id', Authentication.ensureIsAdmin, Controller.removeGroups)

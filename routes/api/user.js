@@ -3,10 +3,10 @@ const { HTTPValidation } = require(`${__}/middlewares`);
 const express = require('express');
 const router = express.Router();
 
-const Controller = require(`${__}/components/user`);
+const { User } = require(`${__}/components`);
 
 router.get('/emailAvailable/:email',
   HTTPValidation.UserController.ApiVerifyEmailAvailability,
-  Controller.Main.verifyEmailAvailability);
+  User.Main.verifyEmailAvailability);
 
 module.exports = router;

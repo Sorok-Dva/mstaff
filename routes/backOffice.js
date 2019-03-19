@@ -1,4 +1,5 @@
 const { Authentication } = require('../middlewares/index');
+const { BackOffice } = require('../components');
 const Controller = require('../controllers/backOffice');//.BackOffice;
 const express = require('express');
 const router = express.Router();
@@ -9,7 +10,7 @@ const router = express.Router();
  */
 router.get('/',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Main.viewIndex);
+  BackOffice.Main.viewIndex);
 
 /**
  * @Route('/back-office/stats') GET;
@@ -17,7 +18,7 @@ router.get('/',
  */
 router.get('/stats',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Main.ViewStats);
+  BackOffice.Main.ViewStats);
 
 /**
  * @Route('/back-office/users/') GET;
@@ -26,7 +27,7 @@ router.get('/stats',
 router.get(
   '/users',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.User.getAll);
+  BackOffice.User.getAll);
 
 /**
  * @Route('/back-office/users/candidates') GET;
@@ -35,7 +36,7 @@ router.get(
 router.get(
   '/users/:type',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.User.getList);
+  BackOffice.User.getList);
 
 /**
  * @Route('/back-office/user/:id/') GET;
@@ -44,11 +45,11 @@ router.get(
 router.get(
   '/user/:id',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.User.findOne
+  BackOffice.User.findOne
 ).post(
   '/user/:id',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.User.edit);
+  BackOffice.User.edit);
 
 /**
  * @Route('/back-office/impersonate/user/:id/') GET;
@@ -56,7 +57,7 @@ router.get(
  */
 router.get('/impersonate/user/:id',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Impersonation.User);
+  BackOffice.Impersonation.User);
 
 /**
  * @Route('/back-office/removeImpersonation/') GET;
@@ -64,7 +65,7 @@ router.get('/impersonate/user/:id',
  */
 router.get('/removeImpersonation',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Impersonation.Remove);
+  BackOffice.Impersonation.Remove);
 
 /**
  * @Route('/back-office/impersonateRemoveReadOnly/') GET;
@@ -72,11 +73,11 @@ router.get('/removeImpersonation',
  */
 router.post('/impersonateRemoveReadOnly',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Impersonation.removeReadOnly);
+  BackOffice.Impersonation.removeReadOnly);
 
 router.get('/impersonatePutReadOnly',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Impersonation.PutReadOnly);
+  BackOffice.Impersonation.PutReadOnly);
 
 /**
  * @Route('/back-office/impersonateRemoveReadOnly/validate/') GET;
@@ -84,7 +85,7 @@ router.get('/impersonatePutReadOnly',
  */
 router.post('/impersonateRemoveReadOnly/validate',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Impersonation.RemoveReadOnlyValidation);
+  BackOffice.Impersonation.RemoveReadOnlyValidation);
 
 /**
  * @Route('/back-office/establishments/') GET;
@@ -92,7 +93,7 @@ router.post('/impersonateRemoveReadOnly/validate',
  */
 router.get('/establishments',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Establishment.ViewRefList);
+  BackOffice.Establishment.ViewRefList);
 
 /**
  * @Route('/back-office/es/') GET;
@@ -100,7 +101,7 @@ router.get('/establishments',
  */
 router.get('/es',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Establishment.ViewList);
+  BackOffice.Establishment.ViewList);
 
 /**
  * @Route('/back-office/es/:id') GET;
@@ -108,7 +109,7 @@ router.get('/es',
  */
 router.get('/es/:id',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Establishment.View);
+  BackOffice.Establishment.View);
 
 /**
  * @Route('/back-office/references/:type') GET;
@@ -116,7 +117,7 @@ router.get('/es/:id',
  */
 router.get('/references/:type',
   Authentication.ensureIsAdmin,
-  Controller.BackOffice.Reference.View);
+  BackOffice.Reference.View);
 
 /**
  * @Route('/back-office/users/groups/') GET;
