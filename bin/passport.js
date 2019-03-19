@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const Models = require('../models');
+const Models = require('../orm/models');
 const UserComponent = require('../components/user');
 
 let attributes = ['id', 'email', 'firstName', 'lastName', 'type', 'role'];
