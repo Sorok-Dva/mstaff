@@ -2,10 +2,7 @@ const { validationResult } = require('express-validator/check');
 const Models = require('../models/index');
 const layout = 'admin';
 
-const BackOffice = require('../components/back-office');
-
 module.exports = {
-  BackOffice,
   getGroups: (req, res) => {
     return Models.Groups.findAll().then( group => {
       res.render('back-office/users/list_groups', {
