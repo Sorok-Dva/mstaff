@@ -32,10 +32,10 @@ router.get('/needs',
   Establishment.Need.ViewAll);
 
 /**
- * @Route('/need/:id') GET;
+ * @Route('/need/:id(\\d+)') GET;
  * Show Specific Need Page
  */
-router.get('/need/:id',
+router.get('/need/:id(\\d+)',
   Authentication.ensureIsEs,
   Establishment.Need.View);
 

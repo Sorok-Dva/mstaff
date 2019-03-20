@@ -17,7 +17,7 @@ router.post('/:esId/addNeed',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Controller.Establishment.Need.Create);
 
-router.post('/:esId/need/:id/:action/user/:candidateId',
+router.post('/:esId/need/:id(\\d+)/:action/user/:candidateId',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Controller.apiNeedCandidate
 );

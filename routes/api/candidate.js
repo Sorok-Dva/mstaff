@@ -48,55 +48,55 @@ router.post('/add/photo',
   avatarUpload,
   User.Candidate.uploadAvatar);
 
-router.get('/xp/:id',
+router.get('/xp/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.getXpById
-).delete('/xp/:id',
+).delete('/xp/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.removeXP);
 
-router.get('/formation/:id',
+router.get('/formation/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.getFormationById)
-  .delete('/formation/:id',
+  .delete('/formation/:id(\\d+)',
     Authentication.ensureIsCandidate,
     User.Candidate.removeFormation)
-  .put('/formation/:id',
+  .put('/formation/:id(\\d+)',
     Authentication.ensureIsCandidate,
     HTTPValidation.CandidateController.putFormation,
     User.Candidate.putFormation
   );
 
-router.get('/diploma/:id',
+router.get('/diploma/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.getDiplomaById)
-  .delete('/diploma/:id',
+  .delete('/diploma/:id(\\d+)',
     Authentication.ensureIsCandidate,
     User.Candidate.removeDiploma);
 
 router.post('/type/:type/add',
   Authentication.ensureIsCandidate,
   User.Candidate.addRating);
-router.post('/rate/:type/:id',
+router.post('/rate/:type/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.starsRating);
-router.delete('/type/:type/:id',
+router.delete('/type/:type/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.deleteRating);
 
-router.get('/wish/:id',
+router.get('/wish/:id(\\d+)',
   Authentication.ensureIsCandidate,
   HTTPValidation.CandidateController.getWish,
   User.Candidate.getWish)
   .post('/wish/add',
     Authentication.ensureIsCandidate,
     User.Candidate.addWish)
-  .delete('/wish/:id',
+  .delete('/wish/:id(\\d+)',
     Authentication.ensureIsCandidate,
     HTTPValidation.CandidateController.removeWish,
     User.Candidate.removeWish
   )
-  .put('/wish/:id',
+  .put('/wish/:id(\\d+)',
     Authentication.ensureIsCandidate,
     User.Candidate.editWish
   );

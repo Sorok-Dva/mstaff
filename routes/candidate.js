@@ -93,7 +93,7 @@ router.post('/add/diploma',
   User.Candidate.AddDiploma
 );
 
-router.get('/wish/edit/:id',
+router.get('/wish/edit/:id(\\d+)',
   Authentication.ensureIsCandidate,
   HTTPValidation.CandidateController.getEditWish,
   User.Candidate.getEditWish);
