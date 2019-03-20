@@ -38,8 +38,8 @@ router.post('/establishment/:id(\\d+)/edit/user/:userId',
   Authentication.ensureIsAdmin,
   BackOffice.Establishment.editUserRole);
 
-router.get('/establishment/:esId/needs', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeeds);
-router.get('/establishment/:esId/need/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeed);
+router.get('/establishment/:esId(\\d+)/needs', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeeds);
+router.get('/establishment/:esId(\\d+)/need/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeed);
 router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, BackOffice.User.sendVerificationEmail);
 
 /**
