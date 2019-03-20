@@ -371,15 +371,17 @@ BackOffice_Establishment.View = (req, res, next) => {
 
 BackOffice_Establishment.ViewList = (req, res, next) => {
   Models.Establishment.findAll({
-    // attributes: ['Establishment.*', [Sequelize.fn('COUNT', Sequelize.col('Needs.id')), 'NeedsCount']],
     include: [{
       model: Models.Need,
+      attributes: ['id'],
       required: false
     }, {
       model: Models.Application,
+      attributes: ['id'],
       required: false
     }, {
       model: Models.ESAccount,
+      attributes: ['id'],
       required: false
     }]
   }).then(data => {
