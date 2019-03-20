@@ -85,7 +85,10 @@
     operateFormatter = (value, row, index) => {
         return [
             '<div class="table-icons">',
-            '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+            '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
+            '<i class="ti-rss-alt"></i>',
+            '</a>',
+            '<a title="Rename" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
             '<i class="ti-pencil-alt"></i>',
             '</a>',
             '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
@@ -97,6 +100,13 @@
 
     $(document).ready(() => {
         window.operateEvents = {
+            'click .link': (e, value, row, index) => {
+              createModal({
+                  id: 'linkGroupModal',
+                  title: 'Lier des établissements à ' + row.name,
+                  modal: 'back-office/linkGroup'
+                }, () => {});
+            },
             'click .edit': (e, value, row, index) => {
                 createModal({
                     id: 'editGroupModal',
@@ -158,7 +168,6 @@
                 });
             }
         };
-
 
         table.bootstrapTable({
             toolbar: ".toolbar",

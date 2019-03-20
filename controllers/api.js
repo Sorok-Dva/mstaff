@@ -18,6 +18,11 @@ module.exports = {
       res.status(200).send({ softwares });
     }).catch(error => next(error));
   },
+  getEstablishmentList: (req, res, next) => {
+    Models.Establishment.findAll().then(establishments => {
+      res.status(200).send({ establishments });
+    }).catch(error => next(error));
+  },
   getCategoriesList: (req, res, next) => {
     Models.CategoriesPostsServices.findAll().then(categories => {
       res.status(200).send({ categories });

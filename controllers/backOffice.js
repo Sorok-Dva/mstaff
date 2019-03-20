@@ -884,7 +884,7 @@ module.exports = {
     if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
     return Models.SuperGroups.findOne({ where: { id: req.params.id } }).then(superGroup => {
-      if (!superGroup) return res.status(400).send({ body: req.body, error: 'This group does not exist' });
+      if (!superGroup) return res.status(400).send({ body: req.body, error: 'This super group does not exist' });
       return superGroup.destroy().then(data => res.status(201).send({ deleted: true, data }));
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   },

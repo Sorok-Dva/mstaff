@@ -1,0 +1,24 @@
+<script src="/static/assets/js/bootstrap-selectpicker.js"></script>
+<div class="modal-body">
+  <div class="form-group">
+    <select id="establishmentsID" class="selectpicker" multiple data-live-search="true">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" id="validateLinkGroup"> Valider les modifications </button>
+</div>
+<script>
+  $.get('/api/establishments/all', function(data) {
+    $.each(data.establishments, function (i, establishment) {
+      console.log(establishment.name);
+      $('#establishmentsID').append($('<option>', {
+        value: establishment.id,
+        text : establishment.name
+      }));
+      $('#establishmentsID').selectpicker('refresh');
+    });
+  });
+  $('#establishmentsID').selectpicker();
+
+</script>
