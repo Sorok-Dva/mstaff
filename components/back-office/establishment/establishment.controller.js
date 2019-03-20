@@ -299,9 +299,9 @@ BackOffice_Establishment.View = (req, res, next) => {
     include: {
       model: Models.ESAccount,
       where: { es_id: req.params.id },
+      required: false,
       include: {
         model: Models.User,
-        required: true,
         on: {
           '$ESAccounts.user_id$': {
             [Op.col]: 'ESAccounts->User.id'
