@@ -9,6 +9,54 @@ const Models = require(`${__}/orm/models/index`);
 
 const User_Candidate = {};
 
+User_Candidate.getProfile = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: { user_id: req.params.userId },
+    include: [{
+      model: Models.User,
+      attributes: { exclude: ['password'] },
+      on: {
+        '$Candidate.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      },
+      required: true
+    }, {
+      model: Models.Experience,
+      as: 'experiences',
+      include: [{
+        model: Models.Service,
+        as: 'service'
+      }, {
+        model: Models.Post,
+        as: 'poste'
+      }]
+    }, {
+      model: Models.CandidateQualification,
+      as: 'qualifications'
+    }, {
+      model: Models.CandidateFormation,
+      as: 'formations'
+    }, {
+      model: Models.CandidateSkill,
+      as: 'skills'
+    }, {
+      model: Models.CandidateEquipment,
+      as: 'equipments'
+    }, {
+      model: Models.CandidateSoftware,
+      as: 'softwares'
+    }, {
+      model: Models.CandidateDocument,
+      as: 'documents'
+    }]
+  }).then(candidate => {
+    candidate.views += 1;
+    candidate.save();
+    return res.status(200).send(candidate);
+  }).catch(error => next(new BackError(error)));
+};
+
 User_Candidate.addVideo = (req, res, next) => {
   if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
   let video = { filename: null };
