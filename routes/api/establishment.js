@@ -8,7 +8,7 @@ router.post('/:esId(\\d+)/search/candidates',
   Controller.Establishment.Application.getCandidates
 );
 
-router.post('/:esId(\\d+)/get/user/:userId(\\d+)',
+router.post('/:esId(\\d+)/get/candidate/:userId(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Controller.apiGetCandidate
 );
