@@ -21,7 +21,7 @@ router.get('/select/es/:currentEsId',
  */
 router.get('/candidates',
   Authentication.ensureIsEs,
-  Establishment.Need.ViewCreate);
+  Establishment.Application.getCVs);
 
 /**
  * @Route('/needs') GET;
