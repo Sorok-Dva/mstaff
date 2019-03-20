@@ -34,7 +34,7 @@ User.create =(req, res, next) => {
   }
   let usr;
   bcrypt.hash(password, 10).then(hash => {
-    User.create({
+    Models.User.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
@@ -96,7 +96,7 @@ User.resetPassword = (req, res, next) => {
     return res.render('users/reset_password', { layout: 'onepage', body: req.body, errors: errors.array() });
   }
 
-  User.findOne({
+  Models.User.findOne({
     where: { key },
     attributes: ['id', 'password', 'key']
   }).then(user => {
@@ -139,7 +139,7 @@ User.verifyEmailAvailability = (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
   }
-  User.findOne({
+  Models.User.findOne({
     where: { email: req.params.email },
     attributes: [ 'id' ]
   }).then(user => {
