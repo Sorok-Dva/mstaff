@@ -42,7 +42,7 @@ module.exports = {
     }
     next(err);
   },
-  notFoundError: (req, res, next) => next(new BackError('Not Found', httpStatus.NOT_FOUND)),
+  notFoundError: (req, res, next) => next(new BackError('Page Introuvable', httpStatus.NOT_FOUND)),
   /*  sentrySenderErrorHandler: (err, req, res, next) => {
     let status = err.status || err.statusCode || 500;
     if (status < 400) status = 500;
