@@ -30,7 +30,7 @@
   let need = { selectedCandidates: [], favoriteCandidates: []};
 </script>
 <div class="row">
-  <div class="col-md-offset-2 col-md-8">
+  <div class="col-md-offset-2 col-md-8 col-sm-12">
     <div class="form-group">
       <div class="searchbar-wrapper">
         <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
@@ -43,6 +43,13 @@
       </div>
     </div>
   </div>
+  <div class="col-md-2 col-sm-12" style="padding: 10px">
+    <button onclick="resetSearch()" class="btn btn-warning pull-left btn">
+      Réinitialiser
+    </button>
+  </div>
+</div>
+<div class="row">
   <div class="col-md-12" id="criteria" style="display: none; padding-top: 15px;">
     <div class="col-md-12 text-center">
       <button class="btn btn-info" data-toggle="modal" data-target="#contractType" data-backdrop="static" data-keyboard="false">
@@ -58,7 +65,7 @@
   </div>
 </div>
 <div class="row" style="padding-top: 30px">
-  <div id="searchResult" class="col-md-12">
+  <div id="baseResult" class="col-md-12">
     {{#each candidates as |data|}}
       {{#unless data.Establishment.ArchivedCandidates.0.candidate_id}}
         <div class="col-md-3" data-card-user="{{data.Wish.Candidate.id}}">
@@ -130,9 +137,10 @@
       {{/unless}}
     {{/each}}
     {{#unless candidates}}
-      <h3>Aucun candidats ne répond à vos critères, essayez une nouvelle recherche.</h3>
+      <h3>Aucun candidats n'a encore postuler dans votre établissement.</h3>
     {{/unless}}
   </div>
+  <div id="searchResult" class="col-md-12" style="display:none"></div>
 </div>
 <div class="modal modal-xs fade" id="candidateProfileModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
@@ -194,14 +202,25 @@
         $('#criteria').show();
       });
     } else {
-      console.log('searching candidates');
       $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
         loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
-          $('#searchResult').html(html);
+          $('#searchResult').html(html).show();
+          $('#baseResult').hide();
         });
-        console.log(data);
       }).catch(error => errorsHandler(error));
     }
+  };
+
+  let resetSearch = () => {
+    $('input#post').val('');
+    $('#searchResult').empty().hide();
+    $('#baseResult').show();
+    $('#btnContractType').empty();
+    $('#btnTimeType').empty();
+    need.firstSearch = true;
+    delete need.post;
+    delete need.contractType;
+    delete need.timeType;
   };
 
   let addCandidate = (id, type) => {
