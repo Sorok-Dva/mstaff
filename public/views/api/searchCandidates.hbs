@@ -1,12 +1,3 @@
-<style>
-  .list-inline>li {
-    padding-right: 0 !important;
-    padding-left: 0 !important;
-  }
-  .fa-1d3x {
-    font-size: 1.3em;
-  }
-</style>
 {{#each this}}
   {{#unless this.Establishment.ArchivedCandidates.0.candidate_id}}
     <div class="col-md-3" data-card-user="{{this.Wish.Candidate.id}}">
@@ -27,6 +18,7 @@
               </li>
               <li>
                 <i class="fal fa-star favCandidate fa-1d3x" data-id="{{this.Wish.Candidate.id}}"
+                   title="Ajouté par {{this.Establishment.FavoriteCandidates.0.User.firstName}} {{this.Establishment.FavoriteCandidates.0.User.lastName}}"
                   {{#if this.Establishment.FavoriteCandidates.0.candidate_id}}
                    onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unfav')" style="cursor: pointer; color: gold"
                   {{else}}
