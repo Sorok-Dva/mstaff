@@ -53,13 +53,57 @@
   .paraph:last-child{
     border-bottom: none;
   }
-  .paraph button.btn.btn-raised.btn-primary{
+  .paraph button.btn.btn-success{
     font-size: 1.5em;
-    background-color: #0ecea4;
+    font-weight: bold;
+    background-color: #0bcfb4;
     border-radius: 300px;
     padding: 10px 15px;
     margin-top: 5%;
   }
+  #postModal{
+    display: none;
+  }
+  #postModal > .modal-dialog{
+    max-width: 100%;
+    min-height: 100%;
+    margin: 0;
+  }
+  #postModal > .modal-dialog > .modal-content{
+    background-color: rgba(0,0,0,0.7);
+    height: 100vh;
+  }
+  #postModal > .modal-dialog > .modal-content > .modal-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .selectPost{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 30%;
+    width: 50%;
+  }
+  .selectParaph > p{
+    font-size: 3em;
+    color: white;
+  }
+  .select-holder > i{
+    font-size: 2.2em;
+    color: white;
+  }
+  .select-holder > select{
+    width: 100%;
+  }
+  .selectPost > div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 3%;
+  }
+
 </style>
 
 <div class="row text-center">
@@ -85,38 +129,35 @@
       <div class="paraph">
         <p>C'est votre toute première fois sur Mstaff ?</p>
         <p>Postulez et créer votre compte candidat.</p>
-        <button class="btn btn-raised btn-primary">En tant que...</button>
+        <button class="btn btn-success" onclick="createPostModal()">En tant que...</button>
       </div>
       <div class="paraph">
         <p>Vous avez déjà un compte Mstaff et souhaitez ajouter cet établissement à votre dernier souhait ?</p>
-        <button class="btn btn-raised btn-primary">Postuler en 1 clic !</button>
+        <button class="btn btn-success">Postuler en 1 clic !</button>
       </div>
     </div>
 </div>
 
-<!--<div class="row text-center">-->
-  <!--<div class="col-sm-4 leftPart">-->
-    <!--<img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">-->
-  <!--</div>-->
+<div class="modal" id="postModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="selectPost">
+          <div class="selectParaph">
+            <p>Vous souhaitez postuler en tant que...</p>
+          </div>
+          <div class="select-holder">
+            <i class="fal fa-search col"></i>
+            <select>
+              <option>Mustard</option>
+              <option>Ketchup</option>
+              <option>Relish</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!--<div class="col-sm-8 rightPart">-->
-    <!--<div class="row">-->
-      <!--<div class="col-sm-12">-->
-        <!--<p>C'est votre tout première fois sur MStaff ? Postulez et créez votre compte candidat.</p>-->
-        <!--<button>-->
-          <!--En tant que...-->
-        <!--</button>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<hr>-->
-    <!--<div class="row">-->
-      <!--<div>-->
-        <!--<h3>C'est votre tout première fois sur MStaff ?</h3>-->
-        <!--<h3>Postulez et créez votre compte candidat.</h3>-->
-        <!--<button>-->
-          <!--En tant que...-->
-        <!--</button>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
+<script src="/static/assets/dist/js/ats.min.js"></script>
