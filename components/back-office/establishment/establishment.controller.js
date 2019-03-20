@@ -370,7 +370,19 @@ BackOffice_Establishment.View = (req, res, next) => {
 };
 
 BackOffice_Establishment.ViewList = (req, res, next) => {
-  Models.Establishment.findAll().then(data => {
+  Models.Establishment.findAll({
+    // attributes: ['Establishment.*', [Sequelize.fn('COUNT', Sequelize.col('Needs.id')), 'NeedsCount']],
+    include: [{
+      model: Models.Need,
+      required: false
+    }, {
+      model: Models.Application,
+      required: false
+    }, {
+      model: Models.ESAccount,
+      required: false
+    }]
+  }).then(data => {
     res.render('back-office/es/list', {
       layout,
       title: 'Liste des Établissements Mstaff',
