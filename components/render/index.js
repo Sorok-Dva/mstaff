@@ -1,3 +1,5 @@
+const View = require('./render.controller');
+
 module.exports = {
-  'Test': 'test'
+  View
 };

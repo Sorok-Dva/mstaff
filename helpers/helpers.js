@@ -4,7 +4,7 @@ const moment = require('moment');
 const _ = require('lodash');
 const config = require('dotenv').config().parsed;
 const httpStatus = require('http-status');
-const Models = require('../models/index');
+const Models = require('../orm/models/index');
 const { BackError } = require('./back.error');
 
 class Env {
@@ -112,7 +112,7 @@ module.exports = {
   },
   isEqualOrBeforeDate: (date, referenceDate) => moment(date).isSameOrBefore(referenceDate, 'day'),
   mkdirIfNotExists: (dir) => {
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   },
   // this is used to debug sequelize
   getIncludes: (opts) => {

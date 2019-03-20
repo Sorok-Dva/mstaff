@@ -1,4 +1,4 @@
-const Models = require('../models');
+const Models = require('../orm/models');
 const _ = require('lodash');
 const Authentication = {};
 

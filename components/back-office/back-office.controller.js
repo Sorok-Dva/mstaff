@@ -3,7 +3,7 @@ const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
 const moment = require('moment');
 
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
 
 const BackOffice = {};

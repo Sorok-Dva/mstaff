@@ -7,7 +7,7 @@ const httpStatus = require('http-status');
 const crypto = require('crypto');
 
 const mailer = require(`${__}/bin/mailer`);
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
 
 const BackOffice_Establishment = {};
@@ -299,9 +299,9 @@ BackOffice_Establishment.View = (req, res, next) => {
     include: {
       model: Models.ESAccount,
       where: { es_id: req.params.id },
+      required: false,
       include: {
         model: Models.User,
-        required: true,
         on: {
           '$ESAccounts.user_id$': {
             [Op.col]: 'ESAccounts->User.id'

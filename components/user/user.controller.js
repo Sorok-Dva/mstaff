@@ -1,10 +1,12 @@
 const __ = process.cwd();
 const { validationResult } = require('express-validator/check');
 const { BackError } = require(`${__}/helpers/back.error`);
+const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const Mailer = require(`${__}/components/mailer`);
-const Models = require(`${__}/models/index`);
+const mailer = require(`${__}/bin/mailer`);
+const Models = require(`${__}/orm/models/index`);
 
 const User = {};
 
@@ -32,7 +34,7 @@ User.create =(req, res, next) => {
   }
   let usr;
   bcrypt.hash(password, 10).then(hash => {
-    User.create({
+    Models.User.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
@@ -57,6 +59,34 @@ User.create =(req, res, next) => {
   });
 };
 
+User.ValidateAccount = (req, res) => {
+  if (req.params.key) {
+    Models.User.findOne({
+      where: { key: req.params.key },
+      attributes: ['key', 'id', 'firstName', 'email', 'validated']
+    }).then(user => {
+      if (_.isNil(user)) {
+        req.flash('error_msg', 'Clé de validation invalide.');
+        return res.render('/', { layout: 'landing' });
+      }
+      user.validated = true;
+      user.save().then(result => {
+        req.flash('success_msg', 'Compte validé avec succès. Vous pouvez désormais vous connecter.');
+        mailer.sendEmail({
+          to: user.email,
+          subject: 'Votre inscription est confirmée.',
+          template: 'candidate/emailValidated',
+          context: { user: user }
+        });
+        res.redirect('/login');
+      })
+    });
+  } else {
+    req.flash('error_msg', 'Clé de validation invalide.');
+    return res.redirect('/');
+  }
+};
+
 User.resetPassword = (req, res, next) => {
   const errors = validationResult(req);
   let { password } = req.body;
@@ -66,7 +96,7 @@ User.resetPassword = (req, res, next) => {
     return res.render('users/reset_password', { layout: 'onepage', body: req.body, errors: errors.array() });
   }
 
-  User.findOne({
+  Models.User.findOne({
     where: { key },
     attributes: ['id', 'password', 'key']
   }).then(user => {
@@ -109,7 +139,7 @@ User.verifyEmailAvailability = (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
   }
-  User.findOne({
+  Models.User.findOne({
     where: { email: req.params.email },
     attributes: [ 'id' ]
   }).then(user => {

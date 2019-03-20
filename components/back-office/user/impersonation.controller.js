@@ -1,7 +1,7 @@
 const __ = process.cwd();
 const _ = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
-const Models = require(`${__}/models/index`);
+const Models = require(`${__}/orm/models/index`);
 const UserComponent = require(`${__}/components/user/user.controller`);
 const discord = require(`${__}/bin/discord-bot`);
 

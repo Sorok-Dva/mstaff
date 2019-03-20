@@ -132,7 +132,6 @@
 <script>
   $('#createES{{this.es.id}}').click(function() {
     let data = {};
-    console.log($('#createNewESForm').serializeArray());
     $.each($('#createNewESForm').serializeArray(), function(_, kv) {
       data[kv.name] = kv.value;
     });
@@ -143,10 +142,13 @@
     delete data.addr_name;
     $.post('/api/back-office/establishment/create', data, (data) => {
       if (data.status === 'Created') {
+        $('#addESfromREFModal').modal('hide');
         notification({
           icon: 'check-circle',
           type: 'success',
-          title: 'Établissement créer avec succès.'
+          title: 'Établissement créer avec succès.',
+          message: 'Vous allez être redirigé vers la page établissement dans quelques instants.',
+          onClosed: () => $(location).attr('href', `/back-office/es/${data.es.id}`)
         })
       } else {
         notification({

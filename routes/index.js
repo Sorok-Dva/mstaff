@@ -1,10 +1,9 @@
 const { Authentication, Express, HTTPValidation } = require('../middlewares');
+const { Render, User } = require('../components');
 const express = require('express');
 const router = express.Router();
 const passport = require('../bin/passport');
 const rateLimit = require('express-rate-limit');
-const { User } = require('../components');
-const IndexController = require('../controllers/index');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
@@ -22,7 +21,7 @@ const loginLimiter = rateLimit({
  * @Route('/') GET;
  * Show Index page
  */
-router.get('/', IndexController.getIndex);
+router.get('/', Render.View.Index);
 
 /**
  * @Route('/login') GET + POST;
@@ -30,13 +29,13 @@ router.get('/', IndexController.getIndex);
  */
 router.get('/login',
   Authentication.ensureIsNotAuthenticated,
-  IndexController.getLogin)
+  Render.View.Login)
   .post('/login',
     loginLimiter,
     Authentication.ensureIsNotAuthenticated,
     HTTPValidation.IndexController.login,
     Express.passportAuthentication,
-    IndexController.postLogin);
+    Render.View.Redirect);
 
 /**
  * @Route('/register') GET + POST;
@@ -44,26 +43,22 @@ router.get('/login',
  */
 router.get('/register/:esCode?',
   Authentication.ensureIsNotAuthenticated,
-  IndexController.getRegister)
+  Render.View.Register)
   .post('/register/:esCode?',
     Authentication.ensureIsNotAuthenticated,
     HTTPValidation.UserController.create,
     User.Main.create);
 
-router.get('/validate/:key', Authentication.ensureIsNotAuthenticated, IndexController.getValidateAccount);
-router.get('/new/password/:key', Authentication.ensureIsNotAuthenticated, IndexController.resetPassword)
+router.get('/validate/:key',
+  Authentication.ensureIsNotAuthenticated,
+  User.Main.ValidateAccount);
+router.get('/new/password/:key',
+  Authentication.ensureIsNotAuthenticated,
+  Render.View.resetPassword)
   .post('/new/password/:key',
     Authentication.ensureIsNotAuthenticated,
     HTTPValidation.UserController.resetPassword,
     User.Main.resetPassword);
-
-/**
- * @Route('/register/complete/profile') GET + POST;
- * Show Register Wizard for profile completion
- */
-router.get('/register/complete/profile',
-  Authentication.ensureIsNotAuthenticated,
-  IndexController.getRegisterWizard);
 
 /**
  * @Route('/register/demo') GET + POST;
@@ -71,18 +66,20 @@ router.get('/register/complete/profile',
  */
 router.get('/demo/register',
   Authentication.ensureIsNotAuthenticated,
-  IndexController.getRegisterDemo);
+  Render.View.RegisterDemo);
 
 /**
  * @Route('/logout') GET;
  * Logout user
  */
-router.get('/logout', Authentication.ensureAuthenticated, IndexController.getLogout);
+router.get('/logout',
+  Authentication.ensureAuthenticated,
+  Render.View.Logout);
 
 /**
  * @Route('/404') GET;
  * 404 Page
  */
-router.get('/404', IndexController.get404);
+router.get('/404', Render.View._404);
 
 module.exports = router;
