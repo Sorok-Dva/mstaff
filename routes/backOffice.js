@@ -109,7 +109,11 @@ router.get('/es',
  */
 router.get('/es/:id',
   Authentication.ensureIsAdmin,
-  BackOffice.Establishment.View);
+  BackOffice.Establishment.View
+).post(
+  '/es/:id',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.Edit);
 
 /**
  * @Route('/back-office/references/:type') GET;

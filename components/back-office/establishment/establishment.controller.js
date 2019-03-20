@@ -55,6 +55,40 @@ BackOffice_Establishment.create = (req, res, next) => {
   }
 };
 
+BackOffice_Establishment.Edit = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+  try {
+    Models.Establishment.findOne({ where: { id: req.params.id } }).then((es) => {
+      if (_.isNil(es)) return next();
+      es.update({
+        name: req.body.name,
+        finess_ej: req.body.finess_ej,
+        siret: req.body.siret,
+        phone: req.body.phone,
+        address: req.body.address,
+        town: req.body.addr_town,
+        sector: req.body.sector,
+        salaries_count: req.body.salaries_count,
+        contact_identity: req.body.contactIdentity,
+        contact_post: req.body.contactPost,
+        contact_email: req.body.contactEmail,
+        contact_phone: req.body.contactPhone,
+        domain_enable: parseInt(req.body.domain_enable),
+        domain_name: req.body.domain_name,
+        logo: req.body.logo,
+        banner: req.body.banner
+      }).then(savedEs => {
+        req.flash('success_msg', 'Établissement mis à jour.');
+        return res.redirect(`/back-office/es/${savedEs.id}`);
+      });
+    })
+  } catch (errors) {
+    return next(new BackError(errors));
+  }
+};
+
 BackOffice_Establishment.getRefList = (req, res, next) => {
   let where = _.isNil(req.query.search) ? null : {
     [Op.or]: [{
