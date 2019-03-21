@@ -33,6 +33,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'es_id',
       sourceKey: 'id'
     });
+    Establishment.hasMany(models.Need, {
+      foreignKey: 'es_id',
+      sourceKey: 'id'
+    });
+    Establishment.hasMany(models.Application, {
+      foreignKey: 'es_id',
+      sourceKey: 'id'
+    });
     Establishment.hasMany(models.FavoriteCandidate, {
       foreignKey: 'es_id',
       sourceKey: 'id'

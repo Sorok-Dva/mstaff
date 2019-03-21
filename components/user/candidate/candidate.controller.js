@@ -9,6 +9,54 @@ const Models = require(`${__}/orm/models/index`);
 
 const User_Candidate = {};
 
+User_Candidate.getProfile = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: { user_id: req.params.userId },
+    include: [{
+      model: Models.User,
+      attributes: { exclude: ['password'] },
+      on: {
+        '$Candidate.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      },
+      required: true
+    }, {
+      model: Models.Experience,
+      as: 'experiences',
+      include: [{
+        model: Models.Service,
+        as: 'service'
+      }, {
+        model: Models.Post,
+        as: 'poste'
+      }]
+    }, {
+      model: Models.CandidateQualification,
+      as: 'qualifications'
+    }, {
+      model: Models.CandidateFormation,
+      as: 'formations'
+    }, {
+      model: Models.CandidateSkill,
+      as: 'skills'
+    }, {
+      model: Models.CandidateEquipment,
+      as: 'equipments'
+    }, {
+      model: Models.CandidateSoftware,
+      as: 'softwares'
+    }, {
+      model: Models.CandidateDocument,
+      as: 'documents'
+    }]
+  }).then(candidate => {
+    candidate.views += 1;
+    candidate.save();
+    return res.status(200).send(candidate);
+  }).catch(error => next(new BackError(error)));
+};
+
 User_Candidate.addVideo = (req, res, next) => {
   if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
   let video = { filename: null };
@@ -69,51 +117,6 @@ User_Candidate.uploadAvatar = (req, res, next) => {
   console.log(req.file);
 };
 
-User_Candidate.getProfile = (req, res, next) => {
-  Models.Candidate.findOne({
-    where: { user_id: req.user.id },
-    include: [{
-      model: Models.User,
-      attributes: { exclude: ['password'] },
-      on: {
-        '$Candidate.user_id$': {
-          [Op.col]: 'User.id'
-        }
-      },
-      required: true
-    }, {
-      model: Models.Experience, // Experiences Associations (user.candidate.experiences)
-      as: 'experiences',
-      include: [{
-        model: Models.Service,
-        as: 'service'
-      }, {
-        model: Models.Post,
-        as: 'poste'
-      }] // Service & Post Associations (user.candidate.experiences.service|post)
-    }, {
-      model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
-      as: 'qualifications'
-    }, {
-      model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
-      as: 'formations'
-    }, {
-      model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
-      as: 'skills'
-    }, {
-      model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
-      as: 'equipments'
-    }, {
-      model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
-      as: 'softwares'
-    }, {
-      model: Models.CandidateDocument, // Softwares Associations (user.candidate.softwares)
-      as: 'documents'
-    }]
-  }).then(candidate => {
-    return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
-  }).catch(error => next(new BackError(error)));
-};
 User_Candidate.ViewEditProfile =(req, res, next) => {
   Models.User.findOne({
     where: { id: req.user.id },

@@ -101,7 +101,7 @@ BackOffice_Users.getList = (req, res, next) => {
   };
 
   Models.User.findAll(query).then(users => {
-    res.render(`back-office/${_getView(req.params.type).term}/list`, {
+    res.render(`back-office/${_getView(req.params.type).render}/list`, {
       layout,
       title: `Liste ${_getView(req.params.type).title}`,
       a: { main: 'users', sub: _getView(req.params.type).term },
@@ -143,14 +143,16 @@ let _getView = (type) => {
     case 'candidates':
       view = {
         term: 'candidates',
+        render: 'candidates',
         title: 'des candidats',
         where: 'candidate'
       };
       break;
     case 'es':
       view = {
-        term: 'candidates',
-        title: 'des candidats',
+        term: 'es',
+        render: 'es/users',
+        title: 'des comptes établissement',
         where: 'es'
       };
       break;

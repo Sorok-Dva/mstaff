@@ -34,7 +34,6 @@ module.exports = {
     }).then(user => res.render('users/login', { user }))
       .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
   },
-
   addApplication: (body, wish) => {
     for (let i = 0; i < body.es.length; i++) {
       Models.Application.create({
@@ -46,56 +45,6 @@ module.exports = {
       });
     }
   },
-  // APPLICATION
-
-  //CANDIDATE
-  apiGetCandidate: (req, res, next) => {
-    Models.Candidate.findOne({
-      where: { user_id: req.params.userId },
-      include: [{
-        model: Models.User,
-        attributes: { exclude: ['password'] },
-        on: {
-          '$Candidate.user_id$': {
-            [Op.col]: 'User.id'
-          }
-        },
-        required: true
-      }, {
-        model: Models.Experience,
-        as: 'experiences',
-        include: [{
-          model: Models.Service,
-          as: 'service'
-        }, {
-          model: Models.Post,
-          as: 'poste'
-        }]
-      }, {
-        model: Models.CandidateQualification,
-        as: 'qualifications'
-      }, {
-        model: Models.CandidateFormation,
-        as: 'formations'
-      }, {
-        model: Models.CandidateSkill,
-        as: 'skills'
-      }, {
-        model: Models.CandidateEquipment,
-        as: 'equipments'
-      }, {
-        model: Models.CandidateSoftware,
-        as: 'softwares'
-      }, {
-        model: Models.CandidateDocument,
-        as: 'documents'
-      }]
-    }).then(candidate => {
-      return res.status(200).send(candidate);
-    }).catch(error => next(new BackError(error)));
-  },
-  //NEED
-
   //NEED.CANDIDATE
   apiNeedCandidate: (req, res, next) => {
     const errors = validationResult(req);

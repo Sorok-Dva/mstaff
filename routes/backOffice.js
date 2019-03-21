@@ -39,23 +39,23 @@ router.get(
   BackOffice.User.getList);
 
 /**
- * @Route('/back-office/user/:id/') GET;
+ * @Route('/back-office/user/:id(\\d+)/') GET;
  * Show User data
  */
 router.get(
-  '/user/:id',
+  '/user/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.User.findOne
 ).post(
-  '/user/:id',
+  '/user/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.User.edit);
 
 /**
- * @Route('/back-office/impersonate/user/:id/') GET;
+ * @Route('/back-office/impersonate/user/:id(\\d+)/') GET;
  * Impersonate User Session
  */
-router.get('/impersonate/user/:id',
+router.get('/impersonate/user/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Impersonation.User);
 
@@ -104,12 +104,16 @@ router.get('/es',
   BackOffice.Establishment.ViewList);
 
 /**
- * @Route('/back-office/es/:id') GET;
+ * @Route('/back-office/es/:id(\\d+)') GET;
  * Show ES page
  */
-router.get('/es/:id',
+router.get('/es/:id(\\d+)',
   Authentication.ensureIsAdmin,
-  BackOffice.Establishment.View);
+  BackOffice.Establishment.View
+).post(
+  '/es/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.Edit);
 
 /**
  * @Route('/back-office/references/:type') GET;
