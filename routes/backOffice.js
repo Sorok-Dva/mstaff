@@ -1,5 +1,6 @@
 const { Authentication } = require('../middlewares/index');
-const BackOfficeController = require('../controllers/backOffice');
+const { BackOffice } = require('../components');
+const Controller = require('../controllers/backOffice');//.BackOffice;
 const express = require('express');
 const router = express.Router();
 
@@ -7,138 +8,131 @@ const router = express.Router();
  * @Route('/back-office/') GET;
  * Show Back Office Index page
  */
-router.get('/', Authentication.ensureIsAdmin, BackOfficeController.index);
+router.get('/',
+  Authentication.ensureIsAdmin,
+  BackOffice.Main.viewIndex);
 
 /**
  * @Route('/back-office/stats') GET;
  * Show Back Office Stats page
  */
-router.get('/stats', Authentication.ensureIsAdmin, BackOfficeController.stats);
+router.get('/stats',
+  Authentication.ensureIsAdmin,
+  BackOffice.Main.ViewStats);
 
 /**
  * @Route('/back-office/users/') GET;
  * Show Users List page
  */
-router.get('/users', Authentication.ensureIsAdmin, BackOfficeController.getUsers);
+router.get(
+  '/users',
+  Authentication.ensureIsAdmin,
+  BackOffice.User.getAll);
 
 /**
  * @Route('/back-office/users/candidates') GET;
  * Show Users (candidates type) List page
  */
-router.get('/users/candidates', Authentication.ensureIsAdmin, BackOfficeController.getCandidates);
+router.get(
+  '/users/:type',
+  Authentication.ensureIsAdmin,
+  BackOffice.User.getList);
 
 /**
- * @Route('/back-office/users/es') GET;
- * Show Users (es type) List page
- */
-router.get('/users/es', Authentication.ensureIsAdmin, BackOfficeController.getESUsers);
-
-/**
- * @Route('/back-office/user/:id/') GET;
+ * @Route('/back-office/user/:id(\\d+)/') GET;
  * Show User data
  */
-router.get('/user/:id', Authentication.ensureIsAdmin, BackOfficeController.getUser)
-  .post('/user/:id/edit', Authentication.ensureIsAdmin, BackOfficeController.editCandidate);
+router.get(
+  '/user/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.User.findOne
+).post(
+  '/user/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.User.edit);
 
 /**
- * @Route('/back-office/impersonate/user/:id/') GET;
+ * @Route('/back-office/impersonate/user/:id(\\d+)/') GET;
  * Impersonate User Session
  */
-router.get('/impersonate/user/:id', Authentication.ensureIsAdmin, BackOfficeController.impersonateUser);
+router.get('/impersonate/user/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Impersonation.User);
 
 /**
  * @Route('/back-office/removeImpersonation/') GET;
  * Remove Impersonation
  */
-router.get('/removeImpersonation', Authentication.ensureIsAdmin, BackOfficeController.removeUserImpersonation);
+router.get('/removeImpersonation',
+  Authentication.ensureIsAdmin,
+  BackOffice.Impersonation.Remove);
 
 /**
  * @Route('/back-office/impersonateRemoveReadOnly/') GET;
  * Generate PinCode for Remove Read Only
  */
-router.post('/impersonateRemoveReadOnly', Authentication.ensureIsAdmin, BackOfficeController.impersonateRemoveReadOnly);
-router.get('/impersonatePutReadOnly', Authentication.ensureIsAdmin, BackOfficeController.impersonatePutReadOnly);
+router.post('/impersonateRemoveReadOnly',
+  Authentication.ensureIsAdmin,
+  BackOffice.Impersonation.removeReadOnly);
+
+router.get('/impersonatePutReadOnly',
+  Authentication.ensureIsAdmin,
+  BackOffice.Impersonation.PutReadOnly);
 
 /**
  * @Route('/back-office/impersonateRemoveReadOnly/validate/') GET;
  * Validation of removing read only
  */
-router.post('/impersonateRemoveReadOnly/validate', Authentication.ensureIsAdmin, BackOfficeController.impersonateRemoveReadOnlyValidation);
+router.post('/impersonateRemoveReadOnly/validate',
+  Authentication.ensureIsAdmin,
+  BackOffice.Impersonation.RemoveReadOnlyValidation);
 
 /**
  * @Route('/back-office/establishments/') GET;
  * Show establishments referential
  */
-router.get('/establishments', Authentication.ensureIsAdmin, BackOfficeController.getEstablishmentsRefList);
+router.get('/establishments',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.ViewRefList);
 
 /**
  * @Route('/back-office/es/') GET;
  * Show ES List page
  */
-router.get('/es', Authentication.ensureIsAdmin, BackOfficeController.getESList);
+router.get('/es',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.ViewList);
 
 /**
- * @Route('/back-office/es/:id') GET;
+ * @Route('/back-office/es/:id(\\d+)') GET;
  * Show ES page
  */
-router.get('/es/:id', Authentication.ensureIsAdmin, BackOfficeController.getES);
+router.get('/es/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.View
+).post(
+  '/es/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.Edit);
 
 /**
- * @Route('/back-office/formations/') GET;
- * Show formations data
+ * @Route('/back-office/references/:type') GET;
+ * Show Reference Model data
  */
-router.get('/formations', Authentication.ensureIsAdmin, BackOfficeController.getFormations);
-
-/**
- * @Route('/back-office/formations/') GET;
- * Show skills data
- */
-router.get('/skills', Authentication.ensureIsAdmin, BackOfficeController.getSkills);
-
-/**
- * @Route('/back-office/formations/') GET;
- * Show equipments data
- */
-router.get('/equipments', Authentication.ensureIsAdmin, BackOfficeController.getEquipments);
-
-/**
- * @Route('/back-office/formations/') GET;
- * Show softwares data
- */
-router.get('/softwares', Authentication.ensureIsAdmin, BackOfficeController.getSoftwares);
-
-/**
- * @Route('/back-office/formations/') GET;
- * Show services data
- */
-router.get('/services', Authentication.ensureIsAdmin, BackOfficeController.getServices);
-
-/**
- * @Route('/back-office/formations/') GET;
- * Show services data
- */
-router.get('/posts', Authentication.ensureIsAdmin, BackOfficeController.getPosts);
-
-/**
- * @Route('/back-office/formations/') GET;
- * Show qualifications data
- */
-router.get('/qualifications', Authentication.ensureIsAdmin, BackOfficeController.getQualifications);
+router.get('/references/:type',
+  Authentication.ensureIsAdmin,
+  BackOffice.Reference.View);
 
 /**
  * @Route('/back-office/users/groups/') GET;
  * Show services data
  */
-router.get('/users/groups', Authentication.ensureIsAdmin, BackOfficeController.getGroups);
+router.get('/groups', Authentication.ensureIsAdmin, Controller.getGroups);
 
 /**
  * @Route('/back-office/users/super-groups/') GET;
  * Show services data
  */
-router.get('/users/super-groups', Authentication.ensureIsAdmin, BackOfficeController.getSuperGroups);
+router.get('/super-groups', Authentication.ensureIsAdmin, Controller.getSuperGroups);
 
-/**
- * @Route('/back-office/formations/') GET;
- * Show qualifications data
- */
 module.exports = router;

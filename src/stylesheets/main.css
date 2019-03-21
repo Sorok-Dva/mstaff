@@ -574,22 +574,24 @@ span.round-tab:hover {
   border-radius: 27px;
 }
 
-span.available {
+div.available {
   margin: 5px;
   background: #04e900;
   border-radius: 50%;
   width: 15px;
   height: 15px;
   border: 2px solid #04e900;
+  display: inline-flex;
 }
 
-span.unavailable {
+div.unavailable {
   margin: 5px;
   background: #ff2a21;
   border-radius: 50%;
   width: 15px;
   height: 15px;
   border: 2px solid #ff2a21;
+  display: inline-flex;
 }
 
 span.text-available {
@@ -602,7 +604,7 @@ span.text-unavailable {
 
 input#post.ui-autocomplete-input {
   background-color: white !important;
-  width: 85%;
+  width: 75%;
 }
 
 @-webkit-keyframes spin {

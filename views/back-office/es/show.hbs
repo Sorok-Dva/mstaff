@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-8">
-    <form id="createESForm" class="card" style="padding: 15px">
+    <form method="post" class="card" style="padding: 15px">
       <fieldset>
         <legend>
           <h5 style="text-align: center">Informations de base</h5>
@@ -41,8 +41,8 @@
           <div class="form-group col-md-3">
             <label for="secteur">Secteur</label>
             <select class="form-control" id="secteur" name="sector">
-              <option value="private" selected="selected">PRIVE</option>
-              <option value="public">PUBLIC</option>
+              <option value="private"{{#ifCond es.sector '===' 'private'}} selected="selected"{{/ifCond}}>PRIVE</option>
+              <option value="public"{{#ifCond es.sector '===' 'public'}} selected="selected"{{/ifCond}}>PUBLIC</option>
             </select>
           </div>
         </div>
@@ -86,9 +86,9 @@
           </div>
           <div class="form-group col-md-3">
             <label for="domaine_enable">Domaine</label>
-            <select class="form-control" id="domaine_enable" name="domaine_enable">
-              <option value="0" selected="selected">Actif</option>
-              <option value="1">Inactif</option>
+            <select class="form-control" id="domain_enable" name="domain_enable">
+              <option value="1"{{#if es.domain_enable}} selected="selected"{{/if}}>Actif</option>
+              <option value="0"{{#unless es.domain_enable}} selected="selected"{{/unless}}>Inactif</option>
             </select>
           </div>
           <div class="form-group col-md-3">
@@ -101,6 +101,8 @@
             </div>
           </div>
         </div>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+        <button type="submit" class="btn btn-primary pull-right">Enregistrer</button>
       </fieldset>
     </form>
   </div>
