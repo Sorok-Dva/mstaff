@@ -9,7 +9,7 @@ const router = express.Router();
  */
 router.get('/profile',
   Authentication.ensureIsCandidate,
-  User.Candidate.getProfile);
+  User.Candidate.viewProfile);
 
 /**
  * @Route('/profile/edit') GET | POST;
