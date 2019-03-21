@@ -832,6 +832,26 @@ module.exports = {
       }
     })
   },
+  editLinkES: (req, res, next) => {
+
+    return Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(esGroup => {
+      //console.log('checkpoint 1');
+      console.log(req.body.selectInput);
+      //console.log(req.body.selectInput[0]);
+      //console.log(esGroup);
+      if (esGroup.length !== 0) {
+        console.log('waa, regarde maman');
+        esGroup.destroy();
+      }
+      req.body.selectInput.forEach( input => {
+        console.log(input);
+        Models.EstablishmentGroups.create({
+          id_es: input,
+          id_group: req.params.id
+        }).then(res.status(200))
+      });
+    }).catch(error => next(new BackError(error)));
+  },
   removeGroups: (req, res, next) => {
     const errors = validationResult(req.body);
 

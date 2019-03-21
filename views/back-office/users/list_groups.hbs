@@ -101,11 +101,30 @@
     $(document).ready(() => {
         window.operateEvents = {
             'click .link': (e, value, row, index) => {
-              createModal({
-                  id: 'linkGroupModal',
-                  title: 'Lier des établissements à ' + row.name,
-                  modal: 'back-office/linkGroup'
-                }, () => {});
+                createModal({
+                      id: 'linkGroupModal',
+                      title: 'Lier des établissements à ' + row.name,
+                      modal: 'back-office/linkGroup'
+                    }, () => {
+                    $('button#validateLinkGroup').click(function () {
+                      if($('select#establishmentsID').val() != '') {
+                        let _csrf = $('#csrfToken').val();
+                        let selectInput = $('select#establishmentsID').val();
+                        $.put(`/api/back-office/linkES/${row.id}`, {
+                          selectInput,
+                          _csrf
+                        }, () => {
+                          $('#linkGroupModal').modal('hide');
+                          notification({
+                            icon: 'check-circle',
+                            type: 'success',
+                            title: 'Etablissement(s) lié(s)',
+                            message: ``
+                          });
+                        });
+                      }
+                    })
+                });
             },
             'click .edit': (e, value, row, index) => {
                 createModal({

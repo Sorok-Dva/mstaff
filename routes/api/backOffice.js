@@ -66,4 +66,9 @@ router.put('/super-groups/:id', Authentication.ensureIsAdmin, BackOfficeControll
   .delete('/super-groups/:id', Authentication.ensureIsAdmin, BackOfficeController.removeSuperGroups)
   .post('/super-groups/', Authentication.ensureIsAdmin, BackOfficeController.addSuperGroups);
 
+router.put('/linkES/:id',
+  Authentication.ensureIsAdmin,
+  HTTPValidation.BackOfficeController.editLinkES,
+  BackOfficeController.editLinkES);
+
 module.exports = router;
