@@ -1,0 +1,59 @@
+<style>
+  #postModal > .modal-dialog > .modal-content{
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+  }
+  #postModal > .modal-dialog > .modal-content > .modal-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .selectPost{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 30%;
+    width: 50%;
+  }
+  .selectParaph > p{
+    font-size: 3em;
+    color: white;
+  }
+  .select-holder > i{
+    font-size: 2.2em;
+    color: white;
+  }
+  .select-holder > select{
+    width: 100%;
+  }
+  .selectPost > div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 3%;
+  }
+</style>
+
+<div class="modal customModal" id="postModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="selectPost">
+          <div class="selectParaph">
+            <p>Vous souhaitez postuler en tant que...</p>
+          </div>
+          <div class="select-holder">
+            <i class="fal fa-search col"></i>
+            <select class="custom-select  ">
+              <option>Mustard</option>
+              <option>Ketchup</option>
+              <option>Relish</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

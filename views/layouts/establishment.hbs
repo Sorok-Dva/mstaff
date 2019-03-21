@@ -51,12 +51,11 @@
   <script src="/static/assets/js/nouislider.min.js"></script>
 </head>
 
-{{#ifCond landing '===' 'main'}}
 <body class="profile-page">
   <div class="page-header header-filter" data-parallax="true"
        style="background-image:url('{{#if @root.es.banner}}{{@root.es.banner}}{{else}}/static/assets/images/cover-es.jpg{{/if}}');">
     <div class="col-md-12">
-      <h1 class="text-center" style="color:white;">{{@root.es.name}}</h1>
+      <h1 class="text-center" style="color:white;">{{es.name}}</h1>
     </div>
   </div>
 
@@ -66,32 +65,19 @@
       <div id="bodyContent" class="col-md-12 content">
         <div class="container-fluid">
           {{> flash}}
-          {{{@root.body}}}
+          {{{body}}}
         </div>
       </div>
     </div>
-    <input id="csrfToken" type="text" value="{{@root.csrfToken}}" class="hidden">
+    <input id="csrfToken" type="text" value="{{csrfToken}}" class="hidden">
   </div>
 
+  {{> ats/ats}}
   <footer class="footer text-center">
     <p>&copy; 2019, Copyright Mstaff</p>
   </footer>
 </body>
-{{/ifCond}}
 
-{{#ifCond landing '===' 'ats'}}
-  <body class="ats">
-  <div class="container-fluid">
-    {{> header}}
-    <div id="bodyContent" class="col-md-12 content">
-      <div class="container-fluid">
-        {{> flash}}
-        {{{@root.body}}}
-      </div>
-    </div>
-  </div>
-  </body>
-{{/ifCond}}
-
+<script src="/static/assets/dist/js/ats.min.js"></script>
 <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
 </html>
