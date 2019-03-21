@@ -16,6 +16,10 @@
     </div>
   </form>
 </div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default pull-left"
+          data-dismiss="modal" onclick="need.firstSearch = false;searchCandidates();">Ignorer</button>
+</div>
 <script>
   $('select#contractType').on('change', function() {
     if (this.value === '') {
@@ -23,20 +27,14 @@
       return false;
     }
     $('select#contractType').removeClass('error').addClass('success');
-    need.contractType = this.value;
+    need.filterQuery.contractType = this.value;
 
-    if (need.contractType !== 'vacation') {
-      delete need.timeType;
+    if (need.filterQuery.contractType !== 'vacation') {
+      delete need.filterQuery.timeType;
     }
 
     $('.modal#contractType').modal('hide');
     $('#btnContractType').html($('#contractType option:selected').text());
-    createModal({
-      id: 'timeType',
-      modal: 'addNeed-TimeType',
-      cantBeClose: true,
-      title: 'Période',
-      contractType: need.contractType
-    });
+    return showTimeModal();
   })
 </script>
