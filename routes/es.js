@@ -1,5 +1,5 @@
 const { Authentication } = require('../middlewares/index');
-const EstablishmentController = require('../controllers/establishment');
+const { Establishment } = require('../components');
 const express = require('express');
 const router = express.Router();
 
@@ -7,26 +7,36 @@ const router = express.Router();
  * @Route('/select/es') GET;
  * Show Select Establishments Page
  */
-router.get('/select/es', Authentication.ensureIsEs, EstablishmentController.getSelectEs);
+router.get('/select/es',
+  Authentication.ensureIsEs,
+  Establishment.Main.ViewAccounts);
 
-router.get('/select/es/:currentEsId', Authentication.ensureIsEs, EstablishmentController.APISelectEs);
+router.get('/select/es/:currentEsId',
+  Authentication.ensureIsEs,
+  Establishment.Main.Select);
 
 /**
  * @Route('/candidates') GET;
  * Show Candidates Index page
  */
-router.get('/candidates', Authentication.ensureIsEs, EstablishmentController.addNeed);
+router.get('/candidates',
+  Authentication.ensureIsEs,
+  Establishment.Application.getCVs);
 
 /**
  * @Route('/needs') GET;
  * Show Needs Index page
  */
-router.get('/needs', Authentication.ensureIsEs, EstablishmentController.getNeeds);
+router.get('/needs',
+  Authentication.ensureIsEs,
+  Establishment.Need.ViewAll);
 
 /**
- * @Route('/need/:id') GET;
+ * @Route('/need/:id(\\d+)') GET;
  * Show Specific Need Page
  */
-router.get('/need/:id', Authentication.ensureIsEs, EstablishmentController.showNeed);
+router.get('/need/:id(\\d+)',
+  Authentication.ensureIsEs,
+  Establishment.Need.View);
 
 module.exports = router;

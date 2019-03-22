@@ -21,7 +21,6 @@ jQuery.each([ 'put', 'patch', 'delete' ], function ( i, method ) {
 
 let notification = (opts) => {
   $.notify({
-    // options
     icon: `fal fa-${opts.icon}`,
     title: `<b>${opts.title}</b>`,
     message: `${opts.message || ''}`,
@@ -41,7 +40,8 @@ let notification = (opts) => {
     animate: {
       enter: 'animated fadeInDown',
       exit: 'animated fadeOutUp'
-    }
+    },
+    onClosed: opts.onClosed
   });
 };
 

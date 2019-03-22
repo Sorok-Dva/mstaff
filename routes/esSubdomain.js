@@ -1,10 +1,13 @@
 const { Authentication } = require('../middlewares/index');
-const ESSubdomainController = require('../controllers/establishment.subdomain');
+const { Establishment } = require('../components');
 const express = require('express');
 const router = express.Router();
 
-router.get('/', ESSubdomainController.getIndex);
+router.get('/',
+  Establishment.Website.getIndex);
 
-router.get('/register', Authentication.ensureIsNotAuthenticated, ESSubdomainController.getRegister);
+router.get('/register',
+  Authentication.ensureIsNotAuthenticated,
+  Establishment.Website.getRegister);
 
 module.exports = router;

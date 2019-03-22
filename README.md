@@ -69,7 +69,8 @@ node_modules/.bin/sequelize seed:generate --name seed-name
 
 Execute seed file alone :  
 ```bash
-sequelize db:seed:generate --seed [path]
+cd orm/
+sequelize db:seed --seed [seed filename]
 ``` 
 
 ## Some useful documentations

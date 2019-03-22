@@ -1,8 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const Models = require('../models');
-const UserController = require('../controllers/user');
+const Models = require('../orm/models');
+const UserComponent = require('../components/user');
 
 let attributes = ['id', 'email', 'firstName', 'lastName', 'type', 'role'];
 
@@ -12,7 +12,7 @@ passport.use(new LocalStrategy({ passReqToCallback: true }, (req, email, passwor
     attributes: ['id', 'password', 'email', 'role']
   }).then(user => {
     if (!user) return done(null, false, req.flash('error_msg', 'Utilisateur inconnu.'));
-    UserController.comparePassword(password, user.dataValues.password, (err, isMatch) => {
+    UserComponent.Main.comparePassword(password, user.dataValues.password, (err, isMatch) => {
       if (err) return done(null, false, err);
       if (isMatch) {
         let session = {

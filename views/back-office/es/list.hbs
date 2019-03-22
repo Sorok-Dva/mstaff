@@ -12,6 +12,9 @@
           <th data-field="finess" data-sortable="true">Finess</th>
           <th data-field="sector" data-sortable="true">Secteur</th>
           <th data-field="status" data-sortable="true">Status</th>
+          <th data-field="candidatures" data-sortable="true">Candidatures</th>
+          <th data-field="besoins" data-sortable="true">Besoins</th>
+          <th data-field="utilisateurs" data-sortable="true">Utilisateurs</th>
           <th data-field="url" data-sortable="true">URL</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions</th>
@@ -24,6 +27,9 @@
               <td>{{es.finess}}</td>
               <td>{{es.sector}}</td>
               <td>{{es.status}}</td>
+              <td>{{es.Applications.length}}</td>
+              <td>{{es.Needs.length}}</td>
+              <td>{{es.ESAccounts.length}}</td>
               <td>
                 {{#if es.domain_enable}}
                   <a href="https://{{es.domain_name}}.mstaff.co/">https://{{es.domain_name}}.mstaff.co</a>
