@@ -44,7 +44,7 @@
 </div>
 <script type="text/javascript">
   $(function () {
-    need.timeType = { dateStart: new Date() };
+    need.filterQuery.timeType = { dateStart: new Date() };
 
     $('#datePicker-start').datetimepicker({
       inline: true,
@@ -53,7 +53,7 @@
       format: 'DD/MM/YYYY'
     }).on('dp.change', (e) => {
       if (!$('.modal-footer.timeType').is(':visible')) $('.modal-footer.timeType').show();
-      need.timeType.dateStart = new Date(e.date);
+      need.filterQuery.timeType.dateStart = new Date(e.date);
       let incrementDay = moment(new Date(e.date));
       incrementDay.add(1, 'days');
       $('#datePicker-end').data('DateTimePicker').minDate(incrementDay);
@@ -64,13 +64,13 @@
       useCurrent: false,
       minDate: new moment(),
       format: 'DD/MM/YYYY'
-    }).on('dp.change', (e) => need.timeType.dateEnd = new Date(e.date));
+    }).on('dp.change', (e) => need.filterQuery.timeType.dateEnd = new Date(e.date));
 
     $('#dateTimePicker-start').datetimepicker({
       inline: true,
       format: 'HH:mm'
     }).on('dp.change', (e) => {
-      need.timeType.timeStart = new Date(e.date);
+      need.filterQuery.timeType.timeStart = new Date(e.date);
       let incrementDay = moment(new Date(e.date));
       incrementDay.add(1, 'days');
       $('#dateTimePicker-end').data('DateTimePicker').minDate(incrementDay);
@@ -79,20 +79,20 @@
     $('#dateTimePicker-end').datetimepicker({
       inline: true,
       format: 'HH:mm'
-    }).on('dp.change', (e) => need.timeType.timeEnd = new Date(e.date));
+    }).on('dp.change', (e) => need.filterQuery.timeType.timeEnd = new Date(e.date));
   });
   $('button#searchProfiles').on('click', function() {
     need.firstSearch = false;
     $('.modal#timeType').modal('hide');
-    let dateRecap = `${moment(need.timeType.dateStart).format('DD/MM/YYYY')}`;
-    if (need.timeType.dateEnd) dateRecap += ` - ${moment(need.timeType.dateEnd).format('DD/MM/YYYY')}`;
+    let dateRecap = `${moment(need.filterQuery.timeType.dateStart).format('DD/MM/YYYY')}`;
+    if (need.filterQuery.timeType.dateEnd) dateRecap += ` - ${moment(need.filterQuery.timeType.dateEnd).format('DD/MM/YYYY')}`;
     $('#btnTimeType').html(dateRecap);
     return searchCandidates()
   });
   $('input.disableEndDate').change(function() {
     if($(this).is(":checked")) {
       $('#endDate').hide();
-      delete need.timeType.dateEnd;
+      delete need.filterQuery.timeType.dateEnd;
       return;
     }
     $('#endDate').show();

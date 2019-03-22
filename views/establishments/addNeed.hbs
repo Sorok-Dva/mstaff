@@ -27,7 +27,9 @@
 <script>
   let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
-  let need = { selectedCandidates: [], favoriteCandidates: []};
+  let need = { selectedCandidates: [], favoriteCandidates: [], filterQuery: {
+      establishments: [ esId ]
+    }};
 </script>
 <div class="row">
   <div class="col-md-offset-2 col-md-8 col-sm-12">
@@ -36,30 +38,37 @@
         <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
           <input placeholder="Indiquez le profil recherché" style="border: 0px" id="post" type="text"
                  class="form-control pull-left" autocomplete="off">
+          <div>
+            <button onclick="resetSearch()" id="resetSearch"
+                    title="Réinitialiser ma recherche" class="btn btn-warning pull-right" style="display: none;margin-left: 5px;">
+              <i class="fal fa-undo-alt"></i>
+            </button>
+            <button id="saveNeed" class="btn btn-success pull-right" title="Enregistrer ma recherche" style="display:none;margin-left: 5px;">
+              <i class="fal fa-save"></i>
+            </button>
+            <button id="searchCandidates" class="btn btn-large btn-primary pull-right">
+              Rechercher
+            </button>
+          </div>
         </div>
-        <button style="position: absolute;right: 25px;top:10px" id="searchCandidates" class="btn btn-large btn-primary">
-          Rechercher
-        </button>
       </div>
     </div>
   </div>
-  <div class="col-md-2 col-sm-12" style="padding: 10px">
-    <button onclick="resetSearch()" class="btn btn-warning pull-left btn">
-      Réinitialiser
-    </button>
-  </div>
 </div>
-<div class="row">
-  <div class="col-md-12" id="criteria" style="display: none; padding-top: 15px;">
+<div class="row" style="margin-top: 15px">
+  <div class="col-md-12" id="criteria">
     <div class="col-md-12 text-center">
+      <button class="btn btn-info" data-toggle="modal" data-target="#serviceType" data-backdrop="static" data-keyboard="false">
+        Service <span id="btnServiceType"></span>
+      </button>
       <button class="btn btn-info" data-toggle="modal" data-target="#contractType" data-backdrop="static" data-keyboard="false">
-        Type de Contrat : <span id="btnContractType"></span>
+        Contrat <span id="btnContractType"></span>
       </button>
       <button class="btn btn-info" data-toggle="modal" data-target="#timeType" data-backdrop="static" data-keyboard="false">
-       Période : <span id="btnTimeType"></span>
+       Période <span id="btnTimeType"></span>
       </button>
-      <button id="saveNeed" class="btn btn-success">
-        <i class="fal fa-save"></i> Enregistrer le besoin
+      <button class="btn btn-info" data-toggle="modal" data-target="#diplomaType" data-backdrop="static" data-keyboard="false">
+        Diplômes Complémentaires <span id="btnDiplomaType"></span>
       </button>
     </div>
   </div>
@@ -72,7 +81,6 @@
           <div class="card card-user">
             <div class="image">
               <div class="pull-left">
-                <span class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available pull-left"></span>
                 <span class="pull-right" style="margin: 5px">
             <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
             <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
@@ -104,9 +112,10 @@
                   <span class="label label-default rank-label">{{{candidateProfilePercentage data.Wish.Candidate}}}</span>
                 </div>
                 <h6>
-            <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
-              {{#if data.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
-            </span>
+                  <div class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"></div>
+                  <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
+                    {{#if data.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
+                  </span>
                 </h6>
                 <h5 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
                   <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>,
@@ -161,18 +170,12 @@
     minLength: 2,
     select: (event, ui) => {
       need.post = ui.item.label;
-      if (need.firstSearch) {
-        createModal({
-          id: 'contractType',
-          modal: 'addNeed-ContractType',
-          cantBeClose: true,
-          title: 'Type de contrat souhaité',
-        }, () => {
-          $('#criteria').show();
-        });
-      } else return searchCandidates();
+      if (need.firstSearch) return showContractModal();
+      else return searchCandidates();
     },
   });
+  $('button[data-target="#contractType"]').click(() => showContractModal());
+  $('button[data-target="#timeType"]').click(() => showTimeModal());
 
   $('#searchCandidates').on('click', function() {
     need.post = $('input#post').val();
@@ -189,26 +192,45 @@
 
   let searchCandidates = () => {
     if ($('input#post').val().length < 2) {
+      if (need.filterQuery.length > 1) {
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Veuillez au moins saisir un nom de poste.',
+        });
+      }
       return false;
     }
     need.post = need.post || $('input#post').val();
     if (need.firstSearch) {
-      createModal({
-        id: 'contractType',
-        modal: 'addNeed-ContractType',
-        cantBeClose: true,
-        title: 'Type de contrat souhaité',
-      }, () => {
-        $('#criteria').show();
-      });
+      return showContractModal();
     } else {
       $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
         loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
+          $('#resetSearch').show();
           $('#searchResult').html(html).show();
           $('#baseResult').hide();
         });
       }).catch(error => errorsHandler(error));
     }
+  };
+
+  let showContractModal = () => {
+    createModal({
+      id: 'contractType',
+      modal: 'addNeed-ContractType',
+      title: 'Type de contrat souhaité',
+    }, () => {
+    });
+  };
+
+  let showTimeModal = () => {
+    createModal({
+      id: 'timeType',
+      modal: 'addNeed-TimeType',
+      title: 'Période',
+      contractType: need.filterQuery.contractType
+    });
   };
 
   let resetSearch = () => {
@@ -218,9 +240,8 @@
     $('#btnContractType').empty();
     $('#btnTimeType').empty();
     need.firstSearch = true;
-    delete need.post;
-    delete need.contractType;
-    delete need.timeType;
+    delete need.filterQuery;
+    $('#resetSearch').hide();
   };
 
   let addCandidate = (id, type) => {
@@ -228,7 +249,8 @@
     switch (type) {
       case 'select':
         if (need.selectedCandidates.indexOf(id) === -1) {
-          $(`i.selectCandidate[data-id="${id}"]`).hide();
+          if (need.selectedCandidates.length === 0) $('#saveNeed').show();
+            $(`i.selectCandidate[data-id="${id}"]`).hide();
           $(`i.unselectCandidate[data-id="${id}"]`).show();
           need.selectedCandidates.push(id);
           /*$('#selectedEsCount').html(need.selectedCandidates.length);
@@ -296,6 +318,7 @@
           $(`i.unselectCandidate[data-id="${id}"]`).hide();
           $(`i.selectCandidate[data-id="${id}"]`).show();
           need.selectedCandidates.splice(index, 1);
+          if (need.selectedCandidates.length === 0) $('#saveNeed').hide();
           /* $('#selectedEsCount').html(need.selectedCandidates.length);
            $(`#es_selected > #es${id}`).remove();*/
         }

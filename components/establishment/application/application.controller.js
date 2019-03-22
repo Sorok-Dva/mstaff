@@ -103,8 +103,9 @@ Establishment_Application.getCVs = (req, res, next) => {
 ;
 
 Establishment_Application.getCandidates = (req, res, next) => {
+  let { filterQuery } = req.body;
   let query = {
-    where: { ref_es_id: req.es.finess },
+    where: { es_id: filterQuery.establishments },
     attributes: { exclude: ['lat', 'lon'] },
     group: ['Wish->Candidate.id'],
     include: [{
@@ -116,8 +117,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
         }
       },
       where: {
-        contract_type: req.body.contractType,
-        $and: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
+        [Op.col]: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
           [Op.like]: `%${req.body.post.toLowerCase()}%`
         })
       },
@@ -188,6 +188,8 @@ Establishment_Application.getCandidates = (req, res, next) => {
       }]
     }]
   };
+
+  if (!_.isNil(filterQuery.contractType)) query.include[0].where.contract_type = filterQuery.contractType;
 
   Models.Application.findAll(query).then(applications => {
     return res.status(200).send(applications);
