@@ -37,7 +37,7 @@
 <script>
   let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
-  let need = { selectedCandidates: [], favoriteCandidates: [], filterQuery: {
+  let need = { selectedCandidates: [], filterQuery: {
       establishments: [ esId ]
     }};
 </script>
@@ -83,6 +83,7 @@
     </div>
   </div>
 </div>
+<div class="row" style="padding-top: 30px">
   <div id="baseResult" class="col-md-12">
     {{#each candidates as |data|}}
       {{#unless data.Establishment.ArchivedCandidates.0.candidate_id}}
@@ -158,12 +159,6 @@
             </div>
           </div>
         </div>
-        <script>
-            {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
-            if (need.favoriteCandidates.indexOf({{this.candidate_id}}) === -1)
-              need.favoriteCandidates.push({{this.candidate_id}});
-            {{/if}}
-        </script>
       {{/unless}}
     {{/each}}
     {{#unless candidates}}
@@ -278,25 +273,22 @@
         }
         break;
         case 'favorite':
-          if (need.favoriteCandidates.indexOf(id) === -1) {d
-            $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
-            need.favoriteCandidates.push(id);
-            $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
-              if (data.status === 'Created') {
-                notification({
-                  icon: 'check-circle',
-                  type: 'success',
-                  title: 'Candidat ajouté au favoris.'
-                })
-              } else {
-                notification({
-                  icon: 'exclamation-circle',
-                  type: 'warning',
-                  title: 'Ce candidat est déjà dans vos favoris.'
-                })
-              }
-            });
-          }
+          $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
+          $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
+            if (data.status === 'Created') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat ajouté au favoris.'
+              })
+            } else {
+              notification({
+                icon: 'exclamation-circle',
+                type: 'warning',
+                title: 'Ce candidat est déjà dans vos favoris.'
+              })
+            }
+          });
           break;
         case 'archive':
           createModal({
@@ -344,20 +336,16 @@
         }
         break;
         case 'unfav':
-          index = need.favoriteCandidates.indexOf(id);
-          if (index !== -1) {
-            $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
-            need.favoriteCandidates.splice(index, 1);
-            $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
-              if (data.status === 'deleted') {
-                notification({
-                  icon: 'check-circle',
-                  type: 'success',
-                  title: 'Candidat supprimé de vos favoris.'
-                })
-              }
-            });
-          }
+          $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
+          $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
+            if (data.status === 'deleted') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat supprimé de vos favoris.'
+              })
+            }
+          });
         break;
     }
   };

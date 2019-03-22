@@ -72,12 +72,6 @@
         </div>
       </div>
     </div>
-    <script>
-        {{#if this.Establishment.FavoriteCandidates.0.candidate_id}}
-        if (need.favoriteCandidates.indexOf({{this.candidate_id}}) === -1)  need.favoriteCandidates.push({{this.candidate_id}});
-        {{else}}
-        {{/if}}
-    </script>
   {{/unless}}
 {{/each}}
 {{#unless this}}
