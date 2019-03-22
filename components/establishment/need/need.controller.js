@@ -141,7 +141,7 @@ Establishment_Need.View = (req, res, next) => {
       required: true
     }]
   }).then(need => {
-    if (_.isNil(need)) return next(new BackError(`Need ${req.params.id} not found`, httpStatus.NOT_FOUND))
+    if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
     render.need = need;
     return res.render('establishments/showNeed', render);
   }).catch(error => next(new BackError(error)));
@@ -156,10 +156,10 @@ Establishment_Need.Create = (req, res, next) => {
   Models.Need.create({
     name: req.body.name || 'Besoin sans nom',
     es_id: req.params.esId,
-    contract_type: req.body.contractType,
-    post: req.body.post,
-    start: req.body.timeType.dateStart,
-    end: req.body.timeType.dateEnd,
+    contract_type: !_.isNil(req.body.filterQuery.contractType) ? req.body.filterQuery.contractType : null,
+    post: !_.isNil(req.body.post ? req.body.post : null),
+    start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart : null,
+    end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd : null,
     createdBy: req.user.id
   }).then(need => {
     req.flash('success_msg', `Besoin ajouté avec succès.`);
