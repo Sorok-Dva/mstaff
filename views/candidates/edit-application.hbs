@@ -341,7 +341,7 @@
 
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
-<script src="/static/assets/dist/js/application.min.js?v={{v}}"></script>
+<script src="/static/assets/dist/js/application.min.js"></script>
 
 <script>
     application.wish = [];
@@ -352,10 +352,9 @@
 
     {{#if wish.services}}
         {{#each wish.services as |service|}}
-        application.serviceType.push('{{{service}}}');
+          application.serviceType.push('{{{service}}}');
         {{/each}}
     {{/if}}
-
     application.selectedESInfo = [];
     application.selectedES = [];
     application.selectedESId = [];

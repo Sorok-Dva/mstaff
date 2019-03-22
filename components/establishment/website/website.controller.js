@@ -12,7 +12,7 @@ const Models = require(`${__}/orm/models/index`);
 const Establishment_Website = {};
 
 Establishment_Website.getIndex = (req, res, next) => {
-  return res.render('establishments/site/index', { layout: 'establishment'})
+  return res.render('establishments/site/index', { layout: 'establishment' })
 };
 
 Establishment_Website.getRegister = (req, res, next) => {
