@@ -5,9 +5,9 @@
         <div class="image">
           <div class="pull-left">
             <span class="pull-right" style="margin: 5px">
-            <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
-            <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
-          </span>
+              <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
+              <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
+            </span>
           </div>
           <div class="actions pull-right">
             <ul class="list-inline">
@@ -34,42 +34,39 @@
             <div class="rank-label-container">
               <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate}}}</span>
             </div>
-            <h6>
-              <div class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"></div>
-              <span class="text-{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
-                {{#if this.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
-              </span>
-            </h6>
             <h5 class="title">{{this.Wish.Candidate.User.firstName}} {{this.Wish.Candidate.User.lastName}},
               <small>{{age this.Wish.Candidate.User.birthday 'years'}} ans</small>,
               <small><b><i class="fal fa-map-marker-alt"></i> {{this.Wish.Candidate.User.town}}</b></small>
             </h5>
+          </div>
+          <div class="text-center">
+            <h6>
+              <div class="{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available"></div>
+              <span class="text-{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
+                {{#if this.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
+              </span>
+            </h6>
             <h5 class="text-muted">
               <i class="fal fa-sun"{{#if this.Wish.day_time}} style="color: #04e900"{{/if}}></i>
               <i class="fal fa-moon"{{#if this.Wish.night_time}} style="color: #04e900"{{/if}}></i>
             </h5>
+            {{#if this.Wish.services}}
+              <hr style="width: 35%; margin: auto">
+              <h5 class="text-muted">
+                Intéressé(e) par les services
+              </h5>
+              <h6>
+                {{#each this.Wish.services as |service|}}
+                  <div class="label label-default">{{service}}</div>
+                {{/each}}
+              </h6>
+              <hr style="width: 35%; margin: auto;">
+            {{/if}}
           </div>
-          <div class="text-center">
-            {{!--<hr style="border-color: lightgrey">
-            <div class="row" style="display: flex;justify-content: center;">
-              <div class="col-md-2">
-                <i class="fal fa-phone fa-2x" style="color:lightgreen"></i>
-              </div>
-              <div class="col-md-2">
-                <i class="fal fa-comment fa-2x" style="color:lightpink"></i>
-              </div>
-              <div class="col-md-2">
-                <i class="fal fa-video fa-2x" style="color:deepskyblue"></i>
-              </div>
-            </div>
-            <hr style="border-color: lightgrey">--}}
-            <div class="row">
-              {{!--<h5><i class="fal fa-phone"></i> {{this.Wish.Candidate.User.phone}}</h5>
-              <h5><i class="fal fa-envelope"></i> {{this.Wish.Candidate.User.email}}</h5>--}}
-              <div class="col-md-12"><button class="btn btn-info" onclick="showCandidateProfile({{this.Wish.Candidate.User.id}})">Accéder au profil complet</button></div>
-              <div class="col-md-12">
-                <p class="text-muted"><small>Inscrit le {{date this.createdAt 'DD/MM/YYYY'}}</small></p>
-              </div>
+          <div class="col-md-12 text-center profile-cta">
+            <div class="col-md-12"><button class="btn btn-info" onclick="showCandidateProfile({{this.Wish.Candidate.User.id}})">Accéder au profil complet</button></div>
+            <div class="col-md-12">
+              <p class="text-muted"><small>Inscrit le {{date this.createdAt 'DD/MM/YYYY'}}</small></p>
             </div>
           </div>
         </div>
