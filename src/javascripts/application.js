@@ -669,7 +669,8 @@ $(document).ready(function () {
       goodServices.show();
       selectServiceType.prop('disabled', false);
       selectServiceType.selectpicker('refresh');
-      application.serviceType = [];
+      if (ApplicationIsAddMode)
+        application.serviceType = [];
     }
     else {
       wrongServices.prop('disabled', false);
