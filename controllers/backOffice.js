@@ -3,62 +3,8 @@ const Models = require('../orm/models/index');
 const layout = 'admin';
 
 module.exports = {
-  getGroups: (req, res) => {
-    return Models.Groups.findAll().then( group => {
-      res.render('back-office/users/list_groups', {
-        layout, group, a: { main: 'users', sub: 'Groups' } })
-    });
-  },
-  editGroups: (req, res, next) => {
-    const errors = validationResult(req.body);
 
-    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
-    return Models.Groups.findOne({ where: { id: req.params.id } }).then(group => {
-      if (req.body.promptInput) {
-        group.name = req.body.promptInput;
-      }
-      group.save();
-      return res.status(200).json({ status: 'Modified' });
-    })
-  },
-  addGroups: (req, res, next) => {
-    const errors = validationResult(req.body);
-
-    if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-
-    return Models.Groups.findOrCreate({
-      where: {
-        name: req.body.promptInput
-      }
-    }).spread((group, created) => {
-      if (created) {
-        return res.status(200).json({ status: 'Created', group });
-      } else {
-        return res.status(200).json({ status: 'Already exists', group });
-      }
-    })
-  },
-  editLinkES: (req, res, next) => {
-
-    return Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(esGroup => {
-      //console.log('checkpoint 1');
-      console.log(req.body.selectInput);
-      //console.log(req.body.selectInput[0]);
-      //console.log(esGroup);
-      if (esGroup.length !== 0) {
-        console.log('waa, regarde maman');
-        esGroup.destroy();
-      }
-      req.body.selectInput.forEach( input => {
-        console.log(input);
-        Models.EstablishmentGroups.create({
-          id_es: input,
-          id_group: req.params.id
-        }).then(res.status(200))
-      });
-    }).catch(error => next(new BackError(error)));
-  },
   removeGroups: (req, res, next) => {
     const errors = validationResult(req.body);
 
