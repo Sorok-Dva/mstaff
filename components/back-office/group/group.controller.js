@@ -13,16 +13,30 @@ const BackOffice_Group = {};
 BackOffice_Group.EditLinkES = (req, res, next) => {
   return Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(esGroup => {
     if (esGroup.length !== 0) {
-      Models.EstablishmentGroups.destroy({ where: { id_group: req.params.id } }).then(() => {
-        for (let i = 0; i < req.body.selectInput.length; i++) {
-          Models.EstablishmentGroups.create({
-            id_es: req.body.selectInput[i],
-            id_group: req.params.id
-          }).then(res.status(200))
-        }
+      Models.EstablishmentGroups.destroy({ where: { id_group: req.params.id } });
+    }
+    for (let i = 0; i < req.body.selectInput.length; i++) {
+      Models.EstablishmentGroups.create({
+        id_es: req.body.selectInput[i],
+        id_group: req.params.id
+      }).then(res.status(200))
+    }
+    return res.status(200).json({ status: 'ok' });
+  }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Group.EditLinkGroup = (req, res, next) => {
+  return Models.GroupsSuperGroups.findAll({ where: { id_super_group: req.params.id } }).then(GroupSuperGroup => {
+    if (GroupSuperGroup.length !== 0) {
+      Models.GroupsSuperGroups.destroy({ where: { id_super_group: req.params.id } });
+    }
+    for (let i = 0; i < req.body.selectInput.length; i++) {
+      Models.GroupsSuperGroups.create({
+        id_group: req.body.selectInput[i],
+        id_super_group: req.params.id
       })
     }
-    return res.status(200);
+    return res.status(200).json({ status: 'ok' });
   }).catch(error => next(new BackError(error)));
 };
 

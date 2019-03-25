@@ -66,7 +66,10 @@ router.put('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.G
 
 router.put('/linkES/:id',
   Authentication.ensureIsAdmin,
-  HTTPValidation.BackOfficeController.editLinkES,
   BackOffice.Group.EditLinkES);
+
+router.put('/linkGroup/:id',
+  Authentication.ensureIsAdmin,
+  BackOffice.Group.EditLinkGroup);
 
 module.exports = router;

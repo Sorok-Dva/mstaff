@@ -6,6 +6,7 @@ const Controller = require('../../controllers/establishment');
 
 router.get('/', (req, res) => res.json({ message: 'welcome' }));
 router.get('/skills/all', ApiController.getSkillsList);
+router.get('/groups/all', ApiController.getGroupsList);
 router.get('/equipments/all', ApiController.getEquipmentsList);
 router.get('/softwares/all', ApiController.getSoftwaresList);
 router.get('/establishments/all', ApiController.getEstablishmentList);

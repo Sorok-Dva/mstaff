@@ -100,6 +100,32 @@
 
     $(document).ready(() => {
         window.operateEvents = {
+            'click .link': (e, value, row, index) => {
+                createModal({
+                    id: 'linkSuperGroupModal',
+                    title: 'Lier des groupes à ' + row.name,
+                    modal: 'back-office/linkSuperGroup'
+                }, () => {
+                    $('button#validateLinkSuperGroup').click(function () {
+                        if($('select#establishmentsID').val() != '') {
+                            let _csrf = $('#csrfToken').val();
+                            let selectInput = $('select#groupsID').val();
+                            $.put(`/api/back-office/linkGroup/${row.id}`, {
+                                selectInput,
+                                _csrf
+                            }, () => {
+                                $('#linkSuperGroupModal').modal('hide');
+                                notification({
+                                    icon: 'check-circle',
+                                    type: 'success',
+                                    title: 'Groupe(s) lié(s)',
+                                    message: ``
+                                });
+                            });
+                        }
+                    })
+                });
+            },
             'click .edit': (e, value, row, index) => {
                 createModal({
                     id: 'editSuperGroupModal',

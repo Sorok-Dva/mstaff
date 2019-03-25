@@ -11,7 +11,6 @@
 <script>
   $.get('/api/establishments/all', function(data) {
     $.each(data.establishments, function (i, establishment) {
-      console.log(establishment.name);
       $('#establishmentsID').append($('<option>', {
         value: establishment.id,
         text : establishment.name

@@ -8,6 +8,11 @@ module.exports = {
       res.status(200).send({ skills });
     }).catch(error => next(error));
   },
+  getGroupsList: (req, res, next) => {
+    Models.Groups.findAll().then(groups => {
+      res.status(200).send({ groups });
+    }).catch(error => next(error));
+  },
   getEquipmentsList: (req, res, next) => {
     Models.Equipment.findAll().then(equipments => {
       res.status(200).send({ equipments });
