@@ -1,13 +1,13 @@
 <style>
-  #postModal > .modal-dialog{
+  .darkModal > .modal-dialog{
     height: 50%;
   }
-  #postModal > .modal-dialog > .modal-content{
+  .darkModal > .modal-dialog > .modal-content{
     background-color: transparent;
     box-shadow: none;
     border: none;
   }
-  #postModal > .modal-dialog > .modal-content > .modal-body{
+  .darkModal > .modal-dialog > .modal-content > .modal-body{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -31,6 +31,9 @@
     font-size: 2.2em;
     color: white;
   }
+  .select-holder > i:last-child{
+    display: none;
+  }
   .selectPost > div{
     display: flex;
     flex-direction: row;
@@ -38,7 +41,7 @@
     align-items: center;
     padding: 3%;
   }
-  #InputPosts{
+  .customInput{
     width: 75%;
     font-size: 3em;
     color: white;
@@ -70,7 +73,7 @@
   }
 </style>
 
-<div class="modal customModal" id="postModal" tabindex="-1" role="dialog">
+<div class="modal customModal darkModal" id="postModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-body">
@@ -80,8 +83,8 @@
           </div>
           <div class="select-holder">
             <i class="fal fa-search"></i>
-            <input id="InputPosts">
-            </select>
+            <input class="customInput" id="InputPosts">
+            <i class="fal fa-check"></i>
           </div>
         </div>
       </div>
