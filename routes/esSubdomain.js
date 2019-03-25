@@ -4,10 +4,13 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/',
-  Establishment.Website.getIndex);
+  Establishment.Website.ViewIndex);
 
 router.get('/register',
   Authentication.ensureIsNotAuthenticated,
-  Establishment.Website.getRegister);
+  Establishment.Website.ViewRegister);
+
+router.get('/posts/all',
+  Establishment.Website.GetPosts);
 
 module.exports = router;

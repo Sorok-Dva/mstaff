@@ -1,4 +1,7 @@
 <style>
+  #postModal > .modal-dialog{
+    height: 50%;
+  }
   #postModal > .modal-dialog > .modal-content{
     background-color: transparent;
     box-shadow: none;
@@ -21,18 +24,49 @@
     font-size: 3em;
     color: white;
   }
+  .select-holder{
+    border-bottom: 2px solid white;
+  }
   .select-holder > i{
     font-size: 2.2em;
     color: white;
-  }
-  .select-holder > select{
-    width: 100%;
   }
   .selectPost > div{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
     padding: 3%;
+  }
+  #InputPosts{
+    width: 75%;
+    font-size: 3em;
+    color: white;
+    background: transparent;
+    border: none;
+  }
+  .ui-autocomplete{
+    z-index: 9999 !important;
+    background: transparent;
+    border: none;
+  }
+  .ui-menu-item-wrapper{
+    font-size: 1.5em;
+  }
+  .ui-menu-item-wrapper.ui-state-active{
+    background: transparent;
+    border: none;
+    color: white;
+  }
+  .ui-menu-item{
+    margin-bottom: 5% !important;
+  }
+  .ui-menu-item:first-child{
+    margin-top: 10% !important;
+  }
+  .ui-widget.ui-widget-content{
+    border: none;
+    color: white;
   }
 </style>
 
@@ -45,11 +79,8 @@
             <p>Vous souhaitez postuler en tant que...</p>
           </div>
           <div class="select-holder">
-            <i class="fal fa-search col"></i>
-            <select class="custom-select  ">
-              <option>Mustard</option>
-              <option>Ketchup</option>
-              <option>Relish</option>
+            <i class="fal fa-search"></i>
+            <input id="InputPosts">
             </select>
           </div>
         </div>

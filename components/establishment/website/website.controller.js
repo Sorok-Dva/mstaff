@@ -11,12 +11,18 @@ const Models = require(`${__}/orm/models/index`);
 
 const Establishment_Website = {};
 
-Establishment_Website.getIndex = (req, res, next) => {
+Establishment_Website.ViewIndex = (req, res, next) => {
   return res.render('establishments/site/index', { layout: 'establishment' })
 };
 
-Establishment_Website.getRegister = (req, res, next) => {
+Establishment_Website.ViewRegister = (req, res, next) => {
   return res.render('users/register', { layout: 'onepage' })
+};
+
+Establishment_Website.GetPosts = (req, res, next) => {
+  Models.Post.findAll().then( posts => {
+    res.status(200).send({ posts });
+  }).catch(error => next(new Error(error)));
 };
 
 module.exports = Establishment_Website;
