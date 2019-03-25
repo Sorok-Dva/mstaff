@@ -35,6 +35,8 @@
 
     $('.modal#contractType').modal('hide');
     $('#btnContractType').html($('#contractType option:selected').text());
-    return showTimeModal();
+
+    if (need.firstSearch) return showTimeModal();
+    else return searchCandidates();
   })
 </script>

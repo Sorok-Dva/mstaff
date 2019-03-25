@@ -23,11 +23,21 @@
   .fa-1d3x {
     font-size: 1.3em;
   }
+
+  .card-user {
+    min-height: 375px;
+    margin-top: 20px;
+  }
+
+  .profile-cta {
+    position: absolute;
+    bottom: 0;
+  }
 </style>
 <script>
   let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
-  let need = { selectedCandidates: [], favoriteCandidates: [], filterQuery: {
+  let need = { selectedCandidates: [], filterQuery: {
       establishments: [ esId ]
     }};
 </script>
@@ -82,9 +92,9 @@
             <div class="image">
               <div class="pull-left">
                 <span class="pull-right" style="margin: 5px">
-            <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
-            <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
-          </span>
+                  <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
+                  <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
+                </span>
               </div>
               <div class="actions pull-right">
                 <ul class="list-inline">
@@ -111,38 +121,44 @@
                 <div class="rank-label-container">
                   <span class="label label-default rank-label">{{{candidateProfilePercentage data.Wish.Candidate}}}</span>
                 </div>
+                <h5 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
+                  <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>,
+                  <small><b><i class="fal fa-map-marker-alt"></i> {{data.Wish.Candidate.User.town}}</b></small>
+                </h5>
+              </div>
+              <div class="text-center">
                 <h6>
                   <div class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"></div>
                   <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
                     {{#if data.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
                   </span>
                 </h6>
-                <h5 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
-                  <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>,
-                  <small><b><i class="fal fa-map-marker-alt"></i> {{data.Wish.Candidate.User.town}}</b></small>
-                </h5>
                 <h5 class="text-muted">
                   <i class="fal fa-sun"{{#if data.Wish.day_time}} style="color: #04e900"{{/if}}></i>
                   <i class="fal fa-moon"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
                 </h5>
+                {{#if data.Wish.services}}
+                  <hr style="width: 35%; margin: auto">
+                  <h5 class="text-muted">
+                    Intéressé(e) par les services
+                  </h5>
+                  <h6>
+                    {{#each data.Wish.services as |service|}}
+                      <div class="label label-default">{{service}}</div>
+                    {{/each}}
+                  </h6>
+                  <hr style="width: 35%; margin: auto;">
+                {{/if}}
               </div>
-              <div class="text-center">
-                <div class="row">
-                  <div class="col-md-12"><button class="btn btn-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">Accéder au profil complet</button></div>
-                  <div class="col-md-12">
-                    <p class="text-muted"><small>Inscrit le {{date data.createdAt 'DD/MM/YYYY'}}</small></p>
-                  </div>
+              <div class="col-md-12 text-center profile-cta">
+                <div class="col-md-12"><button class="btn btn-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">Accéder au profil complet</button></div>
+                <div class="col-md-12">
+                  <p class="text-muted"><small>Inscrit le {{date data.createdAt 'DD/MM/YYYY'}}</small></p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <script>
-            {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
-            if (need.favoriteCandidates.indexOf({{this.candidate_id}}) === -1)
-              need.favoriteCandidates.push({{this.candidate_id}});
-            {{/if}}
-        </script>
       {{/unless}}
     {{/each}}
     {{#unless candidates}}
@@ -240,7 +256,6 @@
     $('#btnContractType').empty();
     $('#btnTimeType').empty();
     need.firstSearch = true;
-    delete need.filterQuery;
     $('#resetSearch').hide();
   };
 
@@ -258,25 +273,22 @@
         }
         break;
         case 'favorite':
-          if (need.favoriteCandidates.indexOf(id) === -1) {
-            $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
-            need.favoriteCandidates.push(id);
-            $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
-              if (data.status === 'Created') {
-                notification({
-                  icon: 'check-circle',
-                  type: 'success',
-                  title: 'Candidat ajouté au favoris.'
-                })
-              } else {
-                notification({
-                  icon: 'exclamation-circle',
-                  type: 'warning',
-                  title: 'Ce candidat est déjà dans vos favoris.'
-                })
-              }
-            });
-          }
+          $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
+          $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
+            if (data.status === 'Created') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat ajouté au favoris.'
+              })
+            } else {
+              notification({
+                icon: 'exclamation-circle',
+                type: 'warning',
+                title: 'Ce candidat est déjà dans vos favoris.'
+              })
+            }
+          });
           break;
         case 'archive':
           createModal({
@@ -324,20 +336,16 @@
         }
         break;
         case 'unfav':
-          index = need.favoriteCandidates.indexOf(id);
-          if (index !== -1) {
-            $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
-            need.favoriteCandidates.splice(index, 1);
-            $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
-              if (data.status === 'deleted') {
-                notification({
-                  icon: 'check-circle',
-                  type: 'success',
-                  title: 'Candidat supprimé de vos favoris.'
-                })
-              }
-            });
-          }
+          $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
+          $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
+            if (data.status === 'deleted') {
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Candidat supprimé de vos favoris.'
+              })
+            }
+          });
         break;
     }
   };
@@ -346,15 +354,13 @@
     need._csrf = _csrf;
 
     $('button#saveNeed').click(function() {
-      if (!need.firstSearch && need.post && need.contractType) {
+      if (need.selectedCandidates.length > 0) {
         need._csrf = _csrf;
         $.post(`/api/es/${esId}/addNeed`, need, (data) => {
           if (data.id) {
             $(location).attr('href', `/need/${data.id}`);
           }
         });
-      } else {
-        console.log('error occurred : invalid search')
       }
     });
   });
