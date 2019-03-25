@@ -14,7 +14,7 @@ Establishment_Application.getCVs = (req, res, next) => {
   let query = {
     where: { es_id: req.session.currentEs },
     attributes: { exclude: ['lat', 'lon'] },
-    group: ['Wish->Candidate.id'],
+    group: ['Wish.candidate_id'],
     include: [{
       model: Models.Wish,
       required: true,
@@ -29,7 +29,7 @@ Establishment_Application.getCVs = (req, res, next) => {
         required: true,
         include: [{
           model: Models.User,
-          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+          attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt', 'createdAt'] },
           on: {
             '$Wish->Candidate.user_id$': {
               [Op.col]: 'Wish->Candidate->User.id'
@@ -39,6 +39,7 @@ Establishment_Application.getCVs = (req, res, next) => {
         }, {
           model: Models.Experience,
           as: 'experiences',
+          attributes: ['candidate_id']
         }, {
           model: Models.CandidateDocument,
           as: 'documents',
@@ -46,6 +47,7 @@ Establishment_Application.getCVs = (req, res, next) => {
         }, {
           model: Models.CandidateFormation,
           as: 'formations',
+          attributes: ['candidate_id']
         }]
       }
     }, {
@@ -190,6 +192,11 @@ Establishment_Application.getCandidates = (req, res, next) => {
   };
 
   if (!_.isNil(filterQuery.contractType)) query.include[0].where.contract_type = filterQuery.contractType;
+  if (!_.isNil(filterQuery.service)) {
+    query.include[0].where.services = {
+      [Op.regexp]: Sequelize.literal(`'(${filterQuery.service})'`),
+    };
+  }
 
   Models.Application.findAll(query).then(applications => {
     return res.status(200).send(applications);
