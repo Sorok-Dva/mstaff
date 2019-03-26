@@ -17,4 +17,8 @@ HTTPValidation.createEstablishmentFromReference = [
   check('salaries_count').isNumeric()
 ];
 
+HTTPValidation.editLinkES = [
+  check('id').isNumeric()
+];
+
 module.exports = HTTPValidation;

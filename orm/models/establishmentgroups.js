@@ -1,7 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const EstablishmentGroup = sequelize.define('EstablishmentGroups', {
-    name: DataTypes.STRING,
+    id_es: DataTypes.INTEGER,
+    id_group: DataTypes.INTEGER
   }, {});
   EstablishmentGroup.associate = function (models) {
     EstablishmentGroup.belongsTo(models.Establishment, {
