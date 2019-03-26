@@ -68,6 +68,7 @@ Establishment_Need.Create = (req, res, next) => {
     es_id: req.params.esId,
     contract_type: !_.isNil(req.body.filterQuery.contractType) ? req.body.filterQuery.contractType : null,
     post: !_.isNil(req.body.post ? req.body.post : null),
+    service: !_.isNil(req.body.filterQuery.service ? req.body.filterQuery.service : null),
     start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart : null,
     end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd : null,
     createdBy: req.user.id
