@@ -76,7 +76,7 @@
 <div class="row" style="margin-top: 15px">
   <div class="col-md-12" id="criteria">
     <div class="col-md-12 text-center">
-      <button class="btn btn-info" onclick="return showServicetModal()">
+      <button class="btn btn-info" onclick="return showServiceModal()">
         Service <span id="btnServiceType"></span>
       </button>
       <button class="btn btn-info" onclick="return showContractModal()">
@@ -85,8 +85,7 @@
       <button class="btn btn-info" onclick="return showTimeModal()">
         Période <span id="btnTimeType"></span>
       </button>
-      <button class="btn btn-info" data-toggle="modal" data-target="#diplomaType" data-backdrop="static"
-              data-keyboard="false">
+      <button class="btn btn-info" onclick="return showDiplomaModal()">
         Diplômes Complémentaires <span id="btnDiplomaType"></span>
       </button>
     </div>
@@ -132,8 +131,7 @@
               <div class="author">
                 <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg"/>
                 <div class="rank-label-container">
-                  <span class="label label-default rank-label">{{{candidateProfilePercentage
-                      data.Wish.Candidate}}}</span>
+                  <span class="label label-default rank-label">{{!--{{{candidateProfilePercentage this.Wish.Candidate}}}--}}</span>
                 </div>
                 <h5 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
                   <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>,
@@ -203,6 +201,12 @@
     <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
   {{/each}}
 </select>
+<select class="form-control" id="selectDiplomaType" data-live-search="true"
+        title="Séléctionner un diplôme" style="display: none">
+  {{#each formations as |formation|}}
+    <option value="{{formation.id}}">{{formation.name}}</option>
+  {{/each}}
+</select>
 <script>
   need.firstSearch = true;
   need.notifyCandidates = false;
@@ -230,7 +234,7 @@
   });
 
   let searchCandidates = () => {
-    if ($('input#post').val().length < 2) {
+    // if ($('input#post').val().length < 2) {
       if (need.filterQuery.length > 1) {
         notification({
           icon: 'exclamation',
@@ -238,8 +242,7 @@
           title: 'Veuillez au moins saisir un nom de poste.',
         });
       }
-      return false;
-    }
+    // }
     need.post = need.post || $('input#post').val();
     if (need.firstSearch) {
       return showContractModal();
@@ -254,7 +257,7 @@
     }
   };
 
-  let showServicetModal = () => {
+  let showServiceModal = () => {
     createModal({
       id: 'serviceType',
       modal: 'es/need/serviceType',
@@ -278,6 +281,14 @@
       modal: 'es/need/timeType',
       title: 'Période',
       contractType: need.filterQuery.contractType
+    });
+  };
+
+  let showDiplomaModal = () => {
+    createModal({
+      id: 'diplomaType',
+      modal: 'es/need/diplomaType',
+      title: 'Diplôme',
     });
   };
 
