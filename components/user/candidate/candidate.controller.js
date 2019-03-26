@@ -728,7 +728,7 @@ User_Candidate.updatePercentage = (user, type) => {
           } else percentage.profile.description = 0;
 
           candidate.percentage = percentage;
-          candidate.save();
+          return User_Candidate.updateTotalPercentage(candidate, percentage);
         });
         break;
       case 'photo':
@@ -737,15 +737,14 @@ User_Candidate.updatePercentage = (user, type) => {
           percentage.profile.photo = 10;
         } else percentage.profile.photo = 0;
         candidate.percentage = percentage;
-        candidate.save();
-        break;
+        return User_Candidate.updateTotalPercentage(candidate, percentage);
       case 'experiences':
         if (!('experiences' in percentage)) percentage.experiences = 0;
         Models.Experience.findAndCountAll({ where: { candidate_id: candidate.id } }).then(experiences => {
           if (experiences.count > 0) percentage.experiences = 10;
           else percentage.experiences = 0;
           candidate.percentage = percentage;
-          candidate.save();
+          return User_Candidate.updateTotalPercentage(candidate, percentage);
         });
         break;
       case 'formations':
@@ -754,7 +753,7 @@ User_Candidate.updatePercentage = (user, type) => {
           if (formations.count > 0) percentage.formations = 10;
           else percentage.formations = 0;
           candidate.percentage = percentage;
-          candidate.save();
+          return User_Candidate.updateTotalPercentage(candidate, percentage);
         });
         break;
       case 'documents':
@@ -772,11 +771,27 @@ User_Candidate.updatePercentage = (user, type) => {
           if (have.CNI) percentage.documents.CNI = 5;
           if (have.VIT) percentage.documents.VIT = 5;
           candidate.percentage = percentage;
-          candidate.save();
+          return User_Candidate.updateTotalPercentage(candidate, percentage);
         });
         break;
     }
   });
+};
+
+User_Candidate.updateTotalPercentage = (candidate, percentage) => {
+  if (Object.keys(percentage).length < 1) return false;
+  if (!('total' in percentage)) percentage.total = 0;
+  let scores = [];
+  if (Object.keys(percentage).length > 0) {
+    _.valuesIn(percentage).forEach((e) => {
+      if (typeof e === 'object') {
+        _.valuesIn(e).forEach(value => scores.push(value));
+      } else scores.push(e);
+    });
+    percentage.total = _.sum(scores);
+    candidate.percentage = percentage;
+    candidate.save();
+  }
 };
 
 module.exports = User_Candidate;
