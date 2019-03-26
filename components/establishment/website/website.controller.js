@@ -25,4 +25,10 @@ Establishment_Website.GetPosts = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
+Establishment_Website.GetServices = (req, res, next) => {
+  Models.Service.findAll().then( services => {
+    res.status(200).send(services);
+  }).catch(error => next(new Error(error)));
+};
+
 module.exports = Establishment_Website;
