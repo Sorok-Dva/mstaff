@@ -29,12 +29,10 @@
     $('select#contractType').removeClass('error').addClass('success');
     need.filterQuery.contractType = this.value;
 
-    if (need.filterQuery.contractType !== 'vacation') {
-      delete need.filterQuery.timeType;
-    }
-
     $('.modal#contractType').modal('hide');
     $('#btnContractType').html($('#contractType option:selected').text());
-    return showTimeModal();
+
+    if (need.firstSearch) return showTimeModal();
+    else return searchCandidates();
   })
 </script>

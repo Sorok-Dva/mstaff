@@ -37,8 +37,10 @@
     </div>
   </div>
 </div>
-<div class="modal-footer timeType" style="display: none">
-  <button type="button" id="searchProfiles" class="btn btn-info pull-right" style="margin-bottom: 5px;">
+<div class="modal-footer">
+  <button type="button" class="btn btn-default pull-left"
+          data-dismiss="modal" onclick="need.firstSearch = false;searchCandidates();">Ignorer</button>
+  <button type="button" id="searchProfiles" class="btn btn-info pull-right" style="display: none;margin-bottom: 5px;">
     Valider
   </button>
 </div>
@@ -52,7 +54,7 @@
       useCurrent: false,
       format: 'DD/MM/YYYY'
     }).on('dp.change', (e) => {
-      if (!$('.modal-footer.timeType').is(':visible')) $('.modal-footer.timeType').show();
+      if (!$('button#searchProfiles').is(':visible')) $('button#searchProfiles').show();
       need.filterQuery.timeType.dateStart = new Date(e.date);
       let incrementDay = moment(new Date(e.date));
       incrementDay.add(1, 'days');
