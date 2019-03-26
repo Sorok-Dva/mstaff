@@ -107,7 +107,7 @@
                     modal: 'back-office/linkSuperGroup'
                 }, () => {
                     $('button#validateLinkSuperGroup').click(function () {
-                        if($('select#establishmentsID').val() != '') {
+                        if($('select#establishmentsID').val() !== '') {
                             let _csrf = $('#csrfToken').val();
                             let selectInput = $('select#groupsID').val();
                             $.put(`/api/back-office/linkGroup/${row.id}`, {
@@ -133,7 +133,7 @@
                     modal: 'back-office/editSuperGroups'
                 }, () => {
                     $('button#btnEditSuperGroup').click(function () {
-                        if ($('input#superGroupValueEdit').val() != '') {
+                        if ($('input#superGroupValueEdit').val() !== '') {
                             let _csrf = $('#csrfToken').val();
                             let promptInput = $('input#superGroupValueEdit').val();
                             $.put(`/api/back-office/super-groups/${row.id}`, {
@@ -151,7 +151,7 @@
                                 });
                             });
                         } else {
-                            if ($('input#superGroupValueEdit').val() == '') {
+                            if ($('input#superGroupValueEdit').val() === '') {
                                 $('input#superGroupValueEdit').addClass('error');
                                 setTimeout(function () {
                                     $('input#superGroupValueEdit').removeClass('error');

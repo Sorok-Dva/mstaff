@@ -107,7 +107,7 @@
                       modal: 'back-office/linkGroup'
                     }, () => {
                     $('button#validateLinkGroup').click(function () {
-                      if($('select#establishmentsID').val() != '') {
+                      if($('select#establishmentsID').val() !== '') {
                         let _csrf = $('#csrfToken').val();
                         let selectInput = $('select#establishmentsID').val();
                         $.put(`/api/back-office/linkES/${row.id}`, {
@@ -133,7 +133,7 @@
                     modal: 'back-office/editGroup'
                 }, () => {
                     $('button#btnEditGroup').click(function () {
-                        if ($('input#groupValueEdit').val() != '') {
+                        if ($('input#groupValueEdit').val() !== '') {
                             let _csrf = $('#csrfToken').val();
                             let promptInput = $('input#groupValueEdit').val();
                             $.put(`/api/back-office/groups/${row.id}`, {
@@ -151,7 +151,7 @@
                                 });
                             });
                         } else {
-                            if ($('input#groupValueEdit').val() == '') {
+                            if ($('input#groupValueEdit').val() === '') {
                                 $('input#groupValueEdit').addClass('error');
                                 setTimeout(function () {
                                     $('input#groupValueEdit').removeClass('error');

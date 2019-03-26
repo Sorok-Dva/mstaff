@@ -6,27 +6,27 @@ module.exports = {
   getSkillsList: (req, res, next) => {
     Models.Skill.findAll().then(skills => {
       res.status(200).send({ skills });
-    }).catch(error => next(error));
+    }).catch(error => next(new Error(error)));
   },
   getGroupsList: (req, res, next) => {
     Models.Groups.findAll().then(groups => {
       res.status(200).send({ groups });
-    }).catch(error => next(error));
+    }).catch(error => next(new Error(error)));
   },
   getEquipmentsList: (req, res, next) => {
     Models.Equipment.findAll().then(equipments => {
       res.status(200).send({ equipments });
-    }).catch(error => next(error));
+    }).catch(error => next(new Error(error)));
   },
   getSoftwaresList: (req, res, next) => {
     Models.Software.findAll().then(softwares => {
       res.status(200).send({ softwares });
-    }).catch(error => next(error));
+    }).catch(error => next(new Error(error)));
   },
   getEstablishmentList: (req, res, next) => {
     Models.Establishment.findAll().then(establishments => {
       res.status(200).send({ establishments });
-    }).catch(error => next(error));
+    }).catch(error => next(new Error(error)));
   },
   getCategoriesList: (req, res, next) => {
     Models.CategoriesPostsServices.findAll().then(categories => {
