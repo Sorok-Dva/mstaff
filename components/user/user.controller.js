@@ -51,7 +51,17 @@ User.create = (req, res, next) => {
       usr = user;
       return Models.Candidate.create({
         user_id: user.id,
-        percentage: {},
+        percentage: {
+          profile: {
+            main: user.firstName && user.lastName && user.phone && user.town ? 20 : 0,
+            description: 0,
+            photo: 0,
+          },
+          experiences: 0,
+          formations: 0,
+          documents: { DIP: 0, RIB: 0, CNI: 0, VIT: 0 },
+          total: user.firstName && user.lastName && user.phone && user.town ? 20 : 0
+        },
         es_id: esId || null
       })
     }).then(candidate => {
