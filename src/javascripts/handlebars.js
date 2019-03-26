@@ -180,17 +180,8 @@ Handlebars.registerHelper('partial', function (name) {
 });
 
 Handlebars.registerHelper('candidateProfilePercentage', (percentage) => {
-  let total = 0;
-  let scores = [];
-  if (Object.keys(percentage).length > 0) {
-    _.valuesIn(percentage).forEach((e, i) => {
-      if (typeof e === 'object') {
-        _.valuesIn(e).forEach(value => scores.push(value));
-      } else scores.push(e);
-    });
-    total = _.sum(scores);
-  }
-  return total === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${total}%`;
+  if (_.isNil(percentage.total)) return '0%';
+  return percentage.total === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage.total}%`;
 });
 
 Handlebars.registerHelper('countInObject', (object, property, search) => {
