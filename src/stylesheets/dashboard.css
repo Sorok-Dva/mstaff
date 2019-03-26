@@ -4865,7 +4865,7 @@ select.selectpicker {
 }
 
 .bootstrap-select > .dropdown-toggle {
-    width: 100%;
+    width: auto;
     padding-right: 25px;
     z-index: 1;
 }

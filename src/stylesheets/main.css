@@ -216,6 +216,10 @@ a {
   top: 17px;
 }
 
+.bootstrap-select {
+  background-color: white !important;
+}
+
 /* Disabled state;
  */
 [disabled].noUi-connect,
