@@ -85,7 +85,10 @@
     operateFormatter = (value, row, index) => {
         return [
             '<div class="table-icons">',
-            '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+            '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
+            '<i class="ti-rss-alt"></i>',
+            '</a>',
+            '<a title="Rename" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
             '<i class="ti-pencil-alt"></i>',
             '</a>',
             '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
@@ -97,6 +100,32 @@
 
     $(document).ready(() => {
         window.operateEvents = {
+            'click .link': (e, value, row, index) => {
+                createModal({
+                      id: 'linkGroupModal',
+                      title: 'Lier des établissements à ' + row.name,
+                      modal: 'back-office/linkGroup'
+                    }, () => {
+                    $('button#validateLinkGroup').click(function () {
+                      if($('select#establishmentsID').val() !== '') {
+                        let _csrf = $('#csrfToken').val();
+                        let selectInput = $('select#establishmentsID').val();
+                        $.put(`/api/back-office/linkES/${row.id}`, {
+                          selectInput,
+                          _csrf
+                        }, () => {
+                          $('#linkGroupModal').modal('hide');
+                          notification({
+                            icon: 'check-circle',
+                            type: 'success',
+                            title: 'Etablissement(s) lié(s)',
+                            message: ``
+                          });
+                        });
+                      }
+                    })
+                });
+            },
             'click .edit': (e, value, row, index) => {
                 createModal({
                     id: 'editGroupModal',
@@ -104,7 +133,7 @@
                     modal: 'back-office/editGroup'
                 }, () => {
                     $('button#btnEditGroup').click(function () {
-                        if ($('input#groupValueEdit').val() != '') {
+                        if ($('input#groupValueEdit').val() !== '') {
                             let _csrf = $('#csrfToken').val();
                             let promptInput = $('input#groupValueEdit').val();
                             $.put(`/api/back-office/groups/${row.id}`, {
@@ -122,7 +151,7 @@
                                 });
                             });
                         } else {
-                            if ($('input#groupValueEdit').val() == '') {
+                            if ($('input#groupValueEdit').val() === '') {
                                 $('input#groupValueEdit').addClass('error');
                                 setTimeout(function () {
                                     $('input#groupValueEdit').removeClass('error');
@@ -158,7 +187,6 @@
                 });
             }
         };
-
 
         table.bootstrapTable({
             toolbar: ".toolbar",

@@ -85,6 +85,9 @@
     operateFormatter = (value, row, index) => {
         return [
             '<div class="table-icons">',
+            '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
+            '<i class="ti-sharethis"></i>',
+            '</a>',
             '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
             '<i class="ti-pencil-alt"></i>',
             '</a>',
@@ -97,6 +100,32 @@
 
     $(document).ready(() => {
         window.operateEvents = {
+            'click .link': (e, value, row, index) => {
+                createModal({
+                    id: 'linkSuperGroupModal',
+                    title: 'Lier des groupes à ' + row.name,
+                    modal: 'back-office/linkSuperGroup'
+                }, () => {
+                    $('button#validateLinkSuperGroup').click(function () {
+                        if($('select#establishmentsID').val() !== '') {
+                            let _csrf = $('#csrfToken').val();
+                            let selectInput = $('select#groupsID').val();
+                            $.put(`/api/back-office/linkGroup/${row.id}`, {
+                                selectInput,
+                                _csrf
+                            }, () => {
+                                $('#linkSuperGroupModal').modal('hide');
+                                notification({
+                                    icon: 'check-circle',
+                                    type: 'success',
+                                    title: 'Groupe(s) lié(s)',
+                                    message: ``
+                                });
+                            });
+                        }
+                    })
+                });
+            },
             'click .edit': (e, value, row, index) => {
                 createModal({
                     id: 'editSuperGroupModal',
@@ -104,7 +133,7 @@
                     modal: 'back-office/editSuperGroups'
                 }, () => {
                     $('button#btnEditSuperGroup').click(function () {
-                        if ($('input#superGroupValueEdit').val() != '') {
+                        if ($('input#superGroupValueEdit').val() !== '') {
                             let _csrf = $('#csrfToken').val();
                             let promptInput = $('input#superGroupValueEdit').val();
                             $.put(`/api/back-office/super-groups/${row.id}`, {
@@ -122,7 +151,7 @@
                                 });
                             });
                         } else {
-                            if ($('input#superGroupValueEdit').val() == '') {
+                            if ($('input#superGroupValueEdit').val() === '') {
                                 $('input#superGroupValueEdit').addClass('error');
                                 setTimeout(function () {
                                     $('input#superGroupValueEdit').removeClass('error');
@@ -135,7 +164,7 @@
             'click .remove': (e, value, row, index) => {
                 createModal({
                     id: 'removeSuperGroupModal',
-                    title: 'Supprimer un superGroupe',
+                    title: 'Supprimer un super groupe',
                     modal: 'back-office/removeSuperGroups'
                 }, () => {
                     let _csrf = $('#csrfToken').val();
@@ -150,7 +179,7 @@
                             notification({
                                 icon: 'check-circle',
                                 type: 'success',
-                                title: 'Super Groupe supprimé.',
+                                title: 'Super groupe supprimé.',
                                 message: ``
                             });
                         });
@@ -158,7 +187,6 @@
                 });
             }
         };
-
 
         table.bootstrapTable({
             toolbar: ".toolbar",
