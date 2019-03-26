@@ -92,10 +92,12 @@ Establishment_Application.getCVs = (req, res, next) => {
       }]
     }]
   };
-
+  let render = { a: { main: 'candidates' } };
   Models.Post.findAll().then(posts => {
-    let render = { a: { main: 'candidates' } };
     render.posts = posts;
+    return Models.Service.findAll();
+  }).then(services => {
+    render.services = services;
     Models.Application.findAll(query).then(applications => {
       render.candidates = applications;
       return res.render('establishments/addNeed', render);

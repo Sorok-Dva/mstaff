@@ -4,22 +4,26 @@
     margin-top: 20px;
     transform: scale(1.5);
   }
+
   .checkbox label::after {
     top: 19px;
     font-size: 21px;
   }
+
   h3, .h3 {
     font-size: 1.825em;
     line-height: 2.2 !important;
   }
+
   .form-group {
     margin-bottom: 0 !important;
   }
 
-   .list-inline>li {
-     padding-right: 0 !important;
-     padding-left: 0 !important;
-   }
+  .list-inline > li {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
   .fa-1d3x {
     font-size: 1.3em;
   }
@@ -37,9 +41,11 @@
 <script>
   let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
-  let need = { selectedCandidates: [], filterQuery: {
-      establishments: [ esId ]
-    }};
+  let need = {
+    selectedCandidates: [], filterQuery: {
+      establishments: [esId]
+    }
+  };
 </script>
 <div class="row">
   <div class="col-md-offset-2 col-md-8 col-sm-12">
@@ -50,10 +56,12 @@
                  class="form-control pull-left" autocomplete="off">
           <div>
             <button onclick="resetSearch()" id="resetSearch"
-                    title="Réinitialiser ma recherche" class="btn btn-warning pull-right" style="display: none;margin-left: 5px;">
+                    title="Réinitialiser ma recherche" class="btn btn-warning pull-right"
+                    style="display: none;margin-left: 5px;">
               <i class="fal fa-undo-alt"></i>
             </button>
-            <button id="saveNeed" class="btn btn-success pull-right" title="Enregistrer ma recherche" style="display:none;margin-left: 5px;">
+            <button id="saveNeed" class="btn btn-success pull-right" title="Enregistrer ma recherche"
+                    style="display:none;margin-left: 5px;">
               <i class="fal fa-save"></i>
             </button>
             <button id="searchCandidates" class="btn btn-large btn-primary pull-right">
@@ -68,16 +76,17 @@
 <div class="row" style="margin-top: 15px">
   <div class="col-md-12" id="criteria">
     <div class="col-md-12 text-center">
-      <button class="btn btn-info" data-toggle="modal" data-target="#serviceType" data-backdrop="static" data-keyboard="false">
+      <button class="btn btn-info" onclick="return showServicetModal()">
         Service <span id="btnServiceType"></span>
       </button>
-      <button class="btn btn-info" data-toggle="modal" data-target="#contractType" data-backdrop="static" data-keyboard="false">
+      <button class="btn btn-info" onclick="return showContractModal()">
         Contrat <span id="btnContractType"></span>
       </button>
-      <button class="btn btn-info" data-toggle="modal" data-target="#timeType" data-backdrop="static" data-keyboard="false">
-       Période <span id="btnTimeType"></span>
+      <button class="btn btn-info" onclick="return showTimeModal()">
+        Période <span id="btnTimeType"></span>
       </button>
-      <button class="btn btn-info" data-toggle="modal" data-target="#diplomaType" data-backdrop="static" data-keyboard="false">
+      <button class="btn btn-info" data-toggle="modal" data-target="#diplomaType" data-backdrop="static"
+              data-keyboard="false">
         Diplômes Complémentaires <span id="btnDiplomaType"></span>
       </button>
     </div>
@@ -92,8 +101,11 @@
             <div class="image">
               <div class="pull-left">
                 <span class="pull-right" style="margin: 5px">
-                  <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
-                  <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
+                  <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
+                     onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
+                  <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
+                     onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')"
+                     style="display:none;cursor: pointer; color: #35e035"></i>
                 </span>
               </div>
               <div class="actions pull-right">
@@ -106,7 +118,8 @@
                     <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
                        title="Ajouté par {{data.Establishment.FavoriteCandidates.0.User.firstName}} {{data.Establishment.FavoriteCandidates.0.User.lastName}}"
                       {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
-                       onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unfav')" style="cursor: pointer; color: gold"
+                       onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unfav')"
+                       style="cursor: pointer; color: gold"
                       {{else}}
                        onclick="addCandidate({{data.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"
                       {{/if}}>
@@ -117,9 +130,10 @@
             </div>
             <div class="content">
               <div class="author">
-                <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
+                <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg"/>
                 <div class="rank-label-container">
-                  <span class="label label-default rank-label">{{{candidateProfilePercentage data.Wish.Candidate}}}</span>
+                  <span class="label label-default rank-label">{{{candidateProfilePercentage
+                      data.Wish.Candidate}}}</span>
                 </div>
                 <h5 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
                   <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>,
@@ -129,7 +143,8 @@
               <div class="text-center">
                 <h6>
                   <div class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"></div>
-                  <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
+                  <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"
+                        style="line-height: 1.8">
                     {{#if data.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
                   </span>
                 </h6>
@@ -151,9 +166,15 @@
                 {{/if}}
               </div>
               <div class="col-md-12 text-center profile-cta">
-                <div class="col-md-12"><button class="btn btn-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">Accéder au profil complet</button></div>
                 <div class="col-md-12">
-                  <p class="text-muted"><small>Inscrit le {{date data.createdAt 'DD/MM/YYYY'}}</small></p>
+                  <button class="btn btn-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">Accéder
+                    au profil complet
+                  </button>
+                </div>
+                <div class="col-md-12">
+                  <p class="text-muted">
+                    <small>Inscrit le {{date data.createdAt 'DD/MM/YYYY'}}</small>
+                  </p>
                 </div>
               </div>
             </div>
@@ -176,8 +197,12 @@
     </div>
   </div>
 </div>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<select class="form-control" id="selectServiceType" data-live-search="true"
+        title="Séléctionner un type de service" style="display: none">
+  {{#each services as |service|}}
+    <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
+  {{/each}}
+</select>
 <script>
   need.firstSearch = true;
   need.notifyCandidates = false;
@@ -190,15 +215,13 @@
       else return searchCandidates();
     },
   });
-  $('button[data-target="#contractType"]').click(() => showContractModal());
-  $('button[data-target="#timeType"]').click(() => showTimeModal());
 
-  $('#searchCandidates').on('click', function() {
+  $('#searchCandidates').on('click', function () {
     need.post = $('input#post').val();
     searchCandidates();
   });
 
-  $('input#post').on('keydown', function(e) {
+  $('input#post').on('keydown', function (e) {
     if (e.which === 13) {
       e.preventDefault();
       need.post = $('input#post').val();
@@ -229,6 +252,15 @@
         });
       }).catch(error => errorsHandler(error));
     }
+  };
+
+  let showServicetModal = () => {
+    createModal({
+      id: 'serviceType',
+      modal: 'es/need/serviceType',
+      title: 'Type de service souhaité',
+    }, () => {
+    });
   };
 
   let showContractModal = () => {
@@ -265,57 +297,57 @@
       case 'select':
         if (need.selectedCandidates.indexOf(id) === -1) {
           if (need.selectedCandidates.length === 0) $('#saveNeed').show();
-            $(`i.selectCandidate[data-id="${id}"]`).hide();
+          $(`i.selectCandidate[data-id="${id}"]`).hide();
           $(`i.unselectCandidate[data-id="${id}"]`).show();
           need.selectedCandidates.push(id);
           /*$('#selectedEsCount').html(need.selectedCandidates.length);
           $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
         }
         break;
-        case 'favorite':
-          $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
-          $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
-            if (data.status === 'Created') {
-              notification({
-                icon: 'check-circle',
-                type: 'success',
-                title: 'Candidat ajouté au favoris.'
-              })
-            } else {
-              notification({
-                icon: 'exclamation-circle',
-                type: 'warning',
-                title: 'Ce candidat est déjà dans vos favoris.'
-              })
-            }
-          });
-          break;
-        case 'archive':
-          createModal({
-            id: 'archivateCandidateModal',
-            modal: 'es/showArchivateCandidate',
-            title: 'Archiver un candidat',
-          }, () => {
-            $('#archivateCandidate').click(function() {
-              $('#archivateCandidateModal').modal('hide');
-              $.post(`/api/es/${esId}/candidate/${id}/archive/`, { _csrf }, (data) => {
-                $(`div[data-card-user="${id}"]`).remove();
-                if (data.status === 'Created') {
-                  notification({
-                    icon: 'check-circle',
-                    type: 'success',
-                    title: 'Candidat archivé avec succès.'
-                  })
-                } else {
-                  notification({
-                    icon: 'exclamation-circle',
-                    type: 'warning',
-                    title: 'Ce candidat est déjà archivé.'
-                  })
-                }
-              });
+      case 'favorite':
+        $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
+        $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
+          if (data.status === 'Created') {
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Candidat ajouté au favoris.'
+            })
+          } else {
+            notification({
+              icon: 'exclamation-circle',
+              type: 'warning',
+              title: 'Ce candidat est déjà dans vos favoris.'
+            })
+          }
+        });
+        break;
+      case 'archive':
+        createModal({
+          id: 'archivateCandidateModal',
+          modal: 'es/showArchivateCandidate',
+          title: 'Archiver un candidat',
+        }, () => {
+          $('#archivateCandidate').click(function () {
+            $('#archivateCandidateModal').modal('hide');
+            $.post(`/api/es/${esId}/candidate/${id}/archive/`, { _csrf }, (data) => {
+              $(`div[data-card-user="${id}"]`).remove();
+              if (data.status === 'Created') {
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Candidat archivé avec succès.'
+                })
+              } else {
+                notification({
+                  icon: 'exclamation-circle',
+                  type: 'warning',
+                  title: 'Ce candidat est déjà archivé.'
+                })
+              }
             });
           });
+        });
         break;
     }
   };
@@ -335,17 +367,17 @@
            $(`#es_selected > #es${id}`).remove();*/
         }
         break;
-        case 'unfav':
-          $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
-          $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
-            if (data.status === 'deleted') {
-              notification({
-                icon: 'check-circle',
-                type: 'success',
-                title: 'Candidat supprimé de vos favoris.'
-              })
-            }
-          });
+      case 'unfav':
+        $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
+        $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
+          if (data.status === 'deleted') {
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Candidat supprimé de vos favoris.'
+            })
+          }
+        });
         break;
     }
   };
@@ -353,7 +385,7 @@
   $(document).ready(() => {
     need._csrf = _csrf;
 
-    $('button#saveNeed').click(function() {
+    $('button#saveNeed').click(function () {
       if (need.selectedCandidates.length > 0) {
         need._csrf = _csrf;
         $.post(`/api/es/${esId}/addNeed`, need, (data) => {
