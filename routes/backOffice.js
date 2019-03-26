@@ -127,12 +127,12 @@ router.get('/references/:type',
  * @Route('/back-office/users/groups/') GET;
  * Show services data
  */
-router.get('/groups', Authentication.ensureIsAdmin, Controller.getGroups);
+router.get('/groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewGroups);
 
 /**
  * @Route('/back-office/users/super-groups/') GET;
  * Show services data
  */
-router.get('/super-groups', Authentication.ensureIsAdmin, Controller.getSuperGroups);
+router.get('/super-groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewSuperGroups);
 
 module.exports = router;

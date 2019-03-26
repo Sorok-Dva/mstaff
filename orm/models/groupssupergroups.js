@@ -1,17 +1,18 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const GroupSuperGroup = sequelize.define('GroupSuperGroups', {
-    name: DataTypes.STRING,
+  const GroupsSuperGroup = sequelize.define('GroupsSuperGroups', {
+    id_group: DataTypes.INTEGER,
+    id_super_group: DataTypes.INTEGER
   }, {});
-  GroupSuperGroup.associate = function (models) {
-    GroupSuperGroup.belongsTo(models.Groups, {
+  GroupsSuperGroup.associate = function (models) {
+    GroupsSuperGroup.belongsTo(models.Groups, {
       foreignKey: 'id',
       onDelete: 'CASCADE'
     });
-    GroupSuperGroup.belongsTo(models.SuperGroups, {
+    GroupsSuperGroup.belongsTo(models.SuperGroups, {
       foreignKey: 'id',
       onDelete: 'CASCADE'
     });
   };
-  return GroupSuperGroup;
+  return GroupsSuperGroup;
 };
