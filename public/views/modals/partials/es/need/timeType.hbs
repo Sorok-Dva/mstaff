@@ -38,8 +38,7 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default pull-left"
-          data-dismiss="modal" onclick="need.firstSearch = false;searchCandidates();">Ignorer</button>
+  <button type="button" id="ignoreTime" class="btn btn-default pull-left" data-dismiss="modal">Ignorer</button>
   <button type="button" id="searchProfiles" class="btn btn-info pull-right" style="display: none;margin-bottom: 5px;">
     Valider
   </button>
@@ -98,5 +97,14 @@
       return;
     }
     $('#endDate').show();
+  });
+
+  $('#ignoreTime').click(function() {
+    need.firstSearch = false;
+    if (!_.isNil(need.filterQuery.timeType)) {
+      delete need.filterQuery.timeType;
+      $('#btnTimeType').empty();
+    }
+    searchCandidates();
   });
 </script>
