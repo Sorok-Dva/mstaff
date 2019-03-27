@@ -144,8 +144,13 @@ $('#post_id').select2();
 
 $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
-  $('#btnRemoveXp').attr('onclick', `removeCandidateExperience(${id})`);
-  $('#removeExperienceModal').modal();
+  createModal({
+    modal: 'removeExperience',
+    id: 'removeExperienceModal',
+    title: 'Supprimer cette experience ?'
+  }, () => {
+    $('#btnRemoveXp').attr('onclick', `removeCandidateExperience(${id})`);
+  })
 }).on('click', 'button.removeFormation', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $('#btnRemoveFormation').attr('onclick', `removeCandidateFormation(${id})`);

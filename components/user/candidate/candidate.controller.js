@@ -100,6 +100,7 @@ User_Candidate.uploadDocument = (req, res, next) => {
         type: file.fieldname,
         path: file.path,
       }).then(document => {
+        User_Candidate.updatePercentage(req.user, 'documents');
         return res.status(200).send(document);
       });
     } else {
@@ -196,6 +197,7 @@ User_Candidate.EditProfile =(req, res, next) => {
         candidate.description = req.body.description;
         candidate.save().then(() => {
           req.flash('success_msg', 'Vos informations ont été sauvegardées.');
+          User_Candidate.updatePercentage(req.user, 'identity');
           return res.redirect('/profile/edit');
         });
       });
@@ -276,6 +278,7 @@ User_Candidate.getDocuments = (req, res, next) => {
     return res.render('candidates/documents', render)
   }).catch(error => next(new BackError(error)));
 };
+
 User_Candidate.addApplication = (req, res, next) => {
   let render = { a: { main: 'applications' } };
   return Models.Post.findAll().then(posts => {
@@ -315,7 +318,7 @@ User_Candidate.removeXP = (req, res, next) => {
   }).then(candidate => {
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.Experience.findOne(opts).then(experience => {
-      experience.destroy();
+      experience.destroy().then(() => User_Candidate.updatePercentage(req.user, 'experiences'));
       res.status(200).send({ done: true });
     }).catch(error => next(error));
   });
@@ -338,7 +341,7 @@ User_Candidate.removeFormation = (req, res, next) => {
   }).then(candidate => {
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateFormation.findOne(opts).then(formation => {
-      formation.destroy();
+      formation.destroy().then(() => User_Candidate.updatePercentage(req.user, 'formations'));
       res.status(200).send({ done: true });
     }).catch(error => next(error));
   });
@@ -390,6 +393,7 @@ User_Candidate.AddExperience = (req, res, next) => {
       start: req.body.start,
       end: req.body.end || null
     }).then(experience => {
+      User_Candidate.updatePercentage(req.user, 'experiences');
       xp = experience.dataValues;
       Models.Service.findOne({ where: { id: experience.service_id } }).then(service => {
         xp.service = service.dataValues;
@@ -418,6 +422,7 @@ User_Candidate.AddFormation = (req, res, next) => {
       start: req.body.start,
       end: req.body.end || null
     }).then(formation => {
+      User_Candidate.updatePercentage(req.user, 'formations');
       res.status(200).send({ formation });
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   })
@@ -704,6 +709,89 @@ User_Candidate.removeWish = (req, res, next) => {
       wish.destroy().then(wish => res.status(201).send({ deleted: true, wish }));
     }).catch(error => next(new Error(error)));
   }).catch(error => next(new Error(error)));
+};
+
+User_Candidate.updatePercentage = (user, type) => {
+  if (_.isNil(type)) return false;
+  Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
+    let { percentage } = candidate;
+    switch (type) {
+      case 'identity':
+        if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };
+        Models.User.findOne({ where: { id: user.id } }).then(user => {
+          if (user.firstName && user.lastName && user.phone && user.town) {
+            percentage.profile.main = 20;
+          } else percentage.profile.main = 0;
+
+          if (!_.isNil(candidate.description) && candidate.description.length > 10) {
+            percentage.profile.description = 30;
+          } else percentage.profile.description = 0;
+
+          candidate.percentage = percentage;
+          return User_Candidate.updateTotalPercentage(candidate, percentage);
+        });
+        break;
+      case 'photo':
+        if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };
+        if (candidate.photo) {
+          percentage.profile.photo = 10;
+        } else percentage.profile.photo = 0;
+        candidate.percentage = percentage;
+        return User_Candidate.updateTotalPercentage(candidate, percentage);
+      case 'experiences':
+        if (!('experiences' in percentage)) percentage.experiences = 0;
+        Models.Experience.findAndCountAll({ where: { candidate_id: candidate.id } }).then(experiences => {
+          if (experiences.count > 0) percentage.experiences = 10;
+          else percentage.experiences = 0;
+          candidate.percentage = percentage;
+          return User_Candidate.updateTotalPercentage(candidate, percentage);
+        });
+        break;
+      case 'formations':
+        if (!('formations' in percentage)) percentage.formations = 0;
+        Models.CandidateFormation.findAndCountAll({ where: { candidate_id: candidate.id } }).then(formations => {
+          if (formations.count > 0) percentage.formations = 10;
+          else percentage.formations = 0;
+          candidate.percentage = percentage;
+          return User_Candidate.updateTotalPercentage(candidate, percentage);
+        });
+        break;
+      case 'documents':
+        if (!('documents' in percentage)) percentage.documents = { DIP: 0, RIB: 0, CNI: 0, VIT: 0 };
+        Models.CandidateDocument.findAll({ where: { candidate_id: candidate.id } }).then(documents => {
+          let have = { DIP: false, CNI: false, RIB: false, VIT: false };
+          documents.forEach(document => {
+            if (document.type === 'DIP') have.DIP = true;
+            if (document.type === 'RIB') have.RIB = true;
+            if (document.type === 'CNI') have.CNI = true;
+            if (document.type === 'VIT') have.VIT = true;
+          });
+          if (have.DIP) percentage.documents.DIP = 5;
+          if (have.RIB) percentage.documents.RIB = 5;
+          if (have.CNI) percentage.documents.CNI = 5;
+          if (have.VIT) percentage.documents.VIT = 5;
+          candidate.percentage = percentage;
+          return User_Candidate.updateTotalPercentage(candidate, percentage);
+        });
+        break;
+    }
+  });
+};
+
+User_Candidate.updateTotalPercentage = (candidate, percentage) => {
+  if (Object.keys(percentage).length < 1) return false;
+  if (!('total' in percentage)) percentage.total = 0;
+  let scores = [];
+  if (Object.keys(percentage).length > 0) {
+    _.valuesIn(percentage).forEach((e) => {
+      if (typeof e === 'object') {
+        _.valuesIn(e).forEach(value => scores.push(value));
+      } else scores.push(e);
+    });
+    percentage.total = _.sum(scores);
+    candidate.percentage = percentage;
+    candidate.save();
+  }
 };
 
 module.exports = User_Candidate;

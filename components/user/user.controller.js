@@ -1,6 +1,7 @@
 const __ = process.cwd();
 const { validationResult } = require('express-validator/check');
 const { BackError } = require(`${__}/helpers/back.error`);
+const { Candidate } = require(`./candidate/candidate.controller`);
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -10,7 +11,7 @@ const Models = require(`${__}/orm/models/index`);
 
 const User = {};
 
-User.create =(req, res, next) => {
+User.create = (req, res, next) => {
   const errors = validationResult(req);
   let { password } = req.body;
   let { esCode } = req.params;
@@ -50,6 +51,17 @@ User.create =(req, res, next) => {
       usr = user;
       return Models.Candidate.create({
         user_id: user.id,
+        percentage: {
+          profile: {
+            main: user.firstName && user.lastName && user.phone && user.town ? 20 : 0,
+            description: 0,
+            photo: 0,
+          },
+          experiences: 0,
+          formations: 0,
+          documents: { DIP: 0, RIB: 0, CNI: 0, VIT: 0 },
+          total: user.firstName && user.lastName && user.phone && user.town ? 20 : 0
+        },
         es_id: esId || null
       })
     }).then(candidate => {
@@ -59,11 +71,10 @@ User.create =(req, res, next) => {
   });
 };
 
-User.ValidateAccount = (req, res) => {
+User.ValidateAccount = (req, res, next) => {
   if (req.params.key) {
     Models.User.findOne({
-      where: { key: req.params.key },
-      attributes: ['key', 'id', 'firstName', 'email', 'validated']
+      where: { key: req.params.key }
     }).then(user => {
       if (_.isNil(user)) {
         req.flash('error_msg', 'Clé de validation invalide.');
@@ -78,7 +89,8 @@ User.ValidateAccount = (req, res) => {
           template: 'candidate/emailValidated',
           context: { user: user }
         });
-        res.redirect('/login');
+        Candidate.updatePercentage(user, 'identity');
+        req.logIn(user, (err) => !_.isNil(err) ? next(new BackError(err)) : null);
       })
     });
   } else {

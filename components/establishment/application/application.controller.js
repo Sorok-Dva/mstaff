@@ -36,18 +36,6 @@ Establishment_Application.getCVs = (req, res, next) => {
             }
           },
           required: true
-        }, {
-          model: Models.Experience,
-          as: 'experiences',
-          attributes: ['candidate_id']
-        }, {
-          model: Models.CandidateDocument,
-          as: 'documents',
-          attributes: ['candidate_id', 'type'],
-        }, {
-          model: Models.CandidateFormation,
-          as: 'formations',
-          attributes: ['candidate_id']
         }]
       }
     }, {
@@ -92,17 +80,21 @@ Establishment_Application.getCVs = (req, res, next) => {
       }]
     }]
   };
-
+  let render = { a: { main: 'candidates' } };
   Models.Post.findAll().then(posts => {
-    let render = { a: { main: 'candidates' } };
     render.posts = posts;
+    return Models.Service.findAll();
+  }).then(services => {
+    render.services = services;
+    return Models.Formation.findAll();
+  }).then(formations => {
+    render.formations = formations;
     Models.Application.findAll(query).then(applications => {
       render.candidates = applications;
       return res.render('establishments/addNeed', render);
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
-}
-;
+};
 
 Establishment_Application.getCandidates = (req, res, next) => {
   let { filterQuery } = req.body;
@@ -136,13 +128,6 @@ Establishment_Application.getCandidates = (req, res, next) => {
             }
           },
           required: true
-        }, {
-          model: Models.Experience,
-          as: 'experiences',
-        }, {
-          model: Models.CandidateDocument,
-          as: 'documents',
-          attributes: ['candidate_id', 'type'],
         }, {
           model: Models.CandidateFormation,
           as: 'formations',
@@ -195,6 +180,12 @@ Establishment_Application.getCandidates = (req, res, next) => {
   if (!_.isNil(filterQuery.service)) {
     query.include[0].where.services = {
       [Op.regexp]: Sequelize.literal(`'(${filterQuery.service})'`),
+    };
+  }
+  if (!_.isNil(filterQuery.diploma)) {
+    query.include[0].include.include[1].required = true;
+    query.include[0].include.include[1].where = {
+      name: { [Op.regexp]: filterQuery.diploma }
     };
   }
 

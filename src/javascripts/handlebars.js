@@ -179,27 +179,9 @@ Handlebars.registerHelper('partial', function (name) {
   return name;
 });
 
-Handlebars.registerHelper('candidateProfilePercentage', (candidate) => {
-  let percentage = 0;
-  if (candidate.User.firstName && candidate.User.lastName && candidate.User.phone && candidate.User.town) percentage += 20;
-  if (candidate.photo) percentage += 10;
-  if (!_.isNil(candidate.description) && candidate.description.length > 10) percentage += 30;
-  if (candidate.experiences.length > 0) percentage += 10;
-  if (candidate.formations.length > 0) percentage += 10;
-  if (candidate.documents.length > 0) {
-    let have = { DIP: false, CNI: false, RIB: false, VIT: false };
-    candidate.documents.forEach(document => {
-      if (document.type === 'DIP') have.DIP = true;
-      if (document.type === 'RIB') have.RIB = true;
-      if (document.type === 'CNI') have.CNI = true;
-      if (document.type === 'VIT') have.VIT = true;
-    });
-    if (have.DIP) percentage += 5;
-    if (have.RIB) percentage += 5;
-    if (have.CNI) percentage += 5;
-    if (have.VIT) percentage += 5;
-  }
-  return percentage === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage}%`;
+Handlebars.registerHelper('candidateProfilePercentage', (percentage) => {
+  if (_.isNil(percentage.total)) return '0%';
+  return percentage.total === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage.total}%`;
 });
 
 Handlebars.registerHelper('countInObject', (object, property, search) => {

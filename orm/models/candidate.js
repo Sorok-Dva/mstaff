@@ -12,6 +12,15 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING,
     note: DataTypes.STRING,
     views: DataTypes.INTEGER,
+    percentage: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('percentage'))
+      },
+      set(data) {
+        this.setDataValue('percentage', JSON.stringify(data));
+      }
+    },
     is_available: DataTypes.BOOLEAN
   }, {});
   Candidate.associate = (models) => {
