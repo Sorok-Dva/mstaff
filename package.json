@@ -9,12 +9,8 @@
     "db:migrate": "sequelize db:migrate",
     "db:migrate:undo": "sequelize db:migrate:undo",
     "db:seed": "sequelize db:seed:all",
-    "db:seed:test": "sequelize db:seed:all --env test",
-    "db:dev_test:migrate": "sequelize db:migrate --env dev_test",
-    "db:dev_test:migrate:undo": "sequelize db:migrate:undo --env dev_test",
-    "db:dev_test:seed": "sequelize db:seed:all --env dev_test",
     "dev": "nodemon --exec npm start",
-    "test": "mocha tests/*/*.js --exit"
+    "test": "ENV=test mocha tests/*/*.js --exit"
   },
   "repository": {
     "type": "git",
