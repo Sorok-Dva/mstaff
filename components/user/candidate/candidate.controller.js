@@ -167,7 +167,7 @@ User_Candidate.viewProfile = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-User_Candidate.ViewEditProfile =(req, res, next) => {
+User_Candidate.ViewEditProfile = (req, res, next) => {
   Models.User.findOne({
     where: { id: req.user.id },
     attributes: { exclude: ['password'] },
@@ -180,7 +180,7 @@ User_Candidate.ViewEditProfile =(req, res, next) => {
   }).catch(error => next(error));
 };
 
-User_Candidate.EditProfile =(req, res, next) => {
+User_Candidate.EditProfile = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -287,7 +287,7 @@ User_Candidate.addApplication = (req, res, next) => {
   return Models.Post.findAll().then(posts => {
     render.posts = posts;
     return Models.Service.findAll();
-  }).then( services => {
+  }).then(services => {
     render.services = services;
     return res.render('candidates/add-application', render)
   }).catch(error => next(new BackError(error)));
@@ -305,14 +305,18 @@ User_Candidate.getWishes = (req, res, next) => {
 };
 
 User_Candidate.getXpById = (req, res, next) => {
-  return Models.Candidate.findOne({
-    where: { user_id: req.user.id }
+  Models.Candidate.findOne({
+    where: { user_id: req.user.id },
+    include: {
+      model: Models.Experience,
+      as: 'experiences',
+      where: { id: req.params.id },
+      required: true
+    }
   }).then(candidate => {
-    let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
-    Models.Experience.findOne(opts).then(experience => {
-      res.status(200).send({ experience });
-    }).catch(error => next(error));
-  });
+    if (!candidate) return res.status(400).send({ errors: 'Candidat ou expérience introuvable.' });
+    res.status(200).send(candidate.experiences[0]);
+  }).catch(error => next(new BackError(error)));
 };
 
 User_Candidate.removeXP = (req, res, next) => {
@@ -431,7 +435,7 @@ User_Candidate.AddFormation = (req, res, next) => {
   })
 };
 
-User_Candidate.AddDiploma =(req, res, next) => {
+User_Candidate.AddDiploma = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -458,7 +462,6 @@ User_Candidate.putFormation = (req, res, next) => {
     return res.status(400).send({ body: req.body, errors: errors.array() });
   }
 
-  // @todo secure with candidate_id clause
   return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
     Models.CandidateFormation.findOne({ where: { id: req.params.id, candidate_id: candidate.id } }).then(formation => {
       if (!formation) return res.status(400).send({ errors: 'Formation not found' });
@@ -472,14 +475,74 @@ User_Candidate.putFormation = (req, res, next) => {
   }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
 };
 
+User_Candidate.putDiploma = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+
+  return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    Models.CandidateQualification.findOne({ where: { id: req.params.id, candidate_id: candidate.id } }).then(diploma => {
+      if (!diploma) return res.status(400).send({ errors: 'Diplôme introuvable.' });
+      diploma.name = req.body.name;
+      diploma.start = req.body.start;
+      diploma.end = req.body.end;
+      diploma.save().then(() => {
+        return res.status(200).send({ result: 'updated' });
+      });
+    })
+  }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+};
+
+User_Candidate.putXP = (req, res, next) => {
+  check('start').isBefore(new Date());
+  check('start').isBefore(req.body.end);
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+
+  Models.Candidate.findOne({
+    where: { user_id: req.user.id },
+    include: {
+      model: Models.Experience,
+      as: 'experiences',
+      where: { id: req.params.id },
+      required: true
+    }
+  }).then(candidate => {
+    if (!candidate) return res.status(400).send({ errors: 'Candidat ou formation introuvable.' });
+    candidate.experiences[0].name = req.body.name;
+    candidate.experiences[0].start = req.body.start;
+    candidate.experiences[0].end = _.isNil(req.body.end) ? null : req.body.end;
+    candidate.experiences[0].poste_id = parseInt(req.body.post_id);
+    candidate.experiences[0].service_id = parseInt(req.body.service_id);
+    candidate.experiences[0].internship = req.body.internship;
+    candidate.experiences[0].current = req.body.current;
+    candidate.experiences[0].save().then(() => {
+      return res.status(200).send({ result: 'updated' });
+    }).catch(error => next(new BackError(error)));
+  }).catch(errors => next(new BackError(errors)))
+};
+
 User_Candidate.addRating = (req, res, next) => {
   const errors = validationResult(req);
   let badType = false, type, as;
   switch (req.params.type) {
-    case 'skill': type = 'CandidateSkill', as = 'skills'; break;
-    case 'equipment': type = 'CandidateEquipment', as = 'equipments'; break;
-    case 'software': type = 'CandidateSoftware', as = 'softwares'; break;
-    default: badType = true;
+    case 'skill':
+      type = 'CandidateSkill', as = 'skills';
+      break;
+    case 'equipment':
+      type = 'CandidateEquipment', as = 'equipments';
+      break;
+    case 'software':
+      type = 'CandidateSoftware', as = 'softwares';
+      break;
+    default:
+      badType = true;
   }
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
   else if (badType) return res.status(400).send({ body: req.body, error: 'Wrong url parameters.' });
@@ -503,10 +566,17 @@ User_Candidate.starsRating = (req, res, next) => {
   const errors = validationResult(req);
   let badType = false, type, as;
   switch (req.params.type) {
-    case 'skill': type = 'CandidateSkill', as = 'skills'; break;
-    case 'equipment': type = 'CandidateEquipment', as = 'equipments'; break;
-    case 'software': type = 'CandidateSoftware', as = 'softwares'; break;
-    default: badType = true;
+    case 'skill':
+      type = 'CandidateSkill', as = 'skills';
+      break;
+    case 'equipment':
+      type = 'CandidateEquipment', as = 'equipments';
+      break;
+    case 'software':
+      type = 'CandidateSoftware', as = 'softwares';
+      break;
+    default:
+      badType = true;
   }
   if (!errors.isEmpty() || badType) {
     return res.status(400).send({ body: req.body, errors: errors.array() || 'Wrong url parameters.' });
@@ -531,10 +601,17 @@ User_Candidate.deleteRating = (req, res, next) => {
   const errors = validationResult(req);
   let badType = false, type, as;
   switch (req.params.type) {
-    case 'skill': type = 'CandidateSkill', as = 'skills'; break;
-    case 'equipment': type = 'CandidateEquipment', as = 'equipments'; break;
-    case 'software': type = 'CandidateSoftware', as = 'softwares'; break;
-    default: badType = true;
+    case 'skill':
+      type = 'CandidateSkill', as = 'skills';
+      break;
+    case 'equipment':
+      type = 'CandidateEquipment', as = 'equipments';
+      break;
+    case 'software':
+      type = 'CandidateSoftware', as = 'softwares';
+      break;
+    default:
+      badType = true;
   }
   if (!errors.isEmpty() || badType) {
     return res.status(400).send({ body: req.body, errors: errors.array() || 'Wrong url parameters.' });
@@ -595,18 +672,18 @@ User_Candidate.addWish = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-User_Candidate.getWish =(req, res, next) => {
+User_Candidate.getWish = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     return res.status(400).send({ body: req.body, errors: errors.array() });
   }
-  return Models.Candidate.findOne( {
+  return Models.Candidate.findOne({
     where: { user_id: req.user.id }
-  }).then( candidate => {
+  }).then(candidate => {
     Models.Wish.findOne({
       where: { id: req.params.id }
-    }).then( wish => {
+    }).then(wish => {
       if (!wish) return res.status(400).send({ body: req.body, error: 'Not exists' });
       res.status(201).send({ get: true, wish })
     })
@@ -615,7 +692,7 @@ User_Candidate.getWish =(req, res, next) => {
 
 User_Candidate.getEditWish = (req, res, next) => {
   let render = { a: { main: 'applications' } };
-  Models.Candidate.findOne( {
+  Models.Candidate.findOne({
     attributes: ['user_id'],
     where: { user_id: req.user.id },
     include: [{
@@ -629,17 +706,19 @@ User_Candidate.getEditWish = (req, res, next) => {
       as: 'applications',
       include: {
         model: Models.EstablishmentReference,
-        on: { '$applications.ref_es_id$': {
-          [Op.col]: 'applications->EstablishmentReference.finess_et' }
+        on: {
+          '$applications.ref_es_id$': {
+            [Op.col]: 'applications->EstablishmentReference.finess_et'
+          }
         }
       }
     }]
-  }).then( candidate => {
+  }).then(candidate => {
     render.candidate = candidate;
     render.wish = candidate.wishes[0];
     render.applications = candidate.applications;
     return Models.Post.findAll();
-  }).then( posts => {
+  }).then(posts => {
     render.posts = posts;
     return Models.Service.findAll();
   }).then(services => {
@@ -676,7 +755,7 @@ User_Candidate.editWish = (req, res, next) => {
           where: {
             wish_id: req.params.id,
           }
-        }).then( () => {
+        }).then(() => {
           for (let i = 0; i < req.body.es.length; i++) {
             Models.Establishment.findOne({ where: { finess: req.body.es[i] } }).then(es => {
               Models.Application.create({
