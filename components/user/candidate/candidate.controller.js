@@ -131,7 +131,7 @@ User_Candidate.viewProfile = (req, res, next) => {
       },
       required: true
     }, {
-      model: Models.Experience, // Experiences Associations (user.candidate.experiences)
+      model: Models.Experience,
       as: 'experiences',
       include: [{
         model: Models.Service,
@@ -139,24 +139,24 @@ User_Candidate.viewProfile = (req, res, next) => {
       }, {
         model: Models.Post,
         as: 'poste'
-      }] // Service & Post Associations (user.candidate.experiences.service|post)
+      }]
     }, {
-      model: Models.CandidateQualification, // CandidateQualifications Associations (user.candidate.qualifications)
+      model: Models.CandidateQualification,
       as: 'qualifications'
     }, {
-      model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
+      model: Models.CandidateFormation,
       as: 'formations'
     }, {
-      model: Models.CandidateSkill, // CandidateSkills Associations (user.candidate.skills)
+      model: Models.CandidateSkill,
       as: 'skills'
     }, {
-      model: Models.CandidateEquipment, // CandidateEquipment Associations (user.candidate.skills)
+      model: Models.CandidateEquipment,
       as: 'equipments'
     }, {
-      model: Models.CandidateSoftware, // Softwares Associations (user.candidate.softwares)
+      model: Models.CandidateSoftware,
       as: 'softwares'
     }, {
-      model: Models.CandidateDocument, // Softwares Associations (user.candidate.softwares)
+      model: Models.CandidateDocument,
       as: 'documents'
     }, {
       model: Models.Wish,

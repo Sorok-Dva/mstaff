@@ -105,6 +105,27 @@
         </ol>
       </div>
     </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">
+          <i class="fal fa-folder-open"></i> Mes documents
+          <a href="/documents" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+          </a>
+        </h4>
+      </div>
+      <div class="card-content">
+        <ul style="word-break: break-all;">
+          {{#each candidate.documents as |document|}}
+            <li>
+              <h5>
+                <a href="{{document.path}}">{{document.name}}</a>
+              </h5>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
   </div>
     <div class="col-lg-8 col-md-7">
     <div class="card">
