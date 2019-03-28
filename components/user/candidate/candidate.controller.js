@@ -158,6 +158,9 @@ User_Candidate.viewProfile = (req, res, next) => {
     }, {
       model: Models.CandidateDocument, // Softwares Associations (user.candidate.softwares)
       as: 'documents'
+    }, {
+      model: Models.Wish,
+      as: 'wishes'
     }]
   }).then(candidate => {
     return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
