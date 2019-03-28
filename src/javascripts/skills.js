@@ -114,7 +114,7 @@ let autocompleteTrigger = (elements, contain) => {
 
 let removeSkill = (type, id) => {
   let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/${type}/${id}`, { _csrf }, (data) => {
+  $.delete(`/api/candidate/type/${type}/${id}`, { _csrf }, (data) => {
     if (data.deleted) {
       notification({
         icon: 'check-circle',
