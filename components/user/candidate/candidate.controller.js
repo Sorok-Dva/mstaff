@@ -780,7 +780,8 @@ User_Candidate.updatePercentage = (user, type) => {
 
 User_Candidate.updateTotalPercentage = (candidate, percentage) => {
   if (Object.keys(percentage).length < 1) return false;
-  if (!('total' in percentage)) percentage.total = 0;
+  if ('total' in percentage) delete percentage.total;
+  percentage.total = 0;
   let scores = [];
   if (Object.keys(percentage).length > 0) {
     _.valuesIn(percentage).forEach((e) => {
