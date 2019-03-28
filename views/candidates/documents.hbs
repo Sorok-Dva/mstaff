@@ -372,7 +372,7 @@
 <script src="/static/assets/dist/js/uploadDocuments.min.js"></script>
 <script>
   let showFiles = (type) => {
-    createModal({ id: 'showFileListModal', modal: 'showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
+    createModal({ id: 'showFileListModal', modal: 'candidate/showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
       let content = ($(`#${type}List ul>li`).length < 1) ? 'Aucun documents' : $(`#${type}List`).clone().show();
       $('.showFileListModalBody').html(content);
     });

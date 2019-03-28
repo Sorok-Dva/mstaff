@@ -599,7 +599,7 @@ let createRecap = () => {
 };
 
 let addWishName = () => {
-  createModal({ id: 'addApplicationNameModal', modal: 'addApplicationName', title: 'Nommez votre candidature' }, () => {
+  createModal({ id: 'addApplicationNameModal', modal: 'candidate/addApplicationName', title: 'Nommez votre candidature' }, () => {
     let regex = new RegExp('[\\w]', 'i');
     let value;
 

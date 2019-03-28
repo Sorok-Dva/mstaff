@@ -72,12 +72,14 @@ $('.add').click(function () {
             .append($('<td>').text(`${data.experience.poste.name}`))
             .append($('<td>').append($('<label>').attr('class', 'label label-warning').text(`${data.experience.service.name}`)))
             .append($('<td>').append($('<button>').attr({
-              class: 'btn btn-simple btn-warning btn-icon editXP',
-              'data-id': data.experience.id
+              class: 'btn btn-simple btn-warning btn-icon',
+              onclick: `showEditXPModal(${data.experience.id})`,
+              type: 'button'
             }).html('<i class="ti-pencil-alt"></i>'))
               .append($('<button>').attr({
-                class: 'btn btn-simple btn-danger btn-icon removeXP',
-                'data-id': data.experience.id
+                class: 'btn btn-simple btn-danger btn-icon',
+                onclick: `showRemoveXPModal(${data.experience.id})`,
+                type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
         }
@@ -99,11 +101,13 @@ $('.add').click(function () {
             .append($('<td>').text(`${data.formation.name}`))
             .append($('<td>').append($('<button>').attr({
               class: 'btn btn-simple btn-warning btn-icon editFormation',
-              'data-id': data.formation.id
+              'data-id': data.formation.id,
+              type: 'button'
             }).html('<i class="ti-pencil-alt"></i>'))
               .append($('<button>').attr({
                 class: 'btn btn-simple btn-danger btn-icon removeFormation',
-                'data-id': data.formation.id
+                'data-id': data.formation.id,
+                type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
         }
@@ -125,11 +129,13 @@ $('.add').click(function () {
             .append($('<td>').text(`${data.diploma.name}`))
             .append($('<td>').append($('<button>').attr({
               class: 'btn btn-simple btn-warning btn-icon editDiploma',
-              'data-id': data.diploma.id
+              'data-id': data.diploma.id,
+              type: 'button'
             }).html('<i class="ti-pencil-alt"></i>'))
               .append($('<button>').attr({
                 class: 'btn btn-simple btn-danger btn-icon removeDiploma',
-                'data-id': data.diploma.id
+                'data-id': data.diploma.id,
+                type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
         }
@@ -145,43 +151,37 @@ $('#post_id').select2();
 $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   createModal({
-    modal: 'removeExperience',
+    modal: 'candidate/removeExperience',
     id: 'removeExperienceModal',
-    title: 'Supprimer cette experience ?'
-  }, () => {
-    $('#btnRemoveXp').attr('onclick', `removeCandidateExperience(${id})`);
+    title: 'Supprimer cette experience ?',
+    xpId: id
   })
 }).on('click', 'button.removeFormation', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
-  $('#btnRemoveFormation').attr('onclick', `removeCandidateFormation(${id})`);
-  $('#removeFormationModal').modal();
+  createModal({
+    modal: 'candidate/removeFormation',
+    id: 'removeFormationModal',
+    title: 'Supprimer cette formation ?',
+    formationId: id
+  });
 }).on('click', 'button.removeDiploma', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
-  $('#btnRemoveDiploma').attr('onclick', `removeCandidateDiploma(${id})`);
-  $('#removeDiplomaModal').modal();
+  createModal({
+    modal: 'candidate/removeDiploma',
+    id: 'removeDiplomaModal',
+    title: 'Supprimer cet diplôme ?',
+    diplomaId: id
+  });
 }).on('click', 'button.editXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
-  $.get(`/api/candidate/xp/${id}`, (data) => {
-    if (data.experience) {
-      let start = new Date(data.experience.start);
-      let end = data.experience.end === null ? null : new Date(data.experience.end);
-
-      $('#editName').val(data.experience.name);
-      $('#editPost_id').val(data.experience.poste_id);
-      $('#editService_id').val(data.experience.service_id);
-      $('#editStart').val(`${('0' + (start.getMonth() + 1)).slice(-2)}/${start.getFullYear()}`);
-      $('#editInternship').prop('checked', !!data.experience.internship);
-      $('#editCurrent').prop('checked', !!data.experience.current);
-
-      if (end === null) {
-        $('#editEnd').prop('disabled', true);
-      } else {
-        $('#editEnd').prop('disabled', false);
-        $('#editEnd').val(`${('0' + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
-      }
-      $('#editXpModal').modal();
-      $('#editXPId').val(id);
-      $('#editXP').attr('onclick', `editXP(${id})`);
+  $.get(`/api/candidate/xp/${id}`, (experience) => {
+    if (experience) {
+      createModal({
+        modal: 'candidate/editExperience',
+        id: 'editXPModal',
+        title: 'Modifier une expérience',
+        experience
+      });
     }
   }).catch(errors => {
     notification({
@@ -195,7 +195,12 @@ $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $.get(`/api/candidate/formation/${id}`, (data) => {
     if (data.formation) {
-      createModal({ id: 'editFormationModal', modal: 'editFormation', title: '<span class="ti-pencil-alt"></span> Modifier une formation' }, () => {
+      createModal({
+        id: 'editFormationModal',
+        modal: 'candidate/editFormation',
+        title: '<span class="ti-pencil-alt"></span> Modifier une formation',
+        dataID: data.formation.id
+      }, () => {
         let start = new Date(data.formation.start);
         let end = data.formation.end === null ? null : new Date(data.formation.end);
 
@@ -208,8 +213,6 @@ $('body').on('click', 'button.removeXP', (event) => {
           $('#editFEnd').prop('disabled', false);
           $('#editFEnd').val(`${('0' + (end.getMonth() + 1)).slice(-2)}/${end.getFullYear()}`);
         }
-        $('#editFormationId').val(id);
-        $('#editFormation').attr('onclick', `editFormation(${$('#editFormation').attr('data-id')})`);
       });
     }
   }).catch(errors => {
@@ -224,7 +227,12 @@ $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   $.get(`/api/candidate/diploma/${id}`, (data) => {
     if (data.diploma) {
-      createModal({ id: 'editDiplomaModal', modal: 'editDiploma', title: '<span class="ti-pencil-alt"></span> Modifier un diplôme' }, () => {
+      createModal({
+        id: 'editDiplomaModal',
+        modal: 'candidate/editDiploma',
+        title: '<span class="ti-pencil-alt"></span> Modifier un diplôme' ,
+        dataID: data.diploma.id
+      }, () => {
         let start = new Date(data.diploma.start);
         let end = data.diploma.end === null ? null : new Date(data.diploma.end);
 
@@ -315,28 +323,27 @@ let removeCandidateDiploma = id => {
   });
 };
 
-let editXP = (id) => {
+let editFormation = (id) => {
   let _csrf = $('#csrfToken').val();
-  let name = $('#editName').val();
-  let poste_id = $('#editPost_id').val();
-  let startDate = $('#editStart').val().split('/');
-  let endDate = $('#editEnd').val().split('/');
+  let startDate = $('#editFStart').val().split('/');
+  let endDate = $('#editFEnd').val().split('/');
   let start = new Date(startDate[1], startDate[0] - 1);
   let end = new Date(endDate[1], endDate[0] - 1);
-
-  $.put(`/api/candidate/xp/${id}`, {
+  $.put(`/api/candidate/formation/${id}`, {
     name: $('#editFName').val(),
     start,
     end,
     _csrf
   }, (data) => {
     if (data.result === 'updated') {
+      $('#editFormationModal').modal('hide');
       notification({
-        type: 'success',
         icon: 'check-circle',
-        title: 'Formation editée :',
-        message: 'Votre formation a correctement été modifiée.'
-      })
+        type: 'success',
+        title: 'Formation mise à jour avec succès.',
+        message: `La page va s'actualiser dans quelques secondes.`,
+        onClosed: () => $(location).attr('href', `/formations`)
+      });
     } else {
       if (data.errors) {
         errorsHandler(data.errors);
@@ -345,25 +352,27 @@ let editXP = (id) => {
   }).catch(errors => errorsHandler(errors));
 };
 
-let editFormation = (íd) => {
+let editDiploma = (id) => {
   let _csrf = $('#csrfToken').val();
-  let startDate = $('#editFStart').val().split('/');
-  let endDate = $('#editFEnd').val().split('/');
+  let startDate = $('#editDStart').val().split('/');
+  let endDate = $('#editDEnd').val().split('/');
   let start = new Date(startDate[1], startDate[0] - 1);
   let end = new Date(endDate[1], endDate[0] - 1);
-  $.put(`/api/candidate/formation/${$('#editFormationId').val()}`, {
-    name: $('#editFName').val(),
+  $.put(`/api/candidate/diploma/${id}`, {
+    name: $('#editDName').val(),
     start,
     end,
     _csrf
   }, (data) => {
     if (data.result === 'updated') {
+      $('#editDiplomaModal').modal('hide');
       notification({
-        type: 'success',
         icon: 'check-circle',
-        title: 'Formation editée :',
-        message: 'Votre formation a correctement été modifiée.'
-      })
+        type: 'success',
+        title: 'Diplôme mis à jour avec succès.',
+        message: `La page va s'actualiser dans quelques secondes.`,
+        onClosed: () => $(location).attr('href', `/formations`)
+      });
     } else {
       if (data.errors) {
         errorsHandler(data.errors);
