@@ -4,7 +4,7 @@ const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
 const rename = require('gulp-rename');
-
+const sourcemaps = require('gulp-sourcemaps');
 
 const DST_PATH = './public/assets/dist';
 const CSS_SRC = './src/stylesheets/*.css';
@@ -57,8 +57,10 @@ let buildStyles = () => {
 
 let buildScripts = () => {
   return src(JS_SRC)
+    .pipe(sourcemaps.init())
     .pipe(terser())
     .pipe(rename({ suffix: '.min' }))
+    .pipe(sourcemaps.write())
     .pipe(dest(JS_DST))
     .pipe(browsersync.reload({ stream: true }));
 };

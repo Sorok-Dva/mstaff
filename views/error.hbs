@@ -1,3 +1,28 @@
-<h1>{{message}}</h1>
-<h2>{{error.status}}</h2>
-<pre>{{error.stack}}</pre>
+<style>
+  h1 {
+    margin: 100px auto 0 auto;
+    color: var(--stroke-color);
+    font-family: 'Encode Sans Semi Condensed', Verdana, sans-serif;
+    font-size: 10rem; line-height: 10rem;
+    font-weight: 200;
+    text-align: center;
+  }
+  h2 {
+    margin: 20px auto 30px auto;
+    font-family: 'Encode Sans Semi Condensed', Verdana, sans-serif;
+    font-weight: 200;
+    text-align: center;
+  }
+  h1, h2 {
+    -webkit-transition: opacity 0.5s linear, margin-top 0.5s linear; /* Safari */
+    transition: opacity 0.5s linear, margin-top 0.5s linear;
+  }
+</style>
+<link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
+<div style="margin-top: -5%">
+  <h1>{{error.status}}</h1>
+  <h2>{{error.message}}</h2>
+  {{#if error.stack}}
+    <pre>{{error.stack}}</pre>
+  {{/if}}
+</div>

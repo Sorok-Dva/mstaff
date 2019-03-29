@@ -35,10 +35,10 @@
       "title_card_header_es": " dans l'établissement ",
       "card-lead": "",
       "form_es_label": "Code établissement",
-      "form_firstName_label": "Nom*",
-      "form_firstName_label_ph": "Votre nom",
-      "form_lastName_label": "Prénom*",
-      "form_lastName_label_ph": "Votre prénom",
+      "form_firstName_label": "Prénom*",
+      "form_firstName_label_ph": "Votre prénom",
+      "form_lastName_label": "Nom*",
+      "form_lastName_label_ph": "Votre nom",
       "form_email_label": "Adresse e-mail*",
       "form_birthDate_label": "Date de naissance*",
       "form_postalCode_label": "Code postal*",
@@ -61,5 +61,12 @@
         "email_taken": "Cette adresse e-mail est déjà utilisée."
       }
     }
+  },
+  "categoriesPostServices": {
+    "medical_category": "Medical",
+    "paramedical_category": "Paramédical",
+    "administrative_technical_category": "Personnel non soignant",
+    "liberal_category": "Profession libérale",
+    "mix_category": "Mix"
   }
 }

@@ -1,36 +1,17 @@
-const { check, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
+const { _ } = require('lodash');
+const { BackError } = require('../helpers/back.error');
+const httpStatus = require('http-status');
 
-const sequelize = require('../bin/sequelize');
-const Models = require('../models/index');
+const mailer = require('../bin/mailer');
+const Models = require('../orm/models/index');
+
+const Establishment = require('../components/establishment');
 
 module.exports = {
-  /**
-   * validate MiddleWare
-   * @param method
-   * @description Form Validator. Each form validation must be created in new case.
-   */
-  validate: (method) => {
-    switch (method) {
-      case 'create': {
-        return [
-          check('email').isEmail(),
-          check('firstName').exists(),
-          check('lastName').exists()
-        ]
-      }
-    }
-  },
-  getNeeds: (req, res, next) => {
-    res.render('establishments/needs');
-  },
-  addNeed: (req, res, next) => {
-    let render = { a: { main: 'needs' } };
-    Models.Post.findAll().then(posts => {
-      render.posts = posts;
-      return res.render('establishments/addNeed', render);
-    }).catch(error => next(new Error(error)));
-  },
+  Establishment,
+
   /**
    * Create User Method
    * @param req
@@ -53,27 +34,6 @@ module.exports = {
     }).then(user => res.render('users/login', { user }))
       .catch(error => res.render('users/register', { body: req.body, sequelizeError: error }));
   },
-  findByGeo: (req, res, next) => {
-    let { rayon, lat, lon, filterQuery } = req.body;
-    let formule = `(6366*acos(cos(radians(${lat}))*cos(radians(lat))*cos(radians(lon) -radians(${lon}))+sin(radians(${lat}))*sin(radians(lat))))`;
-    let sql = `SELECT * FROM EstablishmentReferences WHERE ${formule} <= ${rayon}`;
-    sequelize.query(sql, { type: sequelize.QueryTypes.SELECT }).then((data) => {
-      let ids = [];
-      for (let k in data) {
-        ids.push(data[k].finess_et);
-      }
-      let filter = {
-        where: {
-          finess_et: ids
-        },
-        limit: 5000
-      };
-      if (filterQuery) filter.where.cat = filterQuery;
-      Models.EstablishmentReference.findAll(filter).then((es) => {
-        return res.status(200).json(es);
-      });
-    });
-  },
   addApplication: (body, wish) => {
     for (let i = 0; i < body.es.length; i++) {
       Models.Application.create({
@@ -85,62 +45,138 @@ module.exports = {
       });
     }
   },
-  apiSearchCandidates: (req, res, next) => {
-    Models.Establishment.findOne({
-      where: { id: req.params.id },
-      include: {
-        model: Models.ESAccount,
-        where: { user_id: req.user.id }
-      }
-    }).then(es => {
-      if (!es) return res.status(403).send(`You don't have access to this establishment.`);
-      let query = {
-        where: { ref_es_id: es.finess },
-        attributes: { exclude: ['lat', 'lon'] },
+  //NEED.CANDIDATE
+  apiNeedCandidate: (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    Models.NeedCandidate.findOne({
+      where: { need_id: req.params.id, candidate_id: req.params.candidateId },
+      include: [{
+        model: Models.Need,
+        required: true,
+        on: {
+          'id': {
+            [Op.col]: 'NeedCandidate.need_id'
+          }
+        },
         include: {
-          model: Models.Wish,
+          model: Models.Establishment,
+          required: true
+        }
+      }, {
+        model: Models.Candidate,
+        required: true,
+        include: {
+          model: Models.User,
+          required: true,
           on: {
-            '$Application.wish_id$': {
-              [Op.col]: 'Wish.id'
+            '$Candidate.user_id$': {
+              [Op.col]: 'Candidate->User.id'
             }
           },
-          where: {
-            contract_type: req.body.contractType,
-            $and: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
-              [Op.like]: `%${req.body.post.toLowerCase()}%`
-            })
-          },
-          include: {
-            model: Models.Candidate,
-            attributes: { exclude: ['updatedAt', 'createdAt'] },
-            required: true,
-            include: [{
-              model: Models.User,
-              attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
-              on: {
-                '$Wish->Candidate.user_id$': {
-                  [Op.col]: 'Wish->Candidate->User.id'
-                }
-              },
-              required: true
-            }, {
-              model: Models.Experience,
-              as: 'experiences',
-            }, {
-              model: Models.CandidateDocument,
-              as: 'documents',
-              attributes: ['candidate_id', 'type'],
-            }, {
-              model: Models.CandidateFormation,
-              as: 'formations',
-            }]
-          }
+          attributes: ['id', 'email']
         }
-      };
+      }]
+    }).then(needCandidate => {
+      if (_.isNil(needCandidate))
+        return next(new BackError(`Candidate ${req.params.candidateId} or Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
+      else {
+        switch (req.params.action) {
+          case 'notify':
+            Models.Notification.create({
+              fromUser: req.user.id,
+              fromEs: needCandidate.Need.Establishment.id,
+              to: needCandidate.Candidate.User.id,
+              title: 'Un établissement est intéressé par votre profil !',
+              message: req.body.message
+            }).then(notification => {
+              needCandidate.status = 'notified';
+              needCandidate.notified = true;
+              needCandidate.save().then(result => {
+                mailer.sendEmail({
+                  to: needCandidate.Candidate.User.email,
+                  subject: 'Un établissement est intéressé par votre profil !',
+                  template: 'user/es_notified',
+                  context: {
+                    notification,
+                    needCandidate
+                  }
+                });
+                res.status(201).send(result);
+              })
+            });
+            break;
+          case 'select':
+            needCandidate.status = 'selected';
+            needCandidate.notified = true;
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
+          case 'delete':
+            needCandidate.status = 'deleted';
+            needCandidate.notified = false;
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
+          default:
+            return res.status(400).send('no action provided');
+        }
+      }
+    })
+  },
+  //CANDIDATE
+  apiFavCandidate: (req, res, next) => {
+    const errors = validationResult(req);
 
-      Models.Application.findAll(query).then(applications => {
-        return res.status(200).send(applications);
-      });
-    });
-  }
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ body: req.body, errors: errors.array() });
+    }
+
+    let where = {
+      es_id: req.params.esId,
+      candidate_id: req.params.candidateId,
+      added_by: req.user.id
+    };
+
+    switch (req.params.action) {
+      case 'fav':
+        Models.FavoriteCandidate.findOrCreate({ where }).spread((fav, created) => {
+          if (created) {
+            res.status(201).send({ status: 'Created', fav });
+          } else {
+            res.status(200).send({ status: 'Already exists', fav });
+          }
+        });
+        break;
+      case 'unfav':
+        Models.FavoriteCandidate.findOne({ where }).then(fav => {
+          fav.destroy().then(result => {
+            res.status(200).send({ status: 'deleted', result })
+          })
+        });
+        break;
+      case 'archive':
+        Models.ArchivedCandidate.findOrCreate({ where }).spread((archive, created) => {
+          if (created) {
+            res.status(201).send({ status: 'Created', archive });
+          } else {
+            res.status(200).send({ status: 'Already exists', archive });
+          }
+        });
+        break;
+      case 'unarchive':
+        Models.ArchivedCandidate.findOne({ where }).then(archive => {
+          archive.destroy().then(result => {
+            res.status(200).send({ status: 'deleted', result })
+          })
+        });
+        break;
+    }
+  },
 };
