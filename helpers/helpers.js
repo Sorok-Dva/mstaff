@@ -9,7 +9,7 @@ const { BackError } = require('./back.error');
 
 class Env {
   static get current() {
-    return config.ENV
+    return process.env.ENV
   }
 
   static get isTest() {
