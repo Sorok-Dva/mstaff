@@ -1,12 +1,7 @@
-const assert = require('assert');
 const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../../app');
 const User = require('../../orm/models').User;
 const should = chai.should();
 const expect = chai.expect;
-
-chai.use(chaiHttp);
 
 describe('# ORM User Model - CRUD Operations', () => {
   describe('Create User Operation', () => {
