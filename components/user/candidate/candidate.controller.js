@@ -104,8 +104,6 @@ User_Candidate.uploadDocument = (req, res, next) => {
         return res.status(200).send(document);
       });
     } else {
-      // TODO CHECK THIS METHOD CUZ ITS APPEARS REALLY WEIRD
-      /*mkdirIfNotExists(`${__}/public/uploads/documents/videos/`);*/
       if (fs.existsSync(`./public/uploads/documents/${document.filename}`)) {
         fs.unlinkSync(`./public/uploads/documents/${document.filename}`)
       }
@@ -127,12 +125,12 @@ User_Candidate.deleteDocument = (req, res, next) => {
         fs.unlinkSync(`./public/uploads/candidates/documents/${document.filename}`)
       }
       document.destroy().then(() => {
+        User_Candidate.updatePercentage(req.user, 'documents');
         return res.status(200).send('Document supprimé.');
       });
     }
   });
 };
-
 
 User_Candidate.uploadAvatar = (req, res, next) => {
   console.log(req.file);
@@ -869,9 +867,13 @@ User_Candidate.updatePercentage = (user, type) => {
             if (document.type === 'VIT') have.VIT = true;
           });
           if (have.DIP) percentage.documents.DIP = 5;
+          else percentage.documents.DIP = 0;
           if (have.RIB) percentage.documents.RIB = 5;
+          else percentage.documents.RIB = 0;
           if (have.CNI) percentage.documents.CNI = 5;
+          else percentage.documents.CNI = 0;
           if (have.VIT) percentage.documents.VIT = 5;
+          else percentage.documents.VIT = 0;
           candidate.percentage = percentage;
           return User_Candidate.updateTotalPercentage(candidate, percentage);
         });
@@ -885,16 +887,14 @@ User_Candidate.updateTotalPercentage = (candidate, percentage) => {
   if ('total' in percentage) delete percentage.total;
   percentage.total = 0;
   let scores = [];
-  if (Object.keys(percentage).length > 0) {
-    _.valuesIn(percentage).forEach((e) => {
-      if (typeof e === 'object') {
-        _.valuesIn(e).forEach(value => scores.push(value));
-      } else scores.push(e);
-    });
-    percentage.total = _.sum(scores);
-    candidate.percentage = percentage;
-    candidate.save();
-  }
+  _.valuesIn(percentage).forEach((e) => {
+    if (typeof e === 'object') {
+      _.valuesIn(e).forEach(value => scores.push(value));
+    } else scores.push(e);
+  });
+  percentage.total = _.sum(scores);
+  candidate.percentage = percentage;
+  candidate.save();
 };
 
 module.exports = User_Candidate;
