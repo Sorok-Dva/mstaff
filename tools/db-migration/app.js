@@ -44,7 +44,6 @@ mysql.get('mstaff', (err, con) => {
         if (err) console.log(err);
         log(`${users.rows.length} rows founded.`);
         users.rows.forEach((user, i) => {
-          if (i === 15) process.exit();
           let UserData = {
             id: user.id,
             email: user.email,
@@ -72,7 +71,7 @@ mysql.get('mstaff', (err, con) => {
               });
             })
           } else if (userType(user.type) === 'es') {
-            if (establishments[user.es_id].indexOf(id) === -1) migrate.searchAndMigrateES(user.es_id);
+            if (establishments.indexOf(user.es_id) === -1) migrate.searchAndMigrateES(user.es_id);
           } else {
             con.query('INSERT INTO Users SET ?', UserData)
           }
