@@ -33,6 +33,7 @@ pgsql.connect(err => {
 
 mysql.get('mstaff', (err, con) => {
   let migrate = {};
+  let establishments = [];
 
   migrate.users = () => {
     log('GET PgSQL Users Data ("utilisateur" table)');
@@ -43,6 +44,7 @@ mysql.get('mstaff', (err, con) => {
         if (err) console.log(err);
         log(`${users.rows.length} rows founded.`);
         users.rows.forEach((user, i) => {
+          if (i === 15) process.exit();
           let UserData = {
             id: user.id,
             email: user.email,
@@ -70,7 +72,7 @@ mysql.get('mstaff', (err, con) => {
               });
             })
           } else if (userType(user.type) === 'es') {
-            migrate.searchAndMigrateES(user.es_id);
+            if (establishments[user.es_id].indexOf(id) === -1) migrate.searchAndMigrateES(user.es_id);
           } else {
             con.query('INSERT INTO Users SET ?', UserData)
           }
@@ -100,6 +102,7 @@ mysql.get('mstaff', (err, con) => {
   };
 
   migrate.searchAndMigrateES = (es_id, callback) => {
+    establishments.push(es_id);
     log(`GET PgSQL Establishment Data ("etablissement" table) of es id ${es_id}`);
     pgsql.get({
       name: 'get-es', text: 'SELECT * FROM etablissement WHERE id = $1', values: [es_id]
@@ -109,11 +112,11 @@ mysql.get('mstaff', (err, con) => {
       let esData = {
         id: es.id,
         name: es.nom,
-        finess: es.numero_finess,
+        finess: es.numero_finess || '-',
         sector: es.secteur,
         salaries_count: es.nb_employes,
         status: es.status,
-        phone: es.telephone,
+        phone: es.telephone || '-',
         url: es.url,
         address: es.adresse,
         town: `${es.code_postal} ${es.ville}`,
@@ -129,6 +132,9 @@ mysql.get('mstaff', (err, con) => {
         if (err) {
           if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage);
           console.log(err);
+        } else {
+          establishments[es_id] = { id: esRes.insertId, oldId: es_id };
+          console.log(establishments);
         }
       });
     });
