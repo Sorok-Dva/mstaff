@@ -75,6 +75,7 @@ mysql.get('mstaff', (err, con) => {
             con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
               if (err) {
                 if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
+                else console.log(err);
               } else {
                 console.log(establishments.find((data) => data.oldId === user.es_id).id);
                 if (_.isNil(establishments.find((data) => data.oldId === user.es_id).id)) {
