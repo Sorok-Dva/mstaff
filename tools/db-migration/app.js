@@ -127,8 +127,7 @@ mysql.get('mstaff', (err, con) => {
 
       con.query('INSERT INTO Establishments SET ?', esData, (err, esRes) => {
         if (err) {
-          if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
-        } else {
+          if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage);
           console.log(err);
         }
       });
