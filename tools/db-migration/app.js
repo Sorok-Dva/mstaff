@@ -45,6 +45,7 @@ mysql.get('mstaff', (err, con) => {
         log(`${users.rows.length} rows founded.`);
         users.rows.forEach((user, i) => {
           let UserData = {
+            id: user.id,
             email: user.email,
             password: user.password,
             type: userType(user.type),
@@ -55,6 +56,7 @@ mysql.get('mstaff', (err, con) => {
           };
           if (userType(user.type) === 'candidate') {
             migrate.candidates(UserData, (UserData, candidat) => {
+              delete UserData.id;
               con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
                 if (err) {
                   if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
@@ -69,6 +71,7 @@ mysql.get('mstaff', (err, con) => {
               });
             })
           } else if (userType(user.type) === 'es') {
+            delete UserData.id;
             con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
               if (err) {
                 if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
