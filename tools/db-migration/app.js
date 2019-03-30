@@ -105,7 +105,7 @@ mysql.get('mstaff', (err, con) => {
       name: 'get-es', text: 'SELECT * FROM etablissement WHERE id = $1', values: [es_id]
     }, (err, res) => {
       let es = res.rows[0];
-      if (es === null) return false;
+      if (_.isNil(es)) return false;
       let esData = {
         id: es.id,
         name: es.nom,
