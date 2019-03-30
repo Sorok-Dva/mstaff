@@ -45,7 +45,6 @@ mysql.get('mstaff', (err, con) => {
         log(`${users.rows.length} rows founded.`);
         users.rows.forEach((user, i) => {
           let UserData = {
-            id: user.id,
             email: user.email,
             password: user.password,
             type: userType(user.type),
@@ -56,7 +55,6 @@ mysql.get('mstaff', (err, con) => {
           };
           if (userType(user.type) === 'candidate') {
             migrate.candidates(UserData, (UserData, candidat) => {
-              delete UserData.id;
               con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
                 if (err) {
                   if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
@@ -71,7 +69,17 @@ mysql.get('mstaff', (err, con) => {
               });
             })
           } else if (userType(user.type) === 'es') {
-            if (establishments.indexOf(user.es_id) === -1) migrate.searchAndMigrateES(user.es_id);
+            con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
+              if (err) {
+                if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
+              } else {
+                if (establishments.indexOf(user.es_id) === -1) {
+                  migrate.searchAndMigrateES(user.es_id);
+                } else {
+                  migrate.createESAccount(user.es_id, userRes.insertId);
+                }
+              }
+            });
           } else {
             con.query('INSERT INTO Users SET ?', UserData)
           }
@@ -132,9 +140,28 @@ mysql.get('mstaff', (err, con) => {
           console.log(err);
         } else {
           establishments[es_id] = { id: esRes.insertId, oldId: es_id };
-          console.log(establishments);
         }
       });
+    });
+  };
+
+  migrate.createESAccount = (es_id, user_id, callback) => {
+    establishments.push(es_id);
+    let esAcc = {
+      user_id,
+      es_id: establishments.find((data) => data.oldId === es_id).id,
+      role: 'User',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    con.query('INSERT INTO ESAccounts SET ?', esAcc, (err, esAccRes) => {
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage);
+        console.log(err);
+      } else {
+        console.log(`ESAccount added for user ${user_id} in es ${establishments.find((data) => data.oldId === es_id).id}`);
+      }
     });
   };
 
