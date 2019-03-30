@@ -89,7 +89,7 @@ let showNotifyCandidateModal = (item, target) => {
           });
         }
         $(target).attr('data-status', result.status);
-      });
+      }).catch(err => errorsHandler(err));
     });
   });
 };
@@ -107,7 +107,7 @@ let selectCandidate = (item, target) => {
       });
     }
     $(target).attr('data-status', result.status);
-  });
+  }).catch(err => errorsHandler(err));
 };
 
 let removeCandidate = (needId, cID) => {
@@ -121,7 +121,7 @@ let removeCandidate = (needId, cID) => {
       });
       $(`li[data-candidateid="${cID}"]`).remove();
     }
-  });
+  }).catch(err => errorsHandler(err));
 };
 
 $(document).ready(() => {

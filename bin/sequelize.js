@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
-const conf = require('dotenv').config().parsed;
-const env = conf.ENV || 'development';
-const config = require(`${__dirname}/../config/config.json`)[env];
+const { Env } = require('../helpers/helpers');
+const config = require(`${__dirname}/../orm/config/config.json`)[Env.current];
 
 module.exports = new Sequelize(
   config.database, config.username, config.password, config

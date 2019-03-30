@@ -14,7 +14,7 @@
                                     <th>Souhait</th>
                                     <th>Type de contrat</th>
                                     <th>Établissement(s)</th>
-                                    <th>Mes disponibilités</th>
+                                    <!--<th>Mes disponibilités</th>-->
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -23,14 +23,16 @@
                                 {{#each wishes as |wish|}}
                                     <tr data-applicationId="{{wish.id}}">
                                         <td>{{wish.name}}</td>
-                                        <td></td>
+                                        <td>{{wish.contract_type}}</td>
                                         <td>{{wish.es_count}}</td>
-                                        <td></td>
+                                        <!--<td></td>-->
                                         <td>
-                                            <button class="btn btn-simple btn-warning btn-icon editApplication" data-id="{{wish.id}}">
+                                            <a href="/wish/edit/{{wish.id}}">
+                                            <button class="btn btn-simple btn-warning btn-icon editWish" data-id="{{wish.id}}">
                                                 <i class="ti-pencil-alt"></i>
                                             </button>
-                                            <button class="btn btn-simple btn-danger btn-icon removeApplication" data-id="{{wish.id}}">
+                                            </a>
+                                            <button class="btn btn-simple btn-danger btn-icon removeWish" data-id="{{wish.id}}">
                                                 <i class="ti-close"></i>
                                             </button>
                                         </td>
@@ -53,3 +55,5 @@
         </div>
     </div>
 </div>
+
+<script src="/static/assets/dist/js/removeApplication.min.js"></script>

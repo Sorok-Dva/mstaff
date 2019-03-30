@@ -7,12 +7,14 @@
         </div>
         <table id="users-table" class="table">
           <thead>
-          <th data-field="state" data-checkbox="true"></th>
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
           <th data-field="finess" data-sortable="true">Finess</th>
           <th data-field="sector" data-sortable="true">Secteur</th>
           <th data-field="status" data-sortable="true">Status</th>
+          <th data-field="candidatures" data-sortable="true">Candidatures</th>
+          <th data-field="besoins" data-sortable="true">Besoins</th>
+          <th data-field="utilisateurs" data-sortable="true">Utilisateurs</th>
           <th data-field="url" data-sortable="true">URL</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions</th>
@@ -20,13 +22,22 @@
           <tbody>
           {{#each data as |es|}}
             <tr>
-              <td></td>
               <td>{{es.id}}</td>
               <td>{{es.name}}</td>
               <td>{{es.finess}}</td>
               <td>{{es.sector}}</td>
               <td>{{es.status}}</td>
-              <td>{{es.url}}</td>
+              <td>{{es.Applications.length}}</td>
+              <td>{{es.Needs.length}}</td>
+              <td>{{es.ESAccounts.length}}</td>
+              <td>
+                {{#if es.domain_enable}}
+                  <a href="https://{{es.domain_name}}.mstaff.co/">https://{{es.domain_name}}.mstaff.co</a>
+                {{else}}
+                  -
+                {{/if}}
+              </td>
+              <td></td>
             </tr>
           {{/each}}
           </tbody>
@@ -42,9 +53,6 @@
   operateFormatter = (value, row, index) => {
     return [
       '<div class="table-icons">',
-      '<a rel="tooltip" title="View" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
-      '<i class="ti-image"></i>',
-      '</a>',
       '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
       '<i class="ti-pencil-alt"></i>',
       '</a>',
@@ -57,9 +65,6 @@
 
   $(document).ready(() => {
     window.operateEvents = {
-      'click .view': (e, value, row, index) => {
-        $(location).attr('href', `${row.url}`);
-      },
       'click .edit': (e, value, row, index) => {
         $(location).attr('href', `/back-office/es/${row.id}`);
       },
@@ -67,6 +72,7 @@
         if(confirm('ATTENTION:\n\n ' +
             'Cette action est irreversible et supprimera toutes les données liées à l\'établissement.\n\n' +
             'Voulez vous continuer ?')) {
+          $.delete('/')
 
           table.bootstrapTable('remove', {
             field: 'id',
@@ -79,21 +85,16 @@
     table.bootstrapTable({
       toolbar: ".toolbar",
       search: true,
-      showToggle: true,
       showColumns: true,
       pagination: true,
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
       pageList: [10,25,50,100,200,500],
-      formatShowingRows: (pageFrom, pageTo, totalRows) => {
-        //do nothing here, we don't want to show the text "showing x of y from..."
-      },
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " rows visible";
       },
       icons: {
-        toggle: 'fa fa-th-list',
         columns: 'fa fa-columns',
         detailOpen: 'fa fa-plus-circle',
         detailClose: 'ti-close'

@@ -1,18 +1,18 @@
-<li{{#ifCond @root.a.main '===' 'needs'}} class="active"{{/ifCond}}>
-    <a href="/needs">
-        <i class="ti-search"></i>
-        <p>Mes besoins</p>
-    </a>
-</li>
-<li{{#ifCond @root.a.main '===' 'es'}} class="active"{{/ifCond}}>
-    <a href="/es">
-        <i class="fal fa-hospital"></i>
-        <p>Mon établissment</p>
-    </a>
-</li>
-<li{{#ifCond @root.a.main '===' 'cvtheque'}} class="active"{{/ifCond}}>
-    <a href="/cvtheque">
-        <i class="fal fa-file-archive"></i>
+<li{{#ifCond @root.a.main '===' 'candidates'}} class="active"{{/ifCond}}>
+    <a href="/candidates">
+        <i class="fal fa-users"></i>
         <p>Ma CVthèque</p>
     </a>
+</li>
+<li{{#ifCond @root.a.main '===' 'needs'}} class="active"{{/ifCond}}>
+  <a href="/needs">
+    <i class="ti-search"></i>
+    <p>Mes recherches</p>
+  </a>
+</li>
+<li{{#ifCond @root.a.main '===' 'selectEs'}} class="active"{{/ifCond}}>
+  <a href="/select/es">
+    <i class="fal fa-hospitals"></i>
+    <p>Établissements</p>
+  </a>
 </li>

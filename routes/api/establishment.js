@@ -1,29 +1,31 @@
+const { Authentication } = require('../../middlewares/index');
+const Controller = require('../../controllers/establishment');
+const { Establishment, User } = require('../../components');
 const express = require('express');
 const router = express.Router();
 
-const UserController = require('../../controllers/user');
-const EstablishmentController = require('../../controllers/establishment');
-
-router.post('/:esId/search/candidates',
-  UserController.ensureIsEs && EstablishmentController.verifyEsAccess,
-  EstablishmentController.apiSearchCandidates
+router.post('/:esId(\\d+)/search/candidates',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Application.getCandidates
 );
 
-router.post('/:esId/get/candidate/:userId',
-  UserController.ensureIsEs && EstablishmentController.verifyEsAccess,
-  EstablishmentController.apiGetCandidate
+router.post('/:esId(\\d+)/get/candidate/:userId(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  User.Candidate.getProfile
 );
 
-router.post('/:esId/addNeed', UserController.ensureIsEs && EstablishmentController.verifyEsAccess, EstablishmentController.apiAddNeed);
+router.post('/:esId(\\d+)/addNeed',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Need.Create);
 
-router.post('/:esId/need/:id/:action/candidate/:candidateId',
-  UserController.ensureIsEs && EstablishmentController.verifyEsAccess,
-  EstablishmentController.apiNeedCandidate
+router.post('/:esId(\\d+)/need/:id(\\d+)/:action/candidate/:candidateId(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Controller.apiNeedCandidate
 );
 
-router.post('/:esId/candidate/:candidateId/:action',
-  UserController.ensureIsEs && EstablishmentController.verifyEsAccess,
-  EstablishmentController.apiFavCandidate
+router.post('/:esId(\\d+)/candidate/:candidateId(\\d+)/:action',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Controller.apiFavCandidate
 );
 
 module.exports = router;

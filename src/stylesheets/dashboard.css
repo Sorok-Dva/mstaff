@@ -4865,7 +4865,7 @@ select.selectpicker {
 }
 
 .bootstrap-select > .dropdown-toggle {
-    width: 100%;
+    width: auto;
     padding-right: 25px;
     z-index: 1;
 }
@@ -6641,6 +6641,10 @@ strong {
     transition: all 150ms linear;
 }
 
+/*.btn-default {*/
+    /*border-radius: 5px;*/
+/*}*/
+
 .btn:hover, .btn:focus, .btn:active, .btn.active, .btn:active:focus, .btn:active:hover,
 .open > .btn.dropdown-toggle,
 .open > .btn.dropdown-toggle:focus,
@@ -8091,10 +8095,6 @@ form label.radio, form label.checkbox {
     cursor: pointer;
 }
 
-.form-group {
-    position: relative;
-}
-
 .form-horizontal .checkbox,
 .form-horizontal .radio {
     padding-top: 0;
@@ -9004,7 +9004,7 @@ star {
     box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
     background-color: #FFFFFF;
     color: #252422;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     position: relative;
 }
 

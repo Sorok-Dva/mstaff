@@ -5,6 +5,7 @@
  */
 // require('appmetrics-dash').attach();
 const app = require('../app');
+const sequelize = require('./sequelize');
 const debug = require('debug')('mstaff:server');
 const http = require('http');
 const { spawn } = require('child_process');
@@ -31,7 +32,13 @@ const server = http.createServer(app);
 server.listen(port, () => {
   console.log('%s Server is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
   console.log('Press %s to stop\n', chalk.red('CTRL-C'));
-  if (conf.ENV === 'local' || conf.ENV === 'development') {
+  sequelize.authenticate().then(() => {
+    console.log('[SEQUELIZE] %s Connection has been established successfully.', chalk.green('✓'));
+  }).catch(err => {
+    console.log('[SEQUELIZE] %s Unable to connect to the database.', chalk.red('✗'), err.message);
+    // process.exit(1);
+  });
+  if (conf.ENV === 'local' || conf.ENV === 'development' || conf.ENV === 'dev_test') {
     const gulp = spawn('gulp');
     gulp.stdout.setEncoding('utf8');
     gulp.stdout.on('data', chunk => {

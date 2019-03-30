@@ -72,7 +72,7 @@
               </tbody>
             </table>
             <hr>
-            <a href="/need/add" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+            <a href="/candidates" class="btn btn-success pull-right" style="margin-bottom: 5px;">
               <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
             </a>
           </div>
@@ -81,3 +81,22 @@
     </div>
   </div>
 </div>
+<script>
+  //initialize instance
+  let enjoyhint_instance = new EnjoyHint({});
+
+  //simple config.
+  //Only one step - highlighting(with description) "New" button
+  //hide EnjoyHint after a click on the button.
+  let enjoyhint_script_steps = [
+    {
+      'click .addNeed' : 'Cliquez sur le boutton "Ajouter" pour commencer à créer un besoin.'
+    }
+  ];
+
+  //set script config
+  enjoyhint_instance.set(enjoyhint_script_steps);
+
+  //run Enjoyhint script
+  enjoyhint_instance.run();
+</script>

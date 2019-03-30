@@ -1,10 +1,12 @@
+const __ = process.cwd();
+const { HTTPValidation } = require(`${__}/middlewares`);
 const express = require('express');
 const router = express.Router();
 
-const UserController = require('../../controllers/user');
+const { User } = require(`${__}/components`);
 
 router.get('/emailAvailable/:email',
-  UserController.validate('ApiVerifyEmailAvailability'),
-  UserController.ApiVerifyEmailAvailability);
+  HTTPValidation.UserController.ApiVerifyEmailAvailability,
+  User.Main.verifyEmailAvailability);
 
 module.exports = router;
