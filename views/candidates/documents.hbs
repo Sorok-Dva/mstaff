@@ -46,7 +46,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'DIP'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="DIP">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -86,7 +86,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'CNI'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="CNI">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -126,7 +126,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'ADELI'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="ADELI">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -166,7 +166,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'VIT'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="VIT">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -206,7 +206,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'RIB'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="RIB">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -246,7 +246,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'OrNa'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="OrNa">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -286,7 +286,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'CV'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="CV">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -326,7 +326,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'LM'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="LM">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -351,6 +351,21 @@
     createModal({ id: 'showFileListModal', modal: 'candidate/showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
       let content = ($(`#${type}List ul>li`).length < 1) ? 'Aucun documents' : $(`#${type}List`).clone().show();
       $('.showFileListModalBody').html(content);
+      $('.remove[data-type="document"]').click(function() {
+        let id = $(this).attr('data-id');
+        $.delete(`/api/candidate/document/${id}`, { _csrf }, (result) => {
+          if (result === 'Document supprimé.') {
+            let type = $(`li[data-document-id="${id}"]`).attr('data-type');
+            $(`li[data-document-id="${id}"]`).remove();
+            $(`#${type}Count`).html(parseInt($(`#${type}Count`).text()) - 1);
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Document supprimé.'
+            });
+          }
+        }).catch(error => errorsHandler(error));
+      });
     });
   };
 

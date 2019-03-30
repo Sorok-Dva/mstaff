@@ -43,6 +43,10 @@ router.post('/add/document',
   docsUpload,
   User.Candidate.uploadDocument);
 
+router.delete('/document/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.deleteDocument);
+
 router.post('/add/photo',
   Authentication.ensureIsCandidate,
   avatarUpload,

@@ -107,12 +107,32 @@ User_Candidate.uploadDocument = (req, res, next) => {
       // TODO CHECK THIS METHOD CUZ ITS APPEARS REALLY WEIRD
       /*mkdirIfNotExists(`${__}/public/uploads/documents/videos/`);*/
       if (fs.existsSync(`./public/uploads/documents/${document.filename}`)) {
-        fs.unlinkSync(`./public/uploads/candidates/videos/${document.filename}`)
+        fs.unlinkSync(`./public/uploads/documents/${document.filename}`)
       }
       return res.status(400).send('Document of same type with same name already exist.')
     }
   });
 };
+
+User_Candidate.deleteDocument = (req, res, next) => {
+  let candidate;
+  Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
+    candidate = result;
+    return Models.CandidateDocument.findOne({ where: { id: req.params.id } });
+  }).then(document => {
+    if (_.isNil(document)) {
+      return res.status(404).send('Document introuvable.')
+    } else {
+      if (fs.existsSync(`./public/uploads/candidates/documents/${document.filename}`)) {
+        fs.unlinkSync(`./public/uploads/candidates/documents/${document.filename}`)
+      }
+      document.destroy().then(() => {
+        return res.status(200).send('Document supprimé.');
+      });
+    }
+  });
+};
+
 
 User_Candidate.uploadAvatar = (req, res, next) => {
   console.log(req.file);
