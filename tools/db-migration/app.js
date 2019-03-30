@@ -72,8 +72,7 @@ mysql.get('mstaff', (err, con) => {
           } else if (userType(user.type) === 'es') {
             migrate.searchAndMigrateES(user.es_id);
           } else {
-            con.query('INSERT INTO Users SET ?', UserData);
-
+            con.query('INSERT INTO Users SET ?', UserData)
           }
         });
       });
@@ -104,7 +103,34 @@ mysql.get('mstaff', (err, con) => {
     log(`GET PgSQL Establishment Data ("etablissement" table) of es id ${es_id}`);
     pgsql.get({
       name: 'get-es', text: 'SELECT * FROM etablissement WHERE id = $1', values: [es_id]
-    }, (err, es) => {
+    }, (err, res) => {
+      let es = res.rows[0];
+      let esData = {
+        id: es.id,
+        name: es.nom,
+        finess: es.numero_finess,
+        sector: es.secteur,
+        salaries_count: es.nb_employes,
+        status: es.status,
+        phone: es.telephone,
+        url: es.url,
+        address: es.adresse,
+        town: `${es.code_postal} ${es.ville}`,
+        contact_identity: es.contacts,
+        logo: es.logo,
+        domain_name: es.domain_name,
+        domain_enable: es.domain_enable,
+        createdAt: es.created_at || new Date(),
+        updatedAt: es.updated_at || new Date(),
+      };
+
+      con.query('INSERT INTO Establishments SET ?', esData, (err, esRes) => {
+        if (err) {
+          if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
+        } else {
+          console.log(err);
+        }
+      });
       console.log(es);
     });
   };
