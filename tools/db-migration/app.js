@@ -109,7 +109,6 @@ mysql.get('mstaff', (err, con) => {
       let es = res.rows[0];
       if (_.isNil(es)) return false;
       let esData = {
-        id: es.id,
         name: es.nom,
         finess: es.numero_finess || '-',
         sector: es.secteur,
