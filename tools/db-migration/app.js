@@ -76,8 +76,11 @@ mysql.get('mstaff', (err, con) => {
               if (err) {
                 if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
               } else {
+                console.log
                 if (_.isNil(establishments.find((data) => data.oldId === user.es_id).id)) {
-                  migrate.searchAndMigrateES(user.es_id, userRes.insertId);
+                  migrate.searchAndMigrateES(user.es_id, () => {
+                    migrate.createESAccount(user.es_id, userRes.insertId);
+                  });
                 } else {
                   migrate.createESAccount(user.es_id, userRes.insertId);
                 }
@@ -111,7 +114,7 @@ mysql.get('mstaff', (err, con) => {
     });
   };
 
-  migrate.searchAndMigrateES = (es_id, userRes) => {
+  migrate.searchAndMigrateES = (es_id, callback) => {
     establishments.push(es_id);
     log(`GET PgSQL Establishment Data ("etablissement" table) of es id ${es_id}`);
     pgsql.get({
@@ -143,7 +146,7 @@ mysql.get('mstaff', (err, con) => {
           console.log(err);
         } else {
           establishments[es_id] = { id: esRes.insertId, oldId: es_id };
-          migrate.createESAccount(user.es_id, userRes.insertId);
+          return callback();
         }
       });
     });
