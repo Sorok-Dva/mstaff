@@ -76,7 +76,7 @@ mysql.get('mstaff', (err, con) => {
               if (err) {
                 if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
               } else {
-                console.log
+                console.log(establishments.find((data) => data.oldId === user.es_id).id);
                 if (_.isNil(establishments.find((data) => data.oldId === user.es_id).id)) {
                   migrate.searchAndMigrateES(user.es_id, () => {
                     migrate.createESAccount(user.es_id, userRes.insertId);
