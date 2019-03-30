@@ -69,8 +69,11 @@ mysql.get('mstaff', (err, con) => {
                 }
               });
             })
+          } else if (userType(user.type) === 'es') {
+            migrate.searchAndMigrateES(user.es_id);
           } else {
             con.query('INSERT INTO Users SET ?', UserData);
+
           }
         });
       });
@@ -94,6 +97,15 @@ mysql.get('mstaff', (err, con) => {
         UserData.updatedAt = candidate.updated_at || new Date();
       }
       return callback(UserData, candidat);
+    });
+  };
+
+  migrate.searchAndMigrateES = (es_id, callback) => {
+    log(`GET PgSQL Establishment Data ("etablissement" table) of es id ${es_id}`);
+    pgsql.get({
+      name: 'get-es', text: 'SELECT * FROM etablissement WHERE id = $1', values: [es_id]
+    }, (err, es) => {
+      console.log(es);
     });
   };
 
