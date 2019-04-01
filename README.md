@@ -43,6 +43,13 @@ npm run db:migrate
 npm run db:seed
 ```
 
+Run migrations or seeds in specific db:
+
+```bash
+npm run db:migrate -- --env test
+npm run db:seed -- --env e2e
+```
+
 Build and run local server:
 
 ```bash

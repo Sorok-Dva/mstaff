@@ -1,5 +1,6 @@
 const { Env } = require('./helpers/helpers');
 const { ErrorHandler, Express } = require('./middlewares');
+const Sentry = require('./bin/sentry');
 const path = require('path');
 const express = require('express');
 
@@ -47,6 +48,11 @@ app.use(Express.flash);
 app.use(Express.setLocals);
 app.use(Express.wildcardSubdomains);
 app.use(Express.readOnlySessionForImpersonation);
+
+process.on('unhandledRejection', reason => {
+  if (Env.isPreProd || Env.isProd) Sentry.send(reason, { context: 'unhandledRejection' });
+  else console.log(reason);
+});
 
 // ------ ROUTES
 app.use('/', indexRouter);

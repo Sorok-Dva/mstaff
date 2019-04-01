@@ -1,3 +1,11 @@
+<style>
+  li.wish {
+    border-top: 1px solid #E4F1F7;
+    padding-left: 10px;
+    color: #44b9ff;
+    cursor: pointer;
+  }
+</style>
 <div class="row">
   <div class="col-lg-4 col-md-5">
     <div class="card card-user">
@@ -78,13 +86,44 @@
     </div>
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title"><i class="fa fa-heart" aria-hidden="true"></i> Mes candidatures</h4>
-        <button type="button" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
-        </button>
+        <h4 class="card-title">
+          <i class="fa fa-heart" aria-hidden="true"></i> Mes candidatures
+          <a href="/applications" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+          </a>
+        </h4>
       </div>
       <div class="card-content">
-        Soon
+        <ol>
+          {{#each candidate.wishes as |wish|}}
+            <li class="wish">
+              <h5>
+                <a href="/wish/edit/{{wish.id}}">{{wish.contract_type}} dans {{wish.es_count}} établissement(s)</a>
+              </h5>
+            </li>
+          {{/each}}
+        </ol>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">
+          <i class="fal fa-folder-open"></i> Mes documents
+          <a href="/documents" class="btn btn-success pull-right" style="margin-bottom: 5px;">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+          </a>
+        </h4>
+      </div>
+      <div class="card-content">
+        <ul style="word-break: break-all;">
+          {{#each candidate.documents as |document|}}
+            <li>
+              <h5>
+                <a href="{{document.path}}">{{document.name}}</a>
+              </h5>
+            </li>
+          {{/each}}
+        </ul>
       </div>
     </div>
   </div>

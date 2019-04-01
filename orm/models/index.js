@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const { Env } = require(`../../helpers/helpers`);
 const basename = path.basename(module.filename);
 const conf = require('dotenv').config().parsed;
-const env = conf.ENV;
-const config = require(`${__dirname}/../config/config.json`)[env];
+const config = require(`${__dirname}/../config/config.json`)[Env.current];
 const db = {};
 
 let sequelize;

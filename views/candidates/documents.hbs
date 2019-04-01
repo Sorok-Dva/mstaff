@@ -37,10 +37,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('DIP');" style="cursor: pointer">
                       <small id="DIPCount">{{countFiles candidate.documents 'DIP'}}</small>
                       <i class="fal fa-copy"></i>
@@ -49,7 +46,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'DIP'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="DIP">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -80,10 +77,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('CNI');" style="cursor: pointer">
                       <small id="CNICount">{{countFiles candidate.documents 'CNI'}}</small>
                       <i class="fal fa-copy"></i>
@@ -92,7 +86,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'CNI'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="CNI">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -123,10 +117,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('ADELI');" style="cursor: pointer">
                       <small id="ADELICount">{{countFiles candidate.documents 'ADELI'}}</small>
                       <i class="fal fa-copy"></i>
@@ -135,7 +126,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'ADELI'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="ADELI">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -166,10 +157,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('VIT');" style="cursor: pointer">
                       <small id="VITCount">{{countFiles candidate.documents 'VIT'}}</small>
                       <i class="fal fa-copy"></i>
@@ -178,7 +166,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'VIT'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="VIT">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -209,10 +197,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('RIB');" style="cursor: pointer">
                     <small id="RIBCount">{{countFiles candidate.documents 'RIB'}}</small>
                     <i class="fal fa-copy"></i>
@@ -221,7 +206,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'RIB'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="RIB">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -252,10 +237,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('OrNa');" style="cursor: pointer">
                     <small id="OrNaCount">{{countFiles candidate.documents 'OrNa'}}</small>
                     <i class="fal fa-copy"></i>
@@ -264,7 +246,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'OrNa'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="OrNa">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -295,10 +277,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('CV');" style="cursor: pointer">
                     <small id="CVCount">{{countFiles candidate.documents 'CV'}}</small>
                     <i class="fal fa-copy"></i>
@@ -307,7 +286,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'CV'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="CV">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -338,10 +317,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('LM');" style="cursor: pointer">
                     <small id="LMCount">{{countFiles candidate.documents 'LM'}}</small>
                     <i class="fal fa-copy"></i>
@@ -350,7 +326,7 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'LM'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="LM">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
                             -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
@@ -372,9 +348,24 @@
 <script src="/static/assets/dist/js/uploadDocuments.min.js"></script>
 <script>
   let showFiles = (type) => {
-    createModal({ id: 'showFileListModal', modal: 'showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
+    createModal({ id: 'showFileListModal', modal: 'candidate/showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
       let content = ($(`#${type}List ul>li`).length < 1) ? 'Aucun documents' : $(`#${type}List`).clone().show();
       $('.showFileListModalBody').html(content);
+      $('.remove[data-type="document"]').click(function() {
+        let id = $(this).attr('data-id');
+        $.delete(`/api/candidate/document/${id}`, { _csrf }, (result) => {
+          if (result === 'Document supprimé.') {
+            let type = $(`li[data-document-id="${id}"]`).attr('data-type');
+            $(`li[data-document-id="${id}"]`).remove();
+            $(`#${type}Count`).html(parseInt($(`#${type}Count`).text()) - 1);
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Document supprimé.'
+            });
+          }
+        }).catch(error => errorsHandler(error));
+      });
     });
   };
 

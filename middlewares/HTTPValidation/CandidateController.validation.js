@@ -18,7 +18,7 @@ HTTPValidation.postAddDiploma = [
 ];
 
 HTTPValidation.putFormation = [
-  check('name').isLength({ min: 10 })
+  check('name').isLength({ min: 4 })
 ];
 
 HTTPValidation.getWish = [

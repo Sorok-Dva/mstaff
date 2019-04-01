@@ -43,6 +43,10 @@ router.post('/add/document',
   docsUpload,
   User.Candidate.uploadDocument);
 
+router.delete('/document/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.deleteDocument);
+
 router.post('/add/photo',
   Authentication.ensureIsCandidate,
   avatarUpload,
@@ -50,10 +54,14 @@ router.post('/add/photo',
 
 router.get('/xp/:id(\\d+)',
   Authentication.ensureIsCandidate,
-  User.Candidate.getXpById
-).delete('/xp/:id(\\d+)',
-  Authentication.ensureIsCandidate,
-  User.Candidate.removeXP);
+  User.Candidate.getXpById)
+  .delete('/xp/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.removeXP)
+  .put('/xp/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.putXP
+  );
 
 router.get('/formation/:id(\\d+)',
   Authentication.ensureIsCandidate,
@@ -72,7 +80,10 @@ router.get('/diploma/:id(\\d+)',
   User.Candidate.getDiplomaById)
   .delete('/diploma/:id(\\d+)',
     Authentication.ensureIsCandidate,
-    User.Candidate.removeDiploma);
+    User.Candidate.removeDiploma)
+  .put('/diploma/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.putDiploma);
 
 router.post('/type/:type/add',
   Authentication.ensureIsCandidate,
