@@ -2,6 +2,7 @@ let postsArray = [];
 let application = {};
 let timeOut;
 let isValidInputPosts = false;
+let isValidInputServices = false;
 let allPosts, allServices;
 
 let getPosts = () => {
@@ -29,8 +30,7 @@ let createCurrentPostList = (allPosts) => {
   postsArray.sort();
   $('#InputPosts').autocomplete({
     source: postsArray,
-    minLength: 3,
-    select: verifyInputPost
+    minLength: 3
   });
 };
 
@@ -47,61 +47,160 @@ let filterCurrentServices = (allServices ,category) => {
   allServices.forEach( service => {
     if (service.categoriesPS_id === category)
       currentServices.push(service.name);
+    if (service.categoriesPS_id === 2 && category === 3)
+      currentServices.push(service.name);
   });
   return currentServices;
 };
 
+let verifyInputPost = () => {
+  // let inputPosts = $('#InputPosts');
 
-let verifyInputPost = function(e){
-  let inputPosts = $('#InputPosts');
-
-  if (timeOut)
-    clearTimeout(timeOut);
-  timeOut = setTimeout(() => {
-    if (postsArray.includes(inputPosts.val())){
-      isValidInputPosts = true;
-      application.post = inputPosts.val();
-      $('.fa-check').show();
-      let nextTimeOut = setTimeout( () => {
-        $('#postModal').modal('hide');
-        $('#serviceModal').modal('show');
-        let IdCategory = allPosts.find(item => item.name === application.post).categoriesPS_id;
-        getServices().then(services => {
-          if (IdCategory !== undefined){
-            let currentServices = filterCurrentServices(services, IdCategory);
-            createCurrentServiceList(currentServices);
-          }
-        });
-          }, 500)
-    }
-    else {
-      $('.fa-check').hide();
-      isValidInputPosts = false;
-    }
-  }, 500)
+  // if (timeOut)
+  //   clearTimeout(timeOut);
+  // timeOut = setTimeout(() => {
+  if (postsArray.includes($('#InputPosts').val())){
+    // isValidInputPosts = true;
+    // application.post = inputPosts.val();
+    // $('.fa-check').show();
+    return true;
+    // let nextTimeOut = setTimeout( () => {
+    // $('#postModal').modal('hide');
+    // $('#serviceModal').modal('show');
+    // let IdCategory = allPosts.find(item => item.name === application.post).categoriesPS_id;
+    // getServices().then(services => {
+    //   if (IdCategory !== undefined){
+    //     let currentServices = filterCurrentServices(services, IdCategory);
+    //     createCurrentServiceList(currentServices);
+    //   }
+    // });
+        // }, 500)
+  }
+  else {
+    // $('.fa-check').hide();
+    return false;
+    // isValidInputPosts = false;
+  }
+  // }, 500)
 };
 
-$(document).ready(function () {
+let verifyInputServices = function(){
+  let services = $('#InputServices').select2('data');
+  if (services.length !== 0){
+    $('.fa-arrow-circle-right').show();
+    isValidInputServices = true;
+  } else {
+    $('.fa-arrow-circle-right').hide();
+    isValidInputServices = false;
+  }
+};
 
+let saveServices = () => {
+  let services = $('#InputServices').select2('data');
 
-  $('#postModal').on('show.bs.modal', function(e) {
+  application.services = [];
+  services.forEach( service => {
+    application.services.push(service.text);
+  });
+  $('#serviceModal').modal('hide');
+  $('#identityModal').modal('show');
+};
+
+let verifyStep = (step) => {
+  switch (step) {
+    case 1:
+      return verifyInputPost();
+      break;
+  }
+};
+
+let changeStep = (currentStep, direction) => {
+  if (direction === 'forward'){
+    switch (currentStep) {
+      case 1:
+        if (verifyStep(currentStep)){
+          $('#postModal').modal('hide');
+          $('#serviceModal').modal('show');
+          let IdCategory = allPosts.find(item => item.name === application.post).categoriesPS_id;
+          getServices().then(services => {
+            if (IdCategory !== undefined){
+              let currentServices = filterCurrentServices(services, IdCategory);
+              createCurrentServiceList(currentServices);
+            }
+          });
+        }
+        else
+          console.log('NOTIFY ERROR!');
+        break;
+    }
+  }
+  if (verifyStep(currentStep))
+    console.log('kahouete');
+};
+
+let postModalListener = () => {
+  let inputPosts = $('#InputPosts');
+
+  $('#postModal').on('show.bs.modal', () => {
     $('#mainModal').modal('hide');
     if (postsArray.length === 0)
       getPosts().then(posts => createCurrentPostList(posts));
   });
-  $('#postModal').on('hide.bs.modal', function(e) {
-    if (!isValidInputPosts)
-      $('#mainModal').modal('show');
+
+  // $('#postModal').on('hide.bs.modal', function(e) {
+  //   if (!isValidInputPosts)
+  //     $('#mainModal').modal('show');
+  // });
+
+  inputPosts.on('keyup', () => {
+    if (verifyInputPost())
+      $('.fa-check').show();
+    else
+      $('.fa-check').hide();
   });
 
+  inputPosts.on('autocompleteclose', () => {
+    verifyInputPost() ? $('.fa-check').show() : $('.fa-check').hide();
+  });
+
+  $('#toStep2').on('click', () => {
+    changeStep(1, 'forward');
+  });
+};
+
+let serviceModalListener = () => {
   $('#serviceModal').on('show.bs.modal', function(e) {
     $('#postModal').modal('hide');
     isValidInputPosts = false;
   });
+
   $('#serviceModal').on('hide.bs.modal', function(e) {
     $('#postModal').modal('show');
+    if (!isValidInputServices)
+      $('#identifyModal').modal('show');
   });
 
-  $('#InputPosts').on('keyup', verifyInputPost);
+  $('#InputServices').on('change', verifyInputServices);
+
+  $('#toStep3').on('click', saveServices);
+};
+
+let identityModalListener = () => {
+  $('#identityModal').on('show.bs.modal', function(e) {
+    $('#serviceModal').modal('hide');
+    isValidInputServices = false;
+  });
+
+  $('#identityModal').on('hide.bs.modal', function(e) {
+    $('#serviceModal').modal('show');
+    isValidInputServices = false;
+  });
+};
+
+$(document).ready(function () {
+
+  postModalListener();
+  serviceModalListener();
+  identityModalListener();
 
 });
