@@ -37,6 +37,9 @@
       createModal({
         id: 'feedbackNextHowModal',
         modal: 'es/need/feedback/withMstaffWho',
+        title: 'Quels candidats avez vous fini par recruter ?',
+        cantBeClose: true,
+        needId: {{this.needId}}
       })
     } else if(feedback.how === 'other') {
       $('#otherWhyReason').show();
@@ -49,7 +52,12 @@
     feedback.needId = {{this.needId}};
     $.post(`/api/es/${esId}/feedback`, feedback, (data) => {
       if (data.closed) {
-        //createModal es/need/feedback/thanks
+        $('#startFeedbackModal').modal('hide');
+        createModal({
+          id: 'thanksFeedbackModal',
+          modal: 'es/need/feedback/thanks',
+          title: 'Merci !'
+        })
       }
     }).catch(errors => errorsHandler(errors));
   })
