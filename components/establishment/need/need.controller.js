@@ -81,11 +81,36 @@ Establishment_Need.Create = (req, res, next) => {
         Models.NeedCandidate.create({
           need_id: need.id,
           candidate_id: req.body.selectedCandidates[i],
-          notified: req.body.notifyCandidates
+          notified: req.body.notifyCandidates,
+          status: req.body.notifyCandidates === 'true' ? 'notified' : 'pre-selected'
         });
+        if (req.body.notifyCandidates === 'true') {
+          Establishment_Need.notify(req, i);
+        }
       }
     }
     res.status(201).send(need);
+  });
+};
+
+Establishment_Need.notify = (req, i) => {
+  Models.Notification.create({
+    fromUser: req.user.id,
+    fromEs: req.params.esId,
+    to: req.body.selectedCandidates[i],
+    title: 'Un établissement est intéressé par votre profil !',
+    message: req.body.message
+  }).then(notification => {
+    Models.User.findOne({ where: { id: req.body.selectedCandidates[i] }}).then(user => {
+      mailer.sendEmail({
+        to: user.email,
+        subject: 'Un établissement est intéressé par votre profil !',
+        template: 'candidate/es_notified',
+        context: {
+          notification,
+        }
+      });
+    })
   });
 };
 
