@@ -117,6 +117,12 @@ module.exports = {
               res.status(201).send(result);
             });
             break;
+          case 'cancel':
+            needCandidate.status = 'canceled';
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
           case 'delete':
             needCandidate.status = 'deleted';
             needCandidate.notified = false;
