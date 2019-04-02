@@ -124,6 +124,14 @@ let removeCandidate = (needId, cID) => {
   }).catch(err => errorsHandler(err));
 };
 
+let closeNeed = (needId) => {
+  createModal({
+    id: 'closeNeedModal',
+    modal: 'es/need/close',
+    title: 'Vous êtes sur le point de clôturer ce besoin'
+  })
+};
+
 $(document).ready(() => {
   $('i[data-action="remove"]').click(function() {
     let showWarningRemove = localStorage.getItem('showWarningRemoveCandidate') || 'true';
