@@ -20,4 +20,18 @@ Mailer.sendUserVerificationEmail = (user) => {
   });
 };
 
+Mailer.notifyCandidatesNeedClosed = (email, context) => {
+  let mailObject = {
+    subject: 'Besoin clôturé !',
+    template: 'candidate/needClosed'
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
+
 module.exports = Mailer;
