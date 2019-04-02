@@ -8,6 +8,7 @@ const httpStatus = require('http-status');
 const sequelize = require(`${__}/bin/sequelize`);
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
+const Mailer = require(`${__}/components/mailer`);
 
 const Establishment_Need = {};
 
@@ -125,10 +126,35 @@ Establishment_Need.Feedback = (req, res, next) => {
       stars: req.body.stars || null,
       feedback: req.body.feedback
     }).then(feedback => {
-      need.closed = true;
-      need.save();
+      Establishment_Need.Close(need);
       return res.status(201).send(need);
     });
+  });
+};
+
+Establishment_Need.Close = (need) => {
+  need.closed = true;
+  need.save().then(result => {
+    Models.NeedCandidate.findAll({
+      where: {
+        need_id: need.id,
+        status: ['notified', 'selected']
+      },
+      include: {
+        model: Models.Candidate,
+        attributes: ['user_id'],
+        required: true,
+        include: {
+          model: Models.User,
+          attributes: { exclude: ['password'] },
+          required: true
+        }
+      }
+    }).then(needs => {
+      needs.forEach(need => {
+        Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
+      })
+    })
   });
 };
 
