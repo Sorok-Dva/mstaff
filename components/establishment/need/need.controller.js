@@ -13,7 +13,7 @@ const Establishment_Need = {};
 
 Establishment_Need.ViewAll = (req, res, next) => {
   Models.Need.findAll({
-    where: { es_id: req.session.currentEs },
+    where: { es_id: req.session.currentEs, closed: false },
     include: {
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -101,7 +101,7 @@ Establishment_Need.notify = (req, i) => {
     title: 'Un établissement est intéressé par votre profil !',
     message: req.body.message
   }).then(notification => {
-    Models.User.findOne({ where: { id: req.body.selectedCandidates[i] }}).then(user => {
+    Models.User.findOne({ where: { id: req.body.selectedCandidates[i] } }).then(user => {
       mailer.sendEmail({
         to: user.email,
         subject: 'Un établissement est intéressé par votre profil !',
@@ -114,5 +114,22 @@ Establishment_Need.notify = (req, i) => {
   });
 };
 
+Establishment_Need.Feedback = (req, res, next) => {
+  Models.Need.findOne({ where: { id: req.body.needId, es_id: req.params.esId } }).then(need => {
+    if (_.isNil(need)) return next(new BackError(`Besoin ${req.body.needId} introuvable.`, 404));
+    Models.NeedFeedback.create({
+      es_id: req.params.esId,
+      user_id: req.user.id,
+      need_id: need.id,
+      how: req.body.how,
+      stars: req.body.stars || null,
+      feedback: req.body.feedback
+    }).then(feedback => {
+      need.closed = true;
+      need.save();
+      return res.status(201).send(need);
+    });
+  });
+};
 
 module.exports = Establishment_Need;
