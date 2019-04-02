@@ -27,6 +27,13 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false
       },
+      need_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Needs',
+          key: 'id'
+        }
+      },
       how: {
         type: Sequelize.STRING
       },
