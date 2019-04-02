@@ -3,5 +3,17 @@
 </div>
 <div class="modal-footer">
   <button class="btn btn-default pull-left" data-dismiss="modal">Annuler</button>
-  <button class="btn btn-info pull-right">Continuer</button>
+  <button class="btn btn-info pull-right" id="startFeedback">Continuer</button>
 </div>
+<script>
+  $('#startFeedback').click(function() {
+    $('#closeNeedModal').modal('hide');
+    createModal({
+      id: 'startFeedbackModal',
+      modal: 'es/need/feedback/how',
+      title: 'Retour d\'informations : comment avez vous recruter ?',
+      cantBeClose: true,
+      needId: {{this.needId}}
+    })
+  })
+</script>
