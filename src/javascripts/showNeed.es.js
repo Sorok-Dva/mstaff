@@ -128,7 +128,8 @@ let closeNeed = (needId) => {
   createModal({
     id: 'closeNeedModal',
     modal: 'es/need/close',
-    title: 'Vous êtes sur le point de clôturer ce besoin'
+    title: 'Vous êtes sur le point de clôturer ce besoin',
+    needId
   })
 };
 
