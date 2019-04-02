@@ -100,7 +100,7 @@ module.exports = {
                 mailer.sendEmail({
                   to: needCandidate.Candidate.User.email,
                   subject: 'Un établissement est intéressé par votre profil !',
-                  template: 'user/es_notified',
+                  template: 'candidate/es_notified',
                   context: {
                     notification,
                     needCandidate
