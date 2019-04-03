@@ -169,7 +169,7 @@ $('body').on('click', 'button.removeXP', (event) => {
   createModal({
     modal: 'candidate/removeDiploma',
     id: 'removeDiplomaModal',
-    title: 'Supprimer cet diplôme ?',
+    title: 'Supprimer ce diplôme ?',
     diplomaId: id
   });
 }).on('click', 'button.editXP', (event) => {
