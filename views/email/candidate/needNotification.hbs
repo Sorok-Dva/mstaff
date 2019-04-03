@@ -19,11 +19,11 @@
 
             <p style="text-align: center !important; line-height: 200%;"><span style="font-size:16px">L'établissement {{this.needCandidate.Establishment.name}} vous propose l'offre suivante :&nbsp;</span><br>
               <br>
-              {{#if this.need.post}}
-                <span style="font-size:17px"><span style="color:#A9A9A9">{{this.need.post}}</span></span><br>
+              {{#if this.needCandidate.Need.post}}
+                <span style="font-size:17px"><span style="color:#A9A9A9">{{this.needCandidate.Need.post}}</span></span><br>
               {{/if}}
-              {{#if this.need.contract_type}}
-                <span style="font-size:16px">{{this.need.contract_type}} {{#if this.need.start}}à partir du {{this.need.start}}{{/if}}
+              {{#if this.needCandidate.Need.contract_type}}
+                <span style="font-size:16px">{{this.needCandidate.Need.contract_type}} {{#if this.need.start}}à partir du {{this.need.start}}{{/if}}
                   {{#if this.need.end}}jusqu'au {{this.need.end}}{{/if}}<br></span>
               {{else}}
                 <span style="font-size:16px">{{#if this.need.start}}à partir du {{this.need.start}}{{/if}}
