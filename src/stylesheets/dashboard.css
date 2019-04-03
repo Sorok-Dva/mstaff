@@ -10162,7 +10162,7 @@ star {
     cursor: pointer;
     width: 19px;
     height: 19px;
-    top: -2px;
+    top: 25%;
 }
 
 .checkbox input[type="checkbox"]:checked + label::after {
