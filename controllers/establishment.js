@@ -6,6 +6,7 @@ const httpStatus = require('http-status');
 
 const mailer = require('../bin/mailer');
 const Models = require('../orm/models/index');
+const moment = require('moment');
 
 const Establishment = require('../components/establishment');
 
@@ -91,19 +92,24 @@ module.exports = {
               fromUser: req.user.id,
               fromEs: needCandidate.Need.Establishment.id,
               to: needCandidate.Candidate.User.id,
-              title: 'Un établissement est intéressé par votre profil !',
+              title: 'Un établissement a consulté votre profil.',
               message: req.body.message
             }).then(notification => {
               needCandidate.status = 'notified';
               needCandidate.notified = true;
               needCandidate.save().then(result => {
+                moment.locale('fr');
+                let need = {
+                  start: _.isNil(needCandidate.Need.start) ? null : moment(needCandidate.Need.start).format('dddd Do MMMM YYYY'),
+                  end: _.isNil(needCandidate.Need.end) ? null : moment(needCandidate.Need.end).format('dddd Do MMMM YYYY'),
+                };
                 mailer.sendEmail({
                   to: needCandidate.Candidate.User.email,
-                  subject: 'Un établissement est intéressé par votre profil !',
-                  template: 'candidate/es_notified',
+                  subject: 'Un établissement a consulté votre profil.',
+                  template: 'candidate/needNotification',
                   context: {
-                    notification,
-                    needCandidate
+                    needCandidate,
+                    need
                   }
                 });
                 res.status(201).send(result);
