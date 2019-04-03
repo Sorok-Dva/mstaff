@@ -1,20 +1,15 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Needs', {
+    return queryInterface.createTable('NeedFeedbacks', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       es_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: 'Establishments',
           key: 'id'
@@ -22,28 +17,34 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      createdBy: {
+      user_id: {
         type: Sequelize.INTEGER,
-        allowNulL: false,
         references: {
           model: 'Users',
           key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        allowNull: false
+      },
+      need_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Needs',
+          key: 'id'
         }
       },
-      post: {
+      how: {
         type: Sequelize.STRING
       },
-      contract_type: {
+      candidates: {
+        type: Sequelize.JSON
+      },
+      stars: {
+        type: Sequelize.INTEGER
+      },
+      feedback: {
         type: Sequelize.STRING
-      },
-      start: {
-        type: Sequelize.DATE
-      },
-      end: {
-        type: Sequelize.DATE
-      },
-      closed: {
-        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -51,13 +52,13 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
-        type: Sequelize.DATE,
         allowNull: false,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Needs');
+    return queryInterface.dropTable('NeedFeedbacks');
   }
 };

@@ -8,12 +8,13 @@ const httpStatus = require('http-status');
 const sequelize = require(`${__}/bin/sequelize`);
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
+const Mailer = require(`${__}/components/mailer`);
 
 const Establishment_Need = {};
 
 Establishment_Need.ViewAll = (req, res, next) => {
   Models.Need.findAll({
-    where: { es_id: req.session.currentEs },
+    where: { es_id: req.session.currentEs, closed: false },
     include: {
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -81,13 +82,80 @@ Establishment_Need.Create = (req, res, next) => {
         Models.NeedCandidate.create({
           need_id: need.id,
           candidate_id: req.body.selectedCandidates[i],
-          notified: req.body.notifyCandidates
+          notified: req.body.notifyCandidates,
+          status: req.body.notifyCandidates === 'true' ? 'notified' : 'pre-selected'
         });
+        if (req.body.notifyCandidates === 'true') {
+          Establishment_Need.notify(req, i);
+        }
       }
     }
     res.status(201).send(need);
   });
 };
 
+Establishment_Need.notify = (req, i) => {
+  Models.Notification.create({
+    fromUser: req.user.id,
+    fromEs: req.params.esId,
+    to: req.body.selectedCandidates[i],
+    title: 'Un établissement est intéressé par votre profil !',
+    message: req.body.message
+  }).then(notification => {
+    Models.User.findOne({ where: { id: req.body.selectedCandidates[i] } }).then(user => {
+      mailer.sendEmail({
+        to: user.email,
+        subject: 'Un établissement est intéressé par votre profil !',
+        template: 'candidate/es_notified',
+        context: {
+          notification,
+        }
+      });
+    })
+  });
+};
+
+Establishment_Need.Feedback = (req, res, next) => {
+  Models.Need.findOne({ where: { id: req.body.needId, es_id: req.params.esId } }).then(need => {
+    if (_.isNil(need)) return next(new BackError(`Besoin ${req.body.needId} introuvable.`, 404));
+    Models.NeedFeedback.create({
+      es_id: req.params.esId,
+      user_id: req.user.id,
+      need_id: need.id,
+      how: req.body.how,
+      stars: req.body.stars || null,
+      feedback: req.body.feedback
+    }).then(feedback => {
+      Establishment_Need.Close(need);
+      return res.status(201).send(need);
+    });
+  });
+};
+
+Establishment_Need.Close = (need) => {
+  need.closed = true;
+  need.save().then(result => {
+    Models.NeedCandidate.findAll({
+      where: {
+        need_id: need.id,
+        status: ['notified', 'selected']
+      },
+      include: {
+        model: Models.Candidate,
+        attributes: ['user_id'],
+        required: true,
+        include: {
+          model: Models.User,
+          attributes: { exclude: ['password'] },
+          required: true
+        }
+      }
+    }).then(needs => {
+      needs.forEach(need => {
+        Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
+      })
+    })
+  });
+};
 
 module.exports = Establishment_Need;

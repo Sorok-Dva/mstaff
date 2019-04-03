@@ -397,14 +397,12 @@
     need._csrf = _csrf;
 
     $('button#saveNeed').click(function () {
-      if (need.selectedCandidates.length > 0) {
-        need._csrf = _csrf;
-        $.post(`/api/es/${esId}/addNeed`, need, (data) => {
-          if (data.id) {
-            $(location).attr('href', `/need/${data.id}`);
-          }
-        });
-      }
+      createModal({
+        id: 'needNameModal',
+        title: 'Définir un libellé de recherche.',
+        modal: 'es/need/defineName',
+        cantBeClose: true
+      })
     });
   });
 </script>

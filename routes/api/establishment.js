@@ -28,4 +28,8 @@ router.post('/:esId(\\d+)/candidate/:candidateId(\\d+)/:action',
   Controller.apiFavCandidate
 );
 
+router.post('/:esId(\\d+)/feedback',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Need.Feedback);
+
 module.exports = router;

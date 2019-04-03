@@ -100,7 +100,7 @@ module.exports = {
                 mailer.sendEmail({
                   to: needCandidate.Candidate.User.email,
                   subject: 'Un établissement est intéressé par votre profil !',
-                  template: 'user/es_notified',
+                  template: 'candidate/es_notified',
                   context: {
                     notification,
                     needCandidate
@@ -113,6 +113,12 @@ module.exports = {
           case 'select':
             needCandidate.status = 'selected';
             needCandidate.notified = true;
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
+          case 'cancel':
+            needCandidate.status = 'canceled';
             needCandidate.save().then(result => {
               res.status(201).send(result);
             });
