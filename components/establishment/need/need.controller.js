@@ -15,11 +15,13 @@ const Establishment_Need = {};
 Establishment_Need.ViewAll = (req, res, next) => {
   Models.Need.findAll({
     where: { es_id: req.session.currentEs, closed: false },
-    include: {
+    include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
       required: true
-    }
+    }, {
+      model: Models.User,
+    }]
   }).then(needs => {
     res.render('establishments/needs', { needs,  a: { main: 'needs' } });
   }).catch(error => next(new BackError(error)));
@@ -36,7 +38,7 @@ Establishment_Need.View = (req, res, next) => {
       include: {
         model: Models.Candidate,
         required: true,
-        include: {
+        include: [{
           model: Models.User,
           attributes: ['id', 'firstName', 'lastName', 'birthday'],
           on: {
@@ -45,7 +47,25 @@ Establishment_Need.View = (req, res, next) => {
             }
           },
           required: true
-        }
+        }, {
+          model: Models.Application,
+          attributes: ['id', 'wish_id', 'candidate_id'],
+          as: 'applications',
+          on: {
+            '$candidates->Candidate.id$': {
+              [Op.col]: 'candidates->Candidate->applications.candidate_id'
+            }
+          },
+          include: {
+            model: Models.Wish,
+            on: {
+              '$candidates->Candidate.id$': {
+                [Op.col]: 'candidates->Candidate->applications->Wish.candidate_id'
+              }
+            },
+          },
+          required: true
+        }]
       }
     }, {
       model: Models.Establishment,
@@ -138,7 +158,7 @@ Establishment_Need.Close = (need) => {
     Models.NeedCandidate.findAll({
       where: {
         need_id: need.id,
-        status: ['notified', 'selected']
+        status: ['notified', 'canceled', 'selected']
       },
       include: {
         model: Models.Candidate,
@@ -152,7 +172,10 @@ Establishment_Need.Close = (need) => {
       }
     }).then(needs => {
       needs.forEach(need => {
-        Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
+        if (need.status === 'notified' || need.status === 'canceled') Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
+        if (need.status === 'selected') { // send email to selected candidates
+
+        }
       })
     })
   });
