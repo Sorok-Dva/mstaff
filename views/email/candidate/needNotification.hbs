@@ -17,7 +17,7 @@
 
             <h1 class="mc-toc-title"><span style="color:#A9A9A9">Un établissement a consulté votre profil </span></h1>
 
-            <p style="text-align: center !important; line-height: 200%;"><span style="font-size:16px">L'établissement {{this.needCandidate.Establishment.name}} vous propose l'offre suivante :&nbsp;</span><br>
+            <p style="text-align: center !important; line-height: 200%;"><span style="font-size:16px">L'établissement {{this.needCandidate.Need.Establishment.name}} vous propose l'offre suivante :&nbsp;</span><br>
               <br>
               {{#if this.needCandidate.Need.post}}
                 <span style="font-size:17px"><span style="color:#A9A9A9">{{this.needCandidate.Need.post}}</span></span><br>
@@ -29,7 +29,7 @@
                 <span style="font-size:16px">{{#if this.need.start}}à partir du {{this.need.start}}{{/if}}
                   {{#if this.need.end}}jusqu'au {{this.need.end}}{{/if}}<br></span>
               {{/if}}
-              {{this.needCandidate.Establishment.name}}</p>
+              {{this.needCandidate.Need.Establishment.name}}</p>
           </td>
         </tr>
         </tbody></table>
