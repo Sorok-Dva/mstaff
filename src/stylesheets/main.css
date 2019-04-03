@@ -760,7 +760,7 @@ ul {
 
 .drag-item {
   margin: 10px;
-  height: 100px;
+  height: auto;
   background: rgba(255, 255, 255, 0.8);
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
