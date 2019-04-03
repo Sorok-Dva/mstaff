@@ -24,6 +24,8 @@
                     <td>
                       <h5>{{need.name}}</h5>
                       <span class="text-muted">Créé le {{date need.createdAt 'DD/MM/YYYY'}} par {{need.User.firstName}} {{need.User.lastName}}</span>
+                      <br>
+                      <span class="text-muted">Fermé le {{date need.updatedAt 'DD/MM/YYYY'}}</span>
                     </td>
                     <td>
                       <div class="label-container">
