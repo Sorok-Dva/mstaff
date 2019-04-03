@@ -16,7 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: 'es_id',
       onDelete: 'CASCADE'
     });
-
+    Need.hasOne(models.User, {
+      foreignKey: 'id',
+      sourceKey: 'createdBy'
+    });
     Need.hasMany(models.NeedCandidate, {
       foreignKey: 'need_id',
       as: 'candidates'
