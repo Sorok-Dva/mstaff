@@ -27,6 +27,21 @@ Establishment_Need.ViewAll = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+Establishment_Need.ViewClosed = (req, res, next) => {
+  Models.Need.findAll({
+    where: { es_id: req.session.currentEs, closed: true },
+    include: [{
+      model: Models.NeedCandidate,
+      as: 'candidates',
+      required: true
+    }, {
+      model: Models.User,
+    }]
+  }).then(needs => {
+    res.render('establishments/needs_closed', { needs,  a: { main: 'history' } });
+  }).catch(error => next(new BackError(error)));
+};
+
 Establishment_Need.View = (req, res, next) => {
   let render = { a: { main: 'needs' } };
   Models.Need.findOne({
