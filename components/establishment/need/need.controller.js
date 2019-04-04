@@ -188,9 +188,7 @@ Establishment_Need.Close = (need) => {
     }).then(needs => {
       needs.forEach(need => {
         if (need.status === 'notified' || need.status === 'canceled') Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
-        if (need.status === 'selected') { // send email to selected candidates
-
-        }
+        if (need.status === 'selected') Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
       })
     })
   });
