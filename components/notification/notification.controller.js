@@ -15,6 +15,13 @@ Notification.getAndCount = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+Notification.view = (req, res, next) => {
+  Models.Notification.findOne({ where: { id: req.params.id, to: req.user.id } }).then(notification => {
+    if (_.isNil(notification)) return next(new BackError(`Notification ${req.body.id} introuvable.`, httpStatus.NOT_FOUND));
+    return res.status(httpStatus.OK).send(notification);
+  }).catch(error => next(new BackError(error)));
+};
+
 Notification.read = (req, res, next) => {
   Models.Notification.findOne({ where: { id: req.body.id, to: req.user.id } }).then(notification => {
     if (_.isNil(notification)) return next(new BackError(`Notification ${req.body.id} introuvable.`, httpStatus.NOT_FOUND));
