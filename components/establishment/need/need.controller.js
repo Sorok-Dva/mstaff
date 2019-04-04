@@ -134,7 +134,10 @@ Establishment_Need.notify = (req, i) => {
     fromUser: req.user.id,
     fromEs: req.params.esId,
     to: req.body.selectedCandidates[i],
-    title: 'Un établissement est intéressé par votre profil !',
+    subject: 'Un établissement est intéressé par votre profil !',
+    title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
+    content: '',
+    image: '',
     message: req.body.message
   }).then(notification => {
     Models.User.findOne({ where: { id: req.body.selectedCandidates[i] } }).then(user => {
@@ -188,7 +191,7 @@ Establishment_Need.Close = (need) => {
     }).then(needs => {
       needs.forEach(need => {
         if (need.status === 'notified' || need.status === 'canceled') Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
-        if (need.status === 'selected') Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
+        if (need.status === 'selected') Mailer.Main.notifyCandidatesNeedSelect(need.Candidate.User.email, need);
       })
     })
   });
