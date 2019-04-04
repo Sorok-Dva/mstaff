@@ -1,0 +1,49 @@
+<script src="/static/assets/js/bootstrap-selectpicker.js"></script>
+<div class="modal-body">
+  <div class="form-group">
+    <label for="skillID"> Choisir une compétence  </label>
+    <select id="skillID" class="selectpicker" data-live-search="true">
+    </select>
+    <label for="postID"> Choisir un poste  </label>
+    <select id="postID" class="selectpicker" data-live-search="true">
+    </select>
+    <label for="serviceID"> Choisir un service service  </label>
+    <select id="serviceID" class="selectpicker" data-live-search="true">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" id="validateConfigSkill"> Valider les modifications </button>
+</div>
+<script>
+  $.get('/api/skills/all', function(data) {
+    $.each(data.skills, function (i, skill) {
+      $('#skillID').append($('<option>', {
+        value: skill.id,
+        text : skill.name
+      }));
+      $('#skillID').selectpicker('refresh');
+    });
+  });
+  $.get('/api/posts/all', function(data) {
+    $.each(data.posts, function (i, post) {
+      $('#postID').append($('<option>', {
+        value: post.id,
+        text : post.name
+      }));
+      $('#postID').selectpicker('refresh');
+    });
+  });
+  $.get('/api/services/all', function(data) {
+    $.each(data.services, function (i, service) {
+      $('#serviceID').append($('<option>', {
+        value: service.id,
+        text : service.name
+      }));
+      $('#serviceID').selectpicker('refresh');
+    });
+  });
+  $('#skillID').selectpicker();
+  $('#postID').selectpicker();
+  $('#serviceID').selectpicker();
+</script>

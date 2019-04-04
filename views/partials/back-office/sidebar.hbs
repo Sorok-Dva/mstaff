@@ -191,7 +191,33 @@
           </ul>
         </div>
       </li>
-      <li>
+      <li{{#ifCond a.main '===' 'configuration'}} class="active"{{/ifCond}}>
+        <a data-toggle="collapse" href="#configOverview"
+           aria-expanded="{{#ifCond a.main '===' 'configuration'}}true{{else}}false{{/ifCond}}">
+          <i class="fal fa-cogs"></i>
+          <p>Configuration
+            <b class="caret"></b>
+          </p>
+        </a>
+        <div class="collapse{{#ifCond a.main '===' 'configuration'}} in{{/ifCond}}" id="configOverview">
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'skillconfig'}} class="active"{{/ifCond}}>
+              <a href="/back-office/configuration/skills">
+                <i class="fal fa-cog"></i>
+                <span class="sidebar-normal">Compétences</span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'equipmentconfig'}} class="active"{{/ifCond}}>
+              <a href="/back-office/configuration/equipments">
+                <i class="fal fa-cog"></i>
+                <span class="sidebar-normal">Equipements</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <li>
         <a href="https://analytics.google.com/" target="_blank">
           <img src="/static/assets/images/ga.png" style="height: 65px;" alt="Google Analytics">
         </a>

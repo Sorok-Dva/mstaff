@@ -1,0 +1,148 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
+            createModal({
+              id: 'configEquipmentModal',
+              title: 'Ajouter une prédiction de compétence',
+              modal: 'back-office/configEquipmentModal'
+              }, () => {
+                $('button#validateConfigEquipment').click(function () {
+                  if ($('select#equipmentID').val() != '' && $('select#postID').val() != '' && $('select#serviceID').val() != '') {
+                  let _csrf = $('#csrfToken').val();
+                  let equipmentID = $('select#equipmentID').val();
+                  let postID = $('select#postID').val();
+                  let serviceID = $('select#serviceID').val();
+                    $.post(`/api/back-office/configuration/equipments/`, {
+                      equipmentID,
+                      postID,
+                      serviceID,
+                      _csrf
+                    }, (response) => {
+                      if (response.status === 'Already exists') {
+                        notification({
+                          icon: 'exclamation',
+                          type: 'danger',
+                          title: 'Cette configuration existe déjà.',
+                          message: ``
+                        });
+                      }
+                      else {
+                        table.bootstrapTable('insertRow', {
+                          index: 0,
+                          row: {
+                            id: response.configequipment.id,
+                            equipment: response.configequipment.id_equipment,
+                            post: response.configequipment.id_post,
+                            service: response.configequipment.id_service,
+                          }
+                        });
+                        notification({
+                          icon: 'check-circle',
+                          type: 'success',
+                          title: 'configuration créée.',
+                          message: ``
+                        });
+                      }
+                    });
+                    $('#configEquipmentModal').modal('hide');
+                  }
+                })
+              })"><i class="fal fa-plus"></i></a>
+        </div>
+
+        <table id="equipments-table" class="table">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="equipment" data-sortable="true">Compétence</th>
+          <th data-field="post" data-sortable="true">Poste</th>
+          <th data-field="service" data-sortable="true">Service</th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions</th>
+          </thead>
+          <tbody>
+          {{#each equipmentslinks as |equipmentslink|}}
+            <tr data-id="{{equipment.id}}">
+              <td></td>
+              <td>{{equipmentslink.id}}</td>
+              <td>{{equipmentslink.id_equipment}}</td>
+              <td>{{equipmentslink.id_post}}</td>
+              <td>{{equipmentslink.id_service}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let table = $('#equipments-table');
+
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<i class="ti-close"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .remove': (e, value, row, index) => {
+        createModal({
+          id: 'removeConfigEquipmentModal',
+          title: 'Supprimer une configuration',
+          modal: 'back-office/removeConfigEquipment'
+        }, () => {
+          let _csrf = $('#csrfToken').val();
+          $('button#btnRemoveConfigEquipment').click(function () {
+            $.delete(`/api/back-office/configuration/equipments/${row.id}`, {
+              _csrf
+            }, () => {
+              table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Configuration supprimée.',
+                message: ``
+              });
+            });
+          });
+        });
+      }
+    };
+
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10,25,50,100,200,500],
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
+    });
+
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+</script>

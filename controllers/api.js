@@ -8,6 +8,16 @@ module.exports = {
       res.status(200).send({ skills });
     }).catch(error => next(new BackError(error)));
   },
+  getPostsList: (req, res, next) => {
+    Models.Post.findAll().then(posts => {
+      res.status(200).send({ posts });
+    }).catch(error => next(new BackError(error)));
+  },
+  getServicesList: (req, res, next) => {
+    Models.Service.findAll().then(services => {
+      res.status(200).send({ services });
+    }).catch(error => next(new BackError(error)));
+  },
   getGroupsList: (req, res, next) => {
     Models.Groups.findAll().then(groups => {
       res.status(200).send({ groups });

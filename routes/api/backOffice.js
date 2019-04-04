@@ -56,6 +56,20 @@ router.post('/references/:type',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.Delete);
 
+router.post('/configuration/skills/',
+  Authentication.ensureIsAdmin,
+  BackOffice.Configuration.AddSkill)
+  .delete('/configuration/skills/:id(\\d+)',
+    Authentication.ensureIsAdmin,
+    BackOffice.Configuration.RemoveSkill);
+
+router.post('/configuration/equipments/',
+  Authentication.ensureIsAdmin,
+  BackOffice.Configuration.AddEquipment)
+  .delete('/configuration/equipments/:id(\\d+)',
+    Authentication.ensureIsAdmin,
+    BackOffice.Configuration.RemoveEquipment);
+
 router.put('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditGroup)
   .delete('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveGroup)
   .post('/groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddGroup);
