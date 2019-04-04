@@ -45,7 +45,7 @@ Establishment_Need.ViewClosed = (req, res, next) => {
 Establishment_Need.View = (req, res, next) => {
   let render = { a: { main: 'needs' } };
   Models.Need.findOne({
-    where: { id: req.params.id },
+    where: { id: req.params.id, closed: false },
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
