@@ -33,6 +33,10 @@ module.exports = {
       notified: {
         type: Sequelize.BOOLEAN
       },
+      availability: {
+        type: Sequelize.ENUM,
+        values: ['available', 'pending', 'unavailable']
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
