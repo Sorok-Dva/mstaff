@@ -190,28 +190,37 @@ Establishment_Need.Close = (need, req) => {
       }
     }).then(needs => {
       needs.forEach(need => {
-        if (need.status === 'notified' || need.status === 'canceled') {
-          Models.Notification.create({
-            fromUser: req.user.id,
-            fromEs: req.es.id,
-            to: need.Candidate.user_id,
-            subject: 'Un établissement a clôturé une offre pour laquelle vous étiez disponible.',
-            title: `L'établissement ${req.es.name} a clôturé une offre pour laquelle vous étiez disponible.`,
-            image: '/static/assets/images/sad.jpg',
-            opts: {
-              type: 'NeedNotifyClosedCandidate',
-              details: {
-                post: need.post,
-                contract: need.contract_type,
-                start: need.start,
-                end: need.end,
-              }
+        let notifObject = {
+          fromUser: req.user.id,
+          fromEs: req.es.id,
+          to: need.Candidate.user_id,
+          opts: {
+            details: {
+              post: result.post,
+              contract: result.contract_type,
+              start: result.start,
+              end: result.end,
             }
-          }).then(notification => {
-            Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
-          });
+          }
+        };
+
+        if (need.status === 'notified' || need.status === 'canceled') {
+          notifObject.subject = 'Un établissement a clôturé une offre pour laquelle vous étiez disponible.';
+          notifObject.title = `L'établissement ${req.es.name} a clôturé une offre pour laquelle vous étiez disponible.`;
+          notifObject.image = '/static/assets/images/sad.jpg';
+          notifObject.opts.type = 'NeedNotifyClosedCandidate';
+          Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
         }
-        if (need.status === 'selected') Mailer.Main.notifyCandidatesNeedSelect(need.Candidate.User.email, need);
+        if (need.status === 'selected') {
+          notifObject.subject = 'Vous avez été sélectionné pour l\'offre suivante...';
+          notifObject.title = `L'établissement ${req.es.name} vous a sélectionné pour cette offre dont vous trouverez les détails 
+          ci-dessous et va prendre rapidement contact avec vous.`;
+          notifObject.image = '/static/assets/images/wink.jpg';
+          notifObject.opts.type = 'NeedNotifySelectedCandidate';
+          Mailer.Main.notifyCandidatesNeedSelect(need.Candidate.User.email, need);
+        }
+
+        Models.Notification.create(notifObject);
       })
     })
   });
