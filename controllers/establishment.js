@@ -86,22 +86,27 @@ module.exports = {
       if (_.isNil(needCandidate))
         return next(new BackError(`Candidate ${req.params.candidateId} or Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
       else {
-        let content = '';
         switch (req.params.action) {
           case 'notify':
-            if (needCandidate.Need.post) content += `<h5>Pour quel poste ?</h5><span class="text-muted">${needCandidate.Need.post}</span>`;
-            // if (needCandidate.Need.service) content += `<b>Dans quel service</b><span class="text-muted">${needCandidate.Need.post}</span>`;
-            if (needCandidate.Need.contract_type)
-              content += `<b>Pour quel type de contrat</b><span class="text-muted">${needCandidate.Need.contractType}</span>`;
             Models.Notification.create({
               fromUser: req.user.id,
               fromEs: needCandidate.Need.Establishment.id,
               to: needCandidate.Candidate.User.id,
               subject: 'Un établissement est intéressé par votre profil !',
               title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
-              content,
-              image: '',
-              message: req.body.message
+              image: '/static/assets/images/happy.jpg',
+              opts: {
+                type: 'NeedNotifyCandidate',
+                details: {
+                  post: needCandidate.Need.post,
+                  contract: needCandidate.Need.contract_type,
+                  start: needCandidate.Need.start,
+                  end: needCandidate.Need.end,
+                },
+                message: req.body.message,
+                actions: `<a href="#" class="btn btn-success">Disponible</a> <a href="#" class="btn btn-danger">Indisponible</a>`,
+                needCandidateId: needCandidate.id
+              }
             }).then(notification => {
               needCandidate.status = 'notified';
               needCandidate.notified = true;
