@@ -865,7 +865,7 @@ ul {
 .notifications-container {
   max-height: 300px;
   overflow: auto;
-  margin-top: -4%;
+  margin-top: -2%;
 }
 
 .notification-dropdown-menu {
