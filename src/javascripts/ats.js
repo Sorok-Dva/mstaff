@@ -162,7 +162,7 @@ let postModalListener = () => {
 };
 
 let serviceModalListener = () => {
-  $('#serviceModal').on('hide.bs.modal', function(e) {
+  $('#serviceModal').on('hide.bs.modal', function() {
     if (!toNextModal)
       $('#postModal').modal('show');
   });
@@ -177,7 +177,7 @@ let serviceModalListener = () => {
 };
 
 let identityModalListener = () => {
-  $('#identityModal').on('hide.bs.modal', function(e) {
+  $('#identityModal').on('hide.bs.modal', function() {
     if (!toNextModal)
       $('#serviceModal').modal('show');
   });
