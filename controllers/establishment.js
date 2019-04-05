@@ -104,11 +104,20 @@ module.exports = {
                   end: needCandidate.Need.end,
                 },
                 message: req.body.message,
-                actions: `<a href="#" class="btn btn-success">Disponible</a> <a href="#" class="btn btn-danger">Indisponible</a>`,
+                actions: [{
+                  'type': 'success',
+                  'text': 'Disponible',
+                  'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="available"`
+                }, {
+                  'type': 'danger',
+                  'text': 'Indisponible',
+                  'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="unavailable"`
+                }],
                 needCandidateId: needCandidate.id
               }
             }).then(notification => {
               needCandidate.status = 'notified';
+              needCandidate.availability = 'pending';
               needCandidate.notified = true;
               needCandidate.save().then(result => {
                 moment.locale('fr');
