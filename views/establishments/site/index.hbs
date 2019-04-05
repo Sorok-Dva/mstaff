@@ -146,11 +146,7 @@
   }
 
   #logo {
-    {{#if es.logo}}
-      background-image: url('{{es.logo}}');
-    {{else}}
-      background-image: url(/static/assets/images/default_hospital.jpg);
-    {{/if}}
+    background-image: url('{{es.logo}}');
     width: 200px;
     height: 200px;
     background-size: cover;
@@ -463,10 +459,6 @@
             <div class="name">
               <div class="col-md-12">
                 <a class="btn btn-info" title="Candidature Spontanée" data-target="#mainModal" data-toggle="modal">Candidature Spontanée</a>
-                <br>
-                <button type="button" class="btn btn-default" style="margin-bottom: 5px;">
-                  Rejoindre mon pool
-                </button>
               </div>
             </div>
           </div>

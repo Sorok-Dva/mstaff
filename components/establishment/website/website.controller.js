@@ -21,7 +21,13 @@ Establishment_Website.ViewRegister = (req, res, next) => {
 
 Establishment_Website.GetPosts = (req, res, next) => {
   Models.Post.findAll().then( posts => {
-    res.status(200).send({ posts });
+    res.status(200).send(posts);
+  }).catch(error => next(new Error(error)));
+};
+
+Establishment_Website.GetServices = (req, res, next) => {
+  Models.Service.findAll().then( services => {
+    res.status(200).send(services);
   }).catch(error => next(new Error(error)));
 };
 

@@ -1,13 +1,13 @@
 <style>
-  #postModal > .modal-dialog{
+  .darkModal > .modal-dialog{
     height: 50%;
   }
-  #postModal > .modal-dialog > .modal-content{
+  .darkModal > .modal-dialog > .modal-content{
     background-color: transparent;
     box-shadow: none;
     border: none;
   }
-  #postModal > .modal-dialog > .modal-content > .modal-body{
+  .darkModal > .modal-dialog > .modal-content > .modal-body{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -30,15 +30,20 @@
   .select-holder > i{
     font-size: 2.2em;
     color: white;
+    margin-right: 5%;
+  }
+  .select-holder > i:last-child{
+    display: none;
+    margin-left: 5%;
   }
   .selectPost > div{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
     padding: 3%;
   }
-  #InputPosts{
+  .customInput{
     width: 75%;
     font-size: 3em;
     color: white;
@@ -59,18 +64,26 @@
     color: white;
   }
   .ui-menu-item{
-    margin-bottom: 5% !important;
+    margin-bottom: 10px !important;
   }
   .ui-menu-item:first-child{
-    margin-top: 10% !important;
+    margin-top: 30px !important;
   }
   .ui-widget.ui-widget-content{
     border: none;
     color: white;
   }
+  .next-modal{
+    font-size: 2.2em;
+    color: white;
+  }
+  .next-modal > i:last-child{
+    margin-left: 92%;
+    display: none;
+  }
 </style>
 
-<div class="modal customModal" id="postModal" tabindex="-1" role="dialog">
+<div class="modal customModal darkModal" id="postModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-body">
@@ -80,8 +93,11 @@
           </div>
           <div class="select-holder">
             <i class="fal fa-search"></i>
-            <input id="InputPosts">
-            </select>
+            <input class="customInput" id="InputPosts">
+            <i class="fal fa-check"></i>
+          </div>
+          <div class="next-modal">
+            <i id="toStep2" class="fal fa-arrow-circle-right"></i>
           </div>
         </div>
       </div>

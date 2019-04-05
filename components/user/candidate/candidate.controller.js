@@ -409,7 +409,7 @@ User_Candidate.AddFormation = (req, res, next) => {
     return res.status(400).send({ body: req.body, errors: errors.array() });
   }
   return Models.Candidate.findOne({
-    where: { user_id: req.user.id }
+    where: { user_id: req.user.id },
   }).then(candidate => {
     Models.CandidateFormation.create({
       name: req.body.name,

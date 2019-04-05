@@ -13,4 +13,6 @@ router.get('/register',
 router.get('/posts/all',
   Establishment.Website.GetPosts);
 
+router.get('/services/all',
+  Establishment.Website.GetServices);
 module.exports = router;
