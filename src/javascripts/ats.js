@@ -121,7 +121,7 @@ let nextStepFrom = (currentStep) => {
           saveServices();
           toNextModal = true;
           $('#serviceModal').modal('hide');
-          $('#identityModal').modal('show');
+          $('#contractModal').modal('show');
         }
         toNextModal = false;
         break;
@@ -176,8 +176,8 @@ let serviceModalListener = () => {
   });
 };
 
-let identityModalListener = () => {
-  $('#identityModal').on('hide.bs.modal', function() {
+let contractModalListener = () => {
+  $('#contractModal').on('hide.bs.modal', function() {
     if (!toNextModal)
       $('#serviceModal').modal('show');
   });
@@ -188,6 +188,6 @@ $(document).ready(function () {
   mainModalListener();
   postModalListener();
   serviceModalListener();
-  identityModalListener();
+  contractModalListener();
 
 });

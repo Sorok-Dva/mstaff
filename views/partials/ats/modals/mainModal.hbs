@@ -1,4 +1,5 @@
 <style>
+
   .modal-backdrop~.modal-backdrop{
     background: none;
   }
@@ -13,36 +14,86 @@
     cursor: pointer;
   }
   .customModal > .modal-dialog{
-    position: relative;
     margin: 0;
     padding: 0;
-    max-width: 1000px;
-    width: 100%;
+    max-width: 100vw;
+    width: 75vw;
+    /*height: 60vh;*/
     cursor: auto;
+  }
+  .customModal > .modal-dialog > .modal-content{
+    width: 100%;
+    height: 100%;
   }
   .customModal > .modal-dialog > .modal-content >.modal-body{
     padding: 0;
   }
   .customModal > .modal-dialog > .modal-content >.modal-body > .row{
     margin: 0;
+    height: 100%;
   }
-  p {
-    font-size: 2.2em;
-    line-height: 1.5 !important;
-    color: deepskyblue;
-  }
-  .part{
+
+  .leftPart{
     display: flex;
     flex-direction: column;
-    /*justify-content: space-between;*/
     padding: 3%;
   }
+  .leftPart > div:nth-child(1){
+    margin-bottom: 10%;
+  }
+  .leftPart > div:nth-child(2){
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+  }
+  .leftPart > div:nth-child(2) > p:nth-child(2){
+    color: black;
+  }
+  .leftPart > div:nth-child(3){
+    margin-top: 5%;
+  }
+
   .rightPart{
     background-color: #00aced;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 7%;
+    height: 100%;
   }
+  .paraph{
+    padding: 7%;
+    border-bottom: 2px white solid;
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+  }
+  .paraph:last-child{
+    border-bottom: none;
+  }
+  .paraph p{
+    color: white;
+  }
+  .paraph button.btn.btn-success{
+    font-size: 1.5em;
+    font-weight: bold;
+    background-color: #0bcfb4;
+    color: white;
+    border: none;
+    border-radius: 300px;
+    padding: 10px 15px;
+    margin-top: 5%;
+  }
+
+  p {
+    font-size: 2em;
+    line-height: 1.5 !important;
+    color: deepskyblue;
+    font-family: 'Oxygen', sans-serif;
+  }
+
+
   .footer-left{
     flex-direction: row;
     display: flex;
@@ -57,28 +108,14 @@
   .footer-left-p{
     flex-direction: column;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
-  .paraph{
-    padding: 7%;
-    border-bottom: 1px white solid;
-  }
-  .paraph p{
-    color: white;
-  }
-  .paraph:last-child{
-    border-bottom: none;
-  }
-  .paraph button.btn.btn-success{
-    font-size: 1.5em;
-    font-weight: bold;
-    background-color: #0bcfb4;
-    color: white;
-    border: none;
-    border-radius: 300px;
-    padding: 10px 15px;
-    margin-top: 5%;
-  }
+
+
+
+
+
+
 </style>
 
 <div class="modal customModal" id="mainModal" tabindex="-1" role="dialog">
@@ -86,7 +123,7 @@
     <div class="modal-content">
       <div class="modal-body container-fluid">
         <div class="row text-center">
-          <div class="col-sm-4 part">
+          <div class="col-sm-4 leftPart">
             <div>
               <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
             </div>
@@ -104,7 +141,7 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-8 part rightPart">
+          <div class="col-sm-8 rightPart">
             <div class="paraph">
               <p>C'est votre toute première fois sur Mstaff ?</p>
               <p>Postulez et créer votre compte candidat.</p>
