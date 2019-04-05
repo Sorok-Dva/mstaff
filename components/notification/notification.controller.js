@@ -10,7 +10,7 @@ const Models = require(`${__}/orm/models/index`);
 const Notification = {};
 
 Notification.getAndCount = (req, res, next) => {
-  Models.Notification.findAndCountAll({ where: { to: req.user.id, read: false } }).then(result => {
+  Models.Notification.findAndCountAll({ where: { to: req.user.id, read: false }, order: [['createdAt', 'DESC']] }).then(result => {
     return res.status(httpStatus.OK).send(result);
   }).catch(error => next(new BackError(error)));
 };
