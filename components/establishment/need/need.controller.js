@@ -164,13 +164,13 @@ Establishment_Need.Feedback = (req, res, next) => {
       stars: req.body.stars || null,
       feedback: req.body.feedback
     }).then(feedback => {
-      Establishment_Need.Close(need);
+      Establishment_Need.Close(need, req);
       return res.status(201).send(need);
     });
   });
 };
 
-Establishment_Need.Close = (need) => {
+Establishment_Need.Close = (need, req) => {
   need.closed = true;
   need.save().then(result => {
     Models.NeedCandidate.findAll({
@@ -190,11 +190,62 @@ Establishment_Need.Close = (need) => {
       }
     }).then(needs => {
       needs.forEach(need => {
-        if (need.status === 'notified' || need.status === 'canceled') Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
+        if (need.status === 'notified' || need.status === 'canceled') {
+          Models.Notification.create({
+            fromUser: req.user.id,
+            fromEs: req.es.id,
+            to: need.Candidate.user_id,
+            subject: 'Un établissement a clôturé une offre pour laquelle vous étiez disponible.',
+            title: `L'établissement ${req.es.name} a clôturé une offre pour laquelle vous étiez disponible.`,
+            image: '/static/assets/images/sad.jpg',
+            opts: {
+              type: 'NeedNotifyClosedCandidate',
+              details: {
+                post: need.post,
+                contract: need.contract_type,
+                start: need.start,
+                end: need.end,
+              }
+            }
+          }).then(notification => {
+            Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
+          });
+        }
         if (need.status === 'selected') Mailer.Main.notifyCandidatesNeedSelect(need.Candidate.User.email, need);
       })
     })
   });
+};
+
+Establishment_Need.candidateAnswer = (req, res, next) => {
+  Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next();
+    Models.NeedCandidate.findOne({
+      where: {
+        id: parseInt(req.params.id),
+        candidate_id: candidate.id
+      },
+      include: {
+        model: Models.Need,
+        on: {
+          '$NeedCandidate.need_id$': {
+            [Op.col]: 'Need.id'
+          }
+        },
+        required: true,
+        include: {
+          model: Models.User,
+          attributes: { exclude: ['password'] },
+          required: true
+        }
+      }
+    }).then(needCandidate => {
+      if (_.isNil(needCandidate)) return next();
+      needCandidate.availability = req.body.availability;
+      needCandidate.save();
+      return res.status(200).send('done');
+    })
+  })
 };
 
 module.exports = Establishment_Need;
