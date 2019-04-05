@@ -1,20 +1,37 @@
 <div class="col-md-12">
   <div class="text-center" style="padding: 15px">
-    {{#if this.image}}<img src="{{image}}" style="width: 45px" />{{/if}}
+    {{#if this.image}}<div style="padding: 15px;margin-top: -5%;"><img src="{{image}}" style="width: 45px;" /></div>{{/if}}
     <b>{{breaklines this.title}}</b>
   </div>
   <hr style="width: 25%; border-color: dimgrey">
-  <div class="text-center" style="padding: 15px">
-    {{{this.content}}}
-  </div>
-  {{log this}}
   {{#if this.fromEs}}
-    <hr style="width: 25%; border-color: dimgrey">
+    {{#ifCond this.opts.type '===' 'NeedNotifyCandidate'}}
+      {{#if @root.opts.details}}
+        <div class="text-center" style="padding: 15px">
+          <h5>Pour quel poste ?</h5>
+          <span class="text-muted">{{@root.opts.details.post}}</span>
+          <h5>Pour quel type de contrat ? </h5>
+          <span class="text-muted">
+            {{@root.opts.details.contract}}
+            {{#if @root.opts.details.start}}à partir du {{date @root.opts.details.start 'DD/MM/YYYY'}}{{/if}}
+            {{#if @root.opts.details.end}} jusqu'au {{date @root.opts.details.end 'DD/MM/YYYY'}}{{/if}}
+          </span>
+        </div>
+      {{/if}}
+      {{#if @root.opts.message}}
+        <hr style="width: 25%; border-color: dimgrey">
+        <div class="text-center" style="padding: 15px">
+          <b>Message du recruteur</b><br>
+          <p>
+            {{breaklines @root.opts.message}}
+          </p>
+        </div>
+      {{/if}}
+    {{/ifCond}}
+  {{/if}}
+  {{#if this.opts.actions}}
     <div class="text-center" style="padding: 15px">
-      <b>Message du recruteur</b><br>
-      <p>
-        {{breaklines this.message}}
-      </p>
+      {{{this.opts.actions}}}
     </div>
   {{/if}}
 </div>
