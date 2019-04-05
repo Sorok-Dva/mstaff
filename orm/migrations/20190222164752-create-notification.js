@@ -54,8 +54,8 @@ module.exports = {
       content: {
         type: Sequelize.STRING
       },
-      message: {
-        type: Sequelize.STRING
+      opts: {
+        type: Sequelize.JSON
       },
       image: {
         type: Sequelize.STRING
