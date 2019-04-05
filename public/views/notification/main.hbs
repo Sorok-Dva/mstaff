@@ -1,0 +1,20 @@
+<div class="col-md-12">
+  <div class="text-center" style="padding: 15px">
+    {{#if this.image}}<img src="{{image}}" style="width: 45px" />{{/if}}
+    <b>{{breaklines this.title}}</b>
+  </div>
+  <hr style="width: 25%; border-color: dimgrey">
+  <div class="text-center" style="padding: 15px">
+    {{{this.content}}}
+  </div>
+  {{log this}}
+  {{#if this.fromEs}}
+    <hr style="width: 25%; border-color: dimgrey">
+    <div class="text-center" style="padding: 15px">
+      <b>Message du recruteur</b><br>
+      <p>
+        {{breaklines this.message}}
+      </p>
+    </div>
+  {{/if}}
+</div>

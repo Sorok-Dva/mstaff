@@ -10,6 +10,12 @@
     <p>Mes recherches</p>
   </a>
 </li>
+<li{{#ifCond @root.a.main '===' 'history'}} class="active"{{/ifCond}}>
+  <a href="/history">
+    <i class="fal fa-handshake"></i>
+    <p>Mon historique</p>
+  </a>
+</li>
 <li{{#ifCond @root.a.main '===' 'selectEs'}} class="active"{{/ifCond}}>
   <a href="/select/es">
     <i class="fal fa-hospitals"></i>

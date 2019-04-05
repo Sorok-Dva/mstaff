@@ -2,8 +2,8 @@
   <div class="col-lg-12 col-md-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fal fa-search" aria-hidden="true"></i> Mes besoins</h4>
-        <hr style="width:90%; margin-top: 14px;">
+        <h4 class="card-title pull-left"><i class="fal fa-search" aria-hidden="true"></i> Historique de mes recherches</h4>
+        <hr style="width:80%; margin-top: 14px;">
       </div>
       <div class="card-content">
         <div class="row">
@@ -24,6 +24,8 @@
                     <td>
                       <h5>{{need.name}}</h5>
                       <span class="text-muted">Créé le {{date need.createdAt 'DD/MM/YYYY'}} par {{need.User.firstName}} {{need.User.lastName}}</span>
+                      <br>
+                      <span class="text-muted">Fermé le {{date need.updatedAt 'DD/MM/YYYY'}}</span>
                     </td>
                     <td>
                       <div class="label-container">
@@ -62,15 +64,9 @@
                       </button>
                     </td>
                     <td>
-                      <a class="btn btn-simple btn-success btn-icon" href="/need/{{need.id}}">
+                      <a class="btn btn-simple btn-success btn-icon" href="/history/{{need.id}}">
                         <i class="fal fa-eye"></i>
                       </a>
-                      <button class="btn btn-simple btn-warning btn-icon editApplication" data-id="{{need.id}}">
-                        <i class="ti-pencil-alt"></i>
-                      </button>
-                      <button class="btn btn-simple btn-danger btn-icon removeApplication" data-id="{{need.id}}">
-                        <i class="ti-close"></i>
-                      </button>
                     </td>
                   </tr>
                 {{/each}}
@@ -81,32 +77,9 @@
               {{/if}}
               </tbody>
             </table>
-            <hr>
-            <a href="/candidates" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-              <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
-            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<script>
-  //initialize instance
-  let enjoyhint_instance = new EnjoyHint({});
-
-  //simple config.
-  //Only one step - highlighting(with description) "New" button
-  //hide EnjoyHint after a click on the button.
-  let enjoyhint_script_steps = [
-    {
-      'click .addNeed' : 'Cliquez sur le boutton "Ajouter" pour commencer à créer un besoin.'
-    }
-  ];
-
-  //set script config
-  enjoyhint_instance.set(enjoyhint_script_steps);
-
-  //run Enjoyhint script
-  enjoyhint_instance.run();
-</script>

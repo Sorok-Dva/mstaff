@@ -33,5 +33,18 @@ Mailer.notifyCandidatesNeedClosed = (email, context) => {
   });
 };
 
+Mailer.notifyCandidatesNeedSelect = (email, context) => {
+  let mailObject = {
+    subject: 'Vous avez été sélectionné pour l\'offre suivante',
+    template: 'candidate/needSelected'
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
 
 module.exports = Mailer;

@@ -1,18 +1,24 @@
 <li class="drag-item card" data-status="{{this.this.status}}" data-needid="{{@root.need.id}}"
     data-candidateId="{{this.Candidate.id}}">
-  <div class="card-header">
-    <i class="fal fa-times pull-right" data-action="remove"></i>
+  <div class="card-content">
+    <i class="fal fa-times pull-right" data-action="remove" style="cursor: pointer"></i>
     <div class="row" style="cursor:pointer;"
          onclick="showCandidateProfile({{this.Candidate.User.id}})">
-      <div class="col-md-2 col-sm-2 col-xs-2">
-        <img src="/static/assets/images/face-0.jpg"
-             style="border-radius: 50%;border:3px solid #019ED1; width: 50px;">
+      <div class="col-md-2 col-sm-4 col-xs-4">
+        <div class="icon-big text-center" style="margin-top: 5px;width: 65px;">
+          <img src="/static/assets/images/face-0.jpg" style="border-radius: 50%;border:3px solid #019ED1; width: 75px;">
+        </div>
       </div>
-      <div class="col-md-9 col-sm-9 col-xs-9">
-        <h4 class="text-capitalize">{{this.Candidate.User.firstName}} {{this.Candidate.User.lastName}}
-          (<small>{{age this.Candidate.User.birthday 'years'}} ans</small>)
-        </h4>
+      <div class="col-md-9 col-sm-7 col-xs-7">
+        <h4 class="text-capitalize">{{this.Candidate.User.firstName}} {{this.Candidate.User.lastName}}</h4>
+        <h6 style="word-break: break-all;">{{this.Candidate.applications.0.Wish.posts}}</h6>
       </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <hr>
+    <div class="stats">
+
     </div>
   </div>
 </li>
