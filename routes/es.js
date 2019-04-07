@@ -39,4 +39,12 @@ router.get('/need/:id(\\d+)',
   Authentication.ensureIsEs,
   Establishment.Need.View);
 
+/**
+ * @Route('/history') GET;
+ * Show History page
+ */
+router.get('/history',
+  Authentication.ensureIsEs,
+  Establishment.Need.ViewClosed);
+
 module.exports = router;

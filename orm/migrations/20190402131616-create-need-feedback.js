@@ -1,41 +1,50 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('NeedCandidates', {
+    return queryInterface.createTable('NeedFeedbacks', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      es_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Establishments',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        allowNull: false
+      },
       need_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Needs',
           key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        }
       },
-      candidate_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Candidates',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+      how: {
+        type: Sequelize.STRING
       },
-      status: {
-        type: Sequelize.STRING,
-        defaultValue: 'pre-selected'
+      candidates: {
+        type: Sequelize.JSON
       },
-      notified: {
-        type: Sequelize.BOOLEAN
+      stars: {
+        type: Sequelize.INTEGER
       },
-      availability: {
-        type: Sequelize.ENUM,
-        values: ['available', 'pending', 'unavailable']
+      feedback: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -43,13 +52,13 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
-        type: Sequelize.DATE,
         allowNull: false,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('NeedCandidates');
+    return queryInterface.dropTable('NeedFeedbacks');
   }
 };
