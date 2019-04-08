@@ -162,6 +162,7 @@ $(document).ready(function () {
       loadTemplate('/static/views/notification/main.hbs', data, (html) => {
         $('#notificationData').html(html).show();
         $('#notif-see-all').hide();
+        $('#notif-back').attr('data-id', notifId);
         $('#notif-back').show();
       });
     });
@@ -174,7 +175,36 @@ $(document).ready(function () {
     $('#notificationData').hide();
     $('#notif-see-all').show();
     $('#notif-back').hide();
+    let id = $('#notif-back').attr('data-id');
+    $.put('/api/user/notification/read', { _csrf, id }, (data) => {
+      count--;
+      appNotifications.loadAll();
+    });
   });
+
+  $('#notificationData').on('click', '.notificationCTA', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    let target = $(event.target);
+    let action = target.attr('data-action');
+    switch (action) {
+      case 'nc/availability':
+        let ncid = target.attr('data-ncid');
+        let availability = target.attr('data-availability');
+        $.post(`/api/candidate/nc/${ncid}/availability`, { _csrf, availability}, (data) => {
+          if (data === 'done') {
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Disponibilité enregistrée.',
+              message: `Nous venons d'informer l'établissement de votre disponibilité.`
+            });
+            $('#notif-back').trigger('click');
+          }
+        });
+        break;
+    }
+  })
 });
 
 let count = 0;
@@ -256,6 +286,7 @@ let appNotifications = {
     appNotifications.badgeLoadingMask(true);
 
     $.get('/api/user/notifications', data => {
+      lastCount = count;
       count = data.count;
       $("#notificationsBadge").html(data.count);
       appNotifications.badgeLoadingMask(false);
@@ -274,8 +305,7 @@ let appNotifications = {
       template = template.replace("{{id}}", notif.id);
       template = template.replace("{{image}}", notif.image);
       template = template.replace("{{subject}}", notif.subject);
-      template = template.replace("{{title}}", notif.title);
-      template = template.replace("{{date}}", moment(notif.createdAt).startOf('day').fromNow());
+      template = template.replace("{{date}}", moment(notif.createdAt).fromNow());
       $('#notificationsContainer').append(template);
     });
     // bind mark as read

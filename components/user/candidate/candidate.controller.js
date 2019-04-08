@@ -815,6 +815,7 @@ User_Candidate.updatePercentage = (user, type) => {
   if (_.isNil(type)) return false;
   Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
     let { percentage } = candidate;
+    if (_.isNil(percentage)) percentage = {};
     switch (type) {
       case 'identity':
         if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };

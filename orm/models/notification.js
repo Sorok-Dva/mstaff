@@ -9,7 +9,15 @@ module.exports = (sequelize, DataTypes) => {
     subject: DataTypes.STRING,
     title: DataTypes.STRING,
     content: DataTypes.STRING,
-    message: DataTypes.STRING,
+    opts: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('opts'))
+      },
+      set(data) {
+        this.setDataValue('opts', JSON.stringify(data));
+      }
+    },
     image: DataTypes.STRING
   }, {});
   Notification.associate = function (models) {
