@@ -6,8 +6,9 @@ HTTPValidation.create = [
   check('password')
     .isLength({ min: 8 }).withMessage('must be at least 8 chars long')
     .matches(/\d/).withMessage('must contain a number'),
-  check('firstName').exists(),
-  check('lastName').exists()
+  check('firstName').exists().isAlpha().withMessage(`mustn't contain numbers.`),
+  check('lastName').exists().isAlpha().withMessage(`mustn't contain numbers.`),
+  check('phone').exists().isLength({ min: 10, max: 14 }).withMessage('Invalid phone number')
 ];
 
 HTTPValidation.resetPassword = [
