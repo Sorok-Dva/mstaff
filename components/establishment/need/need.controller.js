@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
+const moment = require('moment');
 const httpStatus = require('http-status');
 
 const sequelize = require(`${__}/bin/sequelize`);
@@ -119,35 +120,66 @@ Establishment_Need.Create = (req, res, next) => {
           candidate_id: req.body.selectedCandidates[i],
           notified: req.body.notifyCandidates,
           status: req.body.notifyCandidates === 'true' ? 'notified' : 'pre-selected'
+        }).then(needCandidate => {
+          if (req.body.notifyCandidates === 'true') {
+            Establishment_Need.notify(req, i, needCandidate, need);
+          }
         });
-        if (req.body.notifyCandidates === 'true') {
-          Establishment_Need.notify(req, i);
-        }
       }
     }
     res.status(201).send(need);
   });
 };
 
-Establishment_Need.notify = (req, i) => {
+Establishment_Need.notify = (req, i, needCandidate, need) => {
   Models.Notification.create({
     fromUser: req.user.id,
     fromEs: req.params.esId,
     to: req.body.selectedCandidates[i],
     subject: 'Un établissement est intéressé par votre profil !',
     title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
-    content: '',
-    image: '',
-    message: req.body.message
+    image: '/static/assets/images/happy.jpg',
+    opts: {
+      type: 'NeedNotifyCandidate',
+      details: {
+        contract: need.contract_type,
+        post: need.post,
+        service: need.service,
+        start: need.start,
+        end: need.end
+      },
+      message: req.body.message,
+      actions: [{
+        'type': 'success',
+        'text': 'Disponible',
+        'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="available"`
+      }, {
+        'type': 'danger',
+        'text': 'Indisponible',
+        'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="unavailable"`
+      }],
+      needCandidateId: needCandidate.id
+    }
   }).then(notification => {
-    Models.User.findOne({ where: { id: req.body.selectedCandidates[i] } }).then(user => {
-      mailer.sendEmail({
-        to: user.email,
-        subject: 'Un établissement est intéressé par votre profil !',
-        template: 'candidate/es_notified',
-        context: {
-          notification,
-        }
+    needCandidate.status = 'notified';
+    needCandidate.availability = 'pending';
+    needCandidate.notified = true;
+    needCandidate.save().then(result => {
+      moment.locale('fr');
+      let needObj = {
+        start: _.isNil(need.start) ? null : moment(need.start).format('dddd Do MMMM YYYY'),
+        end: _.isNil(need.end) ? null : moment(need.end).format('dddd Do MMMM YYYY'),
+      };
+      Models.User.findOne({ where: { id: req.body.selectedCandidates[i] } }).then(user => {
+        mailer.sendEmail({
+          to: user.email,
+          subject: 'Un établissement a consulté votre profil.',
+          template: 'candidate/needNotification',
+          context: {
+            needCandidate,
+            need: needObj
+          }
+        });
       });
     })
   });
