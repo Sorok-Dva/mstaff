@@ -1,10 +1,33 @@
 <style>
   .contractType{
     height: 60vh;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    color: white;
+    justify-content: center;
+    align-items: center;
+  }
+  .contractType > div:nth-child(1){
+    border-bottom: 2px white solid;
+    margin-bottom: 10px;
+  }
+  .contractChoices{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10% 0;
+  }
+  .contractChoice{
+    width: 100%;
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #03A9F4;
+    padding: 2%;
+    margin: 0 4%;
   }
 </style>
 
@@ -34,7 +57,26 @@
           </div>
           <div class="col-sm-8 rightPart">
             <div class="contractType">
-              <p>Que recherchez-vous ?</p>
+              <div>
+                <p>Que recherchez-vous ?</p>
+              </div>
+                <div class="contractChoices">
+                  <div class="contractChoice">
+                    <i class="fal fa-infinity fa-5x"></i>
+                    <p>Un travail durable</p>
+                    <input type="radio" name="contractRadio" checked>
+                  </div>
+                  <div class="contractChoice">
+                    <i class="fal fa-calendar-alt fa-5x"></i>
+                    <p>Des missions ponctuelles</p>
+                    <input type="radio" name="contractRadio">
+                  </div>
+                  <div class="contractChoice">
+                    <i class="fal fa-smile fa-5x"></i>
+                    <p>Un stage</p>
+                    <input type="radio" name="contractRadio">
+                </div>
+              </div>
             </div>
           </div>
         </div>
