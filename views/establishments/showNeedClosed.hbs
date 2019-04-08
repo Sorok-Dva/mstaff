@@ -23,8 +23,6 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
-        <button class="btn btn-warning pull-right" style="margin-left: 3px" onclick="closeNeed({{need.id}})">Clôturer le besoin</button>
-        <button class="btn btn-primary pull-right">Recherche de nouveaux candidats en cours</button> {{!--// aucun nouveau candidats--}}
         <h4 class="card-title">{{need.name}}</h4>
         <div class="label-container">
           {{#if need.post}}
@@ -92,25 +90,3 @@
     </div>
   </div>
 </div>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
-<script>
-  let feedback = {};
-  let showNotifyModalObject = {
-    id: 'showNotifyCandidateModal',
-    modal: 'es/showNotifyCandidate',
-    cantBeClose: true,
-    title: '<img style="height: 75px;" src="{{need.Establishment.logo}}" />',
-    Establishment: {
-      address: '{{need.Establishment.address}}',
-      postal_code: '{{need.Establishment.postal_code}}',
-      town: '{{need.Establishment.town}}',
-    },
-    Need: {
-      contractType: '{{need.contract_type}}',
-      start: '{{need.start}}',
-      end: '{{need.end}}'
-    }
-  };
-  let esId = {{need.es_id}};
-</script>
-<script src="/static/assets/dist/js/showNeed.es.min.js"></script>

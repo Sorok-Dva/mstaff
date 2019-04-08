@@ -94,6 +94,57 @@ Establishment_Need.View = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+Establishment_Need.ViewHistory = (req, res, next) => {
+  let render = { a: { main: 'history' } };
+  Models.Need.findOne({
+    where: { id: req.params.id, closed: true },
+    include: [{
+      model: Models.NeedCandidate,
+      as: 'candidates',
+      required: true,
+      include: {
+        model: Models.Candidate,
+        required: false,
+        include: [{
+          model: Models.User,
+          attributes: ['id', 'firstName', 'lastName', 'birthday'],
+          on: {
+            '$candidates->Candidate.user_id$': {
+              [Op.col]: 'candidates->Candidate->User.id'
+            }
+          },
+          required: false
+        }, {
+          model: Models.Application,
+          attributes: ['id', 'wish_id', 'candidate_id'],
+          as: 'applications',
+          on: {
+            '$candidates->Candidate.id$': {
+              [Op.col]: 'candidates->Candidate->applications.candidate_id'
+            }
+          },
+          include: {
+            model: Models.Wish,
+            on: {
+              '$candidates->Candidate.id$': {
+                [Op.col]: 'candidates->Candidate->applications->Wish.candidate_id'
+              }
+            },
+          },
+          required: true
+        }]
+      }
+    }, {
+      model: Models.Establishment,
+      required: true
+    }]
+  }).then(need => {
+    if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
+    render.need = need;
+    return res.render('establishments/showNeedClosed', render);
+  }).catch(error => next(new BackError(error)));
+};
+
 Establishment_Need.Create = (req, res, next) => {
   const errors = validationResult(req);
 
