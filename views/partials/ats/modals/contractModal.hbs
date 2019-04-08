@@ -1,5 +1,11 @@
 <style>
-
+  .contractType{
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: white;
+  }
 </style>
 
 <div class="modal customModal" id="contractModal" tabindex="-1" role="dialog">
@@ -7,15 +13,13 @@
     <div class="modal-content">
       <div class="modal-body container-fluid">
         <div class="row text-center">
-          <div class="col-sm-4 part">
+          <div class="col-sm-4 leftPart">
             <div>
               <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
             </div>
             <div>
-              <p>Choisissez ici le type de contrat pour votre <b>candidature</b></p>
-            </div>
-            <div>
-              <p>Vous pourrez définir d'autres types de contract en <b>créant une nouvelle candidature</b> depuis votre espace personnel.</p>
+              <p>Choisissez ici le type de contrat pour votre <b>candidature</b>.</p>
+              <p>Vous pourrez définir d'autres types de contrat en créant une nouvelle candidature depuis votre espace personnel.</p>
             </div>
             <div class="footer-left">
               <div>
@@ -28,15 +32,9 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-8 part rightPart">
-            <div class="paraph">
-              <p>C'est votre toute première fois sur Mstaff ?</p>
-              <p>Postulez et créer votre compte candidat.</p>
-              <button class="btn btn-success">En tant que...</button>
-            </div>
-            <div class="paraph">
-              <p>Vous avez déjà un compte Mstaff et souhaitez ajouter cet établissement à votre dernier souhait ?</p>
-              <button class="btn btn-success">Postuler en 1 clic !</button>
+          <div class="col-sm-8 rightPart">
+            <div class="contractType">
+              <p>Que recherchez-vous ?</p>
             </div>
           </div>
         </div>

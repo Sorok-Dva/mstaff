@@ -1,5 +1,4 @@
 <style>
-
   .modal-backdrop~.modal-backdrop{
     background: none;
   }
@@ -18,7 +17,6 @@
     padding: 0;
     max-width: 100vw;
     width: 75vw;
-    /*height: 60vh;*/
     cursor: auto;
   }
   .customModal > .modal-dialog > .modal-content{
@@ -33,10 +31,17 @@
     height: 100%;
   }
 
+  p{
+    font-size: 2em;
+    font-family: 'Oxygen', sans-serif;
+  }
+
   .leftPart{
     display: flex;
     flex-direction: column;
     padding: 3%;
+    background-color: white;
+    height: 60vh;
   }
   .leftPart > div:nth-child(1){
     margin-bottom: 10%;
@@ -47,7 +52,13 @@
     justify-content: center;
     flex-grow: 1;
   }
+  .leftPart > div:nth-child(2) > p:nth-child(1){
+    line-height: 1.5 !important;
+    color: deepskyblue;
+    margin-bottom: 10px;
+  }
   .leftPart > div:nth-child(2) > p:nth-child(2){
+    font-size: 1.5em;
     color: black;
   }
   .leftPart > div:nth-child(3){
@@ -59,21 +70,21 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 7%;
-    height: 100%;
+    padding: 2%;
+    height: 60vh;
   }
   .paraph{
-    padding: 7%;
+    padding: 3%;
     border-bottom: 2px white solid;
-    /*flex-direction: column;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
   }
   .paraph:last-child{
     border-bottom: none;
-  }
-  .paraph p{
-    color: white;
   }
   .paraph button.btn.btn-success{
     font-size: 1.5em;
@@ -84,13 +95,6 @@
     border-radius: 300px;
     padding: 10px 15px;
     margin-top: 5%;
-  }
-
-  p {
-    font-size: 2em;
-    line-height: 1.5 !important;
-    color: deepskyblue;
-    font-family: 'Oxygen', sans-serif;
   }
 
 
@@ -110,12 +114,6 @@
     display: flex;
     justify-content: center;
   }
-
-
-
-
-
-
 </style>
 
 <div class="modal customModal" id="mainModal" tabindex="-1" role="dialog">
