@@ -182,21 +182,21 @@ let contractModalListener = () => {
       $('#serviceModal').modal('show');
   });
 
-  $('.from').datepicker();
-  $('.from').on('dp.change', (e) => {
-    if (!e.date)
-      delete application.start;
-    else
-      application.start = new Date(e.date);
-  });
-
-  $('.to').datepicker();
-  $('.to').on('dp.change', (e) => {
-    if (!e.date)
-      delete application.end;
-    else
-      application.end = new Date(e.date);
-  });
+  // $('.from').datepicker();
+  // $('.from').on('dp.change', (e) => {
+  //   if (!e.date)
+  //     delete application.start;
+  //   else
+  //     application.start = new Date(e.date);
+  // });
+  //
+  // $('.to').datepicker();
+  // $('.to').on('dp.change', (e) => {
+  //   if (!e.date)
+  //     delete application.end;
+  //   else
+  //     application.end = new Date(e.date);
+  // });
 };
 
 $(document).ready(function () {
