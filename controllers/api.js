@@ -8,6 +8,16 @@ module.exports = {
       res.status(200).send({ skills });
     }).catch(error => next(new BackError(error)));
   },
+  getFormationList: (req, res, next) => {
+    Models.Formation.findAll().then(formations => {
+      res.status(200).send({ formations });
+    }).catch( error => next(new BackError(error)));
+  },
+  getQualificationList: (req, res, next) => {
+    Models.Qualification .findAll().then(qualifications => {
+      res.status(200).send({ qualifications });
+    }).catch( error => next(new BackError(error)));
+  },
   getGroupsList: (req, res, next) => {
     Models.Groups.findAll().then(groups => {
       res.status(200).send({ groups });

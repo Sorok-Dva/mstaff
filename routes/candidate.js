@@ -98,4 +98,8 @@ router.get('/wish/edit/:id(\\d+)',
   HTTPValidation.CandidateController.getEditWish,
   User.Candidate.getEditWish);
 
+router.post('/profile/passwordReset',
+  Authentication.ensureAuthenticated,
+  User.Main.changePassword);
+
 module.exports = router;

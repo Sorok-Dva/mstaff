@@ -44,6 +44,7 @@ User.create = (req, res, next) => {
       postal_code: req.body.postal_code,
       town: req.body.town,
       phone: req.body.phone,
+      country: req.body.country,
       role: 'User',
       type: 'candidate',
       key: crypto.randomBytes(20).toString('hex')
@@ -139,6 +140,13 @@ User.comparePassword = (candidatePassword, hash, callback) => {
   });
 };
 
+User.changePassword = (req, res, next) => {
+
+  console.log('change password here');
+
+  return res.status(200).json({ status: 'ok' });
+
+};
 /**
  * [API] Verify Email Availability Method
  * @param req
