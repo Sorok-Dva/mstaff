@@ -177,7 +177,9 @@ Establishment_Need.notify = (req, i, needCandidate, need) => {
           template: 'candidate/needNotification',
           context: {
             needCandidate,
-            need: needObj
+            needObj: needObj,
+            need,
+            es: req.es
           }
         });
       });
