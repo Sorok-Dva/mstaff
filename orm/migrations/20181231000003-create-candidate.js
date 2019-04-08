@@ -45,7 +45,7 @@ module.exports = {
       },
       is_available: {
         type: Sequelize.BOOLEAN,
-        defaultValue: 0
+        defaultValue: true
       },
       createdAt: {
         allowNull: false,
