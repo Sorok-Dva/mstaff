@@ -7,9 +7,11 @@
 		</div>
 	</div>
 </div>
+<script src="/static/assets/js/fullcalendar.min.js"></script>
 <script>
 	let $calendar = $('#fullCalendar');
 
+	moment.locale('fr');
 	today = new Date();
 	y = today.getFullYear();
 	m = today.getMonth();
@@ -18,7 +20,7 @@
 	$calendar.fullCalendar({
 		viewRender: function(view, element) {
 			// We make sure that we activate the perfect scrollbar when the view isn't on Month
-			if (view.name != 'month'){
+			if (view.name !== 'month'){
 				$(element).find('.fc-scroller').perfectScrollbar();
 			}
 		},

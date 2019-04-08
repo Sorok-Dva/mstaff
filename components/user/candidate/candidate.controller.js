@@ -898,4 +898,8 @@ User_Candidate.updateTotalPercentage = (candidate, percentage) => {
   candidate.save();
 };
 
+User_Candidate.viewConferences = (req, res, next) => {
+  return res.render('candidates/calendar');
+};
+
 module.exports = User_Candidate;
