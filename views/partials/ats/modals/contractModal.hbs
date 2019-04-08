@@ -20,7 +20,7 @@
   }
   .contractChoice{
     width: 100%;
-    height: 20vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -75,6 +75,18 @@
                     <i class="fal fa-smile fa-5x"></i>
                     <p>Un stage</p>
                     <input type="radio" name="contractRadio">
+                </div>
+              </div>
+
+              <div id="internshipDate">
+                <div class="col-md-6"> <label for="start">Du *</label>
+                  <input id="start" name="start" type="text"
+                         class="form-control input-md from" required="" autocomplete="off">
+                </div>
+                <div class="col-md-6">
+                  <label for="end">Au *</label>
+                  <input id="end" name="end" type="text"
+                         class="form-control input-md to" autocomplete="off">
                 </div>
               </div>
             </div>
