@@ -1,0 +1,116 @@
+<style>
+  /* Demo info */
+  .section {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .section a {
+    color: white;
+    text-decoration: none;
+    font-weight: 300;
+  }
+
+  .section h4 {
+    font-weight: 400;
+  }
+
+  .section h4 a {
+    font-weight: 600;
+  }
+</style>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <button class="btn btn-warning pull-right" style="margin-left: 3px" onclick="closeNeed({{need.id}})">Clôturer le besoin</button>
+        <button class="btn btn-primary pull-right">Recherche de nouveaux candidats en cours</button> {{!--// aucun nouveau candidats--}}
+        <h4 class="card-title">{{need.name}}</h4>
+        <div class="label-container">
+          {{#if need.post}}
+            <div class="label label-default">{{need.post}}</div>
+          {{/if}}
+          {{#if need.contract_type}}
+            <div class="label label-warning">
+              {{need.contract_type}}
+            </div>
+          {{/if}}
+          {{#if need.start}}
+            <div class="label label-success ">
+              {{date need.start 'DD/MM/YYYY'}}
+              {{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}
+            </div>
+          {{/if}}
+        </div>
+      </div>
+      <div class="card-body" style="margin-top: -10px">
+        <div class="row">
+          <div class="col-md-12" style="padding: 25px;">
+            <div class="drag-container">
+              <ul class="drag-list">
+                <li class="drag-column drag-column-on-hold">
+                  <span class="drag-column-header">
+                    <h5>Pré-séléctionnés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="1">
+                    {{#each need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'pre-selected'}}
+                        {{> es/kanban-card data}}
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+                <li class="drag-column drag-column-in-progress">
+                  <span class="drag-column-header">
+                    <h5>Notifiés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="2">
+                    {{#each need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'notified'}}
+                        {{> es/kanban-card data}}
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+                <li class="drag-column drag-column-approved">
+                  <span class="drag-column-header">
+                    <h5>Sélectionnés</h5>
+                  </span>
+                  <ul class="drag-inner-list" id="3">
+                    {{#each need.candidates as |data|}}
+                      {{#ifCond data.status '===' 'selected'}}
+                        {{> es/kanban-card data }}
+                      {{/ifCond}}
+                    {{/each}}
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
+<script>
+  let feedback = {};
+  let showNotifyModalObject = {
+    id: 'showNotifyCandidateModal',
+    modal: 'es/showNotifyCandidate',
+    cantBeClose: true,
+    title: '<img style="height: 75px;" src="{{need.Establishment.logo}}" />',
+    Establishment: {
+      address: '{{need.Establishment.address}}',
+      postal_code: '{{need.Establishment.postal_code}}',
+      town: '{{need.Establishment.town}}',
+    },
+    Need: {
+      contractType: '{{need.contract_type}}',
+      start: '{{need.start}}',
+      end: '{{need.end}}'
+    }
+  };
+  let esId = {{need.es_id}};
+</script>
+<script src="/static/assets/dist/js/showNeed.es.min.js"></script>
