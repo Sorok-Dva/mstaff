@@ -23,16 +23,24 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
-        <button class="btn btn-warning pull-right" onclick="closeNeed({{need.id}})">Clôturer le besoin</button>
+        <button class="btn btn-warning pull-right" style="margin-left: 3px" onclick="closeNeed({{need.id}})">Clôturer le besoin</button>
+        <button class="btn btn-primary pull-right">Recherche de nouveaux candidats en cours</button> {{!--// aucun nouveau candidats--}}
         <h4 class="card-title">{{need.name}}</h4>
         <div class="label-container">
-          <div class="label label-default">{{need.post}}</div>
-          <div class="label label-warning">
-            {{need.contract_type}}
-          </div>
-          <div class="label label-success ">
-            {{date need.start 'DD/MM/YYYY'}}
-          </div>
+          {{#if need.post}}
+            <div class="label label-default">{{need.post}}</div>
+          {{/if}}
+          {{#if need.contract_type}}
+            <div class="label label-warning">
+              {{need.contract_type}}
+            </div>
+          {{/if}}
+          {{#if need.start}}
+            <div class="label label-success ">
+              {{date need.start 'DD/MM/YYYY'}}
+              {{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}
+            </div>
+          {{/if}}
         </div>
       </div>
       <div class="card-body" style="margin-top: -10px">
