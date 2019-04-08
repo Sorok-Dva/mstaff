@@ -76,10 +76,8 @@ Establishment_Application.getCVs = (req, res, next) => {
           '$Wish->Candidate.id$': {
             [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
           },
+          '$Establishment->ArchivedCandidates.added_by$': req.user.id
         },
-        where: {
-          'added_by': req.user.id
-        }
       }]
     }]
   };
@@ -173,9 +171,8 @@ Establishment_Application.getCandidates = (req, res, next) => {
           },
           '$Wish->Candidate.id$': {
             [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
-          }
-        }, where: {
-          'added_by': req.user.id
+          },
+          '$Establishment->ArchivedCandidates.added_by$': req.user.id
         }
       }]
     }]
