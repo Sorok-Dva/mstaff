@@ -46,7 +46,7 @@ Establishment_Need.ViewClosed = (req, res, next) => {
 Establishment_Need.View = (req, res, next) => {
   let render = { a: { main: 'needs' } };
   Models.Need.findOne({
-    where: { id: req.params.id, closed: false },
+    where: { id: req.params.id, es_id: req.session.currentEs, closed: false },
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -340,6 +340,53 @@ Establishment_Need.candidateAnswer = (req, res, next) => {
       return res.status(200).send('done');
     })
   })
+};
+
+Establishment_Need.getNewCandidates = (req, res, next) => {
+  Models.Need.findOne({
+    where: { id: req.params.id, es_id: req.params.esId, closed: false },
+    include: [{
+      model: Models.NeedCandidate,
+      as: 'candidates',
+    }, {
+      model: Models.Establishment,
+      required: true
+    }]
+  }).then(need => {
+    if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
+
+    let query = {
+      where: {
+      },
+      include: [{
+        model: Models.Application,
+        where: { es_id: req.params.esId, status: { [Op.not]: 'viewed' } },
+        required: true
+      }, {
+        model: Models.Candidate,
+        attributes: { exclude: ['updatedAt', 'createdAt'] },
+        required: true,
+        include: {
+          model: Models.User,
+          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+          on: {
+            '$Wish->Candidate.user_id$': {
+              [Op.col]: 'Wish->Candidate->User.id'
+            }
+          },
+          required: true
+        }
+      }]
+    };
+
+    if (!_.isNil(need.contract_type)) query.where.contract_type = need.contract_type;
+    if (!_.isNil(need.post)) query.where.posts = { [Op.regexp]: Sequelize.literal(`'(${need.post})'`) };
+
+    Models.Wish.findAll(query).then(wishes => {
+      //remove existing candidates of wishes object if they're in need.needCandidates
+      return res.send(wishes);
+    }).catch(error => next(new BackError(error)));
+  }).catch(error => next(new BackError(error)));
 };
 
 module.exports = Establishment_Need;
