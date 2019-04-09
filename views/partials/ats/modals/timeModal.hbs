@@ -1,0 +1,105 @@
+<style>
+  .bootstrap-datetimepicker-widget.dropdown-menu{
+    width: auto;
+  }
+  #internshipDate{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    display: none;
+  }
+  #internshipDate label, #internshipDate input{
+    color: white;
+    text-align: center;
+    font-size: 2em;
+    font-family: 'Oxygen', sans-serif;
+  }
+  #activity{
+    color: white;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  #timeType{
+    display: none;
+  }
+  #start, #end{
+    background-color: #00aced;
+  }
+
+
+</style>
+
+<div class="modal customModal" id="timeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body container-fluid">
+        <div class="row text-center">
+          <div class="col-sm-4 leftPart">
+            <div>
+              <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
+            </div>
+            <div>
+              <p>Choisissez ici vos <b>disponibilités</b>.</p>
+            </div>
+            <div class="footer-left">
+              <div>
+                <img src="/static/assets/images/logo-step2.jpg" alt="Mstaff">
+              </div>
+              <div class="footer-left-p">
+                <div>
+                  <p>"Vous savez ce que vous voulez, et ça se voit !"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8 rightPart">
+            <div id="internshipDate">
+              <div class="col-md-6">
+                <label for="start">Du :</label>
+                <input id="start" name="start" type="text"
+                class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#start">
+              </div>
+              <div class="col-md-6">
+                <label for="end">Au :</label>
+                <input id="end" name="end" type="text"
+                class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#end">
+              </div>
+            </div>
+            <div id="">
+
+            </div>
+            <div id="activity">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" id="full_time" name="full_time" type="checkbox">
+                <label class="form-check-label" for="full_time"><h3>Temps plein</h3></label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" id="part_time" name="part_time" type="checkbox">
+                <label class="form-check-label" for="part_time"><h3>Temps partiel</h3></label>
+              </div>
+            </div>
+            <div id="timeType">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" id="daytime" name="daytime" type="checkbox">
+                <label class="form-check-label" for="daytime"><h3>Jour</h3></label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" id="nighttime" name="nighttime" type="checkbox">
+                <label class="form-check-label" for="nighttime"><h3>Nuit</h3></label>
+              </div>
+            </div>
+              <div class="next-modal">
+                <i id="toStep4" class="fal fa-arrow-circle-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

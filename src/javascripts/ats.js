@@ -181,8 +181,26 @@ let contractModalListener = () => {
     if (!toNextModal)
       $('#serviceModal').modal('show');
   });
+  $('#cdiToggle, #vacationToggle, #internshipToggle').bootstrapToggle({
+    on: '',
+    off: '',
+    onstyle: 'success',
+    offstyle: 'secondary',
+    size: 'lg'
+  });
 
-  // $('.from').datepicker();
+};
+
+let timeModalListener = () => {
+  $('#start').datetimepicker({
+    format: 'D MMMM YYYY',
+    debug: true
+  });
+  $('#end').datetimepicker({
+    format: 'D MMMM YYYY',
+    debug: true
+  });
+
   // $('.from').on('dp.change', (e) => {
   //   if (!e.date)
   //     delete application.start;
@@ -190,7 +208,6 @@ let contractModalListener = () => {
   //     application.start = new Date(e.date);
   // });
   //
-  // $('.to').datepicker();
   // $('.to').on('dp.change', (e) => {
   //   if (!e.date)
   //     delete application.end;
@@ -205,5 +222,6 @@ $(document).ready(function () {
   postModalListener();
   serviceModalListener();
   contractModalListener();
+  timeModalListener();
 
 });

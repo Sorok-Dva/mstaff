@@ -1,11 +1,23 @@
 <style>
+  .btn{
+    border-radius: 20rem;
+    box-sizing: border-box;
+  }
+  .toggle.btn-lg{
+    min-width: 50px;
+    min-height: 20px;
+  }
+  .btn-group-lg > .btn, .btn-lg{
+    font-size: 1rem;
+  }
   .contractType{
     height: 60vh;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    color: white;
   }
   .contractType > div:nth-child(1){
     border-bottom: 2px white solid;
@@ -16,7 +28,6 @@
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    margin: 10% 0;
   }
   .contractChoice{
     width: 100%;
@@ -24,11 +35,14 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
     background: rgba(0,0,0,0.4);
     border: 1px solid #03A9F4;
     padding: 2%;
     margin: 0 4%;
   }
+
+
 </style>
 
 <div class="modal customModal" id="contractModal" tabindex="-1" role="dialog">
@@ -64,31 +78,21 @@
                   <div class="contractChoice">
                     <i class="fal fa-infinity fa-5x"></i>
                     <p>Un travail durable</p>
-                    <input type="radio" name="contractRadio" checked>
+                    <input id="cdiToggle" type="checkbox">
                   </div>
                   <div class="contractChoice">
                     <i class="fal fa-calendar-alt fa-5x"></i>
                     <p>Des missions ponctuelles</p>
-                    <input type="radio" name="contractRadio">
+                    <input id="vacationToggle" type="checkbox">
                   </div>
                   <div class="contractChoice">
                     <i class="fal fa-smile fa-5x"></i>
                     <p>Un stage</p>
-                    <input type="radio" name="contractRadio">
+                    <input id="internshipToggle" type="checkbox">
                 </div>
               </div>
-
-              <div id="internshipDate">
-
-                <div class="col-md-6"> <label for="start">Du *</label>
-                  <input id="start" name="start" type="date"
-                         class="form-control input-md from" required="" autocomplete="off">
-                </div>
-                <div class="col-md-6">
-                  <label for="end">Au *</label>
-                  <input id="end" name="end" type="date"
-                         class="form-control input-md to" autocomplete="off">
-                </div>
+              <div class="next-modal">
+                <i id="toStep4" class="fal fa-arrow-circle-right"></i>
               </div>
             </div>
           </div>
