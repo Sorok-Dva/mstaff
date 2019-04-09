@@ -90,8 +90,9 @@ Establishment_Application.getCVs = (req, res, next) => {
     return Models.Formation.findAll();
   }).then(formations => {
     render.formations = formations;
-    Models.Application.findAll(query).then(applications => {
-      render.candidates = applications;
+    Models.Application.findAndCountAll(query).then(applications => {
+      render.candidates = applications.rows;
+      render.candidatesCount = applications.count;
       return res.render('establishments/addNeed', render);
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
