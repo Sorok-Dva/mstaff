@@ -1,27 +1,38 @@
 <style>
-  .darkModal > .modal-dialog > .modal-content{
-    background-color: transparent;
-    box-shadow: none;
-    border: none;
+  .ui-autocomplete{
+  z-index: 9999 !important;
+  background: transparent;
+  border: none;
   }
-  .darkModal > .modal-dialog > .modal-content > .modal-body{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+  .ui-menu-item-wrapper{
+      font-size: 1.5em;
+      }
+  .ui-menu-item-wrapper.ui-state-active{
+      background: transparent;
+      border: none;
+      color: white;
+      }
+  .ui-menu-item{
+      margin-bottom: 10px !important;
+      }
+  .ui-menu-item:first-child{
+      margin-top: 30px !important;
+      }
+  .ui-widget.ui-widget-content{
+      border: none;
+      color: white;
+      }
   .selectPost{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 50%;
+    width: 100%;
+    height: 100%;
   }
   .selectParaph > p{
     font-size: 3em;
     color: white;
   }
   .select-holder{
-    border-bottom: 2px solid white;
+    height: 6%;
+    font-size: 2em;
   }
   .select-holder > i{
     font-size: 2.2em;
@@ -30,43 +41,15 @@
   }
   .select-holder > i:last-child{
     display: none;
-    margin-left: 5%;
   }
-  .selectPost > div{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 3%;
-  }
-  .customInput{
+  #InputPosts{
     width: 75%;
-    font-size: 3em;
-    color: white;
-    background: transparent;
-    border: none;
-  }
-  .ui-autocomplete{
-    z-index: 9999 !important;
-    background: transparent;
-    border: none;
-  }
-  .ui-menu-item-wrapper{
-    font-size: 1.5em;
-  }
-  .ui-menu-item-wrapper.ui-state-active{
-    background: transparent;
-    border: none;
-    color: white;
-  }
-  .ui-menu-item{
-    margin-bottom: 10px !important;
-  }
-  .ui-menu-item:first-child{
-    margin-top: 30px !important;
-  }
-  .ui-widget.ui-widget-content{
-    border: none;
+    height: 100%;
+    background-color: #00aced;
+    border-bottom: 2px solid white;
+    border-top: none;
+    border-left: none;
+    border-right: none;
     color: white;
   }
   .next-modal{
@@ -85,21 +68,38 @@
   }
 </style>
 
-<div class="modal customModal darkModal" id="postModal" tabindex="-1" role="dialog">
+<div class="modal customModal" id="postModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-body">
-        <div class="selectPost">
-          <div class="selectParaph">
-            <p>Vous souhaitez postuler en tant que...</p>
+      <div class="modal-body container-fluid">
+        <div class="row text-center">
+          <div class="col-sm-4 leftPart">
+            <div>
+              <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
+            </div>
+            <div>
+              <p>Indiquez ici le <b>poste</b> ainsi que le ou les <b>services</b> ou vous souhaitez postuler.</p>
+            </div>
+            <div class="footer-left">
+              <div>
+                <img src="/static/assets/images/logo-step1.jpg" alt="Mstaff">
+              </div>
+              <div class="footer-left-p">
+                <div>
+                  <p>"Sans doute la tête que vous venez de faire en arrivant sur cet écran."</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="select-holder">
-            <i class="fal fa-search"></i>
-            <input class="customInput" id="InputPosts">
-            <i class="fal fa-check"></i>
-          </div>
-          <div class="next-modal">
-            <i id="toStep2" class="fal fa-arrow-circle-right"></i>
+          <div class="col-sm-8 rightPart">
+            <div class="selectPost">
+              <div class="select-holder">
+                <input class="customInput" id="InputPosts" placeholder="Poste ?">
+              </div>
+              <div class="next-modal">
+                <i id="toStep2" class="fal fa-arrow-circle-right"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>
