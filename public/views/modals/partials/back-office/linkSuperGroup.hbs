@@ -1,7 +1,7 @@
 <script src="/static/assets/js/bootstrap-selectpicker.js"></script>
 <div class="modal-body">
   <div class="form-group">
-    <select id="groupsID" class="selectpicker" multiple data-live-search="true">
+    <select id="groupsID" class="selectpicker col-md-12" multiple data-live-search="true">
     </select>
   </div>
 </div>
@@ -17,6 +17,13 @@
       }));
       $('#groupsID').selectpicker('refresh');
     });
+    var Groupoptions = $("#groupsID option");
+    Groupoptions.sort(function(a,b) {
+      if (a.text > b.text) return 1;
+      else if (a.text < b.text) return -1;
+      else return 0;
+    });
+    $("#groupsID").empty().append(Groupoptions).selectpicker("refresh");
   });
   $('#groupsID').selectpicker();
 
