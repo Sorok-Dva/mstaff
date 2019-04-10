@@ -47,12 +47,15 @@
     }
   };
 </script>
+<div class="col-md-12">
+  <h4 class="text-center">Vous avez accès à <span class="label label-primary">{{candidatesCount.0.count}}</span> professionnels au sein de votre CVthèque.</h4>
+</div>
 <div class="row">
   <div class="col-md-offset-2 col-md-8 col-sm-12">
     <div class="form-group">
       <div class="searchbar-wrapper">
         <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
-          <input placeholder="Indiquez le profil recherché" style="border: 0px" id="post" type="text"
+          <input placeholder="Indiquez un type de poste" style="border: 0px" id="post" type="text"
                  class="form-control pull-left" autocomplete="off">
           <div>
             <button onclick="resetSearch()" id="resetSearch"

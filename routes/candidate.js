@@ -98,4 +98,12 @@ router.get('/wish/edit/:id(\\d+)',
   HTTPValidation.CandidateController.getEditWish,
   User.Candidate.getEditWish);
 
+/**
+ * @Route('/conferences') GET;
+ * Show Calendar page.
+ */
+router.get('/conferences',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewConferences);
+
 module.exports = router;

@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
+const moment = require('moment');
 const httpStatus = require('http-status');
 
 const sequelize = require(`${__}/bin/sequelize`);
@@ -45,7 +46,7 @@ Establishment_Need.ViewClosed = (req, res, next) => {
 Establishment_Need.View = (req, res, next) => {
   let render = { a: { main: 'needs' } };
   Models.Need.findOne({
-    where: { id: req.params.id, closed: false },
+    where: { id: req.params.id, es_id: req.session.currentEs, closed: false },
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -93,6 +94,57 @@ Establishment_Need.View = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+Establishment_Need.ViewHistory = (req, res, next) => {
+  let render = { a: { main: 'history' } };
+  Models.Need.findOne({
+    where: { id: req.params.id, closed: true },
+    include: [{
+      model: Models.NeedCandidate,
+      as: 'candidates',
+      required: true,
+      include: {
+        model: Models.Candidate,
+        required: false,
+        include: [{
+          model: Models.User,
+          attributes: ['id', 'firstName', 'lastName', 'birthday'],
+          on: {
+            '$candidates->Candidate.user_id$': {
+              [Op.col]: 'candidates->Candidate->User.id'
+            }
+          },
+          required: false
+        }, {
+          model: Models.Application,
+          attributes: ['id', 'wish_id', 'candidate_id'],
+          as: 'applications',
+          on: {
+            '$candidates->Candidate.id$': {
+              [Op.col]: 'candidates->Candidate->applications.candidate_id'
+            }
+          },
+          include: {
+            model: Models.Wish,
+            on: {
+              '$candidates->Candidate.id$': {
+                [Op.col]: 'candidates->Candidate->applications->Wish.candidate_id'
+              }
+            },
+          },
+          required: true
+        }]
+      }
+    }, {
+      model: Models.Establishment,
+      required: true
+    }]
+  }).then(need => {
+    if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
+    render.need = need;
+    return res.render('establishments/showNeedClosed', render);
+  }).catch(error => next(new BackError(error)));
+};
+
 Establishment_Need.Create = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -119,35 +171,68 @@ Establishment_Need.Create = (req, res, next) => {
           candidate_id: req.body.selectedCandidates[i],
           notified: req.body.notifyCandidates,
           status: req.body.notifyCandidates === 'true' ? 'notified' : 'pre-selected'
+        }).then(needCandidate => {
+          if (req.body.notifyCandidates === 'true') {
+            Establishment_Need.notify(req, i, needCandidate, need);
+          }
         });
-        if (req.body.notifyCandidates === 'true') {
-          Establishment_Need.notify(req, i);
-        }
       }
     }
     res.status(201).send(need);
   });
 };
 
-Establishment_Need.notify = (req, i) => {
+Establishment_Need.notify = (req, i, needCandidate, need) => {
   Models.Notification.create({
     fromUser: req.user.id,
     fromEs: req.params.esId,
     to: req.body.selectedCandidates[i],
     subject: 'Un établissement est intéressé par votre profil !',
     title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
-    content: '',
-    image: '',
-    message: req.body.message
+    image: '/static/assets/images/happy.jpg',
+    opts: {
+      type: 'NeedNotifyCandidate',
+      details: {
+        contract: need.contract_type,
+        post: need.post,
+        service: need.service,
+        start: need.start,
+        end: need.end
+      },
+      message: req.body.message,
+      actions: [{
+        'type': 'success',
+        'text': 'Disponible',
+        'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="available"`
+      }, {
+        'type': 'danger',
+        'text': 'Indisponible',
+        'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="unavailable"`
+      }],
+      needCandidateId: needCandidate.id
+    }
   }).then(notification => {
-    Models.User.findOne({ where: { id: req.body.selectedCandidates[i] } }).then(user => {
-      mailer.sendEmail({
-        to: user.email,
-        subject: 'Un établissement est intéressé par votre profil !',
-        template: 'candidate/es_notified',
-        context: {
-          notification,
-        }
+    needCandidate.status = 'notified';
+    needCandidate.availability = 'pending';
+    needCandidate.notified = true;
+    needCandidate.save().then(result => {
+      moment.locale('fr');
+      let needObj = {
+        start: _.isNil(need.start) ? null : moment(need.start).format('dddd Do MMMM YYYY'),
+        end: _.isNil(need.end) ? null : moment(need.end).format('dddd Do MMMM YYYY'),
+      };
+      Models.User.findOne({ where: { id: req.body.selectedCandidates[i] } }).then(user => {
+        mailer.sendEmail({
+          to: user.email,
+          subject: 'Un établissement a consulté votre profil.',
+          template: 'candidate/needNotification',
+          context: {
+            needCandidate,
+            needObj: needObj,
+            need,
+            es: req.es
+          }
+        });
       });
     })
   });
@@ -255,6 +340,53 @@ Establishment_Need.candidateAnswer = (req, res, next) => {
       return res.status(200).send('done');
     })
   })
+};
+
+Establishment_Need.getNewCandidates = (req, res, next) => {
+  Models.Need.findOne({
+    where: { id: req.params.id, es_id: req.params.esId, closed: false },
+    include: [{
+      model: Models.NeedCandidate,
+      as: 'candidates',
+    }, {
+      model: Models.Establishment,
+      required: true
+    }]
+  }).then(need => {
+    if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
+
+    let query = {
+      where: {
+      },
+      include: [{
+        model: Models.Application,
+        where: { es_id: req.params.esId, status: { [Op.not]: 'viewed' } },
+        required: true
+      }, {
+        model: Models.Candidate,
+        attributes: { exclude: ['updatedAt', 'createdAt'] },
+        required: true,
+        include: {
+          model: Models.User,
+          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+          on: {
+            '$Wish->Candidate.user_id$': {
+              [Op.col]: 'Wish->Candidate->User.id'
+            }
+          },
+          required: true
+        }
+      }]
+    };
+
+    if (!_.isNil(need.contract_type)) query.where.contract_type = need.contract_type;
+    if (!_.isNil(need.post)) query.where.posts = { [Op.regexp]: Sequelize.literal(`'(${need.post})'`) };
+
+    Models.Wish.findAll(query).then(wishes => {
+      //remove existing candidates of wishes object if they're in need.needCandidates
+      return res.send(wishes);
+    }).catch(error => next(new BackError(error)));
+  }).catch(error => next(new BackError(error)));
 };
 
 module.exports = Establishment_Need;

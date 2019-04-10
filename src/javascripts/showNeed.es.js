@@ -155,4 +155,8 @@ $(document).ready(() => {
       });
     } else removeCandidate(needId, cID);
   });
+
+  $.get(`/api/es/${esId}/need/${nId}/newCandidates`, (data) => {
+    console.log(data);
+  }).catch(errors => errorsHandler(errors))
 });

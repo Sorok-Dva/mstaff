@@ -87,7 +87,7 @@
                 message: `Vous pouvez maintenant intéragir sur ce compte.`
               });
             }
-          });
+          }).catch(error => errorsHandler(error));
         } else {
           $('button#btnRemoveRO').prop('disabled', false);
           $('#removeROPassword').addClass('error').val('');
@@ -100,7 +100,7 @@
             });
           }
         }
-      });
+      }).catch(error => errorsHandler(error));
     };
     {{/if}}
 </script>

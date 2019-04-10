@@ -22,10 +22,14 @@
               {{#if this.need.post}}
                 <span style="font-size:17px"><span style="color:#A9A9A9">{{this.need.post}}</span></span><br>
               {{/if}}
-              <span style="font-size:16px">CDI à partir du 22 avril 2018<br>
-Clinique Sainte-Geneviève<br>
-<br>
-Cela signifie que l'établissement a trouvé un soignant.&nbsp;</span></p>
+              {{#if this.need.contract_type}}
+                <span style="font-size:16px">{{this.need.contract_type}} {{#if this.needObj.start}}à partir du {{this.needObj.start}}{{/if}}
+                  {{#if this.needObj.end}}jusqu'au {{this.needObj.end}}{{/if}}<br></span>
+              {{else}}
+                <span style="font-size:16px">{{#if this.needObj.start}}À partir du {{this.needObj.start}}{{/if}}
+                  {{#if this.needObj.end}} Jusqu'au {{this.needObj.end}}{{/if}}<br></span>
+              {{/if}}
+              {{this.es.name}}</p>
 
           </td>
         </tr>
