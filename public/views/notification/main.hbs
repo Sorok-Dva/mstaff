@@ -83,7 +83,7 @@
             En ligne, depuis le lien visio <br>
             <a href="https://meet.jit.si/mstaff-session-{{@root.opts.details.conference.key}}" target="_blank">https://meet.jit.si/mstaff-session-{{@root.opts.details.conference.key}}</a>
           {{else}}
-            {{@root.opts.details.address}}
+            {{@root.opts.details.es.name}}<br>{{@root.opts.details.es.address}} {{@root.opts.details.es.town}}
           {{/ifCond}}
         </span>
         <h5>Pour quel poste ?</h5>
