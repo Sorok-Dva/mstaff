@@ -19,12 +19,12 @@ Conference.create = (req, res, next) => {
         user_id: req.user.id,
         need_id: req.params.id,
         candidate_id: req.params.candidateId,
+        status: 'waiting',
+        type: req.body.type,
       },
       defaults: {
-        type: req.body.type,
         date: req.body.date,
         time: req.body.time,
-        status: 'waiting',
         key: Math.random().toString(36).substring(7)
       }
     }).spread((conference, created) => {
