@@ -19,10 +19,8 @@ const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
 
-const ServerController = require('../controllers/server');
+const ServerController = require('../components/server/server');
 const EstablishmentController = require('../controllers/establishment');
-
-
 
 let sessionStore = new MySQLStore({
   host: config.host,

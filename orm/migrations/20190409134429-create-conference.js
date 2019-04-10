@@ -1,16 +1,12 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Needs', {
+    return queryInterface.createTable('Conferences', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
       },
       es_id: {
         type: Sequelize.INTEGER,
@@ -22,7 +18,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      createdBy: {
+      user_id: {
         type: Sequelize.INTEGER,
         allowNulL: false,
         references: {
@@ -30,21 +26,28 @@ module.exports = {
           key: 'id'
         }
       },
-      post: {
-        type: Sequelize.STRING
+      candidate_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Candidates',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      contract_type: {
-        type: Sequelize.STRING
+      type: {
+        type: Sequelize.ENUM,
+        values: ['online', 'physical']
       },
-      start: {
+      date: {
         type: Sequelize.DATE
       },
-      end: {
-        type: Sequelize.DATE
+      time: {
+        type: Sequelize.TIME
       },
-      closed: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+      status: {
+        type: Sequelize.ENUM,
+        values: ['waiting', 'accepted', 'refused', 'expired']
       },
       createdAt: {
         allowNull: false,
@@ -59,6 +62,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Needs');
+    return queryInterface.dropTable('Conferences');
   }
 };

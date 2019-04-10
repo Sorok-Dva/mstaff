@@ -102,5 +102,12 @@ router.post('/profile/passwordReset',
   Authentication.ensureAuthenticated,
   //HTTPValidation.CandidateController.checkPassEdit,
   User.Main.changePassword);
+/**
+ * @Route('/conferences') GET;
+ * Show Calendar page.
+ */
+router.get('/conferences',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewConferences);
 
 module.exports = router;

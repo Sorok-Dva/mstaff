@@ -75,7 +75,8 @@ Establishment_Application.getCVs = (req, res, next) => {
           },
           '$Wish->Candidate.id$': {
             [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
-          }
+          },
+          '$Establishment->ArchivedCandidates.added_by$': req.user.id
         },
       }]
     }]
@@ -89,8 +90,9 @@ Establishment_Application.getCVs = (req, res, next) => {
     return Models.Formation.findAll();
   }).then(formations => {
     render.formations = formations;
-    Models.Application.findAll(query).then(applications => {
-      render.candidates = applications;
+    Models.Application.findAndCountAll(query).then(applications => {
+      render.candidates = applications.rows;
+      render.candidatesCount = applications.count;
       return res.render('establishments/addNeed', render);
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
@@ -170,8 +172,9 @@ Establishment_Application.getCandidates = (req, res, next) => {
           },
           '$Wish->Candidate.id$': {
             [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
-          }
-        },
+          },
+          '$Establishment->ArchivedCandidates.added_by$': req.user.id
+        }
       }]
     }]
   };

@@ -816,6 +816,7 @@ User_Candidate.updatePercentage = (user, type) => {
   if (_.isNil(type)) return false;
   Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
     let { percentage } = candidate;
+    if (_.isNil(percentage)) percentage = {};
     switch (type) {
       case 'identity':
         if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };
@@ -896,6 +897,11 @@ User_Candidate.updateTotalPercentage = (candidate, percentage) => {
   percentage.total = _.sum(scores);
   candidate.percentage = percentage;
   candidate.save();
+};
+
+User_Candidate.viewConferences = (req, res, next) => {
+  let a = { main: 'conferences' };
+  return res.render('candidates/calendar', { a });
 };
 
 module.exports = User_Candidate;

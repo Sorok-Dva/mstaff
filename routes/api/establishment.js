@@ -18,6 +18,11 @@ router.post('/:esId(\\d+)/addNeed',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Establishment.Need.Create);
 
+router.get('/:esId(\\d+)/need/:id(\\d+)/newCandidates',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Need.getNewCandidates
+);
+
 router.post('/:esId(\\d+)/need/:id(\\d+)/:action/candidate/:candidateId(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Controller.apiNeedCandidate
