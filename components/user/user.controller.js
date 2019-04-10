@@ -141,20 +141,19 @@ User.comparePassword = (candidatePassword, hash, callback) => {
 };
 
 User.changePassword = (req, res, next) => {
-  var oldpass = req.body.oldPassword;
-  var newpass = req.body.newPassword;
-  var newpasscheck = req.body.newPasswordVerification;
+  let oldpass = req.body.oldPassword;
+  let newpass = req.body.newPassword;
+  let newpasscheck = req.body.newPasswordVerification;
 
   Models.User.findOne({ where: { id: req.user.id } }).then( user => {
-    User.comparePassword(oldpass, user.password, function (err, res) {
-      if (res) {
+    User.comparePassword(oldpass, user.password, function (err, match) {
+      if (match) {
         if (newpass === newpasscheck) {
           if (oldpass === newpass) {
             return res.status(400).json({ status: 'new password cannot be your old password' })
           }
           bcrypt.hash(newpass, 10).then(hash => {
             user.password = hash;
-            user.key = crypto.randomBytes(20).toString('hex');
             user.save();
           });
           return res.status(200).json({ status: 'ok' });
