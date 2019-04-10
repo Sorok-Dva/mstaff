@@ -50,9 +50,6 @@ module.exports = {
       date: {
         type: Sequelize.DATE
       },
-      time: {
-        type: Sequelize.TIME
-      },
       status: {
         type: Sequelize.ENUM,
         values: ['waiting', 'accepted', 'refused', 'expired']

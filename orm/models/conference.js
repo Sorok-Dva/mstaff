@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     candidate_id: DataTypes.INTEGER,
     type: DataTypes.STRING,
     date: DataTypes.DATE,
-    time: DataTypes.TIME,
     status: DataTypes.STRING,
     key: DataTypes.STRING
   }, {});
