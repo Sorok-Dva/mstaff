@@ -26,13 +26,12 @@
     $("#establishmentsID").empty().append(ESoptions).selectpicker("refresh");
   });
   var eslinkrow = {{this.group.id}};
+  var preselecteds = [];
   $.get('/api/eslinks/' + eslinkrow, function(data) {
     $.each(data.linkes, function (i, linkes) {
-      $('select[name=selectName]').val(linkes.id_es);
-      $('#establishmentsID').selectpicker('refresh');
-      console.log(linkes.id_es + 'ceci est le link done');
+      preselecteds.push(linkes.id_es);
     });
-    console.log(data.linkes);
+    $('select[name=selectName]').val(preselecteds);
     $('#establishmentsID').selectpicker('refresh');
   });
   $('#establishmentsID').selectpicker();
