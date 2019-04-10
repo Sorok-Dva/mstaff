@@ -18,6 +18,14 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
+      need_id: {
+        type: Sequelize.INTEGER,
+        allowNulL: false,
+        references: {
+          model: 'Needs',
+          key: 'id'
+        }
+      },
       user_id: {
         type: Sequelize.INTEGER,
         allowNulL: false,
@@ -48,6 +56,9 @@ module.exports = {
       status: {
         type: Sequelize.ENUM,
         values: ['waiting', 'accepted', 'refused', 'expired']
+      },
+      key: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
