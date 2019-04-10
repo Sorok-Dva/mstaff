@@ -42,12 +42,14 @@
     }).on('dp.change', (e) => {
       if (!$('button#sendInvitation').is(':visible')) $('button#sendInvitation').show();
       let d = new Date(e.date);
-      timeType.timeStart = `${d.getHours()}:${d.getMinutes()}:00`
+      timeType.dateStart.setHours(d.getHours());
+      timeType.dateStart.setMinutes(d.getMinutes());
+      timeType.dateStart.setSeconds(0);
     });
 
     $('button#sendInvitation').on('click', function() {
       $.post(`/api/es/${esId}/need/{{this.needId}}/candidate/{{this.cID}}/conference`, {
-        _csrf, date: timeType.dateStart, time: timeType.timeStart, type: '{{this.type}}'
+        _csrf, date: timeType.dateStart, type: '{{this.type}}'
       }, data => {
         if (data.id) {
           $('#createConferenceModal').modal('hide');
