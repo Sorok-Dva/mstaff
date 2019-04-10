@@ -48,7 +48,7 @@ Mailer.notifyCandidatesNeedSelect = (email, context) => {
 
 Mailer.notifyCandidatesNeedConference = (email, context) => {
   let mailObject = {
-    subject: 'Vous avez été sélectionné pour l\'offre suivante',
+    subject: 'Un entretien vous a été proposé !',
     template: 'candidate/needConference-' + context.conference.type
   };
   mailer.sendEmail({
