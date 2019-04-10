@@ -100,6 +100,7 @@ router.get('/wish/edit/:id(\\d+)',
 
 router.post('/profile/passwordReset',
   Authentication.ensureAuthenticated,
+  //HTTPValidation.CandidateController.checkPassEdit,
   User.Main.changePassword);
 
 module.exports = router;
