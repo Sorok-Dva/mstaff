@@ -14,7 +14,7 @@ module.exports = {
     }).catch(error => next(new BackError(error)));
   },
   getGroupLinksList: (req, res, next) => {
-    Models.GroupsSuperGroups.findAll().then(linkgroup => {
+    Models.GroupsSuperGroups.findAll({ where: { id_super_group: req.params.id } }).then(linkgroup => {
       res.status(200).send({ linkgroup });
     }).catch(error => next(new BackError(error)));
   },
