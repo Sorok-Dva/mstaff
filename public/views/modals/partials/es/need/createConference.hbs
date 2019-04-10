@@ -1,0 +1,70 @@
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="modal-body">
+        <div class="row" style="display: flex; align-items: center; justify-content: center">
+          <div class="col-md-12">
+            <div id="datePicker-start"></div>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-12">
+            <div id="dateTimePicker-start" style="text-align: center;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="sendInvitation" class="btn btn-info pull-right" style="display: none;margin-bottom: 5px;">
+    Envoyer l'invitation
+  </button>
+</div>
+<script type="text/javascript">
+  $(function () {
+    let timeType = { dateStart: new Date() };
+
+    $('#datePicker-start').datetimepicker({
+      inline: true,
+      minDate: new moment(),
+      useCurrent: false,
+      format: 'DD/MM/YYYY'
+    }).on('dp.change', (e) => {
+      timeType.dateStart = new Date(e.date)
+    });
+
+    $('#dateTimePicker-start').datetimepicker({
+      inline: true,
+      format: 'HH:mm',
+      useCurrent: false,
+    }).on('dp.change', (e) => {
+      if (!$('button#sendInvitation').is(':visible')) $('button#sendInvitation').show();
+      let d = new Date(e.date);
+      timeType.timeStart = `${d.getHours()}:${d.getMinutes()}:00`
+    });
+
+    $('button#sendInvitation').on('click', function() {
+      $.post(`/api/es/${esId}/need/{{this.needId}}/candidate/{{this.cID}}/conference`, {
+        _csrf, date: timeType.dateStart, time: timeType.timeStart, type: '{{this.type}}'
+      }, data => {
+        if (data.id) {
+          $('#createConferenceModal').modal('hide');
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Invitation à l\'entretien envoyé avec succès au candidat.',
+          });
+        } else if (data.status === 'Already exists') {
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Impossible d\'envoyer cette invitation.' ,
+            message: `Vous avez déjà un entretien d'enregistrer par rapport à ce besoin avec ce candidat.`
+          });
+        }
+      }).catch(errors => errorsHandler(errors));
+    });
+  });
+</script>
