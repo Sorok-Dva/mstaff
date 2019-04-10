@@ -1,7 +1,7 @@
 <script src="/static/assets/js/bootstrap-selectpicker.js"></script>
 <div class="modal-body">
   <div class="form-group">
-    <select id="establishmentsID" class="selectpicker col-md-12" multiple data-live-search="true">
+    <select id="establishmentsID" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true" data-live-search="true">
     </select>
   </div>
 </div>
@@ -24,6 +24,16 @@
       else return 0;
     });
     $("#establishmentsID").empty().append(ESoptions).selectpicker("refresh");
+  });
+  var eslinkrow = {{this.group.id}};
+  $.get('/api/eslinks/' + eslinkrow, function(data) {
+    $.each(data.linkes, function (i, linkes) {
+      $('select[name=selectName]').val(linkes.id_es);
+      $('#establishmentsID').selectpicker('refresh');
+      console.log(linkes.id_es + 'ceci est le link done');
+    });
+    console.log(data.linkes);
+    $('#establishmentsID').selectpicker('refresh');
   });
   $('#establishmentsID').selectpicker();
 

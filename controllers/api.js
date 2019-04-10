@@ -8,6 +8,16 @@ module.exports = {
       res.status(200).send({ skills });
     }).catch(error => next(new BackError(error)));
   },
+  getEsLinksList: (req, res, next) => {
+    Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(linkes => {
+      res.status(200).send({ linkes });
+    }).catch(error => next(new BackError(error)));
+  },
+  getGroupLinksList: (req, res, next) => {
+    Models.GroupsSuperGroups.findAll().then(linkgroup => {
+      res.status(200).send({ linkgroup });
+    }).catch(error => next(new BackError(error)));
+  },
   getFormationList: (req, res, next) => {
     Models.Formation.findAll().then(formations => {
       res.status(200).send({ formations });
