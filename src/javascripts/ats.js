@@ -35,6 +35,7 @@ let createCurrentPostList = (allPosts) => {
 let createCurrentServiceList = (currentServices) => {
   $('#InputServices').select2({
     data: currentServices.sort(),
+    placeholder: "Service(s) ?",
     minimumInputLength: 3,
     minimumResultsForSearch: Infinity
   });
@@ -86,10 +87,10 @@ let verifyInputPost = () => {
 
 let verifyStep = (step) => {
   switch (step) {
-    case 1:
+    case 'postModal':
       return verifyInputPost();
       break;
-    case 2:
+    case 'serviceModal':
       return verifyInputServices();
       break;
   }
@@ -97,14 +98,14 @@ let verifyStep = (step) => {
 
 let nextStepFrom = (currentStep) => {
     switch (currentStep) {
-      case 0:
+      case 'mainModal':
         $('#mainModal').modal('hide');
         $('#postModal').modal('show');
         if (postsArray.length === 0)
           getPosts().then(posts => createCurrentPostList(posts));
         break;
 
-      case 1:
+      case 'postModal':
         if (verifyStep(currentStep)) {
           application.post = $('#InputPosts').val();
           toNextModal = true;
@@ -116,7 +117,7 @@ let nextStepFrom = (currentStep) => {
         toNextModal = false;
         break;
 
-      case 2:
+      case 'serviceModal':
         if (verifyStep(currentStep)) {
           saveServices();
           toNextModal = true;
@@ -136,7 +137,7 @@ let nextStepFrom = (currentStep) => {
 
 let mainModalListener = () => {
   $('#toStep1').on('click', () => {
-    nextStepFrom(0);
+    nextStepFrom('mainModal');
   });
 };
 
@@ -147,15 +148,16 @@ let postModalListener = () => {
   });
 
   $('#toStep2').on('click', () => {
-    nextStepFrom(1);
+    nextStepFrom('postModal');
   });
 
   $('#InputPosts').on( 'keyup autocompleteclose', () => {
     if (verifyInputPost()){
-      $('.fa-check').show();
+      let post = $('#InputPosts').val();
       $('#toStep2').show();
+      let Category = allPosts.find(item => item.name === post).categoriesPS_id;
+      generateServiceListByCategory(Category);
     } else {
-      $('.fa-check').hide();
       $('#toStep2').hide();
     }
   });
@@ -172,7 +174,7 @@ let serviceModalListener = () => {
   });
 
   $('#toStep3').on('click', () => {
-    nextStepFrom(2);
+    nextStepFrom('serviceModal');
   });
 };
 
