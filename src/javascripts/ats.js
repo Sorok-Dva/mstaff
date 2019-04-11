@@ -3,6 +3,8 @@ let application = {};
 let toNextModal = false;
 let allPosts, allServices;
 
+// Retrieval datas into BDD
+
 let getPosts = () => {
   return new Promise( resolve => {
     $.get('/posts/all', function(posts) {
@@ -20,6 +22,8 @@ let getServices = () => {
     });
   });
 };
+
+// Initialize Lists
 
 let createCurrentPostList = (allPosts) => {
   allPosts.forEach( post => {
@@ -41,6 +45,8 @@ let createCurrentServiceList = (currentServices) => {
   });
 };
 
+// Filter and Generate Lists
+
 let filterCurrentServices = (allServices ,category) => {
   let currentServices = [];
   allServices.forEach( service => {
@@ -61,22 +67,8 @@ let generateServiceListByCategory = (category) => {
   });
 };
 
-let saveServices = () => {
-  let services = $('#InputServices').select2('data');
 
-  application.services = [];
-  services.forEach( service => {
-    application.services.push(service.text);
-  });
-};
-
-let verifyInputServices = function(){
-  let services = $('#InputServices').select2('data');
-  if (services.length !== 0)
-    return true;
-  else
-    return false;
-};
+// Verification before next step
 
 let verifyInputPost = () => {
   if (postsArray.includes($('#InputPosts').val()))
@@ -90,13 +82,24 @@ let verifyStep = (step) => {
     case 'postModal':
       return verifyInputPost();
       break;
-    case 'serviceModal':
-      return verifyInputServices();
-      break;
   }
 };
 
+// Save datas
+
+let saveServices = () => {
+  let services = $('#InputServices').select2('data');
+
+  application.services = [];
+  services.forEach( service => {
+    application.services.push(service.text);
+  });
+};
+
+// Logic to next step
+
 let nextStepFrom = (currentStep) => {
+  console.log(application);
     switch (currentStep) {
       case 'mainModal':
         $('#mainModal').modal('hide');
@@ -108,25 +111,15 @@ let nextStepFrom = (currentStep) => {
       case 'postModal':
         if (verifyStep(currentStep)) {
           application.post = $('#InputPosts').val();
-          toNextModal = true;
-          $('#postModal').modal('hide');
-          $('#serviceModal').modal('show');
-          let Category = allPosts.find(item => item.name === application.post).categoriesPS_id;
-          generateServiceListByCategory(Category);
-        }
-        toNextModal = false;
-        break;
-
-      case 'serviceModal':
-        if (verifyStep(currentStep)) {
           saveServices();
           toNextModal = true;
-          $('#serviceModal').modal('hide');
+          $('#postModal').modal('hide');
           $('#contractModal').modal('show');
         }
         toNextModal = false;
         break;
-      case 3:
+
+      case 'contractModal':
         if (verifyStep(currentStep)){
           toNextModal = true;
         }
@@ -134,6 +127,8 @@ let nextStepFrom = (currentStep) => {
         break;
     }
 };
+
+// Listeners
 
 let mainModalListener = () => {
   $('#toStep1').on('click', () => {
@@ -147,41 +142,29 @@ let postModalListener = () => {
       $('#mainModal').modal('show');
   });
 
-  $('#toStep2').on('click', () => {
-    nextStepFrom('postModal');
-  });
-
   $('#InputPosts').on( 'keyup autocompleteclose', () => {
     if (verifyInputPost()){
       let post = $('#InputPosts').val();
       $('#toStep2').show();
       let Category = allPosts.find(item => item.name === post).categoriesPS_id;
       generateServiceListByCategory(Category);
+      $('.select-holder > div').show();
     } else {
       $('#toStep2').hide();
+      $('.select-holder > div').hide();
+      $('#InputServices').val(null).trigger('change');
     }
   });
-};
 
-let serviceModalListener = () => {
-  $('#serviceModal').on('hide.bs.modal', function() {
-    if (!toNextModal)
-      $('#postModal').modal('show');
-  });
-
-  $('#InputServices').on('change', () => {
-    verifyInputServices() ? $('#toStep3').show() : $('#toStep3').hide();
-  });
-
-  $('#toStep3').on('click', () => {
-    nextStepFrom('serviceModal');
+  $('#toStep2').on('click', () => {
+    nextStepFrom('postModal');
   });
 };
 
 let contractModalListener = () => {
   $('#contractModal').on('hide.bs.modal', function() {
     if (!toNextModal)
-      $('#serviceModal').modal('show');
+      $('#postModal').modal('show');
   });
   $('#cdiToggle, #vacationToggle, #internshipToggle').bootstrapToggle({
     on: '',
@@ -222,7 +205,6 @@ $(document).ready(function () {
 
   mainModalListener();
   postModalListener();
-  serviceModalListener();
   contractModalListener();
   timeModalListener();
 
