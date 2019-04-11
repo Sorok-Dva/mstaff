@@ -179,7 +179,7 @@ $(document).ready(() => {
   });
 
 
-  $.get(`/api/es/${esId}/need/${nId}/newCandidates`, (data) => {
+  /*$.get(`/api/es/${esId}/need/${nId}/newCandidates`, (data) => {
     console.log(data);
-  }).catch(errors => errorsHandler(errors))
+  }).catch(errors => errorsHandler(errors))*/
 });
