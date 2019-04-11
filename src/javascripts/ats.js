@@ -27,7 +27,8 @@ let getServices = () => {
 
 let createCurrentPostList = (allPosts) => {
   allPosts.forEach( post => {
-    postsArray.push(post.name);
+    // Quick fix to remove non-break-space (encodeURI to see them)
+    postsArray.push(post.name.replace(/\s/g,' '));
   });
   postsArray.sort();
   $('#InputPosts').autocomplete({
@@ -99,7 +100,6 @@ let saveServices = () => {
 // Logic to next step
 
 let nextStepFrom = (currentStep) => {
-  console.log(application);
     switch (currentStep) {
       case 'mainModal':
         $('#mainModal').modal('hide');
