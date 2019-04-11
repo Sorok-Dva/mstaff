@@ -899,8 +899,18 @@ User_Candidate.updateTotalPercentage = (candidate, percentage) => {
 };
 
 User_Candidate.viewConferences = (req, res, next) => {
-  let a = { main: 'conferences' };
-  return res.render('candidates/calendar', { a });
+  Models.Candidate.findOne({
+    where: {
+      user_id: req.user.id
+    }, include: {
+      model: Models.User
+    }
+  }).then(candidate => {
+    Models.Conference.findAll({ where: { candidate_id: candidate.id } }).then(conferences => {
+      let a = { main: 'conferences' };
+      return res.render('candidates/calendar', { a, conferences });
+    })
+  })
 };
 
 module.exports = User_Candidate;

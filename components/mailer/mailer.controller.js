@@ -46,5 +46,18 @@ Mailer.notifyCandidatesNeedSelect = (email, context) => {
   });
 };
 
+Mailer.notifyCandidatesNeedConference = (email, context) => {
+  let mailObject = {
+    subject: 'Un entretien vous a été proposé !',
+    template: 'candidate/needConference-' + context.conference.type
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
 
 module.exports = Mailer;
