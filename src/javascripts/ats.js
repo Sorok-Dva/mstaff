@@ -3,6 +3,14 @@ let application = {};
 let toNextModal = false;
 let allPosts, allServices;
 
+let initApplication = () => {
+  application.fullTime = false;
+  application.partTime = false;
+  application.dayTime = false;
+  application.nightTime = false;
+
+};
+
 // Retrieval datas into BDD
 
 let getPosts = () => {
@@ -87,6 +95,13 @@ let verifyCheckedContract = () => {
     return false;
 };
 
+let verifyCheckedSchedule = () => {
+  if ($('#cdiSchedule input:checked').length !== 0)
+    return true;
+  else
+    return false;
+};
+
 let verifyStep = (step) => {
   switch (step) {
     case 'postModal':
@@ -137,15 +152,24 @@ let nextStepFrom = (currentStep) => {
           toNextModal = true;
           $('#contractModal').modal('hide');
           $('#timeModal').modal('show');
+          if (application.contractType === 'cdi'){
+            $('#cdiSchedule').css('display', 'flex');
+            $('#internshipDate').css('display', 'none');
+          } else  if (application.contractType === 'internship'){
+            $('#cdiSchedule').css('display', 'none');
+            $('#internshipDate').css('display', 'flex');
+          } else nextStepFrom('timeModal')
         }
         toNextModal = false;
+        break;
+
+      case 'timeModal':
+        console.log('page apres timeModal')
         break;
     }
 };
 
 // Listeners
-
-
 
 let mainModalListener = () => {
   $('#toStep1').on('click', () => {
@@ -225,6 +249,25 @@ let timeModalListener = () => {
       $('#contractModal').modal('show');
   });
 
+  $('#cdiSchedule').change(function(e) {
+    switch(e.target.name){
+      case 'full_time':
+        application.fullTime = e.target.checked;
+        break;
+      case 'part_time':
+        application.partTime = e.target.checked;
+        break;
+      case 'day_time':
+        application.dayTime = e.target.checked;
+        break;
+      case 'night_time':
+        application.nightTime = e.target.checked;
+        break;
+    }
+    console.log(verifyCheckedSchedule());
+    // TODO si aucun check hide sinon show
+  });
+
   $('#start').datetimepicker({
     format: 'D MMMM YYYY',
     debug: true
@@ -251,6 +294,7 @@ let timeModalListener = () => {
 
 $(document).ready(function () {
 
+  initApplication();
   mainModalListener();
   postModalListener();
   contractModalListener();

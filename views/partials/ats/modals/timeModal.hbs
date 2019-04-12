@@ -9,7 +9,6 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    display: none;
   }
   #internshipDate label, #internshipDate input{
     color: white;
@@ -17,20 +16,16 @@
     font-size: 2em;
     font-family: 'Oxygen', sans-serif;
   }
-  #activity{
+  #cdiSchedule{
     color: white;
-    width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-  }
-  #timeType{
-    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 50%;
   }
   #start, #end{
     background-color: #00aced;
   }
-
 
 </style>
 
@@ -70,10 +65,7 @@
                 class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#end">
               </div>
             </div>
-            <div id="">
-
-            </div>
-            <div id="activity">
+            <div id="cdiSchedule">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" id="full_time" name="full_time" type="checkbox">
                 <label class="form-check-label" for="full_time"><h3>Temps plein</h3></label>
@@ -82,17 +74,16 @@
                 <input class="form-check-input" id="part_time" name="part_time" type="checkbox">
                 <label class="form-check-label" for="part_time"><h3>Temps partiel</h3></label>
               </div>
-            </div>
-            <div id="timeType">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" id="daytime" name="daytime" type="checkbox">
+                <input class="form-check-input" id="daytime" name="day_time" type="checkbox">
                 <label class="form-check-label" for="daytime"><h3>Jour</h3></label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" id="nighttime" name="nighttime" type="checkbox">
+                <input class="form-check-input" id="nighttime" name="night_time" type="checkbox">
                 <label class="form-check-label" for="nighttime"><h3>Nuit</h3></label>
               </div>
             </div>
+
               <div class="next-modal">
                 <i id="toStep4" class="fal fa-arrow-circle-right"></i>
               </div>
