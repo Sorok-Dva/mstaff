@@ -187,10 +187,10 @@ $(document).ready(function () {
     event.stopPropagation();
     let target = $(event.target);
     let action = target.attr('data-action');
+    let availability = target.attr('data-availability');
     switch (action) {
       case 'nc/availability':
         let ncid = target.attr('data-ncid');
-        let availability = target.attr('data-availability');
         $.post(`/api/candidate/nc/${ncid}/availability`, { _csrf, availability}, (data) => {
           if (data === 'done') {
             notification({
@@ -201,7 +201,21 @@ $(document).ready(function () {
             });
             $('#notif-back').trigger('click');
           }
-        });
+        }).catch(errors => errorsHandler(errors));
+        break;
+      case 'conf/availability':
+        let confid = target.attr('data-confid');
+        $.post(`/api/candidate/conference/${confid}/availability`, { _csrf, availability}, (data) => {
+          if (data === 'done') {
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Disponibilité enregistrée.',
+              message: `Nous venons d'informer l'établissement de votre disponibilité pour cet entretien.`
+            });
+            $('#notif-back').trigger('click');
+          }
+        }).catch(errors => errorsHandler(errors));
         break;
     }
   })
@@ -328,7 +342,6 @@ let appNotifications = {
     let id = elem.attr('data-notif-id');
     elem.remove();
     $.put('/api/user/notification/read', { _csrf, id }, (data) => {
-      console.log(data);
       count--;
       appNotifications.loadAll();
     });

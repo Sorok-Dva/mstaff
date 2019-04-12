@@ -1,4 +1,5 @@
 const BackOffice = require('./back-office');
+const Conference = require('./conference');
 const Establishment = require('./establishment');
 const Mailer = require('./mailer');
 const Notification = require('./notification');
@@ -7,6 +8,7 @@ const User = require('./user');
 
 module.exports = {
   BackOffice,
+  Conference,
   Establishment,
   Mailer,
   Notification,

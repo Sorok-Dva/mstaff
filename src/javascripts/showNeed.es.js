@@ -156,7 +156,30 @@ $(document).ready(() => {
     } else removeCandidate(needId, cID);
   });
 
-  $.get(`/api/es/${esId}/need/${nId}/newCandidates`, (data) => {
+  $('i[data-action="videoconf"]').click(function() {
+    let needId = $(this).closest('li').attr('data-needid');
+    let cID = $(this).closest('li').attr('data-candidateid');
+    createModal({
+      id: 'createConferenceModal',
+      modal: 'es/need/createConference',
+      title: 'Entretien vidéo',
+      needId, cID, type: 'online'
+    });
+  });
+
+  $('i[data-action="physconf"]').click(function() {
+    let needId = $(this).closest('li').attr('data-needid');
+    let cID = $(this).closest('li').attr('data-candidateid');
+    createModal({
+      id: 'createConferenceModal',
+      modal: 'es/need/createConference',
+      title: 'Entretien physique',
+      needId, cID, type: 'physical'
+    });
+  });
+
+
+  /*$.get(`/api/es/${esId}/need/${nId}/newCandidates`, (data) => {
     console.log(data);
-  }).catch(errors => errorsHandler(errors))
+  }).catch(errors => errorsHandler(errors))*/
 });
