@@ -14,6 +14,7 @@ let users = [
     birthday: new Date(rand(1950, 2001), rand(1, 12), rand(1, 30)),
     postal_code: '75000',
     town: 'PARIS',
+    country: 'France',
     phone: '0601020304',
     role: 'Admin',
     type: 'admin'
@@ -25,6 +26,7 @@ let users = [
     birthday: new Date(rand(1950, 2001), rand(1, 12), rand(1, 30)),
     postal_code: '93400',
     town: 'Saint-Ouen',
+    country: 'France',
     phone: '0768808890',
     role: 'User',
     type: 'candidate'
@@ -36,6 +38,7 @@ let users = [
     birthday: new Date(rand(1950, 2001), rand(1, 12), rand(1, 30)),
     postal_code: '82000',
     town: 'Montauban',
+    country: 'France',
     phone: '0629326630',
     role: 'User',
     type: 'candidate'
@@ -59,6 +62,7 @@ module.exports = {
         birthday: new Date(rand(1950, 2001), rand(1, 12), rand(1, 30)),
         postal_code: '75000',
         town: 'PARIS',
+        country: 'France',
         phone: `+33700${Math.floor(Math.random() * 999999) + 100000  }`,
         role: 'User',
         type: 'candidate'

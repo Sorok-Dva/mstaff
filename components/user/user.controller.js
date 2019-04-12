@@ -44,6 +44,7 @@ User.create = (req, res, next) => {
       postal_code: req.body.postal_code,
       town: req.body.town,
       phone: req.body.phone,
+      country: req.body.country,
       role: 'User',
       type: 'candidate',
       key: crypto.randomBytes(20).toString('hex')
@@ -139,6 +140,34 @@ User.comparePassword = (candidatePassword, hash, callback) => {
   });
 };
 
+User.changePassword = (req, res, next) => {
+  let oldpass = req.body.oldPassword;
+  let newpass = req.body.newPassword;
+  let newpasscheck = req.body.newPasswordVerification;
+
+  Models.User.findOne({ where: { id: req.user.id } }).then( user => {
+    User.comparePassword(oldpass, user.password, function (err, match) {
+      if (match) {
+        if (newpass === newpasscheck) {
+          if (oldpass === newpass) {
+            return res.status(200).json({ status: 'new password cannot be your old password' })
+          }
+          bcrypt.hash(newpass, 10).then(hash => {
+            user.password = hash;
+            user.save();
+          });
+          return res.status(200).json({ status: 'ok' });
+        }
+        else {
+          res.status(200).json({ status: 'password verification is incorrect' });
+        }
+      }
+      else {
+        res.status(200).json({ status: 'invalid password' });
+      }
+    });
+  })
+};
 /**
  * [API] Verify Email Availability Method
  * @param req
