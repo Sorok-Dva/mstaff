@@ -98,6 +98,10 @@ router.get('/wish/edit/:id(\\d+)',
   HTTPValidation.CandidateController.getEditWish,
   User.Candidate.getEditWish);
 
+router.post('/profile/passwordReset',
+  Authentication.ensureAuthenticated,
+  //HTTPValidation.CandidateController.checkPassEdit,
+  User.Main.changePassword);
 /**
  * @Route('/conferences') GET;
  * Show Calendar page.

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     stars: DataTypes.INTEGER,
     feedback: DataTypes.STRING
   }, {});
-  NeedFeedback.associate = function(models) {
+  NeedFeedback.associate = function (models) {
     // associations can be defined here
   };
   return NeedFeedback;

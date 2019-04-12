@@ -45,6 +45,8 @@
       "form_postalCode_label_ph": "ex: 75000",
       "form_city_label": "Ville*",
       "form_city_label_ph": "ex: Paris",
+      "form_country_label": "Pays",
+      "form_country_label_ph": "ex: France",
       "form_phoneNumber_label": "Numéro de téléphone*",
       "form_phoneNumber_label_ph": "ex: +33 612345678",
       "form_email_muted": "Nous ne partagerons jamais votre email avec quiconque.",

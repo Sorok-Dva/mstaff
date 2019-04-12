@@ -104,7 +104,8 @@
                 createModal({
                       id: 'linkGroupModal',
                       title: 'Lier des établissements à ' + row.name,
-                      modal: 'back-office/linkGroup'
+                      modal: 'back-office/linkGroup',
+                      group: row
                     }, () => {
                     $('button#validateLinkGroup').click(function () {
                       if($('select#establishmentsID').val() !== '') {
