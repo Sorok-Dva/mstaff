@@ -213,6 +213,7 @@ User_Candidate.EditProfile = (req, res, next) => {
       user.birthday = req.body.birthday;
       user.postal_code = req.body.postal_code;
       user.town = req.body.town;
+      user.country = req.body.country;
       // user.phone = req.body.phone;
       user.save().then(() => {
         candidate.description = req.body.description;
@@ -815,6 +816,7 @@ User_Candidate.updatePercentage = (user, type) => {
   if (_.isNil(type)) return false;
   Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
     let { percentage } = candidate;
+    if (_.isNil(percentage)) percentage = {};
     switch (type) {
       case 'identity':
         if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };
@@ -895,6 +897,21 @@ User_Candidate.updateTotalPercentage = (candidate, percentage) => {
   percentage.total = _.sum(scores);
   candidate.percentage = percentage;
   candidate.save();
+};
+
+User_Candidate.viewConferences = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: {
+      user_id: req.user.id
+    }, include: {
+      model: Models.User
+    }
+  }).then(candidate => {
+    Models.Conference.findAll({ where: { candidate_id: candidate.id } }).then(conferences => {
+      let a = { main: 'conferences' };
+      return res.render('candidates/calendar', { a, conferences });
+    })
+  })
 };
 
 module.exports = User_Candidate;

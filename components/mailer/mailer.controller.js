@@ -20,4 +20,44 @@ Mailer.sendUserVerificationEmail = (user) => {
   });
 };
 
+Mailer.notifyCandidatesNeedClosed = (email, context) => {
+  let mailObject = {
+    subject: 'Besoin clôturé !',
+    template: 'candidate/needClosed'
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
+Mailer.notifyCandidatesNeedSelect = (email, context) => {
+  let mailObject = {
+    subject: 'Vous avez été sélectionné pour l\'offre suivante',
+    template: 'candidate/needSelected'
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
+Mailer.notifyCandidatesNeedConference = (email, context) => {
+  let mailObject = {
+    subject: 'Un entretien vous a été proposé !',
+    template: 'candidate/needConference-' + context.conference.type
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
+
 module.exports = Mailer;

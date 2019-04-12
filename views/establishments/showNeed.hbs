@@ -1,38 +1,25 @@
-<style>
-  /* Demo info */
-  .section {
-    padding: 20px;
-    text-align: center;
-  }
-
-  .section a {
-    color: white;
-    text-decoration: none;
-    font-weight: 300;
-  }
-
-  .section h4 {
-    font-weight: 400;
-  }
-
-  .section h4 a {
-    font-weight: 600;
-  }
-</style>
 <div class="row">
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
-        <h5 class="pull-right">Clôturer le besoin</h5>
+        <button class="btn btn-warning pull-right" style="margin-left: 3px" onclick="closeNeed({{need.id}})">Clôturer le besoin</button>
+        <button class="btn btn-primary pull-right">Recherche de nouveaux candidats en cours</button> {{!--// aucun nouveau candidats--}}
         <h4 class="card-title">{{need.name}}</h4>
         <div class="label-container">
-          <div class="label label-default">{{need.post}}</div>
-          <div class="label label-warning">
-            {{need.contract_type}}
-          </div>
-          <div class="label label-success ">
-            {{date need.start 'DD/MM/YYYY'}}
-          </div>
+          {{#if need.post}}
+            <div class="label label-default">{{need.post}}</div>
+          {{/if}}
+          {{#if need.contract_type}}
+            <div class="label label-warning">
+              {{need.contract_type}}
+            </div>
+          {{/if}}
+          {{#if need.start}}
+            <div class="label label-success ">
+              {{date need.start 'DD/MM/YYYY'}}
+              {{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}
+            </div>
+          {{/if}}
         </div>
       </div>
       <div class="card-body" style="margin-top: -10px">
@@ -86,6 +73,7 @@
 </div>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
 <script>
+  let feedback = {};
   let showNotifyModalObject = {
     id: 'showNotifyCandidateModal',
     modal: 'es/showNotifyCandidate',
@@ -103,5 +91,6 @@
     }
   };
   let esId = {{need.es_id}};
+  let nId = {{need.id}};
 </script>
 <script src="/static/assets/dist/js/showNeed.es.min.js"></script>

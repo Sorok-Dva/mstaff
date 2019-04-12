@@ -16,6 +16,7 @@
           <div class="rank-label-container">
             <span class="label label-default rank-label">{{{candidateProfilePercentage candidate.percentage}}}</span>
           </div>
+          {{log candidate}}
           <h4 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
             <a href="#"><small>{{age candidate.User.birthday 'years'}} ans</small></a>
           </h4>
@@ -39,9 +40,9 @@
       <hr>
       <div class="text-center">
         <div class="row">
-          <h5><i class="fa fa-phone"></i> {{candidate.User.phone}}</h5>
-          <h5><i class="fa fa-envelope"></i> {{candidate.User.email}}</h5>
-          <h5><i class="fas fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h5>
+          <h5><i class="fal fa-phone"></i> {{candidate.User.phone}}</h5>
+          <h5><i class="fal fa-envelope"></i> {{candidate.User.email}}</h5>
+          <h5><i class="fal fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h5>
         </div>
       </div>
     </div>

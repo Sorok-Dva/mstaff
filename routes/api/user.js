@@ -1,12 +1,24 @@
 const __ = process.cwd();
-const { HTTPValidation } = require(`${__}/middlewares`);
+const { HTTPValidation, Authentication } = require(`${__}/middlewares`);
 const express = require('express');
 const router = express.Router();
 
-const { User } = require(`${__}/components`);
+const { User, Notification } = require(`${__}/components`);
 
 router.get('/emailAvailable/:email',
   HTTPValidation.UserController.ApiVerifyEmailAvailability,
   User.Main.verifyEmailAvailability);
+
+router.get('/notifications',
+  Authentication.ensureAuthenticated,
+  Notification.Main.getAndCount);
+
+router.put('/notification/read',
+  Authentication.ensureAuthenticated,
+  Notification.Main.read);
+
+router.get('/notification/:id(\\d+)',
+  Authentication.ensureAuthenticated,
+  Notification.Main.view);
 
 module.exports = router;

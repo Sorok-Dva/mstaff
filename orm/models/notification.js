@@ -6,8 +6,19 @@ module.exports = (sequelize, DataTypes) => {
     to: DataTypes.INTEGER,
     read: DataTypes.BOOLEAN,
     deleted: DataTypes.BOOLEAN,
+    subject: DataTypes.STRING,
     title: DataTypes.STRING,
-    message: DataTypes.STRING
+    content: DataTypes.STRING,
+    opts: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('opts'))
+      },
+      set(data) {
+        this.setDataValue('opts', JSON.stringify(data));
+      }
+    },
+    image: DataTypes.STRING
   }, {});
   Notification.associate = function (models) {
     // associations can be defined here

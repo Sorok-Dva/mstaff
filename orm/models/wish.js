@@ -46,6 +46,11 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: 'candidate_id',
       onDelete: 'CASCADE'
     });
+    Wish.hasMany(models.Application, {
+      foreignKey: 'wish_id',
+      sourceKey: 'id',
+      onDelete: 'CASCADE'
+    });
   };
   return Wish;
 };

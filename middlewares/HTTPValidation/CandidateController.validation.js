@@ -33,4 +33,10 @@ HTTPValidation.getEditWish = [
   check('id').isNumeric()
 ];
 
+HTTPValidation.checkPassEdit = [
+  check('oldPassword').isLength({ min: 8 }),
+  check('newPassword').isLength({ min: 8 }),
+  check('newPasswordVerification').isLength({ min: 8 }),
+];
+
 module.exports = HTTPValidation;

@@ -45,10 +45,19 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      subject: {
+        type: Sequelize.STRING
+      },
       title: {
         type: Sequelize.STRING
       },
-      message: {
+      content: {
+        type: Sequelize.STRING
+      },
+      opts: {
+        type: Sequelize.JSON
+      },
+      image: {
         type: Sequelize.STRING
       },
       createdAt: {

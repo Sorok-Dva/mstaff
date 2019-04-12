@@ -9124,7 +9124,7 @@ star {
 }
 
 .card .card-footer {
-    padding: 0 15px 15px;
+    padding: 0 15px 30px;
 }
 
 .card .card-footer .social-line .btn:first-child {
@@ -10162,7 +10162,7 @@ star {
     cursor: pointer;
     width: 19px;
     height: 19px;
-    top: -2px;
+    top: 25%;
 }
 
 .checkbox input[type="checkbox"]:checked + label::after {

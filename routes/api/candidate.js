@@ -1,6 +1,6 @@
 const __ = process.cwd();
 const { Authentication, HTTPValidation } = require(`${__}/middlewares/index`);
-const { User } = require(`${__}/components`);
+const { User, Establishment, Conference } = require(`${__}/components`);
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -112,5 +112,14 @@ router.get('/wish/:id(\\d+)',
     User.Candidate.editWish
   );
 
+router.post('/nc/:id(\\d+)/availability',
+  Authentication.ensureIsCandidate,
+  Establishment.Need.candidateAnswer
+);
+
+router.post('/conference/:id(\\d+)/availability',
+  Authentication.ensureIsCandidate,
+  Conference.Main.candidateAnswer
+);
 
 module.exports = router;

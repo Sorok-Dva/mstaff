@@ -1,0 +1,91 @@
+<style>
+  .star-rating {
+    line-height:32px;
+    font-size:1.25em;
+  }
+
+  .star-rating .fa-star{color: gold;}
+</style>
+<div class="modal-body">
+  <h4 class="text-center">Comment évalueriez-vous votre expérience avec Mstaff ?</h4>
+    <form role="form" class="form-horizontal text-center">
+      <div class="row">
+        <div class="col-md-12" style="padding: 25px">
+          <div class="rating-stars text-center">
+            <ul class="rate" data-type="skill" data-id="{{skill.id}}">
+              <li class="star selected" title="Fair" data-value="1">
+                <i class="fa fa-star fa-2x" style="font-size: xx-large;"></i>
+              </li>
+              <li class="star" title="Good" data-value='2'>
+                <i class="fa fa-star fa-2x" style="font-size: xx-large;"></i>
+              </li>
+              <li class="star" title="Excellent" data-value='3'>
+                <i class="fa fa-star fa-2x" style="font-size: xx-large;"></i>
+              </li>
+              <li class="star" title="Excellent" data-value='4'>
+                <i class="fa fa-star fa-2x" style="font-size: xx-large;"></i>
+              </li>
+              <li class="star" title="Excellent" data-value='5'>
+                <i class="fa fa-star fa-2x" style="font-size: xx-large;"></i>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label for="whyReason">Un commentaire ? (facultatif)</label>
+          <textarea class="form-control rounded-0" placeholder="(facultatif)" id="feedback" rows="5"></textarea>
+          <button class="btn btn-info pull-right" id="closeFeedbackMstaff" type="button" style="margin-top: 5px">Envoyer</button>
+        </div>
+      </div>
+    </form>
+</div>
+<script>
+  feedback.stars = 0;
+  $('#closeFeedbackMstaff').click(function(){
+    feedback.feedback = $('#feedback').val();
+    feedback._csrf = _csrf;
+    feedback.needId = {{this.needId}};
+    $.post(`/api/es/${esId}/feedback`, feedback, (data) => {
+      if (data.closed) {
+        $('#endFeedbackModal').modal('hide');
+        createModal({
+          id: 'thanksFeedbackModal',
+          modal: 'es/need/feedback/thanks',
+          title: 'Merci !'
+        })
+      }
+    }).catch(errors => errorsHandler(errors));
+  });
+
+  $('body').on('mouseover', '.rate li', function(){
+    let onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
+
+    // Now highlight all the stars that's not after the current hovered star
+    $(this).parent().children('li.star').each(function(e){
+      if (e < onStar) {
+        $(this).addClass('hover');
+      }
+      else {
+        $(this).removeClass('hover');
+      }
+    });
+  }).on('mouseout','.rate li', function(){
+    $(this).parent().children('li.star').each(function(e){
+      $(this).removeClass('hover');
+    });
+  }).on('click', '.rate li', function() {
+    let onStar = parseInt($(this).data('value'), 10); // The star currently selected
+    let stars = $(this).parent().children('li.star');
+
+    for (i = 0; i < stars.length; i++) {
+      $(stars[i]).removeClass('selected');
+    }
+
+    for (i = 0; i < onStar; i++) {
+      $(stars[i]).addClass('selected');
+    }
+    feedback.stars = parseInt($(this).last().data('value'), 10);
+  });
+</script>

@@ -1,4 +1,4 @@
-const Models = require('../orm/models/index');
+const Models = require('../../orm/models');
 
 module.exports = {
   verifyMaintenance: callback => {
