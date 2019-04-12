@@ -9,6 +9,8 @@ let getPosts = () => {
   return new Promise( resolve => {
     $.get('/posts/all', function(posts) {
       allPosts = posts;
+      // Quick fix to remove non-break-space (encodeURI to see them)
+      allPosts.forEach( post => post.name = post.name.replace(/\s/g,' '));
       resolve(allPosts);
     });
   });
@@ -27,8 +29,7 @@ let getServices = () => {
 
 let createCurrentPostList = (allPosts) => {
   allPosts.forEach( post => {
-    // Quick fix to remove non-break-space (encodeURI to see them)
-    postsArray.push(post.name.replace(/\s/g,' '));
+    postsArray.push(post.name);
   });
   postsArray.sort();
   $('#InputPosts').autocomplete({
@@ -38,6 +39,7 @@ let createCurrentPostList = (allPosts) => {
 };
 
 let createCurrentServiceList = (currentServices) => {
+  $('#InputServices').empty();
   $('#InputServices').select2({
     data: currentServices.sort(),
     placeholder: "Service(s) ?",
@@ -78,11 +80,21 @@ let verifyInputPost = () => {
     return false;
 };
 
+let verifyCheckedContract = () => {
+  if ($('#cdiToggle').prop('checked') || $('#vacationToggle').prop('checked') || $('#internshipToggle').prop('checked'))
+    return true;
+  else
+    return false;
+};
+
 let verifyStep = (step) => {
   switch (step) {
     case 'postModal':
       return verifyInputPost();
       break;
+    case 'contractModal':
+      return verifyCheckedContract;
+      break
   }
 };
 
@@ -100,6 +112,7 @@ let saveServices = () => {
 // Logic to next step
 
 let nextStepFrom = (currentStep) => {
+    console.log(application);
     switch (currentStep) {
       case 'mainModal':
         $('#mainModal').modal('hide');
@@ -122,6 +135,8 @@ let nextStepFrom = (currentStep) => {
       case 'contractModal':
         if (verifyStep(currentStep)){
           toNextModal = true;
+          $('#contractModal').modal('hide');
+          $('#timeModal').modal('show');
         }
         toNextModal = false;
         break;
@@ -129,6 +144,8 @@ let nextStepFrom = (currentStep) => {
 };
 
 // Listeners
+
+
 
 let mainModalListener = () => {
   $('#toStep1').on('click', () => {
@@ -146,8 +163,8 @@ let postModalListener = () => {
     if (verifyInputPost()){
       let post = $('#InputPosts').val();
       $('#toStep2').show();
-      let Category = allPosts.find(item => item.name === post).categoriesPS_id;
-      generateServiceListByCategory(Category);
+      let category = allPosts.find(item => item.name === post).categoriesPS_id;
+      generateServiceListByCategory(category);
       $('.select-holder > div').show();
     } else {
       $('#toStep2').hide();
@@ -166,6 +183,7 @@ let contractModalListener = () => {
     if (!toNextModal)
       $('#postModal').modal('show');
   });
+
   $('#cdiToggle, #vacationToggle, #internshipToggle').bootstrapToggle({
     on: '',
     off: '',
@@ -174,9 +192,39 @@ let contractModalListener = () => {
     size: 'lg'
   });
 
+  $('#cdiToggle, #vacationToggle, #internshipToggle').change(function(){
+    if (this.checked){
+      switch(this.id){
+        case 'cdiToggle':
+          $('#vacationToggle, #internshipToggle').bootstrapToggle('off');
+          break;
+        case 'vacationToggle':
+          $('#cdiToggle, #internshipToggle').bootstrapToggle('off');
+          break;
+        case 'internshipToggle':
+          $('#cdiToggle, #vacationToggle').bootstrapToggle('off');
+          break;
+      }
+      application.contractType = this.name;
+      $('#toStep3').show();
+    }
+    if (!verifyCheckedContract()){
+      $('#toStep3').hide();
+      delete application.contractType;
+    }
+  });
+
+  $('#toStep3').on('click', () => {
+    nextStepFrom('contractModal');
+  });
 };
 
 let timeModalListener = () => {
+  $('#timeModal').on('hide.bs.modal', function() {
+    if (!toNextModal)
+      $('#contractModal').modal('show');
+  });
+
   $('#start').datetimepicker({
     format: 'D MMMM YYYY',
     debug: true
