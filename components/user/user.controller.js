@@ -150,7 +150,7 @@ User.changePassword = (req, res, next) => {
       if (match) {
         if (newpass === newpasscheck) {
           if (oldpass === newpass) {
-            return res.status(400).json({ status: 'new password cannot be your old password' })
+            return res.status(200).json({ status: 'new password cannot be your old password' })
           }
           bcrypt.hash(newpass, 10).then(hash => {
             user.password = hash;
@@ -158,9 +158,12 @@ User.changePassword = (req, res, next) => {
           });
           return res.status(200).json({ status: 'ok' });
         }
+        else {
+          res.status(200).json({ status: 'password verification is incorrect' });
+        }
       }
       else {
-        res.status(400).json({ status: 'invalid password' });
+        res.status(200).json({ status: 'invalid password' });
       }
     });
   })

@@ -230,9 +230,53 @@
             newPasswordVerification,
             _csrf
           }, (response) => {
-            console.log('test');
+            console.log(response);
+            if(response.status === 'invalid password') {
+              $('input#oldPassword').addClass('error');
+              setTimeout(function() {
+                $('input#oldPassword').removeClass('error');
+              }, 1000);
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: `Votre mot de passe est invalide`,
+                message: ``
+              });
+            }
+            if(response.status === 'new password cannot be your old password') {
+              $('input#oldPassword').addClass('error');
+              $('input#newPassword').addClass('error');
+              $('input#newPasswordVerification').addClass('error');
+              setTimeout(function() {
+                $('input#oldPassword').removeClass('error');
+                $('input#newPassword').removeClass('error');
+                $('input#newPasswordVerification').removeClass('error');
+              }, 1000);
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: `Votre nouveau mot de passe ne peut pas etre identique à l'ancien`,
+                message: ``
+              });
+            }
+            if(response.status === 'password verification is incorrect') {
+              $('input#newPassword').addClass('error');
+              $('input#newPasswordVerification').addClass('error');
+              setTimeout(function() {
+                $('input#newPassword').removeClass('error');
+                $('input#newPasswordVerification').removeClass('error');
+              }, 1000);
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: `La vérification de votre mot de passe a échoué`,
+                message: ``
+              });
+            }
+            if(response.status === 'ok') {
+              $('#changePassword').modal('hide');
+            }
           });
-          $('#changePassword').modal('hide');
         }
       });
     });
