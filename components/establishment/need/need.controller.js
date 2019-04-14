@@ -370,8 +370,8 @@ Establishment_Need.getNewCandidates = (req, res, next) => {
           model: Models.User,
           attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
           on: {
-            '$Wish->Candidate.user_id$': {
-              [Op.col]: 'Wish->Candidate->User.id'
+            '$Candidate.user_id$': {
+              [Op.col]: 'Candidate->User.id'
             }
           },
           required: true
