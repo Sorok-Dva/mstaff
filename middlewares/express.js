@@ -103,7 +103,7 @@ module.exports = {
     resave: true
   }),
   verifyMaintenance: (req, res, next) => {
-    if (req.url.search('static') !== -1) return next();
+    if (req.url.search('static') !== -1 || req.url.search('back-office') !== -1) return next();
     ServerController.verifyMaintenance(status => {
       if (status === 'maintenance') {
         return res.render('index', { layout: 'maintenance' });
