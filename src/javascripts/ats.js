@@ -108,7 +108,10 @@ let verifyStep = (step) => {
       return verifyInputPost();
       break;
     case 'contractModal':
-      return verifyCheckedContract;
+      return verifyCheckedContract();
+      break
+    case 'timeModal':
+      return verifyCheckedSchedule();
       break
   }
 };
@@ -164,7 +167,12 @@ let nextStepFrom = (currentStep) => {
         break;
 
       case 'timeModal':
-        console.log('page apres timeModal')
+        if (verifyStep(currentStep)){
+          toNextModal = true;
+          // TODO on ouvre / ferme les fenetres
+          console.log('page apres timeModal')
+        }
+        toNextModal = false;
         break;
     }
 };
@@ -208,7 +216,7 @@ let contractModalListener = () => {
       $('#postModal').modal('show');
   });
 
-  $('#cdiToggle, #vacationToggle, #internshipToggle').bootstrapToggle({
+  $('.contractChoices input').bootstrapToggle({
     on: '',
     off: '',
     onstyle: 'success',
@@ -216,7 +224,7 @@ let contractModalListener = () => {
     size: 'lg'
   });
 
-  $('#cdiToggle, #vacationToggle, #internshipToggle').change(function(){
+  $('.contractChoices input').change(function(){
     if (this.checked){
       switch(this.id){
         case 'cdiToggle':
@@ -245,10 +253,25 @@ let contractModalListener = () => {
 
 let timeModalListener = () => {
   $('#timeModal').on('hide.bs.modal', function() {
-    if (!toNextModal)
+    if (!toNextModal){
+      $('#cdiSchedule input').bootstrapToggle('off');
+      $('#internshipDate input').datetimepicker('clear');
       $('#contractModal').modal('show');
+    }
   });
 
+  $('#internshipDate input').datetimepicker({
+    format: 'D MMMM YYYY',
+    debug: true
+  });
+
+  $('#cdiSchedule input').bootstrapToggle({
+    on: '',
+    off: '',
+    onstyle: 'success',
+    offstyle: 'secondary',
+    size: 'lg'
+  });
   $('#cdiSchedule').change(function(e) {
     switch(e.target.name){
       case 'full_time':
@@ -264,18 +287,12 @@ let timeModalListener = () => {
         application.nightTime = e.target.checked;
         break;
     }
-    console.log(verifyCheckedSchedule());
-    // TODO si aucun check hide sinon show
+    if (verifyCheckedSchedule()){
+      $('#toStep4').show();
+    } else $('#toStep4').hide();
   });
 
-  $('#start').datetimepicker({
-    format: 'D MMMM YYYY',
-    debug: true
-  });
-  $('#end').datetimepicker({
-    format: 'D MMMM YYYY',
-    debug: true
-  });
+
 
   // $('.from').on('dp.change', (e) => {
   //   if (!e.date)
@@ -290,6 +307,10 @@ let timeModalListener = () => {
   //   else
   //     application.end = new Date(e.date);
   // });
+
+  $('#toStep4').on('click', () => {
+    nextStepFrom('timeModal');
+  });
 };
 
 $(document).ready(function () {

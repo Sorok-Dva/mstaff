@@ -17,11 +17,28 @@
     font-family: 'Oxygen', sans-serif;
   }
   #cdiSchedule{
+    width: 100%;
+    height: 100%;
     color: white;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    height: 50%;
+    justify-content: space-evenly;
+  }
+  .activity-holder{
+    display: flex;
+    width: 100%;
+    height: 30%;
+    align-items: center;
+  }
+  .activity{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.4);
+    margin: 5%;
   }
   #start, #end{
     background-color: #00aced;
@@ -66,22 +83,30 @@
               </div>
             </div>
             <div id="cdiSchedule">
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" id="full_time" name="full_time" type="checkbox">
-                <label class="form-check-label" for="full_time"><h3>Temps plein</h3></label>
+              <div class="activity-holder">
+                <div class="activity">
+                  <i class="fal fa-calendar-star fa-5x"></i>
+                  <p>Temps plein</p>
+                  <input id="full_time" name="full_time" type="checkbox">
+                </div>
+                <div class="activity">
+                  <i class="fal fa-calendar-day fa-5x"></i>
+                  <p>Temps partiel</p>
+                  <input id="part_time" name="part_time" type="checkbox">
+                </div>
               </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" id="part_time" name="part_time" type="checkbox">
-                <label class="form-check-label" for="part_time"><h3>Temps partiel</h3></label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" id="daytime" name="day_time" type="checkbox">
-                <label class="form-check-label" for="daytime"><h3>Jour</h3></label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" id="nighttime" name="night_time" type="checkbox">
-                <label class="form-check-label" for="nighttime"><h3>Nuit</h3></label>
-              </div>
+             <div class="activity-holder">
+               <div class="activity">
+                 <i class="fal fa-sun fa-5x"></i>
+                 <p>Jour</p>
+                 <input id="day_time" name="day_time" type="checkbox">
+               </div>
+               <div class="activity">
+                 <i class="fal fa-moon-stars fa-5x"></i>
+                 <p>Nuit</p>
+                 <input id="night_time" name="night_time" type="checkbox">
+               </div>
+             </div>
             </div>
 
               <div class="next-modal">
