@@ -104,7 +104,8 @@
                 createModal({
                     id: 'linkSuperGroupModal',
                     title: 'Lier des groupes à ' + row.name,
-                    modal: 'back-office/linkSuperGroup'
+                    modal: 'back-office/linkSuperGroup',
+                    supergroup: row
                 }, () => {
                     $('button#validateLinkSuperGroup').click(function () {
                         if($('select#establishmentsID').val() !== '') {

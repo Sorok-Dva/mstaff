@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING,
     key: DataTypes.STRING
   }, {});
-  Conference.associate = function(models) {
+  Conference.associate = function (models) {
     // associations can be defined here
   };
   return Conference;

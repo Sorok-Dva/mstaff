@@ -1,30 +1,9 @@
-<style>
-  /* Demo info */
-  .section {
-    padding: 20px;
-    text-align: center;
-  }
-
-  .section a {
-    color: white;
-    text-decoration: none;
-    font-weight: 300;
-  }
-
-  .section h4 {
-    font-weight: 400;
-  }
-
-  .section h4 a {
-    font-weight: 600;
-  }
-</style>
 <div class="row">
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
         <button class="btn btn-warning pull-right" style="margin-left: 3px" onclick="closeNeed({{need.id}})">Clôturer le besoin</button>
-        <button class="btn btn-primary pull-right">Recherche de nouveaux candidats en cours</button> {{!--// aucun nouveau candidats--}}
+        <button class="btn btn-primary pull-right" id="searchNewCandidates">Recherche de nouveaux candidats en cours</button> {{!--// aucun nouveau candidats--}}
         <h4 class="card-title">{{need.name}}</h4>
         <div class="label-container">
           {{#if need.post}}

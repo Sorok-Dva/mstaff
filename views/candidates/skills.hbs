@@ -230,4 +230,17 @@
     </div>
   </div>
 </div>
-<script src="/static/assets/dist/js/skills.min.js"></script>
+<script src="/static/assets/dist/js/skills.min.js"> </script>
+<script>
+  var skillAutocomplete = [];
+
+  $.get('/api/skills/all', function(data) {
+    $.each(data.skills, function (i, skill) {
+      skillAutocomplete.push(skill.name);
+    });
+  });
+  $( "#skills" ).autocomplete({
+    source: skillAutocomplete
+  });
+  console.log(skillAutocomplete);
+</script>

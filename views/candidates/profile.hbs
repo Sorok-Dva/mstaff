@@ -5,6 +5,91 @@
     color: #44b9ff;
     cursor: pointer;
   }
+  .label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .label-text {
+    margin-left: 8px;
+  }
+
+  .label-text-available {
+   color: #09c800
+  }
+  .label-text-unavailable {
+   color: #c81d26
+  }
+
+  .toggle {
+    isolation: isolate;
+    position: relative;
+    height: 24px;
+    width: 48px;
+    border-radius: 15px;
+    background: #c81d26;
+    overflow: hidden;
+  }
+
+  .toggle-inner {
+    z-index: 2;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    height: 22px;
+    width: 46px;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .active-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200%;
+    background: #09c800;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.05s linear 0.17s;
+  }
+
+  .state-available {
+    border:1px solid #09c800;
+    border-radius: 25px;
+    width: 40%;
+    margin: 0 auto;
+    height: 2.2em;
+  }
+
+  .state-unavailable {
+    border:1px solid #c81d26;
+    border-radius: 25px;
+    width: 40%;
+    margin: 0 auto;
+    height: 2.2em;
+  }
+
+  .toggle-state {
+    display: none;
+  }
+
+  .indicator {
+    height: 100%;
+    width: 200%;
+    background: white;
+    border-radius: 13px;
+    transform: translate3d(-75%, 0, 0);
+    transition: transform 0.35s cubic-bezier(0.85, 0.05, 0.18, 1.35);
+  }
+
+  .toggle-state:checked ~ .active-bg {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  .toggle-state:checked ~ .toggle-inner .indicator {
+    transform: translate3d(25%, 0, 0);
+  }
 </style>
 <div class="row">
   <div class="col-lg-4 col-md-5">
@@ -16,10 +101,25 @@
           <div class="rank-label-container">
             <span class="label label-default rank-label">{{{candidateProfilePercentage candidate.percentage}}}</span>
           </div>
-          {{log candidate}}
           <h4 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
             <a href="#"><small>{{age candidate.User.birthday 'years'}} ans</small></a>
           </h4>
+        </div>
+        <div class="col-md-12">
+          <div id="ctaAvailability" class="text-center state-{{#unless candidate.is_available}}un{{/unless}}available">
+            <label class="label">
+              <div class="label-text label-text-{{#unless candidate.is_available}}un{{/unless}}available">
+               <b>Je suis {{#unless candidate.is_available}}in{{/unless}}disponible</b>
+              </div>
+              <div class="toggle" style="margin-left:15px">
+                <input class="toggle-state" type="checkbox" name="is_available" {{#if candidate.is_available}}checked{{/if}} />
+                <div class="toggle-inner">
+                  <div class="indicator"></div>
+                </div>
+                <div class="active-bg"></div>
+              </div>
+            </label>
+          </div>
         </div>
         <p class="description text-center">
           {{candidate.description}}
@@ -40,9 +140,9 @@
       <hr>
       <div class="text-center">
         <div class="row">
-          <h5><i class="fa fa-phone"></i> {{candidate.User.phone}}</h5>
-          <h5><i class="fa fa-envelope"></i> {{candidate.User.email}}</h5>
-          <h5><i class="fas fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h5>
+          <h5><i class="fal fa-phone"></i> {{candidate.User.phone}}</h5>
+          <h5><i class="fal fa-envelope"></i> {{candidate.User.email}}</h5>
+          <h5><i class="fal fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h5>
         </div>
       </div>
     </div>
@@ -358,3 +458,16 @@
   </div>
 </div>
 <script src="/static/assets/dist/js/uploadVideo.min.js"></script>
+<script>
+  $('input[name="is_available"]').change(function() {
+    if (this.checked) {
+      $('#ctaAvailability').removeClass('state-unavailable').addClass('state-available');
+      $('div.label-text').removeClass('label-text-unavailable').addClass('label-text-available');
+      $('div.label-text').children('b').html('Je suis disponible')
+    } else {
+      $('#ctaAvailability').removeClass('state-available').addClass('state-unavailable');
+      $('div.label-text').removeClass('label-text-available').addClass('label-text-unavailable');
+      $('div.label-text').children('b').html('Je suis indisponible')
+    }
+  });
+</script>

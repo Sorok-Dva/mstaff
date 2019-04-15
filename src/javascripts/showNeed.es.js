@@ -180,6 +180,10 @@ $(document).ready(() => {
 
 
   $.get(`/api/es/${esId}/need/${nId}/newCandidates`, (data) => {
-    console.log(data);
+    if (data.length === 0) {
+      $('#searchNewCandidates').html('Pas de nouveaux candidats')
+    } else {
+      $('#searchNewCandidates').html(`${data.length} nouveaux candidats`)
+    }
   }).catch(errors => errorsHandler(errors))
 });

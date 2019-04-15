@@ -95,12 +95,15 @@ let loadTemplate = (url, data, callback) => {
 let createModal = (opts, callback) => {
   $(`#${opts.id}`).remove();
   loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
-    let modalOpts = !opts.canBeClose ? {
-      backdrop: 'static',
-      keyboard: false
-    } : null ;
     $('body').append(html);
-    $(`#${opts.id}`).modal(modalOpts);
+    if ('canBeClose' in opts) {
+      if (opts.canBeClose) {
+        $(`#${opts.id}`).modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+      } else $(`#${opts.id}`).modal();
+    } else $(`#${opts.id}`).modal();
     if (callback) return callback();
   });
 };

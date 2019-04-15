@@ -257,3 +257,26 @@
   </div>
 </div>
 <script src="/static/assets/dist/js/formations.min.js"></script>
+<script>
+  var formationAutocomplete = [];
+  var qualificationAutocomplete = [];
+
+  $.get('/api/formations/all', function(data) {
+    $.each(data.formations, function (i, formation) {
+      formationAutocomplete.push(formation.name);
+    });
+  });
+  $.get('/api/qualifications/all', function(data) {
+    $.each(data.qualifications, function (i, qualification) {
+      qualificationAutocomplete.push(qualification.name);
+    });
+  });
+  formationAutocomplete.sort();
+  qualificationAutocomplete.sort();
+  $( "#fName" ).autocomplete({
+    source: formationAutocomplete
+  });
+  $( "#dName" ).autocomplete({
+    source: qualificationAutocomplete
+  });
+</script>
