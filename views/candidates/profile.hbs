@@ -460,14 +460,18 @@
 <script src="/static/assets/dist/js/uploadVideo.min.js"></script>
 <script>
   $('input[name="is_available"]').change(function() {
+    let available = false;
     if (this.checked) {
       $('#ctaAvailability').removeClass('state-unavailable').addClass('state-available');
       $('div.label-text').removeClass('label-text-unavailable').addClass('label-text-available');
-      $('div.label-text').children('b').html('Je suis disponible')
+      $('div.label-text').children('b').html('Je suis disponible');
+      available = true;
     } else {
       $('#ctaAvailability').removeClass('state-available').addClass('state-unavailable');
       $('div.label-text').removeClass('label-text-available').addClass('label-text-unavailable');
       $('div.label-text').children('b').html('Je suis indisponible')
     }
+
+    $.post('/api/candidate/availability', { _csrf, available });
   });
 </script>
