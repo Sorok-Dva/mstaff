@@ -102,6 +102,12 @@ let verifyCheckedSchedule = () => {
     return false;
 };
 
+let verifyInternshipDate = () => {
+  if (application.start && application.end)
+    return true;
+  return false;
+};
+
 let verifyStep = (step) => {
   switch (step) {
     case 'postModal':
@@ -170,7 +176,9 @@ let nextStepFrom = (currentStep) => {
         if (verifyStep(currentStep)){
           toNextModal = true;
           // TODO on ouvre / ferme les fenetres
-          console.log('page apres timeModal')
+          console.log('page apres timeModal');
+          console.log(application.start);
+          console.log(application.end);
         }
         toNextModal = false;
         break;
@@ -256,13 +264,10 @@ let timeModalListener = () => {
     if (!toNextModal){
       $('#cdiSchedule input').bootstrapToggle('off');
       $('#internshipDate input').datetimepicker('clear');
+      delete application.start;
+      delete application.end;
       $('#contractModal').modal('show');
     }
-  });
-
-  $('#internshipDate input').datetimepicker({
-    format: 'D MMMM YYYY',
-    debug: true
   });
 
   $('#cdiSchedule input').bootstrapToggle({
@@ -292,21 +297,26 @@ let timeModalListener = () => {
     } else $('#toStep4').hide();
   });
 
+  $('#internshipDate input').datetimepicker({
+    format: 'D MMMM YYYY',
+    useCurrent: false,
+    ignoreReadonly: true,
+  });
 
-
-  // $('.from').on('dp.change', (e) => {
-  //   if (!e.date)
-  //     delete application.start;
-  //   else
-  //     application.start = new Date(e.date);
-  // });
-  //
-  // $('.to').on('dp.change', (e) => {
-  //   if (!e.date)
-  //     delete application.end;
-  //   else
-  //     application.end = new Date(e.date);
-  // });
+  $('#internshipDate input').on('dp.change', (e) => {
+    console.log(e.date);
+    switch (e.currentTarget.id) {
+      case 'start':
+        $('#end').data("DateTimePicker").minDate(e.date);
+        application.start = new Date(e.date);
+        break;
+      case 'end':
+        $('#start').data("DateTimePicker").maxDate(e.date);
+        application.end = new Date(e.date);
+        break;
+    }
+    verifyInternshipDate() ? $('#toStep4').show() : $('#toStep4').hide();
+  });
 
   $('#toStep4').on('click', () => {
     nextStepFrom('timeModal');
