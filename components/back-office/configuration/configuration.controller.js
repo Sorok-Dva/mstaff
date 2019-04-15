@@ -51,7 +51,6 @@ BackOffice_Configuration.AddSkill = (req, res, next) => {
 };
 
 BackOffice_Configuration.AddEquipment = (req, res, next) => {
-  console.log('where do i crash?');
   return Models.ConfigEquipments.findOrCreate({
     where: {
       id_equipment: req.body.equipmentID,
@@ -60,10 +59,8 @@ BackOffice_Configuration.AddEquipment = (req, res, next) => {
     }
   }).spread((configequipment, created) => {
     if (created) {
-      console.log('where do i crash?3');
       return res.status(200).json({ status: 'Created', configequipment });
     } else {
-      console.log('where do i crash?2');
       return res.status(200).json({ status: 'Already exists', configequipment });
     }
   })
