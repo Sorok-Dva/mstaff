@@ -103,7 +103,9 @@ let verifyCheckedSchedule = () => {
 };
 
 let verifyInternshipDate = () => {
-  if (application.start && application.end)
+  let start = $('#start').data("DateTimePicker").date();
+  let end = $('#end').data("DateTimePicker").date();
+  if (start !== null && end !== null)
     return true;
   return false;
 };
@@ -263,9 +265,8 @@ let timeModalListener = () => {
   $('#timeModal').on('hide.bs.modal', function() {
     if (!toNextModal){
       $('#cdiSchedule input').bootstrapToggle('off');
-      $('#internshipDate input').datetimepicker('clear');
-      delete application.start;
-      delete application.end;
+      $('#start').data("DateTimePicker").clear();
+      $('#end').data("DateTimePicker").clear();
       $('#contractModal').modal('show');
     }
   });
@@ -304,7 +305,6 @@ let timeModalListener = () => {
   });
 
   $('#internshipDate input').on('dp.change', (e) => {
-    console.log(e.date);
     switch (e.currentTarget.id) {
       case 'start':
         $('#end').data("DateTimePicker").minDate(e.date);
@@ -316,6 +316,7 @@ let timeModalListener = () => {
         break;
     }
     verifyInternshipDate() ? $('#toStep4').show() : $('#toStep4').hide();
+
   });
 
   $('#toStep4').on('click', () => {
