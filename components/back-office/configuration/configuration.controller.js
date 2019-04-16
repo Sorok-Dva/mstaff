@@ -24,7 +24,37 @@ BackOffice_Configuration.ViewSkills = (req, res, next) => {
 };
 
 BackOffice_Configuration.ViewEquipments = (req, res, next) => {
-  return Models.ConfigEquipments.findAll().then(equipmentslinks => {
+  return Models.ConfigEquipments.findAll({ include:
+      [
+        { model: Models.Equipment,
+          on: {
+            '$ConfigEquipments.id_equipment$': {
+              [Op.col]: 'Equipment.id'
+            }
+          },
+          attributes: ['name'],
+          required: true
+        },
+        { model: Models.Post,
+          on: {
+            '$ConfigEquipments.id_post$': {
+              [Op.col]: 'Post.id'
+            }
+          },
+          attributes: ['name'],
+          required: true
+        },
+        { model: Models.Service,
+          on: {
+            '$ConfigEquipments.id_service$': {
+              [Op.col]: 'Service.id'
+            }
+          },
+          attributes: ['name'],
+          required: true
+        },
+      ]
+  }).then(equipmentslinks => {
     res.render('back-office/configuration/equipment', {
       layout,
       title: 'Configuration des compétences utilisateur',

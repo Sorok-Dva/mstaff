@@ -6,7 +6,6 @@ const { BackError } = require(`${__}/helpers/back.error`);
 const moment = require('moment');
 const httpStatus = require('http-status');
 
-const sequelize = require(`${__}/bin/sequelize`);
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
 const Mailer = require(`${__}/components/mailer`);

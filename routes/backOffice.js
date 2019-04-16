@@ -146,4 +146,11 @@ router.get('/configuration/skills', Authentication.ensureIsAdmin, BackOffice.Con
  */
 router.get('/configuration/equipments', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewEquipments);
 
+/** @Route('/back-office/settings/') GET;
+ * Show app settings page
+ */
+router.get('/settings',
+  Authentication.ensureIsAdmin,
+  BackOffice.Main.ViewSettings);
+
 module.exports = router;

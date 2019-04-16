@@ -914,4 +914,20 @@ User_Candidate.viewConferences = (req, res, next) => {
   })
 };
 
+User_Candidate.setAvailability = (req, res, next) => {
+  Models.User.findOne({
+    where: { id: req.user.id },
+    include: {
+      model: Models.Candidate,
+      as: 'candidate',
+      required: true
+    } }).then(user => {
+    if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
+    user.candidate.is_available = req.body.available;
+    user.candidate.save().then(result => {
+      return res.status(200).send(result.is_available);
+    });
+  }).catch(error => next(new BackError(error)));
+};
+
 module.exports = User_Candidate;
