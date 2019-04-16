@@ -56,6 +56,7 @@ Conference.sendInvitationNotification = (conference, req) => {
           need,
           es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
         },
+        message: req.body.message,
         actions: [{
           'type': 'success',
           'text': 'Disponible',
