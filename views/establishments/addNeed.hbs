@@ -29,7 +29,8 @@
   }
 
   .card-user {
-    min-height: 375px;
+    min-height: 430px;
+    height: auto;
     margin-top: 20px;
   }
 
@@ -41,6 +42,7 @@
 <script>
   let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
+  let baseCVCount = {{candidatesCount.0.count}};
   let need = {
     selectedCandidates: [], filterQuery: {
       establishments: [esId]
@@ -48,7 +50,7 @@
   };
 </script>
 <div class="col-md-12">
-  <h4 class="text-center">Vous avez accès à <span class="label label-primary">{{candidatesCount.0.count}}</span> professionnels au sein de votre CVthèque.</h4>
+  <h4 class="text-center">Vous avez accès à <span class="label label-primary" id="cvCount">{{candidatesCount.0.count}}</span> professionnels au sein de votre CVthèque.</h4>
 </div>
 <div class="row">
   <div class="col-md-offset-2 col-md-8 col-sm-12">
@@ -153,6 +155,9 @@
                   <i class="fal fa-sun"{{#if data.Wish.day_time}} style="color: #04e900"{{/if}}></i>
                   <i class="fal fa-moon"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
                 </h5>
+                {{#if data.Wish.posts}}
+                  <h5><label class="label label-success">{{this.Wish.posts}}</label></h5>
+                {{/if}}
                 {{#if data.Wish.services}}
                   <hr style="width: 35%; margin: auto">
                   <h5 class="text-muted">
