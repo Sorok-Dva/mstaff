@@ -13,7 +13,37 @@ const layout = 'admin';
 const BackOffice_Configuration = {};
 
 BackOffice_Configuration.ViewSkills = (req, res, next) => {
-  return Models.ConfigSkills.findAll().then(skillslinks => {
+  return Models.ConfigSkills.findAll({ include:
+      [
+        { model: Models.Skill,
+          on: {
+            '$ConfigSkills.id_skill$': {
+              [Op.col]: 'Skill.id'
+            }
+          },
+          attributes: ['name'],
+          required: true
+        },
+        { model: Models.Post,
+          on: {
+            '$ConfigSkills.id_post$': {
+              [Op.col]: 'Post.id'
+            }
+          },
+          attributes: ['name'],
+          required: true
+        },
+        { model: Models.Service,
+          on: {
+            '$ConfigSkills.id_service$': {
+              [Op.col]: 'Service.id'
+            }
+          },
+          attributes: ['name'],
+          required: true
+        },
+      ]
+  }).then(skillslinks => {
     res.render('back-office/configuration/skill', {
       layout,
       title: 'Configuration des compétences utilisateur',
