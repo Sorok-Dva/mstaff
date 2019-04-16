@@ -1,5 +1,6 @@
 let postsArray = [];
 let application = {};
+let experiences = [];
 let toNextModal = false;
 let allPosts, allServices;
 
@@ -333,11 +334,41 @@ let timeModalListener = () => {
         break;
     }
     verifyInternshipDate() ? $('#toStep4').show() : $('#toStep4').hide();
-
   });
 
   $('#toStep4').on('click', () => {
     nextStepFrom('timeModal');
+  });
+};
+
+let experienceModalListener = () => {
+  $('#experienceModal').on('hide.bs.modal', function() {
+    if (!toNextModal){
+      $('#contractModal').modal('show');
+    }
+  });
+
+  $('#xpDate input').datetimepicker({
+    format: 'D MMMM YYYY',
+    useCurrent: false,
+    ignoreReadonly: true,
+  });
+
+  $('#xpDate input').on('dp.change', (e) => {
+    switch (e.currentTarget.id) {
+      case 'xpStart':
+        $('#xpEnd').data("DateTimePicker").minDate(e.date);
+        experiences.xpStart = new Date(e.date);
+        break;
+      case 'xpEnd':
+        $('#xpStart').data("DateTimePicker").maxDate(e.date);
+        experiences.xpEnd = new Date(e.date);
+        break;
+    }
+  });
+
+  $('#toStep5').on('click', () => {
+    nextStepFrom('experienceModal');
   });
 };
 
@@ -348,5 +379,6 @@ $(document).ready(function () {
   postModalListener();
   contractModalListener();
   timeModalListener();
+  experienceModalListener();
 
 });
