@@ -84,6 +84,7 @@ let showDiplomaModal = () => {
 
 let resetSearch = () => {
   $('input#post').val('');
+  $('#cvCount').text(baseCVCount);
   $('#searchResult').empty().hide();
   $('#baseResult').show();
   $('#btnContractType').empty();
