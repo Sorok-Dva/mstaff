@@ -110,20 +110,6 @@ let verifyInternshipDate = () => {
   return false;
 };
 
-let verifyStep = (step) => {
-  switch (step) {
-    case 'postModal':
-      return verifyInputPost();
-      break;
-    case 'contractModal':
-      return verifyCheckedContract();
-      break
-    case 'timeModal':
-      return verifyCheckedSchedule();
-      break
-  }
-};
-
 // Save datas
 
 let saveServices = () => {
@@ -137,12 +123,60 @@ let saveServices = () => {
 
 // Logic to next step
 
+let transitionToNext = (step) => {
+  switch(step) {
+    case 'mainModal':
+      $('#mainModal').modal('hide');
+      $('#postModal').modal('show');
+      break;
+    case 'postModal':
+      $('#postModal').modal('hide');
+      $('#contractModal').modal('show');
+      break;
+    case 'contractModal':
+      $('#contractModal').modal('hide');
+      if (application.contractType === 'vacation')
+        $('#experienceModal').modal('show');
+      else
+        $('#timeModal').modal('show');
+      if (application.contractType === 'cdi'){
+        $('#cdiSchedule').css('display', 'flex');
+        $('#internshipDate').css('display', 'none');
+      } else if (application.contractType === 'internship'){
+        $('#cdiSchedule').css('display', 'none');
+        $('#internshipDate').css('display', 'flex');
+      }
+      break;
+    case 'timeModal':
+      $('#timeModal').modal('hide');
+      $('#experienceModal').modal('show');
+      break;
+  }
+};
+
+let verifyStep = (step) => {
+  switch (step) {
+    case 'postModal':
+      return verifyInputPost();
+      break;
+    case 'contractModal':
+      return verifyCheckedContract();
+      break;
+    case 'timeModalCdi':
+      return verifyCheckedSchedule();
+      break;
+    case 'timeModalInternship':
+      return verifyInternshipDate();
+      break;
+  }
+};
+
 let nextStepFrom = (currentStep) => {
-    console.log(application);
-    switch (currentStep) {
+  console.log(application);
+  toNextModal = true;
+  switch (currentStep) {
       case 'mainModal':
-        $('#mainModal').modal('hide');
-        $('#postModal').modal('show');
+        transitionToNext(currentStep);
         if (postsArray.length === 0)
           getPosts().then(posts => createCurrentPostList(posts));
         break;
@@ -151,40 +185,23 @@ let nextStepFrom = (currentStep) => {
         if (verifyStep(currentStep)) {
           application.post = $('#InputPosts').val();
           saveServices();
-          toNextModal = true;
-          $('#postModal').modal('hide');
-          $('#contractModal').modal('show');
+          transitionToNext(currentStep);
         }
-        toNextModal = false;
         break;
 
       case 'contractModal':
-        if (verifyStep(currentStep)){
-          toNextModal = true;
-          $('#contractModal').modal('hide');
-          $('#timeModal').modal('show');
-          if (application.contractType === 'cdi'){
-            $('#cdiSchedule').css('display', 'flex');
-            $('#internshipDate').css('display', 'none');
-          } else  if (application.contractType === 'internship'){
-            $('#cdiSchedule').css('display', 'none');
-            $('#internshipDate').css('display', 'flex');
-          } else nextStepFrom('timeModal')
-        }
-        toNextModal = false;
+        if (verifyStep(currentStep))
+          transitionToNext(currentStep);
         break;
 
       case 'timeModal':
-        if (verifyStep(currentStep)){
-          toNextModal = true;
-          // TODO on ouvre / ferme les fenetres
-          console.log('page apres timeModal');
-          console.log(application.start);
-          console.log(application.end);
-        }
-        toNextModal = false;
+        if (application.contractType === 'cdi')
+          verifyStep('timeModalCdi') ? transitionToNext(currentStep) : null;
+        else if (application.contractType === 'internship')
+          verifyStep('timeModalInternship') ? transitionToNext(currentStep) : null;
         break;
-    }
+  }
+  toNextModal = false;
 };
 
 // Listeners
