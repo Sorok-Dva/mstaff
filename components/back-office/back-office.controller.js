@@ -69,4 +69,8 @@ BackOffice.ViewStats = (req, res) => {
   res.render('back-office/stats', { layout, title: 'Statistiques', a: { main: 'dashboard', sub: 'stats' } })
 };
 
+BackOffice.ViewSettings = (req, res, next) => {
+  res.render('back-office/settings', { layout, title: 'Paramètres de l\'application', a: { main: 'serverSettings', sub: 'main' } })
+};
+
 module.exports = BackOffice;

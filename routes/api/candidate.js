@@ -28,6 +28,9 @@ const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).
   ]
 );
 
+router.post('/availability',
+  Authentication.ensureIsCandidate,
+  User.Candidate.setAvailability);
 
 /**
  * @Route('/api/user/:action/video') POST;

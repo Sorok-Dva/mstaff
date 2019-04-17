@@ -38,9 +38,12 @@ Establishment.Select = (req, res, next) => {
 };
 
 Establishment.findBySubdomain = (req, res, next) => {
+  let term;
+  if (req.get('host') === 'postuler.croix-rouge.fr') term = 'postuler.crf';
+  else term = req.subdomains[0];
   Models.Establishment.findOne({
     where: {
-      domain_name: req.subdomains[0],
+      domain_name: term,
       domain_enable: true
     }
   }).then(es => {

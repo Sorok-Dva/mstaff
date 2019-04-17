@@ -103,7 +103,7 @@ module.exports = {
     resave: true
   }),
   verifyMaintenance: (req, res, next) => {
-    if (req.url.search('static') !== -1) return next();
+    if (req.url.search('static') !== -1 || req.url.search('back-office') !== -1) return next();
     ServerController.verifyMaintenance(status => {
       if (status === 'maintenance') {
         return res.render('index', { layout: 'maintenance' });
@@ -112,7 +112,7 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2' || req.get('host') === 'postuler.croix-rouge.fr')
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2')
       return next();
     EstablishmentController.Establishment.Main.findBySubdomain(req, res, (data) => {
       res.locals.es = data;

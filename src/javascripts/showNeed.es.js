@@ -178,7 +178,6 @@ $(document).ready(() => {
     });
   });
 
-
   $.get(`/api/es/${esId}/need/${nId}/newCandidates`, (data) => {
     if (data.length === 0) {
       $('#searchNewCandidates').html('Pas de nouveaux candidats')

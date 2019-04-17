@@ -29,7 +29,8 @@
   }
 
   .card-user {
-    min-height: 375px;
+    min-height: 430px;
+    height: auto;
     margin-top: 20px;
   }
 
@@ -41,6 +42,7 @@
 <script>
   let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
+  let baseCVCount = {{candidatesCount.0.count}};
   let need = {
     selectedCandidates: [], filterQuery: {
       establishments: [esId]
@@ -48,10 +50,10 @@
   };
 </script>
 <div class="col-md-12">
-  <h4 class="text-center">Vous avez accès à <span class="label label-primary">{{candidatesCount.0.count}}</span> professionnels au sein de votre CVthèque.</h4>
+  <h4 class="text-center">Vous avez accès à <span class="label label-primary" id="cvCount">{{candidatesCount.0.count}}</span> professionnels au sein de votre CVthèque.</h4>
 </div>
 <div class="row">
-  <div class="col-md-offset-2 col-md-8 col-sm-12">
+  <div class="col-md-offset-2 col-md-8 col-sm-12" style="margin-right: -30px;">
     <div class="form-group">
       <div class="searchbar-wrapper">
         <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
@@ -73,6 +75,12 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-sm-12">
+    <div style="padding: 15px">
+      <i class="fal fa-star fa-2x Show" id="showFavorites" onclick="showFavorites()" style="cursor: pointer" title="Afficher uniquement mes favoris"></i>
+      <i class="fal fa-archive fa-2x Show" id="showArchived" onclick="showArchived()" style="cursor: pointer; margin-left: 5px" title="Afficher uniquement mes candidats archivés"></i>
     </div>
   </div>
 </div>
@@ -97,11 +105,12 @@
 <div class="row" style="padding-top: 30px">
   <div id="baseResult" class="col-md-12">
     {{#each candidates as |data|}}
-      {{#unless data.Establishment.ArchivedCandidates.0.candidate_id}}
-        <div class="col-md-3" data-card-user="{{data.Wish.Candidate.id}}">
-          <div class="card card-user">
-            <div class="image">
-              <div class="pull-left">
+      <div class="col-md-3" data-card-user="{{data.Wish.Candidate.id}}"
+        {{#if data.Establishment.ArchivedCandidates.0.candidate_id}} data-archived="true" style="display:none"{{else}} data-archived="false"{{/if}}
+        {{#if data.Establishment.FavoriteCandidates.0.candidate_id}} data-favorite="true"{{else}} data-favorite="false"{{/if}}>
+        <div class="card card-user">
+          <div class="image">
+            <div class="pull-left">
                 <span class="pull-right" style="margin: 5px">
                   <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
                      onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
@@ -109,79 +118,81 @@
                      onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')"
                      style="display:none;cursor: pointer; color: #35e035"></i>
                 </span>
-              </div>
-              <div class="actions pull-right">
-                <ul class="list-inline">
-                  <li>
-                    <i class="fal fa-archive fa-1d3x" onclick="addCandidate({{data.Wish.Candidate.id}}, 'archive')"
-                       style="cursor: pointer"></i>
-                  </li>
-                  <li>
-                    <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
-                       title="Ajouté par {{data.Establishment.FavoriteCandidates.0.User.firstName}} {{data.Establishment.FavoriteCandidates.0.User.lastName}}"
-                      {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
-                       onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unfav')"
-                       style="cursor: pointer; color: gold"
-                      {{else}}
-                       onclick="addCandidate({{data.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"
-                      {{/if}}>
-                    </i>
-                  </li>
-                </ul>
-              </div>
             </div>
-            <div class="content">
-              <div class="author">
-                <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg"/>
-                <div class="rank-label-container">
-                  <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate.percentage}}}</span>
-                </div>
-                <h5 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
-                  <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>,
-                  <small><b><i class="fal fa-map-marker-alt"></i> {{data.Wish.Candidate.User.town}}</b></small>
-                </h5>
+            <div class="actions pull-right">
+              <ul class="list-inline">
+                <li>
+                  <i class="fal fa-archive fa-1d3x" onclick="addCandidate({{data.Wish.Candidate.id}}, 'archive')"
+                     style="cursor: pointer"></i>
+                </li>
+                <li>
+                  <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
+                     title="Ajouté par {{data.Establishment.FavoriteCandidates.0.User.firstName}} {{data.Establishment.FavoriteCandidates.0.User.lastName}}"
+                    {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
+                     onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unfav')"
+                     style="cursor: pointer; color: gold"
+                    {{else}}
+                     onclick="addCandidate({{data.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"
+                    {{/if}}>
+                  </i>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="content">
+            <div class="author">
+              <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg"/>
+              <div class="rank-label-container">
+                <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate.percentage}}}</span>
               </div>
-              <div class="text-center">
-                <h6>
-                  <div class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"></div>
-                  <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"
-                        style="line-height: 1.8">
-                    {{#if data.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
-                  </span>
-                </h6>
+              <h5 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
+                <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>,
+                <small><b><i class="fal fa-map-marker-alt"></i> {{data.Wish.Candidate.User.town}}</b></small>
+              </h5>
+            </div>
+            <div class="text-center">
+              <h6>
+                <div class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"></div>
+                <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"
+                      style="line-height: 1.8">
+                  {{#if data.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
+                </span>
+              </h6>
+              <h5 class="text-muted">
+                <i class="fal fa-sun"{{#if data.Wish.day_time}} style="color: #04e900"{{/if}}></i>
+                <i class="fal fa-moon"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
+              </h5>
+              {{#if data.Wish.posts}}
+                <h5><label class="label label-success">{{this.Wish.posts}}</label></h5>
+              {{/if}}
+              {{#if data.Wish.services}}
+                <hr style="width: 35%; margin: auto">
                 <h5 class="text-muted">
-                  <i class="fal fa-sun"{{#if data.Wish.day_time}} style="color: #04e900"{{/if}}></i>
-                  <i class="fal fa-moon"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
+                  Intéressé(e) par les services
                 </h5>
-                {{#if data.Wish.services}}
-                  <hr style="width: 35%; margin: auto">
-                  <h5 class="text-muted">
-                    Intéressé(e) par les services
-                  </h5>
-                  <h6>
-                    {{#each data.Wish.services as |service|}}
-                      <div class="label label-default">{{service}}</div>
-                    {{/each}}
-                  </h6>
-                  <hr style="width: 35%; margin: auto;">
-                {{/if}}
+                <h6>
+                  {{#each data.Wish.services as |service|}}
+                    <div class="label label-default">{{service}}</div>
+                  {{/each}}
+                </h6>
+                <hr style="width: 35%; margin: auto;">
+              {{/if}}
+            </div>
+            <div class="col-md-12 text-center profile-cta">
+              <div class="col-md-12">
+                <button class="btn btn-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">Accéder
+                  au profil complet
+                </button>
               </div>
-              <div class="col-md-12 text-center profile-cta">
-                <div class="col-md-12">
-                  <button class="btn btn-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">Accéder
-                    au profil complet
-                  </button>
-                </div>
-                <div class="col-md-12">
-                  <p class="text-muted">
-                    <small>Inscrit le {{date data.createdAt 'DD/MM/YYYY'}}</small>
-                  </p>
-                </div>
+              <div class="col-md-12">
+                <p class="text-muted">
+                  <small>Inscrit le {{date data.createdAt 'DD/MM/YYYY'}}</small>
+                </p>
               </div>
             </div>
           </div>
         </div>
-      {{/unless}}
+      </div>
     {{/each}}
     {{#unless candidates}}
       <h3>Aucun candidats n'a encore postuler dans votre établissement.</h3>

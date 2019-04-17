@@ -15,6 +15,12 @@
         </div>
       </div>
     </div>
+    <p class="text-center"><hr></p>
+    <div class="form-group col-md-12">
+        <textarea class="form-control rounded-0"
+                  placeholder="Vous pouvez indiquer ici les précisions nécessaires au candidat (facultatif)"
+                  id="notifyMessage" rows="10"></textarea>
+    </div>
   </div>
 </div>
 <div class="modal-footer">
@@ -49,7 +55,7 @@
 
     $('button#sendInvitation').on('click', function() {
       $.post(`/api/es/${esId}/need/{{this.needId}}/candidate/{{this.cID}}/conference`, {
-        _csrf, date: timeType.dateStart, type: '{{this.type}}'
+        _csrf, date: timeType.dateStart, type: '{{this.type}}', message: $('#notifyMessage').val()
       }, data => {
         if (data.id) {
           $('#createConferenceModal').modal('hide');

@@ -134,4 +134,12 @@ router.get('/groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewGroups)
  */
 router.get('/super-groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewSuperGroups);
 
+/**
+ * @Route('/back-office/settings/') GET;
+ * Show app settings page
+ */
+router.get('/settings',
+  Authentication.ensureIsAdmin,
+  BackOffice.Main.ViewSettings);
+
 module.exports = router;
