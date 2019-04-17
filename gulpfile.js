@@ -69,8 +69,10 @@ let buildStyles = () => {
 let buildScripts = () => {
   if (Env.current === 'development') {
     return src(JS_SRC)
+      .pipe(sourcemaps.init())
       .pipe(terser())
       .pipe(rename({ suffix: '.min' }))
+      .pipe(sourcemaps.write())
       .pipe(dest(JS_DST))
       .pipe(browsersync.reload({ stream: true }));
   } else {
