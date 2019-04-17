@@ -84,6 +84,7 @@ let showDiplomaModal = () => {
 
 let resetSearch = () => {
   $('input#post').val('');
+  $('#cvCount').text(baseCVCount);
   $('#searchResult').empty().hide();
   $('#baseResult').show();
   $('#btnContractType').empty();
@@ -109,6 +110,7 @@ let addCandidate = (id, type) => {
       $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
       $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
         if (data.status === 'Created') {
+          $(`div[data-card-user="${id}"]`).attr('data-favorite', 'true');
           notification({
             icon: 'check-circle',
             type: 'success',
@@ -132,8 +134,8 @@ let addCandidate = (id, type) => {
         $('#archivateCandidate').click(function () {
           $('#archivateCandidateModal').modal('hide');
           $.post(`/api/es/${esId}/candidate/${id}/archive/`, { _csrf }, (data) => {
-            $(`div[data-card-user="${id}"]`).remove();
             if (data.status === 'Created') {
+              $(`div[data-card-user="${id}"]`).attr('data-archived', 'true').hide();
               notification({
                 icon: 'check-circle',
                 type: 'success',
@@ -172,6 +174,7 @@ let removeCandidate = (id, type) => {
       $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
       $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
         if (data.status === 'deleted') {
+          $(`div[data-card-user="${id}"]`).attr('data-favorite', 'false');
           notification({
             icon: 'check-circle',
             type: 'success',
@@ -180,6 +183,30 @@ let removeCandidate = (id, type) => {
         }
       });
       break;
+  }
+};
+
+let showArchived = () =>{
+  if($('#showArchived').hasClass('Show')) {
+    $('div[data-archived="false"]').hide();
+    $('div[data-archived="true"]').show();
+    $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
+  } else {
+    $('div[data-archived="true"]').hide();
+    $('div[data-archived="false"]').show();
+    $('#showArchived').removeClass('Hide').addClass('Show').css('color', 'black');
+  }
+};
+
+let showFavorites = () => {
+  if($('#showFavorites').hasClass('Show')) {
+    $('div[data-favorite="false"][data-archived="false"]').hide();
+    $('div[data-favorite="true"][data-archived="false"]').show();
+    $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
+  } else {
+    $('div[data-favorite="true"][data-archived="false"]').show();
+    $('div[data-favorite="false"][data-archived="false"]').show();
+    $('#showFavorites').removeClass('Hide').addClass('Show').css('color', 'black');
   }
 };
 

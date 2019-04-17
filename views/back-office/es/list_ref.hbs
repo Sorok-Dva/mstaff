@@ -95,6 +95,12 @@
       url: '/api/back-office/establishmentsReferences',
       searchAlign: 'left',
       pageSize: 100,
+      showExport: true,
+      exportDataType: 'all',
+      exportOptions: {
+        fileName: 'mstaff-comptes-es',
+        ignoreColumn: ['actions']
+      },
       pageList: [25,50,100,200,500],
       icons: {
         columns: 'fa fa-columns',

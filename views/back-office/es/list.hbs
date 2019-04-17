@@ -90,6 +90,12 @@
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
+      showExport: true,
+      exportDataType: 'all',
+      exportOptions: {
+        fileName: 'mstaff-es',
+        ignoreColumn: ['actions']
+      },
       pageList: [10,25,50,100,200,500],
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " rows visible";

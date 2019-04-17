@@ -83,11 +83,16 @@
       toolbar: ".toolbar",
       search: true,
       showColumns: true,
-      showExport: true,
       pagination: true,
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
+      showExport: true,
+      exportDataType: 'all',
+      exportOptions: {
+        fileName: 'mstaff-utilisateurs-es',
+        ignoreColumn: ['actioexitns']
+      },
       pageList: [10,25,50,100,200,500],
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " résultats visible";
