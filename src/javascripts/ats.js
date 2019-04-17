@@ -5,11 +5,15 @@ let toNextModal = false;
 let allPosts, allServices;
 
 let initApplication = () => {
-  application.fullTime = false;
-  application.partTime = false;
-  application.dayTime = false;
-  application.nightTime = false;
-
+  return new Promise( resolve => {
+    application.fullTime = false;
+    application.partTime = false;
+    application.dayTime = false;
+    application.nightTime = false;
+    allPosts = getPosts();
+    allServices = getServices();
+    resolve();
+  });
 };
 
 // Retrieval datas into BDD
@@ -36,21 +40,22 @@ let getServices = () => {
 
 // Initialize Lists
 
-let createCurrentPostList = (allPosts) => {
-  allPosts.forEach( post => {
+let createPostsList = (posts, input) => {
+  postsArray = [];
+  posts.forEach( post => {
     postsArray.push(post.name);
   });
   postsArray.sort();
-  $('#InputPosts').autocomplete({
+  input.autocomplete({
     source: postsArray,
     minLength: 3
   });
 };
 
-let createCurrentServiceList = (currentServices) => {
-  $('#InputServices').empty();
-  $('#InputServices').select2({
-    data: currentServices.sort(),
+let createServicesList = (services, input) => {
+  input.empty();
+  input.select2({
+    data: services.sort(),
     placeholder: "Service(s) ?",
     minimumInputLength: 3,
     minimumResultsForSearch: Infinity
@@ -59,24 +64,22 @@ let createCurrentServiceList = (currentServices) => {
 
 // Filter and Generate Lists
 
-let filterCurrentServices = (allServices ,category) => {
-  let currentServices = [];
-  allServices.forEach( service => {
+let filterServicesByCategory = (services ,category) => {
+  let filteredServices = [];
+  services.forEach( service => {
     if (service.categoriesPS_id === category)
-      currentServices.push(service.name);
+      filteredServices.push(service.name);
     if (service.categoriesPS_id === 2 && category === 3)
-      currentServices.push(service.name);
+      filteredServices.push(service.name);
   });
-  return currentServices;
+  return filteredServices;
 };
 
-let generateServiceListByCategory = (category) => {
-  getServices().then(services => {
+let generateServiceListByCategory = (category, input) => {
     if (category !== undefined) {
-      let currentServices = filterCurrentServices(services, category);
-      createCurrentServiceList(currentServices);
+      let currentServices = filterServicesByCategory(allServices, category);
+      createServicesList(currentServices, input);
     }
-  });
 };
 
 
@@ -109,6 +112,25 @@ let verifyInternshipDate = () => {
   if (start !== null && end !== null)
     return true;
   return false;
+};
+
+let verifyInputXpPost = () => {
+  if (postsArray.includes($('#xpPost').val()))
+    return true;
+  else
+    return false;
+};
+
+let verifyXpComplete = () => {
+  if (verifyInputXpPost())
+    console.log(true);
+  else console.log(false);
+  console.log($('#xpEstablishment').val());
+  console.log($('#xpPost').val());
+  console.log($('#radioContract input:checked').attr('id'));
+  console.log($('#xpService').val());
+  console.log($('#xpStart').data("DateTimePicker").date());
+  console.log($('#xpEnd').data("DateTimePicker").date());
 };
 
 // Save datas
@@ -179,7 +201,9 @@ let nextStepFrom = (currentStep) => {
       case 'mainModal':
         transitionToNext(currentStep);
         if (postsArray.length === 0)
-          getPosts().then(posts => createCurrentPostList(posts));
+          
+          createPostsList(allPosts, $('#InputPosts'));
+          // getPosts().then(posts => createPostsList(posts, $('#InputPosts')));
         break;
 
       case 'postModal':
@@ -191,8 +215,11 @@ let nextStepFrom = (currentStep) => {
         break;
 
       case 'contractModal':
-        if (verifyStep(currentStep))
+        if (verifyStep(currentStep)){
+          createPostsList(allPosts, $('#xpPost'));
           transitionToNext(currentStep);
+        }
+
         break;
 
       case 'timeModal':
@@ -224,7 +251,7 @@ let postModalListener = () => {
       let post = $('#InputPosts').val();
       $('#toStep2').show();
       let category = allPosts.find(item => item.name === post).categoriesPS_id;
-      generateServiceListByCategory(category);
+      generateServiceListByCategory(category, $('#InputServices'));
       $('.select-holder > div').show();
     } else {
       $('#toStep2').hide();
@@ -342,6 +369,8 @@ let timeModalListener = () => {
 };
 
 let experienceModalListener = () => {
+
+
   $('#experienceModal').on('hide.bs.modal', function() {
     if (!toNextModal){
       $('#contractModal').modal('show');
@@ -353,7 +382,6 @@ let experienceModalListener = () => {
     useCurrent: false,
     ignoreReadonly: true,
   });
-
   $('#xpDate input').on('dp.change', (e) => {
     switch (e.currentTarget.id) {
       case 'xpStart':
@@ -367,6 +395,26 @@ let experienceModalListener = () => {
     }
   });
 
+  $('#xpPost').on( 'keyup autocompleteclose', () => {
+    if (verifyInputXpPost()){
+      let post = $('#xpPost').val();
+      let category = allPosts.find(item => item.name === post).categoriesPS_id;
+      generateServiceListByCategory(category, $('#xpService'));
+    } else {
+      $('#xpService').val(null).trigger('change');
+    }
+  });
+
+
+  $('.inputsXp input').on('change', function (e){
+    console.log('Change dans inputsXp');
+    verifyXpComplete();
+  });
+  $('#xpDate').on('dp.change', function(e){
+    console.log('Change dans xpDate');
+    verifyXpComplete();
+  });
+
   $('#toStep5').on('click', () => {
     nextStepFrom('experienceModal');
   });
@@ -374,11 +422,11 @@ let experienceModalListener = () => {
 
 $(document).ready(function () {
 
-  initApplication();
-  mainModalListener();
-  postModalListener();
-  contractModalListener();
-  timeModalListener();
-  experienceModalListener();
-
+  initApplication().then( () => {
+      mainModalListener();
+      postModalListener();
+      contractModalListener();
+      timeModalListener();
+      experienceModalListener();
+  });
 });

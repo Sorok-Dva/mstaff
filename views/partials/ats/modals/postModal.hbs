@@ -26,12 +26,15 @@
     border: none;
   }
   .select2-container--default .select2-selection--multiple .select2-selection__rendered{
-    min-height: 8vh;
-    max-height: 8vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 4vh;
+    max-height: 30vh;
     overflow-y: scroll;
   }
   .select2-results__option[aria-selected]{
-    /*background-color: rgba(0,0,0,0.4);*/
+    background-color: rgba(0,0,0,0.4);
   }
   .select2-container--default .select2-results__option--highlighted[aria-selected]{
     background-color: transparent;
@@ -70,7 +73,7 @@
   .ui-widget.ui-widget-content{
     border: none;
     color: white;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.7);
     max-width: 40%;
     max-height: 50%;
     overflow: scroll;

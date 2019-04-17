@@ -1,4 +1,7 @@
 <style>
+  .recap{
+    overflow-y: scroll;
+  }
   .recap p:nth-child(1){
     font-size: 1.2em;
   }
@@ -62,6 +65,17 @@
     width: 75%;
     border-bottom: 2px solid white;
     color: white;
+  }
+  .saveXp{
+    color: white;
+    cursor: pointer;
+    height: 15%;
+  }
+  .saveXp p{
+    font-size: 1.5em;
+  }
+  .saveXp div{
+    display: none;
   }
 </style>
 
@@ -133,6 +147,12 @@
                   <input id="xpEnd" name="xpEnd" type="text"
                          class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#xpEnd" readonly>
                 </div>
+              </div>
+            </div>
+            <div class="saveXp">
+              <div>
+                <i class="fal fa-check-circle fa-3x"></i>
+                <p>Enregistrer</p>
               </div>
             </div>
             <div class="next-modal">
