@@ -1,5 +1,5 @@
 const { Authentication } = require('../middlewares/index');
-const { Establishment } = require('../components');
+const { Establishment, Conference } = require('../components');
 const express = require('express');
 const router = express.Router();
 
@@ -30,6 +30,14 @@ router.get('/candidates',
 router.get('/needs',
   Authentication.ensureIsEs,
   Establishment.Need.ViewAll);
+
+/**
+ * @Route('/conferences/calendar') GET;
+ * Show conferences page
+ */
+router.get('/conferences/calendar',
+  Authentication.ensureIsEs,
+  Conference.Main.viewConferences_ES);
 
 /**
  * @Route('/need/:id(\\d+)') GET;
