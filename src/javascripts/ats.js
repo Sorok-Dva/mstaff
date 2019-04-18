@@ -53,7 +53,7 @@ let createPostsList = (posts, input) => {
   });
 };
 
-let createServiceList = (services, input) => {
+let createServicesList = (services, input) => {
   servicesArray = [];
   services.forEach( service => {
     servicesArray.push(service);
@@ -102,10 +102,7 @@ let verifyInputPost = () => {
 };
 
 let verifyCheckedContract = () => {
-  if ($('#cdiToggle').prop('checked') || $('#vacationToggle').prop('checked') || $('#internshipToggle').prop('checked'))
-    return true;
-  else
-    return false;
+  return ($('#cdiToggle').prop('checked') || $('#vacationToggle').prop('checked') || $('#internshipToggle').prop('checked'));
 };
 
 let verifyCheckedSchedule = () => {
@@ -115,9 +112,7 @@ let verifyCheckedSchedule = () => {
 let verifyInternshipDate = () => {
   let start = $('#start').data("DateTimePicker").date();
   let end = $('#end').data("DateTimePicker").date();
-  if (start !== null && end !== null)
-    return true;
-  return false;
+  return (start !== null && end !== null);
 };
 
 let verifyInputXpPost = () => {
@@ -129,9 +124,7 @@ let verifyInputXpEstablishment = () => {
 };
 
 let verifyRadioContract = () => {
-  if ($('#radioContract input:checked').attr('id') !== undefined)
-    return true;
-  return false;
+  return ($('#radioContract input:checked').attr('id') !== undefined);
 };
 
 let verifyInputXpService = () => {
@@ -141,19 +134,11 @@ let verifyInputXpService = () => {
 let verifyXpDate = () => {
   let start = $('#xpStart').data("DateTimePicker").date();
   let end = $('#xpEnd').data("DateTimePicker").date();
-  if (start !== null && end !== null)
-    return true;
-  return false;
+  return (start !== null && end !== null);
 };
 
 let verifyXpComplete = () => {
-  // console.log(
-  //   verifyInputXpEstablishment(),
-  //   verifyInputXpPost(),
-  //   verifyRadioContract(),
-  //   verifyInputXpService(),
-  //   verifyXpDate()
-  // );
+  return (verifyInputXpEstablishment() && verifyInputXpPost() && verifyRadioContract() && verifyInputXpService() && verifyXpDate());
 };
 
 // Save datas
@@ -396,14 +381,13 @@ let timeModalListener = () => {
 };
 
 let experienceModalListener = () => {
-
-
   $('#experienceModal').on('hide.bs.modal', function() {
     if (!toNextModal){
       $('#contractModal').modal('show');
     }
   });
 
+  //Initialize
   $('#xpDate input').datetimepicker({
     format: 'D MMMM YYYY',
     useCurrent: false,
@@ -422,31 +406,40 @@ let experienceModalListener = () => {
     }
   });
 
+  //Listeners
+  $('#xpEstablishment').on('keyup', () => {
+    verifyInputXpEstablishment() ? $('#xpEstablishment').siblings().show() : $('#xpEstablishment').siblings().hide();
+  });
   $('#xpPost').on( 'keyup autocompleteclose', () => {
     if (verifyInputXpPost()){
       let post = $('#xpPost').val();
       let category = allPosts.find(item => item.name === post).categoriesPS_id;
       let currentServices = filterServicesByCategory(allServices, category);
       $('#xpPost').siblings().show();
-      createServiceList(currentServices, $('#xpService'));
+      createServicesList(currentServices, $('#xpService'));
     } else {
       $('#xpService').val(null).trigger('change');
-      $('#xpPost').siblings().hide();
+      $('#xpPost, #xpService').siblings().hide();
     }
   });
-  $('#xpEstablishment').on('keyup', () => {
-    verifyInputXpEstablishment() ? $('#xpEstablishment').siblings().show() : $('#xpEstablishment').siblings().hide();
-  });
-
   $('#xpService').on('keyup autocompleteclose', () => {
     verifyInputXpService() ? $('#xpService').siblings().show() : $('#xpService').siblings().hide();
   });
 
+  //Verify completion
   $('.inputsXp input').on('change', function (e){
-    verifyXpComplete();
+    verifyXpComplete() ? $('#saveXp').show() : $('#saveXp').hide();
   });
   $('#xpDate').on('dp.change', function(e){
-    verifyXpComplete();
+    verifyXpComplete() ? $('#saveXp').show() : $('#saveXp').hide();
+  });
+
+  $('#saveXp').on('click', () => {
+    if (verifyXpComplete()){
+      let current = {};
+      current.establishment =
+        console.log('on sauvegarde tout ce bordel');
+    }
   });
 
   $('#toStep5').on('click', () => {
