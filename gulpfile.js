@@ -63,7 +63,6 @@ let buildStyles = () => {
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(CSS_DST))
   }
-
 };
 
 let buildScripts = () => {
