@@ -1,4 +1,5 @@
 let postsArray = [];
+let servicesArray = [];
 let application = {};
 let experiences = [];
 let toNextModal = false;
@@ -48,13 +49,24 @@ let createPostsList = (posts, input) => {
   postsArray.sort();
   input.autocomplete({
     source: postsArray,
-    minLength: 3
+    minLength: 1
   });
 };
 
-let createServicesList = (services, input) => {
-  input.empty();
-  input.select2({
+let createServiceList = (services, input) => {
+  servicesArray = [];
+  services.forEach( service => {
+    servicesArray.push(service);
+  });
+  servicesArray.sort();
+  input.autocomplete({
+    source: servicesArray,
+    minLength: 1
+  });
+};
+
+let createServicesSelect = (services, input) => {
+  input.empty().select2({
     data: services.sort(),
     placeholder: "Service(s) ?",
     minimumInputLength: 3,
@@ -78,7 +90,7 @@ let filterServicesByCategory = (services ,category) => {
 let generateServiceListByCategory = (category, input) => {
     if (category !== undefined) {
       let currentServices = filterServicesByCategory(allServices, category);
-      createServicesList(currentServices, input);
+      createServicesSelect(currentServices, input);
     }
 };
 
@@ -86,10 +98,7 @@ let generateServiceListByCategory = (category, input) => {
 // Verification before next step
 
 let verifyInputPost = () => {
-  if (postsArray.includes($('#InputPosts').val()))
-    return true;
-  else
-    return false;
+  return postsArray.includes($('#InputPosts').val());
 };
 
 let verifyCheckedContract = () => {
@@ -100,10 +109,7 @@ let verifyCheckedContract = () => {
 };
 
 let verifyCheckedSchedule = () => {
-  if ($('#cdiSchedule input:checked').length !== 0)
-    return true;
-  else
-    return false;
+  return ($('#cdiSchedule input:checked').length !== 0);
 };
 
 let verifyInternshipDate = () => {
@@ -115,22 +121,39 @@ let verifyInternshipDate = () => {
 };
 
 let verifyInputXpPost = () => {
-  if (postsArray.includes($('#xpPost').val()))
+  return postsArray.includes($('#xpPost').val());
+};
+
+let verifyInputXpEstablishment = () => {
+  return !$.isEmptyObject($('#xpEstablishment').val());
+};
+
+let verifyRadioContract = () => {
+  if ($('#radioContract input:checked').attr('id') !== undefined)
     return true;
-  else
-    return false;
+  return false;
+};
+
+let verifyInputXpService = () => {
+  return servicesArray.includes($('#xpService').val());
+};;
+
+let verifyXpDate = () => {
+  let start = $('#xpStart').data("DateTimePicker").date();
+  let end = $('#xpEnd').data("DateTimePicker").date();
+  if (start !== null && end !== null)
+    return true;
+  return false;
 };
 
 let verifyXpComplete = () => {
-  if (verifyInputXpPost())
-    console.log(true);
-  else console.log(false);
-  console.log($('#xpEstablishment').val());
-  console.log($('#xpPost').val());
-  console.log($('#radioContract input:checked').attr('id'));
-  console.log($('#xpService').val());
-  console.log($('#xpStart').data("DateTimePicker").date());
-  console.log($('#xpEnd').data("DateTimePicker").date());
+  // console.log(
+  //   verifyInputXpEstablishment(),
+  //   verifyInputXpPost(),
+  //   verifyRadioContract(),
+  //   verifyInputXpService(),
+  //   verifyXpDate()
+  // );
 };
 
 // Save datas
@@ -201,9 +224,7 @@ let nextStepFrom = (currentStep) => {
       case 'mainModal':
         transitionToNext(currentStep);
         if (postsArray.length === 0)
-          
           createPostsList(allPosts, $('#InputPosts'));
-          // getPosts().then(posts => createPostsList(posts, $('#InputPosts')));
         break;
 
       case 'postModal':
@@ -224,9 +245,15 @@ let nextStepFrom = (currentStep) => {
 
       case 'timeModal':
         if (application.contractType === 'cdi')
-          verifyStep('timeModalCdi') ? transitionToNext(currentStep) : null;
+          if (verifyStep('timeModalCdi')){
+            createPostsList(allPosts, $('#xpPost'));
+            transitionToNext(currentStep);
+          }
         else if (application.contractType === 'internship')
-          verifyStep('timeModalInternship') ? transitionToNext(currentStep) : null;
+          if (verifyStep('timeModalInternship')){
+            createPostsList(allPosts, $('#xpPost'));
+            transitionToNext(currentStep);
+          }
         break;
   }
   toNextModal = false;
@@ -399,19 +426,26 @@ let experienceModalListener = () => {
     if (verifyInputXpPost()){
       let post = $('#xpPost').val();
       let category = allPosts.find(item => item.name === post).categoriesPS_id;
-      generateServiceListByCategory(category, $('#xpService'));
+      let currentServices = filterServicesByCategory(allServices, category);
+      $('#xpPost').siblings().show();
+      createServiceList(currentServices, $('#xpService'));
     } else {
       $('#xpService').val(null).trigger('change');
+      $('#xpPost').siblings().hide();
     }
   });
+  $('#xpEstablishment').on('keyup', () => {
+    verifyInputXpEstablishment() ? $('#xpEstablishment').siblings().show() : $('#xpEstablishment').siblings().hide();
+  });
 
+  $('#xpService').on('keyup autocompleteclose', () => {
+    verifyInputXpService() ? $('#xpService').siblings().show() : $('#xpService').siblings().hide();
+  });
 
   $('.inputsXp input').on('change', function (e){
-    console.log('Change dans inputsXp');
     verifyXpComplete();
   });
   $('#xpDate').on('dp.change', function(e){
-    console.log('Change dans xpDate');
     verifyXpComplete();
   });
 
@@ -421,7 +455,6 @@ let experienceModalListener = () => {
 };
 
 $(document).ready(function () {
-
   initApplication().then( () => {
       mainModalListener();
       postModalListener();
