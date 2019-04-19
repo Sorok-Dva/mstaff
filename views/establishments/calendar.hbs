@@ -31,24 +31,39 @@
       center: 'title',
       right: 'dayGridMonth,timeGridMonth,timeGridDay,listMonth'
     },
+    eventClick: (info) => {
+      let id = info.event.id;
+      $.get(`/api/es/{{currentES}}/conference/${id}`, conference => {
+        createModal({
+          title: 'Voir un évenement',
+          modal: 'es/conference/view',
+          id: 'viewConferenceModal',
+          context: {
+            conference
+          }
+        })
+      }).catch(error => errorsHandler(error));
+    },
     locale: 'fr',
-    buttonIcons: true, // show the prev/next text
+    buttonIcons: true,
     weekNumbers: false,
-    navLinks: true, // can click day/week names to navigate views
-    editable: true,
-    eventLimit: true, // allow "more" link when too many events
+    navLinks: true,
+    editable: false,
+    eventLimit: true,
 		events: [
       {{#each conferences as |conference|}}
         {
+          id: {{conference.id}},
           title: 'Entretien {{#ifCond conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}}',
           start: new Date('{{conference.date}}'),
           allDay: false,
           url: '#',
-          className: 'event-{{#ifCond conference.type '===' 'online'}}blue{{else}}orange{{/ifCond}}'
+          textColor: 'black',
+          color: "{{#ifCond conference.type '===' 'online'}}blue{{else}}orange{{/ifCond}}",
         },
       {{/each}}
 		]
 	});
-  calendar.render();
 
+  calendar.render();
 </script>

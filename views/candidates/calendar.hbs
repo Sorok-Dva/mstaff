@@ -1,95 +1,66 @@
+<link href='/static/assets/css/fullcalendar/core/main.css' rel='stylesheet' />
+<link href='/static/assets/css/fullcalendar/daygrid/main.css' rel='stylesheet' />
+<link href='/static/assets/css/fullcalendar/timegrid/main.css' rel='stylesheet' />
+<link href='/static/assets/css/fullcalendar/list/main.css' rel='stylesheet' />
 <div class="row">
-	<div class="col-md-10 col-md-offset-1">
-		<div class="card card-calendar">
-			<div class="card-content">
-				<div id="fullCalendar"></div>
-			</div>
-		</div>
-	</div>
+  <div class="col-md-10 col-md-offset-1">
+    <div class="card card-calendar">
+      <div class="card-content">
+        <div id="fullCalendar"></div>
+      </div>
+    </div>
+  </div>
 </div>
-<script src="/static/assets/js/fullcalendar.min.js"></script>
+<script src='/static/assets/js/fullcalendar/core/main.js'></script>
+<script src='/static/assets/js/fullcalendar/core/locales-all.js'></script>
+<script src='/static/assets/js/fullcalendar/interaction/main.js'></script>
+<script src='/static/assets/js/fullcalendar/daygrid/main.js'></script>
+<script src='/static/assets/js/fullcalendar/timegrid/main.js'></script>
+<script src='/static/assets/js/fullcalendar/list/main.js'></script>
 <script>
-	let $calendar = $('#fullCalendar');
+  let $calendar = document.getElementById('fullCalendar');
 
-	moment.locale('fr');
-	today = new Date();
-	y = today.getFullYear();
-	m = today.getMonth();
-	d = today.getDate();
-
-	$calendar.fullCalendar({
-		viewRender: function(view, element) {
-			// We make sure that we activate the perfect scrollbar when the view isn't on Month
-			if (view.name !== 'month'){
-				$(element).find('.fc-scroller').perfectScrollbar();
-			}
-		},
-		header: {
-			left: 'title',
-			center: 'month',
-			right: 'prev,next,today'
-		},
-		defaultDate: today,
-		selectable: true,
-		selectHelper: true,
-		views: {
-			month: { // name of view
-				titleFormat: 'MMMM YYYY'
-				// other view-specific options here
-			},
-			week: {
-				titleFormat: " MMMM D YYYY"
-			},
-			day: {
-				titleFormat: 'D MMM, YYYY'
-			}
-		},
-
-		select: function(start, end) {
-
-			// on select we show the Sweet Alert modal with an input
-			swal({
-				title: 'Create an Event',
-				html: '<div class="form-group">' +
-						'<input class="form-control" placeholder="Event Title" id="input-field">' +
-						'</div>',
-				showCancelButton: true,
-				confirmButtonClass: 'btn btn-success',
-				cancelButtonClass: 'btn btn-danger',
-				buttonsStyling: false
-			}).then(function(result) {
-
-				var eventData;
-				event_title = $('#input-field').val();
-
-				if (event_title) {
-					eventData = {
-						title: event_title,
-						start: start,
-						end: end
-					};
-					$calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
-				}
-
-				$calendar.fullCalendar('unselect');
-
-			});
-		},
-		editable: true,
-		eventLimit: true, // allow "more" link when too many events
-
-
-		// color classes: [ event-blue | event-azure | event-green | event-orange | event-red ]
-		events: [
+  let calendar = new FullCalendar.Calendar($calendar, {
+    plugins: ['interaction', 'dayGrid', 'timeGrid', 'list' ],
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridMonth,timeGridDay,listMonth'
+    },
+    eventClick: (info) => {
+      let id = info.event.id;
+      $.get(`/api/candidate/conference/${id}`, conference => {
+        createModal({
+          title: 'Voir un évenement',
+          modal: 'candidate/conference/view',
+          id: 'viewConferenceModal',
+          context: {
+            conference
+          }
+        })
+      }).catch(error => errorsHandler(error));
+    },
+    locale: 'fr',
+    buttonIcons: true,
+    weekNumbers: false,
+    navLinks: true,
+    editable: false,
+    eventLimit: true,
+    events: [
       {{#each conferences as |conference|}}
         {
+          id: {{conference.id}},
           title: 'Entretien {{#ifCond conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}}',
           start: new Date('{{conference.date}}'),
           allDay: false,
           url: '#',
-          className: 'event-{{#ifCond conference.type '===' 'online'}}blue{{else}}orange{{/ifCond}}'
+          textColor: 'black',
+          color: "{{#ifCond conference.type '===' 'online'}}blue{{else}}orange{{/ifCond}}",
         },
       {{/each}}
-		]
-	});
+    ]
+  });
+
+  calendar.render();
+
 </script>
