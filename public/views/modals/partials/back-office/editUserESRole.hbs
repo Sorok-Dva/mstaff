@@ -14,25 +14,25 @@
   <button type="button" class="btn btn-success" id="btnEditESROle">Modifier le role</button>
 </div>
 <script>
-  $('#btnEditESROle').click(function() {
+  $('#btnEditESROle').click(function () {
     let newRole = $('select[name="role"] option').filter(":selected").val();
     $.post(`/api/back-office/establishment/{{this.esId}}/edit/user/{{this.userId}}`,
-        { newRole, _csrf: $('#csrfToken').val() }, (data) => {
-      if (data.status === 'Not linked to this es.') {
-        notification({
-          icon: 'exclamation',
-          type: 'danger',
-          title: 'Cet utilisateur n\'est pas lié à cet établissement.',
-        });
-      } else {
-        $('#editESRoleModal').modal('hide');
-        $(`#esUsers > li#${data.user_id} span.role`).html(`[${data.role}]`);
-        notification({
-          icon: 'check-circle',
-          type: 'success',
-          title: 'Role de l\'utilisateur modifié avec succès.'
-        });
-      }
-    });
+      {newRole, _csrf: $('#csrfToken').val()}, (data) => {
+        if (data.status === 'Not linked to this es.') {
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Cet utilisateur n\'est pas lié à cet établissement.',
+          });
+        } else {
+          $('#editESRoleModal').modal('hide');
+          $(`#esUsers > li#${data.user_id} span.role`).html(`[${data.role}]`);
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Role de l\'utilisateur modifié avec succès.'
+          });
+        }
+      });
   });
 </script>

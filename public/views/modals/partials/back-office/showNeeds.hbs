@@ -63,7 +63,7 @@
   <button type="submit" class="btn btn-default btn-default pull-right" data-dismiss="modal">Fermer</button>
 </div>
 <script>
-  $('button.viewNeed').click(function() {
+  $('button.viewNeed').click(function () {
     let id = $(this).attr('data-need-id');
     $.get(`/api/back-office/establishment/{{this.esId}}/need/${id}/`, need => {
       createModal({

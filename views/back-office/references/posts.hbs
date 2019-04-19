@@ -4,67 +4,7 @@
     <div class="card">
       <div class="card-content">
         <div class="toolbar">
-          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
-              $.get
-              createModal({
-              id: 'addPostModal',
-              title: 'Ajouter un poste',
-              modal: 'back-office/addPost',
-              categories: '{{render.categories}}'
-              }, () => {
-              $('button#validatePost').click(function () {
-              if (($('input#postValue').val() != '') && ($('select#postCategory').val() != '')) {
-              let _csrf = $('#csrfToken').val();
-              let promptInput = $('input#postValue').val();
-              let categoryInput = $('select#postCategory').val();
-              $.post(`/api/back-office/references/posts/`, {
-              promptInput,
-              categoryInput,
-              _csrf
-              }, (response) => {
-              if (response.status === 'Already exists') {
-              notification({
-              icon: 'exclamation',
-              type: 'danger',
-              title: 'Ce poste existe déjà.',
-              message: ``
-              });
-              }
-              else {
-              table.bootstrapTable('insertRow', {
-              index: 0,
-              row: {
-              id: response.reference.id,
-              name: response.reference.name,
-              category: response.reference.categoriesPS_id
-              }
-              });
-              notification({
-              icon: 'check-circle',
-              type: 'success',
-              title: 'Poste créé.',
-              message: ``
-              });
-              }
-              });
-              $('#addPostModal').modal('hide');
-              }
-              else {
-              if ($('input#postValue').val() == '') {
-              $('input#postValue').addClass('error');
-              setTimeout(function() {
-              $('input#postValue').removeClass('error');
-              }, 750)
-              }
-              if ($('select#postCategory').val() == '') {
-              $('select#postCategory').addClass('error');
-              setTimeout(function() {
-              $('select#postCategory').removeClass('error');
-              }, 750)
-              }
-              }
-              })
-              })">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showPostModal()">
             <i class="fal fa-plus"></i></a>
         </div>
 
@@ -76,7 +16,8 @@
           <th data-field="category" data-sortable="true">Catégorie</th>
 
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
-              data-formatter="operateFormatter">Actions</th>
+              data-formatter="operateFormatter">Actions
+          </th>
           </thead>
           <tbody>
           {{#each references as |posts|}}
@@ -140,17 +81,16 @@
                   message: ``
                 });
               });
-            }
-            else {
+            } else {
               if ($('input#postValueEdit').val() == '') {
                 $('input#postValueEdit').addClass('error');
-                setTimeout(function() {
+                setTimeout(function () {
                   $('input#postValueEdit').removeClass('error');
                 }, 750)
               }
               if ($('select#postCategoryEdit').val() == '') {
                 $('select#postCategoryEdit').addClass('error');
-                setTimeout(function() {
+                setTimeout(function () {
                   $('select#postCategoryEdit').removeClass('error');
                 }, 750)
               }
@@ -194,7 +134,7 @@
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
-      pageList: [10,25,50,100,200,500],
+      pageList: [10, 25, 50, 100, 200, 500],
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " rows visible";
       },
@@ -212,4 +152,64 @@
       table.bootstrapTable('resetView');
     });
   });
+  let showPostModal = () => {
+
+    createModal({
+      id: 'addPostModal',
+      title: 'Ajouter un poste',
+      modal: 'back-office/addPost',
+      categories: '{{render.categories}}'
+    }, () => {
+      $('button#validatePost').click(function () {
+        if (($('input#postValue').val() != '') && ($('select#postCategory').val() != '')) {
+          let _csrf = $('#csrfToken').val();
+          let promptInput = $('input#postValue').val();
+          let categoryInput = $('select#postCategory').val();
+          $.post(`/api/back-office/references/posts/`, {
+            promptInput,
+            categoryInput,
+            _csrf
+          }, (response) => {
+            if (response.status === 'Already exists') {
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: 'Ce poste existe déjà.',
+                message: ``
+              });
+            } else {
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.reference.id,
+                  name: response.reference.name,
+                  category: response.reference.categoriesPS_id
+                }
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Poste créé.',
+                message: ``
+              });
+            }
+          });
+          $('#addPostModal').modal('hide');
+        } else {
+          if ($('input#postValue').val() == '') {
+            $('input#postValue').addClass('error');
+            setTimeout(function () {
+              $('input#postValue').removeClass('error');
+            }, 750)
+          }
+          if ($('select#postCategory').val() == '') {
+            $('select#postCategory').addClass('error');
+            setTimeout(function () {
+              $('select#postCategory').removeClass('error');
+            }, 750)
+          }
+        }
+      })
+    })
+  }
 </script>
