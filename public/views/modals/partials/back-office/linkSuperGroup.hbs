@@ -28,7 +28,7 @@
   });
   var grouplinkrow = {{this.supergroup.id}};
   var preselecteds = [];
-  $.get('/api/groupslinks/' + grouplinkrow, function (data) {
+  $.get('/api/back-office/groupslinks/' + grouplinkrow, function (data) {
     $.each(data.linkgroup, function (i, linkgroup) {
       preselecteds.push(linkgroup.id_group);
     });
