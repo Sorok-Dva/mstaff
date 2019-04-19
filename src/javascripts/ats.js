@@ -276,6 +276,12 @@ let resetPostRadioService = () => {
   $('#xpService').val(null).trigger('change');
 };
 
+let generateRecapXp = (current) => {
+  $(`<div class="recap-item"><span>#Experience n°${experiences.length}
+<button class="btn" data-id="${current.id}"><i class="fal fa-edit"></i></button>
+<button class="btn"><i class="fal fa-trash-alt"></i></button></span></div>`).appendTo($('.recap'));
+};
+
 // Listeners
 
 let mainModalListener = () => {
@@ -430,11 +436,9 @@ let experienceModalListener = () => {
   switch (e.currentTarget.id) {
     case 'xpStart':
       $('#xpEnd').data("DateTimePicker").minDate(e.date);
-      experiences.xpStart = new Date(e.date);
       break;
     case 'xpEnd':
       $('#xpStart').data("DateTimePicker").maxDate(e.date);
-      experiences.xpEnd = new Date(e.date);
       break;
   }
 });
@@ -456,10 +460,9 @@ let experienceModalListener = () => {
         case 5:
           setLiberalPost();
           break;
-        default:
-          let currentServices = filterServicesByCategory(allServices, category);
-          createServicesList(currentServices, $('#xpService'));
       }
+      let currentServices = filterServicesByCategory(allServices, category);
+      createServicesList(currentServices, $('#xpService'));
     } else resetPostRadioService();
   });
 
@@ -479,13 +482,15 @@ let experienceModalListener = () => {
   $('#saveXp').on('click', () => {
     if (verifyXpComplete()){
       let current = {};
+      current.id = experiences.length + 1;
       current.establishment = $('#xpEstablishment').val();
       current.post = $('#xpPost').val();
       current.contract = $('#radioContract input:checked').attr('id');
       current.service = $('#xpService').val();
       current.start = new Date($('#xpStart').data("DateTimePicker").date());
       current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-      console.log(current);
+      experiences.push(current);
+      generateRecapXp(current);
       resetForm('xp');
     }
   });
