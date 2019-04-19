@@ -29,7 +29,8 @@ module.exports = {
         references: {
           model: 'Services',
           key: 'id'
-        }
+        },
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
