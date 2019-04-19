@@ -315,6 +315,7 @@ User_Candidate.addApplication = (req, res, next) => {
 User_Candidate.getWishes = (req, res, next) => {
   let render = { a: { main: 'applications' } };
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError(`Candidat introuvable.`, 404));
     render.candidate = candidate;
     return Models.Wish.findAll({ where: { candidate_id: candidate.id } });
   }).then(wishes => {
