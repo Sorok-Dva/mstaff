@@ -11,6 +11,13 @@ const Mailer = require(`${__}/components/mailer`);
 
 const Conference = {};
 
+Conference.viewConferences_ES = (req, res, next) => {
+  Models.Conference.findAll({ where: { user_id: req.user.id, es_id: req.session.currentEs } }).then(conferences => {
+    let a = { main: 'conferences' };
+    return res.render('establishments/calendar', { a, conferences });
+  })
+};
+
 Conference.create = (req, res, next) => {
   try {
     Models.Conference.findOrCreate({
