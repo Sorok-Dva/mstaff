@@ -214,10 +214,10 @@ BackOffice_Establishment.addUser = (req, res, next) => {
             template: 'es/new_user',
             context: { user }
           });
-          return res.status(201).json({status: 'Created and added to es', user, esaccount});
+          return res.status(201).json({ status: 'Created and added to es', user, esaccount });
         } else {
-          if (esCreated) return res.status(201).json({status: 'Added to es', user, esaccount});
-          return res.status(200).json({status: 'Already exists', user, esaccount});
+          if (esCreated) return res.status(201).json({ status: 'Added to es', user, esaccount });
+          return res.status(200).json({ status: 'Already exists', user, esaccount });
         }
       });
     });
@@ -398,13 +398,13 @@ BackOffice_Establishment.ViewRefList = (req, res, next) => {
   res.render('back-office/es/list_ref', {
     layout,
     title: 'Liste des Établissements dans le référentiel',
-    a: {main: 'references', sub: 'establishments'}
+    a: { main: 'references', sub: 'establishments' }
   });
 };
 
 BackOffice_Establishment.getEsLinksList = (req, res, next) => {
   Models.EstablishmentGroups.findAll({where: {id_group: req.params.id}}).then(linkes => {
-    res.status(200).send({linkes});
+    res.status(200).send({ linkes });
   }).catch(error => next(new BackError(error)));
 };
 
