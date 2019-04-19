@@ -3,54 +3,7 @@
     <div class="card">
       <div class="card-content">
         <div class="toolbar">
-          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
-            createModal({
-              id: 'configEquipmentModal',
-              title: 'Ajouter une prédiction de compétence',
-              modal: 'back-office/configEquipmentModal'
-              }, () => {
-                $('button#validateConfigEquipment').click(function () {
-                  if ($('select#equipmentID').val() != '' && $('select#postID').val() != '' && $('select#serviceID').val() != '') {
-                  let _csrf = $('#csrfToken').val();
-                  let equipmentID = $('select#equipmentID').val();
-                  let postID = $('select#postID').val();
-                  let serviceID = $('select#serviceID').val();
-                    $.post(`/api/back-office/configuration/equipments/`, {
-                      equipmentID,
-                      postID,
-                      serviceID,
-                      _csrf
-                    }, (response) => {
-                      if (response.status === 'Already exists') {
-                        notification({
-                          icon: 'exclamation',
-                          type: 'danger',
-                          title: 'Cette configuration existe déjà.',
-                          message: ``
-                        });
-                      }
-                      else {
-                        table.bootstrapTable('insertRow', {
-                          index: 0,
-                          row: {
-                            id: response.configequipment.id,
-                            equipment: response.configequipment.id_equipment,
-                            post: response.configequipment.id_post,
-                            service: response.configequipment.id_service,
-                          }
-                        });
-                        notification({
-                          icon: 'check-circle',
-                          type: 'success',
-                          title: 'configuration créée.',
-                          message: ``
-                        });
-                      }
-                    });
-                    $('#configEquipmentModal').modal('hide');
-                  }
-                })
-              })"><i class="fal fa-plus"></i></a>
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showEquipmentModal()"><i class="fal fa-plus"></i></a>
         </div>
 
         <table id="equipments-table" class="table">
@@ -145,4 +98,54 @@
       table.bootstrapTable('resetView');
     });
   });
+
+  let showEquipmentModal = () => {
+    createModal({
+      id: 'configEquipmentModal',
+      title: 'Ajouter une prédiction de compétence',
+      modal: 'back-office/configEquipmentModal'
+    }, () => {
+      $('button#validateConfigEquipment').click(function () {
+        if ($('select#equipmentID').val() != '' && $('select#postID').val() != '' && $('select#serviceID').val() != '') {
+          let _csrf = $('#csrfToken').val();
+          let equipmentID = $('select#equipmentID').val();
+          let postID = $('select#postID').val();
+          let serviceID = $('select#serviceID').val();
+          $.post(`/api/back-office/configuration/equipments/`, {
+            equipmentID,
+            postID,
+            serviceID,
+            _csrf
+          }, (response) => {
+            if (response.status === 'Already exists') {
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: 'Cette configuration existe déjà.',
+                message: ``
+              });
+            }
+            else {
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.configequipment.id,
+                  equipment: response.configequipment.id_equipment,
+                  post: response.configequipment.id_post,
+                  service: response.configequipment.id_service,
+                }
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'configuration créée.',
+                message: ``
+              });
+            }
+          });
+          $('#configEquipmentModal').modal('hide');
+        }
+      })
+    })
+  }
 </script>

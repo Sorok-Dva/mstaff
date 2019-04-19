@@ -49,7 +49,8 @@
     <div class="card">
       <div class="card-header">
         <h4 class="card-title text-center"><i class="fal fa-location-arrow" aria-hidden="true"></i> Localisation</h4>
-        <h5 class="text-center" style="margin-bottom: -10px">{{this.es.address_dpt_name}} - {{this.es.address_town}}</h5>
+        <h5 class="text-center" style="margin-bottom: -10px">{{this.es.address_dpt_name}}
+          - {{this.es.address_town}}</h5>
       </div>
       <div class="card-content text-center">
         <div id="map" style="height: 450px;width: 100%;"></div>
@@ -98,7 +99,7 @@
 </div>
 <script>
   if (document.getElementById('map')) {
-    let pos = { lat: {{this.es.lat}}, lng: {{this.es.lon}}, rayon: 5 };
+    let pos = {lat: {{this.es.lat}}, lng: {{this.es.lon}}, rayon: 5};
     let map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10,
       center: pos
@@ -115,7 +116,7 @@
       fillOpacity: 0.35,
       map: map,
       center: pos,
-      radius: pos.rayon*1000 || 10000
+      radius: pos.rayon * 1000 || 10000
     });
   }
 </script>

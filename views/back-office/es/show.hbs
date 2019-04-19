@@ -8,19 +8,23 @@
         <div class="form-row">
           <div class="form-group col-md-3">
             <label for="ESName">Nom</label>
-            <input type="text" class="form-control" id="ESName" name="name" placeholder="Nom de l'établissement" value="{{es.name}}">
+            <input type="text" class="form-control" id="ESName" name="name" placeholder="Nom de l'établissement"
+                   value="{{es.name}}">
           </div>
           <div class="form-group col-md-3">
             <label for="ESFinessEt">Finess ET</label>
-            <input type="text" class="form-control" id="ESFinessEt" name="finess_et" placeholder="Numéro Finess ET" value="{{es.finess}}">
+            <input type="text" class="form-control" id="ESFinessEt" name="finess_et" placeholder="Numéro Finess ET"
+                   value="{{es.finess}}">
           </div>
           <div class="form-group col-md-3">
             <label for="ESFinessEj">Finess EJ</label>
-            <input type="text" class="form-control" id="ESFinessEj" name="finess_ej" placeholder="Numéro Finess EJ" value="{{es.finess_ej}}">
+            <input type="text" class="form-control" id="ESFinessEj" name="finess_ej" placeholder="Numéro Finess EJ"
+                   value="{{es.finess_ej}}">
           </div>
           <div class="form-group col-md-3">
             <label for="ESSiret">Siret</label>
-            <input type="text" class="form-control" id="ESSiret" name="siret" placeholder="Numéro Siret" value="{{es.siret}}">
+            <input type="text" class="form-control" id="ESSiret" name="siret" placeholder="Numéro Siret"
+                   value="{{es.siret}}">
           </div>
           <div class="form-group col-md-4">
             <label for="ESAddress">Addresse</label>
@@ -32,11 +36,13 @@
           </div>
           <div class="form-group col-md-3">
             <label for="ESPhone">Numéro de téléphone</label>
-            <input type="text" class="form-control" id="ESPhone" name="phone" placeholder="+331020304" value="{{es.phone}}">
+            <input type="text" class="form-control" id="ESPhone" name="phone" placeholder="+331020304"
+                   value="{{es.phone}}">
           </div>
           <div class="form-group col-md-2">
             <label for="salaries_count">Nombre d'employés</label>
-            <input class="form-control" name="salaries_count" type="number" value="{{es.salaries_count}}" id="salaries_count">
+            <input class="form-control" name="salaries_count" type="number" value="{{es.salaries_count}}"
+                   id="salaries_count">
           </div>
           <div class="form-group col-md-3">
             <label for="secteur">Secteur</label>
@@ -54,19 +60,23 @@
         <div class="form-row">
           <div class="form-group col-md-3">
             <label for="ESContactName">Nom</label>
-            <input type="text" class="form-control" id="ESContactName" name="contactIdentity" placeholder="Jean Dupont" value="{{es.contact_identity}}">
+            <input type="text" class="form-control" id="ESContactName" name="contactIdentity" placeholder="Jean Dupont"
+                   value="{{es.contact_identity}}">
           </div>
           <div class="form-group col-md-3">
             <label for="ESContactPost">Poste</label>
-            <input type="text" class="form-control" id="ESContactPost" name="contactPost" placeholder="DRH" value="{{es.contact_post}}">
+            <input type="text" class="form-control" id="ESContactPost" name="contactPost" placeholder="DRH"
+                   value="{{es.contact_post}}">
           </div>
           <div class="form-group col-md-3">
             <label for="ESContactEmail">Email</label>
-            <input type="text" class="form-control" id="ESContactEmail" name="contactEmail" placeholder="jean.dupont@etablissement.org" value="{{es.contact_email}}">
+            <input type="text" class="form-control" id="ESContactEmail" name="contactEmail"
+                   placeholder="jean.dupont@etablissement.org" value="{{es.contact_email}}">
           </div>
           <div class="form-group col-md-3">
             <label for="ESContactPhone">Numéro de téléphone</label>
-            <input type="text" class="form-control" id="ESContactPhone" name="contactPhone" placeholder="0601020304" value="{{es.contact_phone}}">
+            <input type="text" class="form-control" id="ESContactPhone" name="contactPhone" placeholder="0601020304"
+                   value="{{es.contact_phone}}">
           </div>
         </div>
       </fieldset>
@@ -95,13 +105,14 @@
             <label for="domain_name">Nom de domaine</label>
             <div class="row">
               <div class="col-md-8">
-                <input class="form-control col-md-8" placeholder="établissement" name="domain_name" type="text" value="{{es.domain_name}}" id="domain_name">
+                <input class="form-control col-md-8" placeholder="établissement" name="domain_name" type="text"
+                       value="{{es.domain_name}}" id="domain_name">
               </div>
               <div class="col-md-4" style="margin-left: -26px;"><h4>.mstaff.co</h4></div>
             </div>
           </div>
         </div>
-        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+        <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
         <button type="submit" class="btn btn-primary pull-right">Enregistrer</button>
       </fieldset>
     </form>
@@ -112,7 +123,8 @@
         <div class="card" style="padding: 15px">
           <fieldset>
             <legend>
-              <h5 style="text-align: center">Utilisateurs  <span id="addUser" class="btn btn-success"><i class="fal fa-plus-circle"></i></span></h5>
+              <h5 style="text-align: center">Utilisateurs <span id="addUser" class="btn btn-success"><i
+                class="fal fa-plus-circle"></i></span></h5>
             </legend>
             <ul id="esUsers">
               {{#each es.ESAccounts as |esAccount|}}
@@ -120,9 +132,11 @@
                   <h5>
                     {{esAccount.User.firstName}} {{esAccount.User.lastName}}
                     <span class="role">
-                      [{{esAccount.role}} <i style="color: dodgerblue; cursor: pointer" class="fal fa-pencil editESRole" data-uid="{{esAccount.User.id}}"></i>]
+                      [{{esAccount.role}} <i style="color: dodgerblue; cursor: pointer" class="fal fa-pencil editESRole"
+                                             data-uid="{{esAccount.User.id}}"></i>]
                     </span>
-                    <i style="color: red; cursor: pointer" class="fal fa-times removeUserFromES" data-uid="{{esAccount.User.id}}"></i>
+                    <i style="color: red; cursor: pointer" class="fal fa-times removeUserFromES"
+                       data-uid="{{esAccount.User.id}}"></i>
                   </h5>
                 </li>
               {{/each}}
@@ -145,16 +159,18 @@
   </div>
 </div>
 <script>
-  $('#addUser').click(function() {
+  $('#addUser').click(function () {
     createModal({
       id: 'addUserInESModal',
       modal: 'back-office/addUserInES',
       title: 'Ajouter un nouvel utilisateur à cet établissement',
       esId: '{{es.id}}'
-    }, () => { let userExists = false })
+    }, () => {
+      let userExists = false
+    })
   });
 
-  $('.editESRole').click(function() {
+  $('.editESRole').click(function () {
     let userId = $(this).attr('data-uid');
     createModal({
       id: 'editESRoleModal',
@@ -165,7 +181,7 @@
     });
   });
 
-  $('.removeUserFromES').click(function() {
+  $('.removeUserFromES').click(function () {
     let userId = $(this).attr('data-uid');
     if (confirm('Voulez-vous vraiment supprimer cet utilisateur de cet établissement ?')) {
       $.post(`/api/back-office/establishment/{{es.id}}/remove/user/${userId}`, {
@@ -190,7 +206,7 @@
     }
   });
 
-  $('#showNeeds').click(function() {
+  $('#showNeeds').click(function () {
     $.get('/api/back-office/establishment/{{es.id}}/needs', needs => {
       createModal({
         id: 'showNeedsModal',
@@ -207,7 +223,7 @@
 
   });
 
-  $('#showOffers').click(function() {
+  $('#showOffers').click(function () {
     alert('soon');
     /*createModal({
       id: 'addUserInESModal',
@@ -218,7 +234,7 @@
   });
 
   let showCandidateProfile = userId => {
-    $.post(`/api/back-office/candidate/${userId}`, { _csrf: $('#csrfToken').val() } , data => {
+    $.post(`/api/back-office/candidate/${userId}`, {_csrf: $('#csrfToken').val()}, data => {
       createModal({
         id: 'viewCandidateProfileModal',
         modal: 'es/viewCandidateProfile',

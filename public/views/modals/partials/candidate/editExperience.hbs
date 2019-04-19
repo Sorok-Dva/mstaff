@@ -103,7 +103,7 @@
     $('#editEnd').prop('disabled', false);
     $('#editEnd').val(`${("0" + (editEnd.getMonth() + 1)).slice(-2)}/${editEnd.getFullYear()}`);
   }
-  $('#editXP').click(function() {
+  $('#editXP').click(function () {
     var formArray = $(`form#editExperience`).serializeArray(), formData = {}, stop = false;
     $.each(formArray, (i, field) => formData[field.name] = field.value);
     formData.current = formData.current === 'on';
@@ -114,12 +114,12 @@
 
     if (isNaN(formData.start.getTime())) {
       notification(
-          {
-            icon: 'exclamation',
-            type: 'danger',
-            title: 'Champ invalide :',
-            message: `Vous devez indiquer une date de début valide.`
-          }
+        {
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Champ invalide :',
+          message: `Vous devez indiquer une date de début valide.`
+        }
       );
       stop = true;
     }

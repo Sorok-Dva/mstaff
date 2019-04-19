@@ -1,5 +1,6 @@
 <div class="modal-body">
-  <p>Êtes-vous sûr de vouloir supprimer la lecture seule ? Cette action ne doit être destinée qu'à des fins de débug.</p>
+  <p>Êtes-vous sûr de vouloir supprimer la lecture seule ? Cette action ne doit être destinée qu'à des fins de
+    débug.</p>
   <p>Veuillez entrer votre mot de passe pour confirmer cette action</p>
   <form role="form" class="form-horizontal">
     <div class="row">
@@ -21,7 +22,7 @@
   </button>
 </div>
 <script>
-  $('input#removeROPassword').on('keydown', function(e) {
+  $('input#removeROPassword').on('keydown', function (e) {
     if (e.which === 13) {
       e.preventDefault();
       $('button#btnRemoveRO').prop('disabled', true);

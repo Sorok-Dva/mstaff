@@ -3,54 +3,7 @@
     <div class="card">
       <div class="card-content">
         <div class="toolbar">
-          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
-            createModal({
-              id: 'configSkillModal',
-              title: 'Ajouter une prédiction de compétence',
-              modal: 'back-office/configSkillModal'
-              }, () => {
-                $('button#validateConfigSkill').click(function () {
-                  if ($('select#skillID').val() != '' && $('select#postID').val() != '' && $('select#serviceID').val() != '') {
-                  let _csrf = $('#csrfToken').val();
-                  let skillID = $('select#skillID').val();
-                  let postID = $('select#postID').val();
-                  let serviceID = $('select#serviceID').val();
-                    $.post(`/api/back-office/configuration/skills/`, {
-                      skillID,
-                      postID,
-                      serviceID,
-                      _csrf
-                    }, (response) => {
-                      if (response.status === 'Already exists') {
-                        notification({
-                          icon: 'exclamation',
-                          type: 'danger',
-                          title: 'Cette configuration existe déjà.',
-                          message: ``
-                        });
-                      }
-                      else {
-                        table.bootstrapTable('insertRow', {
-                          index: 0,
-                          row: {
-                            id: response.configskill.id,
-                            skill: response.configskill.id_skill,
-                            post: response.configskill.id_post,
-                            service: response.configskill.id_service,
-                          }
-                        });
-                        notification({
-                          icon: 'check-circle',
-                          type: 'success',
-                          title: 'configuration créée.',
-                          message: ``
-                        });
-                      }
-                    });
-                    $('#configSkillModal').modal('hide');
-                  }
-                })
-              })"><i class="fal fa-plus"></i></a>
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showSkillModal()"><i class="fal fa-plus"></i></a>
         </div>
 
         <table id="skills-table" class="table">
@@ -137,7 +90,6 @@
         detailClose: 'ti-close'
       }
     });
-
     //activate the tooltips after the data table is initialized
     $('[rel="tooltip"]').tooltip();
 
@@ -145,4 +97,56 @@
       table.bootstrapTable('resetView');
     });
   });
+
+  let showSkillModal = () => {
+    createModal({
+      id: 'configSkillModal',
+      title: 'Ajouter une prédiction de compétence',
+      modal: 'back-office/configSkillModal'
+    }, () => {
+      $('button#validateConfigSkill').click(function () {
+        if ($('select#skillID').val() != '' && $('select#postID').val() != '' && $('select#serviceID').val() != '') {
+          let _csrf = $('#csrfToken').val();
+          let skillID = $('select#skillID').val();
+          let postID = $('select#postID').val();
+          let serviceID = $('select#serviceID').val();
+          console.log(skillID, postID, serviceID);
+          $.post(`/api/back-office/configuration/skills/`, {
+            skillID,
+            postID,
+            serviceID,
+            _csrf
+          }, (response) => {
+            if (response.status === 'Already exists') {
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: 'Cette configuration existe déjà.',
+                message: ``
+              });
+            }
+            else {
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.configskill.id,
+                  skill: response.configskill.id_skill,
+                  post: response.configskill.id_post,
+                  service: response.configskill.id_service,
+                }
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'configuration créée.',
+                message: ``
+              });
+            }
+          });
+          $('#configSkillModal').modal('hide');
+        }
+      })
+    })
+  };
+
 </script>

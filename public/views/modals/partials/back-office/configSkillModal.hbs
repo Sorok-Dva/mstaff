@@ -1,49 +1,83 @@
-<script src="/static/assets/js/bootstrap-selectpicker.js"></script>
+<style>
+  .SkillStyle {
+    display: flex;
+    flex-direction: column;
+  }
+  .SkillStyle div {
+    width: 100%;
+  }
+</style>
+
 <div class="modal-body">
-  <div class="form-group">
-    <label for="skillID"> Choisir une compétence  </label>
-    <select id="skillID" class="selectpicker col-md-12" data-live-search="true">
-    </select>
-    <label for="postID"> Choisir un poste  </label>
-    <select id="postID" class="selectpicker col-md-12" data-live-search="true">
-    </select>
-    <label for="serviceID"> Choisir un service service  </label>
-    <select id="serviceID" class="selectpicker col-md-12" data-live-search="true">
-    </select>
+  <div class="SkillStyle">
+    <div>
+      <label for="skillID" class="col-md-12"> Choisir une compétence </label>
+      <select id="skillID" class="col-md-12">
+      </select>
+    </div>
+    <div>
+      <label for="postID" class="col-md-12"> Choisir un poste </label>
+      <select id="postID" class="col-md-12">
+      </select>
+    </div>
+    <div>
+      <label for="serviceID" class="col-md-12"> Choisir un service service </label>
+      <select id="serviceID" class="col-md-12">
+      </select>
+    </div>
   </div>
 </div>
+
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" id="validateConfigSkill"> Valider les modifications </button>
+  <button type="button" class="btn btn-default" id="validateConfigSkill"> Valider les modifications</button>
 </div>
 <script>
-  $.get('/api/skills/all', function(data) {
-    $.each(data.skills, function (i, skill) {
-      $('#skillID').append($('<option>', {
-        value: skill.id,
-        text : skill.name
-      }));
-      $('#skillID').selectpicker('refresh');
+  $(() => {
+    let serviceArray = [];
+    let postArray = [];
+    let skillArray = [];
+
+    $.get('/api/skills/all', function (data) {
+      data.skills.forEach(skill => {
+        let skillObject = {};
+        skillObject.id = skill.id;
+        skillObject.text = skill.name;
+        skillArray.push(skillObject);
+      });
+      $('#skillID').empty().select2({
+        data: skillArray.sort(),
+        placeholder: "Compétence ?",
+        minimumResultsForSearch: Infinity
+      });
+      skillArray=[];
+    });
+    $.get('/api/services/all', function (data) {
+      data.services.forEach(service => {
+        let serviceObject = {};
+        serviceObject.id = service.id;
+        serviceObject.text = service.name;
+        serviceArray.push(serviceObject);
+      });
+      $('#serviceID').empty().select2({
+        data: serviceArray.sort(),
+        placeholder: "Service ?",
+        minimumResultsForSearch: Infinity
+      });
+      serviceArray=[];
+    });
+    $.get('/api/posts/all', function (data) {
+      data.posts.forEach(post => {
+        let postObject = {};
+        postObject.id = post.id;
+        postObject.text = post.name;
+        postArray.push(postObject);
+      });
+      $('#postID').empty().select2({
+        data: postArray.sort(),
+        placeholder: "Poste ?",
+        minimumResultsForSearch: Infinity
+      });
+      postArray=[];
     });
   });
-  $.get('/api/posts/all', function(data) {
-    $.each(data.posts, function (i, post) {
-      $('#postID').append($('<option>', {
-        value: post.id,
-        text : post.name
-      }));
-      $('#postID').selectpicker('refresh');
-    });
-  });
-  $.get('/api/services/all', function(data) {
-    $.each(data.services, function (i, service) {
-      $('#serviceID').append($('<option>', {
-        value: service.id,
-        text : service.name
-      }));
-      $('#serviceID').selectpicker('refresh');
-    });
-  });
-  $('#skillID').selectpicker();
-  $('#postID').selectpicker();
-  $('#serviceID').selectpicker();
 </script>
