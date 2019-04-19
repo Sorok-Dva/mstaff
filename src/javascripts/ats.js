@@ -115,12 +115,12 @@ let verifyInternshipDate = () => {
   return (start !== null && end !== null);
 };
 
-let verifyInputXpPost = () => {
-  return postsArray.includes($('#xpPost').val());
-};
-
 let verifyInputXpEstablishment = () => {
   return !$.isEmptyObject($('#xpEstablishment').val());
+};
+
+let verifyInputXpPost = () => {
+  return postsArray.includes($('#xpPost').val());
 };
 
 let verifyRadioContract = () => {
@@ -153,6 +153,18 @@ let saveServices = () => {
 };
 
 // Logic to next step
+
+let resetForm = (form) => {
+  switch (form) {
+    case 'xp':
+      $('.inputsXp').trigger("reset");
+      $('#xpStart').data("DateTimePicker").clear();
+      $('#xpEnd').data("DateTimePicker").clear();
+      $('.inputsXp i').hide();
+      $('#saveXp').hide();
+      break;
+  }
+};
 
 let transitionToNext = (step) => {
   switch(step) {
@@ -210,24 +222,17 @@ let nextStepFrom = (currentStep) => {
         transitionToNext(currentStep);
         if (postsArray.length === 0)
           createPostsList(allPosts, $('#InputPosts'));
-        break;
-
       case 'postModal':
         if (verifyStep(currentStep)) {
           application.post = $('#InputPosts').val();
           saveServices();
           transitionToNext(currentStep);
         }
-        break;
-
       case 'contractModal':
         if (verifyStep(currentStep)){
           createPostsList(allPosts, $('#xpPost'));
           transitionToNext(currentStep);
         }
-
-        break;
-
       case 'timeModal':
         if (application.contractType === 'cdi')
           if (verifyStep('timeModalCdi')){
@@ -239,9 +244,36 @@ let nextStepFrom = (currentStep) => {
             createPostsList(allPosts, $('#xpPost'));
             transitionToNext(currentStep);
           }
-        break;
+    default:
+      toNextModal = false;
   }
-  toNextModal = false;
+};
+
+// experienceModal tools
+
+let setLiberalPost = () => {
+  $('#liberal').trigger('click');
+  $('#salaried').attr('disabled', true);
+  $('#internship').attr('disabled', true);
+  $('#xpService').val('Services Libéraux');
+  $('#xpService').attr('disabled', true);
+  $('#xpService').siblings().show();
+};
+
+let setAdministrativeService = () => {
+  $('#xpService').val('Services généraux');
+  $('#xpService').attr('disabled', true);
+  $('#xpService').siblings().show();
+};
+
+let resetPostRadioService = () => {
+  $('#salaried').attr('disabled', false);
+  $('#internship').attr('disabled', false);
+  $('#liberal').prop('checked', false);
+  $('#xpService').attr('disabled', false);
+  $('#xpPost').siblings().hide();
+  $('#xpService').siblings().hide();
+  $('#xpService').val(null).trigger('change');
 };
 
 // Listeners
@@ -392,36 +424,45 @@ let experienceModalListener = () => {
     format: 'D MMMM YYYY',
     useCurrent: false,
     ignoreReadonly: true,
-  });
-  $('#xpDate input').on('dp.change', (e) => {
-    switch (e.currentTarget.id) {
-      case 'xpStart':
-        $('#xpEnd').data("DateTimePicker").minDate(e.date);
-        experiences.xpStart = new Date(e.date);
-        break;
-      case 'xpEnd':
-        $('#xpStart').data("DateTimePicker").maxDate(e.date);
-        experiences.xpEnd = new Date(e.date);
-        break;
-    }
-  });
+    maxDate: moment(),
+  })
+  .on('dp.change', (e) => {
+  switch (e.currentTarget.id) {
+    case 'xpStart':
+      $('#xpEnd').data("DateTimePicker").minDate(e.date);
+      experiences.xpStart = new Date(e.date);
+      break;
+    case 'xpEnd':
+      $('#xpStart').data("DateTimePicker").maxDate(e.date);
+      experiences.xpEnd = new Date(e.date);
+      break;
+  }
+});
 
   //Listeners
   $('#xpEstablishment').on('keyup', () => {
     verifyInputXpEstablishment() ? $('#xpEstablishment').siblings().show() : $('#xpEstablishment').siblings().hide();
   });
+
   $('#xpPost').on( 'keyup autocompleteclose', () => {
     if (verifyInputXpPost()){
       let post = $('#xpPost').val();
       let category = allPosts.find(item => item.name === post).categoriesPS_id;
-      let currentServices = filterServicesByCategory(allServices, category);
       $('#xpPost').siblings().show();
-      createServicesList(currentServices, $('#xpService'));
-    } else {
-      $('#xpService').val(null).trigger('change');
-      $('#xpPost, #xpService').siblings().hide();
-    }
+      switch (category) {
+        case 4:
+          setAdministrativeService();
+          break;
+        case 5:
+          setLiberalPost();
+          break;
+        default:
+          let currentServices = filterServicesByCategory(allServices, category);
+          createServicesList(currentServices, $('#xpService'));
+      }
+    } else resetPostRadioService();
   });
+
   $('#xpService').on('keyup autocompleteclose', () => {
     verifyInputXpService() ? $('#xpService').siblings().show() : $('#xpService').siblings().hide();
   });
@@ -430,6 +471,7 @@ let experienceModalListener = () => {
   $('.inputsXp input').on('change', function (e){
     verifyXpComplete() ? $('#saveXp').show() : $('#saveXp').hide();
   });
+
   $('#xpDate').on('dp.change', function(e){
     verifyXpComplete() ? $('#saveXp').show() : $('#saveXp').hide();
   });
@@ -437,8 +479,14 @@ let experienceModalListener = () => {
   $('#saveXp').on('click', () => {
     if (verifyXpComplete()){
       let current = {};
-      current.establishment =
-        console.log('on sauvegarde tout ce bordel');
+      current.establishment = $('#xpEstablishment').val();
+      current.post = $('#xpPost').val();
+      current.contract = $('#radioContract input:checked').attr('id');
+      current.service = $('#xpService').val();
+      current.start = new Date($('#xpStart').data("DateTimePicker").date());
+      current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+      console.log(current);
+      resetForm('xp');
     }
   });
 
