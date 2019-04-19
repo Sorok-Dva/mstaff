@@ -130,9 +130,9 @@
                 index: 0,
                 row: {
                   id: response.configskill.id,
-                  skill: response.configskill.id_skill,
-                  post: response.configskill.id_post,
-                  service: response.configskill.id_service,
+                  skill: $('select#skillID :selected').text(),
+                  post: $('select#postID :selected').text(),
+                  service: $('select#serviceID :selected').text(),
                 }
               });
               notification({

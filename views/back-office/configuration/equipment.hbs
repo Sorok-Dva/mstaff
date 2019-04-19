@@ -130,9 +130,9 @@
                 index: 0,
                 row: {
                   id: response.configequipment.id,
-                  equipment: response.configequipment.id_equipment,
-                  post: response.configequipment.id_post,
-                  service: response.configequipment.id_service,
+                  equipment: $('select#equipmentID :selected').text(),
+                  post: $('select#postID :selected').text(),
+                  service: $('select#serviceID :selected').text(),
                 }
               });
               notification({
