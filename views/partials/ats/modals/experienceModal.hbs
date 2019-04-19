@@ -85,13 +85,20 @@
     display: none;
   }
   .recap-item{
+    display: flex;
     font-size: 1.5em;
   }
-  .recap-item > span button{
-    font-size: 1.1em;
+  .recap-item > div:first-child{
+    display: flex;
+    align-items: center;
+    width: 70%;
+    overflow: hidden;
   }
-  .recap-item > span > button:first-child {
-    margin-left: 20%;
+  .recap-item > div:last-child{
+    width: 30%;
+  }
+  .recap-item > div:last-child button{
+    font-size: 1.1em;
   }
 </style>
 

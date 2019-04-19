@@ -2,6 +2,7 @@ let postsArray = [];
 let servicesArray = [];
 let application = {};
 let experiences = [];
+let experienceID = 1;
 let toNextModal = false;
 let allPosts, allServices;
 
@@ -249,7 +250,7 @@ let nextStepFrom = (currentStep) => {
   }
 };
 
-// experienceModal tools
+// EXPERIENCE-MODAL TOOLS
 
 let setLiberalPost = () => {
   $('#liberal').trigger('click');
@@ -277,9 +278,15 @@ let resetPostRadioService = () => {
 };
 
 let generateRecapXp = (current) => {
-  $(`<div class="recap-item"><span>#Experience n°${experiences.length}
-<button class="btn" data-id="${current.id}"><i class="fal fa-edit"></i></button>
-<button class="btn"><i class="fal fa-trash-alt"></i></button></span></div>`).appendTo($('.recap'));
+  $(`<div class="recap-item" data-id="${current.id}"><div>${current.establishment}</div>
+<div><button class="btn"><i class="fal fa-edit"></i></button><button class="btn" onclick="deleteXp(${current.id})">
+<i class="fal fa-trash-alt"></i></button></div></div>`).appendTo($('.recap'));
+};
+
+let deleteXp = (id) => {
+  let i = experiences.map(xp => xp.id).indexOf(id);
+  experiences.splice(i, 1);
+  $(`div [data-id=${id}]`).remove();
 };
 
 // Listeners
@@ -482,7 +489,8 @@ let experienceModalListener = () => {
   $('#saveXp').on('click', () => {
     if (verifyXpComplete()){
       let current = {};
-      current.id = experiences.length + 1;
+      current.id = experienceID;
+      experienceID += 1;
       current.establishment = $('#xpEstablishment').val();
       current.post = $('#xpPost').val();
       current.contract = $('#radioContract input:checked').attr('id');
