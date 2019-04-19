@@ -10,6 +10,12 @@
     <p>Mes besoins</p>
   </a>
 </li>
+<li{{#ifCond @root.a.main '===' 'conferences'}} class="active"{{/ifCond}}>
+  <a href="/conferences/calendar">
+    <i class="fal fa-comments"></i>
+    <p>Mes entretiens</p>
+  </a>
+</li>
 <li{{#ifCond @root.a.main '===' 'history'}} class="active"{{/ifCond}}>
   <a href="/history">
     <i class="fal fa-handshake"></i>

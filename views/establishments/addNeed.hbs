@@ -122,8 +122,14 @@
             <div class="actions pull-right">
               <ul class="list-inline">
                 <li>
-                  <i class="fal fa-archive fa-1d3x" onclick="addCandidate({{data.Wish.Candidate.id}}, 'archive')"
-                     style="cursor: pointer"></i>
+                  <i class="fal fa-archive archiveCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
+                    {{#if data.Establishment.ArchivedCandidates.0.candidate_id}}
+                     onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unarchive')"
+                     style="cursor: pointer; color: rgb(14, 206, 164)"
+                    {{else}}
+                     onclick="addCandidate({{data.Wish.Candidate.id}}, 'archive')"
+                     style="cursor: pointer;"
+                    {{/if}}></i>
                 </li>
                 <li>
                   <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"

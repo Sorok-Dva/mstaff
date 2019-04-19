@@ -135,6 +135,7 @@ let addCandidate = (id, type) => {
           $('#archivateCandidateModal').modal('hide');
           $.post(`/api/es/${esId}/candidate/${id}/archive/`, { _csrf }, (data) => {
             if (data.status === 'Created') {
+              $(`i.archiveCandidate[data-id="${id}"]`).css('color', 'rgb(14, 206, 164)').attr('onclick', `removeCandidate(${id}, 'unarchive')`);
               $(`div[data-card-user="${id}"]`).attr('data-archived', 'true').hide();
               notification({
                 icon: 'check-circle',
@@ -179,6 +180,19 @@ let removeCandidate = (id, type) => {
             icon: 'check-circle',
             type: 'success',
             title: 'Candidat supprimé de vos favoris.'
+          })
+        }
+      });
+      break;
+    case 'unarchive':
+      $(`i.archiveCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'archive')`);
+      $.post(`/api/es/${esId}/candidate/${id}/unarchive/`, { _csrf }, (data) => {
+        if (data.status === 'deleted') {
+          $(`div[data-card-user="${id}"]`).attr('data-archived', 'false').hide();
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Candidat retiré de vos archives.'
           })
         }
       });
