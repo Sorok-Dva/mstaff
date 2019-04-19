@@ -19,9 +19,10 @@
   }
 </style>
 <link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
-<div style="margin-top: -5%">
+<div style="margin-top: -5%; text-align: center">
   <h1>{{error.status}}</h1>
   <h2>{{error.message}}</h2>
+  <a class="btn btn-primary" href="/" style="margin: auto;">Retour à l'accueil</a>
   {{#if error.stack}}
     <pre>{{error.stack}}</pre>
   {{/if}}
