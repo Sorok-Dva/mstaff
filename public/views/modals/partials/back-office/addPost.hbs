@@ -1,29 +1,29 @@
 <div class="modal-body">
-     <div class="form-group">
-         <label for="postValue"> Nom du poste </label>
-         <input class="form-control" type="text" id="postValue">
-     </div>
-     <div class="form-group">
-         <label for="postCategory"> Catégorie de poste </label>
-         <select class="form-control" id="postCategory">
-          <option value=""> Choisir une catégorie </option>
-         </select>
-     </div>
+  <div class="form-group">
+    <label for="postValue"> Nom du poste </label>
+    <input class="form-control" type="text" id="postValue">
+  </div>
+  <div class="form-group">
+    <label for="postCategory"> Catégorie de poste </label>
+    <select class="form-control" id="postCategory">
+      <option value=""> Choisir une catégorie</option>
+    </select>
+  </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" id="validatePost"> Ajouter un poste </button>
+  <button type="button" class="btn btn-default" id="validatePost"> Ajouter un poste</button>
 </div>
 <script>
-    $.get('/api/categoriesPostsServices/all', function(data) {
-        $.each(data.categories, function (i, category) {
-            $('#postCategory').append($('<option>', {
-                value: category.id,
-                text : category.name
-            }));
-        });
-      // Uncomment this if you need to sort the list. It seems better when it's not alphabetically sorted.
-      //$("#postCategory").html($("#postCategory option").sort(function (a, b) {
-      //  return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
-      //}))
+  $.get('/api/categoriesPostsServices/all', function (data) {
+    $.each(data.categories, function (i, category) {
+      $('#postCategory').append($('<option>', {
+        value: category.id,
+        text: category.name
+      }));
     });
+    // Uncomment this if you need to sort the list. It seems better when it's not alphabetically sorted.
+    //$("#postCategory").html($("#postCategory option").sort(function (a, b) {
+    //  return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+    //}))
+  });
 </script>

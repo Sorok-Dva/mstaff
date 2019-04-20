@@ -8,14 +8,14 @@ module.exports = {
       res.status(200).send({ skills });
     }).catch(error => next(new BackError(error)));
   },
-  getEsLinksList: (req, res, next) => {
-    Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(linkes => {
-      res.status(200).send({ linkes });
+  getPostsList: (req, res, next) => {
+    Models.Post.findAll().then(posts => {
+      res.status(200).send({ posts });
     }).catch(error => next(new BackError(error)));
   },
-  getGroupLinksList: (req, res, next) => {
-    Models.GroupsSuperGroups.findAll({ where: { id_super_group: req.params.id } }).then(linkgroup => {
-      res.status(200).send({ linkgroup });
+  getServicesList: (req, res, next) => {
+    Models.Service.findAll().then(services => {
+      res.status(200).send({ services });
     }).catch(error => next(new BackError(error)));
   },
   getFormationList: (req, res, next) => {
@@ -41,11 +41,6 @@ module.exports = {
   getSoftwaresList: (req, res, next) => {
     Models.Software.findAll().then(softwares => {
       res.status(200).send({ softwares });
-    }).catch(error => next(new BackError(error)));
-  },
-  getEstablishmentList: (req, res, next) => {
-    Models.Establishment.findAll().then(establishments => {
-      res.status(200).send({ establishments });
     }).catch(error => next(new BackError(error)));
   },
   getCategoriesList: (req, res, next) => {
