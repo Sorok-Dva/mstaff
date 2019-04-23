@@ -33,9 +33,7 @@
   <button type="button" class="btn btn-info pull-right editConfBtn" style="margin-bottom: 5px; display: none">Sauvegarder</button>
   <button type="submit" class="btn btn-default pull-right" data-dismiss="modal">Fermer</button>
 </div>
-{{log this.context.conference}}
 <script>
-
   $('.editConfType').click(function() {
     let type = $(this).attr('data-action');
     if (type === 'physical') {
@@ -53,29 +51,4 @@
     useCurrent: false,
     format: 'DD/MM/YYYY HH:mm'
   }).on('dp.change', () => $('.editConfBtn').show());
-
-  $('.editConfBtn').click(function() {
-    let type = $('[data-isset="true"]').attr('data-action');
-    let dateString = $('#editConfDate').val();
-    let id = {{this.context.conference.id}};
-    let year = dateString.split('/')[2].split(' ')[0];
-    let month = dateString.split('/')[1] - 1;
-    let day = dateString.split('/')[0];
-    let hour = dateString.split('/')[2].split(' ')[1].split(':')[0];
-    let min = dateString.split('/')[2].split(' ')[1].split(':')[1];
-    let date = new Date(year, month, day, hour, min, 0);
-    if (date === 'Invalid Date' || (type !== 'physical' && type !== 'online')) return false;
-    $.post(`/api/es/conference/${id}`, {type, date, _csrf}, (data) => {
-      if (data) {
-        $('#viewConferenceModal').modal('hide');
-        notification({
-          icon: 'check-circle',
-          type: 'success',
-          title: 'Événement modifié avec succès.',
-        });
-      } else {
-        errorsHandler('Une erreur est survenue');
-      }
-    }).catch(error => errorsHandler(error));
-  });
 </script>
