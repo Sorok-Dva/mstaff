@@ -3,8 +3,10 @@ let servicesArray = [];
 let application = {};
 let experiences = [];
 let experienceID = 1;
+let editMode = false;
 let toNextModal = false;
 let allPosts, allServices;
+
 
 let initApplication = () => {
   return new Promise( resolve => {
@@ -95,64 +97,6 @@ let generateServiceListByCategory = (category, input) => {
     }
 };
 
-
-// Verification before next step
-
-let verifyInputPost = () => {
-  return postsArray.includes($('#InputPosts').val());
-};
-
-let verifyCheckedContract = () => {
-  return ($('#cdiToggle').prop('checked') || $('#vacationToggle').prop('checked') || $('#internshipToggle').prop('checked'));
-};
-
-let verifyCheckedSchedule = () => {
-  return ($('#cdiSchedule input:checked').length !== 0);
-};
-
-let verifyInternshipDate = () => {
-  let start = $('#start').data("DateTimePicker").date();
-  let end = $('#end').data("DateTimePicker").date();
-  return (start !== null && end !== null);
-};
-
-let verifyInputXpEstablishment = () => {
-  return !$.isEmptyObject($('#xpEstablishment').val());
-};
-
-let verifyInputXpPost = () => {
-  return postsArray.includes($('#xpPost').val());
-};
-
-let verifyRadioContract = () => {
-  return ($('#radioContract input:checked').attr('id') !== undefined);
-};
-
-let verifyInputXpService = () => {
-  return servicesArray.includes($('#xpService').val());
-};;
-
-let verifyXpDate = () => {
-  let start = $('#xpStart').data("DateTimePicker").date();
-  let end = $('#xpEnd').data("DateTimePicker").date();
-  return (start !== null && end !== null);
-};
-
-let verifyXpComplete = () => {
-  return (verifyInputXpEstablishment() && verifyInputXpPost() && verifyRadioContract() && verifyInputXpService() && verifyXpDate());
-};
-
-// Save datas
-
-let saveServices = () => {
-  let services = $('#InputServices').select2('data');
-
-  application.services = [];
-  services.forEach( service => {
-    application.services.push(service.text);
-  });
-};
-
 // Logic to next step
 
 let resetForm = (form) => {
@@ -219,38 +163,117 @@ let nextStepFrom = (currentStep) => {
   console.log(application);
   toNextModal = true;
   switch (currentStep) {
-      case 'mainModal':
+    case 'mainModal':
+      transitionToNext(currentStep);
+      if (postsArray.length === 0)
+        createPostsList(allPosts, $('#InputPosts'));
+    case 'postModal':
+      if (verifyStep(currentStep)) {
+        application.post = $('#InputPosts').val();
+        saveServices();
         transitionToNext(currentStep);
-        if (postsArray.length === 0)
-          createPostsList(allPosts, $('#InputPosts'));
-      case 'postModal':
-        if (verifyStep(currentStep)) {
-          application.post = $('#InputPosts').val();
-          saveServices();
-          transitionToNext(currentStep);
-        }
-      case 'contractModal':
-        if (verifyStep(currentStep)){
+      }
+    case 'contractModal':
+      if (verifyStep(currentStep)){
+        createPostsList(allPosts, $('#xpPost'));
+        transitionToNext(currentStep);
+        generateRecapGlobal('xp');
+      }
+    case 'timeModal':
+      if (application.contractType === 'cdi'){
+        if (verifyStep('timeModalCdi')){
           createPostsList(allPosts, $('#xpPost'));
           transitionToNext(currentStep);
+          generateRecapGlobal('xp');
         }
-      case 'timeModal':
-        if (application.contractType === 'cdi')
-          if (verifyStep('timeModalCdi')){
-            createPostsList(allPosts, $('#xpPost'));
-            transitionToNext(currentStep);
-          }
-        else if (application.contractType === 'internship')
-          if (verifyStep('timeModalInternship')){
-            createPostsList(allPosts, $('#xpPost'));
-            transitionToNext(currentStep);
-          }
+      }
+      else if (application.contractType === 'internship'){
+        if (verifyStep('timeModalInternship')){
+          createPostsList(allPosts, $('#xpPost'));
+          transitionToNext(currentStep);
+          generateRecapGlobal('xp');
+        }
+      }
     default:
       toNextModal = false;
   }
 };
 
-// EXPERIENCE-MODAL TOOLS
+// GLOBAL FUNCTIONS ---------------------------------------------------------------------------------------
+
+let RecapPost = () => {
+  $(`<div class="recap-item" data-step="post"><div>Que recherchez-vous ?</div><div><i class="fas fa-check-circle green center-icon"></i><button class="btn"><i class="fal fa-edit"></i></button></div></div>`).appendTo($('.recap'));
+};
+
+let generateRecapGlobal = (step) => {
+  $('.recap > p').first().show();
+  $('.recap p').last().html('Votre récap');
+  switch (step) {
+    case 'xp':
+      $('.recap-item').remove();
+      RecapPost();
+      break;
+  }
+};
+
+// VERIFICATION FUNCTIONS ---------------------------------------------------------------------------------------
+
+let verifyInputPost = () => {
+  return postsArray.includes($('#InputPosts').val());
+};
+
+let verifyCheckedContract = () => {
+  return ($('#cdiToggle').prop('checked') || $('#vacationToggle').prop('checked') || $('#internshipToggle').prop('checked'));
+};
+
+let verifyCheckedSchedule = () => {
+  return ($('#cdiSchedule input:checked').length !== 0);
+};
+
+let verifyInternshipDate = () => {
+  let start = $('#start').data("DateTimePicker").date();
+  let end = $('#end').data("DateTimePicker").date();
+  return (start !== null && end !== null);
+};
+
+let verifyInputXpEstablishment = () => {
+  return !$.isEmptyObject($('#xpEstablishment').val());
+};
+
+let verifyInputXpPost = () => {
+  return postsArray.includes($('#xpPost').val());
+};
+
+let verifyRadioContract = () => {
+  return ($('#radioContract input:checked').attr('id') !== undefined);
+};
+
+let verifyInputXpService = () => {
+  return servicesArray.includes($('#xpService').val());
+};;
+
+let verifyXpDate = () => {
+  let start = $('#xpStart').data("DateTimePicker").date();
+  let end = $('#xpEnd').data("DateTimePicker").date();
+  return (start !== null && end !== null);
+};
+
+let verifyXpComplete = () => {
+  return (verifyInputXpEstablishment() && verifyInputXpPost() && verifyRadioContract() && verifyInputXpService() && verifyXpDate());
+};
+
+// POST-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
+
+let saveServices = () => {
+  let services = $('#InputServices').select2('data');
+
+  application.services = [];
+  services.forEach( service => {
+    application.services.push(service.text);
+  });
+};
+
+// EXPERIENCE-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
 let setLiberalPost = () => {
   $('#liberal').trigger('click');
@@ -277,19 +300,53 @@ let resetPostRadioService = () => {
   $('#xpService').val(null).trigger('change');
 };
 
-let generateRecapXp = (current) => {
-  $(`<div class="recap-item" data-id="${current.id}"><div>${current.establishment}</div>
-<div><button class="btn"><i class="fal fa-edit"></i></button><button class="btn" onclick="deleteXp(${current.id})">
-<i class="fal fa-trash-alt"></i></button></div></div>`).appendTo($('.recap'));
+let saveCurrentXp = () => {
+  let current = {};
+  current.id = experienceID;
+  experienceID += 1;
+  current.establishment = $('#xpEstablishment').val();
+  current.post = $('#xpPost').val();
+  current.contract = $('#radioContract input:checked').attr('id');
+  current.service = $('#xpService').val();
+  current.start = new Date($('#xpStart').data("DateTimePicker").date());
+  current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+  experiences.push(current);
+};
+
+let generateRecapXp = () => {
+  let recapParagraphs = $('.recap p');
+  recapParagraphs.first().hide();
+  recapParagraphs.last().html('Aperçu de vos expériences');
+  $('.recap-item').remove();
+  experiences.forEach( xp => {
+    let title = `<div>#Expérience n°${xp.id}</div>`;
+    let editButton = `<button class="btn" onclick="editXp(${xp.id})"><i class="fal fa-edit"></i></button>`;
+    let deleteButton = `<button class="btn" onclick="deleteXp(${xp.id})"><i class="fal fa-trash-alt"></i></button>`;
+    $(`<div class="recap-item" data-id="${xp.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
+  });
 };
 
 let deleteXp = (id) => {
   let i = experiences.map(xp => xp.id).indexOf(id);
   experiences.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
+  if (experiences.length === 0){
+    $('#toStep5').hide();
+    generateRecapGlobal('xp');
+  }
 };
 
-// Listeners
+let editXp = (id) => {
+  editMode = true;
+  $('#xpEstablishment').val();
+  $('#xpPost').val();
+  $('#radioContract input:checked').attr('id');
+  $('#xpService').val();
+  $('#xpStart').data("DateTimePicker");
+  $('#xpEnd').data("DateTimePicker")
+};
+
+// LISTENERS ---------------------------------------------------------------------------------------
 
 let mainModalListener = () => {
   $('#toStep1').on('click', () => {
@@ -488,18 +545,10 @@ let experienceModalListener = () => {
 
   $('#saveXp').on('click', () => {
     if (verifyXpComplete()){
-      let current = {};
-      current.id = experienceID;
-      experienceID += 1;
-      current.establishment = $('#xpEstablishment').val();
-      current.post = $('#xpPost').val();
-      current.contract = $('#radioContract input:checked').attr('id');
-      current.service = $('#xpService').val();
-      current.start = new Date($('#xpStart').data("DateTimePicker").date());
-      current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-      experiences.push(current);
-      generateRecapXp(current);
+      saveCurrentXp();
+      generateRecapXp();
       resetForm('xp');
+      $('#toStep5').show();
     }
   });
 
