@@ -1,24 +1,25 @@
 <script src="/static/assets/js/bootstrap-selectpicker.js"></script>
 <div class="modal-body">
   <div class="form-group">
-    <select id="groupsID" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true" data-live-search="true">
+    <select id="groupsID" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
+            data-live-search="true">
     </select>
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" id="validateLinkSuperGroup"> Valider les modifications </button>
+  <button type="button" class="btn btn-default" id="validateLinkSuperGroup"> Valider les modifications</button>
 </div>
 <script>
-  $.get('/api/groups/all', function(data) {
+  $.get('/api/groups/all', function (data) {
     $.each(data.groups, function (i, group) {
       $('#groupsID').append($('<option>', {
         value: group.id,
-        text : group.name
+        text: group.name
       }));
       $('#groupsID').selectpicker('refresh');
     });
     var Groupoptions = $("#groupsID option");
-    Groupoptions.sort(function(a,b) {
+    Groupoptions.sort(function (a, b) {
       if (a.text > b.text) return 1;
       else if (a.text < b.text) return -1;
       else return 0;
@@ -27,7 +28,7 @@
   });
   var grouplinkrow = {{this.supergroup.id}};
   var preselecteds = [];
-  $.get('/api/groupslinks/' + grouplinkrow, function(data) {
+  $.get('/api/back-office/groupslinks/' + grouplinkrow, function (data) {
     $.each(data.linkgroup, function (i, linkgroup) {
       preselecteds.push(linkgroup.id_group);
     });

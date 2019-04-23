@@ -135,7 +135,18 @@ router.get('/groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewGroups)
 router.get('/super-groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewSuperGroups);
 
 /**
- * @Route('/back-office/settings/') GET;
+ * @Route('/back-office/configuration/skills') GET;
+ * Show configuration of skills
+ */
+router.get('/configuration/skills', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewSkills);
+
+/**
+ * @Route('/back-office/configuration/equipments') GET;
+ * Show configuration of equipments
+ */
+router.get('/configuration/equipments', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewEquipments);
+
+/** @Route('/back-office/settings/') GET;
  * Show app settings page
  */
 router.get('/settings',
