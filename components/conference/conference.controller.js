@@ -28,6 +28,7 @@ Conference.changeDate = (req, res, next) => {
   Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
     if (_.isNil(conference)) return next(new BackError(`Conférence ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
     conference.date = req.body.newDate;
+    conference.status = req.body.status || 'waiting';
     conference.save().then(result => {
       return res.status(httpStatus.OK).send(result);
     });
@@ -38,6 +39,7 @@ Conference.edit = (req, res, next) => {
   Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
     conference.date = req.body.date;
     conference.type = req.body.type;
+    conference.status = req.body.status || 'waiting';
     conference.save().then(result => {
       return res.status(httpStatus.OK).send(result);
     });
