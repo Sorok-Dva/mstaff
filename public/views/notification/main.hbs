@@ -74,7 +74,10 @@
       <div class="text-center" style="padding: 15px">
         <h5>Quand ?</h5>
         <span class="text-muted">
-          {{date @root.opts.details.conference.date 'dddd Do MMMM YYYY'}} à {{@root.opts.details.conference.time}}
+          {{date @root.opts.details.conference.date 'dddd Do MMMM YYYY'}}
+          {{#if @root.opts.details.conference.time}}
+            à {{@root.opts.details.conference.time}}
+          {{/if}}
         </span>
         <h5>Où ?</h5>
         <span class="text-muted">
