@@ -59,10 +59,17 @@
           allDay: false,
           url: '#',
           textColor: 'black',
-          color: "{{#ifCond conference.type '===' 'online'}}blue{{else}}orange{{/ifCond}}",
+          color: "{{#ifCond conference.type '===' 'online'}}green{{else}}orange{{/ifCond}}",
         },
       {{/each}}
-		]
+		],
+    eventRender: (event) => {
+      let icon = $(event.el).css('background-color') === 'orange' ?
+          `<i class="fal fa-map-marker-alt" style="margin-right: 3px;"></i>` :
+          `<i class="fal fa-video" style="margin-right: 3px;"></i>`;
+      let content = $(event.el).find( '.fc-content' );
+      content.prepend(icon);
+    }
 	});
 
   calendar.render();
