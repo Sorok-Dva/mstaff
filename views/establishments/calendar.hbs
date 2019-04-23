@@ -46,6 +46,36 @@
           context: {
             conference
           }
+        }, () => {
+          $('.editConfBtn').click(function() {
+            let type = $('[data-isset="true"]').attr('data-action');
+            let dateString = $('#editConfDate').val();
+            let year = dateString.split('/')[2].split(' ')[0];
+            let month = dateString.split('/')[1] - 1;
+            let day = dateString.split('/')[0];
+            let hour = dateString.split('/')[2].split(' ')[1].split(':')[0];
+            let min = dateString.split('/')[2].split(' ')[1].split(':')[1];
+            let date = new Date(year, month, day, hour, min, 0);
+            if (date === 'Invalid Date' || (type !== 'physical' && type !== 'online')) return false;
+            $.post(`/api/es/conference/${conference.id}`, {type, date, _csrf}, (data) => {
+              if (data) {
+                let event = calendar.getEventById(info.event.id);
+                event.setStart(date);
+                event.setEnd(date);
+                event.setProp('color', type === 'online' ? 'green' : 'orange');
+                event.setProp('title', `Entretien ${type === 'online' ? 'en ligne' : 'physique'}`);
+                event.setProp('editable', moment(date).isAfter(moment()));
+                $('#viewConferenceModal').modal('hide');
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Événement modifié avec succès.',
+                });
+              } else {
+                errorsHandler('Une erreur est survenue');
+              }
+            }).catch(error => errorsHandler(error));
+          });
         })
       }).catch(error => errorsHandler(error));
     },
@@ -65,6 +95,7 @@
           url: '#',
           textColor: 'black',
           color: "{{#ifCond conference.type '===' 'online'}}green{{else}}orange{{/ifCond}}",
+          editable: moment('{{conference.date}}').isAfter(moment())
         },
       {{/each}}
 		],
@@ -78,6 +109,27 @@
     eventConstraint: {
       start: moment().format('YYYY-MM-DD'),
       end: '2100-01-01' // hard coded goodness unfortunately
+    },
+    eventDrop: (drop) => {
+      let newDate = drop.event.start.toISOString();
+      let id = drop.event.id;
+      if (confirm(`Voulez vous vraiment déplacer cet entretien au ${moment(newDate).format('dddd Do MMMM YYYY')} ?`)) {
+        $.post(`/api/es/conference/${id}/changeDate`, { _csrf, newDate }, data => {
+          if (data) {
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Événement déplacé avec succès.',
+            });
+          } else {
+            errorsHandler('Une erreur est survenue');
+          }
+        }).catch(error => errorsHandler(error));
+      } else {
+        drop.revert();
+      }
+      console.log(drop);
+      // drop.revert();
     }
 	});
 
