@@ -109,7 +109,7 @@ Authentication.ensureIsEs = (req, res, next) => {
  */
 Authentication.verifyEsAccess = (req, res, next) => {
   Models.Establishment.findOne({
-    where: { id: req.params.esId },
+    where: { id: req.params.esId || req.session.currentEs },
     include: {
       model: Models.ESAccount,
       where: { user_id: req.user.id }
