@@ -46,4 +46,8 @@ router.get('/:esId(\\d+)/conference/:id(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Conference.Main.viewConference_ES);
 
+router.post('/conference/:id(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Conference.Main.edit);
+
 module.exports = router;
