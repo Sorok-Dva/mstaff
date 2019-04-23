@@ -50,4 +50,8 @@ router.post('/conference/:id(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Conference.Main.edit);
 
+router.post('/conference/:id(\\d+)/changeDate',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Conference.Main.changeDate);
+
 module.exports = router;
