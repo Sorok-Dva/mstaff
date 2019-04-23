@@ -2,8 +2,7 @@ let postsArray = [];
 let servicesArray = [];
 let application = {};
 let experiences = [];
-let experienceID = 1;
-let editMode = false;
+let permissions = {editMode: false, editId: 0, experienceId: 1};
 let toNextModal = false;
 let allPosts, allServices;
 
@@ -107,6 +106,9 @@ let resetForm = (form) => {
       $('#xpEnd').data("DateTimePicker").clear();
       $('.inputsXp i').hide();
       $('#saveXp').hide();
+      resetPostRadioService();
+      $('#xpStart').data("DateTimePicker").maxDate(moment());
+
       break;
   }
 };
@@ -300,17 +302,22 @@ let resetPostRadioService = () => {
   $('#xpService').val(null).trigger('change');
 };
 
-let saveCurrentXp = () => {
+let saveXp = (id) => {
   let current = {};
-  current.id = experienceID;
-  experienceID += 1;
+  if (id === undefined){
+    current.id = permissions.experienceId;
+    permissions.experienceId += 1;
+  } else current = experiences[experiences.map(xp => xp.id).indexOf(id)];
   current.establishment = $('#xpEstablishment').val();
   current.post = $('#xpPost').val();
   current.contract = $('#radioContract input:checked').attr('id');
   current.service = $('#xpService').val();
   current.start = new Date($('#xpStart').data("DateTimePicker").date());
   current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-  experiences.push(current);
+
+  if (id === undefined)
+    experiences.push(current);
+  permissions.editMode = false;
 };
 
 let generateRecapXp = () => {
@@ -327,6 +334,7 @@ let generateRecapXp = () => {
 };
 
 let deleteXp = (id) => {
+  resetForm('xp');
   let i = experiences.map(xp => xp.id).indexOf(id);
   experiences.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
@@ -337,13 +345,17 @@ let deleteXp = (id) => {
 };
 
 let editXp = (id) => {
-  editMode = true;
-  $('#xpEstablishment').val();
-  $('#xpPost').val();
-  $('#radioContract input:checked').attr('id');
-  $('#xpService').val();
-  $('#xpStart').data("DateTimePicker");
-  $('#xpEnd').data("DateTimePicker")
+  permissions.editMode = true;
+  permissions.editId = id;
+  let i = experiences.map(xp => xp.id).indexOf(id);
+  resetForm('xp');
+  $('#xpEstablishment').val(experiences[i].establishment).trigger('keyup');
+  $('#xpPost').val(experiences[i].post).trigger('keyup');
+  $(`#${experiences[i].contract}`).trigger('click');
+  $('#xpService').val(experiences[i].service).trigger('change');
+  $('#xpStart').data("DateTimePicker").date(experiences[i].start);
+  $('#xpEnd').data("DateTimePicker").date(experiences[i].end);
+  $('#xpDate').trigger('change');
 };
 
 // LISTENERS ---------------------------------------------------------------------------------------
@@ -545,7 +557,7 @@ let experienceModalListener = () => {
 
   $('#saveXp').on('click', () => {
     if (verifyXpComplete()){
-      saveCurrentXp();
+      permissions.editMode ? saveXp(permissions.editId) : saveXp();
       generateRecapXp();
       resetForm('xp');
       $('#toStep5').show();
