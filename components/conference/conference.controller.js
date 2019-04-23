@@ -18,6 +18,12 @@ Conference.viewConferences_ES = (req, res, next) => {
   })
 };
 
+Conference.viewConference_ES = (req, res, next) => {
+  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
+    return res.status(httpStatus.OK).send(conference);
+  })
+};
+
 Conference.create = (req, res, next) => {
   try {
     Models.Conference.findOrCreate({
