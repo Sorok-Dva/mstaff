@@ -40,7 +40,7 @@
       let id = info.event.id;
       $.get(`/api/es/{{session.currentEs}}/conference/${id}`, conference => {
         createModal({
-          title: 'Voir un évenement',
+          title: `Entretien avec ${conference.Candidate.User.firstName} ${conference.Candidate.User.lastName}`,
           modal: 'es/conference/view',
           id: 'viewConferenceModal',
           context: {
@@ -114,6 +114,7 @@
       let newDate = drop.event.start.toISOString();
       let id = drop.event.id;
       if (confirm(`Voulez vous vraiment déplacer cet entretien au ${moment(newDate).format('dddd Do MMMM YYYY')} ?`)) {
+        if (!moment(newDate).isAfter(moment())){ drop.revert(); return false; }
         $.post(`/api/es/conference/${id}/changeDate`, { _csrf, newDate }, data => {
           if (data) {
             notification({
