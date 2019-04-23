@@ -59,7 +59,7 @@
     let dateString = $('#editConfDate').val();
     let id = {{this.context.conference.id}};
     let year = dateString.split('/')[2].split(' ')[0];
-    let month = dateString.split('/')[1];
+    let month = dateString.split('/')[1] - 1;
     let day = dateString.split('/')[0];
     let hour = dateString.split('/')[2].split(' ')[1].split(':')[0];
     let min = dateString.split('/')[2].split(' ')[1].split(':')[1];
