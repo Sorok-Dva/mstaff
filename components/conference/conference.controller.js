@@ -19,7 +19,28 @@ Conference.viewConferences_ES = (req, res, next) => {
 };
 
 Conference.viewConference_ES = (req, res, next) => {
-  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
+  Models.Conference.findOne({
+    where: {
+      user_id: req.user.id,
+      es_id: req.session.currentEs,
+      id: req.params.id
+    },
+    include: {
+      model: Models.Candidate,
+      attributes: ['id', 'user_id'],
+      required: true,
+      on: {
+        '$Conference.candidate_id$': {
+          [Op.col]: 'Candidate.id'
+        }
+      },
+      include: {
+        model: Models.User,
+        required: true,
+        attributes: ['id', 'firstName', 'lastName']
+      }
+    }
+  }).then(conference => {
     return res.status(httpStatus.OK).send(conference);
   })
 };
