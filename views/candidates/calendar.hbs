@@ -60,12 +60,18 @@
           allDay: false,
           url: '#',
           textColor: 'black',
-          color: "{{#ifCond conference.type '===' 'online'}}green{{else}}orange{{/ifCond}}",
+          color: "{{calendarEventColor conference}}",
+          extendedProps: {
+            status: '{{conference.status}}',
+            type: '{{conference.type}}',
+            key: '{{conference.key}}',
+          }
         },
       {{/each}}
     ],
     eventRender: (event) => {
-      let icon = $(event.el).css('background-color') === 'orange' ?
+      let Event = event.event.extendedProps;
+      let icon = Event.type === 'physical' ?
           `<i class="fal fa-map-marker-alt" style="margin-right: 3px;"></i>` :
           `<i class="fal fa-video" style="margin-right: 3px;"></i>`;
       let content = $(event.el).find( '.fc-content' );
@@ -79,4 +85,19 @@
 
   calendar.render();
 
+  let setConfAvailability = (id, availability) => {
+    $.post(`/api/candidate/conference/${id}/availability`, { _csrf, availability}, (data) => {
+      if (data === 'done') {
+        let event = calendar.getEventById(id);
+        event.setProp('color', availability === 'refused' ? '#b74b4b' : event.backgroundColor);
+        $('#viewConferenceModal').modal('hide');
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Disponibilité enregistrée.',
+          message: `Nous venons d'informer l'établissement de votre disponibilité pour cet entretien.`
+        });
+      }
+    }).catch(errors => errorsHandler(errors));
+  }
 </script>
