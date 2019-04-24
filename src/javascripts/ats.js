@@ -108,7 +108,6 @@ let resetForm = (form) => {
       $('#saveXp').hide();
       resetPostRadioService();
       $('#xpStart').data("DateTimePicker").maxDate(moment());
-
       break;
   }
 };
@@ -141,6 +140,10 @@ let transitionToNext = (step) => {
       $('#timeModal').modal('hide');
       $('#experienceModal').modal('show');
       break;
+    case 'experienceModal':
+      $('#experienceModal').modal('hide');
+      $('#diplomaModal').modal('show');
+      break;
   }
 };
 
@@ -169,18 +172,21 @@ let nextStepFrom = (currentStep) => {
       transitionToNext(currentStep);
       if (postsArray.length === 0)
         createPostsList(allPosts, $('#InputPosts'));
+      break;
     case 'postModal':
       if (verifyStep(currentStep)) {
         application.post = $('#InputPosts').val();
         saveServices();
         transitionToNext(currentStep);
       }
+      break;
     case 'contractModal':
       if (verifyStep(currentStep)){
         createPostsList(allPosts, $('#xpPost'));
         transitionToNext(currentStep);
         generateRecapGlobal('xp');
       }
+      break;
     case 'timeModal':
       if (application.contractType === 'cdi'){
         if (verifyStep('timeModalCdi')){
@@ -196,24 +202,67 @@ let nextStepFrom = (currentStep) => {
           generateRecapGlobal('xp');
         }
       }
-    default:
-      toNextModal = false;
+      break;
+    case 'experienceModal':
+      transitionToNext(currentStep);
+      generateRecapGlobal('diploma');
+      break;
+  }
+  toNextModal = false;
+};
+
+let toPreviousModal = (target) => {
+  if (!toNextModal){
+    switch (target) {
+      case 'mainModal':
+        $('#mainModal').modal('show');
+        break;
+      case 'postModal':
+        $('#postModal').modal('show');
+        break;
+      case 'contractModal':
+        $('#cdiSchedule input').bootstrapToggle('off');
+        $('#start').data("DateTimePicker").clear();
+        $('#end').data("DateTimePicker").clear();
+        $('#contractModal').modal('show');
+        break;
+      case 'experienceModal':
+        $('#experienceModal').modal('show');
+        if (experiences.length !== 0)
+          generateRecapXp();
+        break;
+    }
   }
 };
+
 
 // GLOBAL FUNCTIONS ---------------------------------------------------------------------------------------
 
 let RecapPost = () => {
-  $(`<div class="recap-item" data-step="post"><div>Que recherchez-vous ?</div><div><i class="fas fa-check-circle green center-icon"></i><button class="btn"><i class="fal fa-edit"></i></button></div></div>`).appendTo($('.recap'));
+  let title = `<div>Que recherchez-vous ?</div>`;
+  let check = `<i class="fas fa-check-circle green center-icon"></i>`;
+  let editButton = `<button class="btn"><i class="fal fa-edit"></i></button>`;
+  $(`<div class="recap-item" data-step="post">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
+};
+
+let RecapXp = () => {
+  let title = `<div>Expériences</div>`;
+  let check = (experiences.length === 0) ? `<i class="fas fa-check-circle grey center-icon"></i>` : `<i class="fas fa-check-circle green center-icon"></i>`;
+  let editButton = `<button class="btn"><i class="fal fa-edit"></i></button>`;
+  $(`<div class="recap-item" data-step="xp">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
 };
 
 let generateRecapGlobal = (step) => {
   $('.recap > p').first().show();
   $('.recap p').last().html('Votre récap');
+  $('.recap-item').remove();
   switch (step) {
     case 'xp':
-      $('.recap-item').remove();
       RecapPost();
+      break;
+    case 'diploma':
+      RecapPost();
+      RecapXp();
       break;
   }
 };
@@ -367,10 +416,7 @@ let mainModalListener = () => {
 };
 
 let postModalListener = () => {
-  $('#postModal').on('hide.bs.modal', function(e) {
-    if (!toNextModal)
-      $('#mainModal').modal('show');
-  });
+  $('#postModal').on('hide.bs.modal', () => toPreviousModal('mainModal'));
 
   $('#InputPosts').on( 'keyup autocompleteclose', () => {
     if (verifyInputPost()){
@@ -383,6 +429,7 @@ let postModalListener = () => {
       $('#toStep2').hide();
       $('.select-holder > div').hide();
       $('#InputServices').val(null).trigger('change');
+
     }
   });
 
@@ -392,10 +439,7 @@ let postModalListener = () => {
 };
 
 let contractModalListener = () => {
-  $('#contractModal').on('hide.bs.modal', function() {
-    if (!toNextModal)
-      $('#postModal').modal('show');
-  });
+  $('#contractModal').on('hide.bs.modal', () => toPreviousModal('postModal'));
 
   $('.contractChoices input').bootstrapToggle({
     on: '',
@@ -433,14 +477,7 @@ let contractModalListener = () => {
 };
 
 let timeModalListener = () => {
-  $('#timeModal').on('hide.bs.modal', function() {
-    if (!toNextModal){
-      $('#cdiSchedule input').bootstrapToggle('off');
-      $('#start').data("DateTimePicker").clear();
-      $('#end').data("DateTimePicker").clear();
-      $('#contractModal').modal('show');
-    }
-  });
+  $('#timeModal').on('hide.bs.modal', () => toPreviousModal('contractModal'));
 
   $('#cdiSchedule input').bootstrapToggle({
     on: '',
@@ -495,11 +532,7 @@ let timeModalListener = () => {
 };
 
 let experienceModalListener = () => {
-  $('#experienceModal').on('hide.bs.modal', function() {
-    if (!toNextModal){
-      $('#contractModal').modal('show');
-    }
-  });
+  $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('contractModal'));
 
   //Initialize
   $('#xpDate input').datetimepicker({
@@ -564,9 +597,19 @@ let experienceModalListener = () => {
     }
   });
 
+  //Next Step
+  $('#emptyXp').on('click', () => {
+    experiences = [];
+    nextStepFrom('experienceModal');
+  });
+
   $('#toStep5').on('click', () => {
     nextStepFrom('experienceModal');
   });
+};
+
+let diplomaModalListener = () => {
+  $('#diplomaModal').on('hide.bs.modal', () => toPreviousModal('experienceModal'));
 };
 
 $(document).ready(function () {
@@ -576,5 +619,6 @@ $(document).ready(function () {
       contractModalListener();
       timeModalListener();
       experienceModalListener();
+      diplomaModalListener();
   });
 });

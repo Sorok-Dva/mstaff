@@ -113,6 +113,9 @@
   .grey{
     color: #BDBDBD;
   }
+  .emptyStep{
+    cursor: pointer;
+  }
 </style>
 
 <div class="modal customModal" id="experienceModal" tabindex="-1" role="dialog">
@@ -128,7 +131,7 @@
                 <p>Indiquez ici vos expériences. Vous pouvez en ajouter plusieurs.</p>
               </div>
               <div class="recap grow1">
-                <p>Pas encore d'expérience ? Pas de problème, <b>passez cette étape ---></b></p>
+                <p>Pas encore d'expérience ? Pas de problème, <b id="emptyXp" class="emptyStep">passez cette étape <i class="fal fa-long-arrow-right"></i></b></p>
                 <p>Votre récap</p>
               </div>
               <div class="footer-left">
