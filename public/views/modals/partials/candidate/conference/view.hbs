@@ -1,26 +1,38 @@
 <div class="modal-body">
   {{#ifCond this.context.conference.status '===' 'waiting'}}
     <p>L'établissement <b>{{this.context.conference.Establishment.name}}</b> vous propose un entretien
-      {{#ifCond this.context.conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}} le
+      {{#ifCond @root.context.conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}} le
       <b>{{date @root.context.conference.date 'dddd Do MMMM YYYY à HH:mm'}}</b>.</p>
     <p><b>Que voulez-vous faire ?</b></p>
   {{/ifCond}}
   {{#ifCond this.context.conference.status '===' 'refused'}}
     <p>L'établissement <b>{{this.context.conference.Establishment.name}}</b> vous avait proposer un entretien
-      {{#ifCond this.context.conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}} le
+      {{#ifCond @root.context.conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}} le
       <b>{{date @root.context.conference.date 'dddd Do MMMM YYYY à HH:mm'}}</b>.</p>
-    <p><b>Vous avez refuser cet entretien.</b></p>
+    <p><b>Vous avez refusé cet entretien.</b></p>
   {{/ifCond}}
   {{#ifCond this.context.conference.status '===' 'expired'}}
     <p>L'établissement <b>{{this.context.conference.Establishment.name}}</b> vous avait proposer un entretien
-      {{#ifCond this.context.conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}} le
+      {{#ifCond @root.context.conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}} le
       <b>{{date @root.context.conference.date 'dddd Do MMMM YYYY à HH:mm'}}</b>.</p>
     <p><b>L'offre d'entretien a expirée.</b></p>
   {{/ifCond}}
   {{#ifCond this.context.conference.status '===' 'accepted'}}
-    <p>Vous avez accepter un entretien {{#ifCond this.context.conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}}
-      avec l'établissement <b>{{this.context.conference.Establishment.name}}</b>
+    <p>Vous avez accepté un entretien {{#ifCond @root.context.conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}}
+      avec l'établissement <b>{{@root.context.conference.Establishment.name}}</b>
       le <b>{{date @root.context.conference.date 'dddd Do MMMM YYYY à HH:mm'}}</b>.</p>
+    <hr style="width: 35%">
+    {{#ifCond @root.context.conference.type '===' 'online'}}
+      <h5 class="text-muted text-center">Lien de l'entretien visio</h5>
+      <p class="text-center">
+        {{{showVisioLink @root.context.conference}}}
+
+      </p>
+    {{else}}
+      <h5 class="text-muted text-center">Adresse</h5>
+      <h6 class="text-muted text-center">{{@root.context.conference.Establishment.address}}</h6>
+      <h6 class="text-muted text-center">{{@root.context.conference.Establishment.town}}</h6>
+    {{/ifCond}}
   {{/ifCond}}
 </div>
 <div class="modal-footer">
