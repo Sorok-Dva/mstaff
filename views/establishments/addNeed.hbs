@@ -43,8 +43,11 @@
   let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
   let baseCVCount = {{candidatesCount.0.count}};
+  {{log need.candidates}}
   let need = {
-    selectedCandidates: [], filterQuery: {
+    selectedCandidates: [ {{#each need.candidates as |candidate|}}{{candidate.id}},{{/each}} ],
+    firstSearch: {{#if need}}false{{else}}true{{/if}},
+    filterQuery: {
       establishments: [esId]
     }
   };
@@ -58,15 +61,15 @@
       <div class="searchbar-wrapper">
         <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
           <input placeholder="Indiquez un type de poste" style="border: 0px" id="post" type="text"
-                 class="form-control pull-left" autocomplete="off">
+                 class="form-control pull-left" autocomplete="off" value="{{need.post}}">
           <div>
             <button onclick="resetSearch()" id="resetSearch"
                     title="Réinitialiser ma recherche" class="btn btn-warning pull-right"
-                    style="display: none;margin-left: 5px;">
+                    style="{{#unless need}}display: none;{{/unless}}margin-left: 5px;">
               <i class="fal fa-undo-alt"></i>
             </button>
-            <button id="saveNeed" class="btn btn-success pull-right" title="Enregistrer ma recherche"
-                    style="display:none;margin-left: 5px;">
+            <button id="saveNeed" {{#if need.id}}data-need-id="{{need.id}}"{{/if}} class="btn btn-success pull-right"
+                    title="Enregistrer ma recherche" style="{{#unless need}}display: none;{{/unless}}margin-left: 5px;">
               <i class="fal fa-save"></i>
             </button>
             <button id="searchCandidates" class="btn btn-large btn-primary pull-right">
@@ -88,16 +91,16 @@
   <div class="col-md-12" id="criteria">
     <div class="col-md-12 text-center">
       <button class="btn btn-info" onclick="return showServiceModal()">
-        Service <span id="btnServiceType"></span>
+        Service <span id="btnServiceType">{{need.service}}</span>
       </button>
       <button class="btn btn-info" onclick="return showContractModal()">
-        Contrat <span id="btnContractType"></span>
+        Contrat <span id="btnContractType" style="text-transform: uppercase">{{need.contract_type}}</span>
       </button>
       <button class="btn btn-info" onclick="return showTimeModal()">
-        Période <span id="btnTimeType"></span>
+        Période <span id="btnTimeType">{{#if need.start}}{{date need.start 'DD/MM/YYYY'}}{{/if}}{{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}</span>
       </button>
       <button class="btn btn-info" onclick="return showDiplomaModal()">
-        Diplômes Complémentaires <span id="btnDiplomaType"></span>
+        Diplômes Complémentaires <span id="btnDiplomaType">{{need.diploma}}</span>
       </button>
     </div>
   </div>
@@ -228,3 +231,25 @@
   {{/each}}
 </select>
 <script src="/static/assets/dist/js/addNeed.es.min.js"></script>
+<script>
+    {{#if need}}
+    $(document).ready(() => {
+      need.name = '{{need.name}}';
+      need.id = {{need.id}};
+      {{#if need.contract_type}}
+        need.filterQuery.contractType = '{{need.contract_type}}';
+      {{/if}}
+      {{#if need.service}}
+        need.filterQuery.service = '{{need.service}}';
+      {{/if}}
+      {{#if need.diploma}}
+        need.filterQuery.diploma = '{{need.diploma}}';
+      {{/if}}
+      need.filterQuery.timeType = {
+        {{#if need.start}} dateStart: new Date('{{need.start}}'),{{/if}}
+        {{#if need.end}} dateEnd: new Date('{{need.end}}'),{{/if}}
+      };
+      searchCandidates();
+    });
+    {{/if}}
+</script>
