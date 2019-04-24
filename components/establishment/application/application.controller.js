@@ -93,7 +93,22 @@ Establishment_Application.getCVs = (req, res, next) => {
     Models.Application.findAndCountAll(query).then(applications => {
       render.candidates = applications.rows;
       render.candidatesCount = applications.count;
-      return res.render('establishments/addNeed', render);
+      if (req.params.editNeedId) {
+        Models.Need.findOne({
+          where: { id: req.params.editNeedId, es_id: req.session.currentEs, closed: false },
+          include: {
+            model: Models.NeedCandidate,
+            attributes: ['id', 'candidate_id'],
+            as: 'candidates',
+            required: true
+          }
+        }).then(need => {
+          render.need = need;
+          return res.render('establishments/addNeed', render);
+        });
+      } else {
+        return res.render('establishments/addNeed', render);
+      }
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
 };
