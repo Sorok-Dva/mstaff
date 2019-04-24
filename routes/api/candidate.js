@@ -125,4 +125,8 @@ router.post('/conference/:id(\\d+)/availability',
   Conference.Main.candidateAnswer
 );
 
+router.get('/conference/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  Conference.Main.viewConference_Candidate);
+
 module.exports = router;
