@@ -1,4 +1,3 @@
-need.firstSearch = true;
 need.notifyCandidates = false;
 $(`#post`).autocomplete({
   source: list,
@@ -228,11 +227,21 @@ $(document).ready(() => {
   need._csrf = _csrf;
 
   $('button#saveNeed').click(function () {
-    createModal({
-      id: 'needNameModal',
-      title: 'Définir un libellé de recherche.',
-      modal: 'es/need/defineName',
-      cantBeClose: true
-    })
+    if ($(this).is("[data-need-id]")) {
+      createModal({
+        id: 'needNameModal',
+        title: 'Renommer votre recherche',
+        modal: 'es/need/defineName',
+        cantBeClose: true,
+        context: { need }
+      })
+    } else {
+      createModal({
+        id: 'needNameModal',
+        title: 'Définir un libellé de recherche.',
+        modal: 'es/need/defineName',
+        cantBeClose: true
+      })
+    }
   });
 });
