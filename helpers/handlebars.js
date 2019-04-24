@@ -234,7 +234,25 @@ module.exports.register = async (Handlebars) => {
         return '';
     }
   });
+
   Handlebars.registerHelper('json', function (context) {
     return JSON.stringify(context);
+  });
+
+  Handlebars.registerHelper('calendarEventColor', conference => {
+    switch (conference.status) {
+      case 'refused':
+        return '#b74b4b';
+      case 'expired':
+        return 'grey';
+    }
+    switch (conference.type) {
+      case 'online':
+        return 'green';
+      case 'physical':
+        return 'orange';
+      default:
+        return 'grey';
+    }
   });
 };
