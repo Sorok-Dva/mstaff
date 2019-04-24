@@ -62,6 +62,7 @@ Conference.viewConference_Candidate = (req, res, next) => {
       }
     }, {
       model: Models.Establishment,
+      attributes: ['id', 'name', 'address', 'town'],
       required: true,
       on: {
         '$Conference.es_id$': {
