@@ -434,6 +434,7 @@ let loadClearModal = (modal) => {
     case 'contractModal':
       break;
     case 'timeModal':
+
       break;
     case 'experienceModal':
       break;
@@ -506,6 +507,7 @@ let saveDatas = (modal) => {
       });
       break;
     case 'contractModal':
+      application.contractType = $('.contractChoices input:checked').prop('name');
       break;
     case 'timeModal':
       break;
@@ -528,7 +530,7 @@ let verifyDatas = (modal) => {
       return postsArray.includes($('#InputPosts').val()) ? true : notify('inputPost');
       break;
     case 'contractModal':
-      return ($('.contractChoices div input:checked').length);
+      return ($('.contractChoices input:checked').length) ? true : notify('contractChoice');
       break;
     case 'timeModalCdi':
       return ($('#full-part input:checked').length > 0 && $('#day-night input:checked').length > 0);
@@ -563,6 +565,14 @@ let notify = (error) => {
         type: 'danger',
         title: 'Informations manquantes :',
         message: `Merci de choisir un poste valide.`
+      });
+      break;
+    case 'contractChoice':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de sélectionner un type de contrat.`
       });
       break;
   }
@@ -627,17 +637,30 @@ let contractModalListener = () => {
           $('#cdiToggle, #vacationToggle').bootstrapToggle('off');
           break;
       }
-      application.contractType = this.name;
-      $('#toStep3').show();
-    }
-    if (!verifyCheckedContract()){
-      $('#toStep3').hide();
-      delete application.contractType;
     }
   });
 
   $('#toStep3').on('click', () => {
-    nextStepFrom('contractModal');
+    if (verifyDatas('contractModal')){
+      saveDatas('contractModal');
+      let target = $('.contractChoices input:checked').prop('name');
+      switch (target) {
+        case 'cdi':
+          loadModal('contractModal','timeModal');
+          $('#cdiSchedule').css('display', 'flex');
+          $('#internshipDate').css('display', 'none');
+          break;
+        case 'vacation':
+          loadModal('contractModal','experienceModal');
+          break;
+        case 'internship':
+          loadModal('contractModal','timeModal');
+          $('#cdiSchedule').css('display', 'none');
+          $('#internshipDate').css('display', 'flex');
+          break;
+      }
+    }
+    // nextStepFrom('contractModal');
   });
 };
 
