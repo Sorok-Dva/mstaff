@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     es_id: DataTypes.INTEGER,
     createdBy: DataTypes.INTEGER,
     post: DataTypes.STRING,
+    service: DataTypes.STRING,
+    diploma: DataTypes.STRING,
     contract_type: DataTypes.STRING,
     start: DataTypes.DATE,
     end: DataTypes.DATE,
