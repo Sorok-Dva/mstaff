@@ -274,17 +274,18 @@ let verifyInputPost = () => {
 };
 
 let verifyCheckedContract = () => {
-  return ($('#cdiToggle').prop('checked') || $('#vacationToggle').prop('checked') || $('#internshipToggle').prop('checked'));
+  return ($('.contractChoices div input:checked').length);
 };
 
 let verifyCheckedSchedule = () => {
-  return ($('#cdiSchedule input:checked').length !== 0);
+  return ($('#full-part input:checked').length > 0 && $('#day-night input:checked').length > 0);
 };
 
 let verifyInternshipDate = () => {
-  let start = $('#start').data("DateTimePicker").date();
-  let end = $('#end').data("DateTimePicker").date();
-  return (start !== null && end !== null);
+  let start = moment($('#start').data("DateTimePicker").date()).startOf('day');
+  let end = moment($('#end').data("DateTimePicker").date()).startOf('day');
+  let now = moment().startOf('day');
+  return (start.isSameOrAfter(now) && end.isAfter(start));
 };
 
 let verifyInputXpEstablishment = () => {
@@ -407,11 +408,174 @@ let editXp = (id) => {
   $('#xpDate').trigger('change');
 };
 
+
+
+
+
+
+
+
+// REFACTO FUNCTIONS
+
+let loadModal = (current, target) => {
+  $(`#${current}`).modal('hide');
+  $(`#${target}`).modal('show');
+  hasDatas(target) ? loadEditModal(target) : loadClearModal(target);
+};
+
+let loadClearModal = (modal) => {
+  //resetModal(modal) ????
+  console.log('clear');
+  switch (modal) {
+    case 'postModal':
+      if (postsArray.length === 0)
+        createPostsList(allPosts, $('#InputPosts'));
+      break;
+    case 'contractModal':
+      break;
+    case 'timeModal':
+      break;
+    case 'experienceModal':
+      break;
+    case 'diplomaModal':
+      break;
+    case 'otherDiplomaModal':
+      break;
+    case 'skillModal':
+      break;
+    case 'identityModal':
+      break;
+  }
+
+};
+
+let loadEditModal = (modal) => {
+  console.log('hasDatas');
+  switch (modal) {
+    case 'postModal':
+      $('#InputPosts').val(application.post);
+      //Load services
+      break;
+    case 'contractModal':
+      break;
+    case 'timeModal':
+      break;
+    case 'experienceModal':
+      break;
+    case 'diplomaModal':
+      break;
+    case 'otherDiplomaModal':
+      break;
+    case 'skillModal':
+      break;
+    case 'identityModal':
+      break;
+  }
+};
+
+let hasDatas = (modal) => {
+  switch (modal) {
+    case 'postModal':
+        return !$.isEmptyObject(application.post);
+      break;
+    case 'contractModal':
+      break;
+    case 'timeModal':
+      break;
+    case 'experienceModal':
+      break;
+    case 'diplomaModal':
+      break;
+    case 'otherDiplomaModal':
+      break;
+    case 'skillModal':
+      break;
+    case 'identityModal':
+      break;
+  }
+};
+
+let saveDatas = (modal) => {
+  switch (modal) {
+    case 'postModal':
+      let services = $('#InputServices').select2('data');
+      application.post = $('#InputPosts').val();
+      application.services = [];
+      services.forEach( service => {
+        application.services.push(service.text);
+      });
+      break;
+    case 'contractModal':
+      break;
+    case 'timeModal':
+      break;
+    case 'experienceModal':
+      break;
+    case 'diplomaModal':
+      break;
+    case 'otherDiplomaModal':
+      break;
+    case 'skillModal':
+      break;
+    case 'identityModal':
+      break;
+  }
+};
+
+let verifyDatas = (modal) => {
+  switch (modal) {
+    case 'postModal':
+      return postsArray.includes($('#InputPosts').val()) ? true : notify('inputPost');
+      break;
+    case 'contractModal':
+      return ($('.contractChoices div input:checked').length);
+      break;
+    case 'timeModalCdi':
+      return ($('#full-part input:checked').length > 0 && $('#day-night input:checked').length > 0);
+      break;
+    case 'timeModalInternship':
+      let start = moment($('#start').data("DateTimePicker").date()).startOf('day');
+      let end = moment($('#end').data("DateTimePicker").date()).startOf('day');
+      let now = moment().startOf('day');
+      return (start.isSameOrAfter(now) && end.isAfter(start));
+      break;
+    case 'experienceModal':
+      let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val());
+      let xpPost = postsArray.includes($('#xpPost').val());
+      let radioContract = ($('#radioContract input:checked').attr('id') !== undefined);
+      let xpService = servicesArray.includes($('#xpService').val());
+
+
+      //Todo finir verif des dates
+      let xpStart = moment($('#xpStart').data("DateTimePicker").date()).startOf('day');
+      let xpEnd = moment($('#xpEnd').data("DateTimePicker").date()).startOf('day');
+      return (start !== null && end !== null);
+      break;
+
+  }
+};
+
+let notify = (error) => {
+  switch(error) {
+    case 'inputPost':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir un poste valide.`
+      });
+      break;
+  }
+  return false;
+}
+
+
+
 // LISTENERS ---------------------------------------------------------------------------------------
 
 let mainModalListener = () => {
   $('#toStep1').on('click', () => {
-    nextStepFrom('mainModal');
+    loadModal('mainModal','postModal');
   });
 };
 
@@ -421,12 +585,10 @@ let postModalListener = () => {
   $('#InputPosts').on( 'keyup autocompleteclose', () => {
     if (verifyInputPost()){
       let post = $('#InputPosts').val();
-      $('#toStep2').show();
       let category = allPosts.find(item => item.name === post).categoriesPS_id;
       generateServiceListByCategory(category, $('#InputServices'));
       $('.select-holder > div').show();
     } else {
-      $('#toStep2').hide();
       $('.select-holder > div').hide();
       $('#InputServices').val(null).trigger('change');
 
@@ -434,7 +596,10 @@ let postModalListener = () => {
   });
 
   $('#toStep2').on('click', () => {
-    nextStepFrom('postModal');
+    if (verifyDatas('postModal')){
+      saveDatas('postModal');
+      loadModal('postModal','contractModal');
+    }
   });
 };
 
@@ -510,20 +675,7 @@ let timeModalListener = () => {
     format: 'D MMMM YYYY',
     useCurrent: false,
     ignoreReadonly: true,
-  });
-
-  $('#internshipDate input').on('dp.change', (e) => {
-    switch (e.currentTarget.id) {
-      case 'start':
-        $('#end').data("DateTimePicker").minDate(e.date);
-        application.start = new Date(e.date);
-        break;
-      case 'end':
-        $('#start').data("DateTimePicker").maxDate(e.date);
-        application.end = new Date(e.date);
-        break;
-    }
-    verifyInternshipDate() ? $('#toStep4').show() : $('#toStep4').hide();
+    minDate: moment().startOf('day')
   });
 
   $('#toStep4').on('click', () => {
@@ -539,18 +691,8 @@ let experienceModalListener = () => {
     format: 'D MMMM YYYY',
     useCurrent: false,
     ignoreReadonly: true,
-    maxDate: moment(),
-  })
-  .on('dp.change', (e) => {
-  switch (e.currentTarget.id) {
-    case 'xpStart':
-      $('#xpEnd').data("DateTimePicker").minDate(e.date);
-      break;
-    case 'xpEnd':
-      $('#xpStart').data("DateTimePicker").maxDate(e.date);
-      break;
-  }
-});
+    maxDate: moment().startOf('day'),
+  });
 
   //Listeners
   $('#xpEstablishment').on('keyup', () => {
