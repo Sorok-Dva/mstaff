@@ -14,6 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     Conference.hasOne(models.Candidate, {
       foreignKey: 'id',
       sourceKey: 'candidate_id'
+    });
+    Conference.hasOne(models.User, {
+      foreignKey: 'id',
+      sourceKey: 'user_id'
+    });
+    Conference.hasOne(models.Establishment, {
+      foreignKey: 'id',
+      sourceKey: 'es_id'
     })
   };
   return Conference;
