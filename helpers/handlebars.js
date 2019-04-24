@@ -255,4 +255,20 @@ module.exports.register = async (Handlebars) => {
         return 'grey';
     }
   });
+
+  Handlebars.registerHelper('showVisioLink', conference => {
+    if (_.isNil(conference)) return '{{showVisioLink error - empty object}}';
+    const _15minutes = moment(conference.date).subtract(15, 'minutes');
+    const _2hours = moment(conference.date).add(2, 'hours');
+    if (moment().isAfter(_15minutes)) {
+      if (moment().isAfter(_2hours)) {
+        return `L'entretien est terminé. Le lien n'est plus accessible.`;
+      } else {
+        let { key } = conference;
+        return `<a href="https://meet.jit.si/mstaff-session-${key}" target="_blank">https://meet.jit.si/mstaff-session-${key}</a>`;
+      }
+    } else {
+      return `Vous aurez accès au lien 15 minutes avant le début de l'entretien.`;
+    }
+  });
 };
