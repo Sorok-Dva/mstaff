@@ -110,58 +110,39 @@ let resetForm = (form) => {
   }
 };
 
-let toPreviousModal = (target) => {
+let toPreviousModal = (current, target) => {
   if (!toNextModal){
-    switch (target) {
-      case 'mainModal':
-        $('#mainModal').modal('show');
-        break;
-      case 'postModal':
-        $('#postModal').modal('show');
-        break;
-      case 'contractModal':
-        $('#cdiSchedule input').bootstrapToggle('off');
-        $('#start').data("DateTimePicker").clear();
-        $('#end').data("DateTimePicker").clear();
-        $('#contractModal').modal('show');
-        break;
-      case 'experienceModal':
-        $('#experienceModal').modal('show');
-        if (experiences.length !== 0)
-          generateRecapXp();
-        break;
-    }
+    loadModal(current, target);
   }
 };
 
 
 // GLOBAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let RecapPost = () => {
-  let title = `<div>Que recherchez-vous ?</div>`;
-  let check = `<i class="fas fa-check-circle green center-icon"></i>`;
-  let editButton = `<button class="btn"><i class="fal fa-edit"></i></button>`;
-  $(`<div class="recap-item" data-step="post">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
+let addToRecap = (customTitle, colorCheck, currentModal, linkedModal) => {
+  let title = `<div>${customTitle}</div>`;
+  let check = `<i class="fas fa-check-circle ${colorCheck} center-icon"></i>`;
+  let editButton = `<button class="btn" onclick="loadModal('${currentModal}','${linkedModal}')"><i class="fal fa-edit"></i></button>`;
+  $(`<div class="recap-item">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
 };
 
-let RecapXp = () => {
-  let title = `<div>Expériences</div>`;
-  let check = (experiences.length === 0) ? `<i class="fas fa-check-circle grey center-icon"></i>` : `<i class="fas fa-check-circle green center-icon"></i>`;
-  let editButton = `<button class="btn"><i class="fal fa-edit"></i></button>`;
-  $(`<div class="recap-item" data-step="xp">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
-};
-
-let generateRecapGlobal = (step) => {
+let generateRecapGlobal = (current) => {
   $('.recap > p').first().show();
   $('.recap p').last().html('Votre récap');
   $('.recap-item').remove();
-  switch (step) {
-    case 'xp':
-      RecapPost();
+  switch (current) {
+    case 'contractModal':
+      addToRecap('A quel poste ?', 'green', current, 'postModal');
       break;
-    case 'diploma':
-      RecapPost();
-      RecapXp();
+    case 'experienceModal':
+      addToRecap('A quel poste ?', 'green', current, 'postModal');
+      addToRecap('Quel type de contract ?', 'green', current, 'contractModal');
+      break;
+    case 'diplomaModal':
+      addToRecap('A quel poste ?', 'green', current, 'postModal');
+      addToRecap('Quel type de contract ?', 'green', current, 'contractModal');
+      let color = experiences.length > 0 ? 'green' : 'grey';
+      addToRecap('Expériences', color, current, 'experienceModal');
       break;
   }
 };
@@ -258,6 +239,7 @@ let loadModal = (current, target) => {
   toNextModal = true;
   $(`#${current}`).modal('hide');
   $(`#${target}`).modal('show');
+  generateRecapGlobal(target);
   hasDatas(target) ? loadEditModal(target) : loadClearModal(target);
   toNextModal = false;
 };
@@ -276,7 +258,7 @@ let loadClearModal = (modal) => {
       break;
     case 'experienceModal':
       createPostsList(allPosts, $('#xpPost'));
-      generateRecapGlobal('xp');
+      // generateRecapGlobal('xp');
       break;
     case 'diplomaModal':
       break;
@@ -547,7 +529,7 @@ let mainModalListener = () => {
 };
 
 let postModalListener = () => {
-  $('#postModal').on('hide.bs.modal', () => toPreviousModal('mainModal'));
+  $('#postModal').on('hide.bs.modal', () => toPreviousModal('postModal', 'mainModal'));
 
   $('#InputPosts').on( 'keyup autocompleteclose', () => {
     let isValidPost = postsArray.includes($('#InputPosts').val());
@@ -572,7 +554,7 @@ let postModalListener = () => {
 };
 
 let contractModalListener = () => {
-  $('#contractModal').on('hide.bs.modal', () => toPreviousModal('postModal'));
+  $('#contractModal').on('hide.bs.modal', () => toPreviousModal('contractModal', 'postModal'));
 
   $('.contractChoices input').bootstrapToggle({
     on: '',
@@ -620,7 +602,7 @@ let contractModalListener = () => {
 };
 
 let timeModalListener = () => {
-  $('#timeModal').on('hide.bs.modal', () => toPreviousModal('contractModal'));
+  $('#timeModal').on('hide.bs.modal', () => toPreviousModal('timeModal', 'contractModal'));
 
   $('#cdiSchedule input').bootstrapToggle({
     on: '',
@@ -651,7 +633,7 @@ let timeModalListener = () => {
 };
 
 let experienceModalListener = () => {
-  $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('contractModal'));
+  $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('experienceModal', 'contractModal'));
 
   //Initialize
   $('#xpDate input').datetimepicker({
@@ -699,7 +681,7 @@ let experienceModalListener = () => {
 };
 
 let diplomaModalListener = () => {
-  $('#diplomaModal').on('hide.bs.modal', () => toPreviousModal('experienceModal'));
+  $('#diplomaModal').on('hide.bs.modal', () => toPreviousModal('diplomaModal', 'experienceModal'));
 };
 
 $(document).ready(function () {
