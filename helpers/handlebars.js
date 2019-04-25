@@ -282,9 +282,9 @@ module.exports.register = async (Handlebars) => {
     if (timeLeft <= 15 && timeLeft >= 7) color = 'darkorange';
     if (timeLeft <= 6 && timeLeft >= 0) color = 'red';
     if (_.isNil(color)) {
-      return `<h4><i class="refreshWish fal fa-clock" data-refreshWish-id="${wish.id}" style="color: red"></i> Expiré</h4>`;
+      return `<h4><i class="refreshWish fal fa-sync" data-refreshWish-id="${wish.id}" style="color: red"></i> Expiré</h4>`;
     } else {
-      return `<h4><i class="refreshWish fal fa-clock" data-refreshWish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours</h4>`;
+      return `<h4><i class="fal fa-clock" data-refreshWish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours</h4>`;
     }
   });
 };
