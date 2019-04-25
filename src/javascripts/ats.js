@@ -119,30 +119,54 @@ let toPreviousModal = (current, target) => {
 
 // GLOBAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let addToRecap = (customTitle, colorCheck, currentModal, linkedModal) => {
+let addToGlobalRecap = (customTitle, colorCheck, currentModal, linkedModal) => {
   let title = `<div>${customTitle}</div>`;
   let check = `<i class="fas fa-check-circle ${colorCheck} center-icon"></i>`;
   let editButton = `<button class="btn" onclick="loadModal('${currentModal}','${linkedModal}')"><i class="fal fa-edit"></i></button>`;
   $(`<div class="recap-item">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
 };
 
-let generateRecapGlobal = (current) => {
-  $('.recap > p').first().show();
-  $('.recap p').last().html('Votre récap');
+let addToDatasRecap = (customTitle, item) => {
+  let title = `<div>${customTitle} ${item.id}</div>`;
+  let editButton = `<button class="btn" onclick="editXp(${item.id})"><i class="fal fa-edit"></i></button>`;
+  let deleteButton = `<button class="btn" onclick="deleteXp(${item.id})"><i class="fal fa-trash-alt"></i></button>`;
+  $(`<div class="recap-item" data-id="${item.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
+};
+
+let generateGlobalRecap = (current) => {
+  let currentParaph = $(`#${current}.recap > p`)
+  currentParaph.first().show();
+  currentParaph.last().html('Votre récap');
   $('.recap-item').remove();
   switch (current) {
     case 'contractModal':
-      addToRecap('A quel poste ?', 'green', current, 'postModal');
+      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
       break;
     case 'experienceModal':
-      addToRecap('A quel poste ?', 'green', current, 'postModal');
-      addToRecap('Quel type de contract ?', 'green', current, 'contractModal');
+      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
+      addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
       break;
     case 'diplomaModal':
-      addToRecap('A quel poste ?', 'green', current, 'postModal');
-      addToRecap('Quel type de contract ?', 'green', current, 'contractModal');
+      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
+      addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
       let color = experiences.length > 0 ? 'green' : 'grey';
-      addToRecap('Expériences', color, current, 'experienceModal');
+      addToGlobalRecap('Expériences', color, current, 'experienceModal');
+      break;
+  }
+};
+
+let generateDatasRecap = (current) => {
+  let currentParaph = $(`#${current}.recap > p`)
+  currentParaph.first().hide();
+  $('.recap-item').remove();
+  switch (current) {
+    case 'contractModal':
+      break;
+    case 'experienceModal':
+      $('.recap p').last().html('Aperçu de vos expériences');
+      experiences.forEach( xp => addToDatasRecap('#Expérience n°', xp));
+      break;
+    case 'diplomaModal':
       break;
   }
 };
@@ -174,45 +198,13 @@ let resetPostRadioService = () => {
   $('#xpService').val(null).trigger('change');
 };
 
-let saveXp = (id) => {
-  let current = {};
-  if (id === undefined){
-    current.id = permissions.experienceId;
-    permissions.experienceId += 1;
-  } else current = experiences[experiences.map(xp => xp.id).indexOf(id)];
-  current.establishment = $('#xpEstablishment').val();
-  current.post = $('#xpPost').val();
-  current.contract = $('#radioContract input:checked').attr('id');
-  current.service = $('#xpService').val();
-  current.start = new Date($('#xpStart').data("DateTimePicker").date());
-  current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-
-  if (id === undefined)
-    experiences.push(current);
-  permissions.editMode = false;
-};
-
-let generateRecapXp = () => {
-  let recapParagraphs = $('.recap p');
-  recapParagraphs.first().hide();
-  recapParagraphs.last().html('Aperçu de vos expériences');
-  $('.recap-item').remove();
-  experiences.forEach( xp => {
-    let title = `<div>#Expérience n°${xp.id}</div>`;
-    let editButton = `<button class="btn" onclick="editXp(${xp.id})"><i class="fal fa-edit"></i></button>`;
-    let deleteButton = `<button class="btn" onclick="deleteXp(${xp.id})"><i class="fal fa-trash-alt"></i></button>`;
-    $(`<div class="recap-item" data-id="${xp.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
-  });
-};
-
 let deleteXp = (id) => {
   resetForm('xp');
   let i = experiences.map(xp => xp.id).indexOf(id);
   experiences.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
   if (experiences.length === 0){
-    $('#toStep5').hide();
-    generateRecapGlobal('xp');
+    generateGlobalRecap('experienceModal');
   }
 };
 
@@ -231,7 +223,6 @@ let editXp = (id) => {
 };
 
 
-
 // REFACTO FUNCTIONS
 
 let loadModal = (current, target) => {
@@ -239,15 +230,14 @@ let loadModal = (current, target) => {
   toNextModal = true;
   $(`#${current}`).modal('hide');
   $(`#${target}`).modal('show');
-  generateRecapGlobal(target);
   hasDatas(target) ? loadEditModal(target) : loadClearModal(target);
   toNextModal = false;
 };
 
-let loadClearModal = (modal) => {
-  //resetModal(modal) ????
+let loadClearModal = (target) => {
   console.log('clear');
-  switch (modal) {
+  generateGlobalRecap(target);
+  switch (target) {
     case 'postModal':
       if (postsArray.length === 0)
         createPostsList(allPosts, $('#InputPosts'));
@@ -258,7 +248,7 @@ let loadClearModal = (modal) => {
       break;
     case 'experienceModal':
       createPostsList(allPosts, $('#xpPost'));
-      // generateRecapGlobal('xp');
+      // generateGlobalRecap('xp');
       break;
     case 'diplomaModal':
       break;
@@ -272,9 +262,10 @@ let loadClearModal = (modal) => {
 
 };
 
-let loadEditModal = (modal) => {
+let loadEditModal = (target) => {
   console.log('hasDatas');
-  switch (modal) {
+  generateDatasRecap(target);
+  switch (target) {
     case 'postModal':
       $('#InputPosts').val(application.post);
       //Load services
@@ -306,6 +297,7 @@ let hasDatas = (modal) => {
     case 'timeModal':
       break;
     case 'experienceModal':
+      return experiences.length > 0;
       break;
     case 'diplomaModal':
       break;
@@ -342,6 +334,16 @@ let saveDatas = (modal) => {
       application.end = new Date($('#end').data("DateTimePicker").date());
       break;
     case 'experienceModal':
+      let current = {};
+      current.id = permissions.experienceId;
+      permissions.experienceId += 1;
+      current.establishment = $('#xpEstablishment').val();
+      current.post = $('#xpPost').val();
+      current.contract = $('#radioContract input:checked').attr('id');
+      current.service = $('#xpService').val();
+      current.start = new Date($('#xpStart').data("DateTimePicker").date());
+      current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+      experiences.push(current);
       break;
     case 'diplomaModal':
       break;
@@ -350,6 +352,21 @@ let saveDatas = (modal) => {
     case 'skillModal':
       break;
     case 'identityModal':
+      break;
+  }
+};
+
+let saveEditDatas = (modal) => {
+  switch (modal) {
+    case 'experienceModal':
+      let current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
+      current.establishment = $('#xpEstablishment').val();
+      current.post = $('#xpPost').val();
+      current.contract = $('#radioContract input:checked').attr('id');
+      current.service = $('#xpService').val();
+      current.start = new Date($('#xpStart').data("DateTimePicker").date());
+      current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+      permissions.editMode = false;
       break;
   }
 };
@@ -384,7 +401,6 @@ let verifyDatas = (modal) => {
       let xpPost = postsArray.includes($('#xpPost').val()) ? true : notify('xpPost');
       let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
       let xpService = servicesArray.includes($('#xpService').val()) ? true : notify('xpService');
-
       let xpStart = $('#xpStart').data("DateTimePicker").date();
       let xpEnd = $('#xpEnd').data("DateTimePicker").date();
       if (xpStart !== null){
@@ -663,8 +679,8 @@ let experienceModalListener = () => {
 
   $('#saveXp').on('click', () => {
     if (verifyDatas('experienceModal')){
-      permissions.editMode ? saveXp(permissions.editId) : saveXp();
-      generateRecapXp();
+      permissions.editMode ? saveEditDatas('experienceModal') : saveDatas('experienceModal');
+      generateDatasRecap('experienceModal');
       resetForm('xp');
     }
   });
