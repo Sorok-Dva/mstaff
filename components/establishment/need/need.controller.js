@@ -170,7 +170,6 @@ Establishment_Need.edit = (req, res, next) => {
           where: {
             need_id: req.body.id,
             candidate_id: req.body.selectedCandidates[i],
-            notified: req.body.notifyCandidates,
           },
           defaults: {
             notified: req.body.notifyCandidates,
