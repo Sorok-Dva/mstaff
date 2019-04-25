@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-header">
         <button class="btn btn-warning pull-right" style="margin-left: 3px" onclick="closeNeed({{need.id}})">Clôturer le besoin</button>
-        <button class="btn btn-primary pull-right" id="searchNewCandidates">Recherche de nouveaux candidats en cours</button> {{!--// aucun nouveau candidats--}}
+        <a class="btn btn-primary pull-right" id="searchNewCandidates" href="/need/{{need.id}}/edit">Recherche de nouveaux candidats en cours</a> {{!--// aucun nouveau candidats--}}
         <h4 class="card-title">{{need.name}}</h4>
         <div class="label-container">
           {{#if need.post}}
