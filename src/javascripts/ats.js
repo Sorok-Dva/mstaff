@@ -558,7 +558,8 @@ let postModalListener = () => {
   $('#postModal').on('hide.bs.modal', () => toPreviousModal('mainModal'));
 
   $('#InputPosts').on( 'keyup autocompleteclose', () => {
-    if (verifyInputPost()){
+    let isValidPost = postsArray.includes($('#InputPosts').val());
+    if (isValidPost){
       let post = $('#InputPosts').val();
       let category = allPosts.find(item => item.name === post).categoriesPS_id;
       generateServiceListByCategory(category, $('#InputServices'));
