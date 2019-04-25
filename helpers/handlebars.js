@@ -274,13 +274,17 @@ module.exports.register = async (Handlebars) => {
 
   Handlebars.registerHelper('wishValidity', wish => {
     if (_.isNil(wish)) return '{{wishValidity error - empty object}}';
-    const until = moment(wish.createdAt).add(30, 'days');
+    const until = moment(wish.renewed_date).add(30, 'days');
     const today = moment().format('YYYY-MM-DD');
     let timeLeft = until.diff(today, 'days');
     let color;
     if (timeLeft <= 30 && timeLeft >= 16) color = 'blue';
     if (timeLeft <= 15 && timeLeft >= 7) color = 'darkorange';
     if (timeLeft <= 6 && timeLeft >= 0) color = 'red';
-    return `<i class="refreshWish fal fa-clock" data-refreshWish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours`;
+    if (_.isNil(color)) {
+      return `<h4><i class="refreshWish fal fa-clock" data-refreshWish-id="${wish.id}" style="color: red"></i> Expiré</h4>`;
+    } else {
+      return `<h4><i class="refreshWish fal fa-clock" data-refreshWish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours</h4>`;
+    }
   });
 };
