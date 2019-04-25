@@ -166,17 +166,23 @@ Establishment_Need.edit = (req, res, next) => {
       req.body.selectedCandidates = JSON.parse(`[${req.body.selectedCandidates}]`);
 
       for (let i = 0; i < req.body.selectedCandidates.length; i++) {
-        //findOrCreate
-        /*Models.NeedCandidate.create({
-          need_id: need.id,
-          candidate_id: req.body.selectedCandidates[i],
-          notified: req.body.notifyCandidates,
-          status: req.body.notifyCandidates === 'true' ? 'notified' : 'pre-selected'
-        }).then(needCandidate => {
-          if (req.body.notifyCandidates === 'true') {
-            Establishment_Need.notify(req, i, needCandidate, need);
+        Models.NeedCandidate.findOrCreate({
+          where: {
+            need_id: req.body.id,
+            candidate_id: req.body.selectedCandidates[i],
+            notified: req.body.notifyCandidates,
+          },
+          defaults: {
+            notified: req.body.notifyCandidates,
+            status: req.body.notifyCandidates === 'true' ? 'notified' : 'pre-selected'
           }
-        });*/
+        }).spread((needCandidate, created) => {
+          if (created) {
+            if (req.body.notifyCandidates === 'true') {
+              Establishment_Need.notify(req, i, needCandidate, need);
+            }
+          }
+        });
       }
     }
     res.status(201).send({ need, status: 'updated' });
