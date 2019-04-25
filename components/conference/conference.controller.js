@@ -187,4 +187,42 @@ Conference.candidateAnswer = (req, res, next) => {
   })
 };
 
+Conference.askNewDate = (req, res, next) => {
+  Models.Conference.findOne({
+    where: {
+      candidate_id: req.user.id,
+      id: req.params.id,
+    },
+    include: [{
+      model: Models.User,
+      attributes: ['id', 'firstName', 'lastName', 'email'],
+      required: true,
+      on: {
+        '$Conference.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      }
+    }, {
+      model: Models.Establishment,
+      attributes: ['id', 'name', 'address', 'town'],
+      required: true,
+      on: {
+        '$Conference.es_id$': {
+          [Op.col]: 'Establishment.id'
+        }
+      }
+    }]
+  }).then(conference => {
+    return res.status(httpStatus.OK).send(conference);
+  })
+};
+
+Conference.delete = (req, res, next) => {
+  return Models.Conference.findOne({ where: { id: req.params.id } }).then(need => {
+    if (!need) return res.status(400).send({ body: req.body, error: 'Conference introuvable' });
+    return need.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  }).catch(error => next(new BackError(error)));
+};
+
+
 module.exports = Conference;
