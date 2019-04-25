@@ -29,3 +29,21 @@ let removeWish = (id) => {
     } else return errorsHandler(error);
   });
 };
+
+$(document).ready(() => {
+  $('i[data-refreshWish-id]').click(function() {
+    let id = $(this).attr('data-refreshWish-id');
+    if (confirm(`Voulez vous vraiment réactuliser ce souhait ?`)) {
+      $.post(`/api/candidate/wish/${id}/refresh`, { _csrf }, data => {
+        if (data.result === 'updated') {
+          $(`[data-h4-wishId="${id}"]`).html(`<i class="fal fa-clock" data-wish-id="${id}" style="color: blue"></i> 30 jours`);
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Votre souhait a bien été actualiser.',
+          });
+        }
+      }).catch(errors => errorsHandler(errors));
+    }
+  });
+});

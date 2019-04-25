@@ -912,3 +912,7 @@ ul {
 .timepicker-picker {
   text-align: center;
 }
+
+i[data-refreshWish-id] {
+  cursor: pointer;
+}
