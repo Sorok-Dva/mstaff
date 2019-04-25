@@ -42,10 +42,9 @@
 <script>
   let esId = {{session.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
-  let baseCVCount = {{candidatesCount.0.count}};
-  {{log need.candidates}}
+  let baseCVCount = {{candidatesCount.length}};
   let need = {
-    selectedCandidates: [ {{#each need.candidates as |candidate|}}{{candidate.id}},{{/each}} ],
+    selectedCandidates: [ {{#each need.candidates as |candidate|}}{{candidate.candidate_id}},{{/each}} ],
     firstSearch: {{#if need}}false{{else}}true{{/if}},
     filterQuery: {
       establishments: [esId]
@@ -53,7 +52,7 @@
   };
 </script>
 <div class="col-md-12">
-  <h4 class="text-center">Vous avez accès à <span class="label label-primary" id="cvCount">{{candidatesCount.0.count}}</span> professionnels au sein de votre CVthèque.</h4>
+  <h4 class="text-center">Vous avez accès à <span class="label label-primary" id="cvCount">{{candidatesCount.length}}</span> professionnels au sein de votre CVthèque.</h4>
 </div>
 <div class="row">
   <div class="col-md-offset-2 col-md-8 col-sm-12" style="margin-right: -30px;">
@@ -106,7 +105,7 @@
   </div>
 </div>
 <div class="row" style="padding-top: 30px">
-  <div id="baseResult" class="col-md-12">
+  <div id="baseResult" class="col-md-12" {{#if need}}style="display: none"{{/if}}>
     {{#each candidates as |data|}}
       <div class="col-md-3" data-card-user="{{data.Wish.Candidate.id}}"
         {{#if data.Establishment.ArchivedCandidates.0.candidate_id}} data-archived="true" style="display:none"{{else}} data-archived="false"{{/if}}
@@ -249,6 +248,12 @@
         {{#if need.start}} dateStart: new Date('{{need.start}}'),{{/if}}
         {{#if need.end}} dateEnd: new Date('{{need.end}}'),{{/if}}
       };
+      {{#if need.candidates}}
+        need.selectedCandidates.forEach(id => {
+          $(`.selectCandidate[data-id="${id}"]`).hide();
+          $(`.unselectCandidate[data-id="${id}"]`).show();
+        });
+      {{/if}}
       searchCandidates();
     });
     {{/if}}
