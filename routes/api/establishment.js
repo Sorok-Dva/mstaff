@@ -62,4 +62,12 @@ router.post('/need/:editNeedId(\\d+)/edit',
   Authentication.ensureIsEs,
   Establishment.Need.edit);
 
+/**
+ * @Route('/conference/:id(\\d+)') DELETE;
+ * Delete conference
+ */
+router.delete('/conference/:id(\\d+)',
+  Authentication.ensureIsEs,
+  Conference.Main.delete);
+
 module.exports = router;
