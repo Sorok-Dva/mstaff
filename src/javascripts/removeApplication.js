@@ -33,14 +33,14 @@ let removeWish = (id) => {
 $(document).ready(() => {
   $('i[data-refreshWish-id]').click(function() {
     let id = $(this).attr('data-refreshWish-id');
-    if (confirm(`Voulez vous vraiment réactuliser ce souhait ?`)) {
+    if (confirm(`Voulez vous vraiment réactualiser ce souhait ?`)) {
       $.post(`/api/candidate/wish/${id}/refresh`, { _csrf }, data => {
         if (data.result === 'updated') {
           $(`[data-h4-wishId="${id}"]`).html(`<i class="fal fa-clock" data-wish-id="${id}" style="color: blue"></i> 30 jours`);
           notification({
             icon: 'check-circle',
             type: 'success',
-            title: 'Votre souhait a bien été actualiser.',
+            title: 'Votre souhait a bien été actualisé.',
           });
         }
       }).catch(errors => errorsHandler(errors));
