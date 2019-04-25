@@ -271,4 +271,16 @@ module.exports.register = async (Handlebars) => {
       return `Vous aurez accès au lien 15 minutes avant le début de l'entretien.`;
     }
   });
+
+  Handlebars.registerHelper('wishValidity', wish => {
+    if (_.isNil(wish)) return '{{wishValidity error - empty object}}';
+    const until = moment(wish.createdAt).add(30, 'days');
+    const today = moment().format('YYYY-MM-DD');
+    let timeLeft = until.diff(today, 'days');
+    let color;
+    if (timeLeft <= 30 && timeLeft >= 16) color = 'blue';
+    if (timeLeft <= 15 && timeLeft >= 7) color = 'darkorange';
+    if (timeLeft <= 6 && timeLeft >= 0) color = 'red';
+    return `<i class="refreshWish fal fa-clock" data-refreshWish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours`;
+  });
 };
