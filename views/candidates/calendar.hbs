@@ -2,6 +2,11 @@
 <link href='/static/assets/css/fullcalendar/daygrid/main.css' rel='stylesheet' />
 <link href='/static/assets/css/fullcalendar/timegrid/main.css' rel='stylesheet' />
 <link href='/static/assets/css/fullcalendar/list/main.css' rel='stylesheet' />
+<style>
+  td.fc-day.fc-past {
+    background-color: #EEEEEE;
+  }
+</style>
 <div class="row">
   <div class="col-md-10 col-md-offset-1">
     <div class="card card-calendar">
@@ -55,12 +60,44 @@
           allDay: false,
           url: '#',
           textColor: 'black',
-          color: "{{#ifCond conference.type '===' 'online'}}blue{{else}}orange{{/ifCond}}",
+          color: "{{calendarEventColor conference}}",
+          extendedProps: {
+            status: '{{conference.status}}',
+            type: '{{conference.type}}',
+            key: '{{conference.key}}',
+          }
         },
       {{/each}}
-    ]
+    ],
+    eventRender: (event) => {
+      let Event = event.event.extendedProps;
+      let icon = Event.type === 'physical' ?
+          `<i class="fal fa-map-marker-alt" style="margin-right: 3px;"></i>` :
+          `<i class="fal fa-video" style="margin-right: 3px;"></i>`;
+      let content = $(event.el).find( '.fc-content' );
+      content.prepend(icon);
+    },
+    eventConstraint: {
+      start: moment().format('YYYY-MM-DD'),
+      end: '2100-01-01' // hard coded goodness unfortunately
+    }
   });
 
   calendar.render();
 
+  let setConfAvailability = (id, availability) => {
+    $.post(`/api/candidate/conference/${id}/availability`, { _csrf, availability}, (data) => {
+      if (data === 'done') {
+        let event = calendar.getEventById(id);
+        event.setProp('color', availability === 'refused' ? '#b74b4b' : event.backgroundColor);
+        $('#viewConferenceModal').modal('hide');
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Disponibilité enregistrée.',
+          message: `Nous venons d'informer l'établissement de votre disponibilité pour cet entretien.`
+        });
+      }
+    }).catch(errors => errorsHandler(errors));
+  }
 </script>

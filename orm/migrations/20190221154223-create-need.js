@@ -33,6 +33,12 @@ module.exports = {
       post: {
         type: Sequelize.STRING
       },
+      service: {
+        type: Sequelize.STRING
+      },
+      diploma: {
+        type: Sequelize.STRING
+      },
       contract_type: {
         type: Sequelize.STRING
       },

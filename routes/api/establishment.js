@@ -42,4 +42,32 @@ router.post('/:esId(\\d+)/feedback',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Establishment.Need.Feedback);
 
+router.get('/:esId(\\d+)/conference/:id(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Conference.Main.viewConference_ES);
+
+router.post('/conference/:id(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Conference.Main.edit);
+
+router.post('/conference/:id(\\d+)/changeDate',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Conference.Main.changeDate);
+
+/**
+ * @Route('/need/:id(\\d+)/edit') POST;
+ * Post edit need
+ */
+router.post('/need/:editNeedId(\\d+)/edit',
+  Authentication.ensureIsEs,
+  Establishment.Need.edit);
+
+/**
+ * @Route('/conference/:id(\\d+)') DELETE;
+ * Delete conference
+ */
+router.delete('/conference/:id(\\d+)',
+  Authentication.ensureIsEs,
+  Conference.Main.delete);
+
 module.exports = router;

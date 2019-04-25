@@ -48,6 +48,14 @@ router.get('/need/:id(\\d+)',
   Establishment.Need.View);
 
 /**
+ * @Route('/need/:id(\\d+)/edit') GET;
+ * Show Need Edit page (candidates page)
+ */
+router.get('/need/:editNeedId(\\d+)/edit',
+  Authentication.ensureIsEs,
+  Establishment.Application.getCVs);
+
+/**
  * @Route('/history/:id(\\d+)') GET;
  * Show Specific History Need Page
  */

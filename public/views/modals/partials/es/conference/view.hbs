@@ -1,0 +1,54 @@
+<div class="modal-body">
+  <form role="form" class="form-horizontal" autocomplete="off">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="editDName">Type d'entretien *</label>
+          <div class="col-md-8">
+            <i class="fal fa-map-marker-alt fa-2x editConfType"{{#ifCond this.context.conference.type '===' 'physical'}} data-isset="true" {{/ifCond}}
+               data-action="physical" style="cursor: pointer;margin-right: 10px;
+              {{#ifCond this.context.conference.type '===' 'physical'}}color: crimson;{{else}}color:grey{{/ifCond}}"></i>
+            <i class="fal fa-video fa-2x editConfType"{{#ifCond this.context.conference.type '===' 'online'}} data-isset="true" {{/ifCond}}
+               data-action="online" style="cursor: pointer;margin-right: 10px;
+              {{#ifCond this.context.conference.type '===' 'online'}}color: darkorange;{{else}}color:grey{{/ifCond}}"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="editConfDate">Date de l'entretien *</label>
+          <div class="col-sm-8 col-md-8">
+            <input id="editConfDate" name="start" type="text" class="form-control input-md" required="" autocomplete="off"
+              value="{{date this.context.conference.date 'DD/MM/YYYY HH:mm'}}">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-danger pull-left deleteConfBtn">Supprimer</button>
+  <button type="button" class="btn btn-info pull-right editConfBtn" style="margin-bottom: 5px; display: none">Sauvegarder</button>
+  <button type="submit" class="btn btn-default pull-right" data-dismiss="modal">Fermer</button>
+</div>
+<script>
+  $('.editConfType').click(function() {
+    let type = $(this).attr('data-action');
+    if (type === 'physical') {
+      $(this).next().css('color', 'grey').attr('data-isset', 'false');
+      $(this).css('color', 'crimson').attr('data-isset', 'true');
+    } else {
+      $(this).prev().css('color', 'grey').attr('data-isset', 'false');
+      $(this).css('color', 'darkorange').attr('data-isset', 'true');
+    }
+    $('.editConfBtn').show()
+  });
+
+  $('#editConfDate').datetimepicker({
+    minDate: new moment(),
+    useCurrent: false,
+    format: 'DD/MM/YYYY HH:mm'
+  }).on('dp.change', () => $('.editConfBtn').show());
+</script>

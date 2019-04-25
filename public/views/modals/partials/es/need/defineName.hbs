@@ -1,7 +1,7 @@
 <div class="modal-body">
   <div class="form-group">
     <label for="nameValue"> Donnez un nom à votre recherche </label>
-    <input class="form-control" type="text" id="nameValue">
+    <input class="form-control" type="text" id="nameValue" value="{{this.context.need.name}}">
   </div>
   <div style="margin-top: 5px;">
     <button id="submitName" class="btn btn-info" type="button">Valider</button>
@@ -12,17 +12,30 @@
     let name = $('#nameValue').val();
     if (need.selectedCandidates.length > 0 && name.length > 2) {
       need.name = name;
-      createModal({
-        id: 'notifyCandidatesModal',
-        modal: 'es/need/notifyCandidates',
-        title: 'Vous êtes sur le point de sauvegarder votre recherche'
-      });
+      {{#if this.context.need.name}}
+      $.post(`/api/es/need/{{this.context.need.id}}/edit`, need, (data) => {
+        if (data.status === 'updated') {
+          $('#needNameModal').modal('hide');
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Besoin modifié avec succès.',
+          });
+        }
+      }).catch(errors => errorsHandler(errors));
+      {{else}}
+        createModal({
+          id: 'notifyCandidatesModal',
+          modal: 'es/need/notifyCandidates',
+          title: 'Vous êtes sur le point de sauvegarder votre recherche'
+        });
+      {{/if}}
     } else {
       notification({
         icon: 'exclamation',
         type: 'danger',
         title: 'Impossible de créer cette recherche',
-        message: `Vous devez spécifier un nom de recherche d'au moins trois caractères.`
+        message: `Vous devez spécifier un nom de recherche d'au moins trois caractères et seléctionner au moins un candidat.`
       });
     }
   });

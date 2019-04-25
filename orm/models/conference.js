@@ -11,7 +11,18 @@ module.exports = (sequelize, DataTypes) => {
     key: DataTypes.STRING
   }, {});
   Conference.associate = function (models) {
-    // associations can be defined here
+    Conference.hasOne(models.Candidate, {
+      foreignKey: 'id',
+      sourceKey: 'candidate_id'
+    });
+    Conference.hasOne(models.User, {
+      foreignKey: 'id',
+      sourceKey: 'user_id'
+    });
+    Conference.hasOne(models.Establishment, {
+      foreignKey: 'id',
+      sourceKey: 'es_id'
+    })
   };
   return Conference;
 };

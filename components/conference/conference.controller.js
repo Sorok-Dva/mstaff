@@ -18,6 +18,85 @@ Conference.viewConferences_ES = (req, res, next) => {
   })
 };
 
+Conference.viewConference_ES = (req, res, next) => {
+  Models.Conference.findOne({
+    where: {
+      user_id: req.user.id,
+      es_id: req.session.currentEs,
+      id: req.params.id
+    },
+    include: {
+      model: Models.Candidate,
+      attributes: ['id', 'user_id'],
+      required: true,
+      on: {
+        '$Conference.candidate_id$': {
+          [Op.col]: 'Candidate.id'
+        }
+      },
+      include: {
+        model: Models.User,
+        required: true,
+        attributes: ['id', 'firstName', 'lastName']
+      }
+    }
+  }).then(conference => {
+    return res.status(httpStatus.OK).send(conference);
+  })
+};
+
+Conference.viewConference_Candidate = (req, res, next) => {
+  Models.Conference.findOne({
+    where: {
+      candidate_id: req.user.id,
+      id: req.params.id,
+    },
+    include: [{
+      model: Models.User,
+      attributes: ['id', 'firstName', 'lastName'],
+      required: true,
+      on: {
+        '$Conference.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      }
+    }, {
+      model: Models.Establishment,
+      attributes: ['id', 'name', 'address', 'town'],
+      required: true,
+      on: {
+        '$Conference.es_id$': {
+          [Op.col]: 'Establishment.id'
+        }
+      }
+    }]
+  }).then(conference => {
+    return res.status(httpStatus.OK).send(conference);
+  })
+};
+
+Conference.changeDate = (req, res, next) => {
+  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
+    if (_.isNil(conference)) return next(new BackError(`Conférence ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
+    conference.date = req.body.newDate;
+    conference.status = req.body.status || 'waiting';
+    conference.save().then(result => {
+      return res.status(httpStatus.OK).send(result);
+    });
+  });
+};
+
+Conference.edit = (req, res, next) => {
+  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
+    conference.date = req.body.date;
+    conference.type = req.body.type;
+    conference.status = req.body.status || 'waiting';
+    conference.save().then(result => {
+      return res.status(httpStatus.OK).send(result);
+    });
+  })
+};
+
 Conference.create = (req, res, next) => {
   try {
     Models.Conference.findOrCreate({
@@ -107,5 +186,43 @@ Conference.candidateAnswer = (req, res, next) => {
     })
   })
 };
+
+Conference.askNewDate = (req, res, next) => {
+  Models.Conference.findOne({
+    where: {
+      candidate_id: req.user.id,
+      id: req.params.id,
+    },
+    include: [{
+      model: Models.User,
+      attributes: ['id', 'firstName', 'lastName', 'email'],
+      required: true,
+      on: {
+        '$Conference.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      }
+    }, {
+      model: Models.Establishment,
+      attributes: ['id', 'name', 'address', 'town'],
+      required: true,
+      on: {
+        '$Conference.es_id$': {
+          [Op.col]: 'Establishment.id'
+        }
+      }
+    }]
+  }).then(conference => {
+    return res.status(httpStatus.OK).send(conference);
+  })
+};
+
+Conference.delete = (req, res, next) => {
+  return Models.Conference.findOne({ where: { id: req.params.id } }).then(need => {
+    if (!need) return res.status(400).send({ body: req.body, error: 'Conference introuvable' });
+    return need.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  }).catch(error => next(new BackError(error)));
+};
+
 
 module.exports = Conference;
