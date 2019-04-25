@@ -170,6 +170,42 @@ Conference.sendInvitationNotification = (conference, req) => {
   });
 };
 
+Conference.sendDeleteNotification = (conference, req) => {
+  Models.Need.findOne({ where: { id: conference.need_id } }).then(need => {
+    Models.Notification.create({
+      fromUser: conference.user_id,
+      fromEs: conference.es_id,
+      to: conference.candidate_id,
+      subject: 'Un entretien a été annulé.',
+      title: `L'établissement ${req.es.name} a annulé un entretien d'embauche.`,
+      image: '/static/assets/images/sad.jpg',
+      opts: {
+        type: 'ConferenceNotifyCandidate',
+        template: 'delete',
+        details: {
+          conference,
+          need,
+          es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
+        },
+        message: req.body.message,
+        needCandidateId: conference.candidate_id
+      }
+    }).then(notification => {
+      Models.Candidate.findOne({
+        attributes: ['user_id'],
+        where: { id: conference.candidate_id },
+        include: {
+          model: Models.User,
+          attributes: ['email', 'firstName'],
+          required: true
+        }
+      }).then(candidate => {
+        Mailer.Main.notifyCandidatesNeedConferenceDeleted(candidate.User.email, { user: candidate.User })
+      });
+    });
+  });
+};
+
 Conference.candidateAnswer = (req, res, next) => {
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
     if (_.isNil(candidate)) return next();
@@ -218,9 +254,12 @@ Conference.askNewDate = (req, res, next) => {
 };
 
 Conference.delete = (req, res, next) => {
-  return Models.Conference.findOne({ where: { id: req.params.id } }).then(need => {
-    if (!need) return res.status(400).send({ body: req.body, error: 'Conference introuvable' });
-    return need.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  return Models.Conference.findOne({ where: { id: req.params.id } }).then(conference => {
+    if (!conference) return res.status(400).send({ body: req.body, error: 'Conference introuvable' });
+    return conference.destroy().then(data => {
+      Conference.sendDeleteNotification(conference, req);
+      return res.status(201).send({ deleted: true, data })
+    });
   }).catch(error => next(new BackError(error)));
 };
 
