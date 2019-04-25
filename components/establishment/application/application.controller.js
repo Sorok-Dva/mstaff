@@ -4,6 +4,7 @@ const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
+const moment = require('moment');
 
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
@@ -21,6 +22,11 @@ Establishment_Application.getCVs = (req, res, next) => {
       on: {
         '$Application.wish_id$': {
           [Op.col]: 'Wish.id'
+        }
+      },
+      where: {
+        renewed_date: {
+          [Op.gte]: moment().subtract(1, 'months').toDate()
         }
       },
       include: {
@@ -130,7 +136,10 @@ Establishment_Application.getCandidates = (req, res, next) => {
       where: {
         [Op.col]: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
           [Op.like]: `%${req.body.post.toLowerCase()}%`
-        })
+        }),
+        renewed_date: {
+          [Op.gte]: moment().subtract(1, 'months').toDate()
+        }
       },
       include: {
         model: Models.Candidate,
