@@ -76,6 +76,23 @@
               }
             }).catch(error => errorsHandler(error));
           });
+          $('.deleteConfBtn').click(function() {
+            $.delete(`/api/es/conference/${conference.id}`, { _csrf }, (data) => {
+              if (data) {
+                let event = calendar.getEventById(info.event.id);
+                event.remove();
+                $('#viewConferenceModal').modal('hide');
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Événement supprimé avec succès.',
+                });
+              } else {
+                errorsHandler('Une erreur est survenue');
+              }
+            }).catch(error => errorsHandler(error));
+          });
+
         })
       }).catch(error => errorsHandler(error));
     },
