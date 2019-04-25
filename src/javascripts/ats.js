@@ -112,58 +112,6 @@ let resetForm = (form) => {
   }
 };
 
-let transitionToNext = (step) => {
-  switch(step) {
-    case 'mainModal':
-      $('#mainModal').modal('hide');
-      $('#postModal').modal('show');
-      break;
-    case 'postModal':
-      $('#postModal').modal('hide');
-      $('#contractModal').modal('show');
-      break;
-    case 'contractModal':
-      $('#contractModal').modal('hide');
-      if (application.contractType === 'vacation')
-        $('#experienceModal').modal('show');
-      else
-        $('#timeModal').modal('show');
-      if (application.contractType === 'cdi'){
-        $('#cdiSchedule').css('display', 'flex');
-        $('#internshipDate').css('display', 'none');
-      } else if (application.contractType === 'internship'){
-        $('#cdiSchedule').css('display', 'none');
-        $('#internshipDate').css('display', 'flex');
-      }
-      break;
-    case 'timeModal':
-      $('#timeModal').modal('hide');
-      $('#experienceModal').modal('show');
-      break;
-    case 'experienceModal':
-      $('#experienceModal').modal('hide');
-      $('#diplomaModal').modal('show');
-      break;
-  }
-};
-
-let verifyStep = (step) => {
-  switch (step) {
-    case 'postModal':
-      return verifyInputPost();
-      break;
-    case 'contractModal':
-      return verifyCheckedContract();
-      break;
-    case 'timeModalCdi':
-      return verifyCheckedSchedule();
-      break;
-    case 'timeModalInternship':
-      return verifyInternshipDate();
-      break;
-  }
-};
-
 let nextStepFrom = (currentStep) => {
   console.log(application);
   toNextModal = true;
@@ -269,25 +217,6 @@ let generateRecapGlobal = (step) => {
 
 // VERIFICATION FUNCTIONS ---------------------------------------------------------------------------------------
 
-let verifyInputPost = () => {
-  return postsArray.includes($('#InputPosts').val());
-};
-
-let verifyCheckedContract = () => {
-  return ($('.contractChoices div input:checked').length);
-};
-
-let verifyCheckedSchedule = () => {
-  return ($('#full-part input:checked').length > 0 && $('#day-night input:checked').length > 0);
-};
-
-let verifyInternshipDate = () => {
-  let start = moment($('#start').data("DateTimePicker").date()).startOf('day');
-  let end = moment($('#end').data("DateTimePicker").date()).startOf('day');
-  let now = moment().startOf('day');
-  return (start.isSameOrAfter(now) && end.isAfter(start));
-};
-
 let verifyInputXpEstablishment = () => {
   return !$.isEmptyObject($('#xpEstablishment').val());
 };
@@ -312,17 +241,6 @@ let verifyXpDate = () => {
 
 let verifyXpComplete = () => {
   return (verifyInputXpEstablishment() && verifyInputXpPost() && verifyRadioContract() && verifyInputXpService() && verifyXpDate());
-};
-
-// POST-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
-
-let saveServices = () => {
-  let services = $('#InputServices').select2('data');
-
-  application.services = [];
-  services.forEach( service => {
-    application.services.push(service.text);
-  });
 };
 
 // EXPERIENCE-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
