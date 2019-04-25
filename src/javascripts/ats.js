@@ -418,6 +418,7 @@ let editXp = (id) => {
 // REFACTO FUNCTIONS
 
 let loadModal = (current, target) => {
+  console.log(application);
   $(`#${current}`).modal('hide');
   $(`#${target}`).modal('show');
   hasDatas(target) ? loadEditModal(target) : loadClearModal(target);
@@ -434,9 +435,10 @@ let loadClearModal = (modal) => {
     case 'contractModal':
       break;
     case 'timeModal':
-
       break;
     case 'experienceModal':
+      createPostsList(allPosts, $('#xpPost'));
+      generateRecapGlobal('xp');
       break;
     case 'diplomaModal':
       break;
@@ -509,7 +511,15 @@ let saveDatas = (modal) => {
     case 'contractModal':
       application.contractType = $('.contractChoices input:checked').prop('name');
       break;
-    case 'timeModal':
+    case 'timeModalCdi':
+      application.fullTime = $('#full_time').prop('checked');
+      application.partTime = $('#part_time').prop('checked');
+      application.dayTime = $('#day_time').prop('checked');
+      application.nightTime = $('#night_time').prop('checked');
+      break;
+    case 'timeModalInternship':
+      application.start = new Date($('#start').data("DateTimePicker").date());
+      application.end = new Date($('#end').data("DateTimePicker").date());
       break;
     case 'experienceModal':
       break;
@@ -533,13 +543,17 @@ let verifyDatas = (modal) => {
       return ($('.contractChoices input:checked').length) ? true : notify('contractChoice');
       break;
     case 'timeModalCdi':
-      return ($('#full-part input:checked').length > 0 && $('#day-night input:checked').length > 0);
+      let fullpart = ($('#full-part input:checked').length > 0) ? true : notify('fullpart');
+      let daynight = ($('#day-night input:checked').length > 0) ? true : notify('daynight');
+      return (fullpart && daynight);
       break;
     case 'timeModalInternship':
       let start = moment($('#start').data("DateTimePicker").date()).startOf('day');
       let end = moment($('#end').data("DateTimePicker").date()).startOf('day');
       let now = moment().startOf('day');
-      return (start.isSameOrAfter(now) && end.isAfter(start));
+      let validStart = start.isSameOrAfter(now) ? true : notify('internshipWrongStart');
+      let validEnd = end.isAfter(start) ? true : notify('internshipWrongEnd');
+      return (validStart && validEnd);
       break;
     case 'experienceModal':
       let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val());
@@ -575,6 +589,39 @@ let notify = (error) => {
         message: `Merci de sélectionner un type de contrat.`
       });
       break;
+    case 'fullpart':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer si vous souhaitez travailler à temps plein / partiel, ou les deux.`
+      });
+      break;
+    case 'daynight':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer si vous souhaitez travailler de jour / nuit, ou les deux.`
+      });
+      break;
+    case 'internshipWrongStart':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir une date postérieur ou égale à la date du jour.`
+      });
+      break;
+    case 'internshipWrongEnd':
+    notification({
+      icon: 'exclamation',
+      type: 'danger',
+      title: 'Informations manquantes :',
+      message: `Merci de choisir une date de fin postérieur à celle de départ.`
+    });
+      break;
+
   }
   return false;
 }
@@ -622,9 +669,7 @@ let contractModalListener = () => {
     onstyle: 'success',
     offstyle: 'secondary',
     size: 'lg'
-  });
-
-  $('.contractChoices input').change(function(){
+  }).change(function(){
     if (this.checked){
       switch(this.id){
         case 'cdiToggle':
@@ -638,7 +683,7 @@ let contractModalListener = () => {
           break;
       }
     }
-  });
+  });;
 
   $('#toStep3').on('click', () => {
     if (verifyDatas('contractModal')){
@@ -660,7 +705,6 @@ let contractModalListener = () => {
           break;
       }
     }
-    // nextStepFrom('contractModal');
   });
 };
 
@@ -674,25 +718,6 @@ let timeModalListener = () => {
     offstyle: 'secondary',
     size: 'lg'
   });
-  $('#cdiSchedule').change(function(e) {
-    switch(e.target.name){
-      case 'full_time':
-        application.fullTime = e.target.checked;
-        break;
-      case 'part_time':
-        application.partTime = e.target.checked;
-        break;
-      case 'day_time':
-        application.dayTime = e.target.checked;
-        break;
-      case 'night_time':
-        application.nightTime = e.target.checked;
-        break;
-    }
-    if (verifyCheckedSchedule()){
-      $('#toStep4').show();
-    } else $('#toStep4').hide();
-  });
 
   $('#internshipDate input').datetimepicker({
     format: 'D MMMM YYYY',
@@ -702,7 +727,15 @@ let timeModalListener = () => {
   });
 
   $('#toStep4').on('click', () => {
-    nextStepFrom('timeModal');
+    let modal = null;
+    if (application.contractType === 'cdi')
+      modal = 'timeModalCdi';
+    else if (application.contractType === 'internship')
+      modal = 'timeModalInternship';
+    if (verifyDatas(modal)){
+      saveDatas(modal);
+      loadModal('timeModal','experienceModal');
+    }
   });
 };
 
