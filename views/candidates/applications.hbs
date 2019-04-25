@@ -14,7 +14,7 @@
                 <th>Souhait</th>
                 <th>Type de contrat</th>
                 <th>Établissement(s)</th>
-                <!--<th>Mes disponibilités</th>-->
+                <th>Validité</th>
                 <th>Action</th>
               </tr>
               </thead>
@@ -25,7 +25,9 @@
                     <td>{{wish.name}}</td>
                     <td>{{wish.contract_type}}</td>
                     <td>{{wish.es_count}}</td>
-                    <!--<td></td>-->
+                    <td>
+                      {{{wishValidity wish}}}
+                    </td>
                     <td>
                       <a href="/wish/edit/{{wish.id}}">
                         <button class="btn btn-simple btn-warning btn-icon editWish" data-id="{{wish.id}}">
