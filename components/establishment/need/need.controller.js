@@ -179,7 +179,7 @@ Establishment_Need.edit = (req, res, next) => {
         });*/
       }
     }
-    res.status(201).send({need, status: 'updated'});
+    res.status(201).send({ need, status: 'updated' });
   });
 };
 
