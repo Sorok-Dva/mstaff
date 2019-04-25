@@ -110,53 +110,6 @@ let resetForm = (form) => {
   }
 };
 
-let nextStepFrom = (currentStep) => {
-  console.log(application);
-  toNextModal = true;
-  switch (currentStep) {
-    case 'mainModal':
-      transitionToNext(currentStep);
-      if (postsArray.length === 0)
-        createPostsList(allPosts, $('#InputPosts'));
-      break;
-    case 'postModal':
-      if (verifyStep(currentStep)) {
-        application.post = $('#InputPosts').val();
-        saveServices();
-        transitionToNext(currentStep);
-      }
-      break;
-    case 'contractModal':
-      if (verifyStep(currentStep)){
-        createPostsList(allPosts, $('#xpPost'));
-        transitionToNext(currentStep);
-        generateRecapGlobal('xp');
-      }
-      break;
-    case 'timeModal':
-      if (application.contractType === 'cdi'){
-        if (verifyStep('timeModalCdi')){
-          createPostsList(allPosts, $('#xpPost'));
-          transitionToNext(currentStep);
-          generateRecapGlobal('xp');
-        }
-      }
-      else if (application.contractType === 'internship'){
-        if (verifyStep('timeModalInternship')){
-          createPostsList(allPosts, $('#xpPost'));
-          transitionToNext(currentStep);
-          generateRecapGlobal('xp');
-        }
-      }
-      break;
-    case 'experienceModal':
-      transitionToNext(currentStep);
-      generateRecapGlobal('diploma');
-      break;
-  }
-  toNextModal = false;
-};
-
 let toPreviousModal = (target) => {
   if (!toNextModal){
     switch (target) {
@@ -211,34 +164,6 @@ let generateRecapGlobal = (step) => {
       RecapXp();
       break;
   }
-};
-
-// VERIFICATION FUNCTIONS ---------------------------------------------------------------------------------------
-
-let verifyInputXpEstablishment = () => {
-  return !$.isEmptyObject($('#xpEstablishment').val());
-};
-
-let verifyInputXpPost = () => {
-  return postsArray.includes($('#xpPost').val());
-};
-
-let verifyRadioContract = () => {
-  return ($('#radioContract input:checked').attr('id') !== undefined);
-};
-
-let verifyInputXpService = () => {
-  return servicesArray.includes($('#xpService').val());
-};;
-
-let verifyXpDate = () => {
-  let start = $('#xpStart').data("DateTimePicker").date();
-  let end = $('#xpEnd').data("DateTimePicker").date();
-  return (start !== null && end !== null);
-};
-
-let verifyXpComplete = () => {
-  return (verifyInputXpEstablishment() && verifyInputXpPost() && verifyRadioContract() && verifyInputXpService() && verifyXpDate());
 };
 
 // EXPERIENCE-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
@@ -330,9 +255,11 @@ let editXp = (id) => {
 
 let loadModal = (current, target) => {
   console.log(application);
+  toNextModal = true;
   $(`#${current}`).modal('hide');
   $(`#${target}`).modal('show');
   hasDatas(target) ? loadEditModal(target) : loadClearModal(target);
+  toNextModal = false;
 };
 
 let loadClearModal = (modal) => {
@@ -752,15 +679,6 @@ let experienceModalListener = () => {
     } else resetPostRadioService();
   });
 
-  //Verify completion
-  // $('.inputsXp input').on('change', function (e){
-  //   verifyXpComplete() ? $('#saveXp').show() : $('#saveXp').hide();
-  // });
-
-  // $('#xpDate').on('dp.change', function(e){
-  //   verifyXpComplete() ? $('#saveXp').show() : $('#saveXp').hide();
-  // });
-
   $('#saveXp').on('click', () => {
     if (verifyDatas('experienceModal')){
       permissions.editMode ? saveXp(permissions.editId) : saveXp();
@@ -772,11 +690,11 @@ let experienceModalListener = () => {
   //Next Step
   $('#emptyXp').on('click', () => {
     experiences = [];
-    nextStepFrom('experienceModal');
+    loadModal('experienceModal', 'diplomaModal')
   });
 
   $('#toStep5').on('click', () => {
-    nextStepFrom('experienceModal');
+    loadModal('experienceModal','diplomaModal');
   });
 };
 
