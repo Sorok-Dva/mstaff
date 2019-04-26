@@ -1219,3 +1219,9 @@ h4[data-h4-wishId] {
 td.fc-day.fc-past {
   background-color: #EEEEEE;
 }
+
+#notif-back {
+  cursor: pointer;
+  text-align: center;
+  background: #d3d3d37d;
+}
