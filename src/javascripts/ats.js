@@ -219,7 +219,8 @@ let editXp = (id) => {
   $(`#${experiences[i].contract}`).trigger('click');
   $('#xpService').val(experiences[i].service).trigger('change');
   $('#xpStart').data("DateTimePicker").date(experiences[i].start);
-  $('#xpEnd').data("DateTimePicker").date(experiences[i].end);
+  if (experiences[i].end)
+    $('#xpEnd').data("DateTimePicker").date(experiences[i].end);
   $('#xpDate').trigger('change');
 };
 
@@ -343,7 +344,9 @@ let saveDatas = (modal) => {
       current.contract = $('#radioContract input:checked').attr('id');
       current.service = $('#xpService').val();
       current.start = new Date($('#xpStart').data("DateTimePicker").date());
-      current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+      current.end = null;
+      if ($('#xpEnd').data("DateTimePicker").date())
+        current.end = new Date($('#xpEnd').data("DateTimePicker").date());
       experiences.push(current);
       break;
     case 'diplomaModal':
@@ -366,7 +369,8 @@ let saveEditDatas = (modal) => {
       current.contract = $('#radioContract input:checked').attr('id');
       current.service = $('#xpService').val();
       current.start = new Date($('#xpStart').data("DateTimePicker").date());
-      current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+      if ($('#xpEnd').data("DateTimePicker").date())
+        current.end = new Date($('#xpEnd').data("DateTimePicker").date());
       permissions.editMode = false;
       break;
   }
@@ -681,7 +685,6 @@ let experienceModalListener = () => {
 
   $('#saveXp').on('click', () => {
     if (verifyDatas('experienceModal')){
-      console.log('ca a passé la verifDatas');
       permissions.editMode ? saveEditDatas('experienceModal') : saveDatas('experienceModal');
       generateDatasRecap('experienceModal');
       resetForm('xp');
