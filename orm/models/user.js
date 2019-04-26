@@ -55,7 +55,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     opts: {
-      type: DataTypes.JSON
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('opts'))
+      },
+      set(data) {
+        this.setDataValue('opts', JSON.stringify(data));
+      }
     }
   });
   User.associate = function (models) {
