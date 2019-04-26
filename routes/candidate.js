@@ -24,6 +24,14 @@ router.get(
   User.Candidate.EditProfile);
 
 /**
+ * @Route('/profile/edit') GET | POST;
+ * Form for edit user profile.
+ */
+router.post(
+  '/profile/upload', Authentication.ensureIsCandidate,
+  User.Candidate.UploadImageProfile);
+
+/**
  * @Route('/formations') GET;
  * Show Formations and Experiences user page
  */

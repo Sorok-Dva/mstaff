@@ -50,11 +50,6 @@ router.delete('/document/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.deleteDocument);
 
-router.post('/add/photo',
-  Authentication.ensureIsCandidate,
-  avatarUpload,
-  User.Candidate.uploadAvatar);
-
 router.get('/xp/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.getXpById)

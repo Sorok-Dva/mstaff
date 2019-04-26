@@ -7,6 +7,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
+const AvatarStorage = require('../helpers/avatar.storage');
 
 const User_Candidate = {};
 
@@ -133,10 +134,6 @@ User_Candidate.deleteDocument = (req, res, next) => {
   });
 };
 
-User_Candidate.uploadAvatar = (req, res, next) => {
-  console.log(req.file);
-};
-
 User_Candidate.viewProfile = (req, res, next) => {
   Models.Candidate.findOne({
     where: { user_id: req.user.id },
@@ -226,6 +223,10 @@ User_Candidate.EditProfile = (req, res, next) => {
       });
     })
   }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+};
+
+User_Candidate.UploadImageProfile = (req, res, next) => {
+
 };
 
 User_Candidate.getFormationsAndXP = (req, res, next) => {

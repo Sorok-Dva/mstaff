@@ -57,7 +57,7 @@ let AvatarStorage = function (options) {
     });
     this.uploadPath = this.options.responsive ? path.join(UPLOAD_PATH, 'responsive') : UPLOAD_PATH;
     this.uploadBaseUrl = this.options.responsive ? path.join(baseUrl, 'responsive') : baseUrl;
-    if (this.options.storage == 'local') {
+    if (this.options.storage === 'local') {
       !fs.existsSync(this.uploadPath) && mkdirp.sync(this.uploadPath);
     }
   }
@@ -107,7 +107,7 @@ let AvatarStorage = function (options) {
         break;
     }
     if (threshold && square > threshold) {
-      clone = square == width ? clone.resize(threshold, Jimp.AUTO) : clone.resize(Jimp.AUTO, threshold);
+      clone = square === width ? clone.resize(threshold, Jimp.AUTO) : clone.resize(Jimp.AUTO, threshold);
     }
     if (this.options.square) {
       if (threshold) {
