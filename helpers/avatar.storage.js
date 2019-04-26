@@ -101,6 +101,92 @@ let AvatarStorage = function (options) {
   };
 
   AvatarStorage.prototype._processImage = function (image, cb) {
+    let that = this;
+    let batch = [];
+    let sizes = ['lg', 'md', 'sm'];
+    let filename = this._generateRandomFilename();
+    let mime = Jimp.MIME_PNG;
+    let clone = image.clone();
+    let width = clone.bitmap.width;
+    let height = clone.bitmap.height;
+    let square = Math.min(width, height);
+    let threshold = this.options.threshold;
+
+    switch (this.options.output) {
+      case 'jpg':
+        mime = Jimp.MIME_JPEG;
+        break;
+      case 'png':
+      default:
+        mime = Jimp.MIME_PNG;
+        break;
+    }
+
+    if (threshold && square > threshold) {
+      clone = square == width ? clone.resize(threshold, Jimp.AUTO) : clone.resize(Jimp.AUTO, threshold);
+    }
+
+    if (this.options.square) {
+
+      if (threshold) {
+        square = Math.min(square, threshold);
+      }
+
+      clone = clone.crop((clone.bitmap.width - square) / 2, (clone.bitmap.height - square) / 2, square, square);
+    }
+
+    if (this.options.greyscale) {
+      clone = clone.greyscale();
+    }
+
+    clone = clone.quality(this.options.quality);
+
+    if (this.options.responsive) {
+
+      batch = _.map(sizes, function(size) {
+
+        var outputStream;
+
+        var image = null;
+        var filepath = filename.split('.');
+
+        filepath = filepath[0] + '_' + size + '.' + filepath[1];
+        filepath = path.join(that.uploadPath, filepath);
+        outputStream = that._createOutputStream(filepath, cb);
+
+        switch (size) {
+          case 'sm':
+            image = clone.clone().scale(0.3);
+            break;
+          case 'md':
+            image = clone.clone().scale(0.7);
+            break;
+          case 'lg':
+            image = clone.clone();
+            break;
+        }
+
+        return {
+          stream: outputStream,
+          image: image
+        };
+      });
+
+    } else {
+      batch.push({
+        stream: that._createOutputStream(path.join(that.uploadPath, filename), cb),
+        image: clone
+      });
+
+    }
+
+    _.each(batch, function(current) {
+      current.image.getBuffer(mime, function (err, buffer) {
+        if (that.options.storage == 'local') {
+          streamifier.createReadStream(buffer).pipe(current.stream);
+        }
+      });
+    });
   };
 
   AvatarStorage.prototype._handleFile = function (req, file, cb) {
