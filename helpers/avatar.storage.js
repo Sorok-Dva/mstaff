@@ -143,12 +143,12 @@ let AvatarStorage = function (options) {
 
     if (this.options.responsive) {
 
-      batch = _.map(sizes, function(size) {
+      batch = _.map(sizes, function (size) {
 
-        var outputStream;
+        let outputStream;
 
-        var image = null;
-        var filepath = filename.split('.');
+        let image = null;
+        let filepath = filename.split('.');
 
         filepath = filepath[0] + '_' + size + '.' + filepath[1];
         filepath = path.join(that.uploadPath, filepath);
@@ -180,9 +180,9 @@ let AvatarStorage = function (options) {
 
     }
 
-    _.each(batch, function(current) {
+    _.each(batch, function (current) {
       current.image.getBuffer(mime, function (err, buffer) {
-        if (that.options.storage == 'local') {
+        if (that.options.storage === 'local') {
           streamifier.createReadStream(buffer).pipe(current.stream);
         }
       });
@@ -190,9 +190,48 @@ let AvatarStorage = function (options) {
   };
 
   AvatarStorage.prototype._handleFile = function (req, file, cb) {
+    let that = this;
+
+    let fileManipulate = concat(function (imageData) {
+
+      Jimp.read(imageData)
+        .then(function (image) {
+          that._processImage(image, cb);
+        })
+        .catch(cb);
+    });
+    file.stream.pipe(fileManipulate);
   };
 
   AvatarStorage.prototype._removeFile = function (req, file, cb) {
+
+    let matches, pathsplit;
+    let filename = file.filename;
+    let _path = path.join(this.uploadPath, filename);
+    let paths = [];
+
+    delete file.filename;
+    delete file.destination;
+    delete file.baseUrl;
+    delete file.storage;
+
+    if (this.options.responsive) {
+      pathsplit = _path.split('/');
+      matches = pathsplit.pop().match(/^(.+?)_.+?\.(.+)$/i);
+
+      if (matches) {
+        paths = _.map(['lg', 'md', 'sm'], function (size) {
+          return pathsplit.join('/') + '/' + (matches[1] + '_' + size + '.' + matches[2]);
+        });
+      }
+    } else {
+      paths = [_path];
+    }
+
+    _.each(paths, function (_path) {
+      fs.unlink(_path, cb);
+    });
+
   };
 
   return new AvatarStorage(options);
