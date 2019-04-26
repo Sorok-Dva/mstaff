@@ -6,9 +6,7 @@ const crypto = require('crypto');
 const mkdirp = require('mkdirp');
 const concat = require('concat-stream');
 const streamifier = require('streamifier');
-
 const UPLOAD_PATH = path.resolve(__dirname, '..', process.env.AVATAR_STORAGE);
-
 
 let AvatarStorage = function (options) {
 
@@ -28,63 +26,50 @@ let AvatarStorage = function (options) {
       responsive: false,
     };
 
-    let options = (opts && _.isObject(opts)) ? _.pick(opts, _.keys(defaultOptions)) : {};
+    let options = opts && _.isObject(opts) ? _.pick(opts, _.keys(defaultOptions)) : {};
     options = _.extend(defaultOptions, options);
 
     this.options = _.forIn(options, function (value, key, object) {
 
       switch (key) {
-
         case 'square':
         case 'greyscale':
         case 'responsive':
           object[key] = _.isBoolean(value) ? value : defaultOptions[key];
           break;
-
         case 'storage':
           value = String(value).toLowerCase();
           object[key] = _.includes(allowedStorageSystems, value) ? value : defaultOptions[key];
           break;
-
         case 'output':
           value = String(value).toLowerCase();
           object[key] = _.includes(allowedOutputFormats, value) ? value : defaultOptions[key];
           break;
-
         case 'quality':
           value = _.isFinite(value) ? value : Number(value);
           object[key] = value && value >= 0 && value <= 100 ? value : defaultOptions[key];
           break;
-
         case 'threshold':
           value = _.isFinite(value) ? value : Number(value);
           object[key] = value && value >= 0 ? value : defaultOptions[key];
           break;
       }
     });
-
     this.uploadPath = this.options.responsive ? path.join(UPLOAD_PATH, 'responsive') : UPLOAD_PATH;
-
     this.uploadBaseUrl = this.options.responsive ? path.join(baseUrl, 'responsive') : baseUrl;
-
     if (this.options.storage == 'local') {
       !fs.existsSync(this.uploadPath) && mkdirp.sync(this.uploadPath);
     }
   }
 
   AvatarStorage.prototype._generateRandomFilename = function () {
-
     let bytes = crypto.pseudoRandomBytes(32);
-
     let checksum = crypto.createHash('MD5').update(bytes).digest('hex');
-
     return checksum + '.' + this.options.output;
   };
 
   AvatarStorage.prototype._createOutputStream = function (filepath, cb) {
-
     let that = this;
-
     let output = fs.createWriteStream(filepath);
 
     output.on('error', cb);
@@ -121,20 +106,15 @@ let AvatarStorage = function (options) {
         mime = Jimp.MIME_PNG;
         break;
     }
-
     if (threshold && square > threshold) {
       clone = square == width ? clone.resize(threshold, Jimp.AUTO) : clone.resize(Jimp.AUTO, threshold);
     }
-
     if (this.options.square) {
-
       if (threshold) {
         square = Math.min(square, threshold);
       }
-
       clone = clone.crop((clone.bitmap.width - square) / 2, (clone.bitmap.height - square) / 2, square, square);
     }
-
     if (this.options.greyscale) {
       clone = clone.greyscale();
     }
@@ -146,7 +126,6 @@ let AvatarStorage = function (options) {
       batch = _.map(sizes, function (size) {
 
         let outputStream;
-
         let image = null;
         let filepath = filename.split('.');
 
@@ -165,7 +144,6 @@ let AvatarStorage = function (options) {
             image = clone.clone();
             break;
         }
-
         return {
           stream: outputStream,
           image: image
@@ -227,7 +205,6 @@ let AvatarStorage = function (options) {
     } else {
       paths = [_path];
     }
-
     _.each(paths, function (_path) {
       fs.unlink(_path, cb);
     });
@@ -235,8 +212,6 @@ let AvatarStorage = function (options) {
   };
 
   return new AvatarStorage(options);
-
-}
-;
+};
 
 module.exports = AvatarStorage;
