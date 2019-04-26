@@ -2,30 +2,29 @@
   <div class="col-lg-12 col-md-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fal fa-copy-o"></i> Mes documents</h4>
-        <hr style="width:85%; margin-top: 14px;">
+        <h3 class="card-title pull-left"><i class="fal fa-copy"></i> Mes documents</h3>
       </div>
-      <div class="card-content">
+      <div class="card-body">
+        <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/document" style="display: none">
+          <input id="file-upload" type="file" accept="application/pdf, image/png, image/jpeg, image/jpg"/>
+          <label for="file-upload" id="file-drag">
+            <div id="start">
+              <i class="fal fa-times float-right closeUploader" aria-hidden="true"></i>
+              <i class="fal fa-file-upload fa-3x" aria-hidden="true"></i>
+              <div id="notgoodfile" style="color:red;display:none">Format non autorisé (pdf, png & jpeg)</div>
+              <div>Choisir un ou plusieurs fichiers ou déposer ici</div>
+              <span id="file-upload-btn" class="btn btn-primary"></span>
+            </div>
+            <div id="response" style="display:none"></div>
+          </label>
+        </form>
         <div class="row">
-          <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/document" style="display: none">
-            <input id="file-upload" type="file" accept="application/pdf, image/png, image/jpeg, image/jpg"/>
-            <label for="file-upload" id="file-drag">
-              <div id="start">
-                <i class="fal fa-times pull-right closeUploader" aria-hidden="true"></i>
-                <i class="fal fa-file-upload fa-3x" aria-hidden="true"></i>
-                <div id="notgoodfile" style="color:red;display:none">Format non autorisé (pdf, png & jpeg)</div>
-                <div>Choisir un ou plusieurs fichiers ou déposer ici</div>
-                <span id="file-upload-btn" class="btn btn-primary"></span>
-              </div>
-              <div id="response" style="display:none"></div>
-            </label>
-          </form>
           <div class="col-md-3">
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-graduation-cap"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-graduation-cap fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Diplôme (ou Attestation de jeune diplômé)</small>
@@ -37,7 +36,6 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-
                   <span onclick="showFiles('DIP');" style="cursor: pointer">
                       <small id="DIPCount">{{countFiles candidate.documents 'DIP'}}</small>
                       <i class="fal fa-copy"></i>
@@ -48,7 +46,7 @@
                         {{#ifCond document.type '===' 'DIP'}}
                           <li data-document-id="{{document.id}}" data-type="DIP">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -64,8 +62,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-id-card"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-id-card fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Pièce d'identité</small>
@@ -88,7 +86,7 @@
                         {{#ifCond document.type '===' 'CNI'}}
                           <li data-document-id="{{document.id}}" data-type="CNI">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -104,8 +102,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-file-certificate"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-file-certificate fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Justificatif de référencement ADELI</small>
@@ -128,7 +126,7 @@
                         {{#ifCond document.type '===' 'ADELI'}}
                           <li data-document-id="{{document.id}}" data-type="ADELI">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -144,8 +142,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-shield-alt"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-shield-alt fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Carte Vitale ou Attestation de Protection Santé</small>
@@ -168,7 +166,7 @@
                         {{#ifCond document.type '===' 'VIT'}}
                           <li data-document-id="{{document.id}}" data-type="VIT">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -184,8 +182,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-university"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-university fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Relevé d'Identité Bancaire (RIB)</small>
@@ -208,7 +206,7 @@
                         {{#ifCond document.type '===' 'RIB'}}
                           <li data-document-id="{{document.id}}" data-type="RIB">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -224,8 +222,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-user-md"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-user-md fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Attestation d'inscription à l'Ordre National</small>
@@ -248,7 +246,7 @@
                         {{#ifCond document.type '===' 'OrNa'}}
                           <li data-document-id="{{document.id}}" data-type="OrNa">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -264,8 +262,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-file-user"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-file-user fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">CV</small>
@@ -288,7 +286,7 @@
                         {{#ifCond document.type '===' 'CV'}}
                           <li data-document-id="{{document.id}}" data-type="CV">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -304,8 +302,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-file-signature"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-file-signature fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Lettre de motivation</small>
@@ -328,7 +326,7 @@
                         {{#ifCond document.type '===' 'LM'}}
                           <li data-document-id="{{document.id}}" data-type="LM">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>

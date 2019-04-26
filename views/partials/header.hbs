@@ -1,3 +1,4 @@
+{{!--
 {{#if user}}
   <nav class="navbar navbar-default"{{#if session.originalUser}} style=margin-top:35px;"{{/if}}>
     <div class="container-fluid">
@@ -20,7 +21,7 @@
           <li class="dropdown">
             <a class="dropdown-toggle btn-rotate" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i id="notificationsIcon" class="fal fa-bell" aria-hidden="true"></i>
-              <span id="notificationsBadge" class="badge badge-danger"><i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i></span>
+              <span id="notificationsBadge" class="label label-danger"><i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i></span>
             </a>
             <ul class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
               <li>
@@ -39,11 +40,13 @@
                   <p class="notification-solo text-center">Aucune nouvelle notification</p>
                 </a>
               </li>
-              {{!--<li style="cursor: pointer; background-color: white" id="notif-see-all">
+              --}}
+{{!--<li style="cursor: pointer; background-color: white" id="notif-see-all">
                 <a class="dropdown-item dropdown-notification-all" href="/notifications">
                   Voir toutes les notifications
                 </a>
-              </li>--}}
+              </li>--}}{{!--
+
               <li style="cursor: pointer; background-color: white; display: none" id="notif-back">
                 <a class="dropdown-item dropdown-notification-all" href="#">
                   <i class="fal fa-check"></i>
@@ -78,4 +81,20 @@
       </p>
     </div>
   </li>
-</script>
+</script>--}}
+
+<!-- HEADER -->
+<div class="header">
+  <div class="container-fluid">
+    <!-- Body -->
+    <div class="header-body">
+      {{#if session.originalUser}}
+        <div class="col-12 col-lg-12 alert alert-warning" style="z-index: 5;">
+          Vous être en train d'utiliser Mstaff en tant que <b>{{user.email}}</b>
+          <i id="removeReadOnly" class="fa fa-{{readOnly}}"></i>
+          - <a href="/back-office/removeImpersonation"> Retour </a>
+        </div>
+      {{/if}}
+    </div> <!-- / .header-body -->
+  </div>
+</div> <!-- / .header -->

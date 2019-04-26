@@ -2,15 +2,10 @@
 <link href='/static/assets/css/fullcalendar/daygrid/main.css' rel='stylesheet' />
 <link href='/static/assets/css/fullcalendar/timegrid/main.css' rel='stylesheet' />
 <link href='/static/assets/css/fullcalendar/list/main.css' rel='stylesheet' />
-<style>
-  td.fc-day.fc-past {
-    background-color: #EEEEEE;
-  }
-</style>
 <div class="row">
-  <div class="col-md-10 col-md-offset-1">
+  <div class="col-12 col-lg-12">
     <div class="card card-calendar">
-      <div class="card-content">
+      <div class="card-body">
         <div id="fullCalendar"></div>
       </div>
     </div>
@@ -23,67 +18,69 @@
 <script src='/static/assets/js/fullcalendar/timegrid/main.js'></script>
 <script src='/static/assets/js/fullcalendar/list/main.js'></script>
 <script>
-  let $calendar = document.getElementById('fullCalendar');
+ $(document).ready(() => {
+   let $calendar = document.getElementById('fullCalendar');
 
-  let calendar = new FullCalendar.Calendar($calendar, {
-    plugins: ['interaction', 'dayGrid', 'timeGrid', 'list' ],
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridMonth,timeGridDay,listMonth'
-    },
-    eventClick: (info) => {
-      let id = info.event.id;
-      $.get(`/api/candidate/conference/${id}`, conference => {
-        createModal({
-          title: 'Voir un évenement',
-          modal: 'candidate/conference/view',
-          id: 'viewConferenceModal',
-          context: {
-            conference
-          }
-        })
-      }).catch(error => errorsHandler(error));
-    },
-    locale: 'fr',
-    buttonIcons: true,
-    weekNumbers: false,
-    navLinks: true,
-    editable: false,
-    eventLimit: true,
-    events: [
-      {{#each conferences as |conference|}}
-        {
-          id: {{conference.id}},
-          title: 'Entretien {{#ifCond conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}}',
-          start: new Date('{{conference.date}}'),
-          allDay: false,
-          url: '#',
-          textColor: 'black',
-          color: "{{calendarEventColor conference}}",
-          extendedProps: {
-            status: '{{conference.status}}',
-            type: '{{conference.type}}',
-            key: '{{conference.key}}',
-          }
-        },
-      {{/each}}
-    ],
-    eventRender: (event) => {
-      let Event = event.event.extendedProps;
-      let icon = Event.type === 'physical' ?
-          `<i class="fal fa-map-marker-alt" style="margin-right: 3px;"></i>` :
-          `<i class="fal fa-video" style="margin-right: 3px;"></i>`;
-      let content = $(event.el).find( '.fc-content' );
-      content.prepend(icon);
-    },
-    eventConstraint: {
-      start: moment().format('YYYY-MM-DD'),
-      end: '2100-01-01' // hard coded goodness unfortunately
-    }
-  });
+   let calendar = new FullCalendar.Calendar($calendar, {
+     plugins: ['interaction', 'dayGrid', 'timeGrid', 'list' ],
+     header: {
+       left: 'prev,next today',
+       center: 'title',
+       right: 'dayGridMonth,timeGridMonth,timeGridDay,listMonth'
+     },
+     eventClick: (info) => {
+       let id = info.event.id;
+       $.get(`/api/candidate/conference/${id}`, conference => {
+         createModal({
+           title: 'Voir un évenement',
+           modal: 'candidate/conference/view',
+           id: 'viewConferenceModal',
+           context: {
+             conference
+           }
+         })
+       }).catch(error => errorsHandler(error));
+     },
+     locale: 'fr',
+     buttonIcons: true,
+     weekNumbers: false,
+     navLinks: true,
+     editable: false,
+     eventLimit: true,
+     events: [
+       {{#each conferences as |conference|}}
+         {
+           id: {{conference.id}},
+           title: 'Entretien {{#ifCond conference.type '===' 'online'}}en ligne{{else}}physique{{/ifCond}}',
+           start: new Date('{{conference.date}}'),
+           allDay: false,
+           url: '#',
+           textColor: 'black',
+           color: "{{calendarEventColor conference}}",
+           extendedProps: {
+             status: '{{conference.status}}',
+             type: '{{conference.type}}',
+             key: '{{conference.key}}',
+           }
+         },
+       {{/each}}
+     ],
+     eventRender: (event) => {
+       let Event = event.event.extendedProps;
+       let icon = Event.type === 'physical' ?
+           `<i class="fal fa-map-marker-alt" style="margin-right: 3px;"></i>` :
+           `<i class="fal fa-video" style="margin-right: 3px;"></i>`;
+       let content = $(event.el).find( '.fc-content' );
+       content.prepend(icon);
+     },
+     eventConstraint: {
+       start: moment().format('YYYY-MM-DD'),
+       end: '2100-01-01' // hard coded goodness unfortunately
+     }
+   });
 
-  calendar.render();
+   calendar.render();
+ });
 
   let setConfAvailability = (id, availability) => {
     $.post(`/api/candidate/conference/${id}/availability`, { _csrf, availability}, (data) => {

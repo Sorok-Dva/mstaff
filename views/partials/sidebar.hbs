@@ -1,3 +1,86 @@
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
+  <div class="container-fluid">
+
+    <!-- Toggler -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#sidebarCollapse" aria-controls="sidebarCollapse"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Brand -->
+    <a class="navbar-brand" href="/">
+      <img src="/static/assets/images/LOGO_WEB_118_PX.png" class="navbar-brand-img mx-auto" alt="mstaff">
+    </a>
+
+    <!-- User (xs) -->
+    <div class="navbar-user d-md-none">
+      <!-- Dropdown -->
+      <div class="dropdown">
+        <!-- Toggle -->
+        <a href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div class="avatar avatar-sm avatar-online">
+            <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+          </div>
+        </a>
+        <!-- Menu -->
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sidebarIcon">
+          <a href="profile-posts.html" class="dropdown-item">Profile</a>
+          <a href="settings.html" class="dropdown-item">Settings</a>
+          <hr class="dropdown-divider">
+          <a href="/logout" class="dropdown-item">Déconnexion</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collapse -->
+    <div class="collapse navbar-collapse" id="sidebarCollapse">
+
+      <!-- Navigation -->
+      <ul class="navbar-nav">
+        {{#ifCond user.type '===' 'candidate'}}
+          {{> candidate/sidebar-menu}}
+        {{/ifCond}}
+        {{#ifCond user.type '===' 'es'}}
+          {{> es/sidebar-menu}}
+        {{/ifCond}}
+      </ul>
+
+      <!-- Push content down -->
+      <div class="mt-auto"></div>
+
+      <!-- User (md) -->
+      <div class="navbar-user d-none d-md-flex" id="sidebarUser">
+        <!-- Icon -->
+        <a href="#sidebarModalActivity" class="navbar-user-link" data-toggle="modal">
+          <span class="icon">
+            <i class="fe fe-bell"></i>
+          </span>
+        </a>
+
+        <!-- Dropup -->
+        <div class="dropup">
+
+          <!-- Toggle -->
+          <a href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="avatar avatar-sm avatar-online">
+              <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="avatar">
+            </div>
+          </a>
+
+          <!-- Menu -->
+          <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
+            <a href="profile-posts.html" class="dropdown-item">Profile</a>
+            <a href="settings.html" class="dropdown-item">Settings</a>
+            <hr class="dropdown-divider">
+            <a href="/logout" class="dropdown-item">Déconnexion</a>
+          </div>
+        </div>
+      </div>
+    </div> <!-- / .navbar-collapse -->
+  </div>
+</nav>
+{{!--
 <div class="sidebar" data-background-color="brown" data-active-color="info">
   <div class="logo">
     <a href="#" class="simple-text logo-mini">
@@ -18,3 +101,4 @@
     </ul>
   </div>
 </div>
+--}}
