@@ -34,6 +34,7 @@ Establishment.Select = (req, res, next) => {
     if (_.isNil(esAccount)) return next(new BackError('Compte établissement introuvable.', httpStatus.NOT_FOUND));
     Models.User.findOne({ where: { id: req.user.id }, attributes: ['id', 'opts'] }).then(user => {
       let { opts } = user;
+      if (_.isNil(opts)) opts = {};
       if (!('currentEs' in opts)) opts.currentEs = esAccount.es_id;
       else opts.currentEs = esAccount.es_id;
       user.opts = opts;
