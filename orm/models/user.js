@@ -53,6 +53,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: 0,
       allowNull: false
+    },
+    opts: {
+      type: DataTypes.JSON
     }
   });
   User.associate = function (models) {
