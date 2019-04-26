@@ -34,7 +34,7 @@
       },
       eventClick: (info) => {
         let id = info.event.id;
-        $.get(`/api/es/{{session.currentEs}}/conference/${id}`, conference => {
+        $.get(`/api/es/{{user.opts.currentEs}}/conference/${id}`, conference => {
           createModal({
             title: `Entretien avec ${conference.Candidate.User.firstName} ${conference.Candidate.User.lastName}`,
             modal: 'es/conference/view',

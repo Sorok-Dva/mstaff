@@ -40,7 +40,7 @@
   }
 </style>
 <script>
-  let esId = {{session.currentEs}};
+  let esId = {{user.opts.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
   let baseCVCount = {{candidatesCount.length}};
   let need = {
