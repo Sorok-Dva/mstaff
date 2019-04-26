@@ -90,7 +90,7 @@ Authentication.ensureIsCandidate = (req, res, next) => {
 Authentication.ensureIsEs = (req, res, next) => {
   if (req.isAuthenticated()) {
     if (['es'].includes(req.user.type)) {
-      if (_.isNil(req.session.currentEs) && req.url.search('/select/es') === -1) return res.redirect('/select/es');
+      if ((_.isNil(req.user.opts) || !('currentEs' in req.user.opts)) && req.url.search('/select/es') === -1) return res.redirect('/select/es');
       next();
     } else {
       return next(new BackError('Vous n\'avez pas accès à cette page.', httpsStatus.FORBIDDEN));
@@ -109,7 +109,7 @@ Authentication.ensureIsEs = (req, res, next) => {
  */
 Authentication.verifyEsAccess = (req, res, next) => {
   Models.Establishment.findOne({
-    where: { id: req.params.esId || req.session.currentEs },
+    where: { id: req.params.esId || req.user.opts.currentEs },
     include: {
       model: Models.ESAccount,
       where: { user_id: req.user.id }

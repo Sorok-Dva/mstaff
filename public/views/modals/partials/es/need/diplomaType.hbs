@@ -14,7 +14,6 @@
 <script>
   $('#selectDiplomaType').clone().appendTo('#selectDiplomaTypeTrg');
   $('#selectDiplomaTypeTrg > #selectDiplomaType').attr('id', 'diplomaTypeSelect');
-  $('#diplomaTypeSelect').selectpicker();
   $('#diplomaTypeSelect').show();
   $('select#diplomaTypeSelect').on('change', function () {
     if (this.value === '') {

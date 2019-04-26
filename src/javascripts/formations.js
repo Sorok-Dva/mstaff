@@ -83,8 +83,7 @@ $('.add').click(function () {
               }).html('<i class="ti-close"></i>')))
           );
         }
-      }
-      else if (type === 'formation') {
+      } else if (type === 'formation') {
         if (data.formation) {
           notification({
             icon: 'check-circle',
@@ -111,8 +110,7 @@ $('.add').click(function () {
               }).html('<i class="ti-close"></i>')))
           );
         }
-      }
-      else if (type === 'diploma') {
+      } else if (type === 'diploma') {
         if (data.diploma) {
           notification({
             icon: 'check-circle',
@@ -144,10 +142,6 @@ $('.add').click(function () {
     }).catch(errors => errorsHandler(errors));
   }
 });
-
-$('#service_id').select2();
-$('#post_id').select2();
-
 $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   createModal({
@@ -230,7 +224,7 @@ $('body').on('click', 'button.removeXP', (event) => {
       createModal({
         id: 'editDiplomaModal',
         modal: 'candidate/editDiploma',
-        title: '<span class="ti-pencil-alt"></span> Modifier un diplôme' ,
+        title: '<span class="ti-pencil-alt"></span> Modifier un diplôme',
         dataID: data.diploma.id
       }, () => {
         let start = new Date(data.diploma.start);
@@ -380,3 +374,51 @@ let editDiploma = (id) => {
     }
   }).catch(errors => errorsHandler(errors));
 };
+
+$(document).ready(() => {
+  //XP Datepicker
+  $('#xpFrom').datetimepicker().on('dp.change', (e) => {
+    let incrementDay = moment(new Date(e.date));
+    incrementDay.add(1, 'days');
+    $('#xpTo').data('DateTimePicker').minDate(incrementDay);
+  });
+  $('#xpTo').datetimepicker().on('dp.change', (e) => {
+    let decrementDay = moment(new Date(e.date));
+    decrementDay.subtract(1, 'days');
+    $('#xpFrom').data('DateTimePicker').maxDate(decrementDay);
+  });
+  // Formations datepicker
+  $('#fFrom').datetimepicker().on('dp.change', (e) => {
+    let incrementDay = moment(new Date(e.date));
+    incrementDay.add(1, 'days');
+    $('#fTo').data('DateTimePicker').minDate(incrementDay);
+  });
+  $('#fTo').datetimepicker().on('dp.change', (e) => {
+    let decrementDay = moment(new Date(e.date));
+    decrementDay.subtract(1, 'days');
+    $('#fFrom').data('DateTimePicker').maxDate(decrementDay);
+  });
+
+  let formationAutocomplete = [];
+  let qualificationAutocomplete = [];
+
+  $.get('/api/formations/all', function (data) {
+    $.each(data.formations, function (i, formation) {
+      formationAutocomplete.push(formation.name);
+    });
+  });
+  $.get('/api/qualifications/all', function (data) {
+    $.each(data.qualifications, function (i, qualification) {
+      qualificationAutocomplete.push(qualification.name);
+    });
+  });
+  formationAutocomplete.sort();
+  qualificationAutocomplete.sort();
+  $('#fName').autocomplete({
+    source: formationAutocomplete
+  });
+  $('#dName').autocomplete({
+    source: qualificationAutocomplete
+  });
+})
+
