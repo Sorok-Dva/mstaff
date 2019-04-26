@@ -1,6 +1,5 @@
 <style>
   h1 {
-    margin: 100px auto 0 auto;
     color: var(--stroke-color);
     font-family: 'Encode Sans Semi Condensed', Verdana, sans-serif;
     font-size: 10rem;
@@ -15,21 +14,43 @@
     font-weight: 200;
     text-align: center;
   }
-
-  h1, h2 {
-    -webkit-transition: opacity 0.5s linear, margin-top 0.5s linear; /* Safari */
-    transition: opacity 0.5s linear, margin-top 0.5s linear;
-  }
 </style>
 <link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
-<div style="margin-top: -5%; text-align: center">
-  <h1>{{error.status}}</h1>
-  <h2>{{error.message}}</h2>
-  <a class="btn btn-primary" href="/" style="margin: auto;">Retour à l'accueil</a>
-</div>
-{{#if error.stack}}
-  <div style="padding: 15px">
-    <pre>{{error.stack}}</pre>
+<div class="row align-items-center">
+  <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-md-0">
+
+    <!-- Image -->
+    <div class="text-center">
+      <img src="/static/assets/images/illustrations/lost.svg" alt="404 page not found" class="img-fluid">
+    </div>
+
   </div>
-{{/if}}
+  <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+    <div class="text-center">
+
+      <!-- Preheading -->
+      <h1 class="text-uppercase text-muted">{{error.status}}</h1>
+
+      <!-- Heading -->
+      <h1 class="display-4 mb-3">
+        {{error.message}} 😭
+      </h1>
+
+      <!-- Subheading -->
+      <p class="text-muted mb-4">
+      </p>
+
+      <!-- Button -->
+      <a href="/" class="btn btn-lg btn-primary">
+        Retour à l'accueil
+      </a>
+    </div>
+
+    {{#if error.stack}}
+      <div style="padding: 15px">
+        <pre>{{error.stack}}</pre>
+      </div>
+    {{/if}}
+  </div>
+</div> <!-- / .row -->
 
