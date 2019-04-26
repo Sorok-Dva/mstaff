@@ -3,6 +3,7 @@ const { ErrorHandler, Express } = require('./middlewares');
 const Sentry = require('./bin/sentry');
 const path = require('path');
 const express = require('express');
+const dotenv = require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -15,7 +16,6 @@ const apiUserRouter = require('./routes/api/user');
 const apiCandidateRouter = require('./routes/api/candidate');
 const apiBackOfficeRouter = require('./routes/api/backOffice');
 const apiEsRouter = require('./routes/api/establishment');
-const dotenv = require('dotenv').config();
 
 const app = express();
 
