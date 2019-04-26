@@ -1,4 +1,4 @@
-let postsArray = [], servicesArray = [], diplomaArray = [], experiences = [];
+let postsArray = [], servicesArray = [], diplomaArray = [], experiences = [], diplomas = [];
 let application = {};
 let permissions = {editMode: false, editId: 0, experienceId: 1};
 let toNextModal = false;
@@ -253,7 +253,6 @@ let loadClearModal = (target) => {
       break;
     case 'experienceModal':
       createPostsList(allPosts, $('#xpPost'));
-      // generateGlobalRecap('xp');
       break;
     case 'diplomaModal':
       createDiplomaList(allDiplomas, $('#diploma'));
@@ -715,6 +714,25 @@ let diplomaModalListener = () => {
     useCurrent: false,
     ignoreReadonly: true,
     maxDate: moment().startOf('day'),
+  });
+
+
+  //Todo verifyDatas / saveEditDatas / saveDatas / generateDatasRecap / resetForm / editDiploma + deleteDiploma
+  $('#saveDiploma').on('click', () => {
+    if (verifyDatas('diplomaModal')){
+      permissions.editMode ? saveEditDatas('diplomaModal') : saveDatas('diplomaModal');
+      generateDatasRecap('diplomaModal');
+      resetForm('diploma');
+    }
+  });
+
+  $('#emptyDiploma').on('click', () => {
+    diplomas = [];
+    loadModal('diplomaModal', 'qualificationModal')
+  });
+
+  $('#toStep6').on('click', () => {
+    loadModal('diplomaModal','qualificationModal');
   });
 };
 
