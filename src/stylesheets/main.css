@@ -1001,9 +1001,9 @@ ul {
 }
 
 .notification-read {
-  padding-right: 15px;
   color: white;
   float: right;
+  margin-right: -18px;
 }
 
 .notification-date {
