@@ -12,7 +12,7 @@ const Mailer = require(`${__}/components/mailer`);
 const Conference = {};
 
 Conference.viewConferences_ES = (req, res, next) => {
-  Models.Conference.findAll({ where: { user_id: req.user.id, es_id: req.session.currentEs } }).then(conferences => {
+  Models.Conference.findAll({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs } }).then(conferences => {
     let a = { main: 'conferences' };
     return res.render('establishments/calendar', { a, conferences });
   })
@@ -22,7 +22,7 @@ Conference.viewConference_ES = (req, res, next) => {
   Models.Conference.findOne({
     where: {
       user_id: req.user.id,
-      es_id: req.session.currentEs,
+      es_id: req.user.opts.currentEs,
       id: req.params.id
     },
     include: {
@@ -76,7 +76,7 @@ Conference.viewConference_Candidate = (req, res, next) => {
 };
 
 Conference.changeDate = (req, res, next) => {
-  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
+  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs, id: req.params.id } }).then(conference => {
     if (_.isNil(conference)) return next(new BackError(`Conférence ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
     conference.date = req.body.newDate;
     conference.status = req.body.status || 'waiting';
@@ -87,7 +87,7 @@ Conference.changeDate = (req, res, next) => {
 };
 
 Conference.edit = (req, res, next) => {
-  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
+  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs, id: req.params.id } }).then(conference => {
     conference.date = req.body.date;
     conference.type = req.body.type;
     conference.status = req.body.status || 'waiting';
@@ -101,7 +101,7 @@ Conference.create = (req, res, next) => {
   try {
     Models.Conference.findOrCreate({
       where: {
-        es_id: req.session.currentEs,
+        es_id: req.user.opts.currentEs,
         user_id: req.user.id,
         need_id: req.params.id,
         candidate_id: req.params.candidateId,

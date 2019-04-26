@@ -13,7 +13,7 @@ const Establishment_Application = {};
 
 Establishment_Application.getCVs = (req, res, next) => {
   let query = {
-    where: { es_id: req.session.currentEs },
+    where: { es_id: req.user.opts.currentEs },
     attributes: { exclude: ['lat', 'lon'] },
     group: ['Wish.candidate_id'],
     include: [{
@@ -101,7 +101,7 @@ Establishment_Application.getCVs = (req, res, next) => {
       render.candidatesCount = applications.count;
       if (req.params.editNeedId) {
         Models.Need.findOne({
-          where: { id: req.params.editNeedId, es_id: req.session.currentEs, closed: false },
+          where: { id: req.params.editNeedId, es_id: req.user.opts.currentEs, closed: false },
           include: {
             model: Models.NeedCandidate,
             attributes: ['id', 'candidate_id'],

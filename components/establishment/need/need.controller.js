@@ -14,7 +14,7 @@ const Establishment_Need = {};
 
 Establishment_Need.ViewAll = (req, res, next) => {
   Models.Need.findAll({
-    where: { es_id: req.session.currentEs, closed: false },
+    where: { es_id: req.user.opts.currentEs, closed: false },
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -29,7 +29,7 @@ Establishment_Need.ViewAll = (req, res, next) => {
 
 Establishment_Need.ViewClosed = (req, res, next) => {
   Models.Need.findAll({
-    where: { es_id: req.session.currentEs, closed: true },
+    where: { es_id: req.user.opts.currentEs, closed: true },
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -45,7 +45,7 @@ Establishment_Need.ViewClosed = (req, res, next) => {
 Establishment_Need.View = (req, res, next) => {
   let render = { a: { main: 'needs' } };
   Models.Need.findOne({
-    where: { id: req.params.id, es_id: req.session.currentEs, closed: false },
+    where: { id: req.params.id, es_id: req.user.opts.currentEs, closed: false },
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -153,11 +153,11 @@ Establishment_Need.edit = (req, res, next) => {
   Models.Need.update({
     name: req.body.name || 'Besoin sans nom',
     contract_type: !_.isNil(req.body.filterQuery.contractType) ? req.body.filterQuery.contractType : null,
-    post: !_.isNil(req.body.post) ? req.body.post : null,
-    service: !_.isNil(req.body.filterQuery.service) ? req.body.filterQuery.service : null,
-    diploma: !_.isNil(req.body.filterQuery.diploma) ? req.body.filterQuery.diploma : null,
-    start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart : null,
-    end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd : null
+    post: !_.isNil(req.body.post) ? req.body.post || null : null,
+    service: !_.isNil(req.body.filterQuery.service) ? req.body.filterQuery.service || null : null,
+    diploma: !_.isNil(req.body.filterQuery.diploma) ? req.body.filterQuery.diploma || null : null,
+    start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart || null : null,
+    end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd || null : null
   }, {
     where: { id: req.body.id }
   }).then(need => {
@@ -424,6 +424,7 @@ Establishment_Need.getNewCandidates = (req, res, next) => {
     };
 
     if (!_.isNil(need.contract_type)) query.where.contract_type = need.contract_type;
+    if (!_.isNil(need.service)) query.where.service = need.service;
     if (!_.isNil(need.post)) query.where.posts = { [Op.regexp]: Sequelize.literal(`'(${need.post})'`) };
 
     Models.Wish.findAll(query).then(wishes => {
