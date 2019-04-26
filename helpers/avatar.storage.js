@@ -53,16 +53,14 @@ let AvatarStorage = function (options) {
 
         case 'quality':
           value = _.isFinite(value) ? value : Number(value);
-          object[key] = (value && value >= 0 && value <= 100) ? value : defaultOptions[key];
+          object[key] = value && value >= 0 && value <= 100 ? value : defaultOptions[key];
           break;
 
         case 'threshold':
           value = _.isFinite(value) ? value : Number(value);
-          object[key] = (value && value >= 0) ? value : defaultOptions[key];
+          object[key] = value && value >= 0 ? value : defaultOptions[key];
           break;
-
       }
-
     });
 
     this.uploadPath = this.options.responsive ? path.join(UPLOAD_PATH, 'responsive') : UPLOAD_PATH;
@@ -75,9 +73,31 @@ let AvatarStorage = function (options) {
   }
 
   AvatarStorage.prototype._generateRandomFilename = function () {
+
+    let bytes = crypto.pseudoRandomBytes(32);
+
+    let checksum = crypto.createHash('MD5').update(bytes).digest('hex');
+
+    return checksum + '.' + this.options.output;
   };
 
   AvatarStorage.prototype._createOutputStream = function (filepath, cb) {
+
+    let that = this;
+
+    let output = fs.createWriteStream(filepath);
+
+    output.on('error', cb);
+
+    output.on('finish', function () {
+      cb(null, {
+        destination: that.uploadPath,
+        baseUrl: that.uploadBaseUrl,
+        filename: path.basename(filepath),
+        storage: that.options.storage
+      });
+    });
+    return output;
   };
 
   AvatarStorage.prototype._processImage = function (image, cb) {
@@ -91,6 +111,7 @@ let AvatarStorage = function (options) {
 
   return new AvatarStorage(options);
 
-};
+}
+;
 
 module.exports = AvatarStorage;
