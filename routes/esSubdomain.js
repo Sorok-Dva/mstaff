@@ -15,4 +15,8 @@ router.get('/posts/all',
 
 router.get('/services/all',
   Establishment.Website.GetServices);
+
+router.get('/atsDatas/all',
+  Establishment.Website.GetAtsDatas);
+
 module.exports = router;

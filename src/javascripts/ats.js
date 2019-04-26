@@ -1,10 +1,8 @@
-let postsArray = [];
-let servicesArray = [];
+let postsArray = [], servicesArray = [], diplomaArray = [], experiences = [];
 let application = {};
-let experiences = [];
 let permissions = {editMode: false, editId: 0, experienceId: 1};
 let toNextModal = false;
-let allPosts, allServices;
+let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 
 
 let initApplication = () => {
@@ -13,30 +11,24 @@ let initApplication = () => {
     application.partTime = false;
     application.dayTime = false;
     application.nightTime = false;
-    allPosts = getPosts();
-    allServices = getServices();
-    resolve();
+    getAtsDatas().then (() => resolve());
   });
 };
 
 // Retrieval datas into BDD
 
-let getPosts = () => {
+let getAtsDatas = () => {
   return new Promise( resolve => {
-    $.get('/posts/all', function(posts) {
-      allPosts = posts;
+    $.get('/atsDatas/all', function(datas) {
+      allPosts = datas.posts;
+      allServices = datas.services;
+      allDiplomas = datas.diplomas;
+      allQualifications = datas.qualifications;
+      allSkills = datas.skills;
+
       // Quick fix to remove non-break-space (encodeURI to see them)
       allPosts.forEach( post => post.name = post.name.replace(/\s/g,' '));
-      resolve(allPosts);
-    });
-  });
-};
-
-let getServices = () => {
-  return new Promise( resolve => {
-    $.get('/services/all', function(services) {
-      allServices = services;
-      resolve(allServices);
+      resolve();
     });
   });
 };
@@ -63,6 +55,18 @@ let createServicesList = (services, input) => {
   servicesArray.sort();
   input.autocomplete({
     source: servicesArray,
+    minLength: 1
+  });
+};
+
+let createDiplomaList = (diplomas, input) => {
+  diplomaArray = [];
+  diplomas.forEach( diploma => {
+    diplomaArray.push(diploma.name);
+  });
+  diplomaArray.sort();
+  input.autocomplete({
+    source: diplomaArray,
     minLength: 1
   });
 };
@@ -193,8 +197,6 @@ let resetPostRadioService = () => {
   $('#internship').attr('disabled', false);
   $('#liberal').prop('checked', false);
   $('#xpService').attr('disabled', false);
-  $('#xpPost').siblings().hide();
-  $('#xpService').siblings().hide();
   $('#xpService').val(null).trigger('change');
 };
 
@@ -229,6 +231,7 @@ let editXp = (id) => {
 
 let loadModal = (current, target) => {
   console.log(application);
+  console.log(experiences);
   toNextModal = true;
   $(`#${current}`).modal('hide');
   $(`#${target}`).modal('show');
@@ -253,6 +256,7 @@ let loadClearModal = (target) => {
       // generateGlobalRecap('xp');
       break;
     case 'diplomaModal':
+      createDiplomaList(allDiplomas, $('#diploma'));
       break;
     case 'otherDiplomaModal':
       break;
@@ -704,6 +708,14 @@ let experienceModalListener = () => {
 
 let diplomaModalListener = () => {
   $('#diplomaModal').on('hide.bs.modal', () => toPreviousModal('diplomaModal', 'experienceModal'));
+
+  //Initialize
+  $('#diplomaDate input').datetimepicker({
+    format: 'D MMMM YYYY',
+    useCurrent: false,
+    ignoreReadonly: true,
+    maxDate: moment().startOf('day'),
+  });
 };
 
 $(document).ready(function () {

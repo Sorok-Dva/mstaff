@@ -1,3 +1,48 @@
+<style>
+  .inputsDiploma {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .inputsDiploma > div{
+    width: 90%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 5%;
+  }
+
+  #diplomaDate{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+  #diplomaDate label, #diplomaDate input{
+    color: white;
+    text-align: center;
+    font-size: 1.7em;
+    font-family: 'Oxygen', sans-serif;
+  }
+  #diplomaStart, #diplomaEnd{
+    background-color: #00aced;
+    cursor: pointer;
+  }
+  .diplomaInfo{
+    color: white;
+    width: 50%;
+    font-size: 1.2em;
+  }
+  .diplomaInfo > i{
+    display: block;
+  }
+</style>
+
 <div class="modal customModal" id="diplomaModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -26,49 +71,29 @@
             </div>
           </div>
           <div class="col-sm-8 rightPart">
-<!--            <form class="inputsXp">-->
-<!--              <div class="input-holder">-->
-<!--                <input class="xpInput" id="xpEstablishment" placeholder="Dans quelle structure ?">-->
-<!--                <i class="fal fa-check"></i>-->
-
-<!--              </div>-->
-<!--              <div class="input-holder">-->
-<!--                <input class="xpInput" id="xpPost" placeholder="Quel était votre poste ?">-->
-<!--                <i class="fal fa-check"></i>-->
-<!--              </div>-->
-<!--              <div class="radio-holder">-->
-<!--                <div id="radioContract">-->
-<!--                  <div>-->
-<!--                    <input type="radio" id="salaried" name="radioContract">-->
-<!--                    <label for="salaried">Salarié</label>-->
-<!--                  </div>-->
-<!--                  <div>-->
-<!--                    <input type="radio" id="internship" name="radioContract">-->
-<!--                    <label for="internship">Stage</label>-->
-<!--                  </div>-->
-<!--                  <div>-->
-<!--                    <input type="radio" id="liberal" name="radioContract">-->
-<!--                    <label for="liberal">Libéral</label>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="input-holder">-->
-<!--                <input class="xpInput" id="xpService" placeholder="Au sein de quel service ?">-->
-<!--                <i class="fal fa-check"></i>-->
-<!--              </div>-->
-<!--              <div id="xpDate">-->
-<!--                <div>-->
-<!--                  <label for="xpStart">Début</label>-->
-<!--                  <input id="xpStart" name="xpStart" type="text"-->
-<!--                         class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#xpStart" readonly>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  <label for="xpEnd">Fin</label>-->
-<!--                  <input id="xpEnd" name="xpEnd" type="text"-->
-<!--                         class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#xpEnd" readonly>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </form>-->
+            <form class="inputsDiploma">
+              <div>
+                <div class="input-holder">
+                  <input class="xpInput" id="diploma" placeholder="Choisissez votre formation">
+                </div>
+                <div id="diplomaDate">
+                  <div>
+                    <label for="diplomaStart">Début</label>
+                    <input id="diplomaStart" name="diplomaStart" type="text"
+                           class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#diplomaStart" readonly>
+                  </div>
+                  <div>
+                    <label for="diplomaEnd">Fin</label>
+                    <input id="diplomaEnd" name="diplomaEnd" type="text"
+                           class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#diplomaEnd" readonly>
+                  </div>
+                </div>
+                <div class="diplomaInfo">
+                  <i class="fal fa-info-circle"></i>
+                  <span>Il s'agit de votre parcours de formation initial. Vous pourrez ajouter vos  <b>diplômes complémentaires (DU ...)</b>  à l'étape suivante.</span>
+                </div>
+              </div>
+            </form>
             <div class="save-holder">
               <div id="saveDiploma">
                 <i class="fal fa-check-circle fa-3x"></i>
