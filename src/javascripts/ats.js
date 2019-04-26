@@ -200,6 +200,7 @@ let resetPostRadioService = () => {
 
 let deleteXp = (id) => {
   resetForm('xp');
+  permissions.editMode = false;
   let i = experiences.map(xp => xp.id).indexOf(id);
   experiences.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
@@ -532,7 +533,8 @@ let notify = (error) => {
       break;
   }
   return false;
-}
+
+};
 
 
 
@@ -679,6 +681,7 @@ let experienceModalListener = () => {
 
   $('#saveXp').on('click', () => {
     if (verifyDatas('experienceModal')){
+      console.log('ca a passé la verifDatas');
       permissions.editMode ? saveEditDatas('experienceModal') : saveDatas('experienceModal');
       generateDatasRecap('experienceModal');
       resetForm('xp');
