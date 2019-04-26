@@ -15,6 +15,7 @@ const apiUserRouter = require('./routes/api/user');
 const apiCandidateRouter = require('./routes/api/candidate');
 const apiBackOfficeRouter = require('./routes/api/backOffice');
 const apiEsRouter = require('./routes/api/establishment');
+const dotenv = require('dotenv').config();
 
 const app = express();
 

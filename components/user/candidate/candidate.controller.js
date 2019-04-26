@@ -195,7 +195,7 @@ User_Candidate.ViewEditProfile = (req, res, next) => {
       as: 'candidate'
     }]
   }).then(usr => {
-    return res.render('users/edit', { usr, a: { main: 'profile' } })
+    return res.render('users/edit', { usr, a: { main: 'profile' }, avatar_field: process.env.AVATAR_FIELD })
   }).catch(error => next(error));
 };
 

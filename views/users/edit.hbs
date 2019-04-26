@@ -30,44 +30,6 @@
     margin-left: 10px;
   }
 </style>
-<div class="container">
-  <form method="post" action="" enctype="multipart/form-data" id="myform">
-    <div class='preview'>
-      <img src="" id="img" width="100" height="100">
-    </div>
-    <div >
-      <input type="file" id="file" name="file" />
-      <input type="button" class="button" value="Upload" id="but_upload">
-    </div>
-  </form>
-</div>
-<script>
-  $(document).ready(function(){
-
-    $("#but_upload").click(function(){
-
-      var fd = new FormData();
-      var files = $('#file')[0].files[0];
-      fd.append('file',files);
-
-      $.ajax({
-        url: 'upload.php',
-        type: 'post',
-        data: fd,
-        contentType: false,
-        processData: false,
-        success: function(response){
-          if(response != 0){
-            $("#img").attr("src",response);
-            $(".preview img").show(); // Display image element
-          }else{
-            alert('file not uploaded');
-          }
-        },
-      });
-    });
-  });
-</script>
 <div class="row">
   <div class="col-lg-4 col-md-5">
     <div class="card card-user">
@@ -78,7 +40,7 @@
           <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
           <span class="input-group-btn">
              <span class="btn btn-default btn-file">
-               <i class="fal fa-pencil"></i> <input type="file" id="imgInp">
+               <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="{{avatar_field}}">
              </span>
           </span>
           <h4 class="title">{{usr.firstName}} {{usr.lastName}}<br />
