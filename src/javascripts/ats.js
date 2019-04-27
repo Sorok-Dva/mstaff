@@ -563,7 +563,7 @@ let verifyDatas = (modal) => {
         let validQualificationStart = qualificationStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
         let validQualificationEnd = true;
         if (qualificationEnd !== null)
-          validQualificationEnd = validQualificationEnd.startOf('day').isSameOrAfter(qualificationStart.startOf('day')) ? true : notify('endDateBeforeStart');
+          validQualificationEnd = qualificationEnd.startOf('day').isSameOrAfter(qualificationStart.startOf('day')) ? true : notify('endDateBeforeStart');
         return (qualification && validQualificationStart && validQualificationEnd);
       }
       return notify('noStartDate');
