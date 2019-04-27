@@ -63,6 +63,9 @@ module.exports = {
         defaultValue: 0,
         allowNull: false
       },
+      opts: {
+        type: Sequelize.JSON
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

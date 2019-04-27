@@ -1,4 +1,5 @@
 const __ = process.cwd();
+const _ = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
 const Models = require(`${__}/orm/models/index`);
 
@@ -9,8 +10,8 @@ Render.Index = (req, res, next) => {
     return res.redirect('/profile')
   }
   if (req.user && req.user.type === 'es') {
-    if (req.session.currentEs) {
-      return res.redirect('/needs')
+    if (!_.isNil(req.user.opts) && 'currentEs' in req.user.opts) {
+      return res.redirect('/candidates')
     } else {
       return res.redirect('/select/es');
     }

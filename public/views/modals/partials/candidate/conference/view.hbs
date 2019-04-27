@@ -35,7 +35,7 @@
   {{/ifCond}}
 </div>
 <div class="modal-footer">
-  <button type="submit" class="btn btn-default pull-left" data-dismiss="modal">Fermer</button>
+  <button type="submit" class="btn btn-outline-info float-left" data-dismiss="modal">Fermer</button>
   {{#ifCond this.context.conference.status '===' 'waiting'}}
     <button type="submit" id="refuseConf" class="btn btn-danger"
             onclick="setConfAvailability({{@root.context.conference.id}}, 'refused')">
@@ -43,6 +43,6 @@
     </button>
     <button type="button" id="acceptConf" class="btn btn-success pull-right"
         onclick="setConfAvailability({{@root.context.conference.id}}, 'accepted')">Accepter</button>
-    <button type="submit" id="anotherDate" class="btn btn-default pull-right">Demander un autre créneau</button>
+    <button type="submit" id="anotherDate" class="btn btn-outline-secondary float-right">Demander un autre créneau</button>
   {{/ifCond}}
 </div>
