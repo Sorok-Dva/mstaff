@@ -1,4 +1,5 @@
-let postsArray = [], servicesArray = [], diplomaArray = [], qualificationArray = [], experiences = [], diplomas = [], qualifications = [];
+let postsArray = [], servicesArray = [], diplomaArray = [], qualificationArray = [], skillArray = [];
+let experiences = [], diplomas = [], qualifications = [], skills = [];
 let application = {};
 let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1};
 let toNextModal = false;
@@ -79,6 +80,18 @@ let createQualificationList = (qualifications, input) => {
   qualificationArray.sort();
   input.autocomplete({
     source: qualificationArray,
+    minLength: 1
+  });
+};
+
+let createSkillList = (skills, input) => {
+  skillArray = [];
+  skills.forEach( skill => {
+    skillArray.push(skill.name);
+  });
+  skillArray.sort();
+  input.autocomplete({
+    source: skillArray,
     minLength: 1
   });
 };
@@ -321,22 +334,25 @@ let starsSelector = (id) => {
       $(`#star1 i:nth-child(1)`).css('display', 'inline-block');
       $(`#star2 i:nth-child(1)`).css('display', 'inline-block');
       $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
+      $('#legend').html('Notez-vous !');
       break;
     case 'star1':
       $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
       $(`#star2 i:nth-child(1)`).css('display', 'inline-block');
       $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
+      $('#legend').html('Je sais faire avec tutorat');
       break;
     case 'star2':
       $(`#star1 i:nth-child(2)`).css('display', 'inline-block');
       $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
       $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
-
+      $('#legend').html('Je sais faire en autonomie');
       break;
     case 'star3':
       $(`#star1 i:nth-child(2)`).css('display', 'inline-block');
       $(`#star2 i:nth-child(2)`).css('display', 'inline-block');
       $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
+      $('#legend').html('Je sais former');
       break;
   }
 };
@@ -375,6 +391,7 @@ let loadClearModal = (target) => {
       createQualificationList(allQualifications, $('#qualification'));
       break;
     case 'skillModal':
+      createSkillList(allSkills, $('#skill'));
       break;
     case 'identityModal':
       break;
@@ -961,6 +978,24 @@ let skillModalListener = () => {
   $('#stars div').on('click',(e) => {
     starsSelector(e.currentTarget.id);
   });
+
+  $('#saveSkill').on('click', () => {
+    if (verifyDatas('qualificationModal')){
+      permissions.editMode ? saveEditDatas('qualificationModal') : saveDatas('qualificationModal');
+      generateDatasRecap('qualificationModal');
+      resetForm('qualification');
+    }
+  });
+
+  $('#emptySkill').on('click', () => {
+    skills = [];
+    loadModal('skillModal', 'identityModal')
+  });
+
+  $('#toStep8').on('click', () => {
+    loadModal('skillModal','identityModal');
+  });
+
 };
 
 $(document).ready(function () {

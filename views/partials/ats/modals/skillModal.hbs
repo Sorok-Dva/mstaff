@@ -20,9 +20,12 @@
     font-size: 2em;
     color: white;
   }
+  #skill::placeholder{
+    text-align: center;
+  }
   #stars{
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
   }
   #stars div{
     cursor: pointer;
@@ -67,24 +70,24 @@
                   <input class="xpInput" id="skill" placeholder="Indiquez ici une compétence">
                 </div>
                 <div id="skillStars">
-                  <span>Notez-vous !</span>
+                  <span id="legend">Notez-vous !</span>
                   <div id="stars">
                     <div id="star1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
                     <div id="star2"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
                     <div id="star3"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
                   </div>
-                  <span id="legend"></span>
                 </div>
+<!--                <div><span id="legend"></span></div>-->
               </div>
             </form>
             <div class="save-holder">
-              <div id="saveQualification">
+              <div id="saveSkill">
                 <i class="fal fa-check-circle fa-3x"></i>
                 <p>Enregistrer</p>
               </div>
             </div>
             <div class="next-modal">
-              <i id="toStep7" class="fal fa-arrow-circle-right"></i>
+              <i id="toStep8" class="fal fa-arrow-circle-right"></i>
             </div>
           </div>
         </div>
