@@ -271,4 +271,20 @@ module.exports.register = async (Handlebars) => {
       return `Vous aurez accès au lien 15 minutes avant le début de l'entretien.`;
     }
   });
+
+  Handlebars.registerHelper('wishValidity', wish => {
+    if (_.isNil(wish)) return '{{wishValidity error - empty object}}';
+    const until = moment(wish.renewed_date).add(30, 'days');
+    const today = moment().format('YYYY-MM-DD');
+    let timeLeft = until.diff(today, 'days');
+    let color;
+    if (timeLeft <= 30 && timeLeft >= 16) color = 'blue';
+    if (timeLeft <= 15 && timeLeft >= 7) color = 'darkorange';
+    if (timeLeft <= 6 && timeLeft >= 0) color = 'red';
+    if (_.isNil(color)) {
+      return `<h4 data-h4-wishId="${wish.id}"><i class="fal fa-sync" data-refreshWish-id="${wish.id}" style="color: red"></i> Expiré</h4>`;
+    } else {
+      return `<h4 data-h4-wishId="${wish.id}"><i class="fal fa-clock" data-wish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours</h4>`;
+    }
+  });
 };

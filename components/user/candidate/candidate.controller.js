@@ -4,6 +4,7 @@ const { BackError } = require(`${__}/helpers/back.error`);
 const { mkdirIfNotExists } = require(`${__}/helpers/helpers`);
 const { Op } = require('sequelize');
 const _ = require('lodash');
+const moment = require('moment');
 const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
 
@@ -790,6 +791,25 @@ User_Candidate.editWish = (req, res, next) => {
           }
           return res.status(200).send({ result: 'updated' });
         })
+      });
+    })
+  }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+};
+
+User_Candidate.refreshWish = (req, res, next) => {
+  return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    Models.Wish.findOne({
+      where: {
+        id: req.params.id,
+        renewed_date: {
+          [Op.lte]: moment().subtract(1, 'months').toDate()
+        }
+      }
+    }).then(wish => {
+      if (!wish) return res.status(400).send({ errors: 'Souhait introuvable.' });
+      wish.renewed_date = new Date();
+      wish.save().then(() => {
+        return res.status(200).send({ result: 'updated' });
       });
     })
   }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))

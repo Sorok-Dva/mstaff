@@ -38,7 +38,8 @@ module.exports = (sequelize, DataTypes) => {
     lon: DataTypes.STRING,
     geolocation: DataTypes.BOOLEAN,
     custom_address: DataTypes.TEXT,
-    es_count: DataTypes.INTEGER
+    es_count: DataTypes.INTEGER,
+    renewed_date: DataTypes.DATE
   }, {});
   Wish.associate = function (models) {
     Wish.hasOne(models.Candidate, {

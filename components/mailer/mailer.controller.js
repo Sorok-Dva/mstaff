@@ -59,5 +59,18 @@ Mailer.notifyCandidatesNeedConference = (email, context) => {
   });
 };
 
+Mailer.notifyCandidatesNeedConferenceDeleted = (email, context) => {
+  let mailObject = {
+    subject: 'Un entretien a été annulé.',
+    template: 'candidate/needConference-delete'
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
 
 module.exports = Mailer;

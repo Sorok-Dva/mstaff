@@ -59,7 +59,7 @@ router.post('/conference/:id(\\d+)/changeDate',
  * Post edit need
  */
 router.post('/need/:editNeedId(\\d+)/edit',
-  Authentication.ensureIsEs,
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Establishment.Need.edit);
 
 /**
@@ -67,7 +67,7 @@ router.post('/need/:editNeedId(\\d+)/edit',
  * Delete conference
  */
 router.delete('/conference/:id(\\d+)',
-  Authentication.ensureIsEs,
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Conference.Main.delete);
 
 module.exports = router;

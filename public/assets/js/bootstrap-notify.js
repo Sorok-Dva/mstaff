@@ -1,19 +1,4 @@
 /*
-    
-    
-
-     Creative Tim Modifications
-     
-     Lines: 239, 240 was changed from top: 5px to top: 50% and we added margin-top: -13px. In this way the close button will be aligned vertically 
-     Line:242 - modified when the icon is set, we add the class "alert-with-icon", so there will be enough space for the icon.
-
-
-
-
-*/
-
-
-/*
 * Project: Bootstrap Notify = v3.1.5
 * Description: Turns standard Bootstrap alerts into "Growl-like" notifications.
 * Author: Mouse0270 aka Robert McIntosh
@@ -64,7 +49,7 @@
 		onClose: null,
 		onClosed: null,
 		icon_type: 'class',
-		template: '<div data-notify="container" class="col-xs-11 col-sm-4 alert alert-{0}" role="alert"><button type="button" aria-hidden="true" class="close" data-notify="dismiss">&times;</button><span data-notify="icon"></span> <span data-notify="title">{1}</span> <span data-notify="message">{2}</span><div class="progress" data-notify="progressbar"><div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div><a href="{3}" target="{4}" data-notify="url"></a></div>'
+		template: '<div data-notify="container" class="col-xs-11 col-sm-4 alert alert-{0}" role="alert"><button type="button" aria-hidden="true" class="close" data-notify="dismiss">&times;</button><span data-notify="icon"></span> <span data-notify="title">{1}</span> <span data-notify="message">{2}</span><div class="progress progress-sm" data-notify="progressbar"><div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div><a href="{3}" target="{4}" data-notify="url"></a></div>'
 	};
 
 	String.format = function () {
@@ -135,7 +120,7 @@
 			this.init();
 		}
 	}
-	
+
 	$.extend(Notify.prototype, {
 		init: function () {
 			var self = this;
@@ -215,9 +200,9 @@
 			}
 		},
 		setIcon: function () {
-    		
+
     		this.$ele.addClass('alert-with-icon');
-    		
+
 			if (this.settings.icon_type.toLowerCase() === 'class') {
 				this.$ele.find('[data-notify="icon"]').addClass(this.settings.content.icon);
 			} else {

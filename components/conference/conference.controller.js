@@ -12,7 +12,7 @@ const Mailer = require(`${__}/components/mailer`);
 const Conference = {};
 
 Conference.viewConferences_ES = (req, res, next) => {
-  Models.Conference.findAll({ where: { user_id: req.user.id, es_id: req.session.currentEs } }).then(conferences => {
+  Models.Conference.findAll({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs } }).then(conferences => {
     let a = { main: 'conferences' };
     return res.render('establishments/calendar', { a, conferences });
   })
@@ -22,7 +22,7 @@ Conference.viewConference_ES = (req, res, next) => {
   Models.Conference.findOne({
     where: {
       user_id: req.user.id,
-      es_id: req.session.currentEs,
+      es_id: req.user.opts.currentEs,
       id: req.params.id
     },
     include: {
@@ -76,7 +76,7 @@ Conference.viewConference_Candidate = (req, res, next) => {
 };
 
 Conference.changeDate = (req, res, next) => {
-  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
+  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs, id: req.params.id } }).then(conference => {
     if (_.isNil(conference)) return next(new BackError(`Conférence ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
     conference.date = req.body.newDate;
     conference.status = req.body.status || 'waiting';
@@ -87,7 +87,7 @@ Conference.changeDate = (req, res, next) => {
 };
 
 Conference.edit = (req, res, next) => {
-  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.session.currentEs, id: req.params.id } }).then(conference => {
+  Models.Conference.findOne({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs, id: req.params.id } }).then(conference => {
     conference.date = req.body.date;
     conference.type = req.body.type;
     conference.status = req.body.status || 'waiting';
@@ -101,7 +101,7 @@ Conference.create = (req, res, next) => {
   try {
     Models.Conference.findOrCreate({
       where: {
-        es_id: req.session.currentEs,
+        es_id: req.user.opts.currentEs,
         user_id: req.user.id,
         need_id: req.params.id,
         candidate_id: req.params.candidateId,
@@ -170,6 +170,42 @@ Conference.sendInvitationNotification = (conference, req) => {
   });
 };
 
+Conference.sendDeleteNotification = (conference, req) => {
+  Models.Need.findOne({ where: { id: conference.need_id } }).then(need => {
+    Models.Notification.create({
+      fromUser: conference.user_id,
+      fromEs: conference.es_id,
+      to: conference.candidate_id,
+      subject: 'Un entretien a été annulé.',
+      title: `L'établissement ${req.es.name} a annulé un entretien d'embauche.`,
+      image: '/static/assets/images/sad.jpg',
+      opts: {
+        type: 'ConferenceNotifyCandidate',
+        template: 'delete',
+        details: {
+          conference,
+          need,
+          es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
+        },
+        message: req.body.message,
+        needCandidateId: conference.candidate_id
+      }
+    }).then(notification => {
+      Models.Candidate.findOne({
+        attributes: ['user_id'],
+        where: { id: conference.candidate_id },
+        include: {
+          model: Models.User,
+          attributes: ['email', 'firstName'],
+          required: true
+        }
+      }).then(candidate => {
+        Mailer.Main.notifyCandidatesNeedConferenceDeleted(candidate.User.email, { user: candidate.User })
+      });
+    });
+  });
+};
+
 Conference.candidateAnswer = (req, res, next) => {
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
     if (_.isNil(candidate)) return next();
@@ -218,9 +254,12 @@ Conference.askNewDate = (req, res, next) => {
 };
 
 Conference.delete = (req, res, next) => {
-  return Models.Conference.findOne({ where: { id: req.params.id } }).then(need => {
-    if (!need) return res.status(400).send({ body: req.body, error: 'Conference introuvable' });
-    return need.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  return Models.Conference.findOne({ where: { id: req.params.id } }).then(conference => {
+    if (!conference) return res.status(400).send({ body: req.body, error: 'Conference introuvable' });
+    return conference.destroy().then(data => {
+      Conference.sendDeleteNotification(conference, req);
+      return res.status(201).send({ deleted: true, data })
+    });
   }).catch(error => next(new BackError(error)));
 };
 

@@ -87,6 +87,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 0
       },
+      renewed_date: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
