@@ -1,6 +1,6 @@
 let postsArray = [], servicesArray = [], diplomaArray = [], experiences = [], diplomas = [];
 let application = {};
-let permissions = {editMode: false, editId: 0, experienceId: 1};
+let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1};
 let toNextModal = false;
 let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 
@@ -108,8 +108,12 @@ let resetForm = (form) => {
       $('.inputsXp').trigger("reset");
       $('#xpStart').data("DateTimePicker").clear();
       $('#xpEnd').data("DateTimePicker").clear();
-      $('.inputsXp i').hide();
       resetPostRadioService();
+      break;
+    case 'diploma':
+      $('.inputsDiploma').trigger("reset");
+      $('#diplomaStart').data("DateTimePicker").clear();
+      $('#diplomaEnd').data("DateTimePicker").clear();
       break;
   }
 };
@@ -130,10 +134,10 @@ let addToGlobalRecap = (customTitle, colorCheck, currentModal, linkedModal) => {
   $(`<div class="recap-item">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
 };
 
-let addToDatasRecap = (customTitle, item) => {
+let addToDatasRecap = (customTitle, item, postfix) => {
   let title = `<div>${customTitle} ${item.id}</div>`;
-  let editButton = `<button class="btn" onclick="editXp(${item.id})"><i class="fal fa-edit"></i></button>`;
-  let deleteButton = `<button class="btn" onclick="deleteXp(${item.id})"><i class="fal fa-trash-alt"></i></button>`;
+  let editButton = `<button class="btn" onclick="atsEdit${postfix}(${item.id})"><i class="fal fa-edit"></i></button>`;
+  let deleteButton = `<button class="btn" onclick="atsDelete${postfix}(${item.id})"><i class="fal fa-trash-alt"></i></button>`;
   $(`<div class="recap-item" data-id="${item.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
 };
 
@@ -168,9 +172,11 @@ let generateDatasRecap = (current) => {
       break;
     case 'experienceModal':
       $('.recap p').last().html('Aperçu de vos expériences');
-      experiences.forEach( xp => addToDatasRecap('#Expérience n°', xp));
+      experiences.forEach( xp => addToDatasRecap('#Expérience n°', xp, 'Xp'));
       break;
     case 'diplomaModal':
+      $('.recap p').last().html('Aperçu de vos formations');
+      diplomas.forEach( diploma => addToDatasRecap('#Formation n°', diploma, 'Diploma'));
       break;
   }
 };
@@ -200,18 +206,7 @@ let resetPostRadioService = () => {
   $('#xpService').val(null).trigger('change');
 };
 
-let deleteXp = (id) => {
-  resetForm('xp');
-  permissions.editMode = false;
-  let i = experiences.map(xp => xp.id).indexOf(id);
-  experiences.splice(i, 1);
-  $(`div [data-id=${id}]`).remove();
-  if (experiences.length === 0){
-    generateGlobalRecap('experienceModal');
-  }
-};
-
-let editXp = (id) => {
+let atsEditXp = (id) => {
   permissions.editMode = true;
   permissions.editId = id;
   let i = experiences.map(xp => xp.id).indexOf(id);
@@ -226,6 +221,41 @@ let editXp = (id) => {
   $('#xpDate').trigger('change');
 };
 
+let atsDeleteXp = (id) => {
+  resetForm('xp');
+  permissions.editMode = false;
+  let i = experiences.map(xp => xp.id).indexOf(id);
+  experiences.splice(i, 1);
+  $(`div [data-id=${id}]`).remove();
+  if (experiences.length === 0){
+    generateGlobalRecap('experienceModal');
+  }
+};
+
+// DIPLOMA-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
+
+let atsEditDiploma = (id) => {
+  permissions.editMode = true;
+  permissions.editId = id;
+  let i = diplomas.map(diploma => diploma.id).indexOf(id);
+  resetForm('diploma');
+  $('#diploma').val(diplomas[i].diploma).trigger('keyup');
+  $('#diplomaStart').data("DateTimePicker").date(diplomas[i].start);
+  if (diplomas[i].end)
+    $('#diplomaEnd').data("DateTimePicker").date(diplomas[i].end);
+  $('#diplomaDate').trigger('change');
+};
+
+let atsDeleteDiploma = (id) => {
+  resetForm('diploma');
+  permissions.editMode = false;
+  let i = diplomas.map(diploma => diploma.id).indexOf(id);
+  diplomas.splice(i, 1);
+  $(`div [data-id=${id}]`).remove();
+  if (diplomas.length === 0){
+    generateGlobalRecap('diplomaModal');
+  }
+};
 
 // REFACTO FUNCTIONS
 
@@ -305,6 +335,7 @@ let hasDatas = (modal) => {
       return experiences.length > 0;
       break;
     case 'diplomaModal':
+      return diplomas.length > 0;
       break;
     case 'otherDiplomaModal':
       break;
@@ -316,6 +347,7 @@ let hasDatas = (modal) => {
 };
 
 let saveDatas = (modal) => {
+  let current;
   switch (modal) {
     case 'postModal':
       let services = $('#InputServices').select2('data');
@@ -339,7 +371,7 @@ let saveDatas = (modal) => {
       application.end = new Date($('#end').data("DateTimePicker").date());
       break;
     case 'experienceModal':
-      let current = {};
+      current = {};
       current.id = permissions.experienceId;
       permissions.experienceId += 1;
       current.establishment = $('#xpEstablishment').val();
@@ -353,6 +385,15 @@ let saveDatas = (modal) => {
       experiences.push(current);
       break;
     case 'diplomaModal':
+      current = {};
+      current.id = permissions.diplomaId;
+      permissions.diplomaId += 1;
+      current.diploma = $('#diploma').val();
+      current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
+      current.end = null;
+      if ($('#diplomaEnd').data("DateTimePicker").date())
+        current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
+      diplomas.push(current);
       break;
     case 'otherDiplomaModal':
       break;
@@ -364,9 +405,10 @@ let saveDatas = (modal) => {
 };
 
 let saveEditDatas = (modal) => {
+  let current = null;
   switch (modal) {
     case 'experienceModal':
-      let current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
+      current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
       current.establishment = $('#xpEstablishment').val();
       current.post = $('#xpPost').val();
       current.contract = $('#radioContract input:checked').attr('id');
@@ -374,9 +416,16 @@ let saveEditDatas = (modal) => {
       current.start = new Date($('#xpStart').data("DateTimePicker").date());
       if ($('#xpEnd').data("DateTimePicker").date())
         current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-      permissions.editMode = false;
+      break;
+    case 'diplomaModal':
+      current =  diplomas[diplomas.map(diploma => diploma.id).indexOf(permissions.editId)];
+      current.diploma = $('#diploma').val();
+      current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
+      if ($('#diplomaEnd').data("DateTimePicker").date())
+        current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
       break;
   }
+  permissions.editMode = false;
 };
 
 let verifyDatas = (modal) => {
@@ -412,13 +461,26 @@ let verifyDatas = (modal) => {
       let xpStart = $('#xpStart').data("DateTimePicker").date();
       let xpEnd = $('#xpEnd').data("DateTimePicker").date();
       if (xpStart !== null){
-        let validXpStart = xpStart.startOf('day').isSameOrBefore(now) ? true : notify('xpWrongStart');
+        let validXpStart = xpStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
         let validXpEnd = true;
         if (xpEnd !== null)
-          validXpEnd = xpEnd.startOf('day').isSameOrAfter(xpStart.startOf('day')) ? true : notify('xpWrongEnd');
+          validXpEnd = xpEnd.startOf('day').isSameOrAfter(xpStart.startOf('day')) ? true : notify('endDateBeforeStart');
         return (xpEtablishment && xpPost && radioContract && xpService && validXpStart && validXpEnd);
       }
-      return notify('noXpStartDate');
+      return notify('noStartDate');
+      break;
+    case 'diplomaModal':
+      let diploma = diplomaArray.includes($('#diploma').val()) ? true : notify('noDiploma');
+      let diplomaStart = $('#diplomaStart').data("DateTimePicker").date();
+      let diplomaEnd = $('#diplomaEnd').data("DateTimePicker").date();
+      if (diplomaStart !== null){
+        let validDiplomaStart = diplomaStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
+        let validDiplomaEnd = true;
+        if (diplomaEnd !== null)
+          validDiplomaEnd = diplomaEnd.startOf('day').isSameOrAfter(diplomaStart.startOf('day')) ? true : notify('endDateBeforeStart');
+        return (diploma && validDiplomaStart && validDiplomaEnd);
+      }
+      return notify('noStartDate');
       break;
 
   }
@@ -514,7 +576,7 @@ let notify = (error) => {
         message: `Merci d'indiquer une date de début ainsi qu'une date de fin.`
       });
       break;
-    case 'noXpStartDate':
+    case 'noStartDate':
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -522,7 +584,7 @@ let notify = (error) => {
         message: `Merci d'indiquer une date de début.`
       });
       break;
-    case 'xpWrongStart':
+    case 'startDateAfterNow':
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -530,12 +592,20 @@ let notify = (error) => {
         message: `Merci de choisir une date antérieure ou égale à la date du jour.`
       });
       break;
-    case 'xpWrongEnd':
+    case 'endDateBeforeStart':
       notification({
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
         message: `Merci de choisir une date de fin postérieure ou égale à celle de départ.`
+      });
+      break;
+    case 'noDiploma':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer un diplôme valide.`
       });
       break;
   }
@@ -717,7 +787,7 @@ let diplomaModalListener = () => {
   });
 
 
-  //Todo verifyDatas / saveEditDatas / saveDatas / generateDatasRecap / resetForm / editDiploma + deleteDiploma
+  //Todo editDiploma + deleteDiploma
   $('#saveDiploma').on('click', () => {
     if (verifyDatas('diplomaModal')){
       permissions.editMode ? saveEditDatas('diplomaModal') : saveDatas('diplomaModal');
