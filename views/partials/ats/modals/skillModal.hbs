@@ -27,20 +27,9 @@
   #stars div{
     cursor: pointer;
   }
-
-
-  /*#qualificationDate{*/
-  /*  display: flex;*/
-  /*  flex-direction: row;*/
-  /*  justify-content: space-evenly;*/
-  /*  width: 100%;*/
-  /*}*/
-  /*#qualificationDate label, #qualificationDate input{*/
-  /*  color: white;*/
-  /*  text-align: center;*/
-  /*  font-size: 1.7em;*/
-  /*  font-family: 'Oxygen', sans-serif;*/
-  /*}*/
+  #stars div i:nth-child(even){
+    display: none;
+  }
 
 </style>
 
@@ -80,9 +69,9 @@
                 <div id="skillStars">
                   <span>Notez-vous !</span>
                   <div id="stars">
-                    <div><i class="fal fa-star"></i></div>
-                    <div><i class="fal fa-star"></i></div>
-                    <div><i class="fal fa-star"></i></div>
+                    <div id="star1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
+                    <div id="star2"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
+                    <div id="star3"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
                   </div>
                   <span id="legend"></span>
                 </div>

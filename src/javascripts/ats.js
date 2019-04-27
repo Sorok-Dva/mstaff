@@ -312,6 +312,35 @@ let atsDeleteQualification = (id) => {
   }
 };
 
+// SKILL-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
+
+let starsSelector = (id) => {
+  $('#stars div i').css('display', 'none');
+  switch (id) {
+    case 'reset':
+      $(`#star1 i:nth-child(1)`).css('display', 'inline-block');
+      $(`#star2 i:nth-child(1)`).css('display', 'inline-block');
+      $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
+      break;
+    case 'star1':
+      $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
+      $(`#star2 i:nth-child(1)`).css('display', 'inline-block');
+      $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
+      break;
+    case 'star2':
+      $(`#star1 i:nth-child(2)`).css('display', 'inline-block');
+      $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
+      $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
+
+      break;
+    case 'star3':
+      $(`#star1 i:nth-child(2)`).css('display', 'inline-block');
+      $(`#star2 i:nth-child(2)`).css('display', 'inline-block');
+      $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
+      break;
+  }
+};
+
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
 
 let loadModal = (current, target) => {
@@ -926,6 +955,14 @@ let qualificationModalListener = () => {
   });
 };
 
+let skillModalListener = () => {
+  $('#skillModal').on('hide.bs.modal', () => toPreviousModal('skillModal', 'qualificationModal'));
+
+  $('#stars div').on('click',(e) => {
+    starsSelector(e.currentTarget.id);
+  });
+};
+
 $(document).ready(function () {
   initApplication().then( () => {
     mainModalListener();
@@ -935,5 +972,6 @@ $(document).ready(function () {
     experienceModalListener();
     diplomaModalListener();
     qualificationModalListener();
+    skillModalListener();
   });
 });
