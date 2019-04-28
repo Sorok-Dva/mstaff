@@ -18,10 +18,10 @@
 <script src='/static/assets/js/fullcalendar/timegrid/main.js'></script>
 <script src='/static/assets/js/fullcalendar/list/main.js'></script>
 <script>
- $(document).ready(() => {
-   let $calendar = document.getElementById('fullCalendar');
-
-   let calendar = new FullCalendar.Calendar($calendar, {
+  let $calendar = document.getElementById('fullCalendar');
+  let calendar;
+  $(document).ready(() => {
+    calendar = new FullCalendar.Calendar($calendar, {
      plugins: ['interaction', 'dayGrid', 'timeGrid', 'list' ],
      header: {
        left: 'prev,next today',
