@@ -119,15 +119,21 @@
         </a>
       </div>
       <div class="card-content">
-        <ol>
-          {{#each candidate.wishes as |wish|}}
-            <li class="wish">
-              <h5>
-                <a href="/wish/edit/{{wish.id}}">{{wish.contract_type}} dans {{wish.es_count}} établissement(s)</a>
-              </h5>
-            </li>
-          {{/each}}
-        </ol>
+        {{#if candidate.wishes}}
+          <ol class="mt-3">
+            {{#each candidate.wishes as |wish|}}
+              <li class="wish">
+                <h5>
+                  <a href="/wish/edit/{{wish.id}}">{{wish.contract_type}} dans {{wish.es_count}} établissement(s)</a>
+                </h5>
+              </li>
+            {{/each}}
+          </ol>
+        {{else}}
+          <h3 class="text-center p-4">
+            Aucune donnée disponible.
+          </h3>
+        {{/if}}
       </div>
     </div>
     <div class="card">
@@ -138,15 +144,21 @@
         </a>
       </div>
       <div class="card-content">
-        <ul style="word-break: break-all;">
-          {{#each candidate.documents as |document|}}
-            <li>
-              <h5>
-                <a href="{{document.path}}">{{document.name}}</a>
-              </h5>
-            </li>
-          {{/each}}
-        </ul>
+        {{#if candidate.documents}}
+          <ul style="word-break: break-all;">
+            {{#each candidate.documents as |document|}}
+              <li>
+                <h5>
+                  <a href="{{document.path}}">{{document.name}}</a>
+                </h5>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+            <h3 class="text-center p-4">
+              Aucune donnée disponible.
+            </h3>
+        {{/if}}
       </div>
     </div>
   </div>
