@@ -74,7 +74,8 @@
     .intl-tel-input .country-list .flag-box, .intl-tel-input .country-list .country-name, .intl-tel-input .country-list .dial-code {
       vertical-align: middle; }
     .intl-tel-input .country-list .flag-box, .intl-tel-input .country-list .country-name {
-      margin-right: 6px; }
+      margin-right: 6px;
+      color: black;}
   .intl-tel-input.allow-dropdown input, .intl-tel-input.allow-dropdown input[type=text], .intl-tel-input.allow-dropdown input[type=tel], .intl-tel-input.separate-dial-code input, .intl-tel-input.separate-dial-code input[type=text], .intl-tel-input.separate-dial-code input[type=tel] {
     padding-right: 6px;
     padding-left: 52px;
