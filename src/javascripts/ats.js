@@ -1,7 +1,7 @@
 let postsArray = [], servicesArray = [], diplomaArray = [], qualificationArray = [], skillArray = [];
 let experiences = [], diplomas = [], qualifications = [], skills = [];
 let application = {};
-let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1};
+let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1, skillId: 1};
 let toNextModal = false;
 let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 
@@ -145,6 +145,10 @@ let resetForm = (form) => {
       $('#qualificationStart').data("DateTimePicker").clear();
       $('#qualificationEnd').data("DateTimePicker").clear();
       break;
+    case 'skill':
+      $('.inputsSkill').trigger("reset");
+      starsSelector('reset');
+      break;
   }
 };
 
@@ -199,6 +203,16 @@ let generateGlobalRecap = (current) => {
       color = diplomas.length > 0 ? 'green' : 'grey';
       addToGlobalRecap('Formations', color, current, 'diplomaModal');
       break;
+    case 'skillModal':
+      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
+      addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
+      color = experiences.length > 0 ? 'green' : 'grey';
+      addToGlobalRecap('Expériences', color, current, 'experienceModal');
+      color = diplomas.length > 0 ? 'green' : 'grey';
+      addToGlobalRecap('Formations', color, current, 'diplomaModal');
+      color = qualifications.length > 0 ? 'green' : 'grey';
+      addToGlobalRecap('Diplômes', color, current, 'qualificationModal');
+      break;
   }
 };
 
@@ -220,6 +234,10 @@ let generateDatasRecap = (current) => {
     case 'qualificationModal':
       $('.recap p').last().html('Aperçu de vos diplômes');
       qualifications.forEach( qualification => addToDatasRecap('#Diplôme n°', qualification, 'Qualification'));
+      break;
+    case 'skillModal':
+      $('.recap p').last().html('Aperçu de vos compétences');
+      skills.forEach( skill => addToDatasRecap('#Compétence n°', skill, 'Skill'));
       break;
   }
 };
@@ -357,6 +375,36 @@ let starsSelector = (id) => {
   }
 };
 
+let starsSelected = () => {
+  if ($('#star3 i.fas.fa-star').prop('style').display === 'inline-block')
+    return 3;
+  if ($('#star2 i.fas.fa-star').prop('style').display === 'inline-block')
+    return 2;
+  if ($('#star1 i.fas.fa-star').prop('style').display === 'inline-block')
+    return 1;
+  return 0;
+};
+
+let atsEditSkill = (id) => {
+  permissions.editMode = true;
+  permissions.editId = id;
+  let i = skills.map(skill => skill.id).indexOf(id);
+  resetForm('skill');
+  $('#skill').val(skills[i].skill).trigger('keyup');
+  starsSelector(`star${skills[i].stars}`);
+};
+8
+let atsDeleteSkill = (id) => {
+  resetForm('skill');
+  permissions.editMode = false;
+  let i = skills.map(skill => skill.id).indexOf(id);
+  skills.splice(i, 1);
+  $(`div [data-id=${id}]`).remove();
+  if (skills.length === 0){
+    generateGlobalRecap('skillModal');
+  }
+};
+
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
 
 let loadModal = (current, target) => {
@@ -443,6 +491,7 @@ let hasDatas = (modal) => {
       return qualifications.length > 0;
       break;
     case 'skillModal':
+      return skills.length > 0;
       break;
     case 'identityModal':
       break;
@@ -510,6 +559,12 @@ let saveDatas = (modal) => {
       qualifications.push(current);
       break;
     case 'skillModal':
+      current = {};
+      current.id = permissions.skillId;
+      permissions.skillId += 1;
+      current.skill = $('#skill').val();
+      current.stars = starsSelected();
+      skills.push(current);
       break;
     case 'identityModal':
       break;
@@ -542,6 +597,11 @@ let saveEditDatas = (modal) => {
       current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
       if ($('#qualificationEnd').data("DateTimePicker").date())
         current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
+      break;
+    case 'skillModal':
+      current =  skills[skills.map(skill => skill.id).indexOf(permissions.editId)];
+      current.skill = $('#skill').val();
+      current.stars = starsSelected();
       break;
   }
   permissions.editMode = false;
@@ -613,6 +673,11 @@ let verifyDatas = (modal) => {
         return (qualification && validQualificationStart && validQualificationEnd);
       }
       return notify('noStartDate');
+      break;
+    case 'skillModal':
+      let skill = skillArray.includes($('#skill').val()) ? true : notify('noSkill');
+      let stars = starsSelected() > 0 ? true : notify('noStars')
+      return (skill && stars);
       break;
   }
 };
@@ -745,6 +810,22 @@ let notify = (error) => {
         type: 'danger',
         title: 'Informations manquantes :',
         message: `Merci d'indiquer un diplôme valide.`
+      });
+      break;
+    case 'noSkill':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer une compétence valide.`
+      });
+      break;
+    case 'noStars':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de noter votre compétence.`
       });
       break;
   }
@@ -980,10 +1061,10 @@ let skillModalListener = () => {
   });
 
   $('#saveSkill').on('click', () => {
-    if (verifyDatas('qualificationModal')){
-      permissions.editMode ? saveEditDatas('qualificationModal') : saveDatas('qualificationModal');
-      generateDatasRecap('qualificationModal');
-      resetForm('qualification');
+    if (verifyDatas('skillModal')){
+      permissions.editMode ? saveEditDatas('skillModal') : saveDatas('skillModal');
+      generateDatasRecap('skillModal');
+      resetForm('skill');
     }
   });
 
