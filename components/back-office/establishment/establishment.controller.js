@@ -402,4 +402,16 @@ BackOffice_Establishment.ViewRefList = (req, res, next) => {
   });
 };
 
+BackOffice_Establishment.getEsLinksList = (req, res, next) => {
+  Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(linkes => {
+    res.status(200).send({ linkes });
+  }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Establishment.getEstablishmentList = (req, res, next) => {
+  Models.Establishment.findAll().then(establishments => {
+    res.status(200).send({ establishments });
+  }).catch(error => next(new BackError(error)));
+};
+
 module.exports = BackOffice_Establishment;

@@ -4,56 +4,7 @@
     <div class="card">
       <div class="card-content">
         <div class="toolbar">
-          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
-                   createModal({
-                       id: 'addEquipmentModal',
-                       title: 'Ajouter une compétence',
-                       modal: 'back-office/addEquipment'
-                   }, () => {
-                       $('button#validateEquipment').click(function () {
-                           if ($('input#equipmentValue').val() != '') {
-                               let _csrf = $('#csrfToken').val();
-                               let promptInput = $('input#equipmentValue').val();
-                               $.post(`/api/back-office/references/equipments/`, {
-                                   promptInput,
-                                   _csrf
-                               }, (response) => {
-                               if (response.status === 'Already exists') {
-                                   notification({
-                                   icon: 'exclamation',
-                                   type: 'danger',
-                                   title: 'Cette compétence existe déjà.',
-                                   message: ``
-                               });
-                           }
-                       else {
-                           table.bootstrapTable('insertRow', {
-                               index: 0,
-                               row: {
-                                   id: response.reference.id,
-                                   name: response.reference.name
-                               }
-                           });
-                           notification({
-                               icon: 'check-circle',
-                               type: 'success',
-                               title: 'Compétence créée.',
-                               message: ``
-                           });
-                       }
-                   });
-                   $('#addEquipmentModal').modal('hide');
-               }
-               else {
-                   if ($('input#equipmentValue').val() == '') {
-                       $('input#equipmentValue').addClass('error');
-                       setTimeout(function() {
-                           $('input#equipmentValue').removeClass('error');
-                       }, 750)
-                   }
-               }
-           })
-       })"> <i class="fal fa-plus"></i></a>
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showEquipmentModal()"> <i class="fal fa-plus"></i></a>
         </div>
 
         <table id="equipments-table" class="table">
@@ -62,7 +13,8 @@
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
-              data-formatter="operateFormatter">Actions</th>
+              data-formatter="operateFormatter">Actions
+          </th>
           </thead>
           <tbody>
           {{#each references as |equipments|}}
@@ -168,7 +120,7 @@
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
-      pageList: [10,25,50,100,200,500],
+      pageList: [10, 25, 50, 100, 200, 500],
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " rows visible";
       },
@@ -186,4 +138,54 @@
       table.bootstrapTable('resetView');
     });
   });
+
+  let showEquipmentModal = () => {
+    createModal({
+      id: 'addEquipmentModal',
+      title: 'Ajouter une compétence',
+      modal: 'back-office/addEquipment'
+    }, () => {
+      $('button#validateEquipment').click(function () {
+        if ($('input#equipmentValue').val() != '') {
+          let _csrf = $('#csrfToken').val();
+          let promptInput = $('input#equipmentValue').val();
+          $.post(`/api/back-office/references/equipments/`, {
+            promptInput,
+            _csrf
+          }, (response) => {
+            if (response.status === 'Already exists') {
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: 'Cette compétence existe déjà.',
+                message: ``
+              });
+            } else {
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.reference.id,
+                  name: response.reference.name
+                }
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Compétence créée.',
+                message: ``
+              });
+            }
+          });
+          $('#addEquipmentModal').modal('hide');
+        } else {
+          if ($('input#equipmentValue').val() == '') {
+            $('input#equipmentValue').addClass('error');
+            setTimeout(function () {
+              $('input#equipmentValue').removeClass('error');
+            }, 750)
+          }
+        }
+      })
+    })
+  }
 </script>

@@ -14,7 +14,6 @@
 <script>
   $('#selectServiceType').clone().appendTo('#selectServiceTypeTrg');
   $('#selectServiceTypeTrg > #selectServiceType').attr('id', 'serviceTypeSelect');
-  $('#serviceTypeSelect').selectpicker();
   $('#serviceTypeSelect').show();
   $('select#serviceTypeSelect').on('change', function () {
     if (this.value === '') {

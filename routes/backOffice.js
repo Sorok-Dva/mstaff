@@ -1,6 +1,5 @@
 const { Authentication } = require('../middlewares/index');
 const { BackOffice } = require('../components');
-const Controller = require('../controllers/backOffice');//.BackOffice;
 const express = require('express');
 const router = express.Router();
 
@@ -134,5 +133,24 @@ router.get('/groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewGroups)
  * Show services data
  */
 router.get('/super-groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewSuperGroups);
+
+/**
+ * @Route('/back-office/configuration/skills') GET;
+ * Show configuration of skills
+ */
+router.get('/configuration/skills', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewSkills);
+
+/**
+ * @Route('/back-office/configuration/equipments') GET;
+ * Show configuration of equipments
+ */
+router.get('/configuration/equipments', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewEquipments);
+
+/** @Route('/back-office/settings/') GET;
+ * Show app settings page
+ */
+router.get('/settings',
+  Authentication.ensureIsAdmin,
+  BackOffice.Main.ViewSettings);
 
 module.exports = router;

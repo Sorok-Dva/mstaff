@@ -21,17 +21,12 @@ module.exports = {
       },
       finess_ej: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       siret: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
       },
       phone: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
       },
       code: {
         type: Sequelize.STRING

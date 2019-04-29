@@ -72,8 +72,8 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal">Annuler</button>
-  <button type="button" id="editXP" data-id="" class="btn btn-info pull-right" style="margin-bottom: 5px;">
+  <button type="submit" class="btn btn-secondary float-left" data-dismiss="modal">Annuler</button>
+  <button type="button" id="editXP" data-id="" class="btn btn-outline-info float-right" style="margin-bottom: 5px;">
     <i class="fa fa-pencil-square" aria-hidden="true"></i> Modifier
   </button>
 </div>
@@ -103,7 +103,7 @@
     $('#editEnd').prop('disabled', false);
     $('#editEnd').val(`${("0" + (editEnd.getMonth() + 1)).slice(-2)}/${editEnd.getFullYear()}`);
   }
-  $('#editXP').click(function() {
+  $('#editXP').click(function () {
     var formArray = $(`form#editExperience`).serializeArray(), formData = {}, stop = false;
     $.each(formArray, (i, field) => formData[field.name] = field.value);
     formData.current = formData.current === 'on';
@@ -114,12 +114,12 @@
 
     if (isNaN(formData.start.getTime())) {
       notification(
-          {
-            icon: 'exclamation',
-            type: 'danger',
-            title: 'Champ invalide :',
-            message: `Vous devez indiquer une date de début valide.`
-          }
+        {
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Champ invalide :',
+          message: `Vous devez indiquer une date de début valide.`
+        }
       );
       stop = true;
     }

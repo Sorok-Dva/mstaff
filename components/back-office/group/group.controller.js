@@ -116,4 +116,10 @@ BackOffice_Group.RemoveSuperGroup = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+BackOffice_Group.getGroupLinksList = (req, res, next) => {
+  Models.GroupsSuperGroups.findAll({ where: { id_super_group: req.params.id } }).then(linkgroup => {
+    res.status(200).send({ linkgroup });
+  }).catch(error => next(new BackError(error)));
+};
+
 module.exports = BackOffice_Group;

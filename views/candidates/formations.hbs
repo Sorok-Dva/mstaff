@@ -1,144 +1,169 @@
 <div class="row">
-  <div class="col-lg-12 col-md-12">
+  <div class="col-12 col-lg-12 col-md-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Expériences professionnelles</h4>
-        <hr style="width:80%; margin-top: 14px;">
+        <h2 class="card-title float-left"><i class="fa fa-briefcase"></i> Expériences professionnelles</h2>
       </div>
       <div class="card-content">
-        <form id="experience">
-          <div class="row">
-            <div class="col-md-3" id="test">
-              <div class="form-group">
-                <label for="xpName">Établissement *</label>
-                <input name="name" type="text"
-                       placeholder="Clinique, hopital ..."
-                       class="form-control input-md" value="{{body.name}}" required="" autocomplete="off">
+        <div class="row">
+          <div class="col-12 col-lg-4 col-md-4" style="padding: 20px">
+            <div class="card">
+              <div class="card-body">
+                <form id="experience">
+                  <div class="form-group">
+                    <label for="xpName">Établissement *</label>
+                    <input name="name" type="text"
+                           placeholder="Clinique, hopital ..."
+                           class="form-control input-md" value="{{body.name}}" required="" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <label for="post_id">Poste *</label>
+                    <select id="post_id" class="form-control" name="post_id" required="" data-toggle="select">
+                      {{#each posts as |post|}}
+                        <option value="{{post.id}}">{{post.name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" name="internship" id="xpInternship">
+                      <label class="custom-control-label" for="xpInternship">En tant que stagiaire</label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="service_id">Service *</label>
+                    <select class="form-control input-md" name="service_id" id="service_id" required=""
+                            data-toggle="select">
+                      {{#each services as |service|}}
+                        <option value="{{service.id}}">{{service.name}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-6">
+                        <label for="xpStart">Début *</label>
+                        <input id="xpStart" name="start" type="text"
+                               class="form-control input-md monthpicker from" required="" autocomplete="off"
+                               data-toggle="datetimepicker">
+                      </div>
+                      <div class="col-6">
+                        <label for="xpEnd">Fin *</label>
+                        <input id="xpEnd" name="end" type="text"
+                               class="form-control input-md monthpicker to" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" name="current" id="xpCurrent">
+                      <label class="custom-control-label" for="xpCurrent">J'occupe actuellement ce poste</label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" data-type="experience" class="btn btn-success float-right add"
+                            style="margin-bottom: 5px;">
+                      <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
+                    </button>
+                  </div>
+                </form>
               </div>
-              <div class="form-group">
-                <label for="post_id">Poste *</label>
-                <select id="post_id" class="form-control input-md" name="post_id" required="" style="width:75%">
-                  {{#each posts as |post|}}
-                    <option value="{{post.id}}">{{post.name}}</option>
-                  {{/each}}
-                </select>
-                <div class="checkbox">
-                  <input id="xpInternship" name="internship" type="checkbox">
-                  <label for="xpInternship">
-                    En tant que stagiaire
-                  </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="service_id">Service *</label>
-                <select class="form-control input-md" name="service_id" id="service_id" required="" style="width:75%">
-                  {{#each services as |service|}}
-                    <option value="{{service.id}}">{{service.name}}</option>
-                  {{/each}}
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="xpStart">Début *</label>
-                <input id="xpStart" name="start" type="text"
-                       class="form-control input-md monthpicker from" required="" autocomplete="off">
-                <label for="xpEnd">Fin *</label>
-                <input id="xpEnd" name="end" type="text"
-                       class="form-control input-md monthpicker to" autocomplete="off">
-              </div>
-              <div class="form-group">
-                <div class="checkbox">
-                  <input id="xpCurrent" name="current" type="checkbox">
-                  <label for="xpCurrent">
-                    J'occupe actuellement ce poste
-                  </label>
-                </div>
-              </div>
-              <button type="button" data-type="experience" class="btn btn-success pull-right add" style="margin-bottom: 5px;">
-                <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
-              </button>
-            </div>
-            <div class="col-md-9 table-responsive table-full-width">
-              <table class="table table-hover">
-                <thead>
-                <tr class="info">
-                  <th>Date</th>
-                  <th>Établissement</th>
-                  <th>Poste</th>
-                  <th>Service</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody id="experienceTbody">
-                {{#if candidate.experiences}}
-                  {{#each candidate.experiences as |xp|}}
-                    <tr data-xpId="{{xp.id}}">
-                      <td>
-                        {{date xp.start 'MM/YYYY' }} -
-                        {{#if xp.end}}
-                          {{date xp.end 'MM/YYYY' }}
-                        {{else}}
-                          maintenant
-                        {{/if}}
-                        {{#if xp.internship}}
-                          <small>(stage)</small>
-                        {{/if}}
-                      </td>
-                      <td>{{xp.name}}</td>
-                      <td>{{xp.poste.name}}</td>
-                      <td><label class="label label-warning">{{xp.service.name}}</label></td>
-                      <td>
-                        <button class="btn btn-simple btn-warning btn-icon editXP" data-id="{{xp.id}}" type="button">
-                          <i class="ti-pencil-alt"></i>
-                        </button>
-                        <button class="btn btn-simple btn-danger btn-icon removeXP" data-id="{{xp.id}}" type="button">
-                          <i class="ti-close"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  {{/each}}
-                {{else}}
-                  <tr class="text-center noXPAvailable">
-                    <td colspan="5">Aucune donnée disponible</td>
-                  </tr>
-                {{/if}}
-                </tbody>
-              </table>
             </div>
           </div>
-        </form>
+          <div class="col-12 col-lg-8 col-md-8 table-responsive table-full-width">
+            <table class="table table-hover">
+              <thead>
+              <tr class="info">
+                <th>Date</th>
+                <th>Établissement</th>
+                <th>Poste</th>
+                <th>Service</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody id="experienceTbody">
+              {{#if candidate.experiences}}
+                {{#each candidate.experiences as |xp|}}
+                  <tr data-xpId="{{xp.id}}">
+                    <td>
+                      {{date xp.start 'MM/YYYY' }} -
+                      {{#if xp.end}}
+                        {{date xp.end 'MM/YYYY' }}
+                      {{else}}
+                        maintenant
+                      {{/if}}
+                      {{#if xp.internship}}
+                        <small>(stage)</small>
+                      {{/if}}
+                    </td>
+                    <td>{{xp.name}}</td>
+                    <td>{{xp.poste.name}}</td>
+                    <td><label class="label label-warning">{{xp.service.name}}</label></td>
+                    <td>
+                      <button class="btn btn-simple btn-outline-warning btn-icon editXP" data-id="{{xp.id}}"
+                              type="button">
+                        <i class="ti-pencil-alt"></i>
+                      </button>
+                      <button class="btn btn-simple btn-outline-danger btn-icon removeXP" data-id="{{xp.id}}"
+                              type="button">
+                        <i class="ti-close"></i>
+                      </button>
+                    </td>
+                  </tr>
+                {{/each}}
+              {{else}}
+                <tr class="text-center noXPAvailable">
+                  <td colspan="5">Aucune donnée disponible</td>
+                </tr>
+              {{/if}}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <div class="col-lg-12 col-md-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fa fa-book" aria-hidden="true"></i> Formations</h4>
+        <h4 class="card-title float-left"><i class="fa fa-book" aria-hidden="true"></i> Formations</h4>
         <hr style="width:90%; margin-top: 14px;">
       </div>
       <div class="card-content">
         <div class="row">
-          <div class="col-md-3">
-            <form id="formation">
-              <div class="form-group">
-              <label for="fName">Formations *</label>
-              <input id="fName" name="name" type="text"
-                     placeholder="Choisir une formation"
-                     class="form-control input-md" value="{{body.name}}" required="" autocomplete="off">
-            </div>
-              <div class="form-group">
-                <label for="fStart">Début *</label>
-                <input id="fStart" name="start" type="text"
-                       class="form-control input-md monthpicker from" required="" autocomplete="off">
-                <label for="fEnd">Fin *</label>
-                <input id="fEnd" name="end" type="text"
-                       class="form-control input-md monthpicker to" autocomplete="off">
+          <div class="col-12 col-lg-4 col-md-4" style="padding: 20px">
+            <div class="card">
+              <div class="card-body">
+                <form id="formation">
+                  <div class="form-group">
+                    <label for="fName">Formations *</label>
+                    <input id="fName" name="name" type="text"
+                           placeholder="Choisir une formation"
+                           class="form-control input-md" value="{{body.name}}" required="" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-6">
+                        <label for="fStart">Début *</label>
+                        <input id="fStart" name="start" type="text"
+                               class="form-control input-md monthpicker from" required="" autocomplete="off">
+                      </div>
+                      <div class="col-6">
+                        <label for="fEnd">Fin *</label>
+                        <input id="fEnd" name="end" type="text"
+                               class="form-control input-md monthpicker to" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" data-type="formation" class="btn btn-success float-right add"
+                          style="margin-bottom: 5px;">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
+                  </button>
+                </form>
               </div>
-              <button type="button" data-type="formation" class="btn btn-success pull-right add" style="margin-bottom: 5px;">
-                <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
-              </button>
-            </form>
+            </div>
           </div>
-          <div class="col-md-9 table-responsive table-full-width">
+          <div class="col-12 col-lg-8 col-md-8 table-responsive table-full-width">
             <table class="table table-hover">
               <thead>
               <tr class="info">
@@ -161,10 +186,12 @@
                     </td>
                     <td>{{formation.name}}</td>
                     <td>
-                      <button class="btn btn-simple btn-warning btn-icon editFormation" data-id="{{formation.id}}">
+                      <button class="btn btn-simple btn-outline-warning btn-icon editFormation"
+                              data-id="{{formation.id}}">
                         <i class="ti-pencil-alt"></i>
                       </button>
-                      <button class="btn btn-simple btn-danger btn-icon removeFormation" data-id="{{formation.id}}">
+                      <button class="btn btn-simple btn-outline-danger btn-icon removeFormation"
+                              data-id="{{formation.id}}">
                         <i class="ti-close"></i>
                       </button>
                     </td>
@@ -185,33 +212,46 @@
   <div class="col-lg-12 col-md-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fa fa-graduation-cap"></i> Diplômes complémentaires</h4>
+        <h2 class="card-title float-left"><i class="fa fa-graduation-cap"></i> Diplômes complémentaires</h2>
         <hr style="width:80%; margin-top: 14px;">
       </div>
       <div class="card-content">
         <div class="row">
-          <div class="col-md-3">
-            <form id="diploma">
-              <div class="form-group">
-                <label for="dName">Diplôme *</label>
-                <input id="dName" type="text" name="name"
-                       placeholder="Choisir un diplôme universitaire"
-                       class="form-control input-md" value="{{body.name}}" required="" autocomplete="off">
+          <div class="col-12 col-lg-4 col-md-4" style="padding: 20px">
+            <div class="card">
+              <div class="card-body">
+                <form id="diploma">
+                  <div class="form-group">
+                    <label for="dName">Diplôme *</label>
+                    <input id="dName" type="text" name="name"
+                           placeholder="Choisir un diplôme universitaire"
+                           class="form-control input-md" value="{{body.name}}" required="" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-6">
+                        <label for="dStart">Début *</label>
+                        <input id="dStart" name="start" type="text"
+                               class="form-control input-md monthpicker from" required="" autocomplete="off">
+                      </div>
+                      <div class="col-6">
+                        <label for="dEnd">Fin *</label>
+                        <input id="dEnd" name="end" type="text"
+                               class="form-control input-md monthpicker to" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" data-type="diploma" class="btn btn-success float-right add"
+                            style="margin-bottom: 5px;">
+                      <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
+                    </button>
+                  </div>
+                </form>
               </div>
-              <div class="form-group">
-                <label for="dStart">Début *</label>
-                <input id="dStart" name="start" type="text"
-                       class="form-control input-md monthpicker from" required="" autocomplete="off">
-                <label for="dEnd">Fin *</label>
-                <input id="dEnd" name="end" type="text"
-                       class="form-control input-md monthpicker to" autocomplete="off">
-              </div>
-              <button type="button" data-type="diploma" class="btn btn-success pull-right add" style="margin-bottom: 5px;">
-                <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
-              </button>
-            </form>
+            </div>
           </div>
-          <div class="col-md-9 table-responsive table-full-width">
+          <div class="col-12 col-lg-8 col-md-8 table-responsive table-full-width">
             <table class="table table-hover">
               <thead>
               <tr class="info">
@@ -234,10 +274,10 @@
                     </td>
                     <td>{{diploma.name}}</td>
                     <td>
-                      <button class="btn btn-simple btn-warning btn-icon editDiploma" data-id="{{diploma.id}}">
+                      <button class="btn btn-simple btn-outline-warning btn-icon editDiploma" data-id="{{diploma.id}}">
                         <i class="ti-pencil-alt"></i>
                       </button>
-                      <button class="btn btn-simple btn-danger btn-icon removeDiploma" data-id="{{diploma.id}}">
+                      <button class="btn btn-simple btn-outline-danger btn-icon removeDiploma" data-id="{{diploma.id}}">
                         <i class="ti-close"></i>
                       </button>
                     </td>

@@ -52,5 +52,14 @@
     "dialect": "mysql",
     "operatorsAliases": false,
     "logging": false
+  },
+  "migration": {
+    "username": "mstaff",
+    "password": "Mstaff2019*",
+    "database": "mstaff_migration",
+    "host": "91.121.79.166",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "logging": false
   }
 }

@@ -1,218 +1,222 @@
 <div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-content">
-                <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
-                   createModal({
-                       id: 'addGroupModal',
-                       title: 'Ajouter un groupe',
-                       modal: 'back-office/addGroup'
-                   }, () => {
-                       $('button#validateGroup').click(function () {
-                           if ($('input#groupValue').val() != '') {
-                               let _csrf = $('#csrfToken').val();
-                               let promptInput = $('input#groupValue').val();
-                               $.post(`/api/back-office/groups/`, {
-                                   promptInput,
-                                   _csrf
-                               }, (response) => {
-                               if (response.status === 'Already exists') {
-                                   notification({
-                                   icon: 'exclamation',
-                                   type: 'danger',
-                                   title: 'Ce groupe existe déjà.',
-                                   message: ``
-                               });
-                           }
-                       else {
-                           table.bootstrapTable('insertRow', {
-                               index: 0,
-                               row: {
-                                   id: response.group.id,
-                                   name: response.group.name
-                               }
-                           });
-                           notification({
-                               icon: 'check-circle',
-                               type: 'success',
-                               title: 'Groupe créé.',
-                               message: ``
-                           });
-                       }
-                   });
-                   $('#addGroupModal').modal('hide');
-               }
-               else {
-                   if ($('input#groupValue').val() == '') {
-                       $('input#groupValue').addClass('error');
-                       setTimeout(function() {
-                           $('input#groupValue').removeClass('error');
-                       }, 750)
-                   }
-               }
-           })
-       })"> <i class="fal fa-plus"></i></a>
-                </div>
-
-                <table id="groups-table" class="table">
-                    <thead>
-                    <th data-field="state" data-checkbox="true"></th>
-                    <th data-field="id" class="text-center">ID</th>
-                    <th data-field="name" data-sortable="true">Nom</th>
-
-                    <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
-                        data-formatter="operateFormatter">Actions</th>
-                    </thead>
-                    <tbody>
-                    {{#each group as |groups|}}
-                        <tr data-id="{{groups.id}}">
-                            <td></td>
-                            <td>{{groups.id}}</td>
-                            <td>{{groups.name}}</td>
-                            <td></td>
-                        </tr>
-                    {{/each}}
-                    </tbody>
-                </table>
-            </div>
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showGroupModal()"> <i class="fal fa-plus"></i></a>
         </div>
+
+        <table id="groups-table" class="table">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="name" data-sortable="true">Nom</th>
+
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions
+          </th>
+          </thead>
+          <tbody>
+          {{#each group as |groups|}}
+            <tr data-id="{{groups.id}}">
+              <td></td>
+              <td>{{groups.id}}</td>
+              <td>{{groups.name}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
 <script type="text/javascript">
-    let table = $('#groups-table');
+  let table = $('#groups-table');
 
-    operateFormatter = (value, row, index) => {
-        return [
-            '<div class="table-icons">',
-            '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
-            '<i class="ti-rss-alt"></i>',
-            '</a>',
-            '<a title="Rename" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
-            '<i class="ti-pencil-alt"></i>',
-            '</a>',
-            '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
-            '<i class="ti-close"></i>',
-            '</a>',
-            '</div>',
-        ].join('');
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
+      '<i class="ti-rss-alt"></i>',
+      '</a>',
+      '<a title="Rename" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+      '<i class="ti-pencil-alt"></i>',
+      '</a>',
+      '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<i class="ti-close"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .link': (e, value, row, index) => {
+        createModal({
+          id: 'linkGroupModal',
+          title: 'Lier des établissements à ' + row.name,
+          modal: 'back-office/linkGroup',
+          group: row
+        }, () => {
+          $('button#validateLinkGroup').click(function () {
+            if ($('select#establishmentsID').val() !== '') {
+              let _csrf = $('#csrfToken').val();
+              let selectInput = $('select#establishmentsID').val();
+              $.put(`/api/back-office/linkES/${row.id}`, {
+                selectInput,
+                _csrf
+              }, () => {
+                $('#linkGroupModal').modal('hide');
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Etablissement(s) lié(s)',
+                  message: ``
+                });
+              });
+            }
+          })
+        });
+      },
+      'click .edit': (e, value, row, index) => {
+        createModal({
+          id: 'editGroupModal',
+          title: 'Modifier un groupe',
+          modal: 'back-office/editGroup'
+        }, () => {
+          $('button#btnEditGroup').click(function () {
+            if ($('input#groupValueEdit').val() !== '') {
+              let _csrf = $('#csrfToken').val();
+              let promptInput = $('input#groupValueEdit').val();
+              $.put(`/api/back-office/groups/${row.id}`, {
+                promptInput,
+                _csrf
+              }, () => {
+                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                $('#editGroupModal').modal('hide');
+                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Groupe modifié.',
+                  message: ``
+                });
+              });
+            } else {
+              if ($('input#groupValueEdit').val() === '') {
+                $('input#groupValueEdit').addClass('error');
+                setTimeout(function () {
+                  $('input#groupValueEdit').removeClass('error');
+                }, 750)
+              }
+            }
+          });
+        });
+      },
+      'click .remove': (e, value, row, index) => {
+        createModal({
+          id: 'removeGroupModal',
+          title: 'Supprimer un groupe',
+          modal: 'back-office/removeGroup'
+        }, () => {
+          let _csrf = $('#csrfToken').val();
+          $('button#btnRemoveGroup').click(function () {
+            $.delete(`/api/back-office/groups/${row.id}`, {
+              _csrf
+            }, () => {
+              table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Groupe supprimé.',
+                message: ``
+              });
+            });
+          });
+        });
+      }
     };
 
-    $(document).ready(() => {
-        window.operateEvents = {
-            'click .link': (e, value, row, index) => {
-                createModal({
-                      id: 'linkGroupModal',
-                      title: 'Lier des établissements à ' + row.name,
-                      modal: 'back-office/linkGroup'
-                    }, () => {
-                    $('button#validateLinkGroup').click(function () {
-                      if($('select#establishmentsID').val() !== '') {
-                        let _csrf = $('#csrfToken').val();
-                        let selectInput = $('select#establishmentsID').val();
-                        $.put(`/api/back-office/linkES/${row.id}`, {
-                          selectInput,
-                          _csrf
-                        }, () => {
-                          $('#linkGroupModal').modal('hide');
-                          notification({
-                            icon: 'check-circle',
-                            type: 'success',
-                            title: 'Etablissement(s) lié(s)',
-                            message: ``
-                          });
-                        });
-                      }
-                    })
-                });
-            },
-            'click .edit': (e, value, row, index) => {
-                createModal({
-                    id: 'editGroupModal',
-                    title: 'Modifier un groupe',
-                    modal: 'back-office/editGroup'
-                }, () => {
-                    $('button#btnEditGroup').click(function () {
-                        if ($('input#groupValueEdit').val() !== '') {
-                            let _csrf = $('#csrfToken').val();
-                            let promptInput = $('input#groupValueEdit').val();
-                            $.put(`/api/back-office/groups/${row.id}`, {
-                                promptInput,
-                                _csrf
-                            }, () => {
-                                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                                $('#editGroupModal').modal('hide');
-                                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
-                                notification({
-                                    icon: 'check-circle',
-                                    type: 'success',
-                                    title: 'Groupe modifié.',
-                                    message: ``
-                                });
-                            });
-                        } else {
-                            if ($('input#groupValueEdit').val() === '') {
-                                $('input#groupValueEdit').addClass('error');
-                                setTimeout(function () {
-                                    $('input#groupValueEdit').removeClass('error');
-                                }, 750)
-                            }
-                        }
-                    });
-                });
-            },
-            'click .remove': (e, value, row, index) => {
-                createModal({
-                    id: 'removeGroupModal',
-                    title: 'Supprimer un groupe',
-                    modal: 'back-office/removeGroup'
-                }, () => {
-                    let _csrf = $('#csrfToken').val();
-                    $('button#btnRemoveGroup').click(function () {
-                        $.delete(`/api/back-office/groups/${row.id}`, {
-                            _csrf
-                        }, () => {
-                            table.bootstrapTable('remove', {
-                                field: 'id',
-                                values: [row.id]
-                            });
-                            notification({
-                                icon: 'check-circle',
-                                type: 'success',
-                                title: 'Groupe supprimé.',
-                                message: ``
-                            });
-                        });
-                    });
-                });
-            }
-        };
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
 
-        table.bootstrapTable({
-            toolbar: ".toolbar",
-            search: true,
-
-            showColumns: true,
-            pagination: true,
-            searchAlign: 'left',
-            pageSize: 25,
-            clickToSelect: true,
-            pageList: [10,25,50,100,200,500],
-            formatRecordsPerPage: (pageNumber) => {
-                return pageNumber + " rows visible";
-            },
-            icons: {
-                columns: 'fa fa-columns',
-                detailOpen: 'fa fa-plus-circle',
-                detailClose: 'ti-close'
-            }
-        });
-
-        //activate the tooltips after the data table is initialized
-        $('[rel="tooltip"]').tooltip();
-
-        $(window).resize(() => {
-            table.bootstrapTable('resetView');
-        });
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10, 25, 50, 100, 200, 500],
+      formatRecordsPerPage: (pageNumber) => {
+        return pageNumber + " rows visible";
+      },
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
     });
+
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+
+  let showGroupModal = () => {
+
+    createModal({
+      id: 'addGroupModal',
+      title: 'Ajouter un groupe',
+      modal: 'back-office/addGroup'
+    }, () => {
+      $('button#validateGroup').click(function () {
+        if ($('input#groupValue').val() != '') {
+          let _csrf = $('#csrfToken').val();
+          let promptInput = $('input#groupValue').val();
+          $.post(`/api/back-office/groups/`, {
+            promptInput,
+            _csrf
+          }, (response) => {
+            if (response.status === 'Already exists') {
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: 'Ce groupe existe déjà.',
+                message: ``
+              });
+            } else {
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.group.id,
+                  name: response.group.name
+                }
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Groupe créé.',
+                message: ``
+              });
+            }
+          });
+          $('#addGroupModal').modal('hide');
+        } else {
+          if ($('input#groupValue').val() == '') {
+            $('input#groupValue').addClass('error');
+            setTimeout(function () {
+              $('input#groupValue').removeClass('error');
+            }, 750)
+          }
+        }
+      })
+    })
+  }
 </script>

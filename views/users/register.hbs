@@ -1,80 +1,118 @@
-<div class="row">
-  <div class="col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3">
-    <form action="/register/{{es.code}}" method="post">
-      <input type="hidden" name="_csrf" value="{{csrfToken}}" />
-      <div class="card" data-background="color" data-color="blue">
-        <div class="card-header">
-          <h3 class="card-title">
-            {{tr.pages.register.title_card_header}}
-            {{#if es}}
-              {{tr.pages.register.title_card_header_es}} {{es.name}}
-            {{/if}}
-          </h3>
-        </div>
-        <div class="card-content">
-          <div class="form-group firstName">
-            <label for="firstName">{{tr.pages.register.form_firstName_label}}</label>
-            <input id="firstName" name="firstName" type="text"
-                   placeholder="{{tr.pages.register.form_firstName_label_ph}}"
-                   class="form-control input-md" value="{{body.firstName}}" required="">
-          </div>
-          <div class="form-group lastName">
-            <label for="lastName">{{tr.pages.register.form_lastName_label}}</label>
-            <input id="lastName" name="lastName" type="text"
-                   placeholder="{{tr.pages.register.form_lastName_label_ph}}"
-                   class="form-control input-md" value="{{body.lastName}}" required="">
-          </div>
-          <div class="form-group birthday">
-            <label for="birthday">{{tr.pages.register.form_birthDate_label}}</label>
-            <input id="birthday" name="birthday" type="date" value="{{body.birthday}}"
-                   class="form-control input-md" required="">
-          </div>
-          <div class="form-group postal_code">
-            <label for="postal_code">{{tr.pages.register.form_postalCode_label}}</label>
-            <input id="postal_code" name="postal_code" type="text"
-                   placeholder="{{tr.pages.register.form_postalCode_label_ph}}"
-                   class="form-control input-md" value="{{body.postal_code}}" required="">
-          </div>
-          <div class="form-group town">
-            <label for="town">{{tr.pages.register.form_city_label}}</label>
-            <input id="town" name="town" type="text"
-                   placeholder="{{tr.pages.register.form_city_label_ph}}"
-                   class="form-control input-md" value="{{body.town}}" required="">
-          </div>
-          <div class="form-group phone">
-            <label for="phone">{{tr.pages.register.form_phoneNumber_label}}</label>
-            <input id="phone" name="phone" type="text"
-                   placeholder="{{tr.pages.register.form_phoneNumber_label_ph}}"
-                   class="form-control input-md" value="{{body.phone}}" required="">
-          </div>
-          <div class="form-group email">
-            <label for="email">{{tr.pages.register.form_email_label}}</label>
-            <input id="email" name="email" type="email" email="true"
-                   placeholder="{{tr.pages.register.form_email_ph}}"
-                   class="form-control input-md" value="{{body.email}}" required="">
-            <small id="emailTaken" class="form-text text-muted">{{tr.pages.register.errors.email_taken}}</small>
-            <small id="emailHelp" class="form-text text-muted">{{tr.pages.register.form_email_muted}}</small>
-          </div>
-          <div class="form-group password">
-            <label for="password">{{tr.pages.register.form_password_label}}</label>
-            <input id="password" name="password" type="password"
-                   placeholder="{{tr.pages.register.form_password_label_ph}}"
-                   class="form-control input-md" required="">
+<div class="container-fluid">
+  <div class="row align-items-center justify-content-center">
+    <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+      <!-- Heading -->
+      <h1 class="display-4 text-center mb-3">
+        Inscription
+      </h1>
+
+      <!-- Subheading -->
+      <p class="text-muted text-center mb-5">
+        {{tr.pages.register.title_card_header}}
+        {{#if es}}
+          {{tr.pages.register.title_card_header_es}} {{es.name}}
+        {{/if}}
+      </p>
+
+      <!-- Form -->
+      <form action="/register" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-6 firstName">
+              <label for="firstName">{{tr.pages.register.form_firstName_label}}</label>
+              <input id="firstName" name="firstName" type="text"
+                     placeholder="{{tr.pages.register.form_firstName_label_ph}}"
+                     class="form-control" value="{{body.firstName}}" required="">
+            </div>
+            <div class="col-6 lastName">
+              <label for="lastName">{{tr.pages.register.form_lastName_label}}</label>
+              <input id="lastName" name="lastName" type="text"
+                     placeholder="{{tr.pages.register.form_lastName_label_ph}}"
+                     class="form-control" value="{{body.lastName}}" required="">
+            </div>
           </div>
         </div>
-        <div class="card-footer text-center">
-          <p class="small">{{tr.pages.register.terms}}</p>
-          <button class="btn btn-info btn-loader float-md-right" type="submit"
-                  data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>
-                            {{tr.pages.register.form_submit_btn_loading_text}}">
-            {{tr.pages.register.form_submit_btn}}
-          </button>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-6 birthday">
+              <label for="birthday">{{tr.pages.register.form_birthDate_label}}</label>
+              <input id="birthday" name="birthday" type="date" value="{{body.birthday}}"
+                     class="form-control" required="">
+            </div>
+            <div class="col-6 postal_code">
+              <label for="postal_code">{{tr.pages.register.form_postalCode_label}}</label>
+              <input id="postal_code" name="postal_code" type="text"
+                     placeholder="{{tr.pages.register.form_postalCode_label_ph}}"
+                     class="form-control" value="{{body.postal_code}}" required="">
+            </div>
+          </div>
         </div>
-      </div>
-    </form>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-6 town">
+              <label for="town">{{tr.pages.register.form_city_label}}</label>
+              <input id="town" name="town" type="text"
+                     placeholder="{{tr.pages.register.form_city_label_ph}}"
+                     class="form-control" value="{{body.town}}" required="">
+            </div>
+            <div class="col-6 country">
+              <label for="country">{{tr.pages.register.form_country_label}}</label>
+              <input id="country" name="country" type="text"
+                     placeholder="{{tr.pages.register.form_country_label_ph}}"
+                     class="form-control" value="{{body.country}}" required="">
+            </div>
+          </div>
+        </div>
+        <div class="form-group phone">
+          <label for="phone">{{tr.pages.register.form_phoneNumber_label}}</label>
+          <input id="phone" name="phone" type="text"
+                 placeholder="{{tr.pages.register.form_phoneNumber_label_ph}}"
+                 class="form-control" value="{{body.phone}}" required="">
+        </div>
+        <div class="form-group email">
+          <label for="email">{{tr.pages.register.form_email_label}}</label>
+          <input id="email" name="email" type="email" email="true"
+                 placeholder="{{tr.pages.register.form_email_ph}}"
+                 class="form-control" value="{{body.email}}" required="">
+          <small id="emailTaken" class="form-text text-muted">{{tr.pages.register.errors.email_taken}}</small>
+          <small id="emailHelp" class="form-text text-muted">{{tr.pages.register.form_email_muted}}</small>
+        </div>
+        <div class="form-group password">
+          <label for="password">{{tr.pages.register.form_password_label}}</label>
+          <input id="password" name="password" type="password"
+                 placeholder="{{tr.pages.register.form_password_label_ph}}"
+                 class="form-control" required="">
+        </div>
+
+        <!-- Terms -->
+        <p class="text-center">
+          <small class="text-muted text-center">
+            {{tr.pages.register.terms}}
+          </small>
+        </p>
+
+        <!-- Submit -->
+        <button class="btn btn-lg btn-block btn-primary mb-3">
+          {{tr.pages.register.form_submit_btn}}
+        </button>
+
+        <!-- Link -->
+        <p class="text-center">
+          <small class="text-muted text-center">
+            Vous avez déjà un compte ? <a href="/login">Se connecter</a>.
+          </small>
+        </p>
+      </form>
+    </div>
+    <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+      <!-- Image -->
+      <div class="bg-cover vh-100 mt-n1 mr-n3"
+           style="background-image: url(/static/assets/images/BG02.jpg);"></div>
+    </div>
   </div>
 </div>
-
 <script>
   $('#email').blur(() => {
     let email = $('#email').val();

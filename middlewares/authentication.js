@@ -1,5 +1,7 @@
-const Models = require('../orm/models');
 const _ = require('lodash');
+const httpsStatus = require('http-status');
+const { BackError } = require(`../helpers/back.error`);
+const Models = require('../orm/models');
 const Authentication = {};
 
 /**
@@ -31,7 +33,7 @@ Authentication.ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   } else {
-    req.flash('error_msg', 'You are not logged');
+    req.flash('error_msg', 'Vous n\'êtes pas connecté.');
     res.redirect('/');
   }
 };
@@ -49,10 +51,11 @@ Authentication.ensureIsAdmin = (req, res, next) => {
     if (['Admin'].includes(req.user.role) || ['Admin'].includes(req.session.role)) {
       next();
     } else {
-      res.redirect('/');
+      console.log(req.user, req.session);
+      return next(new BackError('Vous n\'avez pas accès à cette page.', httpsStatus.FORBIDDEN));
     }
   } else {
-    res.redirect('/');
+    return next(new BackError('Vous devez être connecté.', httpsStatus.FORBIDDEN));
   }
 };
 
@@ -69,10 +72,10 @@ Authentication.ensureIsCandidate = (req, res, next) => {
     if (['candidate'].includes(req.user.type)) {
       next();
     } else {
-      res.redirect('/');
+      return next(new BackError('Vous n\'avez pas accès à cette page.', httpsStatus.FORBIDDEN));
     }
   } else {
-    res.redirect('/');
+    return next(new BackError('Vous devez être connecté.', httpsStatus.FORBIDDEN));
   }
 };
 
@@ -87,13 +90,13 @@ Authentication.ensureIsCandidate = (req, res, next) => {
 Authentication.ensureIsEs = (req, res, next) => {
   if (req.isAuthenticated()) {
     if (['es'].includes(req.user.type)) {
-      if (_.isNil(req.session.currentEs) && req.url.search('/select/es') === -1) return res.redirect('/select/es');
+      if ((_.isNil(req.user.opts) || !('currentEs' in req.user.opts)) && req.url.search('/select/es') === -1) return res.redirect('/select/es');
       next();
     } else {
-      res.redirect('/');
+      return next(new BackError('Vous n\'avez pas accès à cette page.', httpsStatus.FORBIDDEN));
     }
   } else {
-    res.redirect('/');
+    return next(new BackError('Vous devez être connecté.', httpsStatus.FORBIDDEN));
   }
 };
 
@@ -106,7 +109,7 @@ Authentication.ensureIsEs = (req, res, next) => {
  */
 Authentication.verifyEsAccess = (req, res, next) => {
   Models.Establishment.findOne({
-    where: { id: req.params.esId },
+    where: { id: req.params.esId || req.user.opts.currentEs },
     include: {
       model: Models.ESAccount,
       where: { user_id: req.user.id }

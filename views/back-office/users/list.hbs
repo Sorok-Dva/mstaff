@@ -16,7 +16,8 @@
           <th data-field="phone" data-sortable="true">Téléphone</th>
           <th data-field="type" data-sortable="true">Type</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
-              data-formatter="operateFormatter">Actions</th>
+              data-formatter="operateFormatter">Actions
+          </th>
           </thead>
           <tbody>
           {{#each users as |user|}}
@@ -67,9 +68,9 @@
         $(location).attr('href', `/back-office/user/${row.id}`);
       },
       'click .remove': (e, value, row, index) => {
-        if(confirm('ATTENTION:\n\n ' +
-            'Cette action est irreversible et supprimera toutes les données liées à l\'utilisateur.\n\n' +
-            'Voulez vous continuer ?')) {
+        if (confirm('ATTENTION:\n\n ' +
+          'Cette action est irreversible et supprimera toutes les données liées à l\'utilisateur.\n\n' +
+          'Voulez vous continuer ?')) {
 
           table.bootstrapTable('remove', {
             field: 'id',
@@ -83,12 +84,17 @@
       toolbar: ".toolbar",
       search: true,
       showColumns: true,
-      showExport: true,
       pagination: true,
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
-      pageList: [10,25,50,100,200,500],
+      showExport: true,
+      exportDataType: 'all',
+      exportOptions: {
+        fileName: 'mstaff-utilisateurs-es',
+        ignoreColumn: ['actioexitns']
+      },
+      pageList: [10, 25, 50, 100, 200, 500],
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " résultats visible";
       },

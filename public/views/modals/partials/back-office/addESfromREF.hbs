@@ -8,39 +8,48 @@
         <div class="form-row">
           <div class="form-group col-md-3">
             <label for="newESName">Nom</label>
-            <input type="text" class="form-control" id="newESName" name="name" placeholder="Nom de l'établissement" value="{{this.es.name}}" required>
+            <input type="text" class="form-control" id="newESName" name="name" placeholder="Nom de l'établissement"
+                   value="{{this.es.name}}" required>
           </div>
           <div class="form-group col-md-3">
             <label for="newESFinessEt">Finess ET</label>
-            <input type="text" class="form-control" id="newESFinessEt" name="finess_et" placeholder="Numéro Finess ET" value="{{this.es.finess_et}}" required>
+            <input type="text" class="form-control" id="newESFinessEt" name="finess_et" placeholder="Numéro Finess ET"
+                   value="{{this.es.finess_et}}" required>
           </div>
           <div class="form-group col-md-3">
             <label for="newESFinessEj">Finess EJ</label>
-            <input type="text" class="form-control" id="newESFinessEj" name="finess_ej" placeholder="Numéro Finess EJ" value="{{this.es.finess_ej}}">
+            <input type="text" class="form-control" id="newESFinessEj" name="finess_ej" placeholder="Numéro Finess EJ"
+                   value="{{this.es.finess_ej}}">
           </div>
           <div class="form-group col-md-3">
             <label for="newESSiret">Siret</label>
-            <input type="text" class="form-control" id="newESSiret" name="siret" placeholder="Numéro Siret" value="{{this.es.siret}}">
+            <input type="text" class="form-control" id="newESSiret" name="siret" placeholder="Numéro Siret"
+                   value="{{this.es.siret}}">
           </div>
           <div class="form-group col-md-2">
             <label for="newESAddressNum">Numéro d'adresse</label>
-            <input type="text" class="form-control" id="newESAddressNum" name="addr_num" placeholder="12" value="{{this.es.address_num}}" autocomplete="fckgooglechromeandhisbadautocompletesystem">
+            <input type="text" class="form-control" id="newESAddressNum" name="addr_num" placeholder="12"
+                   value="{{this.es.address_num}}" autocomplete="fckgooglechromeandhisbadautocompletesystem">
           </div>
           <div class="form-group col-md-2">
             <label for="newESAddressType">Type d'adresse</label>
-            <input type="text" class="form-control" id="newESAddressType" name="addr_type" placeholder="Avenue, Chemin, Rue, etc" value="{{this.es.address_type}}">
+            <input type="text" class="form-control" id="newESAddressType" name="addr_type"
+                   placeholder="Avenue, Chemin, Rue, etc" value="{{this.es.address_type}}">
           </div>
           <div class="form-group col-md-3">
             <label for="newESAddressName">Nom de l'adresse</label>
-            <input type="text" class="form-control" id="newESAddressName" name="addr_name" placeholder="De la liberté" value="{{this.es.address_name}}">
+            <input type="text" class="form-control" id="newESAddressName" name="addr_name" placeholder="De la liberté"
+                   value="{{this.es.address_name}}">
           </div>
           <div class="form-group col-md-3">
             <label for="newESAddressTown">Code postal et ville</label>
-            <input type="text" class="form-control" id="newESAddressTown" name="addr_town" placeholder="75000 PARIS" value="{{this.es.address_town}}" required>
+            <input type="text" class="form-control" id="newESAddressTown" name="addr_town" placeholder="75000 PARIS"
+                   value="{{this.es.address_town}}" required>
           </div>
           <div class="form-group col-md-2">
             <label for="newESPhone">Numéro de téléphone</label>
-            <input type="text" class="form-control" id="newESPhone" name="phone" placeholder="+331020304" value="+ {{this.es.phone}}">
+            <input type="text" class="form-control" id="newESPhone" name="phone" placeholder="+331020304"
+                   value="+ {{this.es.phone}}">
           </div>
           <div class="form-group col-md-2">
             <label for="salaries_count">Nombre d'employés</label>
@@ -74,7 +83,8 @@
         <div class="form-row">
           <div class="form-group col-md-3">
             <label for="newESContactName">Nom</label>
-            <input type="text" class="form-control" id="newESContactName" name="contactIdentity" placeholder="Jean Dupont">
+            <input type="text" class="form-control" id="newESContactName" name="contactIdentity"
+                   placeholder="Jean Dupont">
           </div>
           <div class="form-group col-md-3">
             <label for="newESContactPost">Poste</label>
@@ -82,7 +92,8 @@
           </div>
           <div class="form-group col-md-3">
             <label for="newESContactEmail">Email</label>
-            <input type="text" class="form-control" id="newESContactEmail" name="contactEmail" placeholder="jean.dupont@etablissement.org">
+            <input type="text" class="form-control" id="newESContactEmail" name="contactEmail"
+                   placeholder="jean.dupont@etablissement.org">
           </div>
           <div class="form-group col-md-3">
             <label for="newESContactPhone">Numéro de téléphone</label>
@@ -126,13 +137,13 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal">Annuler</button>
+  <button type="submit" class="btn btn-secondary float-left" data-dismiss="modal">Annuler</button>
   <button type="submit" id="createES{{this.es.id}}" class="btn btn-primary pull-right">Brancher l'établissement</button>
 </div>
 <script>
-  $('#createES{{this.es.id}}').click(function() {
+  $('#createES{{this.es.id}}').click(function () {
     let data = {};
-    $.each($('#createNewESForm').serializeArray(), function(_, kv) {
+    $.each($('#createNewESForm').serializeArray(), function (_, kv) {
       data[kv.name] = kv.value;
     });
     data.address = `${data.addr_num} ${data.addr_type} ${data.addr_name}`;

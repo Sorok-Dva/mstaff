@@ -1,0 +1,66 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label for="equipmentID"> Choisir une compétence  </label>
+    <select id="equipmentID" class="col-md-12" data-live-search="true">
+    </select>
+    <label for="postID"> Choisir un poste  </label>
+    <select id="postID" class="col-md-12" data-live-search="true">
+    </select>
+    <label for="serviceID"> Choisir un service service  </label>
+    <select id="serviceID" class="col-md-12" data-live-search="true">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" id="validateConfigEquipment"> Valider les modifications </button>
+</div>
+<script>
+  $(() => {
+    let serviceArray = [];
+    let postArray = [];
+    let equipmentArray = [];
+
+    $.get('/api/equipments/all', function (data) {
+      data.equipments.forEach(equipment => {
+        let equipmentObject = {};
+        equipmentObject.id = equipment.id;
+        equipmentObject.text = equipment.name;
+        equipmentArray.push(equipmentObject);
+      });
+      $('#equipmentID').empty().select2({
+        data: equipmentArray.sort(),
+        placeholder: "Compétence ?",
+        minimumResultsForSearch: Infinity
+      });
+      equipmentArray=[];
+    });
+    $.get('/api/services/all', function (data) {
+      data.services.forEach(service => {
+        let serviceObject = {};
+        serviceObject.id = service.id;
+        serviceObject.text = service.name;
+        serviceArray.push(serviceObject);
+      });
+      $('#serviceID').empty().select2({
+        data: serviceArray.sort(),
+        placeholder: "Service ?",
+        minimumResultsForSearch: Infinity
+      });
+      serviceArray=[];
+    });
+    $.get('/api/posts/all', function (data) {
+      data.posts.forEach(post => {
+        let postObject = {};
+        postObject.id = post.id;
+        postObject.text = post.name;
+        postArray.push(postObject);
+      });
+      $('#postID').empty().select2({
+        data: postArray.sort(),
+        placeholder: "Poste ?",
+        minimumResultsForSearch: Infinity
+      });
+      postArray=[];
+    });
+  });
+</script>

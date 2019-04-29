@@ -1,0 +1,119 @@
+<div class="col-md-12">
+  <div class="text-center" style="padding: 15px">
+    {{#if this.image}}<div style="padding: 15px;margin-top: -5%;"><img src="{{image}}" style="width: 45px;" /></div>{{/if}}
+    <b>{{breaklines this.title}}</b>
+  </div>
+  <hr style="width: 25%; border-color: dimgrey">
+  {{#if this.fromEs}}
+    {{#ifCond this.opts.type '===' 'NeedNotifyCandidate'}}
+      {{#if @root.opts.details}}
+        <div class="text-center" style="padding: 15px">
+          <h5>Pour quel poste ?</h5>
+          <span class="text-muted">
+            {{#if @root.opts.details.post}}
+              {{@root.opts.details.post}}
+            {{else}}
+              L'établissement n'a pas fourni cette information.
+            {{/if}}
+          </span>
+          <h5>Pour quel type de contrat ? </h5>
+          <span class="text-muted">
+            {{#if @root.opts.details.contract}}
+              {{@root.opts.details.contract}}
+            {{else}}
+              L'établissement n'a pas préciser de type de contrat.
+            {{/if}}
+          </span>
+          <span>
+            {{#if @root.opts.details.start}}à partir du {{date @root.opts.details.start 'DD/MM/YYYY'}}{{/if}}
+            {{#if @root.opts.details.end}} jusqu'au {{date @root.opts.details.end 'DD/MM/YYYY'}}{{/if}}
+          </span>
+        </div>
+      {{/if}}
+      {{#if @root.opts.message}}
+        <hr style="width: 25%; border-color: dimgrey">
+        <div class="text-center" style="padding: 15px">
+          <b>Message du recruteur</b><br>
+          <p>
+            {{breaklines @root.opts.message}}
+          </p>
+        </div>
+      {{/if}}
+    {{/ifCond}}
+    {{#ifCond this.opts.type '===' 'NeedNotifyClosedCandidate'}}
+      {{#if @root.opts.details}}
+        <div class="text-center" style="padding: 15px">
+          <span class="text-muted">{{@root.opts.details.post}}</span><br>
+          <span class="text-muted">
+            {{@root.opts.details.contract}}
+            {{#if @root.opts.details.start}}à partir du {{date @root.opts.details.start 'DD/MM/YYYY'}}{{/if}}
+            {{#if @root.opts.details.end}} jusqu'au {{date @root.opts.details.end 'DD/MM/YYYY'}}{{/if}}
+          </span>
+        </div>
+      {{/if}}
+        <div class="text-center" style="padding: 15px">
+          <b>Ne vous découragez pas ! 💪</b><br><br>
+          <a href="/applications" class="btn btn-success">Accéder à mes candidatures</a>
+        </div>
+    {{/ifCond}}
+    {{#ifCond this.opts.type '===' 'NeedNotifySelectedCandidate'}}
+      {{#if @root.opts.details}}
+        <div class="text-center" style="padding: 15px">
+          <span class="text-muted">{{@root.opts.details.post}}</span><br>
+          <span class="text-muted">
+            {{@root.opts.details.contract}}
+            {{#if @root.opts.details.start}}à partir du {{date @root.opts.details.start 'DD/MM/YYYY'}}{{/if}}
+            {{#if @root.opts.details.end}} jusqu'au {{date @root.opts.details.end 'DD/MM/YYYY'}}{{/if}}
+          </span>
+        </div>
+      {{/if}}
+    {{/ifCond}}
+  {{/if}}
+  {{#ifCond this.opts.type '===' 'ConferenceNotifyCandidate'}}
+    {{#if @root.opts.details}}
+      <div class="text-center" style="padding: 15px">
+        <h5>Quand ?</h5>
+        <span class="text-muted">
+          {{date @root.opts.details.conference.date 'dddd Do MMMM YYYY'}}
+          {{#if @root.opts.details.conference.time}}
+            à {{@root.opts.details.conference.time}}
+          {{/if}}
+        </span>
+        <h5>Où ?</h5>
+        <span class="text-muted">
+          {{#ifCond @root.opts.details.conference.type '===' 'online'}}
+            En ligne, depuis le lien visio <br>
+            <a href="https://meet.jit.si/mstaff-session-{{@root.opts.details.conference.key}}" target="_blank">https://meet.jit.si/mstaff-session-{{@root.opts.details.conference.key}}</a>
+          {{else}}
+            {{@root.opts.details.es.name}}<br>{{@root.opts.details.es.address}} {{@root.opts.details.es.town}}
+          {{/ifCond}}
+        </span>
+        <h5>Pour quel poste ?</h5>
+        <span class="text-muted">
+          {{@root.opts.details.need.post}}<br>
+          {{@root.opts.details.need.contract_type}}
+          {{#if @root.opts.details.need.start}}à partir du {{date @root.opts.details.need.start 'DD/MM/YYYY'}}{{/if}}
+          {{#if @root.opts.details.need.end}} jusqu'au {{date @root.opts.details.need.end 'DD/MM/YYYY'}}{{/if}}
+          </span>
+      </div>
+    {{/if}}
+    {{#if @root.opts.message}}
+      <hr style="width: 25%; border-color: dimgrey">
+      <div class="text-center" style="padding: 15px">
+        <b>Message du recruteur</b><br>
+        <p>
+          {{breaklines @root.opts.message}}
+        </p>
+      </div>
+    {{/if}}
+  {{/ifCond}}
+  {{#if this.opts.actions}}
+    <div class="text-center" style="padding: 15px">
+      {{#each this.opts.actions as |button| }}
+        <button class="btn btn-{{button.type}} notificationCTA" {{{button.dataAttr}}}>{{button.text}}</button>
+      {{/each}}
+      <script>
+      </script>
+    </div>
+  {{/if}}
+</div>

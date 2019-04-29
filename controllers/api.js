@@ -8,6 +8,26 @@ module.exports = {
       res.status(200).send({ skills });
     }).catch(error => next(new BackError(error)));
   },
+  getPostsList: (req, res, next) => {
+    Models.Post.findAll().then(posts => {
+      res.status(200).send({ posts });
+    }).catch(error => next(new BackError(error)));
+  },
+  getServicesList: (req, res, next) => {
+    Models.Service.findAll().then(services => {
+      res.status(200).send({ services });
+    }).catch(error => next(new BackError(error)));
+  },
+  getFormationList: (req, res, next) => {
+    Models.Formation.findAll().then(formations => {
+      res.status(200).send({ formations });
+    }).catch( error => next(new BackError(error)));
+  },
+  getQualificationList: (req, res, next) => {
+    Models.Qualification .findAll().then(qualifications => {
+      res.status(200).send({ qualifications });
+    }).catch( error => next(new BackError(error)));
+  },
   getGroupsList: (req, res, next) => {
     Models.Groups.findAll().then(groups => {
       res.status(200).send({ groups });
@@ -21,11 +41,6 @@ module.exports = {
   getSoftwaresList: (req, res, next) => {
     Models.Software.findAll().then(softwares => {
       res.status(200).send({ softwares });
-    }).catch(error => next(new BackError(error)));
-  },
-  getEstablishmentList: (req, res, next) => {
-    Models.Establishment.findAll().then(establishments => {
-      res.status(200).send({ establishments });
     }).catch(error => next(new BackError(error)));
   },
   getCategoriesList: (req, res, next) => {

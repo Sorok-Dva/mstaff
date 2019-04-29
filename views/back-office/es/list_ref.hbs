@@ -13,7 +13,8 @@
           <th data-field="address_town" data-sortable="true">Adresse</th>
           <th data-field="applications" data-sortable="true">Candidatures</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
-              data-formatter="operateFormatter">Actions</th>
+              data-formatter="operateFormatter">Actions
+          </th>
           </thead>
           <tbody>
           </tbody>
@@ -29,7 +30,7 @@
 
   let showEsInfo = id => {
     let _csrf = $('#csrfToken').val();
-    $.post(`/api/back-office/establishmentsReferences/info/${id}`, { _csrf } , data => {
+    $.post(`/api/back-office/establishmentsReferences/info/${id}`, {_csrf}, data => {
       createModal({
         id: 'viewESProfileModal',
         modal: 'back-office/viewESProfile',
@@ -43,7 +44,7 @@
 
   let addES = id => {
     let _csrf = $('#csrfToken').val();
-    $.post(`/api/back-office/establishmentsReferences/info/${id}/toCreate`, { _csrf } , data => {
+    $.post(`/api/back-office/establishmentsReferences/info/${id}/toCreate`, {_csrf}, data => {
       createModal({
         id: 'addESfromREFModal',
         modal: 'back-office/addESfromREF',
@@ -51,7 +52,8 @@
         style: 'width:80%',
         title: `Brancher l'établissement ${data.name} à Mstaff`,
         es: data
-      }, () => {});
+      }, () => {
+      });
     }).catch(error => errorsHandler(error));
   };
 
@@ -63,7 +65,7 @@
     })
   }
 
-  $(function() {
+  $(function () {
     $('.toolbar input').change(refreshTable)
   });
 
@@ -95,7 +97,13 @@
       url: '/api/back-office/establishmentsReferences',
       searchAlign: 'left',
       pageSize: 100,
-      pageList: [25,50,100,200,500],
+      showExport: true,
+      exportDataType: 'all',
+      exportOptions: {
+        fileName: 'mstaff-comptes-es',
+        ignoreColumn: ['actions']
+      },
+      pageList: [25, 50, 100, 200, 500],
       icons: {
         columns: 'fa fa-columns',
         detailOpen: 'fa fa-plus-circle',

@@ -32,15 +32,26 @@ Establishment.Select = (req, res, next) => {
     }
   }).then(esAccount => {
     if (_.isNil(esAccount)) return next(new BackError('Compte établissement introuvable.', httpStatus.NOT_FOUND));
-    req.session.currentEs = esAccount.es_id;
-    return res.redirect('/needs');
+    Models.User.findOne({ where: { id: req.user.id }, attributes: ['id', 'opts'] }).then(user => {
+      let { opts } = user;
+      if (_.isNil(opts)) opts = {};
+      if (!('currentEs' in opts)) opts.currentEs = esAccount.es_id;
+      else opts.currentEs = esAccount.es_id;
+      user.opts = opts;
+      user.save().then(result => {
+        return res.redirect('/candidates');
+      });
+    });
   }).catch(error => next(new BackError(error)));
 };
 
 Establishment.findBySubdomain = (req, res, next) => {
+  let term;
+  if (req.get('host') === 'postuler.croix-rouge.fr') term = 'postuler.crf';
+  else term = req.subdomains[0];
   Models.Establishment.findOne({
     where: {
-      domain_name: req.subdomains[0],
+      domain_name: term,
       domain_enable: true
     }
   }).then(es => {
