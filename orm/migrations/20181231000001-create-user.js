@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      oldId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -44,7 +48,6 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       role: {
         type: Sequelize.STRING,
