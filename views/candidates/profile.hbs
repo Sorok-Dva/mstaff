@@ -15,7 +15,7 @@
       <div class="image"></div>
       <div class="content">
         <div class="card-profile">
-          <div class="avatar avatar-xxl avatar-online" style="margin-top: -30px;">
+          <div class="avatar avatar-xxl avatar-online">
             <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle border-blue" alt="avatar">
           </div>
           <div class="rank-label-container">
@@ -41,7 +41,7 @@
             </label>
           </div>
         </div>
-        <p class="description text-center">
+        <p class="description text-center p-4">
           {{candidate.description}}
           <a href="/profile/edit"><i class="fa fa-pencil"></i></a>
         </p>
@@ -76,9 +76,9 @@
       <div class="card-header">
         <h4 class="card-title"><i class="fa fa-film" aria-hidden="true"></i> Vidéo de présentation</h4>
         {{#if candidate.video}}
-          <span id="removeVideo" class="btn btn-danger pull-right"><i class="fa fa-trash"></i></span>
+          <span id="removeVideo" class="col-3 btn btn-outline-danger"><i class="fal fa-trash"></i></span>
         {{else}}
-          <span id="removeVideo" style="display: none" class="btn btn-danger pull-rigt"><i class="fa fa-trash"></i></span>
+          <span id="removeVideo" style="display: none" class="col-3 btn btn-outline-danger"><i class="fal fa-trash"></i></span>
         {{/if}}
       </div>
       <div class="card-content text-center">
@@ -119,15 +119,21 @@
         </a>
       </div>
       <div class="card-content">
-        <ol>
-          {{#each candidate.wishes as |wish|}}
-            <li class="wish">
-              <h5>
-                <a href="/wish/edit/{{wish.id}}">{{wish.contract_type}} dans {{wish.es_count}} établissement(s)</a>
-              </h5>
-            </li>
-          {{/each}}
-        </ol>
+        {{#if candidate.wishes}}
+          <ol class="mt-3">
+            {{#each candidate.wishes as |wish|}}
+              <li class="wish">
+                <h5>
+                  <a href="/wish/edit/{{wish.id}}">{{wish.contract_type}} dans {{wish.es_count}} établissement(s)</a>
+                </h5>
+              </li>
+            {{/each}}
+          </ol>
+        {{else}}
+          <h3 class="text-center p-4">
+            Aucune donnée disponible.
+          </h3>
+        {{/if}}
       </div>
     </div>
     <div class="card">
@@ -138,15 +144,21 @@
         </a>
       </div>
       <div class="card-content">
-        <ul style="word-break: break-all;">
-          {{#each candidate.documents as |document|}}
-            <li>
-              <h5>
-                <a href="{{document.path}}">{{document.name}}</a>
-              </h5>
-            </li>
-          {{/each}}
-        </ul>
+        {{#if candidate.documents}}
+          <ul style="word-break: break-all;">
+            {{#each candidate.documents as |document|}}
+              <li>
+                <h5>
+                  <a href="{{document.path}}">{{document.name}}</a>
+                </h5>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+            <h3 class="text-center p-4">
+              Aucune donnée disponible.
+            </h3>
+        {{/if}}
       </div>
     </div>
   </div>
@@ -159,7 +171,7 @@
         </a>
       </div>
       <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th>Date</th>
@@ -205,7 +217,7 @@
         </a>
       </div>
       <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th style="width:25%"><i class="fa fa-book" aria-hidden="true"></i> Diplômes</th>
@@ -231,7 +243,7 @@
           </tbody>
         </table>
         {{#if candidate.qualifications}}
-          <table class="table table-hover">
+          <table class="table table-hover mb-0">
             <thead>
             <tr class="info">
               <th style="width:25%"><i class="fa fa-book" aria-hidden="true"></i> Diplômes complémentaires</th>
@@ -263,7 +275,7 @@
         </a>
       </div>
       <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th style="width:80%"><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</th>
@@ -299,7 +311,7 @@
           {{/if}}
           </tbody>
         </table>
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th style="width:80%"><i class="fa fa-stethoscope" aria-hidden="true"></i> Matériels et produits</th>
@@ -335,7 +347,7 @@
           {{/if}}
           </tbody>
         </table>
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th style="width:80%"><i class="fa fa-floppy-o" aria-hidden="true"></i> Logiciels</th>
