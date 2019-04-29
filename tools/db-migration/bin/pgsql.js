@@ -11,7 +11,7 @@ const config = {
   port: 5433,
   max: 10, // max number of clients in the pool
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 30000,
 };
 
 exports.connect = (done) => {
@@ -24,7 +24,10 @@ exports.get = (statements, cb) => {
   let { pool } = state;
   if (!pool) return cb(new Error('Missing database connection.'));
   pool.connect((err, client, done) => {
-    if (err) console.log(err);
+    if (err) {
+      console.log(err);
+      return false;
+    }
     client.query(statements, (err, res) => {
       done();
       if (err) return cb(err);

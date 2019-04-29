@@ -33,7 +33,6 @@ pgsql.connect(err => {
 
 mysql.get('mstaff', (err, con) => {
   let migrate = {};
-  let establishments = [];
 
   migrate.users = () => {
     log('GET PgSQL Users Data ("utilisateur" table)');
@@ -46,6 +45,7 @@ mysql.get('mstaff', (err, con) => {
         users.rows.forEach((user, i) => {
           let UserData = {
             id: user.id,
+            oldId: user.id,
             email: user.email,
             password: user.password,
             type: userType(user.type),
@@ -70,25 +70,8 @@ mysql.get('mstaff', (err, con) => {
                 }
               });
             })
-          } else if (userType(user.type) === 'es') {
-            delete UserData.id;
-            con.query('INSERT INTO Users SET ?', UserData, (err, userRes) => {
-              if (err) {
-                if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage)
-                else console.log(err);
-              } else {
-                console.log(establishments.find((data) => data.oldId === user.es_id).id);
-                if (_.isNil(establishments.find((data) => data.oldId === user.es_id).id)) {
-                  migrate.searchAndMigrateES(user.es_id, () => {
-                    migrate.createESAccount(user.es_id, userRes.insertId);
-                  });
-                } else {
-                  migrate.createESAccount(user.es_id, userRes.insertId);
-                }
-              }
-            });
           } else {
-            con.query('INSERT INTO Users SET ?', UserData)
+            con.query('INSERT INTO Users SET ?', UserData);
           }
         });
       });
@@ -115,68 +98,11 @@ mysql.get('mstaff', (err, con) => {
     });
   };
 
-  migrate.searchAndMigrateES = (es_id, callback) => {
-    establishments.push(es_id);
-    log(`GET PgSQL Establishment Data ("etablissement" table) of es id ${es_id}`);
-    pgsql.get({
-      name: 'get-es', text: 'SELECT * FROM etablissement WHERE id = $1', values: [es_id]
-    }, (err, res) => {
-      let es = res.rows[0];
-      if (_.isNil(es)) return false;
-      let esData = {
-        name: es.nom,
-        finess: es.numero_finess || '-',
-        sector: es.secteur,
-        salaries_count: es.nb_employes,
-        status: es.status,
-        phone: es.telephone || '-',
-        url: es.url,
-        address: es.adresse,
-        town: `${es.code_postal} ${es.ville}`,
-        contact_identity: es.contacts,
-        logo: es.logo,
-        domain_name: es.domain_name,
-        domain_enable: es.domain_enable,
-        createdAt: es.created_at || new Date(),
-        updatedAt: es.updated_at || new Date(),
-      };
-
-      con.query('INSERT INTO Establishments SET ?', esData, (err, esRes) => {
-        if (err) {
-          if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage);
-          console.log(err);
-        } else {
-          establishments[es_id] = { id: esRes.insertId, oldId: es_id };
-          return callback();
-        }
-      });
-    });
-  };
-
-  migrate.createESAccount = (es_id, user_id, callback) => {
-    establishments.push(es_id);
-    let esAcc = {
-      user_id,
-      es_id: establishments.find((data) => data.oldId === es_id).id,
-      role: 'User',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    con.query('INSERT INTO ESAccounts SET ?', esAcc, (err, esAccRes) => {
-      if (err) {
-        if (err.code === 'ER_DUP_ENTRY') console.log('[DUPLICATION] ', err.sqlMessage);
-        console.log(err);
-      } else {
-        console.log(`ESAccount added for user ${user_id} in es ${establishments.find((data) => data.oldId === es_id).id}`);
-      }
-    });
-  };
-
   migrate.insertCandidate = (candidat, userRes, callback) => {
     let candidate = candidat.rows[0];
     let CandidateData = {
       user_id: userRes.insertId,
+      oldId: candidate.id,
       description: candidate.description,
       photo: candidate.photo,
       video: candidate.video,
