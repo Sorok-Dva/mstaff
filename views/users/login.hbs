@@ -1,75 +1,67 @@
-<div class="row align-items-center justify-content-center">
-  <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+<div class="container-fluid">
+  <div class="row align-items-center justify-content-center">
+    <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
 
-    <!-- Heading -->
-    <h1 class="display-4 text-center mb-3">
-      Connexion
-    </h1>
-
-    <!-- Subheading -->
-    <p class="text-muted text-center mb-5">
-      Connectez-vous à votre espace Mstaff
-    </p>
-
-    <!-- Form -->
-    <form action="/login" method="post">
-      <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
-
-      <!-- Email address -->
-      <div class="form-group">
-        <!-- Label -->
-        <label>{{tr.pages.login.form_email_label}}</label>
-        <!-- Input -->
-        <input type="email" class="form-control" name="username" placeholder="{{tr.pages.login.form_email_ph}}">
-      </div>
-
-      <!-- Password -->
-      <div class="form-group">
-        <div class="row">
-          <div class="col">
-            <!-- Label -->
-            <label>{{tr.pages.login.form_password_label}}</label>
-          </div>
-          <div class="col-auto">
-            <!-- Help text -->
-            <a href="password-reset-cover.html" class="form-text small text-muted">
-              Mot de passe oublié ?
-            </a>
-          </div>
-        </div> <!-- / .row -->
-        <!-- Input group -->
-        <div class="input-group input-group-merge">
-          <!-- Input -->
-          <input type="password" class="form-control form-control-appended" name="password"
-                 placeholder="{{tr.pages.login.form_password_ph}}">
-          <!-- Icon -->
-          <div class="input-group-append">
-            <span class="input-group-text">
-              <i class="fe fe-eye"></i>
-            </span>
-          </div>
-        </div>
-      </div>
-      <!-- Submit -->
-      <button class="btn btn-lg btn-block btn-primary mb-3">
+      <!-- Heading -->
+      <h1 class="display-4 text-center mb-3">
         Connexion
-      </button>
+      </h1>
 
-      <!-- Link -->
-      <p class="text-center">
-        <small class="text-muted text-center">
-          Vous n'avez pas encore de compte ? <a href="/register">S'inscrire</a>.
-        </small>
+      <!-- Subheading -->
+      <p class="text-muted text-center mb-5">
+        Connectez-vous à votre espace Mstaff
       </p>
 
-    </form>
+      <!-- Form -->
+      <form action="/login" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
 
-  </div>
-  <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+        <!-- Email address -->
+        <div class="form-group">
+          <!-- Label -->
+          <label>{{tr.pages.login.form_email_label}}</label>
+          <!-- Input -->
+          <input type="email" class="form-control" name="username" placeholder="{{tr.pages.login.form_email_ph}}">
+        </div>
 
-    <!-- Image -->
-    <div class="bg-cover vh-100 mt-n1 mr-n3"
-         style="background-image: url(/static/assets/images/BG02.jpg);"></div>
+        <!-- Password -->
+        <div class="form-group">
+          <div class="row">
+            <div class="col">
+              <!-- Label -->
+              <label>{{tr.pages.login.form_password_label}}</label>
+            </div>
+            <div class="col-auto">
+              <!-- Help text -->
+              <a href="/reset/password" class="form-text small text-muted">
+                Mot de passe oublié ?
+              </a>
+            </div>
+          </div> <!-- / .row -->
+          <!-- Input group -->
+          <div class="form-group">
+            <!-- Input -->
+            <input type="password" class="form-control form-control-appended" name="password"
+                   placeholder="{{tr.pages.login.form_password_ph}}">
+          </div>
+        </div>
+        <!-- Submit -->
+        <button class="btn btn-lg btn-block btn-primary mb-3">
+          Connexion
+        </button>
 
+        <!-- Link -->
+        <p class="text-center">
+          <small class="text-muted text-center">
+            Vous n'avez pas encore de compte ? <a href="/register">S'inscrire</a>.
+          </small>
+        </p>
+      </form>
+    </div>
+    <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+      <!-- Image -->
+      <div class="bg-cover vh-100 mt-n1 mr-n3"
+           style="background-image: url(/static/assets/images/BG02.jpg);"></div>
+    </div>
   </div>
 </div>
