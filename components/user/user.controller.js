@@ -100,6 +100,22 @@ User.ValidateAccount = (req, res, next) => {
   }
 };
 
+User.sendResetPassword = (req, res, next) => {
+  Models.User.findOne({
+    where: { email: req.body.email },
+    attributes: ['id', 'firstName', 'lastName', 'email', 'key']
+  }).then(user => {
+    if (!_.isNil(user)) {
+      if (_.isNil(user.key)) {
+        user.key = crypto.randomBytes(20).toString('hex');
+        user.save();
+      }
+      Mailer.Main.sendUserResetPasswordLink(user);
+    }
+    return res.render('users/resetPasswordLink-send', { layout: 'onepage' })
+  })
+};
+
 User.resetPassword = (req, res, next) => {
   const errors = validationResult(req);
   let { password } = req.body;
@@ -168,6 +184,7 @@ User.changePassword = (req, res, next) => {
     });
   })
 };
+
 /**
  * [API] Verify Email Availability Method
  * @param req
