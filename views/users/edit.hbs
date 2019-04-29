@@ -44,9 +44,15 @@
             <span class="input-group-btn">
               <span class="btn btn-default btn-file">
                 <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="{{avatar_field}}">
+                <script>
+                  mytruc = () => {
+                    let test = $('input#imgInp').files[0];
+                    console.log(test);
+                  }
+                  </script>
               </span>
             </span>
-            <button type="submit" class="btn btn-primary" style="display:none"> Valider </button>
+            <button type="button" class="btn btn-primary" onclick="mytruc()" style=""> Valider </button>
           </form>
           <h4 class="title">{{usr.firstName}} {{usr.lastName}}<br/>
           </h4>

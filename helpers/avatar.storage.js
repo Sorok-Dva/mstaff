@@ -92,10 +92,10 @@ let AvatarStorage = function (options) {
     let filename = this._generateRandomFilename();
     let mime = Jimp.MIME_PNG;
     let clone = image.clone();
-    let width = clone.bitmap.width;
-    let height = clone.bitmap.height;
+    let { width } = clone.bitmap;
+    let { height } = clone.bitmap;
     let square = Math.min(width, height);
-    let threshold = this.options.threshold;
+    let { threshold } = this.options;
 
     switch (this.options.output) {
       case 'jpg':
@@ -184,7 +184,7 @@ let AvatarStorage = function (options) {
   AvatarStorage.prototype._removeFile = function (req, file, cb) {
 
     let matches, pathsplit;
-    let filename = file.filename;
+    let { filename } = file;
     let _path = path.join(this.uploadPath, filename);
     let paths = [];
 
