@@ -4,6 +4,8 @@ let application = {};
 let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1, skillId: 1};
 let toNextModal = false;
 let allPosts, allServices, allDiplomas, allQualifications, allSkills;
+let iti;
+
 
 
 let initApplication = () => {
@@ -393,7 +395,7 @@ let atsEditSkill = (id) => {
   $('#skill').val(skills[i].skill).trigger('keyup');
   starsSelector(`star${skills[i].stars}`);
 };
-8
+
 let atsDeleteSkill = (id) => {
   resetForm('skill');
   permissions.editMode = false;
@@ -679,6 +681,13 @@ let verifyDatas = (modal) => {
       let stars = starsSelected() > 0 ? true : notify('noStars')
       return (skill && stars);
       break;
+    case 'identityModal':
+      let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
+      let mail = $('#identityMail').val();
+      let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
+      console.log(iti.getSelectedCountryData());
+      return (false);
+      break;
   }
 };
 
@@ -826,6 +835,22 @@ let notify = (error) => {
         type: 'danger',
         title: 'Informations manquantes :',
         message: `Merci de noter votre compétence.`
+      });
+      break;
+    case 'wrongMailFormat':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de saisir un mail valide, exemple : identifiant@domain.xxx .`
+      });
+      break;
+    case 'wrongPhoneFormat':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de saisir un numéro de téléphone valide.`
       });
       break;
   }
@@ -1079,6 +1104,30 @@ let skillModalListener = () => {
 
 };
 
+let identityModalListener = () => {
+  $('#identityModal').on('hide.bs.modal', () => toPreviousModal('identityModal', 'skillModal'));
+
+  $('#toStep9').on('click', () => {
+    if (verifyDatas('identityModal')){
+      saveDatas('identityModal');
+      loadModal('identityModal','recapModal');
+    }
+  });
+
+  let input = document.querySelector("#identityPhone");
+  iti = intlTelInput(input, {
+    utilsScript: '/static/assets/js/utils.js',
+    preferredCountries: ["fr", "gb", "us"],
+    initialCountry: "auto",
+    geoIpLookup: function(success, failure) {
+      $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+        let countryCode = (resp && resp.country) ? resp.country : "";
+        success(countryCode);
+      });
+    },
+  });
+};
+
 $(document).ready(function () {
   initApplication().then( () => {
     mainModalListener();
@@ -1089,5 +1138,6 @@ $(document).ready(function () {
     diplomaModalListener();
     qualificationModalListener();
     skillModalListener();
+    identityModalListener();
   });
 });
