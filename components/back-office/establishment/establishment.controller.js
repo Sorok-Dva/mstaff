@@ -64,6 +64,7 @@ BackOffice_Establishment.Edit = (req, res, next) => {
       if (_.isNil(es)) return next();
       es.update({
         name: req.body.name,
+        category: req.body.category,
         finess_ej: req.body.finess_ej,
         siret: req.body.siret,
         phone: req.body.phone,

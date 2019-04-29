@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Establishment = sequelize.define('Establishment', {
     name: DataTypes.STRING,
+    category: DataTypes.STRING,
     finess: DataTypes.STRING,
     finess_ej: DataTypes.STRING,
     siret: DataTypes.STRING,
