@@ -5,6 +5,8 @@ const { Env } = require('../helpers/helpers');
 
 const debug = require('debug')('error'); // eslint-disable-line no-unused-vars
 
+let layout = 'onepage';
+
 const getStatus = (err) => {
   // if (err.code === MULTER_ERROR_CODE_MAX_FILE_UPLOAD) return httpStatus.REQUEST_ENTITY_TOO_LARGE;
   return err.status;
@@ -15,7 +17,7 @@ const sendError = (req, res, status, err) => {
   err.status = status;
   if (Env.current === 'production' || Env.current === 'pre-prod') delete err.stack;
   if (req.xhr) return res.status(status).json(err);
-  else return res.status(status).render('error', { error: err });
+  else return res.status(status).render('error', { layout, error: err });
 };
 
 module.exports = {
