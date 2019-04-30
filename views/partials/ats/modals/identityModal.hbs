@@ -28,12 +28,23 @@
   }
   .password-indicator{
     width: 75%;
+    height: 25%;
     color: white;
+  }
+  .password-indicator ul{
+    display: none;
   }
   .password-indicator li{
     text-align: start;
     list-style-type: disc;
-    font-size: 1.2em;
+    font-size: 1.4em;
+    font-weight: bold;
+  }
+  .bad-rule{
+    color:red;
+  }
+  .good-rule{
+    color: greenyellow;
   }
 </style>
 
@@ -86,10 +97,10 @@
             </form>
             <div class="password-indicator">
               <ul>
-                <li>Minimum 8 caractères</li>
-                <li>Au moins une majuscule</li>
-                <li>Au moins un caractère spécial</li>
-                <li>Au moins un chiffre</li>
+                <li id="length" class="bad-rule">Minimum 8 caractères</li>
+                <li id="uppercase" class="bad-rule">Au moins une majuscule</li>
+                <li id="symbol" class="bad-rule">Au moins un caractère spécial (!@#$%^&*)</li>
+                <li id="number" class="bad-rule">Au moins un chiffre</li>
               </ul>
             </div>
             <div class="next-modal">

@@ -417,6 +417,20 @@ let togglePasswordVisibility = () => {
   }
 };
 
+let displayIndicator = () => {
+  let password = $('#identityPassword').val();
+  let rules = [
+    { Pattern: '[A-Z]', Target: 'uppercase' },
+    { Pattern: '[0-9]', Target: 'number' },
+    { Pattern: '[!@#$%^&*]', Target: 'symbol' }
+    ];
+
+  $('#length').removeClass('bad-rule good-rule').addClass(password.length < 8 ? 'bad-rule' : 'good-rule');
+  for (let i = 0; i < rules.length; i++) {
+    $('#' + rules[i].Target).removeClass('bad-rule good-rule').addClass(new RegExp(rules[i].Pattern).test(password) ? 'good-rule' : 'bad-rule');
+  }
+};
+
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
 
 let loadModal = (current, target) => {
@@ -1153,13 +1167,6 @@ let skillModalListener = () => {
 let identityModalListener = () => {
   $('#identityModal').on('hide.bs.modal', () => toPreviousModal('identityModal', 'skillModal'));
 
-  $('#toStep9').on('click', () => {
-    if (verifyDatas('identityModal')){
-      saveDatas('identityModal');
-      loadModal('identityModal','recapModal');
-    }
-  });
-
   let input = document.querySelector("#identityPhone");
   iti = intlTelInput(input, {
     utilsScript: '/static/assets/js/utils.js',
@@ -1172,6 +1179,26 @@ let identityModalListener = () => {
       });
     },
   });
+
+  let password = $('#identityPassword');
+  let passwordIndicator = $('.password-indicator ul');
+  password.on('focus', () => {
+    passwordIndicator.css('display', 'block');
+  });
+  password.on('blur', () => {
+    passwordIndicator.css('display', 'none');
+  });
+  password.on('keyup', () => {
+    displayIndicator();
+  });
+
+  $('#toStep9').on('click', () => {
+    if (verifyDatas('identityModal')){
+      saveDatas('identityModal');
+      loadModal('identityModal','recapModal');
+    }
+  });
+
 };
 
 $(document).ready(function () {
