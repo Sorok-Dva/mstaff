@@ -33,7 +33,6 @@ User.create = (req, res, next) => {
       }
     });
   }
-  let usr;
   bcrypt.hash(password, 10).then(hash => {
     Models.User.create({
       firstName: req.body.firstName,
@@ -49,8 +48,7 @@ User.create = (req, res, next) => {
       type: 'candidate',
       key: crypto.randomBytes(20).toString('hex')
     }).then(user => {
-      usr = user;
-      return Models.Candidate.create({
+      Models.Candidate.create({
         user_id: user.id,
         percentage: {
           profile: {
@@ -64,10 +62,10 @@ User.create = (req, res, next) => {
           total: user.firstName && user.lastName && user.phone && user.town ? 20 : 0
         },
         es_id: esId || null
-      })
-    }).then(candidate => {
-      Mailer.sendUserVerificationEmail(usr);
-      res.redirect('login');
+      }).then(candidate => {
+        Mailer.Main.sendUserVerificationEmail(user);
+        return res.redirect('login');
+      }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
     }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
   });
 };
