@@ -1,6 +1,6 @@
 let postsArray = [], servicesArray = [], diplomaArray = [], qualificationArray = [], skillArray = [];
 let experiences = [], diplomas = [], qualifications = [], skills = [];
-let application = {};
+let application = {}, identity = {};
 let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1, skillId: 1};
 let toNextModal = false;
 let allPosts, allServices, allDiplomas, allQualifications, allSkills;
@@ -176,43 +176,64 @@ let addToDatasRecap = (customTitle, item, postfix) => {
   $(`<div class="recap-item" data-id="${item.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
 };
 
+let generateContratRecap = (current) => {
+  addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
+};
+
+let generateExperienceRecap = (current) => {
+  generateContratRecap(current);
+  addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
+};
+
+let generateDiplomaRecap = (current) => {
+  generateExperienceRecap(current);
+  let color = experiences.length > 0 ? 'green' : 'grey';
+  addToGlobalRecap('Expériences', color, current, 'experienceModal');
+};
+
+let generateQualificationRecap = (current) => {
+  generateDiplomaRecap(current);
+  let color = diplomas.length > 0 ? 'green' : 'grey';
+  addToGlobalRecap('Formations', color, current, 'diplomaModal');
+};
+
+let generateSkillRecap = (current) => {
+  generateQualificationRecap(current);
+  let color = qualifications.length > 0 ? 'green' : 'grey';
+  addToGlobalRecap('Diplômes', color, current, 'qualificationModal');
+};
+
+let generateFinalRecap = (current) => {
+  generateSkillRecap(current);
+  let color = skills.length > 0 ? 'green' : 'grey';
+  addToGlobalRecap('Compétences', color, current, 'skillModal');
+  color = !$.isEmptyObject(identity) ? 'green' : 'grey';
+  addToGlobalRecap('Coordonnées', color, current, 'identityModal');
+};
+
 let generateGlobalRecap = (current) => {
   let currentParaph = $(`#${current}.recap > p`)
   currentParaph.first().show();
   currentParaph.last().html('Votre récap');
   $('.recap-item').remove();
-  let color = null;
   switch (current) {
     case 'contractModal':
-      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
+      generateContratRecap(current);
       break;
     case 'experienceModal':
-      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
-      addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
+      generateExperienceRecap(current);
       break;
     case 'diplomaModal':
-      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
-      addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
-      color = experiences.length > 0 ? 'green' : 'grey';
-      addToGlobalRecap('Expériences', color, current, 'experienceModal');
+      generateDiplomaRecap(current);
       break;
     case 'qualificationModal':
-      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
-      addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
-      color = experiences.length > 0 ? 'green' : 'grey';
-      addToGlobalRecap('Expériences', color, current, 'experienceModal');
-      color = diplomas.length > 0 ? 'green' : 'grey';
-      addToGlobalRecap('Formations', color, current, 'diplomaModal');
+      generateQualificationRecap(current);
       break;
     case 'skillModal':
-      addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
-      addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
-      color = experiences.length > 0 ? 'green' : 'grey';
-      addToGlobalRecap('Expériences', color, current, 'experienceModal');
-      color = diplomas.length > 0 ? 'green' : 'grey';
-      addToGlobalRecap('Formations', color, current, 'diplomaModal');
-      color = qualifications.length > 0 ? 'green' : 'grey';
-      addToGlobalRecap('Diplômes', color, current, 'qualificationModal');
+      generateSkillRecap(current);
+      break;
+    case 'recapModal':
+      generateFinalRecap(current);
       break;
   }
 };
@@ -426,16 +447,14 @@ let displayIndicator = () => {
     ];
 
   $('#length').removeClass('bad-rule good-rule').addClass(password.length < 8 ? 'bad-rule' : 'good-rule');
-  for (let i = 0; i < rules.length; i++) {
-    $('#' + rules[i].Target).removeClass('bad-rule good-rule').addClass(new RegExp(rules[i].Pattern).test(password) ? 'good-rule' : 'bad-rule');
-  }
+  rules.forEach( rule => {
+    $('#' + rule.Target).removeClass('bad-rule good-rule').addClass(new RegExp(rule.Pattern).test(password) ? 'good-rule' : 'bad-rule');
+  });
 };
 
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
 
 let loadModal = (current, target) => {
-  console.log(application);
-  console.log(experiences);
   toNextModal = true;
   $(`#${current}`).modal('hide');
   $(`#${target}`).modal('show');
@@ -444,16 +463,11 @@ let loadModal = (current, target) => {
 };
 
 let loadClearModal = (target) => {
-  console.log('clear');
   generateGlobalRecap(target);
   switch (target) {
     case 'postModal':
       if (postsArray.length === 0)
         createPostsList(allPosts, $('#InputPosts'));
-      break;
-    case 'contractModal':
-      break;
-    case 'timeModal':
       break;
     case 'experienceModal':
       createPostsList(allPosts, $('#xpPost'));
@@ -467,14 +481,11 @@ let loadClearModal = (target) => {
     case 'skillModal':
       createSkillList(allSkills, $('#skill'));
       break;
-    case 'identityModal':
-      break;
   }
 
 };
 
 let loadEditModal = (target) => {
-  console.log('hasDatas');
   generateDatasRecap(target);
   switch (target) {
     case 'postModal':
@@ -521,6 +532,9 @@ let hasDatas = (modal) => {
       break;
     case 'identityModal':
       break;
+    case 'recapModal':
+      break;
+
   }
 };
 
@@ -593,6 +607,12 @@ let saveDatas = (modal) => {
       skills.push(current);
       break;
     case 'identityModal':
+      identity.forename = $('#identityForename').val();
+      identity.name = $('#identityName').val();
+      identity.phone = iti.getNumber();
+      identity.localisation = iti.getSelectedCountryData().name;
+      identity.mail = $('#identityMail').val();
+      identity.password = $('#identityPassword').val();
       break;
   }
 };
@@ -708,24 +728,19 @@ let verifyDatas = (modal) => {
     case 'identityModal':
       let forename = $('#identityForename').val();
       let name = $('#identityName').val();
-      let phoneNumber = iti.getNumber();
-      let localisation = iti.getSelectedCountryData().name;
       let mail = $('#identityMail').val();
       let password = $('#identityPassword').val();
-
-      console.log(password);
-
       let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
       let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
+      let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
       let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
       let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
-      let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
-      return (isValidForename && isValidName && isValidMail && isValidPhone) ;
+      let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
+      let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
+      return (isValidForename && isValidName && isValidMail && isValidPhone && isValidPassword) ;
       break;
   }
 };
-
-
 
 let notify = (error) => {
   switch(error) {
@@ -913,12 +928,18 @@ let notify = (error) => {
         message: `Merci de saisir un numéro de téléphone valide.`
       });
       break;
+    case 'wrongPasswordFormat':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de saisir un password valide.`
+      });
+      break;
   }
   return false;
 
 };
-
-
 
 // LISTENERS ---------------------------------------------------------------------------------------
 
@@ -1168,6 +1189,9 @@ let identityModalListener = () => {
   $('#identityModal').on('hide.bs.modal', () => toPreviousModal('identityModal', 'skillModal'));
 
   let input = document.querySelector("#identityPhone");
+  let password = $('#identityPassword');
+  let passwordIndicator = $('.password-indicator ul');
+
   iti = intlTelInput(input, {
     utilsScript: '/static/assets/js/utils.js',
     preferredCountries: ["fr", "gb", "us"],
@@ -1180,15 +1204,11 @@ let identityModalListener = () => {
     },
   });
 
-  let password = $('#identityPassword');
-  let passwordIndicator = $('.password-indicator ul');
   password.on('focus', () => {
     passwordIndicator.css('display', 'block');
-  });
-  password.on('blur', () => {
+  }).on('blur', () => {
     passwordIndicator.css('display', 'none');
-  });
-  password.on('keyup', () => {
+  }).on('keyup', () => {
     displayIndicator();
   });
 
@@ -1199,6 +1219,10 @@ let identityModalListener = () => {
     }
   });
 
+};
+
+let recapModalListener = () => {
+  $('#recapModal').on('hide.bs.modal', () => toPreviousModal('recapModal', 'identityModal'));
 };
 
 $(document).ready(function () {
@@ -1212,5 +1236,6 @@ $(document).ready(function () {
     qualificationModalListener();
     skillModalListener();
     identityModalListener();
+    recapModalListener();
   });
 });

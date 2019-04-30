@@ -1,0 +1,55 @@
+<style>
+  .inputsIdentity {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .inputsIdentity > div{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+</style>
+
+<div class="modal customModal" id="recapModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body container-fluid">
+        <div class="row text-center">
+          <div class="col-sm-4 leftPart">
+            <div>
+              <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
+            </div>
+            <div>
+              <p>Un récapitulif de votre <b>parcours</b>.</p>
+            </div>
+            <div class="footer-left">
+              <div>
+                <img src="/static/assets/images/logo-step7.jpg" alt="Mstaff">
+              </div>
+              <div class="footer-left-p">
+                <div>
+                  <p>"Plus qu'un petit clic !"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8 rightPart">
+            <div class="recap">
+              <p>Pas encore d'expérience ? Pas de problème, <b id="emptyRecap" class="emptyStep">passez cette étape <i class="fal fa-long-arrow-right"></i></b></p>
+              <p>Votre récap</p>
+            </div>
+            <div class="next-modal">
+              <i id="toStep9" class="fal fa-arrow-circle-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
