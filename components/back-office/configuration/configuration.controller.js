@@ -140,4 +140,15 @@ BackOffice_Configuration.RemoveEquipment = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+BackOffice_Configuration.ViewCategories = (req, res, next) => {
+  return Models.MstaffCategories.findAll().then(categories => {
+    res.render('back-office/configuration/category', {
+      layout,
+      title: 'Configuration des catégories mstaff',
+      categories,
+      a: { main: 'configuration', sub: 'categoryconfig' },
+    })
+  });
+};
+
 module.exports = BackOffice_Configuration;

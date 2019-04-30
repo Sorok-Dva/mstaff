@@ -1,0 +1,110 @@
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+        </div>
+        <table id="categories-table" class="table">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="name" data-sortable="true">Nom</th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions
+          </th>
+          </thead>
+          <tbody>
+          {{#each categories as |category|}}
+            <tr data-id="{{category.id}}">
+              <td></td>
+              <td>{{category.id}}</td>
+              <td>{{category.name}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let table = $('#categories-table');
+
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Edit" class="btn btn-simple btn-info btn-icon table-action edit" href="javascript:void(0)">',
+      '<i class="ti-link"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .edit': (e, value, row, index) => {
+        createModal({
+          id: 'editCategoryModal',
+          title: 'Liaison de catégories Mstaff',
+          modal: 'back-office/linkCategory'
+        }, () => {
+          $('button#btnEditCategory').click(function () {
+            if ($('input#categoryValueEdit').val() != '') {
+              let _csrf = $('#csrfToken').val();
+              let promptInput = $('input#categoryValueEdit').val();
+              $.put(`/api/back-office/references/categories/${row.id}`, {
+                promptInput,
+                _csrf
+              }, () => {
+                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                $('#editCategoryModal').modal('hide');
+                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Compétence modifiée.',
+                  message: ``
+                });
+              });
+            } else {
+              if ($('input#categoryValueEdit').val() == '') {
+                $('input#categoryValueEdit').addClass('error');
+                setTimeout(function () {
+                  $('input#categoryValueEdit').removeClass('error');
+                }, 750)
+              }
+            }
+          });
+        });
+      },
+    };
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10, 25, 50, 100, 200, 500],
+      formatRecordsPerPage: (pageNumber) => {
+        return pageNumber + " rows visible";
+      },
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
+    });
+
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+</script>

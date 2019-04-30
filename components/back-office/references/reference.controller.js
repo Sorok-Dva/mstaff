@@ -19,6 +19,18 @@ BackOffice_References.View = (req, res, next) => {
   });
 };
 
+BackOffice_References.ViewCategories = (req, res, next) => {
+  return Models.MstaffCategories.findAll().then(categories => {
+    res.render('back-office/references/categories', {
+      layout,
+      title: 'Catégories mstaff',
+      categories,
+      a: { main: 'references', sub: 'categories' },
+    })
+  });
+};
+
+
 BackOffice_References.Add = (req, res, next) => {
   let model = req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
@@ -35,6 +47,24 @@ BackOffice_References.Add = (req, res, next) => {
       return res.status(200).json({ status: 'Created', reference });
     } else {
       return res.status(200).json({ status: 'Already exists', reference });
+    }
+  })
+};
+
+BackOffice_References.AddCategory = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+  return Models.MstaffCategories.findOrCreate({
+    where: {
+      name: req.body.promptInput
+    }
+  }).spread((category, created) => {
+    if (created) {
+      return res.status(200).json({ status: 'Created', category });
+    } else {
+      return res.status(200).json({ status: 'Already exists', category });
     }
   })
 };
