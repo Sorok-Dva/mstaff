@@ -19,7 +19,7 @@ Establishment.ViewAccounts = (req, res, next) => {
       required: true
     }
   }).then(esAccounts => {
-    res.render('establishments/selectEs', { esAccounts });
+    res.render('establishments/selectEs', { esAccounts, a: { main: 'selectEs' } });
   }).catch(error => next(new BackError(error)));
 };
 
