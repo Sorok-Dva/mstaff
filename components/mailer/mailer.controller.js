@@ -20,6 +20,19 @@ Mailer.sendUserVerificationEmail = (user) => {
   });
 };
 
+Mailer.sendUserResetPasswordLink = (user) => {
+  let mailObject = {};
+  mailObject.subject = 'Réinitialisation de votre mot de passe Mstaff.';
+  mailObject.template = 'user/resetPasswordLink';
+  mailer.sendEmail({
+    to: user.email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context: { user }
+  });
+};
+
+
 Mailer.notifyCandidatesNeedClosed = (email, context) => {
   let mailObject = {
     subject: 'Besoin clôturé !',
