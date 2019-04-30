@@ -9,7 +9,7 @@ let ValidatePassword = function () {
     Pattern: '[0-9]',
     Target: 'number'
   }, {
-    Pattern: '[!@@#$%^&*]',
+    Pattern: '[!@#$%^&*]',
     Target: 'symbol'
   }];
 
