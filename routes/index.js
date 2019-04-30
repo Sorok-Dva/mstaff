@@ -52,6 +52,7 @@ router.get('/register/:esCode?',
 router.get('/validate/:key',
   Authentication.ensureIsNotAuthenticated,
   User.Main.ValidateAccount);
+
 router.get('/new/password/:key',
   Authentication.ensureIsNotAuthenticated,
   Render.View.resetPassword)
@@ -75,6 +76,18 @@ router.get('/demo/register',
 router.get('/logout',
   Authentication.ensureAuthenticated,
   Render.View.Logout);
+
+/**
+ * @Route('/reset/password') GET + POST;
+ * Reset Password
+ */
+router.get('/reset/password',
+  Authentication.ensureIsNotAuthenticated,
+  Render.View.ResetPassword)
+  .post('/reset/password',
+    Authentication.ensureIsNotAuthenticated,
+    HTTPValidation.UserController.ApiVerifyEmailAvailability,
+    User.Main.sendResetPassword);
 
 /**
  * @Route('/404') GET;
