@@ -7,7 +7,6 @@ let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 let iti;
 
 
-
 let initApplication = () => {
   return new Promise( resolve => {
     application.fullTime = false;
@@ -407,6 +406,17 @@ let atsDeleteSkill = (id) => {
   }
 };
 
+// IDENTITY-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
+
+let togglePasswordVisibility = () => {
+  let x = document.getElementById("identityPassword");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+};
+
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
 
 let loadModal = (current, target) => {
@@ -682,14 +692,26 @@ let verifyDatas = (modal) => {
       return (skill && stars);
       break;
     case 'identityModal':
-      let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
+      let forename = $('#identityForename').val();
+      let name = $('#identityName').val();
+      let phoneNumber = iti.getNumber();
+      let localisation = iti.getSelectedCountryData().name;
       let mail = $('#identityMail').val();
+      let password = $('#identityPassword').val();
+
+      console.log(password);
+
+      let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
+      let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
+      let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
       let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
-      console.log(iti.getSelectedCountryData());
-      return (false);
+      let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
+      return (isValidForename && isValidName && isValidMail && isValidPhone) ;
       break;
   }
 };
+
+
 
 let notify = (error) => {
   switch(error) {
@@ -835,6 +857,30 @@ let notify = (error) => {
         type: 'danger',
         title: 'Informations manquantes :',
         message: `Merci de noter votre compétence.`
+      });
+      break;
+    case 'noForename':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer votre prénom.`
+      });
+      break;
+    case 'noName':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer votre nom.`
+      });
+      break;
+    case 'wrongPhoneNumber':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de saisir un numéro de téléphone valide.`
       });
       break;
     case 'wrongMailFormat':

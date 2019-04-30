@@ -13,7 +13,6 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    margin: 5%;
   }
 
   .iti-flag {background-image: url("static/assets/images/telinput/flags.png");}
@@ -26,6 +25,15 @@
   }
   .intl-tel-input .country-list{
     background-color: rgba(0,0,0,0.8);
+  }
+  .password-indicator{
+    width: 75%;
+    color: white;
+  }
+  .password-indicator li{
+    text-align: start;
+    list-style-type: disc;
+    font-size: 1.2em;
   }
 </style>
 
@@ -65,9 +73,6 @@
                   <input class="xpInput" id="identityName" placeholder="Votre nom ?">
                 </div>
                 <div class="input-holder">
-                  <input class="xpInput" id="identityCountry" placeholder="Votre localisation ?">
-                </div>
-                <div class="input-holder">
                   <input class="xpInput" id="identityPhone" type="tel" placeholder="Votre numéro de téléphone ?">
                 </div>
                 <div class="input-holder">
@@ -75,9 +80,18 @@
                 </div>
                 <div class="input-holder">
                   <input class="xpInput" id="identityPassword" type="password" placeholder="Saisissez un mot de passe">
+                  <i class="fal fa-low-vision" onclick="togglePasswordVisibility()"></i>
                 </div>
               </div>
             </form>
+            <div class="password-indicator">
+              <ul>
+                <li>Minimum 8 caractères</li>
+                <li>Au moins une majuscule</li>
+                <li>Au moins un caractère spécial</li>
+                <li>Au moins un chiffre</li>
+              </ul>
+            </div>
             <div class="next-modal">
               <i id="toStep9" class="fal fa-arrow-circle-right"></i>
             </div>
