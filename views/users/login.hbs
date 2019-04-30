@@ -12,6 +12,8 @@
         Connectez-vous à votre espace Mstaff
       </p>
 
+      {{> flash}}
+
       <!-- Form -->
       <form action="/login" method="post">
         <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
