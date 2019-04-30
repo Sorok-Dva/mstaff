@@ -64,7 +64,7 @@ User.create = (req, res, next) => {
         es_id: esId || null
       }).then(candidate => {
         Mailer.Main.sendUserVerificationEmail(user);
-        return res.redirect('login');
+        return res.render('users/register-email-send', { layout: 'onepage' });
       }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
     }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
   });
