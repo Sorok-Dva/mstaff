@@ -1,7 +1,7 @@
 const __ = process.cwd();
 const { validationResult } = require('express-validator/check');
 const { BackError } = require(`${__}/helpers/back.error`);
-const { Candidate } = require(`./candidate/candidate.controller`);
+const Candidate = require(`./candidate/candidate.controller`);
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -73,12 +73,12 @@ User.create = (req, res, next) => {
 User.ValidateAccount = (req, res, next) => {
   if (req.params.key) {
     Models.User.findOne({
-      where: { key: req.params.key }
+      where: { key: req.params.key, validated: false }
     }).then(user => {
       if (_.isNil(user)) {
-        req.flash('error_msg', 'Clé de validation invalide.');
-        return res.render('/', { layout: 'landing' });
+        return next(new BackError('Clé de validation invalide ou compte déjà validé.', 403));
       }
+      user.key = crypto.randomBytes(20).toString('hex');
       user.validated = true;
       user.save().then(result => {
         req.flash('success_msg', 'Compte validé avec succès. Vous pouvez désormais vous connecter.');
@@ -90,6 +90,7 @@ User.ValidateAccount = (req, res, next) => {
         });
         Candidate.updatePercentage(user, 'identity');
         req.logIn(user, (err) => !_.isNil(err) ? next(new BackError(err)) : null);
+        res.render('users/account-validated', { layout: 'onepage' });
       })
     });
   } else {
