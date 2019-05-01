@@ -451,12 +451,17 @@ let generateFinalRecap = () => {
   let xp = $('#finalExperience div > i');
   let diploma = $('#finalDiploma div > i');
   let qualif = $('#finalQualification div > i');
-  xp.removeClass('final-green', 'final-grey');
-  diploma.removeClass('final-green', 'final-grey');
-  qualif.removeClass('final-green', 'final-grey');
+  let skill = $('#finalSkill div > i');
+
+  xp.removeClass('final-green final-grey');
+  diploma.removeClass('final-green final-grey');
+  qualif.removeClass('final-green final-grey');
+  skill.removeClass('final-green final-grey');
+
   experiences.length > 0 ? xp.addClass('final-green') : xp.addClass('final-grey');
   diplomas.length > 0 ? diploma.addClass('final-green') : diploma.addClass('final-grey');
   qualifications.length > 0 ? qualif.addClass('final-green') : qualif.addClass('final-grey');
+  skills.length > 0 ? skill.addClass('final-green') : skill.addClass('final-grey');
 };
 
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
@@ -544,7 +549,6 @@ let hasDatas = (modal) => {
       break;
     case 'recapModal':
       break;
-
   }
 };
 
