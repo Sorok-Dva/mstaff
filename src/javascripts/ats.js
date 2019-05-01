@@ -103,7 +103,7 @@ let createServicesSelect = (services, input) => {
   input.empty().select2({
     data: services.sort(),
     placeholder: "Service(s) ?",
-    minimumInputLength: 3,
+    minimumInputLength: 1,
     minimumResultsForSearch: Infinity
   });
 };

@@ -29,8 +29,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    min-height: 7vh;
-    max-height: 7vh;
+    min-height: 4vh;
+    max-height: 25vh;
     overflow-y: scroll;
   }
   .select2-results__option[aria-selected]{
@@ -88,12 +88,14 @@
   }
   .post-holder{
     font-size: 2em;
+    height: 10%;
   }
-  /*.input-holder > i{*/
-    /*font-size: 2.2em;*/
-    /*color: white;*/
-    /*margin-right: 5%;*/
-  /*}*/
+  .select-holder{
+    height: 10%;
+  }
+  .select-holder > select{
+    display: none;
+  }
 
   #InputPosts{
     width: 75%;
@@ -106,15 +108,8 @@
     color: white;
   }
 
-  .select-holder{
-    height: 8vh;
-  }
-  .select-holder > div{
-    display: none;
-  }
-  
   #InputServices{
-    display: none;
+    /*display: none;*/
     width: 75%;
     height: 100%;
     background-color: #00aced;
@@ -166,9 +161,7 @@
                 <input class="customInput" id="InputPosts" placeholder="Poste ?">
               </div>
               <div class="select-holder">
-                <div>
-                  <select id="InputServices"  multiple="multiple"></select>
-                </div>
+                  <select id="InputServices" multiple="multiple"></select>
               </div>
             </div>
             <div class="next-modal">
