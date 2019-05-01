@@ -82,8 +82,7 @@
         <h5>Où ?</h5>
         <span class="text-muted">
           {{#ifCond @root.opts.details.conference.type '===' 'online'}}
-            En ligne, depuis le lien visio <br>
-            <a href="https://meet.jit.si/mstaff-session-{{@root.opts.details.conference.key}}" target="_blank">https://meet.jit.si/mstaff-session-{{@root.opts.details.conference.key}}</a>
+            En ligne, vous aurez accès au lien 15 minutes avant le début de l'entretien depuis la page "Mes entretiens". <br>
           {{else}}
             {{@root.opts.details.es.name}}<br>{{@root.opts.details.es.address}} {{@root.opts.details.es.town}}
           {{/ifCond}}
