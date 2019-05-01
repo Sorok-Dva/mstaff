@@ -46,7 +46,6 @@
       '</div>',
     ].join('');
   };
-
   $(document).ready(() => {
     window.operateEvents = {
       'click .edit': (e, value, row, index) => {
@@ -164,8 +163,8 @@
               table.bootstrapTable('insertRow', {
                 index: 0,
                 row: {
-                  id: response.reference.id,
-                  name: response.reference.name
+                  id: response.category.id,
+                  name: response.category.name
                 }
               });
               notification({

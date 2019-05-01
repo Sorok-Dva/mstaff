@@ -72,6 +72,10 @@ router.post('/configuration/skills/',
     Authentication.ensureIsAdmin,
     BackOffice.Configuration.RemoveSkill);
 
+router.put('/configuration/category/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Configuration.LinkCategory);
+
 router.post('/configuration/equipments/',
   Authentication.ensureIsAdmin,
   BackOffice.Configuration.AddEquipment)

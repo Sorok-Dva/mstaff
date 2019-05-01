@@ -1,6 +1,5 @@
-<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
-
+<!--<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css" rel="stylesheet">-->
+<!--<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>-->
 <div class="row">
   <div class="col-md-12">
     <div class="card">
@@ -9,7 +8,6 @@
         </div>
         <table id="categories-table" class="table">
           <thead>
-          <th data-field="state" data-checkbox="true"></th>
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
@@ -19,7 +17,6 @@
           <tbody>
           {{#each categories as |category|}}
             <tr data-id="{{category.id}}">
-              <td></td>
               <td>{{category.id}}</td>
               <td>{{category.name}}</td>
               <td></td>
@@ -33,7 +30,7 @@
 </div>
 <script type="text/javascript">
   let table = $('#categories-table');
-
+  let optionjson = {{{json categories}}};
   operateFormatter = (value, row, index) => {
     return [
       '<div class="table-icons">',
@@ -48,36 +45,40 @@
     window.operateEvents = {
       'click .edit': (e, value, row, index) => {
         createModal({
-          id: 'editCategoryModal',
+          id: 'linkCategoryModal',
           title: 'Liaison de catégories Mstaff',
-          modal: 'back-office/linkCategory'
+          modal: 'back-office/linkCategory',
+          row: row.id
         }, () => {
-          $('button#btnEditCategory').click(function () {
-            if ($('input#categoryValueEdit').val() != '') {
-              let _csrf = $('#csrfToken').val();
-              let promptInput = $('input#categoryValueEdit').val();
-              $.put(`/api/back-office/references/categories/${row.id}`, {
-                promptInput,
-                _csrf
-              }, () => {
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                $('#editCategoryModal').modal('hide');
-                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
-                notification({
-                  icon: 'check-circle',
-                  type: 'success',
-                  title: 'Compétence modifiée.',
-                  message: ``
-                });
+          $('button#validateCategory').click(function () {
+            let _csrf = $('#csrfToken').val();
+            let medical = $("#medicalToggle").prop("checked") ? 1 : 0;
+            let paramedical = $("#paramedicalToggle").prop("checked") ? 1 : 0;
+            let administrative = $("#administrativeToggle").prop("checked") ? 1 : 0;
+            let liberal = $("#liberalToggle").prop("checked") ? 1 : 0;
+            let contract = $("#contractToggle").prop("checked") ? 1 : 0;
+            let vacation = $("#vacationToggle").prop("checked") ? 1 : 0;
+            let internship = $("#internshipToggle").prop("checked") ? 1 : 0;
+            let service = $("#serviceToggle").prop("checked") ? 1 : 0;
+            $.put(`/api/back-office/configuration/category/${row.id}`, {
+              medical,
+              paramedical,
+              administrative,
+              liberal,
+              contract,
+              vacation,
+              internship,
+              service,
+              _csrf
+            }, () => {
+              $('#linkCategoryModal').modal('hide');
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'configuration modifiée.',
+                message: ``
               });
-            } else {
-              if ($('input#categoryValueEdit').val() == '') {
-                $('input#categoryValueEdit').addClass('error');
-                setTimeout(function () {
-                  $('input#categoryValueEdit').removeClass('error');
-                }, 750)
-              }
-            }
+            });
           });
         });
       },
@@ -101,7 +102,6 @@
         detailClose: 'ti-close'
       }
     });
-
     //activate the tooltips after the data table is initialized
     $('[rel="tooltip"]').tooltip();
 
@@ -109,4 +109,6 @@
       table.bootstrapTable('resetView');
     });
   });
+
+  let i = 0;
 </script>
