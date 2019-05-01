@@ -695,7 +695,7 @@ let verifyDatas = (modal) => {
       return notify('noStartDate');
       break;
     case 'diplomaModal':
-      let diploma = diplomaArray.includes($('#diploma').val()) ? true : notify('noDiploma');
+      let diploma = !$.isEmptyObject($('#diploma').val()) ? true : notify('noDiploma');
       let diplomaStart = $('#diplomaStart').data("DateTimePicker").date();
       let diplomaEnd = $('#diplomaEnd').data("DateTimePicker").date();
       if (diplomaStart !== null){
@@ -708,7 +708,7 @@ let verifyDatas = (modal) => {
       return notify('noStartDate');
       break;
     case 'qualificationModal':
-      let qualification = qualificationArray.includes($('#qualification').val()) ? true : notify('noQualification');
+      let qualification = !$.isEmptyObject($('#qualification').val()) ? true : notify('noQualification');
       let qualificationStart = $('#qualificationStart').data("DateTimePicker").date();
       let qualificationEnd = $('#qualificationEnd').data("DateTimePicker").date();
       if (qualificationStart !== null){
@@ -721,7 +721,7 @@ let verifyDatas = (modal) => {
       return notify('noStartDate');
       break;
     case 'skillModal':
-      let skill = skillArray.includes($('#skill').val()) ? true : notify('noSkill');
+      let skill = !$.isEmptyObject($('#skill').val()) ? true : notify('noSkill');
       let stars = starsSelected() > 0 ? true : notify('noStars')
       return (skill && stars);
       break;
@@ -861,7 +861,7 @@ let notify = (error) => {
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer une formation valide.`
+        message: `Merci d'indiquer une formation.`
       });
       break;
     case 'noQualification':
@@ -869,7 +869,7 @@ let notify = (error) => {
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer un diplôme valide.`
+        message: `Merci d'indiquer un diplôme.`
       });
       break;
     case 'noSkill':
@@ -877,7 +877,7 @@ let notify = (error) => {
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer une compétence valide.`
+        message: `Merci d'indiquer une compétence.`
       });
       break;
     case 'noStars':
