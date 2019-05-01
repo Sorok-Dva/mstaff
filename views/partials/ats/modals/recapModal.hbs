@@ -6,7 +6,6 @@
     flex-direction: column;
     align-items: center;
     color: white;
-    padding: 5%;
   }
   .finalRecap-title{
     font-size: 1.5em;
@@ -44,19 +43,14 @@
     font-size: 1.1em;
     color: white;
   }
-  .finalRecap-button{
-    flex-grow: 1;
+  .finalRecap-next{
+    width: 100%;
+    font-size: 2.2em;
+    color: white;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 50%;
-  }
-  .finalRecap-button button{
-    font-size: 1.5em;
-    background-color: #0ECEA4;
-  }
-  .finalRecap-text{
-    width: 50%;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-grow: 1;
   }
   .final-green{
     color: #0ECEA4;
@@ -114,21 +108,21 @@
                 <div class="finalRecap-item" id="finalExperience">
                   <span>Expériences</span>
                   <div>
-                    <i class="fas fa-check-circle center-icon"></i>
+                    <i class="fas fa-check-circle final-grey center-icon"></i>
                     <button class="btn" onclick="loadModal('recapModal','experienceModal')"><i class="fal fa-edit"></i></button>
                   </div>
                 </div>
                 <div class="finalRecap-item" id="finalDiploma">
                   <span>Formations</span>
                   <div>
-                    <i class="fas fa-check-circle center-icon"></i>
+                    <i class="fas fa-check-circle final-grey center-icon"></i>
                     <button class="btn" onclick="loadModal('recapModal','diplomaModal')"><i class="fal fa-edit"></i></button>
                   </div>
                 </div>
                 <div class="finalRecap-item" id="finalQualification">
                   <span>Diplômes</span>
                   <div>
-                    <i class="fas fa-check-circle center-icon"></i>
+                    <i class="fas fa-check-circle final-grey center-icon"></i>
                     <button class="btn" onclick="loadModal('recapModal','qualificationModal')"><i class="fal fa-edit"></i></button>
                   </div>
                 </div>
@@ -140,11 +134,8 @@
                   </div>
                 </div>
               </div>
-              <div class="finalRecap-button">
-                <button type="button" class="btn btn-success">Confirmer et Publier mon profil</button>
-              </div>
-              <div class="finalRecap-text">
-                <span>En cliquant sur le bouton ci-dessus, j'accepte les Conditions Générales d'Utilisation et autorise la société Mstaff à publier mon profil auprès des établissements de santé.</span>
+              <div class="finalRecap-next">
+                <i id="toStep10" class="fal fa-arrow-circle-right"></i>
               </div>
             </div>
           </div>

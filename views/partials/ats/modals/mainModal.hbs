@@ -99,8 +99,6 @@
     padding: 10px 15px;
     margin-top: 5%;
   }
-
-
   .footer-left{
     flex-direction: row;
     display: flex;
@@ -116,6 +114,7 @@
     flex-direction: column;
     display: flex;
     justify-content: center;
+    flex-grow: 1;
   }
   input::-webkit-input-placeholder{
     color: #e6e6e6;
@@ -156,7 +155,7 @@
             </div>
             <div class="paraph">
               <p>Déjà inscrit ?</p>
-              <button class="btn btn-success">Se connecter à mon espace candidat</button>
+              <button class="btn btn-success" onclick="$(location).attr('href', 'https://v2.mstaff.co/login');">Se connecter à mon espace candidat</button>
             </div>
           </div>
         </div>

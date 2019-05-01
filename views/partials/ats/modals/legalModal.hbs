@@ -1,0 +1,76 @@
+<style>
+  .final-button{
+    height: 7%;
+    flex-grow: 1;
+  }
+  .final-button button{
+    font-size: 1.5em;
+    background-color: #0ECEA4;
+    display: none;
+  }
+  .final-text{
+    width: 65%;
+    height: 100%;
+    flex-grow: 9;
+    font-size: 1.7em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  .text-item{
+    background-color: rgba(0,0,0,0.4);
+    padding: 5%;
+    border-radius: 25px;
+  }
+</style>
+
+<div class="modal customModal" id="legalModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body container-fluid">
+        <div class="row text-center">
+          <div class="col-sm-4 leftPart">
+            <div>
+              <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
+            </div>
+            <div>
+              <p>Conformité RGPD</p>
+            </div>
+            <div class="footer-left">
+              <div>
+                <img src="/static/assets/images/logo-step7.jpg" alt="Mstaff">
+              </div>
+              <div class="footer-left-p">
+                <div>
+                  <p>"Ne lisez pas et cliquez !"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8 rightPart">
+            <div class="finalRecap">
+              <div class="final-text">
+                <div class="text-item">
+                  <div>
+                    En cochant cette case,  j'accepte les Conditions Générales d'Utilisation et autorise la société Mstaff à publier mon profil auprès des établissements de santé.
+                  </div>
+                    <input id="legal-first" type="checkbox" name="legalFirst">
+                </div>
+                <div class="text-item">
+                  <div>
+                    En cochant cette case, j'accepte que mon profil soit visible auprès des établissements sélectionnés lors de ma création de souhaits de candidature. Les établissements pourront imprimer et partager ma candidature. Mstaff s'engage à ne pas utiliser vos informations à des fins commerciales.
+                  </div>
+                  <input id="legal-second" type="checkbox" name="legalSecond">
+                </div>
+              </div>
+              <div class="final-button">
+                <button type="button" class="btn btn-success" onclick="finalize()">Confirmer et Publier mon profil
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

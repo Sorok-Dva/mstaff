@@ -951,6 +951,16 @@ let notify = (error) => {
 
 };
 
+let finalize = () => {
+  //TODO
+  console.log(application);
+  console.log(experiences);
+  console.log(diplomas);
+  console.log(qualifications);
+  console.log(skills);
+  console.log(identity);
+};
+
 // LISTENERS ---------------------------------------------------------------------------------------
 
 let mainModalListener = () => {
@@ -1233,6 +1243,27 @@ let identityModalListener = () => {
 
 let recapModalListener = () => {
   $('#recapModal').on('hide.bs.modal', () => toPreviousModal('recapModal', 'identityModal'));
+
+  $('#toStep10').on('click', () => loadModal('recapModal','legalModal'));
+};
+
+let legalModalListener = () => {
+  $('#legalModal').on('hide.bs.modal', () => toPreviousModal('legalModal', 'recapModal'));
+
+  $('.final-text input').bootstrapToggle({
+    on: '',
+    off: '',
+    onstyle: 'success',
+    offstyle: 'secondary',
+    size: 'lg'
+  }).change( () => {
+    let first = $('#legal-first').prop('checked');
+    let second = $('#legal-second').prop('checked');
+    let button = $('.final-button button');
+    (first && second) ? button.show() : button.hide();
+  });
+
+
 };
 
 $(document).ready(function () {
@@ -1247,5 +1278,6 @@ $(document).ready(function () {
     skillModalListener();
     identityModalListener();
     recapModalListener();
+    legalModalListener();
   });
 });
