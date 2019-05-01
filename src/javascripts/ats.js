@@ -9,6 +9,8 @@ let iti;
 
 let initApplication = () => {
   return new Promise( resolve => {
+    application.post = false;
+    application.contractType = false;
     application.fullTime = false;
     application.partTime = false;
     application.dayTime = false;
@@ -177,12 +179,14 @@ let addToDatasRecap = (customTitle, item, postfix) => {
 };
 
 let generateContratRecap = (current) => {
-  addToGlobalRecap('A quel poste ?', 'green', current, 'postModal');
+  let color = application.post ? 'green' : 'grey';
+  addToGlobalRecap('A quel poste ?', color, current, 'postModal');
 };
 
 let generateExperienceRecap = (current) => {
   generateContratRecap(current);
-  addToGlobalRecap('Quel type de contract ?', 'green', current, 'contractModal');
+  let color = application.contractType ? 'green' : 'grey';
+  addToGlobalRecap('Quel type de contract ?', color, current, 'contractModal');
 };
 
 let generateDiplomaRecap = (current) => {
@@ -201,14 +205,6 @@ let generateSkillRecap = (current) => {
   generateQualificationRecap(current);
   let color = qualifications.length > 0 ? 'green' : 'grey';
   addToGlobalRecap('Diplômes', color, current, 'qualificationModal');
-};
-
-let generateFinalRecap = (current) => {
-  generateSkillRecap(current);
-  let color = skills.length > 0 ? 'green' : 'grey';
-  addToGlobalRecap('Compétences', color, current, 'skillModal');
-  color = !$.isEmptyObject(identity) ? 'green' : 'grey';
-  addToGlobalRecap('Coordonnées', color, current, 'identityModal');
 };
 
 let generateGlobalRecap = (current) => {
@@ -231,9 +227,6 @@ let generateGlobalRecap = (current) => {
       break;
     case 'skillModal':
       generateSkillRecap(current);
-      break;
-    case 'recapModal':
-      generateFinalRecap(current);
       break;
   }
 };
@@ -452,6 +445,20 @@ let displayIndicator = () => {
   });
 };
 
+// RECAP-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
+
+let generateFinalRecap = () => {
+  let xp = $('#finalExperience div > i');
+  let diploma = $('#finalDiploma div > i');
+  let qualif = $('#finalQualification div > i');
+  xp.removeClass('final-green', 'final-grey');
+  diploma.removeClass('final-green', 'final-grey');
+  qualif.removeClass('final-green', 'final-grey');
+  experiences.length > 0 ? xp.addClass('final-green') : xp.addClass('final-grey');
+  diplomas.length > 0 ? diploma.addClass('final-green') : diploma.addClass('final-grey');
+  qualifications.length > 0 ? qualif.addClass('final-green') : qualif.addClass('final-grey');
+};
+
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
 
 let loadModal = (current, target) => {
@@ -480,6 +487,9 @@ let loadClearModal = (target) => {
       break;
     case 'skillModal':
       createSkillList(allSkills, $('#skill'));
+      break;
+    case 'recapModal':
+      generateFinalRecap();
       break;
   }
 

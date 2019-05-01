@@ -1,19 +1,70 @@
 <style>
-  .inputsIdentity {
+  .finalRecap {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: white;
+    padding: 5%;
   }
-  .inputsIdentity > div{
-    width: 100%;
-    height: 100%;
+  .finalRecap-title{
+    font-size: 1.5em;
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
+    flex-grow: 1;
+  }
+  .finalRecap-modal{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+    font-size: 1.5em;
+    border-bottom: 1px solid;
     justify-content: space-evenly;
+    border-top: 1px solid;
+    width: 50%;
+  }
+  .finalRecap-item{
+    width: 100%;
+    display: flex;
+  }
+  .finalRecap-item span{
+    flex-grow: 7;
+    text-align: left;
+  }
+  .finalRecap-item div{
+    flex-grow: 3;
+    display: flex;
+    justify-content: flex-end;
     align-items: center;
   }
+  .finalRecap-item div button{
+    font-size: 1.1em;
+    color: white;
+  }
+  .finalRecap-button{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+  }
+  .finalRecap-button button{
+    font-size: 1.5em;
+    background-color: #0ECEA4;
+  }
+  .finalRecap-text{
+    width: 50%;
+  }
+  .final-green{
+    color: #0ECEA4;
+  }
+  .final-grey{
+    color: grey;
+  }
+
 </style>
 
 <div class="modal customModal" id="recapModal" tabindex="-1" role="dialog">
@@ -40,12 +91,61 @@
             </div>
           </div>
           <div class="col-sm-8 rightPart">
-            <div class="recap">
-              <p></p>
-              <p>Votre récap</p>
-            </div>
-            <div class="next-modal">
-              <i id="toStep9" class="fal fa-arrow-circle-right"></i>
+            <div class="finalRecap">
+              <div class="finalRecap-title">
+                <div>Vérifiez vos informations ou modifiez-les si besoin.</div>
+                <div>Votre récap</div>
+              </div>
+              <div class="finalRecap-modal">
+                <div class="finalRecap-item">
+                  <span>Poste</span>
+                  <div>
+                    <i class="fas fa-check-circle final-green center-icon"></i>
+                    <button class="btn" onclick="loadModal('recapModal','postModal')"><i class="fal fa-edit"></i></button>
+                  </div>
+                </div>
+                <div class="finalRecap-item">
+                  <span>Type de contrat</span>
+                  <div>
+                    <i class="fas fa-check-circle final-green center-icon"></i>
+                    <button class="btn" onclick="loadModal('recapModal','contractModal')"><i class="fal fa-edit"></i></button>
+                  </div>
+                </div>
+                <div class="finalRecap-item" id="finalExperience">
+                  <span>Expériences</span>
+                  <div>
+                    <i class="fas fa-check-circle center-icon"></i>
+                    <button class="btn" onclick="loadModal('recapModal','experienceModal')"><i class="fal fa-edit"></i></button>
+                  </div>
+                </div>
+                <div class="finalRecap-item" id="finalDiploma">
+                  <span>Formations</span>
+                  <div>
+                    <i class="fas fa-check-circle center-icon"></i>
+                    <button class="btn" onclick="loadModal('recapModal','diplomaModal')"><i class="fal fa-edit"></i></button>
+                  </div>
+                </div>
+                <div class="finalRecap-item" id="finalQualification">
+                  <span>Diplômes</span>
+                  <div>
+                    <i class="fas fa-check-circle center-icon"></i>
+                    <button class="btn" onclick="loadModal('recapModal','qualificationModal')"><i class="fal fa-edit"></i></button>
+                  </div>
+                </div>
+                <div class="finalRecap-item">
+                  <span>Coordonnées</span>
+                  <div>
+                    <i class="fas fa-check-circle final-green center-icon"></i>
+                    <button class="btn" onclick="loadModal('recapModal','identityModal')"><i class="fal fa-edit"></i></button>
+                  </div>
+                </div>
+              </div>
+              <div class="finalRecap-button">
+                <button type="button" class="btn btn-success">Confirmer et Publier mon profil</button>
+              </div>
+              <div class="finalRecap-text">
+                <span>En cliquant sur le bouton ci-dessus, j'accepte les Conditions Générales d'Utilisation et autorise la société Mstaff à publier mon profil auprès des établissements de santé.</span>
+              </div>
             </div>
           </div>
         </div>
