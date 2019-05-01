@@ -22,6 +22,7 @@
   "dependencies": {
     "@sentry/node": "^4.6.6",
     "bcryptjs": "*",
+    "bootstrap-toggle": "^2.2.2",
     "chalk": "^2.4.2",
     "compression": "^1.7.4",
     "concat-stream": "^2.0.0",

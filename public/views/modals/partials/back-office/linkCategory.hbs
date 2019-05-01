@@ -1,34 +1,52 @@
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
 <div class="modal-body">
   <div class="form-group">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" data-toggle="toggle">
-        Médical
-      </label>
-    </div>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" data-toggle="toggle">
-        Paramédical
-      </label>
-    </div>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" data-toggle="toggle">
-        Administratif et technique
-      </label>
-    </div>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" data-toggle="toggle">
-        Libéral
-      </label>
+    <div class="categoryOptions">
+      <div class="categoryOption">
+        <p>Médical</p>
+          <input id="medicalToggle" type="checkbox" name="medical">
+      </div>
+      <div class="categoryOption">
+        <p>Paramédical</p>
+          <input id="paramedicalToggle" type="checkbox" name="paramedical">
+      </div>
+      <div class="categoryOption">
+        <p>Administratif et technique</p>
+          <input id="administrativeToggle" type="checkbox" name="administrative">
+      </div>
+      <div class="categoryOption">
+        <p>Libéral</p>
+          <input id="liberalToggle" type="checkbox" name="liberal" >
+      </div>
+      <div class="categoryOption">
+        <p>CDI/CDD</p>
+          <input id="contractToggle" type="checkbox" name="contract" >
+      </div>
+      <div class="categoryOption">
+        <p> Vacations </p>
+          <input id="vacationToggle" type="checkbox" name="vacation" >
+      </div>
+      <div class="categoryOption">
+        <p>Stages</p>
+          <input id="internshipToggle" type="checkbox" name="internship" >
+      </div>
+      <div class="categoryOption">
+        <p>Bouton "Services"</p>
+          <input id="serviceToggle" type="checkbox" name="service">
+      </div>
     </div>
   </div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" id="validateCategory"> Valider les modifications </button>
 </div>
+<script>
+  $(document).ready(function () {
+    $('.categoryOptions input').bootstrapToggle({
+      on: '',
+      off: '',
+      onstyle: 'success',
+      offstyle: 'secondary',
+      size: 'md'
+    });
+  });
+</script>
