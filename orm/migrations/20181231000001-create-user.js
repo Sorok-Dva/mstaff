@@ -48,6 +48,7 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING,
+        allowNull: true
       },
       role: {
         type: Sequelize.STRING,

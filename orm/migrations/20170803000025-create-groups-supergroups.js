@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      oldId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       id_group: {
         type: Sequelize.INTEGER,
         references: {
