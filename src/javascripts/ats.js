@@ -955,8 +955,9 @@ let notify = (error) => {
 
 };
 
-let finalize = () => {
+let finalize = (es_finess) => {
   //TODO
+  console.log(es_finess);
   console.log(application);
   console.log(experiences);
   console.log(diplomas);
@@ -1086,6 +1087,7 @@ let experienceModalListener = () => {
     useCurrent: false,
     ignoreReadonly: true,
     maxDate: moment().startOf('day'),
+    widgetPositioning: {vertical: 'top'}
   });
 
   $('#xpPost').on( 'keyup autocompleteclose', () => {
@@ -1134,6 +1136,7 @@ let diplomaModalListener = () => {
     useCurrent: false,
     ignoreReadonly: true,
     maxDate: moment().startOf('day'),
+    widgetPositioning: {vertical: 'top'}
   });
 
   $('#saveDiploma').on('click', () => {
@@ -1163,6 +1166,7 @@ let qualificationModalListener = () => {
     useCurrent: false,
     ignoreReadonly: true,
     maxDate: moment().startOf('day'),
+    widgetPositioning: {vertical: 'top'}
   });
 
   $('#saveQualification').on('click', () => {

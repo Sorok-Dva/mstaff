@@ -22,6 +22,13 @@
     padding: 5%;
     border-radius: 25px;
   }
+  .final-footer-left{
+    flex-direction: column;
+    display: flex;
+  }
+  .final-footer-left img {
+    width: 100px;
+  }
 </style>
 
 <div class="modal customModal" id="legalModal" tabindex="-1" role="dialog">
@@ -29,24 +36,6 @@
     <div class="modal-content">
       <div class="modal-body container-fluid">
         <div class="row text-center">
-          <div class="col-sm-4 leftPart">
-            <div>
-              <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
-            </div>
-            <div>
-              <p>Conformité RGPD</p>
-            </div>
-            <div class="footer-left">
-              <div>
-                <img src="/static/assets/images/logo-step7.jpg" alt="Mstaff">
-              </div>
-              <div class="footer-left-p">
-                <div>
-                  <p>"Ne lisez pas et cliquez !"</p>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="col-sm-8 rightPart">
             <div class="finalRecap">
               <div class="final-text">
@@ -64,8 +53,26 @@
                 </div>
               </div>
               <div class="final-button">
-                <button type="button" class="btn btn-success" onclick="finalize()">Confirmer et Publier mon profil
+                <button type="button" class="btn btn-success" onclick="finalize('{{es.finess}}')">Confirmer et Publier mon profil
                 </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4 leftPart">
+            <div>
+              <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
+            </div>
+            <div>
+              <p>Conformité RGPD</p>
+            </div>
+            <div class="final-footer-left">
+              <div>
+                <img src="/static/assets/images/logo-rgpd.jpg" alt="Mstaff">
+              </div>
+              <div class="footer-left-p">
+                <div>
+                  <p>"Ne lisez pas et cliquez !"</p>
+                </div>
               </div>
             </div>
           </div>

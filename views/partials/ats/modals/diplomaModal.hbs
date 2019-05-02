@@ -35,12 +35,12 @@
     background-color: #00aced;
     cursor: pointer;
   }
-  .diplomaInfo{
+  .info{
     color: white;
     width: 50%;
     font-size: 1.2em;
   }
-  .diplomaInfo > i{
+  .info > i{
     display: block;
   }
 </style>
@@ -50,6 +50,40 @@
     <div class="modal-content">
       <div class="modal-body container-fluid">
         <div class="row text-center">
+          <div class="col-sm-8 rightPart">
+            <form class="inputsDiploma">
+              <div>
+                <div class="input-holder">
+                  <input class="xpInput" id="diploma" placeholder="Choisissez votre formation">
+                </div>
+                <div id="diplomaDate">
+                  <div>
+                    <label for="diplomaStart">Début</label>
+                    <input id="diplomaStart" name="diplomaStart" type="text"
+                           class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#diplomaStart" readonly>
+                  </div>
+                  <div>
+                    <label for="diplomaEnd">Fin</label>
+                    <input id="diplomaEnd" name="diplomaEnd" type="text"
+                           class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#diplomaEnd" readonly>
+                  </div>
+                </div>
+                <div class="info">
+                  <i class="fal fa-info-circle"></i>
+                  <span>Indiquez ici votre formation initiale ou bien sélectionnez-la depuis la liste. Vous pourrez ajouter vos  <b>diplômes complémentaires (DU ...)</b>  à l'étape suivante.</span>
+                </div>
+              </div>
+            </form>
+            <div class="save-holder">
+              <div id="saveDiploma">
+                <i class="fal fa-check-circle fa-3x"></i>
+                <p>Enregistrer</p>
+              </div>
+            </div>
+            <div class="next-modal">
+              <i id="toStep6" class="fal fa-arrow-circle-right"></i>
+            </div>
+          </div>
           <div class="col-sm-4 leftPart">
             <div>
               <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
@@ -70,40 +104,6 @@
                   <p>"Des années pour vous former. 3 secondes pour nous le faire savoir !"</p>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="col-sm-8 rightPart">
-            <form class="inputsDiploma">
-              <div>
-                <div class="input-holder">
-                  <input class="xpInput" id="diploma" placeholder="Choisissez votre formation">
-                </div>
-                <div id="diplomaDate">
-                  <div>
-                    <label for="diplomaStart">Début</label>
-                    <input id="diplomaStart" name="diplomaStart" type="text"
-                           class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#diplomaStart" readonly>
-                  </div>
-                  <div>
-                    <label for="diplomaEnd">Fin</label>
-                    <input id="diplomaEnd" name="diplomaEnd" type="text"
-                           class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#diplomaEnd" readonly>
-                  </div>
-                </div>
-                <div class="diplomaInfo">
-                  <i class="fal fa-info-circle"></i>
-                  <span>Il s'agit de votre parcours de formation initial. Vous pourrez ajouter vos  <b>diplômes complémentaires (DU ...)</b>  à l'étape suivante.</span>
-                </div>
-              </div>
-            </form>
-            <div class="save-holder">
-              <div id="saveDiploma">
-                <i class="fal fa-check-circle fa-3x"></i>
-                <p>Enregistrer</p>
-              </div>
-            </div>
-            <div class="next-modal">
-              <i id="toStep6" class="fal fa-arrow-circle-right"></i>
             </div>
           </div>
         </div>

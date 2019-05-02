@@ -68,7 +68,8 @@ module.exports = {
       { name: 'Néonatologie - unité de Soins Intensifs', categoriesPS_id: 2 },
       { name: 'Soins intensifs pédiatriques', categoriesPS_id: 2 },
       { name: 'Radiologie conventionnelle', categoriesPS_id: 2 },
-      { name: 'Kinésithérapie', categoriesPS_id: 2 }
+      { name: 'Kinésithérapie', categoriesPS_id: 2 },
+      { name: 'Aucun service', categoriesPS_id: 2 }
     ];
     let records = [];
 
