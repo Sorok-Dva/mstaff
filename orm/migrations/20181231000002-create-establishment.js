@@ -20,8 +20,7 @@ module.exports = {
       },
       finess: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
       finess_ej: {
         type: Sequelize.STRING,
