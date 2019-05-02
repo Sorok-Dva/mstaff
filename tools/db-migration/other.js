@@ -46,6 +46,33 @@ let migrateOtherData = () => {
                 });
               }
             });
+          } else if (user.es_list) {
+            con.query('SELECT id, oldId FROM Users WHERE oldId = ?', user.id, (err, res) => {
+              if (err || res.length < 1) {
+                console.log(err, res.length < 1);
+              } else {
+                user.es_list.forEach((id) => {
+                  console.log(`SELECT id, oldId FROM Establishments WHERE oldId = ${id}`);
+                  con.query('SELECT id, oldId FROM Establishments WHERE oldId = ?', id, (err, resEs) => {
+                    if (err || resEs.length < 1) {
+                      console.log(err, resEs.length < 1);
+                    } else {
+                      con.query('INSERT INTO ESAccounts SET ?', {
+                        user_id: res[0].id,
+                        es_id: resEs[0].id,
+                        role: 'User',
+                        createdAt: res[0].created_at || new Date(),
+                        updatedAt: res[0].updated_at || new Date(),
+                      }, (err, res) => {
+                        if (err) {
+                          console.log(err);
+                        }
+                      });
+                    }
+                  });
+                });
+              }
+            });
           }
         });
       });
