@@ -7,8 +7,9 @@ let migrateOtherData = () => {
     let migrate = {};
 
     migrate.other = () => {
-      // migrate.groupsAndSuperGroups();
-      // migrate.esAccounts();
+      migrate.groupsAndSuperGroups();
+      migrate.esAccounts();
+      // wish
     };
 
     migrate.groupsAndSuperGroups = () => {
