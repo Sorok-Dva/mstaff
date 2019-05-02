@@ -32,8 +32,7 @@
     $.each(data.linkes, function (i, linkes) {
       preselecteds.push(linkes.id_es);
     });
-    $('select[name=selectName]').val(preselecteds);
-    $('#establishmentsID').selectpicker('refresh');
+    $('#establishmentsID').selectpicker('val' ,preselecteds);
   });
   $('#establishmentsID').selectpicker();
 
