@@ -7,7 +7,75 @@ let migrateOtherData = () => {
     let migrate = {};
 
     migrate.other = () => {
-      migrate.esAccounts();
+      // migrate.groupsAndSuperGroups();
+      // migrate.esAccounts();
+    };
+
+    migrate.groupsAndSuperGroups = () => {
+      log('GET PgSQL Groups Data ("groupe" table)');
+      pgsql.get({
+        name: 'get-groups',
+        text: 'SELECT * FROM groupe'
+      }, (err, groups) => {
+        if (err) console.log(err);
+        log(`${groups.rows.length} rows founded (groups).`);
+        groups.rows.forEach((group, i) => {
+          let groupData = {
+            name: group.libelle,
+            oldId: group.id,
+            createdAt: group.created_at || new Date(),
+            updatedAt: group.updated_at || new Date(),
+          };
+          con.query('INSERT INTO `Groups` SET ?', groupData, (err, res) => {
+            if (err) {
+              console.log(err);
+            }
+          });
+        });
+
+        log('GET PgSQL Groups Data ("groupe" table)');
+        pgsql.get({
+          name: 'get-groups',
+          text: 'SELECT * FROM super_groupe'
+        }, (err, superGroups) => {
+          if (err) console.log(err);
+          log(`${superGroups.rows.length} rows founded (SuperGroups).`);
+          superGroups.rows.forEach((superG, i) => {
+            console.log(superG.groupes);
+            let SgroupData = {
+              name: superG.libelle,
+              oldId: superG.id,
+              createdAt: superG.created_at || new Date(),
+              updatedAt: superG.updated_at || new Date(),
+            };
+            con.query('INSERT INTO `SuperGroups` SET ?', SgroupData, (err, insertRes) => {
+              if (err) {
+                console.log(err);
+              } else {
+                superG.groupes.forEach((group) => {
+                  con.query('SELECT id, oldId FROM `Groups` WHERE oldId = ?', group, (err, res) => {
+                    if (err) {
+                      console.log(err);
+                    } else {
+                      let LinkData = {
+                        id_group: res[0].id,
+                        id_super_group: insertRes.insertId,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                      };
+                      con.query('INSERT INTO `GroupsSuperGroups` SET ?', LinkData, (err, res) => {
+                        if (err) {
+                          console.log(err);
+                        }
+                      });
+                    }
+                  });
+                })
+              }
+            });
+          });
+        });
+      });
     };
 
     migrate.esAccounts = () => {
