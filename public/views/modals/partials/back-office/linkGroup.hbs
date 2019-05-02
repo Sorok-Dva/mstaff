@@ -24,14 +24,14 @@
       else return 0;
     });
     $("#establishmentsID").empty().append(ESoptions).selectpicker("refresh");
-  });
-  let eslinkrow = {{this.group.id}};
-  let preselecteds = [];
-  $.get('/api/back-office/eslinks/' + eslinkrow, function (data) {
-    $.each(data.linkes, function (i, linkes) {
-      preselecteds.push(linkes.id_es);
+    let eslinkrow = {{this.group.id}};
+    let preselecteds = [];
+    $.get('/api/back-office/eslinks/' + eslinkrow, function (data) {
+      $.each(data.linkes, function (i, linkes) {
+        preselecteds.push(linkes.id_es);
+      });
+      $('#establishmentsID').selectpicker('val' ,preselecteds);
     });
-    $('#establishmentsID').selectpicker('val' ,preselecteds);
   });
   $('#establishmentsID').selectpicker();
 
