@@ -5,6 +5,7 @@ const { Candidate } = require(`./candidate/candidate.controller`);
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const httpStatus = require('http-status');
 const Mailer = require(`${__}/components/mailer`);
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
@@ -18,6 +19,9 @@ User.create = (req, res, next) => {
   let esId = null;
 
   if (!errors.isEmpty()) {
+    if (req.xhr) {
+      return res.status(httpStatus.BAD_REQUEST).send({ body: req.body, errors: errors.array() });
+    }
     return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
   }
 
@@ -67,7 +71,9 @@ User.create = (req, res, next) => {
       })
     }).then(candidate => {
       Mailer.sendUserVerificationEmail(usr);
-      res.redirect('login');
+      if (req.xhr) {
+        return res.status(httpStatus.CREATED).send({ result: 'created' });
+      } else res.redirect('login');
     }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
   });
 };

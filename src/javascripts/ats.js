@@ -621,11 +621,11 @@ let saveDatas = (modal) => {
       skills.push(current);
       break;
     case 'identityModal':
-      identity.forename = $('#identityForename').val();
-      identity.name = $('#identityName').val();
+      identity.firstName = $('#identityForename').val();
+      identity.lastName = $('#identityName').val();
       identity.phone = iti.getNumber();
-      identity.localisation = iti.getSelectedCountryData().name;
-      identity.mail = $('#identityMail').val();
+      identity.country = iti.getSelectedCountryData().name;
+      identity.email = $('#identityMail').val();
       identity.password = $('#identityPassword').val();
       break;
   }
@@ -956,6 +956,10 @@ let notify = (error) => {
 };
 
 let finalize = (es_finess) => {
+  identity._csrf = $('#csrfToken');
+  $.post('/register/', identity, (data) => {
+    console.log(data);
+  }).catch(error => errorsHandler(error));
   //TODO
   console.log(es_finess);
   console.log(application);
