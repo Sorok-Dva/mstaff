@@ -161,7 +161,7 @@
               <div class="col-9">
                 <div class="form-group col-12" style="margin-top: 25px">
                   <label for="selectPostType">
-                    <select class="form-control col-12" id="selectPostType">
+                    <select class="form-control col-12" id="selectPostType" data-toggle="select">
                       {{#each posts as |post|}}
                         <option value="{{post.id}}" data-categorie="{{post.categoriesPS_id}}">{{post.name}}</option>
                       {{/each}}
