@@ -46,6 +46,22 @@
   .good-rule{
     color: greenyellow;
   }
+  .identity-holder{
+    display: flex;
+    justify-content: space-around;
+    width: 83%;
+  }
+  .semi::placeholder{
+    text-align: center;
+    width: 100%;
+  }
+  #identityPhone{
+    flex-grow: 1;
+  }
+  .semi{
+    width: 40%;
+  }
+
 </style>
 
 <div class="modal customModal" id="identityModal" tabindex="-1" role="dialog">
@@ -56,11 +72,16 @@
           <div class="col-sm-8 rightPart">
             <form class="inputsIdentity">
               <div>
-                <div class="input-holder">
-                  <input class="xpInput" id="identityForename" placeholder="Votre prénom ?">
+                <div class="identity-holder">
+                  <input class="xpInput input-holder semi" id="identityForename" placeholder="Votre prénom ?">
+                  <input class="xpInput input-holder semi" id="identityName" placeholder="Votre nom ?">
+                </div>
+                <div class="identity-holder">
+                  <input class="xpInput input-holder semi" id="identityBirth" type="date">
+                  <input class="xpInput input-holder semi" id="identityPostal" placeholder="Code Postal ?">
                 </div>
                 <div class="input-holder">
-                  <input class="xpInput" id="identityName" placeholder="Votre nom ?">
+                  <input class="xpInput" id="identityCity" placeholder="Votre ville ?">
                 </div>
                 <div class="input-holder">
                   <input class="xpInput" id="identityPhone" type="tel" placeholder="Votre numéro de téléphone ?">

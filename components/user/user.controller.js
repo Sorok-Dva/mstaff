@@ -21,8 +21,9 @@ User.create = (req, res, next) => {
   if (!errors.isEmpty()) {
     if (req.xhr) {
       return res.status(httpStatus.BAD_REQUEST).send({ body: req.body, errors: errors.array() });
+    } else {
+      return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
     }
-    return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
   }
 
   if (esCode) {
@@ -73,8 +74,16 @@ User.create = (req, res, next) => {
       Mailer.sendUserVerificationEmail(usr);
       if (req.xhr) {
         return res.status(httpStatus.CREATED).send({ result: 'created' });
-      } else res.redirect('login');
-    }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
+      } else {
+        return res.redirect('login');
+      }
+    }).catch(error => {
+      if (req.xhr){
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ body: req.body, sequelizeError: error });
+      } else {
+        res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error });
+      }
+    });
   });
 };
 

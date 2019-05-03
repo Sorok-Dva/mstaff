@@ -627,6 +627,9 @@ let saveDatas = (modal) => {
       identity.country = iti.getSelectedCountryData().name;
       identity.email = $('#identityMail').val();
       identity.password = $('#identityPassword').val();
+      identity.birthday = $('#identityBirth').val();
+      identity.postal_code = $('#identityPostal').val();;
+      identity.town = $('#identityCity').val();;
       break;
   }
 };
@@ -743,15 +746,25 @@ let verifyDatas = (modal) => {
       let forename = $('#identityForename').val();
       let name = $('#identityName').val();
       let mail = $('#identityMail').val();
+      let birthDate = $('#identityBirth').val();
+      let postal = $('#identityPostal').val();
+      let city = $('#identityCity').val();
       let password = $('#identityPassword').val();
+
       let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
       let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
+      let isValidPostal = !isNaN(postal) ? true : notify('wrongPostalCode');;
+      let isValidCity = !$.isEmptyObject(city);
+      let isValidBirthDate = new Date(birthDate) !== 'Invalid Date' ? true : notify('wrongBirthDateFormat');
+      if (isValidBirthDate)
+        isValidBirthDate = moment(birthDate).isBefore(moment().subtract(18, 'years')) ? true : notify('wrongBirthDate');
       let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
       let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
       let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
       let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
       let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
-      return (isValidForename && isValidName && isValidMail && isValidPhone && isValidPassword) ;
+
+      return (isValidForename && isValidName && isValidMail && isValidPhone && isValidPassword && isValidPostal && isValidCity && isValidBirthDate);
       break;
   }
 };
@@ -918,6 +931,31 @@ let notify = (error) => {
         message: `Merci d'indiquer votre nom.`
       });
       break;
+    case 'wrongPostalCode':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer un code postal valide.`
+      });
+      break;
+
+    case 'wrongBirthDateFormat':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de saisir un format de date valide.`
+      });
+      break;
+    case 'wrongBirthDate':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `L'age légal minimum requis pour vous inscrire sur Mstaff est de 18 ans.`
+      });
+      break;
     case 'wrongPhoneNumber':
       notification({
         icon: 'exclamation',
@@ -956,7 +994,8 @@ let notify = (error) => {
 };
 
 let finalize = (es_finess) => {
-  identity._csrf = $('#csrfToken');
+  identity._csrf = $('#csrfToken').val();
+  console.log(identity);
   $.post('/register/', identity, (data) => {
     console.log(data);
   }).catch(error => errorsHandler(error));
