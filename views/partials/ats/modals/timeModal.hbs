@@ -1,0 +1,122 @@
+<style>
+  .bootstrap-datetimepicker-widget.dropdown-menu{
+    width: auto;
+  }
+  #internshipDate{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  #internshipDate label, #internshipDate input{
+    color: white;
+    text-align: center;
+    font-size: 2em;
+    font-family: 'Oxygen', sans-serif;
+  }
+  #cdiSchedule{
+    width: 100%;
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  .activity-holder{
+    display: flex;
+    width: 100%;
+    height: 30%;
+    align-items: center;
+  }
+  .activity{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.4);
+    margin: 5%;
+  }
+  #start, #end{
+    background-color: #00aced;
+    cursor: pointer;
+  }
+
+</style>
+
+<div class="modal customModal" id="timeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body container-fluid">
+        <div class="row text-center">
+          <div class="col-sm-8 rightPart">
+            <div id="internshipDate">
+              <div class="col-md-6">
+                <label for="start">Du :</label>
+                <input id="start" name="start" type="text"
+                class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#start" readonly>
+              </div>
+              <div class="col-md-6">
+                <label for="end">Au :</label>
+                <input id="end" name="end" type="text"
+                class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#end" readonly>
+              </div>
+            </div>
+            <div id="cdiSchedule">
+              <div id="full-part" class="activity-holder">
+                <div class="activity">
+                  <i class="fal fa-calendar-star fa-5x"></i>
+                  <p>Temps plein</p>
+                  <input id="full_time" name="full_time" type="checkbox">
+                </div>
+                <div class="activity">
+                  <i class="fal fa-calendar-day fa-5x"></i>
+                  <p>Temps partiel</p>
+                  <input id="part_time" name="part_time" type="checkbox">
+                </div>
+              </div>
+             <div id="day-night" class="activity-holder">
+               <div class="activity">
+                 <i class="fal fa-sun fa-5x"></i>
+                 <p>Jour</p>
+                 <input id="day_time" name="day_time" type="checkbox">
+               </div>
+               <div class="activity">
+                 <i class="fal fa-moon-stars fa-5x"></i>
+                 <p>Nuit</p>
+                 <input id="night_time" name="night_time" type="checkbox">
+               </div>
+             </div>
+            </div>
+
+              <div class="next-modal">
+                <i id="toStep4" class="fal fa-arrow-circle-right"></i>
+              </div>
+            </div>
+          <div class="col-sm-4 leftPart">
+            <div>
+              <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
+            </div>
+            <div>
+              <p>Choisissez ici vos <b>disponibilités</b>.</p>
+            </div>
+            <div class="footer-left">
+              <div>
+                <img src="/static/assets/images/logo-step2.jpg" alt="Mstaff">
+              </div>
+              <div class="footer-left-p">
+                <div>
+                  <p>"Vous savez ce que vous voulez, et ça se voit !"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,6 +6,7 @@ const httpStatus = require('http-status');
 
 const mailer = require('../bin/mailer');
 const Models = require('../orm/models/index');
+const moment = require('moment');
 
 const Establishment = require('../components/establishment');
 
@@ -91,19 +92,46 @@ module.exports = {
               fromUser: req.user.id,
               fromEs: needCandidate.Need.Establishment.id,
               to: needCandidate.Candidate.User.id,
-              title: 'Un établissement est intéressé par votre profil !',
-              message: req.body.message
+              subject: 'Un établissement est intéressé par votre profil !',
+              title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
+              image: '/static/assets/images/happy.jpg',
+              opts: {
+                type: 'NeedNotifyCandidate',
+                details: {
+                  post: needCandidate.Need.post,
+                  contract: needCandidate.Need.contract_type,
+                  start: needCandidate.Need.start,
+                  end: needCandidate.Need.end,
+                },
+                message: req.body.message,
+                actions: [{
+                  'type': 'success',
+                  'text': 'Disponible',
+                  'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="available"`
+                }, {
+                  'type': 'danger',
+                  'text': 'Indisponible',
+                  'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="unavailable"`
+                }],
+                needCandidateId: needCandidate.id
+              }
             }).then(notification => {
               needCandidate.status = 'notified';
+              needCandidate.availability = 'pending';
               needCandidate.notified = true;
               needCandidate.save().then(result => {
+                moment.locale('fr');
+                let need = {
+                  start: _.isNil(needCandidate.Need.start) ? null : moment(needCandidate.Need.start).format('dddd Do MMMM YYYY'),
+                  end: _.isNil(needCandidate.Need.end) ? null : moment(needCandidate.Need.end).format('dddd Do MMMM YYYY'),
+                };
                 mailer.sendEmail({
                   to: needCandidate.Candidate.User.email,
-                  subject: 'Un établissement est intéressé par votre profil !',
-                  template: 'user/es_notified',
+                  subject: 'Un établissement a consulté votre profil.',
+                  template: 'candidate/needNotification',
                   context: {
-                    notification,
-                    needCandidate
+                    needCandidate,
+                    need
                   }
                 });
                 res.status(201).send(result);
@@ -113,6 +141,12 @@ module.exports = {
           case 'select':
             needCandidate.status = 'selected';
             needCandidate.notified = true;
+            needCandidate.save().then(result => {
+              res.status(201).send(result);
+            });
+            break;
+          case 'cancel':
+            needCandidate.status = 'canceled';
             needCandidate.save().then(result => {
               res.status(201).send(result);
             });

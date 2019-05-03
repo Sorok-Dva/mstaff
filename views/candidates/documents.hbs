@@ -2,30 +2,29 @@
   <div class="col-lg-12 col-md-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fal fa-copy-o"></i> Mes documents</h4>
-        <hr style="width:85%; margin-top: 14px;">
+        <h3 class="card-title pull-left"><i class="fal fa-copy"></i> Mes documents</h3>
       </div>
-      <div class="card-content">
+      <div class="card-body">
+        <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/document" style="display: none">
+          <input id="file-upload" type="file" accept="application/pdf, image/png, image/jpeg, image/jpg"/>
+          <label for="file-upload" id="file-drag">
+            <div id="start">
+              <i class="fal fa-times float-right closeUploader" aria-hidden="true"></i>
+              <i class="fal fa-file-upload fa-3x" aria-hidden="true"></i>
+              <div id="notgoodfile" style="color:red;display:none">Format non autorisé (pdf, png & jpeg)</div>
+              <div>Choisir un ou plusieurs fichiers ou déposer ici</div>
+              <span id="file-upload-btn" class="btn btn-primary"></span>
+            </div>
+            <div id="response" style="display:none"></div>
+          </label>
+        </form>
         <div class="row">
-          <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/document" style="display: none">
-            <input id="file-upload" type="file" accept="application/pdf, image/png, image/jpeg, image/jpg"/>
-            <label for="file-upload" id="file-drag">
-              <div id="start">
-                <i class="fal fa-times pull-right closeUploader" aria-hidden="true"></i>
-                <i class="fal fa-file-upload fa-3x" aria-hidden="true"></i>
-                <div id="notgoodfile" style="color:red;display:none">Format non autorisé (pdf, png & jpeg)</div>
-                <div>Choisir un ou plusieurs fichiers ou déposer ici</div>
-                <span id="file-upload-btn" class="btn btn-primary"></span>
-              </div>
-              <div id="response" style="display:none"></div>
-            </label>
-          </form>
           <div class="col-md-3">
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-graduation-cap"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-graduation-cap fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Diplôme (ou Attestation de jeune diplômé)</small>
@@ -37,10 +36,6 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
                   <span onclick="showFiles('DIP');" style="cursor: pointer">
                       <small id="DIPCount">{{countFiles candidate.documents 'DIP'}}</small>
                       <i class="fal fa-copy"></i>
@@ -49,9 +44,9 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'DIP'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="DIP">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -67,8 +62,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-id-card"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-id-card fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Pièce d'identité</small>
@@ -80,10 +75,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('CNI');" style="cursor: pointer">
                       <small id="CNICount">{{countFiles candidate.documents 'CNI'}}</small>
                       <i class="fal fa-copy"></i>
@@ -92,9 +84,9 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'CNI'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="CNI">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -110,8 +102,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-file-certificate"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-file-certificate fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Justificatif de référencement ADELI</small>
@@ -123,10 +115,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('ADELI');" style="cursor: pointer">
                       <small id="ADELICount">{{countFiles candidate.documents 'ADELI'}}</small>
                       <i class="fal fa-copy"></i>
@@ -135,9 +124,9 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'ADELI'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="ADELI">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -153,8 +142,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-shield-alt"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-shield-alt fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Carte Vitale ou Attestation de Protection Santé</small>
@@ -166,10 +155,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('VIT');" style="cursor: pointer">
                       <small id="VITCount">{{countFiles candidate.documents 'VIT'}}</small>
                       <i class="fal fa-copy"></i>
@@ -178,9 +164,9 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'VIT'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="VIT">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -196,8 +182,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-university"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-university fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Relevé d'Identité Bancaire (RIB)</small>
@@ -209,10 +195,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('RIB');" style="cursor: pointer">
                     <small id="RIBCount">{{countFiles candidate.documents 'RIB'}}</small>
                     <i class="fal fa-copy"></i>
@@ -221,9 +204,9 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'RIB'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="RIB">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -239,8 +222,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-user-md"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-user-md fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Attestation d'inscription à l'Ordre National</small>
@@ -252,10 +235,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('OrNa');" style="cursor: pointer">
                     <small id="OrNaCount">{{countFiles candidate.documents 'OrNa'}}</small>
                     <i class="fal fa-copy"></i>
@@ -264,9 +244,9 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'OrNa'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="OrNa">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -282,8 +262,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-file-user"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-file-user fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">CV</small>
@@ -295,10 +275,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('CV');" style="cursor: pointer">
                     <small id="CVCount">{{countFiles candidate.documents 'CV'}}</small>
                     <i class="fal fa-copy"></i>
@@ -307,9 +284,9 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'CV'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="CV">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -325,8 +302,8 @@
             <div class="card">
               <div class="card-content center-block">
                 <div class="col-md-12">
-                  <div class="icon-big icon-info text-center">
-                    <i class="fal fa-file-signature"></i>
+                  <div class="icon-big icon-info text-center mt-1">
+                    <i class="fal fa-file-signature fa-3x"></i>
                   </div>
                   <div class="text-center">
                     <small class="text-center">Lettre de motivation</small>
@@ -338,10 +315,7 @@
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <div class="pull-right" style="position:relative; display:inline-block;">
-                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" rel="tooltip" title=""
-                       data-original-title=""></i>
-                  </div>
+
                   <span onclick="showFiles('LM');" style="cursor: pointer">
                     <small id="LMCount">{{countFiles candidate.documents 'LM'}}</small>
                     <i class="fal fa-copy"></i>
@@ -350,9 +324,9 @@
                     <ul>
                       {{#each candidate.documents as |document|}}
                         {{#ifCond document.type '===' 'LM'}}
-                          <li>
+                          <li data-document-id="{{document.id}}" data-type="LM">
                             <a href="/static/uploads/candidates/documents/{{document.filename}}" target="_blank">{{document.name}}</a>
-                            -<button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
+                            -<button class="btn btn-simple btn-outline-danger btn-icon remove" data-type="document" data-id="{{document.id}}">
                             <i class="fa fa-trash"></i>
                           </button>
                           </li>
@@ -372,9 +346,24 @@
 <script src="/static/assets/dist/js/uploadDocuments.min.js"></script>
 <script>
   let showFiles = (type) => {
-    createModal({ id: 'showFileListModal', modal: 'showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
+    createModal({ id: 'showFileListModal', modal: 'candidate/showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
       let content = ($(`#${type}List ul>li`).length < 1) ? 'Aucun documents' : $(`#${type}List`).clone().show();
       $('.showFileListModalBody').html(content);
+      $('.remove[data-type="document"]').click(function() {
+        let id = $(this).attr('data-id');
+        $.delete(`/api/candidate/document/${id}`, { _csrf }, (result) => {
+          if (result === 'Document supprimé.') {
+            let type = $(`li[data-document-id="${id}"]`).attr('data-type');
+            $(`li[data-document-id="${id}"]`).remove();
+            $(`#${type}Count`).html(parseInt($(`#${type}Count`).text()) - 1);
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Document supprimé.'
+            });
+          }
+        }).catch(error => errorsHandler(error));
+      });
     });
   };
 

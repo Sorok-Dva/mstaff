@@ -4,3 +4,4 @@
 /src
 /orm/seeders
 /tools/db-migration
+/tests

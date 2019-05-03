@@ -1,5 +1,5 @@
 const { Authentication } = require('../middlewares/index');
-const { Establishment } = require('../components');
+const { Establishment, Conference } = require('../components');
 const express = require('express');
 const router = express.Router();
 
@@ -32,11 +32,43 @@ router.get('/needs',
   Establishment.Need.ViewAll);
 
 /**
+ * @Route('/conferences/calendar') GET;
+ * Show conferences page
+ */
+router.get('/conferences/calendar',
+  Authentication.ensureIsEs,
+  Conference.Main.viewConferences_ES);
+
+/**
  * @Route('/need/:id(\\d+)') GET;
  * Show Specific Need Page
  */
 router.get('/need/:id(\\d+)',
   Authentication.ensureIsEs,
   Establishment.Need.View);
+
+/**
+ * @Route('/need/:id(\\d+)/edit') GET;
+ * Show Need Edit page (candidates page)
+ */
+router.get('/need/:editNeedId(\\d+)/edit',
+  Authentication.ensureIsEs,
+  Establishment.Application.getCVs);
+
+/**
+ * @Route('/history/:id(\\d+)') GET;
+ * Show Specific History Need Page
+ */
+router.get('/history/:id(\\d+)',
+  Authentication.ensureIsEs,
+  Establishment.Need.ViewHistory);
+
+/**
+ * @Route('/history') GET;
+ * Show History page
+ */
+router.get('/history',
+  Authentication.ensureIsEs,
+  Establishment.Need.ViewClosed);
 
 module.exports = router;

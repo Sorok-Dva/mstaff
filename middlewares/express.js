@@ -2,6 +2,7 @@ const conf = require('dotenv').config().parsed;
 const packageJson = require('../package');
 const path = require('path');
 const { Env } = require('../helpers/helpers');
+const Sentry = require('../bin/sentry');
 const config = require(`../orm/config/config`)[Env.current];
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
@@ -17,18 +18,9 @@ const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
-const wildcardSubdomains = require('wildcard-subdomains');
 
-const ServerController = require('../controllers/server');
+const ServerController = require('../components/server/server');
 const EstablishmentController = require('../controllers/establishment');
-
-let Sentry =  require('@sentry/node');
-if (Env.isProd || Env.isPreProd) {
-  Sentry.init({
-    dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846',
-    release: `${packageJson.name}@${packageJson.version}`
-  });
-}
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -111,7 +103,7 @@ module.exports = {
     resave: true
   }),
   verifyMaintenance: (req, res, next) => {
-    if (req.url.search('static') !== -1) return next();
+    if (req.url.search('static') !== -1 || req.url.search('back-office') !== -1) return next();
     ServerController.verifyMaintenance(status => {
       if (status === 'maintenance') {
         return res.render('index', { layout: 'maintenance' });
@@ -120,7 +112,8 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2') return next();
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2')
+      return next();
     EstablishmentController.Establishment.Main.findBySubdomain(req, res, (data) => {
       res.locals.es = data;
       req.url = `/esDomain${req.url}`;

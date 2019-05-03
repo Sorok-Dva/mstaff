@@ -67,7 +67,7 @@
         <h4 class="title">Modifier le profil</h4>
       </div>
       <div class="card-content">
-        <form method="post" action="/back-office/user/{{user.id}}/edit">
+        <form method="post" action="/back-office/user/{{user.id}}">
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
@@ -141,7 +141,7 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label>Description candidat</label>
+                  <label>Motivations</label>
                   <textarea rows="5" name="description"
                             class="form-control border-input">{{user.candidate.description}}</textarea>
                 </div>
@@ -159,12 +159,12 @@
   </div>
 </div>
 <script>
-  $('button[data-action="sendVerifEmail"]').click(function() {
+  $('button[data-action="sendVerifEmail"]').click(function () {
     console.log($(this));
     let _csrf = $('#csrfToken').val();
     let email = $(this).attr('data-email');
 
-    $.post(`/api/back-office/candidates/sendVerifEmail`, { _csrf, email }, (data) => {
+    $.post(`/api/back-office/candidates/sendVerifEmail`, {_csrf, email}, (data) => {
       if (data === 'Send') {
         notification({
           icon: 'check-circle',

@@ -4,7 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     need_id: DataTypes.INTEGER,
     candidate_id: DataTypes.INTEGER,
     status: DataTypes.STRING,
-    notified: DataTypes.BOOLEAN
+    notified: DataTypes.BOOLEAN,
+    availability: {
+      type: DataTypes.ENUM,
+      values: ['available', 'pending', 'unavailable']
+    }
   }, {});
   NeedCandidate.associate = function (models) {
     NeedCandidate.hasOne(models.Candidate, {

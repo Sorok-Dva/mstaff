@@ -33,6 +33,12 @@ module.exports = {
       post: {
         type: Sequelize.STRING
       },
+      service: {
+        type: Sequelize.STRING
+      },
+      diploma: {
+        type: Sequelize.STRING
+      },
       contract_type: {
         type: Sequelize.STRING
       },
@@ -41,6 +47,10 @@ module.exports = {
       },
       end: {
         type: Sequelize.DATE
+      },
+      closed: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,

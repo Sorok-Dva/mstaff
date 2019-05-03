@@ -1,55 +1,56 @@
 <style>
-  .darkModal > .modal-dialog{
-    height: 50%;
-  }
-  .darkModal > .modal-dialog > .modal-content{
-    background-color: transparent;
-    box-shadow: none;
-    border: none;
-  }
-  .darkModal > .modal-dialog > .modal-content > .modal-body{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .selectPost{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    height: 30%;
-    width: 50%;
-  }
-  .selectParaph > p{
-    font-size: 3em;
+  .select2-container{
+    width: 75% !important;
+    font-size: 2em;
     color: white;
   }
-  .select-holder{
+  .select2-container--default .select2-selection--multiple{
+    background-color: #00aced;
     border-bottom: 2px solid white;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-radius: unset;
   }
-  .select-holder > i{
-    font-size: 2.2em;
+  .select2-container--default.select2-container--focus .select2-selection--multiple{
+    background-color: #00aced;
+    border-bottom: 2px solid white;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+  .select2-container > .select2-dropdown--below{
+    background-color: transparent;
     color: white;
-    margin-right: 5%;
-  }
-  .select-holder > i:last-child{
-    display: none;
-    margin-left: 5%;
-  }
-  .selectPost > div{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 3%;
-  }
-  .customInput{
-    width: 75%;
-    font-size: 3em;
-    color: white;
-    background: transparent;
+    font-size: 1em;
     border: none;
   }
+  .select2-container--default .select2-selection--multiple .select2-selection__rendered{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 4vh;
+    max-height: 25vh;
+    overflow-y: scroll;
+  }
+  .select2-results__option[aria-selected]{
+    background-color: rgba(0,0,0,0.4);
+  }
+  .select2-container--default .select2-results__option--highlighted[aria-selected]{
+    background-color: #03A9DE;
+    border: 1px solid white;
+  }
+  .select2-container--default .select2-results__option[aria-selected="true"]{
+    background-color: rgba(0,0,0,0.4);
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice{
+    background-color: transparent;
+    border: none;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice__remove{
+    color: white;
+  }
+
   .ui-autocomplete{
     z-index: 9999 !important;
     background: transparent;
@@ -72,32 +73,100 @@
   .ui-widget.ui-widget-content{
     border: none;
     color: white;
+    background: rgba(0,0,0,0.7);
+    max-width: 40%;
+    max-height: 50%;
+    overflow: scroll;
   }
-  .next-modal{
-    font-size: 2.2em;
+
+  .selectPost{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .post-holder{
+    font-size: 2em;
+    height: 10%;
+  }
+  .select-holder{
+    height: 10%;
+  }
+  .select-holder > select{
+    display: none;
+  }
+
+  #InputPosts{
+    width: 75%;
+    height: 100%;
+    background-color: #00aced;
+    border-bottom: 2px solid white;
+    border-top: none;
+    border-left: none;
+    border-right: none;
     color: white;
   }
-  .next-modal > i:last-child{
-    margin-left: 92%;
-    display: none;
+
+  #InputServices{
+    /*display: none;*/
+    width: 75%;
+    height: 100%;
+    background-color: #00aced;
+    border-bottom: 2px solid white;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    color: white;
+  }
+
+  .next-modal{
+    width: 100%;
+    height: 7%;
+    font-size: 2.2em;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
   }
 </style>
 
-<div class="modal customModal darkModal" id="postModal" tabindex="-1" role="dialog">
+<div class="modal customModal" id="postModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-body">
-        <div class="selectPost">
-          <div class="selectParaph">
-            <p>Vous souhaitez postuler en tant que...</p>
+      <div class="modal-body container-fluid">
+        <div class="row text-center">
+          <div class="col-sm-8 rightPart">
+            <div class="selectPost">
+              <div class="post-holder">
+                <input class="customInput" id="InputPosts" placeholder="Poste ?">
+              </div>
+              <div class="select-holder">
+                  <select id="InputServices" multiple="multiple"></select>
+              </div>
+            </div>
+            <div class="next-modal">
+              <i id="toStep2" class="fal fa-arrow-circle-right"></i>
+            </div>
           </div>
-          <div class="select-holder">
-            <i class="fal fa-search"></i>
-            <input class="customInput" id="InputPosts">
-            <i class="fal fa-check"></i>
-          </div>
-          <div class="next-modal">
-            <i id="toStep2" class="fal fa-arrow-circle-right"></i>
+          <div class="col-sm-4 leftPart">
+            <div>
+              <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff">
+            </div>
+            <div>
+              <p>Indiquez ici le <b>poste</b> ainsi que le ou les <b>services (facultatif)</b> ou vous souhaitez postuler.</p>
+            </div>
+            <div class="footer-left">
+              <div>
+                <img src="/static/assets/images/logo-step1.jpg" alt="Mstaff">
+              </div>
+              <div class="footer-left-p">
+                <div>
+                  <p>"Sans doute la tête que vous venez de faire en arrivant sur cet écran."</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

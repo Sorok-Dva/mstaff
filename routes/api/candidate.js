@@ -1,6 +1,6 @@
 const __ = process.cwd();
 const { Authentication, HTTPValidation } = require(`${__}/middlewares/index`);
-const { User } = require(`${__}/components`);
+const { User, Establishment, Conference } = require(`${__}/components`);
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -28,6 +28,9 @@ const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).
   ]
 );
 
+router.post('/availability',
+  Authentication.ensureIsCandidate,
+  User.Candidate.setAvailability);
 
 /**
  * @Route('/api/user/:action/video') POST;
@@ -43,6 +46,10 @@ router.post('/add/document',
   docsUpload,
   User.Candidate.uploadDocument);
 
+router.delete('/document/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.deleteDocument);
+
 router.post('/add/photo',
   Authentication.ensureIsCandidate,
   avatarUpload,
@@ -50,10 +57,14 @@ router.post('/add/photo',
 
 router.get('/xp/:id(\\d+)',
   Authentication.ensureIsCandidate,
-  User.Candidate.getXpById
-).delete('/xp/:id(\\d+)',
-  Authentication.ensureIsCandidate,
-  User.Candidate.removeXP);
+  User.Candidate.getXpById)
+  .delete('/xp/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.removeXP)
+  .put('/xp/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.putXP
+  );
 
 router.get('/formation/:id(\\d+)',
   Authentication.ensureIsCandidate,
@@ -72,7 +83,10 @@ router.get('/diploma/:id(\\d+)',
   User.Candidate.getDiplomaById)
   .delete('/diploma/:id(\\d+)',
     Authentication.ensureIsCandidate,
-    User.Candidate.removeDiploma);
+    User.Candidate.removeDiploma)
+  .put('/diploma/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.putDiploma);
 
 router.post('/type/:type/add',
   Authentication.ensureIsCandidate,
@@ -94,12 +108,32 @@ router.get('/wish/:id(\\d+)',
   .delete('/wish/:id(\\d+)',
     Authentication.ensureIsCandidate,
     HTTPValidation.CandidateController.removeWish,
-    User.Candidate.removeWish
-  )
+    User.Candidate.removeWish)
   .put('/wish/:id(\\d+)',
     Authentication.ensureIsCandidate,
     User.Candidate.editWish
   );
 
+router.post('/wish/:id(\\d+)/refresh',
+  Authentication.ensureIsCandidate,
+  User.Candidate.refreshWish);
+router.post('/nc/:id(\\d+)/availability',
+  Authentication.ensureIsCandidate,
+  Establishment.Need.candidateAnswer
+);
+
+router.post('/conference/:id(\\d+)/availability',
+  Authentication.ensureIsCandidate,
+  Conference.Main.candidateAnswer
+);
+
+router.post('/conference/:id(\\d+)/askNewDate',
+  Authentication.ensureIsCandidate,
+  Conference.Main.askNewDate
+);
+
+router.get('/conference/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  Conference.Main.viewConference_Candidate);
 
 module.exports = router;

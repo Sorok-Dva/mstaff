@@ -4,28 +4,33 @@
     margin-top: 20px;
     transform: scale(1.5);
   }
+
   .checkbox label::after {
     top: 19px;
     font-size: 21px;
   }
+
   h3, .h3 {
     font-size: 1.825em;
     line-height: 2.2 !important;
   }
+
   .form-group {
     margin-bottom: 0 !important;
   }
 
-   .list-inline>li {
-     padding-right: 0 !important;
-     padding-left: 0 !important;
-   }
+  .list-inline > li {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
   .fa-1d3x {
     font-size: 1.3em;
   }
 
   .card-user {
-    min-height: 375px;
+    min-height: 380px;
+    height: auto;
     margin-top: 20px;
   }
 
@@ -35,28 +40,39 @@
   }
 </style>
 <script>
-  let esId = {{session.currentEs}};
+  let esId = {{user.opts.currentEs}};
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
-  let need = { selectedCandidates: [], filterQuery: {
-      establishments: [ esId ]
-    }};
+  let baseCVCount = {{candidatesCount.length}};
+  let need = {
+    selectedCandidates: [ {{#each need.candidates as |candidate|}}{{candidate.candidate_id}},{{/each}} ],
+    firstSearch: {{#if need}}false{{else}}true{{/if}},
+    filterQuery: {
+      establishments: [esId]
+    }
+  };
 </script>
-<div class="row">
-  <div class="col-md-offset-2 col-md-8 col-sm-12">
+<div class="col-md-12">
+  <h1 class="text-center">Vous avez accès à <span class="badge badge-soft-primary" id="cvCount">{{candidatesCount.length}}</span> professionnels au sein de votre CVthèque.</h1>
+</div>
+<div class="row d-flex justify-content-center">
+  <div class="col-12 col-md-8 col-lg-8">
     <div class="form-group">
       <div class="searchbar-wrapper">
         <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
-          <input placeholder="Indiquez le profil recherché" style="border: 0px" id="post" type="text"
-                 class="form-control pull-left" autocomplete="off">
+          <input placeholder="Indiquez un type de poste" style="border: 0px" id="post" type="text"
+                 class="form-control float-left" autocomplete="off" value="{{need.post}}">
           <div>
-            <button onclick="resetSearch()" id="resetSearch"
-                    title="Réinitialiser ma recherche" class="btn btn-warning pull-right" style="display: none;margin-left: 5px;">
+            <button onclick="resetSearch()" id="resetSearch" data-toggle="tooltip" data-placement="top"
+                    data-original-title="Réinitialiser ma recherche" class="btn btn-outline-warning float-right"
+                    style="{{#unless need}}display: none;{{/unless}}margin-left: 5px;">
               <i class="fal fa-undo-alt"></i>
             </button>
-            <button id="saveNeed" class="btn btn-success pull-right" title="Enregistrer ma recherche" style="display:none;margin-left: 5px;">
+            <button id="saveNeed" {{#if need.id}}data-need-id="{{need.id}}"{{/if}} class="btn btn-outline-success float-right"
+                    data-toggle="tooltip" data-placement="top" data-original-title="Enregistrer ma recherche"
+                    style="{{#unless need}}display: none;{{/unless}}margin-left: 5px;">
               <i class="fal fa-save"></i>
             </button>
-            <button id="searchCandidates" class="btn btn-large btn-primary pull-right">
+            <button id="searchCandidates" class="btn btn-large btn-outline-primary float-right">
               Rechercher
             </button>
           </div>
@@ -65,107 +81,132 @@
     </div>
   </div>
 </div>
-<div class="row" style="margin-top: 15px">
+<div class="row mt-2 mb-4">
   <div class="col-md-12" id="criteria">
     <div class="col-md-12 text-center">
-      <button class="btn btn-info" data-toggle="modal" data-target="#serviceType" data-backdrop="static" data-keyboard="false">
-        Service <span id="btnServiceType"></span>
+      <button class="btn btn-outline-info" onclick="return showServiceModal()">
+        Service <span id="btnServiceType">{{need.service}}</span>
       </button>
-      <button class="btn btn-info" data-toggle="modal" data-target="#contractType" data-backdrop="static" data-keyboard="false">
-        Contrat <span id="btnContractType"></span>
+      <button class="btn btn-outline-info" onclick="return showContractModal()">
+        Contrat <span id="btnContractType" style="text-transform: uppercase">{{need.contract_type}}</span>
       </button>
-      <button class="btn btn-info" data-toggle="modal" data-target="#timeType" data-backdrop="static" data-keyboard="false">
-       Période <span id="btnTimeType"></span>
+      <button class="btn btn-outline-info" onclick="return showTimeModal()">
+        Période <span id="btnTimeType">{{#if need.start}}{{date need.start 'DD/MM/YYYY'}}{{/if}}{{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}</span>
       </button>
-      <button class="btn btn-info" data-toggle="modal" data-target="#diplomaType" data-backdrop="static" data-keyboard="false">
-        Diplômes Complémentaires <span id="btnDiplomaType"></span>
+      <button class="btn btn-outline-info" onclick="return showDiplomaModal()">
+        Diplômes Complémentaires <span id="btnDiplomaType">{{need.diploma}}</span>
       </button>
+    </div>
+    <div class="text-center" style="padding: 10px">
+      <i class="fal fa-archive fa-2x Show" id="showArchived" onclick="showArchived()" style="cursor: pointer; margin-left: 5px; color:#9e9e9e"
+         data-toggle="tooltip" data-placement="top" data-original-title="Afficher uniquement mes candidats archivés" title="Afficher uniquement mes candidats archivés"></i>
+      <i class="fal fa-star fa-2x Show" id="showFavorites" onclick="showFavorites()" style="cursor: pointer; color:#9e9e9e"
+         data-toggle="tooltip" data-placement="top" data-original-title="Afficher uniquement mes favoris" title="Afficher uniquement mes favoris"></i>
     </div>
   </div>
 </div>
+
 <div class="row" style="padding-top: 30px">
-  <div id="baseResult" class="col-md-12">
-    {{#each candidates as |data|}}
-      {{#unless data.Establishment.ArchivedCandidates.0.candidate_id}}
-        <div class="col-md-3" data-card-user="{{data.Wish.Candidate.id}}">
+  <div id="baseResult" class="col-md-12" {{#if need}}style="display: none"{{/if}}>
+    <div class="row">
+      {{#each candidates as |data|}}
+        <div class="col-12 col-md-6 col-lg-3" data-card-user="{{data.Wish.Candidate.id}}"
+          {{#if data.Establishment.ArchivedCandidates.0.candidate_id}} data-archived="true" style="display:none"{{else}} data-archived="false"{{/if}}
+          {{#if data.Establishment.FavoriteCandidates.0.candidate_id}} data-favorite="true"{{else}} data-favorite="false"{{/if}}>
           <div class="card card-user">
-            <div class="image">
-              <div class="pull-left">
-                <span class="pull-right" style="margin: 5px">
-                  <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
-                  <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}" onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
+            <div class="icons" style="z-index: 1">
+              <div class="float-left">
+                <span class="float-right" style="margin: 5px">
+                  <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
+                     onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
+                  <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
+                     onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')"
+                     style="display:none;cursor: pointer; color: #35e035"></i>
                 </span>
               </div>
-              <div class="actions pull-right">
-                <ul class="list-inline">
-                  <li>
-                    <i class="fal fa-archive fa-1d3x" onclick="addCandidate({{data.Wish.Candidate.id}}, 'archive')"
-                       style="cursor: pointer"></i>
-                  </li>
-                  <li>
-                    <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
-                       title="Ajouté par {{data.Establishment.FavoriteCandidates.0.User.firstName}} {{data.Establishment.FavoriteCandidates.0.User.lastName}}"
-                      {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
-                       onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unfav')" style="cursor: pointer; color: gold"
-                      {{else}}
-                       onclick="addCandidate({{data.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"
-                      {{/if}}>
-                    </i>
-                  </li>
-                </ul>
+              <div class="actions float-right p-2">
+                <i class="fal fa-archive archiveCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
+                  {{#if data.Establishment.ArchivedCandidates.0.candidate_id}}
+                   onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unarchive')"
+                   style="cursor: pointer; color: rgb(14, 206, 164)"
+                  {{else}}
+                   onclick="addCandidate({{data.Wish.Candidate.id}}, 'archive')"
+                   style="cursor: pointer;"
+                  {{/if}}></i>
+                <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
+                   title="Ajouté par {{data.Establishment.FavoriteCandidates.0.User.firstName}} {{data.Establishment.FavoriteCandidates.0.User.lastName}}"
+                  {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
+                   onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unfav')"
+                   style="cursor: pointer; color: gold"
+                  {{else}}
+                   onclick="addCandidate({{data.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"
+                  {{/if}}>
+                </i>
               </div>
             </div>
             <div class="content">
-              <div class="author">
-                <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
-                <div class="rank-label-container">
-                  <span class="label label-default rank-label">{{{candidateProfilePercentage data.Wish.Candidate}}}</span>
+              <div class="card-profile">
+                <div class="avatar avatar-xxl avatar-online" style="margin-top: -30px;">
+                  <img src="/static/assets/images/face-0.jpg" id="candidateAvatar" class="avatar-img rounded-circle border-blue" alt="avatar">
                 </div>
-                <h5 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
+                <div class="rank-label-container">
+                  <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate.percentage}}}</span>
+                </div>
+                <h4 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
                   <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>,
                   <small><b><i class="fal fa-map-marker-alt"></i> {{data.Wish.Candidate.User.town}}</b></small>
-                </h5>
+                </h4>
               </div>
               <div class="text-center">
-                <h6>
+                <h4>
                   <div class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"></div>
-                  <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
+                  <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"
+                        style="line-height: 1.8">
                     {{#if data.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
                   </span>
-                </h6>
-                <h5 class="text-muted">
-                  <i class="fal fa-sun"{{#if data.Wish.day_time}} style="color: #04e900"{{/if}}></i>
-                  <i class="fal fa-moon"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
-                </h5>
+                </h4>
+                <h4 class="text-muted">
+                  <i class="fal fa-sun fa-2x"{{#if data.Wish.day_time}} style="color: #04e900"{{/if}}></i>
+                  <i class="fal fa-moon fa-2x"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
+                </h4>
+                {{#if data.Wish.posts}}
+                  <h4><label class="badge badge-soft-success">{{this.Wish.posts}}</label></h4>
+                {{/if}}
                 {{#if data.Wish.services}}
-                  <hr style="width: 35%; margin: auto">
-                  <h5 class="text-muted">
+                  <hr style="width: 45%; margin: auto">
+                  <h4 class="text-muted mt-2">
                     Intéressé(e) par les services
-                  </h5>
-                  <h6>
+                  </h4>
+                  <h5>
                     {{#each data.Wish.services as |service|}}
-                      <div class="label label-default">{{service}}</div>
+                      <div class="badge badge-soft-secondary">{{service}}</div>
                     {{/each}}
-                  </h6>
-                  <hr style="width: 35%; margin: auto;">
+                  </h5>
+                  <hr style="width: 45%; margin: auto;">
                 {{/if}}
               </div>
               <div class="col-md-12 text-center profile-cta">
-                <div class="col-md-12"><button class="btn btn-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">Accéder au profil complet</button></div>
                 <div class="col-md-12">
-                  <p class="text-muted"><small>Inscrit le {{date data.createdAt 'DD/MM/YYYY'}}</small></p>
+                  <button class="btn btn-outline-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">Accéder
+                    au profil complet
+                  </button>
+                </div>
+                <div class="col-md-12">
+                  <p class="text-muted">
+                    <small>Inscrit le {{date data.createdAt 'DD/MM/YYYY'}}</small>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      {{/unless}}
-    {{/each}}
+      {{/each}}
+    </div>
     {{#unless candidates}}
       <h3>Aucun candidats n'a encore postuler dans votre établissement.</h3>
     {{/unless}}
   </div>
-  <div id="searchResult" class="col-md-12" style="display:none"></div>
+  <div id="searchResult" class="col-12" style="display:none"></div>
 </div>
 <div class="modal modal-xs fade" id="candidateProfileModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
@@ -176,192 +217,44 @@
     </div>
   </div>
 </div>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<select class="form-control" id="selectServiceType" data-live-search="true"
+        title="Séléctionner un type de service" style="display: none">
+  {{#each services as |service|}}
+    <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
+  {{/each}}
+</select>
+<select class="form-control" id="selectDiplomaType" data-live-search="true"
+        title="Séléctionner un diplôme" style="display: none">
+  {{#each formations as |formation|}}
+    <option value="{{formation.id}}">{{formation.name}}</option>
+  {{/each}}
+</select>
+<script src="/static/assets/dist/js/addNeed.es.min.js"></script>
 <script>
-  need.firstSearch = true;
-  need.notifyCandidates = false;
-  $(`#post`).autocomplete({
-    source: list,
-    minLength: 2,
-    select: (event, ui) => {
-      need.post = ui.item.label;
-      if (need.firstSearch) return showContractModal();
-      else return searchCandidates();
-    },
-  });
-  $('button[data-target="#contractType"]').click(() => showContractModal());
-  $('button[data-target="#timeType"]').click(() => showTimeModal());
-
-  $('#searchCandidates').on('click', function() {
-    need.post = $('input#post').val();
-    searchCandidates();
-  });
-
-  $('input#post').on('keydown', function(e) {
-    if (e.which === 13) {
-      e.preventDefault();
-      need.post = $('input#post').val();
+    {{#if need}}
+    $(document).ready(() => {
+      need.name = '{{need.name}}';
+      need.id = {{need.id}};
+      {{#if need.contract_type}}
+        need.filterQuery.contractType = '{{need.contract_type}}';
+      {{/if}}
+      {{#if need.service}}
+        need.filterQuery.service = '{{need.service}}';
+      {{/if}}
+      {{#if need.diploma}}
+        need.filterQuery.diploma = '{{need.diploma}}';
+      {{/if}}
+      need.filterQuery.timeType = {
+        {{#if need.start}} dateStart: new Date('{{need.start}}'),{{/if}}
+        {{#if need.end}} dateEnd: new Date('{{need.end}}'),{{/if}}
+      };
+      {{#if need.candidates}}
+        need.selectedCandidates.forEach(id => {
+          $(`.selectCandidate[data-id="${id}"]`).hide();
+          $(`.unselectCandidate[data-id="${id}"]`).show();
+        });
+      {{/if}}
       searchCandidates();
-    }
-  });
-
-  let searchCandidates = () => {
-    if ($('input#post').val().length < 2) {
-      if (need.filterQuery.length > 1) {
-        notification({
-          icon: 'exclamation',
-          type: 'danger',
-          title: 'Veuillez au moins saisir un nom de poste.',
-        });
-      }
-      return false;
-    }
-    need.post = need.post || $('input#post').val();
-    if (need.firstSearch) {
-      return showContractModal();
-    } else {
-      $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
-        loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
-          $('#resetSearch').show();
-          $('#searchResult').html(html).show();
-          $('#baseResult').hide();
-        });
-      }).catch(error => errorsHandler(error));
-    }
-  };
-
-  let showContractModal = () => {
-    createModal({
-      id: 'contractType',
-      modal: 'addNeed-ContractType',
-      title: 'Type de contrat souhaité',
-    }, () => {
     });
-  };
-
-  let showTimeModal = () => {
-    createModal({
-      id: 'timeType',
-      modal: 'addNeed-TimeType',
-      title: 'Période',
-      contractType: need.filterQuery.contractType
-    });
-  };
-
-  let resetSearch = () => {
-    $('input#post').val('');
-    $('#searchResult').empty().hide();
-    $('#baseResult').show();
-    $('#btnContractType').empty();
-    $('#btnTimeType').empty();
-    need.firstSearch = true;
-    $('#resetSearch').hide();
-  };
-
-  let addCandidate = (id, type) => {
-    id = parseInt(id);
-    switch (type) {
-      case 'select':
-        if (need.selectedCandidates.indexOf(id) === -1) {
-          if (need.selectedCandidates.length === 0) $('#saveNeed').show();
-            $(`i.selectCandidate[data-id="${id}"]`).hide();
-          $(`i.unselectCandidate[data-id="${id}"]`).show();
-          need.selectedCandidates.push(id);
-          /*$('#selectedEsCount').html(need.selectedCandidates.length);
-          $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
-        }
-        break;
-        case 'favorite':
-          $(`i.favCandidate[data-id="${id}"]`).css('color', 'gold').attr('onclick', `removeCandidate(${id}, 'unfav')`);
-          $.post(`/api/es/${esId}/candidate/${id}/fav/`, { _csrf }, (data) => {
-            if (data.status === 'Created') {
-              notification({
-                icon: 'check-circle',
-                type: 'success',
-                title: 'Candidat ajouté au favoris.'
-              })
-            } else {
-              notification({
-                icon: 'exclamation-circle',
-                type: 'warning',
-                title: 'Ce candidat est déjà dans vos favoris.'
-              })
-            }
-          });
-          break;
-        case 'archive':
-          createModal({
-            id: 'archivateCandidateModal',
-            modal: 'es/showArchivateCandidate',
-            title: 'Archiver un candidat',
-          }, () => {
-            $('#archivateCandidate').click(function() {
-              $('#archivateCandidateModal').modal('hide');
-              $.post(`/api/es/${esId}/candidate/${id}/archive/`, { _csrf }, (data) => {
-                $(`div[data-card-user="${id}"]`).remove();
-                if (data.status === 'Created') {
-                  notification({
-                    icon: 'check-circle',
-                    type: 'success',
-                    title: 'Candidat archivé avec succès.'
-                  })
-                } else {
-                  notification({
-                    icon: 'exclamation-circle',
-                    type: 'warning',
-                    title: 'Ce candidat est déjà archivé.'
-                  })
-                }
-              });
-            });
-          });
-        break;
-    }
-  };
-
-  let removeCandidate = (id, type) => {
-    id = parseInt(id);
-    let index;
-    switch (type) {
-      case 'unselect':
-        index = need.selectedCandidates.indexOf(id);
-        if (index !== -1) {
-          $(`i.unselectCandidate[data-id="${id}"]`).hide();
-          $(`i.selectCandidate[data-id="${id}"]`).show();
-          need.selectedCandidates.splice(index, 1);
-          if (need.selectedCandidates.length === 0) $('#saveNeed').hide();
-          /* $('#selectedEsCount').html(need.selectedCandidates.length);
-           $(`#es_selected > #es${id}`).remove();*/
-        }
-        break;
-        case 'unfav':
-          $(`i.favCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'favorite')`);
-          $.post(`/api/es/${esId}/candidate/${id}/unfav/`, { _csrf }, (data) => {
-            if (data.status === 'deleted') {
-              notification({
-                icon: 'check-circle',
-                type: 'success',
-                title: 'Candidat supprimé de vos favoris.'
-              })
-            }
-          });
-        break;
-    }
-  };
-
-  $(document).ready(() => {
-    need._csrf = _csrf;
-
-    $('button#saveNeed').click(function() {
-      if (need.selectedCandidates.length > 0) {
-        need._csrf = _csrf;
-        $.post(`/api/es/${esId}/addNeed`, need, (data) => {
-          if (data.id) {
-            $(location).attr('href', `/need/${data.id}`);
-          }
-        });
-      }
-    });
-  });
+    {{/if}}
 </script>

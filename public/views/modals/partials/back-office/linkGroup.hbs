@@ -1,0 +1,40 @@
+<script src="/static/assets/js/bootstrap-selectpicker.js"></script>
+<div class="modal-body">
+  <div class="form-group">
+    <select id="establishmentsID" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
+            data-live-search="true">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" id="validateLinkGroup"> Valider les modifications</button>
+</div>
+<script>
+  $.get('/api/back-office/establishments/all', function (data) {
+    $.each(data.establishments, function (i, establishment) {
+      $('#establishmentsID').append($('<option>', {
+        value: establishment.id,
+        text: establishment.name
+      }));
+      $('#establishmentsID').selectpicker('refresh');
+    });
+    var ESoptions = $("#establishmentsID option");
+    ESoptions.sort(function (a, b) {
+      if (a.text > b.text) return 1;
+      else if (a.text < b.text) return -1;
+      else return 0;
+    });
+    $("#establishmentsID").empty().append(ESoptions).selectpicker("refresh");
+  });
+  var eslinkrow = {{this.group.id}};
+  var preselecteds = [];
+  $.get('/api/back-office/eslinks/' + eslinkrow, function (data) {
+    $.each(data.linkes, function (i, linkes) {
+      preselecteds.push(linkes.id_es);
+    });
+    $('select[name=selectName]').val(preselecteds);
+    $('#establishmentsID').selectpicker('refresh');
+  });
+  $('#establishmentsID').selectpicker();
+
+</script>

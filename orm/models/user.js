@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     phone: {
       type: DataTypes.STRING,
       allowNull: false
@@ -49,6 +53,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: 0,
       allowNull: false
+    },
+    opts: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('opts'))
+      },
+      set(data) {
+        this.setDataValue('opts', JSON.stringify(data));
+      }
     }
   });
   User.associate = function (models) {

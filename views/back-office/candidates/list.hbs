@@ -15,6 +15,7 @@
           <th data-field="localisation" data-sortable="true">Localisation</th>
           <th data-field="phone" data-sortable="true">Téléphone</th>
           <th data-field="views" data-sortable="true">Vues</th>
+          <th data-field="validated" data-sortable="true">État</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions</th>
           </thead>
@@ -29,6 +30,7 @@
               <td>{{user.town}} ({{user.postal_code}})</td>
               <td>{{user.phone}}</td>
               <td>{{user.candidate.views}}</td>
+              <td>{{#if user.validated}}Validé{{else}}En attente{{/if}}</td>
               <td></td>
             </tr>
           {{/each}}
@@ -87,13 +89,19 @@
       searchAlign: 'left',
       pageSize: 25,
       clickToSelect: true,
+      showExport: true,
+      exportDataType: 'all',
+      exportOptions: {
+        fileName: 'mstaff-candidats',
+        ignoreColumn: ['actions']
+      },
       pageList: [10,25,50,100,200,500],
       formatRecordsPerPage: (pageNumber) => {
         return pageNumber + " rows visible";
       },
       icons: {
-        columns: 'fa fa-columns',
-        detailOpen: 'fa fa-plus-circle',
+        columns: 'fal fa-columns',
+        detailOpen: 'fal fa-plus-circle',
         detailClose: 'ti-close'
       }
     });

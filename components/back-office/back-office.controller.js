@@ -2,6 +2,7 @@ const __ = process.cwd();
 const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
 const moment = require('moment');
+const { BackError } = require(`${__}/helpers/back.error`);
 
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
@@ -66,6 +67,10 @@ BackOffice.viewIndex = (req, res, next) => {
 
 BackOffice.ViewStats = (req, res) => {
   res.render('back-office/stats', { layout, title: 'Statistiques', a: { main: 'dashboard', sub: 'stats' } })
+};
+
+BackOffice.ViewSettings = (req, res, next) => {
+  res.render('back-office/settings', { layout, title: 'Paramètres de l\'application', a: { main: 'serverSettings', sub: 'main' } })
 };
 
 module.exports = BackOffice;

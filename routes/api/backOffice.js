@@ -1,5 +1,4 @@
 const { Authentication, HTTPValidation } = require('../../middlewares/index');
-const Controller = require('../../controllers/backOffice');
 const { BackOffice } = require('../../components');
 const express = require('express');
 const router = express.Router();
@@ -56,12 +55,43 @@ router.post('/references/:type',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.Delete);
 
-router.put('/groups/:id(\\d+)', Authentication.ensureIsAdmin, Controller.editGroups)
-  .delete('/groups/:id(\\d+)', Authentication.ensureIsAdmin, Controller.removeGroups)
-  .post('/groups/', Authentication.ensureIsAdmin, Controller.addGroups);
+router.post('/configuration/skills/',
+  Authentication.ensureIsAdmin,
+  BackOffice.Configuration.AddSkill)
+  .delete('/configuration/skills/:id(\\d+)',
+    Authentication.ensureIsAdmin,
+    BackOffice.Configuration.RemoveSkill);
 
-router.put('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, Controller.editSuperGroups)
-  .delete('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, Controller.removeSuperGroups)
-  .post('/super-groups/', Authentication.ensureIsAdmin, Controller.addSuperGroups);
+router.post('/configuration/equipments/',
+  Authentication.ensureIsAdmin,
+  BackOffice.Configuration.AddEquipment)
+  .delete('/configuration/equipments/:id(\\d+)',
+    Authentication.ensureIsAdmin,
+    BackOffice.Configuration.RemoveEquipment);
+
+router.put('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditGroup)
+  .delete('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveGroup)
+  .post('/groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddGroup);
+
+router.put('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditSuperGroup)
+  .delete('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveSuperGroup)
+  .post('/super-groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddSuperGroup);
+
+router.put('/linkES/:id',
+  Authentication.ensureIsAdmin,
+  BackOffice.Group.EditLinkES);
+
+router.put('/linkGroup/:id',
+  Authentication.ensureIsAdmin,
+  BackOffice.Group.EditLinkGroup);
+
+/**
+ * @Route('/back-office/references/:type') POST;
+ * Create Reference Model data
+ */
+
+router.get('/eslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getEsLinksList);
+router.get('/groupslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.getGroupLinksList);
+router.get('/establishments/all', Authentication.ensureIsAdmin, BackOffice.Establishment.getEstablishmentList);
 
 module.exports = router;

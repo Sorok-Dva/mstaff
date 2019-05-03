@@ -9,12 +9,8 @@
     "db:migrate": "sequelize db:migrate",
     "db:migrate:undo": "sequelize db:migrate:undo",
     "db:seed": "sequelize db:seed:all",
-    "db:seed:test": "sequelize db:seed:all --env test",
-    "db:dev_test:migrate": "sequelize db:migrate --env dev_test",
-    "db:dev_test:migrate:undo": "sequelize db:migrate:undo --env dev_test",
-    "db:dev_test:seed": "sequelize db:seed:all --env dev_test",
     "dev": "nodemon --exec npm start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ENV=test mocha tests/*/*.js --exit"
   },
   "repository": {
     "type": "git",
@@ -24,7 +20,7 @@
     "url": "https://github.com/Sorok-Dva/mstaff/issues"
   },
   "dependencies": {
-    "@sentry/node": "^4.6.5",
+    "@sentry/node": "^4.6.6",
     "bcryptjs": "*",
     "chalk": "^2.4.2",
     "compression": "^1.7.4",
@@ -70,7 +66,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "*",
     "request": "^2.87.0",
-    "sequelize": "^5.1.0",
+    "sequelize": ">=5.3.0",
     "sequelize-cli": "^5.4.0",
     "sha1": "^1.1.1",
     "socket.io": "^2.2.0",
@@ -79,6 +75,7 @@
   },
   "devDependencies": {
     "browser-sync": "^2.26.3",
+    "chai": "^4.2.0",
     "eslint": "^5.15.3",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-async-await": "0.0.0",
@@ -91,7 +88,9 @@
     "gulp-rename": "^1.4.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-terser": "^1.1.7",
-    "nyc": "^13.3.0"
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
+    "supertest": "^4.0.2"
   },
   "main": "bin/www"
 }

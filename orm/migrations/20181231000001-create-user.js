@@ -38,6 +38,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      country: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       phone: {
         type: Sequelize.STRING,
         allowNull: false
@@ -58,6 +62,9 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: 0,
         allowNull: false
+      },
+      opts: {
+        type: Sequelize.JSON
       },
       createdAt: {
         allowNull: false,

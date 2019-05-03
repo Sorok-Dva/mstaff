@@ -31,4 +31,24 @@ Establishment_Website.GetServices = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
+Establishment_Website.GetAtsDatas = (req, res, next) => {
+  let datas = {};
+  Models.Post.findAll().then(posts => {
+    datas.posts = posts;
+    return Models.Service.findAll();
+  }).then(services => {
+    datas.services = services;
+    return Models.Formation.findAll();
+  }).then(formations => {
+    datas.diplomas = formations;
+    return Models.Qualification.findAll();
+  }).then(qualifications => {
+    datas.qualifications = qualifications;
+    return Models.Skill.findAll();
+  }).then( skills => {
+    datas.skills = skills;
+    res.status(200).send(datas);
+  }).catch(error => next(new BackError(error)));
+};
+
 module.exports = Establishment_Website;

@@ -1,22 +1,27 @@
 const __ = process.cwd();
 const { validationResult } = require('express-validator/check');
 const { BackError } = require(`${__}/helpers/back.error`);
+const { Candidate } = require(`./candidate/candidate.controller`);
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const httpStatus = require('http-status');
 const Mailer = require(`${__}/components/mailer`);
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
 
 const User = {};
 
-User.create =(req, res, next) => {
+User.create = (req, res, next) => {
   const errors = validationResult(req);
   let { password } = req.body;
   let { esCode } = req.params;
   let esId = null;
 
   if (!errors.isEmpty()) {
+    if (req.xhr) {
+      return res.status(httpStatus.BAD_REQUEST).send({ body: req.body, errors: errors.array() });
+    }
     return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
   }
 
@@ -43,6 +48,7 @@ User.create =(req, res, next) => {
       postal_code: req.body.postal_code,
       town: req.body.town,
       phone: req.body.phone,
+      country: req.body.country,
       role: 'User',
       type: 'candidate',
       key: crypto.randomBytes(20).toString('hex')
@@ -50,20 +56,32 @@ User.create =(req, res, next) => {
       usr = user;
       return Models.Candidate.create({
         user_id: user.id,
+        percentage: {
+          profile: {
+            main: user.firstName && user.lastName && user.phone && user.town ? 20 : 0,
+            description: 0,
+            photo: 0,
+          },
+          experiences: 0,
+          formations: 0,
+          documents: { DIP: 0, RIB: 0, CNI: 0, VIT: 0 },
+          total: user.firstName && user.lastName && user.phone && user.town ? 20 : 0
+        },
         es_id: esId || null
       })
     }).then(candidate => {
       Mailer.sendUserVerificationEmail(usr);
-      res.redirect('login');
+      if (req.xhr) {
+        return res.status(httpStatus.CREATED).send({ result: 'created' });
+      } else res.redirect('login');
     }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
   });
 };
 
-User.ValidateAccount = (req, res) => {
+User.ValidateAccount = (req, res, next) => {
   if (req.params.key) {
     Models.User.findOne({
-      where: { key: req.params.key },
-      attributes: ['key', 'id', 'firstName', 'email', 'validated']
+      where: { key: req.params.key }
     }).then(user => {
       if (_.isNil(user)) {
         req.flash('error_msg', 'Clé de validation invalide.');
@@ -78,13 +96,30 @@ User.ValidateAccount = (req, res) => {
           template: 'candidate/emailValidated',
           context: { user: user }
         });
-        res.redirect('/login');
+        Candidate.updatePercentage(user, 'identity');
+        req.logIn(user, (err) => !_.isNil(err) ? next(new BackError(err)) : null);
       })
     });
   } else {
     req.flash('error_msg', 'Clé de validation invalide.');
     return res.redirect('/');
   }
+};
+
+User.sendResetPassword = (req, res, next) => {
+  Models.User.findOne({
+    where: { email: req.body.email },
+    attributes: ['id', 'firstName', 'lastName', 'email', 'key']
+  }).then(user => {
+    if (!_.isNil(user)) {
+      if (_.isNil(user.key)) {
+        user.key = crypto.randomBytes(20).toString('hex');
+        user.save();
+      }
+      Mailer.Main.sendUserResetPasswordLink(user);
+    }
+    return res.render('users/resetPasswordLink-send', { layout: 'onepage' })
+  })
 };
 
 User.resetPassword = (req, res, next) => {
@@ -125,6 +160,35 @@ User.comparePassword = (candidatePassword, hash, callback) => {
   bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
     return callback(err, isMatch);
   });
+};
+
+User.changePassword = (req, res, next) => {
+  let oldpass = req.body.oldPassword;
+  let newpass = req.body.newPassword;
+  let newpasscheck = req.body.newPasswordVerification;
+
+  Models.User.findOne({ where: { id: req.user.id } }).then( user => {
+    User.comparePassword(oldpass, user.password, function (err, match) {
+      if (match) {
+        if (newpass === newpasscheck) {
+          if (oldpass === newpass) {
+            return res.status(200).json({ status: 'new password cannot be your old password' })
+          }
+          bcrypt.hash(newpass, 10).then(hash => {
+            user.password = hash;
+            user.save();
+          });
+          return res.status(200).json({ status: 'ok' });
+        }
+        else {
+          res.status(200).json({ status: 'password verification is incorrect' });
+        }
+      }
+      else {
+        res.status(200).json({ status: 'invalid password' });
+      }
+    });
+  })
 };
 
 /**
