@@ -1,5 +1,5 @@
 const mysql = require('./bin/mysql');
-const pgsql = require('./bin/pgsql');
+const pgsql = require('./bin/pgsql');o
 const _ = require('lodash');
 
 let migrateUsersData = () => {
@@ -22,7 +22,8 @@ let migrateUsersData = () => {
             type: userType(user.type),
             firstName: user.prenom,
             lastName: user.nom,
-            createdAt: user.created_at || new Date(),
+            validated: user.emailverified,
+            createdAt: user.created_at || user.updated_at || new Date(),
             updatedAt: user.updated_at || new Date(),
           };
           if (userType(user.type) === 'candidate') {
