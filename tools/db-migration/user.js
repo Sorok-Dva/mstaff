@@ -1,5 +1,5 @@
 const mysql = require('./bin/mysql');
-const pgsql = require('./bin/pgsql');o
+const pgsql = require('./bin/pgsql');
 const _ = require('lodash');
 
 let migrateUsersData = () => {
