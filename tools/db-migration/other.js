@@ -7,9 +7,9 @@ let migrateOtherData = () => {
     let migrate = {};
 
     migrate.other = () => {
-      migrate.groupsAndSuperGroups();
-      migrate.esAccounts();
-      // wish
+      // migrate.groupsAndSuperGroups();
+      // migrate.esAccounts();
+      migrate.wishes();
     };
 
     migrate.groupsAndSuperGroups = () => {
@@ -147,9 +147,146 @@ let migrateOtherData = () => {
       });
     };
 
+    migrate.wishes = () => {
+      log('GET PgSQL User Data ("souhait" table)');
+      pgsql.get({
+        name: 'get-wishes',
+        text: 'SELECT * FROM souhait'
+      }, (err, wishes) => {
+        if (err) console.log(err);
+        log(`${wishes.rows.length} rows founded (wishes).`);
+        wishes.rows.forEach((wish, i) => {
+          pgsql.get({
+            name: 'get-wishesPosts',
+            text: 'SELECT * FROM souhait_postes WHERE souhait_id = $1', values: [wish.id]
+          }, (err, posts) => {
+            if (wish.candidat_id) {
+              let wishPosts = [];
+              if (posts.rows.length > 0) {
+                con.query('SELECT id, oldId FROM Candidates WHERE oldId = ?', wish.candidat_id, (err, resCandidate) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    if (err || resCandidate.length < 1) {
+                      console.log(err, resCandidate.length < 1);
+                      console.log(resCandidate);
+                    } else {
+                      let i = 0;
+                      posts.rows.forEach((post) => {
+                        pgsql.get({
+                          name: 'get-post',
+                          text: 'SELECT * FROM poste WHERE id = $1', values: [post.poste_id]
+                        }, (err, post) => {
+                          i++;
+                          if (post.rows.length === 1) {
+                            wishPosts.push(post.rows[0].libelle)
+                          }
+                          if (i === posts.rows.length) {
+                            let textPosts = `"${JSON.stringify(wishPosts).replace(/"/g, '\\"')}"`;
+                            con.query('INSERT INTO Wishes SET ?', {
+                              oldId: wish.id,
+                              candidate_id: resCandidate[0].id,
+                              name: wish.libelle,
+                              contract_type: contractType(wish.type_contrat_id),
+                              full_time: wish.temp_plein,
+                              part_time: wish.temp_partiel,
+                              day_time: wish.horaire_nuit,
+                              night_time: wish.horaire_jour,
+                              liberal_cabinets: wish.cabinets_liberaux,
+                              start: wish.date_debut,
+                              posts: textPosts,
+                              end: wish.date_fin,
+                              status: wish.statut,
+                              lat: wish.lat,
+                              lon: wish.lon,
+                              geolocation: wish.mode_geo,
+                              custom_address: wish.adresse_custom,
+                              es_count: wish.nb_etablissements,
+                              createdAt: new Date(),
+                              updatedAt: new Date(),
+                            }, (err, res) => {
+                              if (err) {
+                                console.log(err);
+                              } else {
+                                pgsql.get({
+                                  name: 'get-applications',
+                                  text: 'SELECT * FROM souhait_etablissements WHERE souhait_id = $1',
+                                  values: [wish.id]
+                                }, (err, applications) => {
+                                  if (err) console.log(err);
+                                  log(`${applications.rows.length} rows founded (applications).`);
+                                  applications.rows.forEach((application, i) => {
+                                    if (!_.isNil(application.numero_finess)) {
+                                      application.numero_finess = application.numero_finess.replace(' ', '');
+                                      con.query('SELECT * FROM Establishments WHERE finess = ?', application.numero_finess, (err, resEs) => {
+                                        let es_id = null;
+                                        if (err) {
+                                          console.log(err);
+                                        } else if (resEs.length < 1) {
+                                        } else {
+                                          es_id =  resEs[0].id;
+                                        }
+                                        con.query('INSERT INTO Applications SET ?', {
+                                          name: wish.libelle || 'Souhait sans nom',
+                                          wish_id: res.insertId,
+                                          es_id,
+                                          candidate_id: resCandidate[0].id,
+                                          ref_es_id: application.numero_finess,
+                                          createdAt: new Date(),
+                                          updatedAt: new Date(),
+                                        }, (err, res) => {
+                                          if (err) {
+                                            console.log(err);
+                                          } else {
+                                          }
+                                        });
+                                      });
+                                    } else {
+                                      con.query('INSERT INTO Applications SET ?', {
+                                        name: wish.libelle || 'Souhait sans nom',
+                                        wish_id: res.insertId,
+                                        es_id: null,
+                                        candidate_id: resCandidate[0].id,
+                                        ref_es_id: application.numero_finess,
+                                        createdAt: new Date(),
+                                        updatedAt: new Date(),
+                                      }, (err, res) => {
+                                        if (err) {
+                                          console.log(err);
+                                        } else {
+                                        }
+                                      });
+                                    }
+                                  });
+                                });
+                              }
+                            });
+                          }
+                        });
+                      });
+                    }
+                  }
+                });
+              }
+            }
+          });
+        });
+      });
+    };
+
     migrate.other();
   });
 };
+
+let contractType = (id) => {
+  if (id === 1) return 'cdi-cdd';
+  if (id === 2) return 'vacation';
+  if (id === 3) return 'internship';
+  if (id === 4) return 'other';
+  console.log(id);
+  return '';
+};
+
 
 let log = (msg) => {
   console.log('[DB-MIGRATION]', msg);
