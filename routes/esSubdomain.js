@@ -15,6 +15,10 @@ router.get('/register',
     HTTPValidation.UserController.create,
     User.Main.create);
 
+router.get('/emailAvailable/:email',
+  HTTPValidation.UserController.ApiVerifyEmailAvailability,
+  User.Main.verifyEmailAvailability);
+
 router.get('/posts/all',
   Establishment.Website.GetPosts);
 

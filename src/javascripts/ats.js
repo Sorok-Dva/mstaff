@@ -5,6 +5,7 @@ let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qu
 let toNextModal = false;
 let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 let iti;
+let checkingMail = null;
 
 
 let initApplication = () => {
@@ -628,8 +629,8 @@ let saveDatas = (modal) => {
       identity.email = $('#identityMail').val();
       identity.password = $('#identityPassword').val();
       identity.birthday = $('#identityBirth').val();
-      identity.postal_code = $('#identityPostal').val();;
-      identity.town = $('#identityCity').val();;
+      identity.postal_code = $('#identityPostal').val();
+      identity.town = $('#identityCity').val();
       break;
   }
 };
@@ -668,6 +669,14 @@ let saveEditDatas = (modal) => {
       break;
   }
   permissions.editMode = false;
+};
+
+let isAvailableMail = (mail) => {
+  return new Promise( resolve => {
+    $.get(`/emailAvailable/${mail}`, (data) => {
+      resolve(data.available);
+    }).catch(error => errorsHandler(error));
+  });
 };
 
 let verifyDatas = (modal) => {
@@ -764,7 +773,18 @@ let verifyDatas = (modal) => {
       let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
       let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
 
-      return (isValidForename && isValidName && isValidMail && isValidPhone && isValidPassword && isValidPostal && isValidCity && isValidBirthDate);
+      //TODO regler ce merdier
+      if (isValidMail){
+        if (mail !== checkingMail) {
+          checkingMail = mail;
+          isAvailableMail(mail).then(data => {
+            console.log('retour de data.available', data);
+            return (isValidForename && isValidName && isValidMail && isValidPhone && isValidPassword && isValidPostal && isValidCity && isValidBirthDate && data);
+          });
+        }
+        notify('mailAlreadyUse');
+      }
+      return false;
       break;
   }
 };
@@ -939,7 +959,6 @@ let notify = (error) => {
         message: `Merci d'indiquer un code postal valide.`
       });
       break;
-
     case 'wrongBirthDateFormat':
       notification({
         icon: 'exclamation',
@@ -988,25 +1007,56 @@ let notify = (error) => {
         message: `Merci de saisir un password valide.`
       });
       break;
+    case 'mailAlreadyUse':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Cet email est déjà utilisé.`
+      });
+      break;
+    case 'checkingIfMailAlreadyUse':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Vérification de la disponibilité de l'adresse email en cours...`
+      });
+      break;
+
   }
   return false;
 
 };
 
 let finalize = (es_finess) => {
+  identity.firstName = 'Romain';
+  identity.lastName = 'Pic';
+  identity.phone = '+33629326630';
+  identity.country = 'France';
+  identity.email = 'pic@pic.fr';
+  identity.password = 'A123456*';
+  identity.birthday = '2000-01-01';
+  identity.postal_code = '75000';
+  identity.town = 'Marseille';
   identity._csrf = $('#csrfToken').val();
   console.log(identity);
   $.post('/register/', identity, (data) => {
-    console.log(data);
+    if (data.result === 'created'){
+      console.log('CREATED !');
+      console.log(es_finess);
+      console.log(application);
+      console.log(experiences);
+      console.log(diplomas);
+      console.log(qualifications);
+      console.log(skills);
+      console.log(identity);
+    } else {
+      //TODO Gerer erreurs
+    }
   }).catch(error => errorsHandler(error));
   //TODO
-  console.log(es_finess);
-  console.log(application);
-  console.log(experiences);
-  console.log(diplomas);
-  console.log(qualifications);
-  console.log(skills);
-  console.log(identity);
+
 };
 
 // LISTENERS ---------------------------------------------------------------------------------------
@@ -1313,8 +1363,6 @@ let legalModalListener = () => {
     let button = $('.final-button button');
     (first && second) ? button.show() : button.hide();
   });
-
-
 };
 
 $(document).ready(function () {
