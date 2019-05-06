@@ -15,7 +15,6 @@ const User = {};
 User.create = (req, res, next) => {
   const errors = validationResult(req);
   let { password } = req.body;
-  let { esCode } = req.params;
   let esId = null;
 
   if (!errors.isEmpty()) {
@@ -24,19 +23,6 @@ User.create = (req, res, next) => {
     } else {
       return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
     }
-  }
-
-  if (esCode) {
-    Models.Establishment.findOne({
-      attributes: ['id', 'code'],
-      where: {
-        code: esCode
-      }
-    }).then(es => {
-      if (es) {
-        esId = es.dataValues.id;
-      }
-    });
   }
   let usr;
   bcrypt.hash(password, 10).then(hash => {
@@ -70,8 +56,8 @@ User.create = (req, res, next) => {
         },
         es_id: esId || null
       })
-    }).then(candidate => {
-      Mailer.sendUserVerificationEmail(usr);
+    }).then( () => {
+      Mailer.Main.sendUserVerificationEmail(usr);
       if (req.xhr) {
         return res.status(httpStatus.CREATED).send({ result: 'created' });
       } else {

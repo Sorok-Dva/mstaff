@@ -40,7 +40,7 @@ Mailer.sendEmail = (opts) => {
   }, (error, info) => {
     transporter.close();
     /* eslint-disable no-console */
-    if (error) return console.log(`[MAIL_ERROR]`, JSON.stringify(info));
+    if (error) return console.log(`[MAIL_ERROR]`, JSON.stringify(error));
     if (info) return console.log(`[MAIL_INFO]`, JSON.stringify(info));
     /* eslint-enable no-console */
   });
