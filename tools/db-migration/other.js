@@ -10,7 +10,8 @@ let migrateOtherData = () => {
     migrate.other = () => {
       // migrate.groupsAndSuperGroups();
       // migrate.esAccounts();
-      migrate.wishes();
+      // migrate.wishes();
+      migrate.needs();
     };
 
     migrate.groupsAndSuperGroups = () => {
@@ -262,6 +263,54 @@ let migrateOtherData = () => {
                 });
               }
             }
+          });
+        });
+      });
+    };
+
+    migrate.needs = () => {
+      log('GET PgSQL User Data ("besoin" table)');
+      pgsql.get({
+        name: 'get-needs',
+        text: 'SELECT * FROM besoin'
+      }, (err, needs) => {
+        if (err) console.log(err);
+        log(`${needs.rows.length} rows founded (needs).`);
+        needs.rows.forEach((need, i) => {
+          pgsql.get({
+            name: 'get-needsPosts',
+            text: 'SELECT * FROM poste WHERE id = $1', values: [need.poste_id]
+          }, (err, post) => {
+            pgsql.get({
+              name: 'get-needsService',
+              text: 'SELECT * FROM service WHERE id = $1', values: [need.service_id]
+            }, (err, service) => {
+              con.query('SELECT id, oldId FROM Establishments WHERE oldId = ?', need.etablissement_id, (err, resEs) => {
+              con.query('SELECT id, oldId FROM Users WHERE oldId = ?', need.utilisateur_id, (err, resUser) => {
+                let needPost = post.rowCount === 0 ? null : post.rows[0].libelle, needService = service.rowCount === 0 ? null : service.rows[0].libelle;
+                if (err || resEs.length < 1 || resUser.length < 1) {
+                  console.log(err);
+                } else {
+                  con.query('INSERT INTO Needs SET ?', {
+                    name: need.nom,
+                    post: needPost,
+                    service: needService,
+                    es_id: resEs[0].id,
+                    createdBy: resUser[0].id,
+                    contract_type: contractType(need.type_contrat_id),
+                    start: need.date_debut,
+                    end: need.date_fin,
+                    createdAt: need.created_ad || new Date(),
+                    updatedAt: need.updated_at || new Date(),
+                  }, (err, res) => {
+                    if (err) {
+                      console.log(err);
+                    }
+                  });
+                }
+              });
+              });
+            });
           });
         });
       });
