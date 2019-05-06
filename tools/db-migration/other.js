@@ -1,6 +1,7 @@
 const mysql = require('./bin/mysql');
 const pgsql = require('./bin/pgsql');
 const _ = require('lodash');
+const fs = require('fs');
 
 let migrateOtherData = () => {
   mysql.get('mstaff', (err, con) => {
@@ -149,6 +150,8 @@ let migrateOtherData = () => {
 
     migrate.wishes = () => {
       log('GET PgSQL User Data ("souhait" table)');
+      fs.appendFileSync('applications.sql',
+        'INSERT INTO Applications (`name`, wish_id, candidate_id, es_id, ref_es_id) VALUES ');
       pgsql.get({
         name: 'get-wishes',
         text: 'SELECT * FROM souhait'
@@ -226,7 +229,9 @@ let migrateOtherData = () => {
                                         } else {
                                           es_id =  resEs[0].id;
                                         }
-                                        con.query('INSERT INTO Applications SET ?', {
+                                        fs.appendFileSync('applications.sql',
+                                          `("${wish.libelle.replace(/"/g, '\\"') || 'Souhait sans nom'}", ${res.insertId}, ${es_id}, ${resCandidate[0].id}, '${application.numero_finess}'),`);
+                                        /*con.query('INSERT INTO Applications SET ?', {
                                           name: wish.libelle || 'Souhait sans nom',
                                           wish_id: res.insertId,
                                           es_id,
@@ -239,23 +244,11 @@ let migrateOtherData = () => {
                                             console.log(err);
                                           } else {
                                           }
-                                        });
+                                        });*/
                                       });
                                     } else {
-                                      con.query('INSERT INTO Applications SET ?', {
-                                        name: wish.libelle || 'Souhait sans nom',
-                                        wish_id: res.insertId,
-                                        es_id: null,
-                                        candidate_id: resCandidate[0].id,
-                                        ref_es_id: application.numero_finess,
-                                        createdAt: new Date(),
-                                        updatedAt: new Date(),
-                                      }, (err, res) => {
-                                        if (err) {
-                                          console.log(err);
-                                        } else {
-                                        }
-                                      });
+                                      fs.appendFileSync('applications.sql',
+                                        `("${wish.libelle.replace(/"/g, '\\"') || 'Souhait sans nom'}", ${res.insertId}, NULL, ${resCandidate[0].id}, '${application.numero_finess}'),`);
                                     }
                                   });
                                 });
