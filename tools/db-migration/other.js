@@ -230,7 +230,7 @@ let migrateOtherData = () => {
                                           es_id =  resEs[0].id;
                                         }
                                         fs.appendFileSync('applications.sql',
-                                          `("${wish.libelle.replace(/"/g, '\\"') || 'Souhait sans nom'}", ${res.insertId}, ${es_id}, ${resCandidate[0].id}, '${application.numero_finess}'),`);
+                                          `("${wish.libelle.replace(/"/g, '\\"') || 'Souhait sans nom'}", ${res.insertId}, ${resCandidate[0].id}, ${es_id}, '${application.numero_finess}'),`);
                                         /*con.query('INSERT INTO Applications SET ?', {
                                           name: wish.libelle || 'Souhait sans nom',
                                           wish_id: res.insertId,
@@ -248,7 +248,7 @@ let migrateOtherData = () => {
                                       });
                                     } else {
                                       fs.appendFileSync('applications.sql',
-                                        `("${wish.libelle.replace(/"/g, '\\"') || 'Souhait sans nom'}", ${res.insertId}, NULL, ${resCandidate[0].id}, '${application.numero_finess}'),`);
+                                        `("${wish.libelle.replace(/"/g, '\\"') || 'Souhait sans nom'}", ${res.insertId}, ${resCandidate[0].id}, NULL,'${application.numero_finess}'),`);
                                     }
                                   });
                                 });
