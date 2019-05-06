@@ -7,8 +7,7 @@
     "start": "node ./bin/www",
     "start debug": "DEBUG=mstaff-db-migrate:* npm start",
     "dev": "nodemon --exec npm start",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "bower install"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Llyam Garcia",
   "dependencies": {
@@ -21,6 +20,7 @@
     "pg": "^7.4.1",
     "promise-mysql": "^3.2.1",
     "request": "^2.85.0",
-    "sha1": "^1.1.1"
+    "sha1": "^1.1.1",
+    "validator": "^10.11.0"
   }
 }

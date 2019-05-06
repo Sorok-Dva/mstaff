@@ -1,6 +1,7 @@
 const mysql = require('./bin/mysql');
 const pgsql = require('./bin/pgsql');
 const _ = require('lodash');
+const { validator } = require('validator');
 
 let migrateUsersData = () => {
   mysql.get('mstaff', (err, con) => {
@@ -17,7 +18,7 @@ let migrateUsersData = () => {
         users.rows.forEach((user, i) => {
           let UserData = {
             oldId: user.id,
-            email: user.email,
+            email: validator.normalizeEmail(user.email),
             password: user.password,
             type: userType(user.type),
             firstName: user.prenom,
