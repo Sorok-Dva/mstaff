@@ -53,7 +53,8 @@ module.exports = (sequelize, DataTypes) => {
     opts: {
       type: DataTypes.JSON,
       get() {
-        return JSON.parse(this.getDataValue('opts'))
+        let opts = this.getDataValue('opts') === undefined ? '{}' : this.getDataValue('opts');
+        return JSON.parse(opts);
       },
       set(data) {
         this.setDataValue('opts', JSON.stringify(data));
