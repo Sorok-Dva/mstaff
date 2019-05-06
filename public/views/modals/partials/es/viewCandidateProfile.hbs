@@ -1,139 +1,122 @@
-<div class="row" style="padding-top:15px">
-  <div class="col-lg-4 col-md-5">
-    <div class="card card-user">
-      <div class="image"></div>
-      <div class="content">
-        <div class="author">
-          <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
-          <div class="rank-label-container">
-            <span class="label label-default rank-label">{{{candidateProfilePercentage this.candidate.percentage}}}</span>
+<div class="container-fluid">
+  <div class="row mt-2">
+    <div class="col-12 col-lg-4">
+      <div class="card card-user">
+        <div class="image"></div>
+        <div class="content">
+          <div class="card-profile">
+            <div class="avatar avatar-xxl avatar-online">
+              <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle border-blue" alt="avatar">
+            </div>
+            <div class="rank-label-container">
+              <span class="label label-default rank-label">{{{candidateProfilePercentage this.candidate.percentage}}}</span>
+            </div>
+            <h2 class="title">{{this.candidate.User.firstName}} {{this.candidate.User.lastName}}<br />
+              <small>{{age this.candidate.User.birthday 'years'}} ans</small>
+            </h2>
           </div>
-          <h4 class="title">{{this.candidate.User.firstName}} {{this.candidate.User.lastName}}<br />
-            <a href="#"><small>{{age this.candidate.User.birthday 'years'}} ans</small></a>
-          </h4>
+          <p class="description text-center p-4">
+            {{this.candidate.description}}
+          </p>
         </div>
-        <p class="description text-center">
-          {{this.candidate.description}}
-        </p>
-      </div>
-      <hr>
-      <div class="text-center">
-        <div class="row">
-          <div class="col-md-5 col-md-offset-1">
-            <h5>{{date this.candidate.User.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
-          </div>
-          <div class="col-md-6">
-            <h5>{{date this.candidate.User.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
+        <hr>
+        <div class="text-center">
+          <div class="row">
+            <div class="col-6 col-lg-6">
+              <h3>{{date this.candidate.User.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h3>
+            </div>
+            <div class="col-6 col-lg-6">
+              <h3>{{date this.candidate.User.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h3>
+            </div>
           </div>
         </div>
-      </div>
-      <hr>
-      <div class="text-center">
-        <div class="row">
-          <h5><i class="fa fa-phone"></i> {{this.candidate.User.phone}}</h5>
-          <h5><i class="fa fa-envelope"></i> {{this.candidate.User.email}}</h5>
-          <h5><i class="fas fa-map-marked-alt"></i> {{this.candidate.User.postal_code}} {{this.candidate.User.town}}</h5>
+        <hr>
+        <div class="text-center">
+          <div class="row">
+            <div class="col-12 col-lg-12">
+              <h4><i class="fal fa-phone"></i> {{this.candidate.User.phone}}</h4>
+            </div>
+            <div class="col-12 col-lg-12">
+              <h4><i class="fal fa-envelope"></i> {{this.candidate.User.email}}</h4>
+            </div>
+            <div class="col-12 col-lg-12">
+              <h4><i class="fal fa-map-marked-alt"></i> {{this.candidate.User.postal_code}} {{candidate.User.town}}</h4>
+            </div>
+          </div>
         </div>
       </div>
+      {{#if this.candidate.video}}
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"><i class="fa fa-film" aria-hidden="true"></i> Vidéo de présentation</h4>
+          </div>
+          <div class="card-content text-center">
+            <video id="video-preview" style="width:100%" controls>
+              <source src="/static/uploads/candidates/{{this.candidates}}/videos/{{this.candidate.video}}" id="videoSrc">
+            </video>
+          </div>
+        </div>
+      {{/if}}
     </div>
-    {{#if this.candidate.video}}
+    <div class="col-12 col-lg-8">
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title"><i class="fa fa-film" aria-hidden="true"></i> Vidéo de présentation</h4>
+          <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Expériences</h4>
         </div>
-        <div class="card-content text-center">
-          <video id="video-preview" style="width:100%" controls>
-            <source src="/static/uploads/candidates/{{this.candidates}}/videos/{{this.candidate.video}}" id="videoSrc">
-          </video>
-        </div>
-      </div>
-    {{/if}}
-  </div>
-  <div class="col-lg-8 col-md-7">
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Expériences</h4>
-      </div>
-      <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
-          <thead>
-          <tr class="info">
-            <th>Date</th>
-            <th>Établissement</th>
-            <th>Poste</th>
-            <th>Service</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#if this.candidate.experiences}}
-            {{#each this.candidate.experiences as |xp|}}
-              <tr>
-                <td>
-                  {{date xp.start 'MM/YYYY' }} -
-                  {{#if xp.end}}
-                    {{date xp.end 'MM/YYYY' }}
-                  {{else}}
-                    maintenant
-                  {{/if}}
-                  {{#if xp.internship}}
-                    <small>(stage)</small>
-                  {{/if}}
-                </td>
-                <td>{{xp.name}}</td>
-                <td>{{xp.poste.name}}</td>
-                <td>{{xp.service.name}}</td>
-              </tr>
-            {{/each}}
-          {{else}}
-            <tr class="text-center">
-              <td colspan="4">Aucune donnée disponible</td>
-            </tr>
-          {{/if}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fa fa-graduation-cap"></i> Formations</h4>
-      </div>
-      <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
-          <thead>
-          <tr class="info">
-            <th style="width:25%"><i class="fa fa-book" aria-hidden="true"></i> Diplômes</th>
-            <th style="width:75%"></th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#if this.candidate.formations}}
-            {{#each this.candidate.formations as |diploma|}}
-              <tr>
-                <td>
-                  {{date diploma.start 'MM/YYYY' }} -
-                  {{#if diploma.end}}{{date diploma.end 'MM/YYYY' }}{{else}}maintenant{{/if}}
-                </td>
-                <td>{{diploma.name}}</td>
-              </tr>
-            {{/each}}
-          {{else}}
-            <tr class="text-center">
-              <td colspan="2">Aucune donnée disponible</td>
-            </tr>
-          {{/if}}
-          </tbody>
-        </table>
-        {{#if this.candidate.qualifications}}
+        <div class="card-content table-responsive table-full-width">
           <table class="table table-hover">
             <thead>
             <tr class="info">
-              <th style="width:25%"><i class="fa fa-book" aria-hidden="true"></i> Diplômes complémentaires</th>
+              <th>Date</th>
+              <th>Établissement</th>
+              <th>Poste</th>
+              <th>Service</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#if this.candidate.experiences}}
+              {{#each this.candidate.experiences as |xp|}}
+                <tr>
+                  <td>
+                    {{date xp.start 'MM/YYYY' }} -
+                    {{#if xp.end}}
+                      {{date xp.end 'MM/YYYY' }}
+                    {{else}}
+                      maintenant
+                    {{/if}}
+                    {{#if xp.internship}}
+                      <small>(stage)</small>
+                    {{/if}}
+                  </td>
+                  <td>{{xp.name}}</td>
+                  <td>{{xp.poste.name}}</td>
+                  <td>{{xp.service.name}}</td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr class="text-center">
+                <td colspan="4">Aucune donnée disponible</td>
+              </tr>
+            {{/if}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title pull-left"><i class="fa fa-graduation-cap"></i> Formations</h4>
+        </div>
+        <div class="card-content table-responsive table-full-width">
+          <table class="table table-hover">
+            <thead>
+            <tr class="info">
+              <th style="width:25%"><i class="fa fa-book" aria-hidden="true"></i> Diplômes</th>
               <th style="width:75%"></th>
             </tr>
             </thead>
             <tbody>
-            {{#if this.candidate.qualifications}}
-              {{#each this.candidate.qualifications as |diploma|}}
+            {{#if this.candidate.formations}}
+              {{#each this.candidate.formations as |diploma|}}
                 <tr>
                   <td>
                     {{date diploma.start 'MM/YYYY' }} -
@@ -142,125 +125,152 @@
                   <td>{{diploma.name}}</td>
                 </tr>
               {{/each}}
+            {{else}}
+              <tr class="text-center">
+                <td colspan="2">Aucune donnée disponible</td>
+              </tr>
             {{/if}}
             </tbody>
           </table>
-        {{/if}}
+          {{#if this.candidate.qualifications}}
+            <table class="table table-hover">
+              <thead>
+              <tr class="info">
+                <th style="width:25%"><i class="fa fa-book" aria-hidden="true"></i> Diplômes complémentaires</th>
+                <th style="width:75%"></th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#if this.candidate.qualifications}}
+                {{#each this.candidate.qualifications as |diploma|}}
+                  <tr>
+                    <td>
+                      {{date diploma.start 'MM/YYYY' }} -
+                      {{#if diploma.end}}{{date diploma.end 'MM/YYYY' }}{{else}}maintenant{{/if}}
+                    </td>
+                    <td>{{diploma.name}}</td>
+                  </tr>
+                {{/each}}
+              {{/if}}
+              </tbody>
+            </table>
+          {{/if}}
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Compétences</h4>
-      </div>
-      <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
-          <thead>
-          <tr class="info">
-            <th style="width:80%"><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#if this.candidate.skills}}
-            {{#each this.candidate.skills as |knowledge|}}
-              <tr>
-                <td>{{knowledge.name}}</td>
-                <td>
-                  <div class="rating-stars text-center">
-                    <ul class="stars-disabled" data-type="software">
-                      <li class="star {{rating knowledge.stars 1}}" title="Je sais faire avec tutorat" data-value="1">
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                      <li class="star {{rating knowledge.stars 2}}" title="Je sais faire en autonomie" data-value='2'>
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                      <li class="star {{rating knowledge.stars 3}}" title="Je sais former" data-value='3'>
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-              </tr>
-            {{/each}}
-          {{else}}
-            <tr class="text-center">
-              <td colspan="2">Aucune donnée disponible</td>
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Compétences</h4>
+        </div>
+        <div class="card-content table-responsive table-full-width">
+          <table class="table table-hover">
+            <thead>
+            <tr class="info">
+              <th style="width:80%"><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</th>
+              <th></th>
             </tr>
-          {{/if}}
-          </tbody>
-        </table>
-        <table class="table table-hover">
-          <thead>
-          <tr class="info">
-            <th style="width:80%"><i class="fa fa-stethoscope" aria-hidden="true"></i> Matériels et produits</th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#if this.candidate.equipments}}
-            {{#each this.candidate.equipments as |equipment|}}
-              <tr>
-                <td>{{equipment.name}}</td>
-                <td>
-                  <div class="rating-stars text-center">
-                    <ul class="stars-disabled" data-type="software">
-                      <li class="star {{rating equipment.stars 1}}" title="Je sais faire avec tutorat" data-value="1">
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                      <li class="star {{rating equipment.stars 2}}" title="Je sais faire en autonomie" data-value='2'>
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                      <li class="star {{rating equipment.stars 3}}" title="Je sais former" data-value='3'>
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
+            </thead>
+            <tbody>
+            {{#if this.candidate.skills}}
+              {{#each this.candidate.skills as |knowledge|}}
+                <tr>
+                  <td>{{knowledge.name}}</td>
+                  <td>
+                    <div class="rating-stars text-center">
+                      <ul class="stars-disabled" data-type="software">
+                        <li class="star {{rating knowledge.stars 1}}" title="Je sais faire avec tutorat" data-value="1">
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                        <li class="star {{rating knowledge.stars 2}}" title="Je sais faire en autonomie" data-value='2'>
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                        <li class="star {{rating knowledge.stars 3}}" title="Je sais former" data-value='3'>
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr class="text-center">
+                <td colspan="2">Aucune donnée disponible</td>
               </tr>
-            {{/each}}
-          {{else}}
-            <tr class="text-center">
-              <td colspan="2">Aucune donnée disponible</td>
+            {{/if}}
+            </tbody>
+          </table>
+          <table class="table table-hover">
+            <thead>
+            <tr class="info">
+              <th style="width:80%"><i class="fa fa-stethoscope" aria-hidden="true"></i> Matériels et produits</th>
+              <th></th>
             </tr>
-          {{/if}}
-          </tbody>
-        </table>
-        <table class="table table-hover">
-          <thead>
-          <tr class="info">
-            <th style="width:80%"><i class="fa fa-floppy-o" aria-hidden="true"></i> Logiciels</th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#if this.candidate.softwares}}
-            {{#each this.candidate.softwares as |software|}}
-              <tr>
-                <td>{{software.name}}</td>
-                <td>
-                  <div class="rating-stars text-center">
-                    <ul class="stars-disabled" data-type="software">
-                      <li class="star {{rating software.stars 1}}" title="Je sais faire avec tutorat" data-value="1">
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                      <li class="star {{rating software.stars 2}}" title="Je sais faire en autonomie" data-value='2'>
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                      <li class="star {{rating software.stars 3}}" title="Je sais former" data-value='3'>
-                        <i class="fa fa-star" disabled></i>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
+            </thead>
+            <tbody>
+            {{#if this.candidate.equipments}}
+              {{#each this.candidate.equipments as |equipment|}}
+                <tr>
+                  <td>{{equipment.name}}</td>
+                  <td>
+                    <div class="rating-stars text-center">
+                      <ul class="stars-disabled" data-type="software">
+                        <li class="star {{rating equipment.stars 1}}" title="Je sais faire avec tutorat" data-value="1">
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                        <li class="star {{rating equipment.stars 2}}" title="Je sais faire en autonomie" data-value='2'>
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                        <li class="star {{rating equipment.stars 3}}" title="Je sais former" data-value='3'>
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr class="text-center">
+                <td colspan="2">Aucune donnée disponible</td>
               </tr>
-            {{/each}}
-          {{else}}
-            <tr class="text-center">
-              <td colspan="2">Aucune donnée disponible</td>
+            {{/if}}
+            </tbody>
+          </table>
+          <table class="table table-hover">
+            <thead>
+            <tr class="info">
+              <th style="width:80%"><i class="fa fa-floppy-o" aria-hidden="true"></i> Logiciels</th>
+              <th></th>
             </tr>
-          {{/if}}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+            {{#if this.candidate.softwares}}
+              {{#each this.candidate.softwares as |software|}}
+                <tr>
+                  <td>{{software.name}}</td>
+                  <td>
+                    <div class="rating-stars text-center">
+                      <ul class="stars-disabled" data-type="software">
+                        <li class="star {{rating software.stars 1}}" title="Je sais faire avec tutorat" data-value="1">
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                        <li class="star {{rating software.stars 2}}" title="Je sais faire en autonomie" data-value='2'>
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                        <li class="star {{rating software.stars 3}}" title="Je sais former" data-value='3'>
+                          <i class="fa fa-star" disabled></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr class="text-center">
+                <td colspan="2">Aucune donnée disponible</td>
+              </tr>
+            {{/if}}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

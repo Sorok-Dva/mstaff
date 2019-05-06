@@ -1,6 +1,7 @@
 <div class="container-fluid">
   <div class="row align-items-center justify-content-center">
     <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+      <a href="/"><i class="fal fa-chevron-circle-left fa-2x"></i></a>
       <!-- Heading -->
       <h1 class="display-4 text-center mb-3">
         Inscription
@@ -13,6 +14,8 @@
           {{tr.pages.register.title_card_header_es}} {{es.name}}
         {{/if}}
       </p>
+
+      {{> flash}}
 
       <!-- Form -->
       <form action="/register" method="post">
@@ -83,13 +86,14 @@
           <label for="password">{{tr.pages.register.form_password_label}}</label>
           <input id="password" name="password" type="password"
                  placeholder="{{tr.pages.register.form_password_label_ph}}"
-                 class="form-control" required="">
+                 class="form-control" required="" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+                  sagittis lacus vel augue laoreet rutrum faucibus.">
         </div>
 
         <!-- Terms -->
         <p class="text-center">
           <small class="text-muted text-center">
-            {{tr.pages.register.terms}}
+            {{{tr.pages.register.terms}}}
           </small>
         </p>
 

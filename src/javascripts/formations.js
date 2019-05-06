@@ -376,27 +376,42 @@ let editDiploma = (id) => {
 };
 
 $(document).ready(() => {
+  let dtargv = {
+    format: 'MM/YYYY',
+    useCurrent: false
+  };
   //XP Datepicker
-  $('#xpFrom').datetimepicker().on('dp.change', (e) => {
+  $('#xpStart').datetimepicker(dtargv).on('dp.change', (e) => {
     let incrementDay = moment(new Date(e.date));
     incrementDay.add(1, 'days');
-    $('#xpTo').data('DateTimePicker').minDate(incrementDay);
+    $('#xpEnd').data('DateTimePicker').minDate(incrementDay);
   });
-  $('#xpTo').datetimepicker().on('dp.change', (e) => {
+  $('#xpEnd').datetimepicker(dtargv).on('dp.change', (e) => {
     let decrementDay = moment(new Date(e.date));
     decrementDay.subtract(1, 'days');
-    $('#xpFrom').data('DateTimePicker').maxDate(decrementDay);
+    $('#xpStart').data('DateTimePicker').maxDate(decrementDay);
   });
   // Formations datepicker
-  $('#fFrom').datetimepicker().on('dp.change', (e) => {
+  $('#fStart').datetimepicker(dtargv).on('dp.change', (e) => {
     let incrementDay = moment(new Date(e.date));
     incrementDay.add(1, 'days');
-    $('#fTo').data('DateTimePicker').minDate(incrementDay);
+    $('#fEnd').data('DateTimePicker').minDate(incrementDay);
   });
-  $('#fTo').datetimepicker().on('dp.change', (e) => {
+  $('#fEnd').datetimepicker(dtargv).on('dp.change', (e) => {
     let decrementDay = moment(new Date(e.date));
     decrementDay.subtract(1, 'days');
-    $('#fFrom').data('DateTimePicker').maxDate(decrementDay);
+    $('#fStart').data('DateTimePicker').maxDate(decrementDay);
+  });
+  // Diplomas datepicker
+  $('#dStart').datetimepicker(dtargv).on('dp.change', (e) => {
+    let incrementDay = moment(new Date(e.date));
+    incrementDay.add(1, 'days');
+    $('#dEnd').data('DateTimePicker').minDate(incrementDay);
+  });
+  $('#dEnd').datetimepicker(dtargv).on('dp.change', (e) => {
+    let decrementDay = moment(new Date(e.date));
+    decrementDay.subtract(1, 'days');
+    $('#dStart').data('DateTimePicker').maxDate(decrementDay);
   });
 
   let formationAutocomplete = [];
@@ -420,5 +435,5 @@ $(document).ready(() => {
   $('#dName').autocomplete({
     source: qualificationAutocomplete
   });
-})
+});
 

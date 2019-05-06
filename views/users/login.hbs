@@ -1,6 +1,7 @@
 <div class="container-fluid">
   <div class="row align-items-center justify-content-center">
     <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+      <a href="/"><i class="fal fa-chevron-circle-left fa-2x mb-4"></i></a>
 
       <!-- Heading -->
       <h1 class="display-4 text-center mb-3">
@@ -12,6 +13,8 @@
         Connectez-vous à votre espace Mstaff
       </p>
 
+      {{> flash}}
+
       <!-- Form -->
       <form action="/login" method="post">
         <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
@@ -21,7 +24,7 @@
           <!-- Label -->
           <label>{{tr.pages.login.form_email_label}}</label>
           <!-- Input -->
-          <input type="email" class="form-control" name="username" placeholder="{{tr.pages.login.form_email_ph}}">
+          <input type="email" class="form-control" name="username" placeholder="{{tr.pages.login.form_email_ph}}" required>
         </div>
 
         <!-- Password -->
@@ -42,11 +45,11 @@
           <div class="form-group">
             <!-- Input -->
             <input type="password" class="form-control form-control-appended" name="password"
-                   placeholder="{{tr.pages.login.form_password_ph}}">
+                   placeholder="{{tr.pages.login.form_password_ph}}" required>
           </div>
         </div>
         <!-- Submit -->
-        <button class="btn btn-lg btn-block btn-primary mb-3">
+        <button type="submit" class="btn btn-lg btn-block btn-primary mb-3">
           Connexion
         </button>
 

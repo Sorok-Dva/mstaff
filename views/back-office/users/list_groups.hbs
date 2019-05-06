@@ -177,7 +177,7 @@
       modal: 'back-office/addGroup'
     }, () => {
       $('button#validateGroup').click(function () {
-        if ($('input#groupValue').val() != '') {
+        if ($('input#groupValue').val() !== '') {
           let _csrf = $('#csrfToken').val();
           let promptInput = $('input#groupValue').val();
           $.post(`/api/back-office/groups/`, {
