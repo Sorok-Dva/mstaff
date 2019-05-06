@@ -1,7 +1,0 @@
-/i18n
-/node_modules
-/public
-/src
-/orm/seeders
-/tools/db-migration
-/tests
