@@ -50,8 +50,9 @@ app.use(Express.wildcardSubdomains);
 app.use(Express.readOnlySessionForImpersonation);
 
 process.on('unhandledRejection', reason => {
-  if (Env.isPreProd || Env.isProd) Sentry.send(reason, { context: 'unhandledRejection' });
-  else console.log(reason);
+  //@TODO Fix Sentry.send for unhandled rejection in prod or pre-prod env
+  /*if (Env.isPreProd || Env.isProd) Sentry.send(reason, { context: 'unhandledRejection' });
+  else*/ console.log(reason);
 });
 
 // ------ ROUTES
