@@ -6,6 +6,7 @@ let toNextModal = false;
 let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 let iti;
 let checkingMail = null;
+const verifiedEvent = new Event('verified');
 
 
 let initApplication = () => {
@@ -674,7 +675,7 @@ let saveEditDatas = (modal) => {
 let isAvailableMail = (mail) => {
   return new Promise( resolve => {
     $.get(`/emailAvailable/${mail}`, (data) => {
-      resolve(data.available);
+      resolve(data);
     }).catch(error => errorsHandler(error));
   });
 };
@@ -752,39 +753,36 @@ let verifyDatas = (modal) => {
       return (skill && stars);
       break;
     case 'identityModal':
-      let forename = $('#identityForename').val();
-      let name = $('#identityName').val();
       let mail = $('#identityMail').val();
-      let birthDate = $('#identityBirth').val();
-      let postal = $('#identityPostal').val();
-      let city = $('#identityCity').val();
-      let password = $('#identityPassword').val();
-
-      let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
-      let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
-      let isValidPostal = !isNaN(postal) ? true : notify('wrongPostalCode');;
-      let isValidCity = !$.isEmptyObject(city);
-      let isValidBirthDate = new Date(birthDate) !== 'Invalid Date' ? true : notify('wrongBirthDateFormat');
-      if (isValidBirthDate)
-        isValidBirthDate = moment(birthDate).isBefore(moment().subtract(18, 'years')) ? true : notify('wrongBirthDate');
-      let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
       let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
       let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
-      let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
-      let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
-
-      //TODO regler ce merdier
       if (isValidMail){
-        if (mail !== checkingMail) {
-          checkingMail = mail;
-          isAvailableMail(mail).then(data => {
-            console.log('retour de data.available', data);
-            return (isValidForename && isValidName && isValidMail && isValidPhone && isValidPassword && isValidPostal && isValidCity && isValidBirthDate && data);
-          });
-        }
-        notify('mailAlreadyUse');
+        //TODO checkingMail pour eviter le spam requete
+        isAvailableMail(mail).then(data => {
+          if (data.available){
+            let forename = $('#identityForename').val();
+            let name = $('#identityName').val();
+            let birthDate = $('#identityBirth').val();
+            let postal = $('#identityPostal').val();
+            let city = $('#identityCity').val();
+            let password = $('#identityPassword').val();
+            let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
+            let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
+            let isValidPostal = !isNaN(postal) ? true : notify('wrongPostalCode');;
+            let isValidCity = !$.isEmptyObject(city);
+            let isValidBirthDate = new Date(birthDate) !== 'Invalid Date' ? true : notify('wrongBirthDateFormat');
+            if (isValidBirthDate)
+              isValidBirthDate = moment(birthDate).isBefore(moment().subtract(18, 'years')) ? true : notify('wrongBirthDate');
+            let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
+            let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
+            let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
+            if (isValidForename && isValidName && isValidPostal && isValidCity && isValidBirthDate && isValidPhone && isValidPassword){
+              document.getElementById('toStep9').dispatchEvent(verifiedEvent);
+            }
+          }
+          else notify('mailAlreadyUse');
+        });
       }
-      return false;
       break;
   }
 };
@@ -1013,14 +1011,6 @@ let notify = (error) => {
         type: 'danger',
         title: 'Informations manquantes :',
         message: `Cet email est déjà utilisé.`
-      });
-      break;
-    case 'checkingIfMailAlreadyUse':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Vérification de la disponibilité de l'adresse email en cours...`
       });
       break;
 
@@ -1333,11 +1323,13 @@ let identityModalListener = () => {
     displayIndicator();
   });
 
+  document.getElementById('toStep9').addEventListener('verified', () => {
+    saveDatas('identityModal');
+    loadModal('identityModal','recapModal');
+  }, false);
+
   $('#toStep9').on('click', () => {
-    if (verifyDatas('identityModal')){
-      saveDatas('identityModal');
-      loadModal('identityModal','recapModal');
-    }
+    verifyDatas('identityModal');
   });
 
 };
