@@ -757,31 +757,36 @@ let verifyDatas = (modal) => {
       let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
       let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
       if (isValidMail){
-        //TODO checkingMail pour eviter le spam requete
-        isAvailableMail(mail).then(data => {
-          if (data.available){
-            let forename = $('#identityForename').val();
-            let name = $('#identityName').val();
-            let birthDate = $('#identityBirth').val();
-            let postal = $('#identityPostal').val();
-            let city = $('#identityCity').val();
-            let password = $('#identityPassword').val();
-            let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
-            let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
-            let isValidPostal = !isNaN(postal) ? true : notify('wrongPostalCode');;
-            let isValidCity = !$.isEmptyObject(city);
-            let isValidBirthDate = new Date(birthDate) !== 'Invalid Date' ? true : notify('wrongBirthDateFormat');
-            if (isValidBirthDate)
-              isValidBirthDate = moment(birthDate).isBefore(moment().subtract(18, 'years')) ? true : notify('wrongBirthDate');
-            let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
-            let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
-            let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
-            if (isValidForename && isValidName && isValidPostal && isValidCity && isValidBirthDate && isValidPhone && isValidPassword){
-              document.getElementById('toStep9').dispatchEvent(verifiedEvent);
+        if (mail !== checkingMail){
+          checkingMail = mail;
+          isAvailableMail(mail).then(data => {
+            if (data.available){
+              let forename = $('#identityForename').val();
+              let name = $('#identityName').val();
+              let birthDate = $('#identityBirth').val();
+              let postal = $('#identityPostal').val();
+              let city = $('#identityCity').val();
+              let password = $('#identityPassword').val();
+              let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
+              let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
+              let isValidPostal = !isNaN(postal) ? true : notify('wrongPostalCode');;
+              let isValidCity = !$.isEmptyObject(city);
+              let isValidBirthDate = new Date(birthDate) !== 'Invalid Date' ? true : notify('wrongBirthDateFormat');
+              if (isValidBirthDate)
+                isValidBirthDate = moment(birthDate).isBefore(moment().subtract(18, 'years')) ? true : notify('wrongBirthDate');
+              let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
+              let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
+              let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
+              if (isValidForename && isValidName && isValidPostal && isValidCity && isValidBirthDate && isValidPhone && isValidPassword){
+                checkingMail = null;
+                document.getElementById('toStep9').dispatchEvent(verifiedEvent);
+              }
             }
-          }
-          else notify('mailAlreadyUse');
-        });
+            else notify('mailAlreadyUse');
+          });
+        } else {
+          notify('mailAlreadyUse');
+        }
       }
       break;
   }
