@@ -417,6 +417,7 @@ User_Candidate.AddExperience = (req, res, next) => {
       poste_id: parseInt(req.body.post_id),
       service_id: parseInt(req.body.service_id),
       internship: req.body.internship,
+      liberal: req.body.liberal,
       current: req.body.current,
       start: req.body.start,
       end: req.body.end || null
