@@ -42,6 +42,8 @@ let getAtsDatas = () => {
 // Initialize Lists
 
 let createPostsList = (posts, input) => {
+  console.log(posts);
+  // TODO VOIR POUR CALER L ID DANS AUTOCOMPLETE POUR RECUP POUR LA BDD PARCE QUE
   postsArray = [];
   posts.forEach( post => {
     postsArray.push(post.name);
@@ -49,7 +51,10 @@ let createPostsList = (posts, input) => {
   postsArray.sort();
   input.autocomplete({
     source: postsArray,
-    minLength: 1
+    minLength: 1,
+    select: (event, ui) => {
+      console.log(ui, event);
+    }
   });
 };
 
@@ -582,10 +587,12 @@ let saveDatas = (modal) => {
       current = {};
       current.id = permissions.experienceId;
       permissions.experienceId += 1;
-      current.establishment = $('#xpEstablishment').val();
-      current.post = $('#xpPost').val();
-      current.contract = $('#radioContract input:checked').attr('id');
-      current.service = $('#xpService').val();
+      current.name = $('#xpEstablishment').val();
+      current.post_id = $('#xpPost').val();
+      // current.contract = $('#radioContract input:checked').attr('id');
+      //Todo a modifier par la suite (voir si on reste sur cette structure)
+      current.internship = 0;
+      current.service_id = $('#xpService').val();
       current.start = new Date($('#xpStart').data("DateTimePicker").date());
       current.end = null;
       if ($('#xpEnd').data("DateTimePicker").date())
@@ -1018,36 +1025,27 @@ let notify = (error) => {
         message: `Cet email est déjà utilisé.`
       });
       break;
-
   }
   return false;
 
 };
 
 let finalize = (es_finess) => {
-  identity.firstName = 'Romain';
-  identity.lastName = 'Pic';
-  identity.phone = '+33629326630';
-  identity.country = 'France';
-  identity.email = 'pic@pic.fr';
-  identity.password = 'A123456*';
-  identity.birthday = '2000-01-01';
-  identity.postal_code = '75000';
-  identity.town = 'Marseille';
   identity._csrf = $('#csrfToken').val();
-  console.log(identity);
   $.post('/register/', identity, (data) => {
     if (data.result === 'created'){
-      console.log('CREATED !');
+      if (experiences.length > 0){
+        //TODO A FINIR
+        $.post('/add/experience', { experiences, _csrf: $('#csrfToken').val() }, (data) => {
+          console.log(data);
+        });
+      }
       console.log(es_finess);
       console.log(application);
       console.log(experiences);
       console.log(diplomas);
       console.log(qualifications);
       console.log(skills);
-      console.log(identity);
-    } else {
-      //TODO Gerer erreurs
     }
   }).catch(error => errorsHandler(error));
   //TODO

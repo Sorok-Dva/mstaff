@@ -59,13 +59,14 @@ User.create = (req, res, next) => {
     }).then( () => {
       Mailer.Main.sendUserVerificationEmail(usr);
       if (req.xhr) {
+        req.session.newAtsUserId = usr.id;
         return res.status(httpStatus.CREATED).send({ result: 'created' });
       } else {
         return res.redirect('login');
       }
     }).catch(error => {
       if (req.xhr){
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ body: req.body, sequelizeError: error });
+        return next(new BackError('Une erreur est survenue lors de la creation de votre compte', 500));
       } else {
         res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error });
       }

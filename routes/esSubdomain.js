@@ -15,6 +15,21 @@ router.get('/register',
     HTTPValidation.UserController.create,
     User.Main.create);
 
+router.post('/add/diploma',
+  Authentication.ensureIsNotAuthenticated,
+  HTTPValidation.CandidateController.postAddDiploma,
+  User.Candidate.AddDiploma
+);
+
+router.post('/add/experience',
+  //TODO verifier user id si pas d authentification
+  // Authentication.ensureIsNotAuthenticated,
+  HTTPValidation.CandidateController.postAddExperience,
+  User.Candidate.AddExperience
+);
+
+
+
 router.get('/emailAvailable/:email',
   HTTPValidation.UserController.ApiVerifyEmailAvailability,
   User.Main.verifyEmailAvailability);

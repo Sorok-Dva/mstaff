@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     poste_id: DataTypes.INTEGER,
     service_id: DataTypes.INTEGER,
     internship: DataTypes.BOOLEAN,
+    liberal: DataTypes.BOOLEAN,
     start: DataTypes.DATE,
     end: DataTypes.DATE,
     current: DataTypes.BOOLEAN
