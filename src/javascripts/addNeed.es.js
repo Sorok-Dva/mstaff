@@ -41,6 +41,7 @@ let searchCandidates = () => {
         $('#resetSearch').show();
         $('#searchResult').html(html).show();
         $('#baseResult').hide();
+        $('#paginationContainer').hide();
       });
     }).catch(error => errorsHandler(error));
   }
@@ -86,6 +87,7 @@ let resetSearch = () => {
   $('#cvCount').text(baseCVCount);
   $('#searchResult').empty().hide();
   $('#baseResult').show();
+  $('#paginationContainer').show();
   $('#btnContractType').empty();
   $('#btnTimeType').empty();
   need.firstSearch = true;
@@ -101,8 +103,7 @@ let addCandidate = (id, type) => {
         $(`i.selectCandidate[data-id="${id}"]`).hide();
         $(`i.unselectCandidate[data-id="${id}"]`).show();
         need.selectedCandidates.push(id);
-        /*$('#selectedEsCount').html(need.selectedCandidates.length);
-        $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
+        $('#saveNeed').attr('data-original-title', `Enregister ma recherche (${need.selectedCandidates.length} candidat sélectionnés)`)
       }
       break;
     case 'favorite':
