@@ -113,7 +113,7 @@
         <!-- User (md) -->
         <div class="navbar-user d-none d-md-flex" id="sidebarUser">
           <!-- Dropup -->
-          <div class="dropup">
+          <div class="dropup ml-5">
             <!-- Toggle -->
             <a href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <div class="avatar avatar-sm avatar-online">
@@ -126,10 +126,13 @@
                 <a href="/profile/edit" class="dropdown-item">Modifier le profil</a>
               {{/ifCond}}
               <a href="#settings" data-toggle="modal" class="dropdown-item">Paramètres</a>
-              <hr class="dropdown-divider">
-              <a href="/logout" class="dropdown-item">Déconnexion</a>
             </div>
           </div>
+          <a href="/logout" class="navbar-user-link" data-toggle="modal">
+            <span class="icon">
+              <i class="fal fa-sign-out" data-toggle="tooltip" data-placement="top" data-original-title="Me déconnecter" title="Me déconnecter"></i>
+            </span>
+          </a>
         </div>
       </div> <!-- / .navbar-collapse -->
     </div>
