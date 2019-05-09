@@ -81,11 +81,11 @@
       </div>
     {{/unless}}
   {{/each}}
-  {{#unless this}}
-  {{!--<script>$('#cvCount').text('0');</script>--}}
-  <h1 class="text-center">Aucun candidats ne répond à vos critères, essayez une nouvelle recherche.</h1>
-  {{/unless}}
 </div>
+{{#unless this}}
+{{!--<script>$('#cvCount').text('0');</script>--}}
+  <h1 class="text-center">Aucun candidats ne répond à vos critères, essayez une nouvelle recherche.</h1>
+{{/unless}}
 <script>
   need.selectedCandidates.forEach(e => {
     $(`i.selectCandidate[data-id="${e}"]`).hide();
