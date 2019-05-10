@@ -110,4 +110,12 @@ router.get('/conferences',
   Authentication.ensureIsCandidate,
   User.Candidate.viewConferences);
 
+router.get('/pools',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewPools);
+
+router.get('/my-pools',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewMyPools);
+
 module.exports = router;

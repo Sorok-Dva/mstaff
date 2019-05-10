@@ -42,6 +42,9 @@ module.exports = {
           key: 'id'
         }
       },
+      planning: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

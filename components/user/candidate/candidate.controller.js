@@ -935,6 +935,16 @@ User_Candidate.viewConferences = (req, res, next) => {
   })
 };
 
+User_Candidate.viewPools = (req, res, next) => {
+  let a = { main: 'pools' };
+  return res.render('candidates/pools', { a } );
+};
+
+User_Candidate.viewMyPools = (req, res, next) => {
+  let a = { main: 'pools' };
+  return res.render('candidates/my-pools', { a } );
+};
+
 User_Candidate.setAvailability = (req, res, next) => {
   Models.User.findOne({
     where: { id: req.user.id },
