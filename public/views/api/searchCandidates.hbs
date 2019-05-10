@@ -13,9 +13,7 @@
             <div class="actions float-right p-2">
               <i class="fal fa-archive fa-1d3x" onclick="addCandidate({{this.Wish.Candidate.id}}, 'archive')"
                      style="cursor: pointer"></i>
-
                   <i class="fal fa-star favCandidate fa-1d3x" data-id="{{this.Wish.Candidate.id}}"
-                     title="Ajouté par {{this.Establishment.FavoriteCandidates.0.User.firstName}} {{this.Establishment.FavoriteCandidates.0.User.lastName}}"
                     {{#if this.Establishment.FavoriteCandidates.0.candidate_id}}
                      onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unfav')" style="cursor: pointer; color: gold"
                     {{else}}

@@ -27,7 +27,6 @@
                style="cursor: pointer;"
               {{/if}}></i>
             <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
-               title="Ajouté par {{data.Establishment.FavoriteCandidates.0.User.firstName}} {{data.Establishment.FavoriteCandidates.0.User.lastName}}"
               {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
                onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unfav')"
                style="cursor: pointer; color: gold"
