@@ -80,7 +80,7 @@ function uploadFile(f, i) {
               title: 'Document sauvegardé :',
               message: `Votre document a correctement été sauvegarder sur nos serveurs.`
             });
-            $(`#${type}List ul`).append(`<li><a href="${url}" target="_blank">${response.name}</a>${rmBtn}</li>`);
+            $(`#${type}List ul`).append(`<li data-document-id="${response.id}" data-type="${type}"><a href="${url}" target="_blank">${response.name}</a>${rmBtn}</li>`);
             $(`#${type}Count`).html(parseInt($(`#${type}Count`).html()) + 1);
             $(`i[data-type="${type}"]`).attr('class', 'fal fa-check-circle fa-2x');
             setTimeout(() => {

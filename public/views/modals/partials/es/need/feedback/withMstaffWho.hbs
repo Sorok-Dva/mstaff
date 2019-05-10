@@ -1,0 +1,52 @@
+<div class="modal-body">
+  <div id="selected"></div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-outline-info float-right" id="endFeedback">Suivant</button>
+</div>
+<script>
+  $('ul#3').clone().appendTo('div#selected');
+  $('div#selected').find('ul#3').attr('id', 'selectedList');
+  $('#selectedList').removeClass(['drag-item', 'card']);
+  $('#selectedList').find('i[data-action="remove"]').attr({
+    class: 'finalCandidates fal fa-check-square fa-2x float-right',
+    'data-action': 'unselect',
+    style: 'cursor: pointer'
+  });
+
+  $('.finalCandidates').click(function(){
+    let action = $(this).attr('data-action');
+    let candidateId = $(this).parent('div').parent('li.card').attr('data-candidateid');
+    let needId = $(this).parent('div').parent('li.card').attr('data-needid');
+    if (action === 'unselect') {
+      $(this).attr({
+        class: 'finalCandidates fal fa-square fa-2x float-right',
+        'data-action': 'select',
+        style: 'cursor: pointer'
+      });
+      $(this).parent('div').parent('li.card').css('background-color', '#bdbdbd');
+      $.post(`/api/es/${esId}/need/${needId}/cancel/candidate/${candidateId}`, { _csrf }, () => {})
+          .catch(err => errorsHandler(err));
+    } else {
+      $(this).attr({
+        class: 'finalCandidates fal fa-check-square fa-2x float-right',
+        'data-action': 'unselect',
+        style: 'cursor: pointer'
+      });
+      $(this).parent('div').parent('li.card').css('background-color', 'white');
+      $.post(`/api/es/${esId}/need/${needId}/select/candidate/${candidateId}`, { _csrf }, () => {})
+          .catch(err => errorsHandler(err));
+    }
+  });
+  $('#endFeedback').click(function() {
+    $('#feedbackNextHowModal').modal('hide');
+    createModal({
+      id: 'endFeedbackModal',
+      modal: 'es/need/feedback/rate',
+      title: 'Retour d\'informations : votre expérience avec Mstaff.',
+      cantBeClose: true,
+      needId: {{this.needId}}
+    })
+  })
+
+</script>

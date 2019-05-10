@@ -1,10 +1,11 @@
 const { src, dest, watch, series, parallel } = require('gulp');
+const { Env } = require('./helpers/helpers');
 const del = require('del');
 const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
 const rename = require('gulp-rename');
-
+const sourcemaps = require('gulp-sourcemaps');
 
 const DST_PATH = './public/assets/dist';
 const CSS_SRC = './src/stylesheets/*.css';
@@ -21,12 +22,14 @@ let clean = (done) => {
 };
 
 let browserSync = (done) => {
-  browsersync.init({
-    proxy: {
-      target: 'localhost:3001',
-      ws: true
-    }
-  });
+  if (Env.current === 'development') {
+    browsersync.init({
+      proxy: {
+        target: 'localhost:3001',
+        ws: true
+      }
+    });
+  }
   done();
 };
 
@@ -48,19 +51,36 @@ let watchJs = () => {
 };
 
 let buildStyles = () => {
-  return src(CSS_SRC)
-    .pipe(cleanCSS())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(dest(CSS_DST))
-    .pipe(browsersync.reload({ stream: true }))
+  if (Env.current === 'development') {
+    return src(CSS_SRC)
+      .pipe(cleanCSS())
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(dest(CSS_DST))
+      .pipe(browsersync.reload({ stream: true }))
+  } else {
+    return src(CSS_SRC)
+      .pipe(cleanCSS())
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(dest(CSS_DST))
+  }
 };
 
 let buildScripts = () => {
-  return src(JS_SRC)
-    .pipe(terser())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(dest(JS_DST))
-    .pipe(browsersync.reload({ stream: true }));
+  if (Env.current === 'development') {
+    return src(JS_SRC)
+      .pipe(sourcemaps.init())
+      .pipe(terser())
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(sourcemaps.write())
+      .pipe(dest(JS_DST))
+      .pipe(browsersync.reload({ stream: true }));
+  } else {
+    return src(JS_SRC)
+      .pipe(terser())
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(dest(JS_DST));
+  }
+
 };
 
 /*

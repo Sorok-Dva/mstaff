@@ -1,0 +1,220 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showSuperGroupModal()"> <i class="fal fa-plus"></i></a>
+        </div>
+
+        <table id="superGroups-table" class="table">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="name" data-sortable="true">Nom</th>
+
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions
+          </th>
+          </thead>
+          <tbody>
+          {{#each superGroup as |superGroups|}}
+            <tr data-id="{{superGroups.id}}">
+              <td></td>
+              <td>{{superGroups.id}}</td>
+              <td>{{superGroups.name}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let table = $('#superGroups-table');
+
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
+      '<i class="ti-sharethis"></i>',
+      '</a>',
+      '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+      '<i class="ti-pencil-alt"></i>',
+      '</a>',
+      '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<i class="ti-close"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .link': (e, value, row, index) => {
+        createModal({
+          id: 'linkSuperGroupModal',
+          title: 'Lier des groupes à ' + row.name,
+          modal: 'back-office/linkSuperGroup',
+          supergroup: row
+        }, () => {
+          $('button#validateLinkSuperGroup').click(function () {
+            if ($('select#establishmentsID').val() !== '') {
+              let _csrf = $('#csrfToken').val();
+              let selectInput = $('select#groupsID').val();
+              $.put(`/api/back-office/linkGroup/${row.id}`, {
+                selectInput,
+                _csrf
+              }, () => {
+                $('#linkSuperGroupModal').modal('hide');
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Groupe(s) lié(s)',
+                  message: ``
+                });
+              });
+            }
+          })
+        });
+      },
+      'click .edit': (e, value, row, index) => {
+        createModal({
+          id: 'editSuperGroupModal',
+          title: 'Modifier un super Groupe',
+          modal: 'back-office/editSuperGroups'
+        }, () => {
+          $('button#btnEditSuperGroup').click(function () {
+            if ($('input#superGroupValueEdit').val() !== '') {
+              let _csrf = $('#csrfToken').val();
+              let promptInput = $('input#superGroupValueEdit').val();
+              $.put(`/api/back-office/super-groups/${row.id}`, {
+                promptInput,
+                _csrf
+              }, () => {
+                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                $('#editSuperGroupModal').modal('hide');
+                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'SuperGroup modifié.',
+                  message: ``
+                });
+              });
+            } else {
+              if ($('input#superGroupValueEdit').val() === '') {
+                $('input#superGroupValueEdit').addClass('error');
+                setTimeout(function () {
+                  $('input#superGroupValueEdit').removeClass('error');
+                }, 750)
+              }
+            }
+          });
+        });
+      },
+      'click .remove': (e, value, row, index) => {
+        createModal({
+          id: 'removeSuperGroupModal',
+          title: 'Supprimer un super groupe',
+          modal: 'back-office/removeSuperGroups'
+        }, () => {
+          let _csrf = $('#csrfToken').val();
+          $('button#btnRemoveSuperGroup').click(function () {
+            $.delete(`/api/back-office/super-groups/${row.id}`, {
+              _csrf
+            }, () => {
+              table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Super groupe supprimé.',
+                message: ``
+              });
+            });
+          });
+        });
+      }
+    };
+
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10, 25, 50, 100, 200, 500],
+      formatRecordsPerPage: (pageNumber) => {
+        return pageNumber + " rows visible";
+      },
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
+    });
+
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+  let showSuperGroupModal = () => {
+    createModal({
+      id: 'addSuperGroupModal',
+      title: 'Ajouter un super groupe',
+      modal: 'back-office/addSuperGroups'
+    }, () => {
+      $('button#validateSuperGroup').click(function () {
+        if ($('input#superGroupValue').val() != '') {
+          let _csrf = $('#csrfToken').val();
+          let promptInput = $('input#superGroupValue').val();
+          $.post(`/api/back-office/super-groups/`, {
+            promptInput,
+            _csrf
+          }, (response) => {
+            if (response.status === 'Already exists') {
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: 'Ce super groupe existe déjà.',
+                message: ``
+              });
+            } else {
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.superGroup.id,
+                  name: response.superGroup.name
+                }
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Super Groupe créé.',
+                message: ``
+              });
+            }
+          });
+          $('#addSuperGroupModal').modal('hide');
+        } else {
+          if ($('input#superGroupValue').val() == '') {
+            $('input#superGroupValue').addClass('error');
+            setTimeout(function () {
+              $('input#superGroupValue').removeClass('error');
+            }, 750)
+          }
+        }
+      })
+    })
+  }
+</script>

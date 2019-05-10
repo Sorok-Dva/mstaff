@@ -2,14 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const _ = require('lodash');
-const config = require('dotenv').config().parsed;
-const httpStatus = require('http-status');
-const Models = require('../models/index');
-const { BackError } = require('./back.error');
 
 class Env {
   static get current() {
-    return config.ENV
+    return process.env.ENV
   }
 
   static get isTest() {
@@ -28,34 +24,15 @@ class Env {
     return 'development' === Env.current
   }
 
+  static get isPreProd() {
+    return 'pre-prod' === Env.current
+  }
+
   static get isProd() {
     return 'production' === Env.current
   }
-
-  static get isSentryEnabled() {
-    return !(Env.isTest || Env.isLocal)
-  }
-
-  static get isPreProd() {
-    return !Env.isSentryEnabled || Env.isDev
-  }
 }
 
-const getObjectOrError = async (model, id, {
-  error = new BackError('getObjectOrError default Error'),
-  include = undefined, transaction = null
-} = {}) => {
-  const rv = await Models[model].findByPk(id, reformatOpts(omitByNil({ include, transaction })));
-  if (rv === null) throw error;
-  return rv;
-};
-
-const getObjectOr404 = async (model, id, { include = undefined, transaction = null } = {}) =>
-  getObjectOrError(model, id, {
-    error: new BackError(`${ Models[model].getTableName()} ${id} not found`, httpStatus.NOT_FOUND),
-    include,
-    transaction
-  });
 
 const reformatOpts = (opts) => {
   if (opts && opts.isSequelizeModel === true) return opts;
@@ -74,18 +51,6 @@ const omitByNil = o => _.omitBy(o, _.isNil);
 
 module.exports = {
   Env,
-  getObjectOrError,
-  getObjectOr404,
-  getOneOrError: async (model, opts, {
-    tooManyError = new BackError(`Multiple ${model.getTableName()} found with opts ${JSON.stringify(opts)}`),
-    notFoundError = new BackError(`${model.getTableName()} not found with opts ${JSON.stringify(opts)}`, httpStatus.NOT_FOUND),
-    transaction = null
-  } = {}) => {
-    const [rv, rvUnexpected] = await model.findAll({ ...this.reformatOpts(this.omitByNil(opts)), transaction });
-    if (!_.isUndefined(rvUnexpected)) throw tooManyError;
-    if (_.isUndefined(rv)) throw notFoundError;
-    return rv;
-  },
   plain: e => e && e.get({ plain: true }),
   omitValue: (l, label) => _.filter(l, e => e !== label),
   omitByNil,
@@ -116,7 +81,7 @@ module.exports = {
   },
   isEqualOrBeforeDate: (date, referenceDate) => moment(date).isSameOrBefore(referenceDate, 'day'),
   mkdirIfNotExists: (dir) => {
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   },
   // this is used to debug sequelize
   getIncludes: (opts) => {

@@ -1,194 +1,186 @@
 <div class="row">
-
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-content">
-                <div class="toolbar">
-                    <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="
-                   createModal({
-                       id: 'addSkillModal',
-                       title: 'Ajouter une compétence',
-                       modal: 'back-office/addSkill'
-                   }, () => {
-                       $('button#validateSkill').click(function () {
-                           if ($('input#skillValue').val() != '') {
-                               let _csrf = $('#csrfToken').val();
-                               let promptInput = $('input#skillValue').val();
-                               $.post(`/api/back-office/skills/`, {
-                                   promptInput,
-                                   _csrf
-                               }, (response) => {
-                               if (response.status === 'Already exists') {
-                                   notification({
-                                   icon: 'exclamation',
-                                   type: 'danger',
-                                   title: 'Cette compétence existe déjà.',
-                                   message: ``
-                               });
-                           }
-                       else {
-                           table.bootstrapTable('insertRow', {
-                               index: 0,
-                               row: {
-                                   id: response.skill.id,
-                                   name: response.skill.name
-                               }
-                           });
-                           notification({
-                               icon: 'check-circle',
-                               type: 'success',
-                               title: 'Compétence créée.',
-                               message: ``
-                           });
-                       }
-                   });
-                   $('#addSkillModal').modal('hide');
-               }
-               else {
-                   if ($('input#skillValue').val() == '') {
-                       $('input#skillValue').addClass('error');
-                       setTimeout(function() {
-                           $('input#skillValue').removeClass('error');
-                       }, 750)
-                   }
-               }
-           })
-       })"> <i class="fal fa-plus"></i></a>
-                </div>
-
-                <table id="skills-table" class="table">
-                    <thead>
-                    <th data-field="state" data-checkbox="true"></th>
-                    <th data-field="id" class="text-center">ID</th>
-                    <th data-field="name" data-sortable="true">Nom</th>
-
-                    <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
-                        data-formatter="operateFormatter">Actions</th>
-                    </thead>
-                    <tbody>
-                    {{#each skill as |skills|}}
-                        <tr data-id="{{skills.id}}">
-                            <td></td>
-                            <td>{{skills.id}}</td>
-                            <td>{{skills.name}}</td>
-                        </tr>
-                    {{/each}}
-                    </tbody>
-                </table>
-            </div>
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showSkillModal()"><i class="fal fa-plus"></i></a>
         </div>
+        <table id="skills-table" class="table">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="name" data-sortable="true">Nom</th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions
+          </th>
+          </thead>
+          <tbody>
+          {{#each references as |skills|}}
+            <tr data-id="{{skills.id}}">
+              <td></td>
+              <td>{{skills.id}}</td>
+              <td>{{skills.name}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
 <script type="text/javascript">
-    let table = $('#skills-table');
+  let table = $('#skills-table');
 
-    operateFormatter = (value, row, index) => {
-        return [
-            '<div class="table-icons">',
-            '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
-            '<i class="ti-pencil-alt"></i>',
-            '</a>',
-            '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
-            '<i class="ti-close"></i>',
-            '</a>',
-            '</div>',
-        ].join('');
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+      '<i class="ti-pencil-alt"></i>',
+      '</a>',
+      '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<i class="ti-close"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .edit': (e, value, row, index) => {
+        createModal({
+          id: 'editSkillModal',
+          title: 'Modifier une compétence',
+          modal: 'back-office/editSkill'
+        }, () => {
+          $('button#btnEditSkill').click(function () {
+            if ($('input#skillValueEdit').val() != '') {
+              let _csrf = $('#csrfToken').val();
+              let promptInput = $('input#skillValueEdit').val();
+              $.put(`/api/back-office/references/skills/${row.id}`, {
+                promptInput,
+                _csrf
+              }, () => {
+                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                $('#editSkillModal').modal('hide');
+                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Compétence modifiée.',
+                  message: ``
+                });
+              });
+            } else {
+              if ($('input#skillValueEdit').val() == '') {
+                $('input#skillValueEdit').addClass('error');
+                setTimeout(function () {
+                  $('input#skillValueEdit').removeClass('error');
+                }, 750)
+              }
+            }
+          });
+        });
+      },
+      'click .remove': (e, value, row, index) => {
+        createModal({
+          id: 'removeSkillModal',
+          title: 'Supprimer une skill',
+          modal: 'back-office/removeSkill'
+        }, () => {
+          let _csrf = $('#csrfToken').val();
+          $('button#btnRemoveSkill').click(function () {
+            $.delete(`/api/back-office/references/skills/${row.id}`, {
+              _csrf
+            }, () => {
+              table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Compétence supprimée.',
+                message: ``
+              });
+            });
+          });
+        });
+      }
     };
 
-    $(document).ready(() => {
-        window.operateEvents = {
-            'click .edit': (e, value, row, index) => {
-                createModal({
-                    id: 'editSkillModal',
-                    title: 'Modifier une compétence',
-                    modal: 'back-office/editSkill'
-                }, () => {
-                    $('button#btnEditSkill').click(function () {
-                        if ($('input#skillValueEdit').val() != '') {
-                            let _csrf = $('#csrfToken').val();
-                            let promptInput = $('input#skillValueEdit').val();
-                            $.put(`/api/back-office/skills/${row.id}`, {
-                                promptInput,
-                                _csrf
-                            }, () => {
-                                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                                $('#editSkillModal').modal('hide');
-                                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
-                                notification({
-                                    icon: 'check-circle',
-                                    type: 'success',
-                                    title: 'Compétence modifiée.',
-                                    message: ``
-                                });
-                            });
-                        } else {
-                            if ($('input#skillValueEdit').val() == '') {
-                                $('input#skillValueEdit').addClass('error');
-                                setTimeout(function () {
-                                    $('input#skillValueEdit').removeClass('error');
-                                }, 750)
-                            }
-                        }
-                    });
-                });
-            },
-            'click .remove': (e, value, row, index) => {
-                createModal({
-                    id: 'removeSkillModal',
-                    title: 'Supprimer une skill',
-                    modal: 'back-office/removeSkill'
-                }, () => {
-                    let _csrf = $('#csrfToken').val();
-                    $('button#btnRemoveSkill').click(function () {
-                        $.delete(`/api/back-office/skills/${row.id}`, {
-                            _csrf
-                        }, () => {
-                            table.bootstrapTable('remove', {
-                                field: 'id',
-                                values: [row.id]
-                            });
-                            notification({
-                                icon: 'check-circle',
-                                type: 'success',
-                                title: 'Compétence supprimée.',
-                                message: ``
-                            });
-                        });
-                    });
-                });
-            }
-        };
 
-
-        table.bootstrapTable({
-            toolbar: ".toolbar",
-            search: true,
-            showToggle: true,
-            showColumns: true,
-            pagination: true,
-            searchAlign: 'left',
-            pageSize: 25,
-            clickToSelect: true,
-            pageList: [10,25,50,100,200,500],
-            formatShowingRows: (pageFrom, pageTo, totalRows) => {
-                //do nothing here, we don't want to show the text "showing x of y from..."
-            },
-            formatRecordsPerPage: (pageNumber) => {
-                return pageNumber + " rows visible";
-            },
-            icons: {
-                toggle: 'fa fa-th-list',
-                columns: 'fa fa-columns',
-                detailOpen: 'fa fa-plus-circle',
-                detailClose: 'ti-close'
-            }
-        });
-
-        //activate the tooltips after the data table is initialized
-        $('[rel="tooltip"]').tooltip();
-
-        $(window).resize(() => {
-            table.bootstrapTable('resetView');
-        });
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10, 25, 50, 100, 200, 500],
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
     });
+
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+
+  let showSkillModal = () => {
+    createModal({
+      id: 'addSkillModal',
+      title: 'Ajouter une compétence',
+      modal: 'back-office/addSkill'
+    }, () => {
+      $('button#validateSkill').click(function () {
+        if ($('input#skillValue').val() != '') {
+          let _csrf = $('#csrfToken').val();
+          let promptInput = $('input#skillValue').val();
+          $.post(`/api/back-office/references/skills/`, {
+            promptInput,
+            _csrf
+          }, (response) => {
+            if (response.status === 'Already exists') {
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: 'Cette compétence existe déjà.',
+                message: ``
+              });
+            } else {
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.reference.id,
+                  name: response.reference.name
+                }
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Compétence créée.',
+                message: ``
+              });
+            }
+          });
+          $('#addSkillModal').modal('hide');
+        } else {
+          if ($('input#skillValue').val() == '') {
+            $('input#skillValue').addClass('error');
+            setTimeout(function () {
+              $('input#skillValue').removeClass('error');
+            }, 750)
+          }
+        }
+      })
+    })
+  }
 </script>

@@ -1,3 +1,6 @@
+const __ = process.cwd();
+const { Authentication, HTTPValidation } = require(`${__}/middlewares/index`);
+const { User, Establishment, Conference } = require(`${__}/components`);
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -11,6 +14,7 @@ const storage = (path, type) => multer.diskStorage({
   }
 });
 const videoUpload = multer({ storage: storage('candidates/videos/', 'video') }).single('file');
+const avatarUpload = multer({ storage: storage('candidates/images/', 'photo') }).single('file');
 const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).fields(
   [
     { name: 'CNI', maxCount: 1 }, // carte natinale d'identité
@@ -24,35 +28,112 @@ const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).
   ]
 );
 
-const UserController = require('../../controllers/user');
-const CandidateController = require('../../controllers/candidate');
+router.post('/availability',
+  Authentication.ensureIsCandidate,
+  User.Candidate.setAvailability);
 
 /**
- * @Route('/api/candidate/:action/video') POST;
+ * @Route('/api/user/:action/video') POST;
  * Candidate upload video/ delete to his profile.
  */
-router.post('/:action/video', UserController.ensureIsCandidate, videoUpload, CandidateController.postVideo);
+router.post('/:action/video',
+  Authentication.ensureIsCandidate,
+  videoUpload,
+  User.Candidate.addVideo);
 
-router.post('/add/document', UserController.ensureIsCandidate, docsUpload, CandidateController.uploadDocument);
+router.post('/add/document',
+  Authentication.ensureIsCandidate,
+  docsUpload,
+  User.Candidate.uploadDocument);
 
-router.get('/xp/:id', UserController.ensureIsCandidate, CandidateController.getXpById)
-  .delete('/xp/:id', UserController.ensureIsCandidate, CandidateController.removeXP);
+router.delete('/document/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.deleteDocument);
 
-router.get('/formation/:id', UserController.ensureIsCandidate, CandidateController.getFormationById)
-  .delete('/formation/:id', UserController.ensureIsCandidate, CandidateController.removeFormation)
-  .put('/formation/:id',
-    UserController.ensureIsCandidate,
-    CandidateController.validate('putFormation'),
-    CandidateController.putFormation
+router.post('/add/photo',
+  Authentication.ensureIsCandidate,
+  avatarUpload,
+  User.Candidate.uploadAvatar);
+
+router.get('/xp/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getXpById)
+  .delete('/xp/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.removeXP)
+  .put('/xp/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.putXP
   );
 
-router.get('/diploma/:id', UserController.ensureIsCandidate, CandidateController.getDiplomaById)
-  .delete('/diploma/:id', UserController.ensureIsCandidate, CandidateController.removeDiploma);
+router.get('/formation/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getFormationById)
+  .delete('/formation/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.removeFormation)
+  .put('/formation/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    HTTPValidation.CandidateController.putFormation,
+    User.Candidate.putFormation
+  );
 
-router.post('/:type/add', UserController.ensureIsCandidate, CandidateController.addRating);
-router.post('/rate/:type/:id', UserController.ensureIsCandidate, CandidateController.starsRating);
-router.delete('/:type/:id', UserController.ensureIsCandidate, CandidateController.deleteRating);
+router.get('/diploma/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getDiplomaById)
+  .delete('/diploma/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.removeDiploma)
+  .put('/diploma/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.putDiploma);
 
-router.post('/wish/add', UserController.ensureIsCandidate, CandidateController.addWish);
+router.post('/type/:type/add',
+  Authentication.ensureIsCandidate,
+  User.Candidate.addRating);
+router.post('/rate/:type/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.starsRating);
+router.delete('/type/:type/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.deleteRating);
+
+router.get('/wish/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  HTTPValidation.CandidateController.getWish,
+  User.Candidate.getWish)
+  .post('/wish/add',
+    Authentication.ensureIsCandidate,
+    User.Candidate.addWish)
+  .delete('/wish/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    HTTPValidation.CandidateController.removeWish,
+    User.Candidate.removeWish)
+  .put('/wish/:id(\\d+)',
+    Authentication.ensureIsCandidate,
+    User.Candidate.editWish
+  );
+
+router.post('/wish/:id(\\d+)/refresh',
+  Authentication.ensureIsCandidate,
+  User.Candidate.refreshWish);
+router.post('/nc/:id(\\d+)/availability',
+  Authentication.ensureIsCandidate,
+  Establishment.Need.candidateAnswer
+);
+
+router.post('/conference/:id(\\d+)/availability',
+  Authentication.ensureIsCandidate,
+  Conference.Main.candidateAnswer
+);
+
+router.post('/conference/:id(\\d+)/askNewDate',
+  Authentication.ensureIsCandidate,
+  Conference.Main.askNewDate
+);
+
+router.get('/conference/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  Conference.Main.viewConference_Candidate);
 
 module.exports = router;

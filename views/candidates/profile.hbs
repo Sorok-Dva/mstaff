@@ -1,18 +1,47 @@
+<style>
+  .label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .label-text {
+    margin-left: 8px;
+  }
+</style>
 <div class="row">
-  <div class="col-lg-4 col-md-5">
+  <div class="col-4 col-lg-4">
     <div class="card card-user">
       <div class="image"></div>
       <div class="content">
-        <div class="author">
-          <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg" />
-          <div class="rank-label-container">
-            <span class="label label-default rank-label">{{{candidateProfilePercentage candidate}}}</span>
+        <div class="card-profile">
+          <div class="avatar avatar-xxl {{#if candidate.is_available}}on{{else}}off{{/if}}line">
+            <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle border-blue" alt="avatar">
           </div>
-          <h4 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
-            <a href="#"><small>{{age candidate.User.birthday 'years'}} ans</small></a>
-          </h4>
+          <div class="rank-label-container">
+            <span class="label label-default rank-label">{{{candidateProfilePercentage candidate.percentage}}}</span>
+          </div>
+          <h2 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
+            <small>{{age candidate.User.birthday 'years'}} ans</small>
+          </h2>
         </div>
-        <p class="description text-center">
+        <div class="col-md-12">
+          <div id="ctaAvailability" class="text-center state-{{#unless candidate.is_available}}un{{/unless}}available">
+            <label class="label">
+              <div class="label-text label-text-{{#unless candidate.is_available}}un{{/unless}}available">
+               <b>Je suis {{#unless candidate.is_available}}in{{/unless}}disponible</b>
+              </div>
+              <div class="toggle mt-1" style="margin-left:15px">
+                <input class="toggle-state" type="checkbox" name="is_available" {{#if candidate.is_available}}checked{{/if}} />
+                <div class="toggle-inner">
+                  <div class="indicator"></div>
+                </div>
+                <div class="active-bg"></div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <p class="description text-center p-4">
           {{candidate.description}}
           <a href="/profile/edit"><i class="fa fa-pencil"></i></a>
         </p>
@@ -20,20 +49,26 @@
       <hr>
       <div class="text-center">
         <div class="row">
-          <div class="col-md-5 col-md-offset-1">
-            <h5>{{date candidate.User.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h5>
+          <div class="col-6 col-lg-6">
+            <h3>{{date candidate.User.createdAt 'DD/MM/YY'}}<br /><small>Inscription</small></h3>
           </div>
-          <div class="col-md-6">
-            <h5>{{date candidate.User.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h5>
+          <div class="col-6 col-lg-6">
+            <h3>{{date candidate.User.updatedAt 'DD/MM/YY'}}<br /><small>Dernière modification</small></h3>
           </div>
         </div>
       </div>
       <hr>
       <div class="text-center">
         <div class="row">
-          <h5><i class="fa fa-phone"></i> {{candidate.User.phone}}</h5>
-          <h5><i class="fa fa-envelope"></i> {{candidate.User.email}}</h5>
-          <h5><i class="fas fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h5>
+          <div class="col-12 col-lg-12">
+            <h4><i class="fal fa-phone"></i> {{candidate.User.phone}}</h4>
+          </div>
+          <div class="col-12 col-lg-12">
+            <h4><i class="fal fa-envelope"></i> {{candidate.User.email}}</h4>
+          </div>
+          <div class="col-12 col-lg-12">
+            <h4><i class="fal fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h4>
+          </div>
         </div>
       </div>
     </div>
@@ -41,9 +76,9 @@
       <div class="card-header">
         <h4 class="card-title"><i class="fa fa-film" aria-hidden="true"></i> Vidéo de présentation</h4>
         {{#if candidate.video}}
-          <span id="removeVideo" class="btn btn-danger pull-right"><i class="fa fa-trash"></i></span>
+          <span id="removeVideo" class="col-3 btn btn-outline-danger"><i class="fal fa-trash"></i></span>
         {{else}}
-          <span id="removeVideo" style="display: none" class="btn btn-danger pull-rigt"><i class="fa fa-trash"></i></span>
+          <span id="removeVideo" style="display: none" class="col-3 btn btn-outline-danger"><i class="fal fa-trash"></i></span>
         {{/if}}
       </div>
       <div class="card-content text-center">
@@ -78,26 +113,65 @@
     </div>
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title"><i class="fa fa-heart" aria-hidden="true"></i> Mes candidatures</h4>
-        <button type="button" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
-        </button>
+        <h4 class="card-title pull-left">  <i class="fal fa-heart" aria-hidden="true"></i> Mes candidatures</h4>
+        <a href="/applications" class="col-3 btn btn-outline-success pull-right" style="margin-bottom: 5px;">
+          <i class="fal fa-pencil" aria-hidden="true"></i> Modifier
+        </a>
       </div>
       <div class="card-content">
-        Soon
+        {{#if candidate.wishes}}
+          <ol class="mt-3">
+            {{#each candidate.wishes as |wish|}}
+              <li class="wish">
+                <h5>
+                  <a href="/wish/edit/{{wish.id}}">{{wish.contract_type}} dans {{wish.es_count}} établissement(s)</a>
+                </h5>
+              </li>
+            {{/each}}
+          </ol>
+        {{else}}
+          <h3 class="text-center p-4">
+            Aucune donnée disponible.
+          </h3>
+        {{/if}}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title pull-left"> <i class="fal fa-folder-open"></i> Mes documents</h4>
+        <a href="/documents" class="col-3 btn btn-outline-success pull-right" style="margin-bottom: 5px;">
+          <i class="fal fa-pencil" aria-hidden="true"></i> Modifier
+        </a>
+      </div>
+      <div class="card-content">
+        {{#if candidate.documents}}
+          <ul style="word-break: break-all;">
+            {{#each candidate.documents as |document|}}
+              <li>
+                <h5>
+                  <a href="{{document.path}}">{{document.name}}</a>
+                </h5>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+            <h3 class="text-center p-4">
+              Aucune donnée disponible.
+            </h3>
+        {{/if}}
       </div>
     </div>
   </div>
-    <div class="col-lg-8 col-md-7">
+    <div class="col-8 col-lg-8">
     <div class="card">
       <div class="card-header">
         <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Expériences</h4>
-        <a href="/formations" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+        <a href="/formations" class="col-2 btn btn-outline-success pull-right" style="margin-bottom: 5px;">
+          <i class="fal fa-pencil" aria-hidden="true"></i> Modifier
         </a>
       </div>
       <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th>Date</th>
@@ -135,17 +209,15 @@
         </table>
       </div>
     </div>
-  </div>
-  <div class="col-lg-8 col-md-7">
     <div class="card">
       <div class="card-header">
         <h4 class="card-title pull-left"><i class="fa fa-graduation-cap"></i> Formations</h4>
-        <a href="/formations" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+        <a href="/formations" class="col-2 btn btn-outline-success pull-right" style="margin-bottom: 5px;">
+          <i class="fal fa-pencil" aria-hidden="true"></i> Modifier
         </a>
       </div>
       <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th style="width:25%"><i class="fa fa-book" aria-hidden="true"></i> Diplômes</th>
@@ -171,7 +243,7 @@
           </tbody>
         </table>
         {{#if candidate.qualifications}}
-          <table class="table table-hover">
+          <table class="table table-hover mb-0">
             <thead>
             <tr class="info">
               <th style="width:25%"><i class="fa fa-book" aria-hidden="true"></i> Diplômes complémentaires</th>
@@ -195,17 +267,15 @@
         {{/if}}
       </div>
     </div>
-  </div>
-  <div class="col-lg-8 col-md-7">
     <div class="card">
       <div class="card-header">
         <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Compétences</h4>
-        <a href="/knowledges" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modifier
+        <a href="/knowledges" class="col-2 btn btn-outline-success pull-right" style="margin-bottom: 5px;">
+          <i class="fal fa-pencil" aria-hidden="true"></i> Modifier
         </a>
       </div>
       <div class="card-content table-responsive table-full-width">
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th style="width:80%"><i class="fa fa-medkit" aria-hidden="true"></i> Soins techniques</th>
@@ -241,7 +311,7 @@
           {{/if}}
           </tbody>
         </table>
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th style="width:80%"><i class="fa fa-stethoscope" aria-hidden="true"></i> Matériels et produits</th>
@@ -277,7 +347,7 @@
           {{/if}}
           </tbody>
         </table>
-        <table class="table table-hover">
+        <table class="table table-hover mb-0">
           <thead>
           <tr class="info">
             <th style="width:80%"><i class="fa fa-floppy-o" aria-hidden="true"></i> Logiciels</th>
@@ -318,3 +388,20 @@
   </div>
 </div>
 <script src="/static/assets/dist/js/uploadVideo.min.js"></script>
+<script>
+  $('input[name="is_available"]').change(function() {
+    let available = false;
+    if (this.checked) {
+      $('#ctaAvailability').removeClass('state-unavailable').addClass('state-available');
+      $('div.label-text').removeClass('label-text-unavailable').addClass('label-text-available');
+      $('div.label-text').children('b').html('Je suis disponible');
+      available = true;
+    } else {
+      $('#ctaAvailability').removeClass('state-available').addClass('state-unavailable');
+      $('div.label-text').removeClass('label-text-available').addClass('label-text-unavailable');
+      $('div.label-text').children('b').html('Je suis indisponible')
+    }
+
+    $.post('/api/candidate/availability', { _csrf, available });
+  });
+</script>

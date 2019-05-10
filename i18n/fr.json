@@ -45,6 +45,8 @@
       "form_postalCode_label_ph": "ex: 75000",
       "form_city_label": "Ville*",
       "form_city_label_ph": "ex: Paris",
+      "form_country_label": "Pays",
+      "form_country_label_ph": "ex: France",
       "form_phoneNumber_label": "Numéro de téléphone*",
       "form_phoneNumber_label_ph": "ex: +33 612345678",
       "form_email_muted": "Nous ne partagerons jamais votre email avec quiconque.",
@@ -56,7 +58,7 @@
       "form_submit_btn": "S'inscrire",
       "respond_here": "Répondez ici",
       "es_type": "Type d'établissement",
-      "terms": "En cliquant sur S'inscrire, vous acceptez les Conditions d'utilisation et la Politique de confidentialité de Mstaff",
+      "terms": "En cliquant sur S'inscrire, vous acceptez les <a href='/static/assets/pdf/CGU_02.06.2018.pdf' target='_blank'>Conditions d'utilisation et la Politique de confidentialité</a> de Mstaff.",
       "errors": {
         "email_taken": "Cette adresse e-mail est déjà utilisée."
       }
@@ -64,7 +66,9 @@
   },
   "categoriesPostServices": {
     "medical_category": "Medical",
-    "administrative_category": "Administratif",
+    "paramedical_category": "Paramédical",
+    "administrative_technical_category": "Personnel non soignant",
+    "liberal_category": "Profession libérale",
     "mix_category": "Mix"
   }
 }

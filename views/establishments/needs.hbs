@@ -2,8 +2,7 @@
   <div class="col-lg-12 col-md-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title pull-left"><i class="fal fa-search" aria-hidden="true"></i> Mes besoins</h4>
-        <hr style="width:90%; margin-top: 14px;">
+        <h3 class="card-title pull-left"><i class="fal fa-search" aria-hidden="true"></i> Mes besoins</h3>
       </div>
       <div class="card-content">
         <div class="row">
@@ -21,16 +20,26 @@
               {{#if needs}}
                 {{#each needs as |need|}}
                   <tr data-applicationId="{{need.id}}">
-                    <td>{{need.name}}</td>
+                    <td>
+                      <h2>{{need.name}}</h2>
+                      <span class="text-muted">Créé le {{date need.createdAt 'DD/MM/YYYY'}} par {{need.User.firstName}} {{need.User.lastName}}</span>
+                    </td>
                     <td>
                       <div class="label-container">
-                        <div class="label label-default">{{need.post}}</div>
-                        <div class="label label-warning">
-                          {{need.contract_type}}
-                        </div>
-                        <div class="label label-success ">
-                          {{date need.start 'DD/MM/YYYY'}}
-                        </div>
+                        {{#if need.post}}
+                          <div class="label label-default">{{need.post}}</div>
+                        {{/if}}
+                        {{#if need.contract_type}}
+                          <div class="label label-warning">
+                            {{need.contract_type}}
+                          </div>
+                        {{/if}}
+                        {{#if need.start}}
+                          <div class="label label-success">
+                            {{date need.start 'DD/MM/YYYY'}}
+                            {{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}
+                          </div>
+                        {{/if}}
                       </div>
                     </td>
                     <td>
@@ -52,13 +61,13 @@
                       </button>
                     </td>
                     <td>
-                      <a class="btn btn-simple btn-success btn-icon" href="/need/{{need.id}}">
+                      <a class="btn btn-simple btn-outline-success btn-icon" href="/need/{{need.id}}">
                         <i class="fal fa-eye"></i>
                       </a>
-                      <button class="btn btn-simple btn-warning btn-icon editApplication" data-id="{{need.id}}">
+                      <a class="btn btn-simple btn-outline-warning btn-icon editApplication" href="/need/{{need.id}}/edit">
                         <i class="ti-pencil-alt"></i>
-                      </button>
-                      <button class="btn btn-simple btn-danger btn-icon removeApplication" data-id="{{need.id}}">
+                      </a>
+                      <button class="btn btn-simple btn-outline-danger btn-icon removeApplication" data-id="{{need.id}}">
                         <i class="ti-close"></i>
                       </button>
                     </td>
@@ -72,9 +81,11 @@
               </tbody>
             </table>
             <hr>
-            <a href="/need/add" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-              <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
-            </a>
+            <div class="col-12">
+              <a href="/candidates" class="btn btn-success float-right" style="margin-bottom: 5px;">
+                <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
+              </a>
+            </div>
           </div>
         </div>
       </div>

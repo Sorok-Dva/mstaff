@@ -171,31 +171,24 @@ Handlebars.registerHelper('repeat', function (n, block) {
   return accum;
 });
 
+Handlebars.registerHelper('json', function (context) {
+  return JSON.stringify(context);
+});
+
 Handlebars.registerHelper('partial', function (name) {
   return name;
 });
 
-Handlebars.registerHelper('candidateProfilePercentage', (candidate) => {
-  let percentage = 0;
-  if (candidate.User.firstName && candidate.User.lastName && candidate.User.phone && candidate.User.town) percentage += 20;
-  if (candidate.photo) percentage += 10;
-  if (!_.isNil(candidate.description) && candidate.description.length > 10) percentage += 30;
-  if (candidate.experiences.length > 0) percentage += 10;
-  if (candidate.formations.length > 0) percentage += 10;
-  if (candidate.documents.length > 0) {
-    let have = { DIP: false, CNI: false, RIB: false, VIT: false };
-    candidate.documents.forEach(document => {
-      if (document.type === 'DIP') have.DIP = true;
-      if (document.type === 'RIB') have.RIB = true;
-      if (document.type === 'CNI') have.CNI = true;
-      if (document.type === 'VIT') have.VIT = true;
-    });
-    if (have.DIP) percentage += 5;
-    if (have.RIB) percentage += 5;
-    if (have.CNI) percentage += 5;
-    if (have.VIT) percentage += 5;
-  }
-  return percentage === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage}%`;
+Handlebars.registerHelper('candidateProfilePercentage', (percentage) => {
+  if (_.isNil(percentage)) return '0%';
+  else if (_.isNil(percentage.total)) return '0%';
+  else return percentage.total === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage.total}%`;
+});
+
+Handlebars.registerHelper('countInObject', (object, property, search) => {
+  let count = 0;
+  if (!_.isNil(object)) object.forEach((e, i) => object[i][property] === search ? count++ : null);
+  return count;
 });
 
 /* eslint-disable no-console */
@@ -212,3 +205,25 @@ Handlebars.registerHelper('log', function () {
   ));
 });
 /* eslint-enable no-console */
+
+Handlebars.registerHelper('breaklines', function(text) {
+  text = Handlebars.Utils.escapeExpression(text);
+  text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+  return new Handlebars.SafeString(text);
+});
+
+Handlebars.registerHelper('showVisioLink', conference => {
+  if (_.isNil(conference)) return '{{showVisioLink error - empty object}}';
+  const _15minutes = moment(conference.date).subtract(15, 'minutes');
+  const _2hours = moment(conference.date).add(2, 'hours');
+  if (moment().isAfter(_15minutes)) {
+    if (moment().isAfter(_2hours)) {
+      return `L'entretien est terminé. Le lien n'est plus accessible.`;
+    } else {
+      let { key } = conference;
+      return `<a href="https://meet.jit.si/mstaff-session-${key}" target="_blank">https://meet.jit.si/mstaff-session-${key}</a>`;
+    }
+  } else {
+    return `Vous aurez accès au lien 15 minutes avant le début de l'entretien.`;
+  }
+});

@@ -1,0 +1,110 @@
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="modal-body">
+        <div class="row" style="display: flex; align-items: center; justify-content: center">
+          <div class="col-md-6">
+            <p class="text-center">Date de début</p>
+            <div id="datePicker-start"></div>
+          </div>
+          <div id="endDate" class="col-md-6">
+            <p class="text-center">Date de fin</p>
+            <div id="datePicker-end"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label class="pull-right">
+              <input type="checkbox" class="disableEndDate">
+              Aucun date de fin
+            </label>
+          </div>
+        </div>
+        {{#ifCond this.contractType '===' 'vacation'}}
+          <h5 class="text-center">Créneau horaire</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <p class="text-center">Heure de début</p>
+              <div id="dateTimePicker-start" style="text-align: center;"></div>
+            </div>
+            <div class="col-md-6">
+              <p class="text-center">Heure de fin</p>
+              <div id="dateTimePicker-end" style="text-align: center;"></div>
+            </div>
+          </div>
+        {{/ifCond}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="ignoreTime" class="btn btn-default pull-left" data-dismiss="modal">Ignorer</button>
+  <button type="button" id="searchProfiles" class="btn btn-outline-info float-right" style="display: none;margin-bottom: 5px;">
+    Valider
+  </button>
+</div>
+<script type="text/javascript">
+  $(function () {
+    need.filterQuery.timeType = { dateStart: new Date() };
+
+    $('#datePicker-start').datetimepicker({
+      inline: true,
+      minDate: new moment(),
+      useCurrent: false,
+      format: 'DD/MM/YYYY'
+    }).on('dp.change', (e) => {
+      if (!$('button#searchProfiles').is(':visible')) $('button#searchProfiles').show();
+      need.filterQuery.timeType.dateStart = new Date(e.date);
+      let incrementDay = moment(new Date(e.date));
+      incrementDay.add(1, 'days');
+      $('#datePicker-end').data('DateTimePicker').minDate(incrementDay);
+    });
+
+    $('#datePicker-end').datetimepicker({
+      inline: true,
+      useCurrent: false,
+      minDate: new moment(),
+      format: 'DD/MM/YYYY'
+    }).on('dp.change', (e) => need.filterQuery.timeType.dateEnd = new Date(e.date));
+
+    $('#dateTimePicker-start').datetimepicker({
+      inline: true,
+      format: 'HH:mm'
+    }).on('dp.change', (e) => {
+      need.filterQuery.timeType.timeStart = new Date(e.date);
+      let incrementDay = moment(new Date(e.date));
+      incrementDay.add(1, 'days');
+      $('#dateTimePicker-end').data('DateTimePicker').minDate(incrementDay);
+    });
+
+    $('#dateTimePicker-end').datetimepicker({
+      inline: true,
+      format: 'HH:mm'
+    }).on('dp.change', (e) => need.filterQuery.timeType.timeEnd = new Date(e.date));
+  });
+  $('button#searchProfiles').on('click', function() {
+    need.firstSearch = false;
+    $('.modal#timeType').modal('hide');
+    let dateRecap = `${moment(need.filterQuery.timeType.dateStart).format('DD/MM/YYYY')}`;
+    if (need.filterQuery.timeType.dateEnd) dateRecap += ` - ${moment(need.filterQuery.timeType.dateEnd).format('DD/MM/YYYY')}`;
+    $('#btnTimeType').html(dateRecap);
+    return searchCandidates()
+  });
+  $('input.disableEndDate').change(function() {
+    if($(this).is(":checked")) {
+      $('#endDate').hide();
+      delete need.filterQuery.timeType.dateEnd;
+      return;
+    }
+    $('#endDate').show();
+  });
+
+  $('#ignoreTime').click(function() {
+    need.firstSearch = false;
+    if (!_.isNil(need.filterQuery.timeType)) {
+      delete need.filterQuery.timeType;
+      $('#btnTimeType').empty();
+    }
+    searchCandidates();
+  });
+</script>

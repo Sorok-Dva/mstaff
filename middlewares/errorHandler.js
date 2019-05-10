@@ -5,15 +5,19 @@ const { Env } = require('../helpers/helpers');
 
 const debug = require('debug')('error'); // eslint-disable-line no-unused-vars
 
+let layout = 'onepage';
+
 const getStatus = (err) => {
   // if (err.code === MULTER_ERROR_CODE_MAX_FILE_UPLOAD) return httpStatus.REQUEST_ENTITY_TOO_LARGE;
   return err.status;
 };
 
 const sendError = (req, res, status, err) => {
+  if (res.headersSent) return;
   err.status = status;
+  if (Env.current === 'production' || Env.current === 'pre-prod') delete err.stack;
   if (req.xhr) return res.status(status).json(err);
-  else return res.status(status).render('error', { error: err });
+  else return res.status(status).render('error', { layout, error: err });
 };
 
 module.exports = {
@@ -40,8 +44,8 @@ module.exports = {
     }
     next(err);
   },
-  notFoundError: (req, res, next) => next(new BackError('Not Found', httpStatus.NOT_FOUND)),
-  sentrySenderErrorHandler: (err, req, res, next) => {
+  notFoundError: (req, res, next) => next(new BackError('Page Introuvable', httpStatus.NOT_FOUND)),
+  /*  sentrySenderErrorHandler: (err, req, res, next) => {
     let status = err.status || err.statusCode || 500;
     if (status < 400) status = 500;
 
@@ -53,10 +57,10 @@ module.exports = {
       },
       extra: err.extraContextForSentry,
     };
-    // Sentry.send(err, context);
+    Sentry.send(err, context);
 
     next(err);
-  },
+  },*/
   api: (err, req, res, next) => { // eslint-disable-line no-unused-vars
     let status = err.status || err.statusCode || 500;
     if (status < 400) status = 500;
@@ -66,7 +70,7 @@ module.exports = {
     const body = { status };
 
     // show the stacktrace when not in production
-    if (Env.current !== 'production') {
+    if (Env.current !== 'production' && 'pre-prod') {
       body.stack = err.stack;
     }
     // internal server errors

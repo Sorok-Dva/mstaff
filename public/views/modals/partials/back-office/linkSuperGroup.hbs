@@ -1,0 +1,39 @@
+<div class="modal-body">
+  <div class="form-group">
+    <select id="groupsID" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
+            data-live-search="true">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" id="validateLinkSuperGroup"> Valider les modifications</button>
+</div>
+<script>
+  $.get('/api/groups/all', function (data) {
+    $.each(data.groups, function (i, group) {
+      $('#groupsID').append($('<option>', {
+        value: group.id,
+        text: group.name
+      }));
+      $('#groupsID').selectpicker('refresh');
+    });
+    let Groupoptions = $("#groupsID option");
+    Groupoptions.sort(function (a, b) {
+      if (a.text > b.text) return 1;
+      else if (a.text < b.text) return -1;
+      else return 0;
+    });
+    $("#groupsID").empty().append(Groupoptions).selectpicker("refresh");
+    let grouplinkrow = {{this.supergroup.id}};
+    let preselecteds = [];
+    $.get('/api/back-office/groupslinks/' + grouplinkrow, function (data) {
+      $.each(data.linkgroup, function (i, linkgroup) {
+        preselecteds.push(linkgroup.id_group);
+      });
+      $('select[name=selectName]').val(preselecteds);
+      $('#groupsID').selectpicker('refresh');
+    });
+  });
+  $('#groupsID').selectpicker();
+
+</script>

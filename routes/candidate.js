@@ -1,60 +1,76 @@
+const { Authentication, HTTPValidation } = require('../middlewares/index');
+const { User } = require('../components');
 const express = require('express');
 const router = express.Router();
-
-const UserController = require('../controllers/user');
-const CandidateController = require('../controllers/candidate');
 
 /**
  * @Route('/profile') GET;
  * Show user profile.
  */
-router.get('/profile', UserController.ensureIsCandidate, CandidateController.getProfile);
+router.get('/profile',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewProfile);
 
 /**
  * @Route('/profile/edit') GET | POST;
  * Form for edit user profile.
  */
-router.get('/profile/edit', UserController.ensureIsCandidate, CandidateController.getEditProfile)
-  .post('/profile/edit', UserController.ensureIsCandidate, CandidateController.postEditProfile);
+router.get(
+  '/profile/edit', Authentication.ensureIsCandidate,
+  User.Candidate.ViewEditProfile
+).post(
+  '/profile/edit',
+  Authentication.ensureIsCandidate,
+  User.Candidate.EditProfile);
 
 /**
  * @Route('/formations') GET;
- * Show Formations and Experiences candidate page
+ * Show Formations and Experiences user page
  */
-router.get('/formations', UserController.ensureIsCandidate, CandidateController.getFormationsAndXP);
+router.get('/formations',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getFormationsAndXP);
 
 /**
  * @Route('/knowledges') GET;
- * Show knowledges candidate page
+ * Show knowledges user page
  */
-router.get('/knowledges', UserController.ensureIsCandidate, CandidateController.getKnowledge);
+router.get('/knowledges',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getKnowledge);
 
 /**
  * @Route('/documents') GET;
- * Show documents candidate page
+ * Show documents user page
  */
-router.get('/documents', UserController.ensureIsCandidate, CandidateController.getDocuments);
+router.get('/documents',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getDocuments);
 
 /**
  * @Route('/applications') GET;
- * Show applications candidate page
+ * Show applications user page
  */
-router.get('/applications', UserController.ensureIsCandidate, CandidateController.getWishes);
+router.get('/applications',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getWishes);
 
 /**
  * @Route('/applications/new') GET;
  * Show new application form page
  */
-router.get('/applications/new', UserController.ensureIsCandidate, CandidateController.addApplication);
+router.get('/applications/new',
+  Authentication.ensureIsCandidate,
+  User.Candidate.addApplication);
 
 /**
  * @Route('/add/Experience') POST;
  * add Candidate Experience.
  */
 router.post('/add/experience',
-  UserController.ensureIsCandidate,
-  CandidateController.validate('postAddExperience'),
-  CandidateController.postAddExperience
+  Authentication.ensureIsCandidate,
+  HTTPValidation.CandidateController.postAddExperience,
+  User.Candidate.AddExperience
 );
 
 /**
@@ -62,9 +78,9 @@ router.post('/add/experience',
  * add Candidate Formation.
  */
 router.post('/add/formation',
-  UserController.ensureIsCandidate,
-  CandidateController.validate('postAddFormation'),
-  CandidateController.postAddFormation
+  Authentication.ensureIsCandidate,
+  HTTPValidation.CandidateController.postAddFormation,
+  User.Candidate.AddFormation
 );
 
 /**
@@ -72,9 +88,26 @@ router.post('/add/formation',
  * add Candidate Diploma.
  */
 router.post('/add/diploma',
-  UserController.ensureIsCandidate,
-  CandidateController.validate('postAddDiploma'),
-  CandidateController.postAddDiploma
+  Authentication.ensureIsCandidate,
+  HTTPValidation.CandidateController.postAddDiploma,
+  User.Candidate.AddDiploma
 );
+
+router.get('/wish/edit/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  HTTPValidation.CandidateController.getEditWish,
+  User.Candidate.getEditWish);
+
+router.post('/profile/passwordReset',
+  Authentication.ensureAuthenticated,
+  //HTTPValidation.CandidateController.checkPassEdit,
+  User.Main.changePassword);
+/**
+ * @Route('/conferences') GET;
+ * Show Calendar page.
+ */
+router.get('/conferences',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewConferences);
 
 module.exports = router;
