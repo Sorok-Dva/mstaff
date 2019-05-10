@@ -202,25 +202,59 @@ let removeCandidate = (id, type) => {
 
 let showArchived = () =>{
   if($('#showArchived').hasClass('Show')) {
-    $('div[data-archived="false"]').hide();
-    $('div[data-archived="true"]').show();
-    $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
+    if ($('#showFavorites').hasClass('Hide')) {
+      showFavorites();
+    }
+    $.post(`/api/es/${esId}/candidates/archived/`, { _csrf }, (data) => {
+      $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
+      loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
+        $('#baseResult').hide();
+        $('#searchResult').hide();
+        $('#paginationContainer').hide();
+        $('#myCandidates').html(html).show();
+      });
+    }).catch(errors => errorsHandler(errors));
   } else {
-    $('div[data-archived="true"]').hide();
-    $('div[data-archived="false"]').show();
-    $('#showArchived').removeClass('Hide').addClass('Show').css('color', 'black');
+    $('#myCandidates').empty().hide();
+    $('#showArchived').removeClass('Hide').addClass('Show').css('color', '#9e9e9e');
+    if ($('#searchResult').text().length === 0) {
+      $('#baseResult').show();
+      $('#searchResult').hide();
+      $('#paginationContainer').show();
+    } else {
+      $('#baseResult').hide();
+      $('#searchResult').show();
+      $('#paginationContainer').hide();
+    }
   }
 };
 
 let showFavorites = () => {
   if($('#showFavorites').hasClass('Show')) {
-    $('div[data-favorite="false"][data-archived="false"]').hide();
-    $('div[data-favorite="true"][data-archived="false"]').show();
-    $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
+    if ($('#showArchived').hasClass('Hide')) {
+      showArchived();
+    }
+    $.post(`/api/es/${esId}/candidates/favorites/`, { _csrf }, (data) => {
+      $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
+      loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
+        $('#baseResult').hide();
+        $('#searchResult').hide();
+        $('#paginationContainer').hide();
+        $('#myCandidates').html(html).show();
+      });
+    }).catch(errors => errorsHandler(errors));
   } else {
-    $('div[data-favorite="true"][data-archived="false"]').show();
-    $('div[data-favorite="false"][data-archived="false"]').show();
-    $('#showFavorites').removeClass('Hide').addClass('Show').css('color', 'black');
+    $('#showFavorites').removeClass('Hide').addClass('Show').css('color', '#9e9e9e');
+    if ($('#searchResult').text().length === 0) {
+      $('#baseResult').show();
+      $('#searchResult').hide();
+      $('#paginationContainer').show();
+    } else {
+      $('#baseResult').hide();
+      $('#searchResult').show();
+      $('#paginationContainer').hide();
+    }
+    $('#myCandidates').empty().hide();
   }
 };
 
