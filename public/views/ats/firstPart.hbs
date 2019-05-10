@@ -1,0 +1,29 @@
+<a href="/"><i class="fal fa-chevron-circle-left fa-2x mb-4"></i></a>
+
+<!-- Heading -->
+<h1 class="display-4 text-center mb-3">
+  ATS
+</h1>
+
+<!-- Subheading -->
+<p class="text-muted text-center mb-5">
+  Texte
+</p>
+
+<!-- Form -->
+<form>
+  <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+
+  // ton premier ecran ats
+  <!-- Submit -->
+  <button type="button" class="btn btn-lg btn-block btn-primary mb-3">
+    Connexion
+  </button>
+</form>
+<script>
+  $('button').click(function() {
+    loadTemplate('/static/views/ats/secondPart.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+</script>

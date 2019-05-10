@@ -15,6 +15,10 @@ Establishment_Website.ViewIndex = (req, res, next) => {
   return res.render('establishments/site/index', { layout: 'establishment' })
 };
 
+Establishment_Website.ViewATS = (req, res, next) => {
+  return res.render('establishments/site/ats/index', { layout: 'onepage' })
+};
+
 Establishment_Website.ViewRegister = (req, res, next) => {
   return res.render('users/register', { layout: 'onepage' })
 };

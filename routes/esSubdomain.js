@@ -7,6 +7,9 @@ const router = express.Router();
 router.get('/',
   Establishment.Website.ViewIndex);
 
+router.get('/join',
+  Establishment.Website.ViewATS);
+
 router.get('/register',
   Authentication.ensureIsNotAuthenticated,
   Establishment.Website.ViewRegister)
@@ -27,8 +30,6 @@ router.post('/add/experience',
   HTTPValidation.CandidateController.postAddExperience,
   User.Candidate.AddExperience
 );
-
-
 
 router.get('/emailAvailable/:email',
   HTTPValidation.UserController.ApiVerifyEmailAvailability,
