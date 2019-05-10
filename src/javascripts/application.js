@@ -636,9 +636,7 @@ $(document).ready(function () {
   let searchCity = $('#searchCity');
   const keyEnter = 13;
 
-/*  selectPostType.select2({
-    maximumSelectionLength: 1
-  });*/
+  selectPostType.select2();
   selectServiceType.selectpicker();
   allServiceType.prop('disabled', true);
   allServiceType.hide();
