@@ -15,17 +15,19 @@ let ValidatePassword = function () {
 
   let password = $(this).val();
 
-  $('#length').removeClass(password.length > 6 ? 'bad-rule' : 'good-rule');
-  $('#length').addClass(password.length > 6 ? 'good-rule' : 'bad-rule');
+  $('#length').removeClass(password.length > 8 ? 'bad-rule' : 'good-rule');
+  $('#length').addClass(password.length > 8 ? 'good-rule' : 'bad-rule');
 
   for (let i = 0; i < rules.length; i++) {
     $('#' + rules[i].Target).removeClass(new RegExp(rules[i].Pattern).test(password) ? 'bad-rule' : 'good-rule');
     $('#' + rules[i].Target).addClass(new RegExp(rules[i].Pattern).test(password) ? 'good-rule' : 'bad-rule');
   }
   if ($('ul').find('.bad-rule').length === 0) {
-    $('button#resetPassword').removeAttr('disabled');
+    $('button#validateForm').removeAttr('disabled');
+    $('#password').removeClass('is-invalid').addClass('is-valid');
   } else {
-    $('button#resetPassword').attr('disabled', 'disabled');
+    $('button#validateForm').attr('disabled', 'disabled');
+    $('#password').removeClass('is-valid').addClass('is-invalid');
   }
 };
 
