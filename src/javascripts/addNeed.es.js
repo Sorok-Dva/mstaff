@@ -1,4 +1,6 @@
+let loadingCandidateHTML = $('#loadingCandidates').html();
 need.notifyCandidates = false;
+
 $(`#post`).autocomplete({
   source: list,
   minLength: 2,
@@ -36,12 +38,14 @@ let searchCandidates = () => {
   if (need.firstSearch) {
     return showContractModal();
   } else {
+    $('#baseResult').hide();
+    $('#paginationContainer').hide();
+    $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
     $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
       loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
         $('#resetSearch').show();
         $('#searchResult').html(html).show();
-        $('#baseResult').hide();
-        $('#paginationContainer').hide();
+        $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
       });
     }).catch(error => errorsHandler(error));
   }
@@ -85,6 +89,7 @@ let showDiplomaModal = () => {
 let resetSearch = () => {
   $('input#post').val('');
   $('#cvCount').text(baseCVCount);
+  $('#searchCount').empty().hide();
   $('#searchResult').empty().hide();
   $('#baseResult').show();
   $('#paginationContainer').show();
@@ -212,6 +217,7 @@ let showArchived = () =>{
         $('#searchResult').hide();
         $('#paginationContainer').hide();
         $('#myCandidates').html(html).show();
+        $('#searchCount').html(`${data.length} candidats archivés.`).show();
       });
     }).catch(errors => errorsHandler(errors));
   } else {
@@ -221,6 +227,7 @@ let showArchived = () =>{
       $('#baseResult').show();
       $('#searchResult').hide();
       $('#paginationContainer').show();
+      $('#searchCount').empty().hide();
     } else {
       $('#baseResult').hide();
       $('#searchResult').show();
@@ -241,6 +248,7 @@ let showFavorites = () => {
         $('#searchResult').hide();
         $('#paginationContainer').hide();
         $('#myCandidates').html(html).show();
+        $('#searchCount').html(`${data.length} candidats favoris.`).show();
       });
     }).catch(errors => errorsHandler(errors));
   } else {
@@ -249,6 +257,7 @@ let showFavorites = () => {
       $('#baseResult').show();
       $('#searchResult').hide();
       $('#paginationContainer').show();
+      $('#searchCount').empty().hide();
     } else {
       $('#baseResult').hide();
       $('#searchResult').show();
@@ -261,7 +270,6 @@ let showFavorites = () => {
 $(document).ready(() => {
   need._csrf = _csrf;
 
-  let loadingCandidateHTML = $('#loadingCandidates').html();
   $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
     loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
       $('#baseResult').empty().html(html);
