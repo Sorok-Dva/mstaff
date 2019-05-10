@@ -1,18 +1,22 @@
 <link rel="stylesheet" href="/static/assets/css/telinput/intlTelInput.css">
 <style>
-  .iti-flag {background-image: url("/static/assets/images/telinput/flags.png");}
-
+  .iti-flag {
+    background-image: url("/static/assets/images/telinput/flags.png");
+  }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .iti-flag {background-image: url("/static/assets/images/telinput/flags@2x.png");}
+    .iti-flag {
+      background-image: url("/static/assets/images/telinput/flags@2x.png");
+    }
   }
 </style>
 
-<div class="row align-items-center justify-content-center">
-  <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
-    <!-- Heading -->
-    <h1 class="display-4 text-center mb-3">
-      Inscription
-    </h1>
+<div class="container-fluid">
+  <div class="row align-items-center justify-content-center">
+    <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+      <!-- Heading -->
+      <h1 class="display-4 text-center mb-3">
+        Inscription
+      </h1>
       <!-- Subheading -->
       <p class="text-muted text-center mb-5">
         {{tr.pages.register.title_card_header}}
@@ -20,6 +24,8 @@
           {{tr.pages.register.title_card_header_es}} {{es.name}}
         {{/if}}
       </p>
+
+      {{> flash}}
 
       <!-- Form -->
       <form action="/register" method="post">
@@ -72,36 +78,60 @@
             </div>
           </div>
         </div>
-      <div class="form-group phone">
-        <label for="phone">{{tr.pages.register.form_phoneNumber_label}}</label> <br>
-        <input id="phone" name="phone" type="tel"
-               placeholder="{{tr.pages.register.form_phoneNumber_label_ph}}"
-               class="form-control" value="{{body.phone}}" required="">
-      </div>
-      <div class="form-group email">
-        <label for="email">{{tr.pages.register.form_email_label}}</label>
-        <input id="email" name="email" type="email" email="true"
-               placeholder="{{tr.pages.register.form_email_ph}}"
-               class="form-control" value="{{body.email}}" required="">
-        <small id="emailTaken" class="form-text text-muted">{{tr.pages.register.errors.email_taken}}</small>
-        <small id="emailHelp" class="form-text text-muted">{{tr.pages.register.form_email_muted}}</small>
-      </div>
-      <div class="form-group password">
-        <label for="password">{{tr.pages.register.form_password_label}}</label>
-        <input id="password" name="password" type="password"
-               placeholder="{{tr.pages.register.form_password_label_ph}}"
-               class="form-control" required="">
-      </div>
+        <div class="form-group phone">
+          <label for="phone">{{tr.pages.register.form_phoneNumber_label}}</label>
+          <input id="phone" name="phone" type="tel"
+                 placeholder="{{tr.pages.register.form_phoneNumber_label_ph}}"
+                 class="form-control" value="{{body.phone}}" required="">
+        </div>
+        <div class="form-group email">
+          <label for="email">{{tr.pages.register.form_email_label}}</label>
+          <input id="email" name="email" type="email" email="true"
+                 placeholder="{{tr.pages.register.form_email_ph}}"
+                 class="form-control" value="{{body.email}}" required="">
+          <small id="emailTaken" class="form-text text-muted">{{tr.pages.register.errors.email_taken}}</small>
+          <small id="emailHelp" class="form-text text-muted">{{tr.pages.register.form_email_muted}}</small>
+        </div>
+        <div class="form-group password">
+          <label for="password">{{tr.pages.register.form_password_label}}</label>
+          <input id="password" name="password" type="password"
+                 placeholder="{{tr.pages.register.form_password_label_ph}}"
+                 class="form-control" required="" autocomplete="off">
+        </div>
+        <div class="card bg-light border ml-md-4 passwordStrength" style="display: none">
+          <div class="card-body">
+            <p class="mb-2">
+              Exigences de mot de passe
+            </p>
 
+            <p class="small text-muted mb-2">
+              Merci de satisfaire toutes les exigences suivantes pour créer votre compte sur Mstaff :
+            </p>
+            <ul class="small text-muted pl-4 mb-0">
+              <li id="length" class="bad-rule">
+                Minimum 8 caractères.
+              </li>
+              <li id="uppercase" class="bad-rule">
+                Au moins une majuscule.
+              </li>
+              <li id="symbol" class="bad-rule">
+                Au moins un caractère spécial.
+              </li>
+              <li id="number" class="bad-rule">
+                Au moins un chiffre.
+              </li>
+            </ul>
+          </div>
+        </div>
         <!-- Terms -->
         <p class="text-center">
           <small class="text-muted text-center">
-            {{tr.pages.register.terms}}
+            {{{tr.pages.register.terms}}}
           </small>
         </p>
 
         <!-- Submit -->
-        <button class="btn btn-lg btn-block btn-primary mb-3">
+        <button class="btn btn-lg btn-block btn-primary mb-3" id="validateForm" disabled>
           {{tr.pages.register.form_submit_btn}}
         </button>
 
@@ -119,25 +149,33 @@
            style="background-image: url(/static/assets/images/login-cover-hd.jpg);"></div>
     </div>
   </div>
-<script src="/static/assets/js/telinput/intlTelInput.js"></script>
-<script>
-  $('#email').blur(() => {
-    let email = $('#email').val();
-    $.get(`/api/user/emailAvailable/${email}`, (result) => {
-      if (!result.available) {
-        $('.form-group.email').addClass('has-error');
-        $('#emailTaken').show();
-      } else {
-        $('.form-group.email').addClass('has-success').removeClass('has-error');
+</div>
+  <script src="/static/assets/js/telinput/intlTelInput.js"></script>
+  <script>
+    $('#email').blur(() => {
+      let email = $('#email').val();
+      $.get(`/api/user/emailAvailable/${email}`, (result) => {
+        if (!result.available) {
+          $('.form-group.email').addClass('has-error');
+          $('#emailTaken').show();
+        } else {
+          $('.form-group.email').addClass('has-success').removeClass('has-error');
+          $('#emailTaken').hide();
+        }
+      }).catch(error => {
         $('#emailTaken').hide();
-      }
-    }).catch(error => {
-      $('#emailTaken').hide();
-      $('.form-group.email').addClass('has-error').removeClass('has-success');
+        $('.form-group.email').addClass('has-error').removeClass('has-success');
+      });
     });
-  });
-  $(document).ready(function () {
-    let input = document.querySelector("#phone");
-    window.intlTelInput(input);
-  });
-</script>
+    $(document).ready(function () {
+      let input = document.querySelector("#phone");
+      window.intlTelInput(input);
+    });
+    $('#password').focus(() => {
+      $('.passwordStrength').show();
+    });
+    $('#password').blur(() => {
+      $('.passwordStrength').hide();
+    });
+  </script>
+  <script src="/static/assets/dist/js/passwordStrengthChecker.min.js"></script>

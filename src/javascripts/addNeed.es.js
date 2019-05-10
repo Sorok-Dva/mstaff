@@ -41,6 +41,7 @@ let searchCandidates = () => {
         $('#resetSearch').show();
         $('#searchResult').html(html).show();
         $('#baseResult').hide();
+        $('#paginationContainer').hide();
       });
     }).catch(error => errorsHandler(error));
   }
@@ -86,6 +87,7 @@ let resetSearch = () => {
   $('#cvCount').text(baseCVCount);
   $('#searchResult').empty().hide();
   $('#baseResult').show();
+  $('#paginationContainer').show();
   $('#btnContractType').empty();
   $('#btnTimeType').empty();
   need.firstSearch = true;
@@ -101,8 +103,7 @@ let addCandidate = (id, type) => {
         $(`i.selectCandidate[data-id="${id}"]`).hide();
         $(`i.unselectCandidate[data-id="${id}"]`).show();
         need.selectedCandidates.push(id);
-        /*$('#selectedEsCount').html(need.selectedCandidates.length);
-        $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
+        $('#saveNeed').attr('data-original-title', `Enregister ma recherche (${need.selectedCandidates.length} candidat sélectionnés)`)
       }
       break;
     case 'favorite':
@@ -226,6 +227,30 @@ let showFavorites = () => {
 $(document).ready(() => {
   need._csrf = _csrf;
 
+  let loadingCandidateHTML = $('#loadingCandidates').html();
+  $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
+    loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+      $('#baseResult').empty().html(html);
+    });
+  }).catch(errors => errorsHandler(errors));
+  $('.pagination').twbsPagination({
+    totalPages: baseCVCount / size,
+    visiblePages: 3,
+    first: '<i class="fal fa-chevron-double-left"></i>',
+    prev: '<i class="fal fa-chevron-left"></i>',
+    next: '<i class="fal fa-chevron-right"></i>',
+    last: '<i class="fal fa-chevron-double-right"></i>',
+    pageClass: 'page-item',
+    anchorClass: 'page-link',
+    onPageClick: function (event, page) {
+      $('#baseResult').empty().html(loadingCandidateHTML);
+      $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
+        loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+          $('#baseResult').empty().html(html);
+        });
+      }).catch(errors => errorsHandler(errors));
+    }
+  });
   $('button#saveNeed').click(function () {
     if ($(this).is("[data-need-id]")) {
       createModal({

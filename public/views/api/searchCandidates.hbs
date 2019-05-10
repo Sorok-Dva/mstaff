@@ -49,7 +49,7 @@
                 <i class="fal fa-moon fa-2x"{{#if this.Wish.night_time}} style="color: #04e900"{{/if}}></i>
               </h4>
               {{#if this.Wish.posts}}
-                <h4><label class="badge badge-soft-success">{{this.Wish.posts}}</label></h4>
+                <h4><label class="col-8 wrapword badge badge-soft-success">{{this.Wish.posts}}</label></h4>
               {{/if}}
               {{#if this.Wish.services}}
                 <hr style="width: 45%; margin: auto">
@@ -81,11 +81,11 @@
       </div>
     {{/unless}}
   {{/each}}
-  {{#unless this}}
-  {{!--<script>$('#cvCount').text('0');</script>--}}
-    <h3>Aucun candidats ne répond à vos critères, essayez une nouvelle recherche.</h3>
-  {{/unless}}
 </div>
+{{#unless this}}
+{{!--<script>$('#cvCount').text('0');</script>--}}
+  <h1 class="text-center">Aucun candidats ne répond à vos critères, essayez une nouvelle recherche.</h1>
+{{/unless}}
 <script>
   need.selectedCandidates.forEach(e => {
     $(`i.selectCandidate[data-id="${e}"]`).hide();
