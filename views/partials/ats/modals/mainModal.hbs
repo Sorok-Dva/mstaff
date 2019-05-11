@@ -1,128 +1,128 @@
-<style>
-  .modal-backdrop~.modal-backdrop{
-    background: none;
-  }
-  .modal-backdrop.in{
-    opacity: 0.9;
-  }
-  .customModal.in{
-    display: flex !important;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-  .customModal > .modal-dialog{
-    margin: 0;
-    padding: 0;
-    max-width: 100vw;
-    width: 50vw;
-    cursor: auto;
-  }
-  .customModal > .modal-dialog > .modal-content{
-    width: 100%;
-    height: 100%;
-  }
-  .customModal > .modal-dialog > .modal-content >.modal-body{
-    padding: 0;
-  }
-  .customModal > .modal-dialog > .modal-content >.modal-body > .row{
-    margin: 0;
-    height: 100%;
-  }
+<!--<style>-->
+<!--  .modal-backdrop~.modal-backdrop{-->
+<!--    background: none;-->
+<!--  }-->
+<!--  .modal-backdrop.in{-->
+<!--    opacity: 0.9;-->
+<!--  }-->
+<!--  .customModal.in{-->
+<!--    display: flex !important;-->
+<!--    flex-direction: row;-->
+<!--    justify-content: center;-->
+<!--    align-items: center;-->
+<!--    cursor: pointer;-->
+<!--  }-->
+<!--  .customModal > .modal-dialog{-->
+<!--    margin: 0;-->
+<!--    padding: 0;-->
+<!--    max-width: 100vw;-->
+<!--    width: 50vw;-->
+<!--    cursor: auto;-->
+<!--  }-->
+<!--  .customModal > .modal-dialog > .modal-content{-->
+<!--    width: 100%;-->
+<!--    height: 100%;-->
+<!--  }-->
+<!--  .customModal > .modal-dialog > .modal-content >.modal-body{-->
+<!--    padding: 0;-->
+<!--  }-->
+<!--  .customModal > .modal-dialog > .modal-content >.modal-body > .row{-->
+<!--    margin: 0;-->
+<!--    height: 100%;-->
+<!--  }-->
 
-  p{
-    font-size: 2em;
-    font-family: 'Oxygen', sans-serif;
-  }
+<!--  p{-->
+<!--    font-size: 2em;-->
+<!--    font-family: 'Oxygen', sans-serif;-->
+<!--  }-->
 
-  .leftPart{
-    display: flex;
-    flex-direction: column;
-    padding: 3%;
-    background-color: white;
-    height: 60vh;
-  }
-  .leftPart > div:nth-child(1){
-    margin-bottom: 10%;
-  }
-  .leftPart > div:nth-child(2){
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex-grow: 1;
-  }
-  .leftPart > div:nth-child(2) > p:nth-child(1){
-    line-height: 1.5 !important;
-    color: deepskyblue;
-    margin-bottom: 10px;
-  }
-  .leftPart > div:nth-child(2) > p:nth-child(2){
-    font-size: 1.5em;
-    color: black;
-  }
-  .leftPart > div:nth-child(3){
-    margin-top: 5%;
-  }
+<!--  .leftPart{-->
+<!--    display: flex;-->
+<!--    flex-direction: column;-->
+<!--    padding: 3%;-->
+<!--    background-color: white;-->
+<!--    height: 60vh;-->
+<!--  }-->
+<!--  .leftPart > div:nth-child(1){-->
+<!--    margin-bottom: 10%;-->
+<!--  }-->
+<!--  .leftPart > div:nth-child(2){-->
+<!--    display: flex;-->
+<!--    flex-direction: column;-->
+<!--    justify-content: center;-->
+<!--    flex-grow: 1;-->
+<!--  }-->
+<!--  .leftPart > div:nth-child(2) > p:nth-child(1){-->
+<!--    line-height: 1.5 !important;-->
+<!--    color: deepskyblue;-->
+<!--    margin-bottom: 10px;-->
+<!--  }-->
+<!--  .leftPart > div:nth-child(2) > p:nth-child(2){-->
+<!--    font-size: 1.5em;-->
+<!--    color: black;-->
+<!--  }-->
+<!--  .leftPart > div:nth-child(3){-->
+<!--    margin-top: 5%;-->
+<!--  }-->
 
-  .rightPart{
-    background-color: #00aced;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2%;
-    height: 60vh;
-  }
+<!--  .rightPart{-->
+<!--    background-color: #00aced;-->
+<!--    display: flex;-->
+<!--    flex-direction: column;-->
+<!--    justify-content: center;-->
+<!--    align-items: center;-->
+<!--    padding: 2%;-->
+<!--    height: 60vh;-->
+<!--  }-->
 
-  .paraph{
-    padding: 3%;
-    border-bottom: 2px white solid;
-    height: 30vh;
-    width: 75%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-  }
-  .paraph:last-child{
-    border-bottom: none;
-  }
-  .paraph button.btn.btn-success{
-    font-size: 1.5em;
-    font-weight: bold;
-    background-color: #0bcfb4;
-    color: white;
-    border: none;
-    border-radius: 300px;
-    padding: 10px 15px;
-    margin-top: 5%;
-  }
-  .footer-left{
-    flex-direction: row;
-    display: flex;
-  }
-  .footer-left img{
-    width: 100px;
-  }
-  .footer-left-p p{
-    color: black;
-    font-size: 1.5em;
-  }
-  .footer-left-p{
-    flex-direction: column;
-    display: flex;
-    justify-content: center;
-    flex-grow: 1;
-  }
-  input::-webkit-input-placeholder{
-    color: #e6e6e6;
-  }
-  input:-moz-placeholder {
-    color: #e6e6e6;
-  }
-</style>
+<!--  .paraph{-->
+<!--    padding: 3%;-->
+<!--    border-bottom: 2px white solid;-->
+<!--    height: 30vh;-->
+<!--    width: 75%;-->
+<!--    display: flex;-->
+<!--    flex-direction: column;-->
+<!--    justify-content: center;-->
+<!--    align-items: center;-->
+<!--    color: white;-->
+<!--  }-->
+<!--  .paraph:last-child{-->
+<!--    border-bottom: none;-->
+<!--  }-->
+<!--  .paraph button.btn.btn-success{-->
+<!--    font-size: 1.5em;-->
+<!--    font-weight: bold;-->
+<!--    background-color: #0bcfb4;-->
+<!--    color: white;-->
+<!--    border: none;-->
+<!--    border-radius: 300px;-->
+<!--    padding: 10px 15px;-->
+<!--    margin-top: 5%;-->
+<!--  }-->
+<!--  .footer-left{-->
+<!--    flex-direction: row;-->
+<!--    display: flex;-->
+<!--  }-->
+<!--  .footer-left img{-->
+<!--    width: 100px;-->
+<!--  }-->
+<!--  .footer-left-p p{-->
+<!--    color: black;-->
+<!--    font-size: 1.5em;-->
+<!--  }-->
+<!--  .footer-left-p{-->
+<!--    flex-direction: column;-->
+<!--    display: flex;-->
+<!--    justify-content: center;-->
+<!--    flex-grow: 1;-->
+<!--  }-->
+<!--  input::-webkit-input-placeholder{-->
+<!--    color: #e6e6e6;-->
+<!--  }-->
+<!--  input:-moz-placeholder {-->
+<!--    color: #e6e6e6;-->
+<!--  }-->
+<!--</style>-->
 
 <div class="modal customModal" id="mainModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">

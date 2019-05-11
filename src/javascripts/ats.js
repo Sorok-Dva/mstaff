@@ -1202,6 +1202,11 @@ let experienceModalListener = () => {
     }
   });
 
+  $('#xpOngoing').on('change', (event) => {
+    if (event.currentTarget.checked){
+    }
+  });
+
   //Next Step
   $('#emptyXp').on('click', () => {
     experiences = [];

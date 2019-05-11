@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row align-items-center justify-content-center">
-    <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5" id="atsPart">
+    <div class="col-12 col-md-5 col-lg-6 col-xl-6 px-lg-6 my-5" id="atsPart">
       <div class="col-12" id="loadingCandidates">
         <h1 class="text-center" style="padding-top: 30px">
           Chargement du formulaire en cours...
@@ -11,10 +11,11 @@
       </div>
 
     </div>
-    <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+    <div class="col-12 col-md-7 col-lg-6 col-xl-6 d-none d-lg-block">
       <!-- Image -->
       <div class="bg-cover vh-100 mt-n1 mr-n3"
-           style="background-image: url(/static/assets/images/login-cover-hd.jpg);"></div>
+           style="background-image: url(/static/assets/images/login-cover-hd.jpg);">
+      </div>
     </div>
   </div>
 </div>
@@ -24,7 +25,7 @@
   };
 
   $(document).ready(() => {
-    loadTemplate('/static/views/ats/firstPart.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/main.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })
   });
