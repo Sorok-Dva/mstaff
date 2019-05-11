@@ -1,0 +1,76 @@
+<style>
+  .cadetblue{
+    background-color: cadetblue;
+  }
+  .underline{
+    text-decoration: underline;
+  }
+</style>
+
+<a href="/"
+><i class="fe fe-arrow-left-circle"></i></a>
+
+<div class="row justify-content-around">
+  <div class="card text-center col-6">
+    <i class="fe fe-aperture mt-4"></i>
+    <div class="card-body">
+      <h1 class="card-title">Temps plein</h1>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+      </div>
+    </div>
+  </div>
+  <div class="w-100"></div>
+
+  <div class="card text-center col-6">
+    <i class="fe fe-aperture mt-4"></i>
+    <div class="card-body">
+      <h1 class="card-title">Temps partiel</h1>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+      </div>
+    </div>
+  </div>
+  <div class="w-100"></div>
+
+  <div class="card text-center col-6">
+    <i class="fe fe-aperture mt-4"></i>
+    <div class="card-body">
+      <h1 class="card-title">Jour</h1>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+      </div>
+    </div>
+  </div>
+  <div class="w-100"></div>
+
+  <div class="card text-center col-6">
+    <i class="fe fe-aperture mt-4"></i>
+    <div class="card-body">
+      <h1 class="card-title">Nuit</h1>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+      </div>
+    </div>
+  </div>
+  <div class="w-100"></div>
+
+</div>
+
+<div class="row justify-content-end">
+  <a href="#" id="toTime"><i class="fe fe-arrow-right-circle"></i></a>
+</div>
+
+
+<script>
+  $('#toTime').click(function() {
+    let template = 'cdiTime';
+    //TODO if toggle = travail durable : template = cdiTime
+    //TODO else toggle = stage : template = internshipTime
+    loadTemplate(`/static/views/ats/${template}.hbs`, {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    });
+    //TODO if toggle = travail durable :
+
+  });
+</script>

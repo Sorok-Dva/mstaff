@@ -1,0 +1,30 @@
+<a href="/"><i class="fe fe-arrow-left-circle"></i></a>
+<!-- Heading -->
+
+<!-- Form -->
+<form>
+  <div class="form-group">
+    <label for="InputPosts">Poste* </label>
+    <input type="text" class="form-control" id="InputPosts">
+  </div>
+  <div class="form-group">
+    <label for="InputServices">Service (facultatif)</label>
+    <select class="form-control" data-toggle="select" multiple id="InputServices">
+      <option>CSS</option>
+      <option>HTML</option>
+      <option>JavaScript</option>
+      <option>Bootstrap</option>
+    </select>
+  </div>
+  <div class="row justify-content-end">
+    <a href="#" id="toContract"><i class="fe fe-arrow-right-circle"></i></a>
+  </div>
+</form>
+
+<script>
+  $('#toContract').click(function() {
+    loadTemplate('/static/views/ats/contract.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+</script>

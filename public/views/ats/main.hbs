@@ -1,35 +1,30 @@
-<a href="/"><i class="fal fa-chevron-circle-left fa-2x mb-4"></i></a>
+<a href="/"><i class="fe fe-arrow-left-circle"></i></a>
 
 <!-- Heading -->
-
-<div class="container">
-  <h1 class="display-4 text-center mb-3">
+<div class="row justify-content-center mb-6">
+  <h1 class="text-center col-12">
     C'est votre toute première fois sur Mstaff ?
   </h1>
-
-  <h1 class="display-4 text-center mb-3">
+  <h1 class="text-center col-12">
     Postulez et créer votre compte candidat.
   </h1>
+  <button id="toPost" type="button" class="btn btn-outline-success col-6">En tant que...</button>
 </div>
 
+<div class="row justify-content-center mb-6">
+  <h1 class="text-center col-12">Déjà inscrit ?</h1>
+  <button type="button" class="btn btn-outline-success col-8"
+          onclick="$(location).attr('href', 'https://v2.mstaff.co/login');">Se connecter à mon espace candidat</button>
+</div>
 
+<!--  <input type="hidden" name="_csrf" value="{{csrfToken}}"/>-->
 
-<!-- Subheading -->
-
-<!-- Form -->
-<form>
-  <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
-
-  // ton premier ecran ats
-  <!-- Submit -->
-  <button type="button" class="btn btn-lg btn-block btn-primary mb-3">
-    Connexion
-  </button>
-</form>
 <script>
-  $('button').click(function() {
-    loadTemplate('/static/views/ats/secondPart.hbs', {atsData, test: {}}, (html) => {
+
+  $('#toPost').click(function() {
+    loadTemplate('/static/views/ats/post.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })
   });
+
 </script>

@@ -1,0 +1,72 @@
+<style>
+.cadetblue{
+  background-color: cadetblue;
+}
+  .underline{
+    text-decoration: underline;
+  }
+</style>
+
+<a href="/"><i class="fe fe-arrow-left-circle"></i></a>
+<!-- Heading -->
+
+<div class="row justify-content-center mb-4 mb-md-6">
+  <h1 class="text-center col-12 underline">Que recherchez-vous ?</h1>
+</div>
+
+<div class="row justify-content-center">
+
+  <div class="card text-center col-6">
+    <i class="fe fe-aperture mt-4"></i>
+    <div class="card-body">
+      <h1 class="card-title">Un travail durable</h1>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+      </div>
+    </div>
+  </div>
+  <div class="w-100"></div>
+
+  <div class="card text-center col-6">
+    <i class="fe fe-calendar mt-4"></i>
+    <div class="card-body">
+      <h1 class="card-title">Des missions ponctuelles</h1>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch2">
+      </div>
+    </div>
+  </div>
+  <div class="w-100"></div>
+
+
+  <div class="card text-center col-6">
+    <i class="fe fe-award mt-4"></i>
+    <div class="card-body">
+      <h1 class="card-title">Un stage</h1>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitch3">
+      </div>
+    </div>
+  </div>
+  <div class="w-100"></div>
+
+
+</div>
+
+<div class="row justify-content-end">
+  <a href="#" id="toTime"><i class="fe fe-arrow-right-circle"></i></a>
+</div>
+
+
+<script>
+  $('#toTime').click(function() {
+    let template = 'cdiTime';
+    //TODO if toggle = travail durable : template = cdiTime
+    //TODO else toggle = stage : template = internshipTime
+    loadTemplate(`/static/views/ats/${template}.hbs`, {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    });
+    //TODO if toggle = travail durable :
+
+  });
+</script>
