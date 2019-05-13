@@ -1,0 +1,123 @@
+<style>
+  .iti-flag {
+    background-image: url("/static/assets/images/telinput/flags.png") !important;
+  }
+
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti-flag {
+      background-image: url("/static/assets/images/telinput/flags@2x.png") !important;
+    }
+  }
+  .intl-tel-input .country-list{
+    background-color: rgba(0,0,0,0.8) !important;
+  }
+  .custom-cursor{
+    cursor: pointer;
+  }
+</style>
+
+<a href="#" id="backtoSkill"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+
+<form>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-6">
+        <label for="identityForename">Prénom*</label>
+        <input id="identityForename" type="text" class="form-control">
+      </div>
+      <div class="col-6">
+        <label for="identityName">Nom*</label>
+        <input id="identityName" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-6">
+        <label for="identityBirth">Date de naissance*</label>
+        <input id="identityBirth" type="date" class="form-control">
+      </div>
+      <div class="col-6">
+        <label for="identityPostal">Code postal*</label>
+        <input id="identityPostal" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-6">
+        <label for="identityCity">Ville*</label>
+        <input id="identityCity" type="text" class="form-control">
+      </div>
+      <div class="col-6">
+        <label for="identityCountry">Pays*</label>
+        <input id="identityCountry" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-6">
+        <label for="identityPhone">Numéro de téléphone*</label>
+        <input id="identityPhone" type="tel" class="form-control">
+      </div>
+      <div class="col-6">
+        <label for="identityMail">Adresse e-mail*</label>
+        <input id="identityMail" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="identityPassword">Mot de passe*</label>
+    <div class="input-group mb-3">
+      <input id="identityPassword" type="password" class="form-control">
+      <div class="input-group-append">
+        <span class="input-group-text"><i class="fal fa-low-vision col-5 custom-cursor" onclick="togglePasswordVisibility()"></i></span>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="row justify-content-end">
+  <a href="#" id="toLegal"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
+</div>
+
+<script>
+  let input = document.querySelector("#identityPhone");
+  iti = intlTelInput(input, {
+    utilsScript: '/static/assets/js/utils.js',
+    preferredCountries: ["fr", "gb", "us"],
+    initialCountry: "auto",
+    geoIpLookup: function(success, failure) {
+      $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+        let countryCode = (resp && resp.country) ? resp.country : "";
+        success(countryCode);
+      });
+    },
+  });
+
+  let togglePasswordVisibility = () => {
+    let x = document.getElementById("identityPassword");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  };
+
+  $('#backtoSkill').click(function() {
+    loadTemplate('/static/views/ats/skill.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
+  $('#toLegal').click(function() {
+    loadTemplate('/static/views/ats/legal.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+</script>
