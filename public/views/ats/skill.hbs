@@ -5,31 +5,29 @@
   .custom-cursor{
     cursor: pointer;
   }
+  #stars div i:nth-child(even){
+    display: none;
+  }
 </style>
 
-<a href="#" id="backtoDiploma"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<a href="#" id="backtoQualification"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
-  <h2 class="text-center underline">Aperçu de vos diplômes</h2>
+  <h2 class="text-center underline">Aperçu de vos compétences</h2>
 </nav>
 
 <form>
   <div class="form-group text-center">
-    <label for="diploma">Choisissez votre diplôme</label>
-    <input type="text" class="form-control" id="qualification">
+    <label for="diploma">Indiquez ici une compétence</label>
+    <input type="text" class="form-control" id="diploma">
   </div>
-
-  <div id="diplomaDate" class="row justify-content-around">
-    <div class="col-6 text-center">
-      <label for="qualificationStart">Début</label>
-      <input id="qualificationStart" name="qualificationStart" type="text"
-             class="form-control datetimepicker-input" readonly>
-    </div>
-    <div class="col-6 text-center">
-      <label for="qualificationEnd">Fin</label>
-      <input id="qualificationEnd" name="qualificationEnd" type="text"
-             class="form-control datetimepicker-input" readonly>
+  <div id="skillStars" class="form-group text-center">
+    <span class="text-muted" id="legend">Notez-vous !</span>
+    <div id="stars" class="d-flex justify-content-center">
+      <div id="star1" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
+      <div id="star2" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
+      <div id="star3" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
     </div>
   </div>
 </form>
@@ -42,7 +40,7 @@
 </div>
 
 <div class="row justify-content-end">
-  <a href="#" id="toSkill"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
+  <a href="#" id="toQualification"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
 </div>
 
 <script>
@@ -54,7 +52,7 @@
     $('#recap').removeClass('d-lg-block');
   });
 
-  $('#backtoDiploma').click(function() {
+  $('#backtoQualification').click(function() {
     loadTemplate('/static/views/ats/diploma.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })
