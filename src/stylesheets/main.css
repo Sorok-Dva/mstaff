@@ -190,11 +190,11 @@ li.wish {
 }
 
 .no-ui-slider .slider-labels li:hover {
-  color: #333333;
+  color: #03a9de;
 }
 
 .no-ui-slider .slider-labels li.slideActive {
-  color: #333333;
+  color: #03a9de;
 }
 
 .noUi-target,
