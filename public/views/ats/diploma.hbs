@@ -1,4 +1,18 @@
+<style>
+  .underline{
+    text-decoration: underline;
+  }
+  .custom-cursor{
+    cursor: pointer;
+  }
+</style>
+
 <a href="#" id="backtoExperience"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+
+<nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
+  <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
+  <h2 class="text-center underline">Aperçu de vos formations</h2>
+</nav>
 
 <form>
   <div class="form-group text-center">
@@ -21,15 +35,30 @@
 
   <div class="row justify-content-center mt-5">
     <i class="fal fa-info-circle col-12 text-center"></i>
-    <div class="col-6 text-center">Indiquez ici votre <b>formation initiale</b> ou bien sélectionnez-la depuis la liste. Vous pourrez ajouter vos  <b>diplômes complémentaires (DU ...)</b>  à l'étape suivante.</div>
+    <div class="col-9 text-center">Indiquez ici votre <b>formation initiale</b> ou bien sélectionnez-la depuis la liste. Vous pourrez ajouter vos  <b>diplômes complémentaires (DU ...)</b>  à l'étape suivante.</div>
   </div>
 </form>
+
+<div class="row text-center justify-content-center mt-5">
+  <div class="custom-cursor saveDiploma">
+    <i class="fal fa-check-circle fa-2x col-12"></i>
+    <p class="col-12">Enregistrer</p>
+  </div>
+</div>
 
 <div class="row justify-content-end">
   <a href="#" id="toQualification"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
 </div>
 
 <script>
+  $('.saveDiploma').click(function() {
+    $('#recap').addClass('d-lg-block');
+  });
+
+  $('.closeRecap').click(function() {
+    $('#recap').removeClass('d-lg-block');
+  });
+
   $('#backtoExperience').click(function() {
     loadTemplate('/static/views/ats/experience.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
