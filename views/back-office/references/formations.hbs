@@ -58,7 +58,7 @@
         }, () => {
           $('button#btnEditFormation').click(function () {
             if ($('input#formationValueEdit').val() != '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#formationValueEdit').val();
               $.put(`/api/back-office/references/formations/${row.id}`, {
                 promptInput,
@@ -91,7 +91,7 @@
           title: 'Supprimer une formation',
           modal: 'back-office/removeFormation'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveFormation').click(function () {
             $.delete(`/api/back-office/references/formations/${row.id}`, {
               _csrf
@@ -149,7 +149,7 @@
     }, () => {
       $('button#validateFormation').click(function () {
         if ($('input#formationValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#formationValue').val();
           $.post(`/api/back-office/references/formations/`, {
             promptInput,

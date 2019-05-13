@@ -62,7 +62,7 @@
         }, () => {
           $('button#btnEditPost').click(function () {
             if (($('input#postValueEdit').val() != '') && ($('select#postCategoryEdit').val() != '')) {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#postValueEdit').val();
               let categoryInput = $('select#postCategoryEdit').val();
               $.put(`/api/back-office/references/posts/${row.id}`, {
@@ -104,7 +104,7 @@
           title: 'Supprimer un poste',
           modal: 'back-office/removePost'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemovePost').click(function () {
             $.delete(`/api/back-office/references/posts/${row.id}`, {
               _csrf
@@ -162,7 +162,7 @@
     }, () => {
       $('button#validatePost').click(function () {
         if (($('input#postValue').val() != '') && ($('select#postCategory').val() != '')) {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#postValue').val();
           let categoryInput = $('select#postCategory').val();
           $.post(`/api/back-office/references/posts/`, {

@@ -57,7 +57,7 @@
         }, () => {
           $('button#btnEditService').click(function () {
             if ($('input#serviceValueEdit').val() != '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#serviceValueEdit').val();
               $.put(`/api/back-office/references/services/${row.id}`, {
                 promptInput,
@@ -90,7 +90,7 @@
           title: 'Supprimer un service',
           modal: 'back-office/removeService'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveService').click(function () {
             $.delete(`/api/back-office/references/services/${row.id}`, {
               _csrf
@@ -149,7 +149,7 @@
     }, () => {
       $('button#validateService').click(function () {
         if ($('input#serviceValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#serviceValue').val();
           $.post(`/api/back-office/references/services/`, {
             promptInput,

@@ -363,7 +363,7 @@ let loadResult = (list) => {
 };
 
 let getEsList = (query) => {
-  let _csrf = $('#csrfToken').val();
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
 
   if (query.type === 'aroundMe'){
     let p = query.position;

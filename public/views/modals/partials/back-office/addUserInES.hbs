@@ -69,7 +69,7 @@
 
     user.email = $('input[name="AUemail"]').val();
     user.role = $('select[name="role"] option').filter(":selected").val();
-    user._csrf = $('#csrfToken').val();
+    user._csrf = $('meta[name="csrf-token"]').attr('content');
 
     if (!userExists) {
       user.firstName = $('input[name="AUfirstName"]').val();
