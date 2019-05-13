@@ -1,13 +1,10 @@
 <style>
-.cadetblue{
-  background-color: cadetblue;
-}
   .underline{
     text-decoration: underline;
   }
 </style>
 
-<a href="/"><i class="fe fe-arrow-left-circle"></i></a>
+<a href="#" id="backToPost"><i class="fe fe-arrow-left-circle"></i></a>
 <!-- Heading -->
 
 <div class="row justify-content-center mb-4 mb-md-6">
@@ -59,10 +56,19 @@
 
 
 <script>
+  $('#backToPost').click(function() {
+    loadTemplate('/static/views/ats/post.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
   $('#toTime').click(function() {
-    let template = 'cdiTime';
-    //TODO if toggle = travail durable : template = cdiTime
-    //TODO else toggle = stage : template = internshipTime
+    // let template = 'cdiTime';
+    let template = 'internshipTime';
+    //TODO if toggle = travail durable : template = cdiTime.hbs
+    //TODO else toggle = stage : template = internshipTime.hbs
+    //TODO else toggle = missions ponctuelles : template = experience.hbs
+
     loadTemplate(`/static/views/ats/${template}.hbs`, {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     });

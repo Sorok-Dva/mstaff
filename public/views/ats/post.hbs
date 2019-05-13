@@ -1,4 +1,4 @@
-<a href="/"><i class="fe fe-arrow-left-circle"></i></a>
+<a href="#" id="backToMain"><i class="fe fe-arrow-left-circle"></i></a>
 <!-- Heading -->
 
 <!-- Form -->
@@ -22,6 +22,12 @@
 </form>
 
 <script>
+  $('#backToMain').click(function() {
+    loadTemplate('/static/views/ats/main.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
   $('#toContract').click(function() {
     loadTemplate('/static/views/ats/contract.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);

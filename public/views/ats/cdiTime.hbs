@@ -1,14 +1,4 @@
-<style>
-  .cadetblue{
-    background-color: cadetblue;
-  }
-  .underline{
-    text-decoration: underline;
-  }
-</style>
-
-<a href="/"
-><i class="fe fe-arrow-left-circle"></i></a>
+<a href="#" id="backToContract"><i class="fe fe-arrow-left-circle"></i></a>
 
 <div class="row justify-content-around">
   <div class="card text-center col-6">
@@ -58,19 +48,20 @@
 </div>
 
 <div class="row justify-content-end">
-  <a href="#" id="toTime"><i class="fe fe-arrow-right-circle"></i></a>
+  <a href="#" id="toExperience"><i class="fe fe-arrow-right-circle"></i></a>
 </div>
 
 
 <script>
-  $('#toTime').click(function() {
-    let template = 'cdiTime';
-    //TODO if toggle = travail durable : template = cdiTime
-    //TODO else toggle = stage : template = internshipTime
-    loadTemplate(`/static/views/ats/${template}.hbs`, {atsData, test: {}}, (html) => {
+  $('#backToContract').click(function() {
+    loadTemplate('/static/views/ats/contract.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
-    });
-    //TODO if toggle = travail durable :
+    })
+  });
 
+  $('#toExperience').click(function() {
+    loadTemplate('/static/views/ats/experience.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
   });
 </script>

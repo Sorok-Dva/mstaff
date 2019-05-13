@@ -1,0 +1,24 @@
+<a href="#" id="backToContract"><i class="fe fe-arrow-left-circle"></i></a>
+
+<div class="row justify-content-around">
+
+</div>
+
+<div class="row justify-content-end">
+  <a href="#" id="toDiploma"><i class="fe fe-arrow-right-circle"></i></a>
+</div>
+
+
+<script>
+  $('#backToContract').click(function() {
+    loadTemplate('/static/views/ats/contract.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
+  $('#toDiploma').click(function() {
+    loadTemplate('/static/views/ats/diploma.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+</script>

@@ -1,0 +1,33 @@
+<a href="#" id="backToContract"><i class="fe fe-arrow-left-circle"></i></a>
+
+<div class="row justify-content-around">
+  <div class="col-6 text-center">
+    <label for="start">Du :</label>
+    <input id="start" name="start" type="text"
+           class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#start" readonly>
+  </div>
+  <div class="col-6 text-center">
+    <label for="end">Au :</label>
+    <input id="end" name="end" type="text"
+           class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#end" readonly>
+  </div>
+</div>
+
+<div class="row justify-content-end">
+  <a href="#" id="toExperience"><i class="fe fe-arrow-right-circle"></i></a>
+</div>
+
+
+<script>
+  $('#backToContract').click(function() {
+    loadTemplate('/static/views/ats/contract.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
+  $('#toExperience').click(function() {
+    loadTemplate('/static/views/ats/experience.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+</script>
