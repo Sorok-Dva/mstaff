@@ -1,0 +1,44 @@
+<a href="#" id="backtoExperience"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+
+<form>
+  <div class="form-group text-center">
+    <label for="diploma">Choisissez votre formation</label>
+    <input type="text" class="form-control" id="diploma">
+  </div>
+
+  <div id="diplomaDate" class="row justify-content-around">
+    <div class="col-6 text-center">
+      <label for="diplomaStart">Début</label>
+      <input id="diplomaStart" name="diplomaStart" type="text"
+             class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#diplomaStart" readonly>
+    </div>
+    <div class="col-6 text-center">
+      <label for="diplomaEnd">Fin</label>
+      <input id="diplomaEnd" name="diplomaEnd" type="text"
+             class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#diplomaEnd" readonly>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mt-5">
+    <i class="fal fa-info-circle col-12 text-center"></i>
+    <div class="col-6 text-center">Indiquez ici votre <b>formation initiale</b> ou bien sélectionnez-la depuis la liste. Vous pourrez ajouter vos  <b>diplômes complémentaires (DU ...)</b>  à l'étape suivante.</div>
+  </div>
+
+  <div class="row justify-content-end">
+    <a href="#" id="toQualification"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
+  </div>
+</form>
+
+<script>
+  $('#backtoExperience').click(function() {
+    loadTemplate('/static/views/ats/experience.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
+  $('#toQualification').click(function() {
+    loadTemplate('/static/views/ats/qualification.hbs', {atsData, test: {}}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+</script>
