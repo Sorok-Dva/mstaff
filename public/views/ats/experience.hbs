@@ -1,31 +1,18 @@
+<style>
+  .underline{
+    text-decoration: underline;
+  }
+  .custom-cursor{
+    cursor: pointer;
+  }
+</style>
+
 <a href="#" id="backToContract"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
-
-
-
-
-<div class="pos-f-t">
-  <nav class="navbar navbar-dark bg-dark fixed-right">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </nav>
-
-
-  <nav id="navbarToggleExternalContent" class="collapse navbar navbar-vertical fixed-right navbar-expand-md navbar-light">
-    ...
-  </nav>
-
-
-<!--  <div class="collapse fixed-right" id="navbarToggleExternalContent">-->
-<!--    <div class="bg-dark p-4">-->
-<!--      <h5 class="text-white h4">Collapsed content</h5>-->
-<!--      <span class="text-muted">Toggleable via the navbar brand.</span>-->
-<!--    </div>-->
-<!--  </div>-->
-
-</div>
-
+<nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
+  <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
+  <h2 class="text-center underline">Aperçu de vos expériences</h2>
+</nav>
 
 <form>
   <div class="form-group">
@@ -81,16 +68,27 @@
       </div>
     </div>
   </div>
-
-  <div class="row justify-content-end">
-    <a href="#" id="toDiploma"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
-  </div>
 </form>
 
+<div class="row text-center custom-cursor saveXp">
+  <i class="fal fa-check-circle fa-2x col-12"></i>
+  <p class="col-12">Enregistrer</p>
+</div>
 
-
+<div class="row justify-content-end">
+  <a href="#" id="toDiploma"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
+</div>
 
 <script>
+
+  $('.saveXp').click(function() {
+      $('#recap').addClass('d-lg-block');
+  });
+
+  $('.closeRecap').click(function() {
+    $('#recap').removeClass('d-lg-block');
+  });
+
   $('#backToContract').click(function() {
     loadTemplate('/static/views/ats/contract.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
