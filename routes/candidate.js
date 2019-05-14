@@ -1,5 +1,28 @@
 const { Authentication, HTTPValidation } = require('../middlewares/index');
 const { User } = require('../components');
+const multer  = require('multer');
+const path = require('path');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    req.body.filename = Date.now() + '.png';
+    cb(null, req.body.filename)
+  }
+});
+const upload = multer({ storage: storage,
+  fileFilter: function (req, file, callback) {
+    let ext = path.extname(file.originalname);
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+      return callback(new Error('Only images are allowed'))
+    }
+    callback(null, true)
+  },
+  limits: {
+    fileSize: 1024 * 1024
+  }
+});
 const express = require('express');
 const router = express.Router();
 
@@ -24,11 +47,12 @@ router.get(
   User.Candidate.EditProfile);
 
 /**
- * @Route('/profile/edit') GET | POST;
- * Form for edit user profile.
+ * @Route('/profile/upload') POST;
+ * Form for edit user avatar.
  */
 router.post(
   '/profile/upload', Authentication.ensureIsCandidate,
+  upload.single('avatar'),
   User.Candidate.UploadImageProfile);
 
 /**

@@ -7,17 +7,17 @@ const _ = require('lodash');
 const moment = require('moment');
 const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
-const AvatarStorage = require('../../../helpers/avatar.storage');
+/*const AvatarStorage = require('../../../helpers/avatar.storage');*/
 const path = require('path');
 const multer = require('multer');
 
 const User_Candidate = {};
-const storage = AvatarStorage({
+/*const storage = AvatarStorage({
   square: true,
   responsive: true,
   greyscale: true,
   quality: 90
-});
+});*/
 const limits = {
   files: 1, // allow only 1 file per request
   fileSize: 1024 * 1024, // 1 MB (max file size)
@@ -238,45 +238,15 @@ User_Candidate.EditProfile = (req, res, next) => {
   }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
 };
 
-let fileFilter = (req, file, cb) => {
-  if (_.includes(allowedMimes, file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Invalid file type. Only jpg, png and gif image files are allowed.'));
-  }
-};
-
-var upload = multer({
-  storage: storage,
-  limits: limits,
-  fileFilter: fileFilter
-});
-
 User_Candidate.UploadImageProfile = (req, res, next) => {
-
-  let files;
-  let file = req.file.filename;
-  let matches = file.match(/^(.+?)_.+?\.(.+)$/i);
-
-  if (matches) {
-    files = _.map(['lg', 'md', 'sm'], function (size) {
-      return matches[1] + '_' + size + '.' + matches[2];
+  console.log('Bonjour ' + req.body.filename);
+  Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    candidate.photo = req.body.filename;
+    candidate.save().then(() => {
+      req.flash('success_msg', 'Votre photo a été sauvegardée.');
+      return res.redirect('/profile/edit');
     });
-  } else {
-    files = [file];
-  }
-
-  files = _.map(files, function (file) {
-    let port = req.app.get('port');
-    let base = req.protocol + '://' + req.hostname + (port ? ':' + port : '');
-    let url = path.join(req.file.baseUrl, file).replace(/[\\\/]+/g, '/').replace(/^[\/]+/g, '');
-    return req.file.storage === 'local' ? base : '' + '/' + url;
-  });
-
-  res.json({
-    images: files
-  });
-
+  }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
 };
 
 User_Candidate.getFormationsAndXP = (req, res, next) => {

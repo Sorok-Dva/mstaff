@@ -43,18 +43,19 @@
       <div class="content">
         <div class="author">
           <div style="padding-top: 10px;">
-            <div class="col-md-4">
-              <img id="candidateAvatar" class="avatar border-blue" src="/static/assets/images/face-0.jpg"/>
-            </div>
+            <div class="avatar avatar-xxl">
+            <img id="candidateAvatar" src="/static/uploads/{{usr.candidate.photo}}" class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
-          <form action="/profile/upload" method="post" enctype="multipart/form-data">
-            <span class="input-group-btn">
-              <span class="btn btn-default btn-file">
-                <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="{{avatar_field}}">
-              </span>
-            </span>
-            <button type="button" class="btn btn-primary" style="display:none"> Valider </button>
-          </form>
+        </div>
+        <form action="/profile/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
+        <span id="editAvatar" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px; background-color: white;">
+            <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
+          </span>
+        <span onclick="$('#validateAvatarButton').click()" id="validateAvatar" class="btn btn-default btn-file rounded-circle" style="display: none; border: 1px solid black; margin-top: -42px; background-color: white">
+            <i class="fal fa-check"></i>
+          </span>
+        <button id="validateAvatarButton" type="submit" class="btn btn-primary" style="display:none"> Valider </button>
+        </form>
           <h4 class="title">{{usr.firstName}} {{usr.lastName}}<br/>
           </h4>
         </div>
@@ -171,6 +172,11 @@
   </div>
 </div>
 <script>
+  let avatarSelected = () => {
+    $('#editAvatar').toggle();
+    $('#validateAvatar').toggle();
+  };
+
   $(document).ready(function () {
     $(document).on('change', '.btn-file :file', function () {
       let input = $(this),
