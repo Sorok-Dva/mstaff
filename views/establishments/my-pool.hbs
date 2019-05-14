@@ -17,7 +17,7 @@
 
 <div class="row">
   <div class="col-12 col-md-12 col-lg-12" style="margin-bottom: 25px; display:flex">
-    <button class="btn btn-info rounded-circle" style="width: 50px; height: 50px;"> + </button>
+    <button class="btn btn-info rounded-circle" style="width: 50px; height: 50px;" onclick="createPool()"> + </button>
     <span style="margin-top: 15px; margin-left: 10px"><h2> Créer un nouveau pool</h2></span>
   </div>
   <div class="col-12 col-md-12 col-lg-4 card-competence">
@@ -34,17 +34,17 @@
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-5">
+          <div class="col-lg-5" >
             <a href="#">
               <button class="btn btn-outline-primary" style="width:100%"> Volontaires </button>
             </a>
           </div>
-          <div class="col-md-5">
+          <div class="col-lg-5">
             <a href="#">
               <button class="btn btn-outline-primary" style="width:100%"> Inviter </button>
             </a>
           </div>
-          <div class="col-md-2">
+          <div class="col-lg-2">
             <a href="#">
               <button class="btn btn-outline-secondary" style="width:100%"> <i class="fal fa-cog"></i> </button>
             </a>
@@ -150,7 +150,20 @@
           </div>
         </div>
       </div>
-      </div>
     </div>
   </div>
 </div>
+<script>
+  let createPool = () => {
+    createModal({
+      id: 'createPoolModal',
+      modal: 'es/createPool',
+      title: 'Créer un pool de remplaçant'
+    });
+  };
+  let personnelStep = () => {
+    $('#label').text('Ajouter un soignant:');
+    $('#addPersonnelButton').toggle();
+    $('#createPoolButton').toggle();
+  };
+</script>
