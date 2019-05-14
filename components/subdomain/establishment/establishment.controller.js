@@ -13,7 +13,7 @@ const Establishment_Website = {};
 
 Establishment_Website.ViewIndex = (req, res, next) => {
   Models.EstablishmentReference.findOne({ where: { finess_et: req.es.finess } }).then(ref => {
-    return res.render('establishments/site/index', { ref, layout: 'establishment' })
+    return res.render('subdomain/establishment', { ref, layout: 'subdomain' })
   })
 };
 

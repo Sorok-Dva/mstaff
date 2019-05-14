@@ -2,6 +2,7 @@ const conf = require('dotenv').config().parsed;
 const packageJson = require('../package');
 const path = require('path');
 const { Env } = require('../helpers/helpers');
+const { Establishment, Server, Subdomain } = require('../components');
 const Sentry = require('../bin/sentry');
 const config = require(`../orm/config/config`)[Env.current];
 const session = require('express-session');
@@ -18,9 +19,6 @@ const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
-
-const ServerController = require('../components/server/server');
-const EstablishmentController = require('../controllers/establishment');
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -104,7 +102,7 @@ module.exports = {
   }),
   verifyMaintenance: (req, res, next) => {
     if (req.url.search('static') !== -1 || req.url.search('back-office') !== -1) return next();
-    ServerController.verifyMaintenance(status => {
+    Server.Main.verifyMaintenance(status => {
       if (status === 'maintenance') {
         return res.render('index', { layout: 'maintenance' });
       }
@@ -114,11 +112,24 @@ module.exports = {
   wildcardSubdomains: (req, res, next) => {
     if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2')
       return next();
-    EstablishmentController.Establishment.Main.findBySubdomain(req, res, (data) => {
-      res.locals.es = data;
-      req.es = data;
-      req.url = `/esDomain${req.url}`;
-      next();
+    Subdomain.Main.find(req, res, (subdomain) => {
+      if (subdomain.es_id) {
+        Establishment.Main.find(subdomain.es_id, (data) => {
+          res.locals.es = data;
+          req.es = data;
+          req.url = `/esDomain${req.url}`;
+          return next();
+        });
+      } else if (subdomain.group_id) {
+        Subdomain.Group.find(subdomain.group_id, (data) => {
+          res.locals.group = data;
+          req.group = data;
+          req.url = `/groupDomain${req.url}`;
+          return next();
+        });
+      } else {
+        return next();
+      }
     });
   }
 };
