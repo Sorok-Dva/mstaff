@@ -371,12 +371,12 @@ BackOffice_Establishment.View = (req, res, next) => {
 
 BackOffice_Establishment.ViewList = (req, res, next) => {
   Models.Establishment.findAll({
+    attributes: [
+      'id', 'name', 'finess', 'sector', 'status', 'domain_enable', 'domain_name',
+      [Sequelize.literal(
+        '(SELECT COUNT(id) FROM Applications WHERE `Establishment`.`finess` = `Applications`.`ref_es_id`)'), 'applications']],
     include: [{
       model: Models.Need,
-      attributes: ['id'],
-      required: false
-    }, {
-      model: Models.Application,
       attributes: ['id'],
       required: false
     }, {

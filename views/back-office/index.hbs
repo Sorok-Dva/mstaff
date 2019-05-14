@@ -152,6 +152,7 @@
     </div>
   </div>
 </div>
+<script src="/static/assets/js/chartist.min.js"></script>
 <script>
   let lastWeek = [
     moment().subtract(6, 'days').format('ddd'),
@@ -172,7 +173,6 @@
     labels: lastWeek,
     series: [[{{weekStats esWeekRegistration}}]]
   };
-  {{log wishesWeek.dataValues}}
   let dataWishesWeek = {
     labels: lastWeek,
     series: [[{{weekStats wishesWeek}}]]

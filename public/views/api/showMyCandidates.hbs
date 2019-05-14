@@ -1,6 +1,5 @@
 <div class="row">
   {{#each this as |data|}}
-    {{log data.Wish.Candidate.id}}
     <div class="col-12 col-md-6 col-lg-3" data-card-user="{{data.Wish.Candidate.id}}"
       {{#if data.Establishment.ArchivedCandidates.0.candidate_id}}
          data-archived="true" style="display:none"{{else}} data-archived="false"{{/if}}

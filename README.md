@@ -50,6 +50,14 @@ npm run db:migrate -- --env test
 npm run db:seed -- --env e2e
 ```
 
+Build uploads folder:
+
+```bash
+mkdir -p  public/uploads/candidates/documents
+mkdir -p  public/uploads/candidates/videos
+mkdir -p  public/uploads/candidates/photos
+```
+
 Build and run local server:
 
 ```bash
