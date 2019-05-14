@@ -7,7 +7,7 @@
   }
 </style>
 
-<a href="#" id="backtoDiploma"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<a href="#" id="backToDiploma"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
@@ -54,7 +54,7 @@
     $('#recap').removeClass('d-lg-block');
   });
 
-  $('#backtoDiploma').click(function() {
+  $('#backToDiploma').click(function() {
     loadTemplate('/static/views/ats/diploma.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })

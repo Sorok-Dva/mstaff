@@ -7,7 +7,7 @@
   }
 </style>
 
-<a href="#" id="backtoExperience"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<a href="#" id="backToExperience"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
@@ -59,7 +59,7 @@
     $('#recap').removeClass('d-lg-block');
   });
 
-  $('#backtoExperience').click(function() {
+  $('#backToExperience').click(function() {
     loadTemplate('/static/views/ats/experience.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })

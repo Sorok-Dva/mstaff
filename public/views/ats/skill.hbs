@@ -10,7 +10,7 @@
   }
 </style>
 
-<a href="#" id="backtoQualification"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<a href="#" id="backToQualification"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
@@ -52,7 +52,7 @@
     $('#recap').removeClass('d-lg-block');
   });
 
-  $('#backtoQualification').click(function() {
+  $('#backToQualification').click(function() {
     loadTemplate('/static/views/ats/qualification.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })

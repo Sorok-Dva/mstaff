@@ -16,7 +16,7 @@
   }
 </style>
 
-<a href="#" id="backtoSkill"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<a href="#" id="backToSkill"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
 <form>
   <div class="form-group">
@@ -83,12 +83,12 @@
 </form>
 
 <div class="row justify-content-end">
-  <a href="#" id="toLegal"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
+  <a href="#" id="toRecap"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
 </div>
 
 <script>
-  let input = document.querySelector("#identityPhone");
-  iti = intlTelInput(input, {
+
+  iti = intlTelInput(document.querySelector("#identityPhone"), {
     utilsScript: '/static/assets/js/utils.js',
     preferredCountries: ["fr", "gb", "us"],
     initialCountry: "auto",
@@ -100,7 +100,7 @@
     },
   });
 
-  let togglePasswordVisibility = () => {
+  function togglePasswordVisibility() {
     let x = document.getElementById("identityPassword");
     if (x.type === "password") {
       x.type = "text";
@@ -109,14 +109,14 @@
     }
   };
 
-  $('#backtoSkill').click(function() {
+  $('#backToSkill').click(function() {
     loadTemplate('/static/views/ats/skill.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
-  $('#toLegal').click(function() {
-    loadTemplate('/static/views/ats/legal.hbs', {atsData, test: {}}, (html) => {
+  $('#toRecap').click(function() {
+    loadTemplate('/static/views/ats/recap.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })
   });
