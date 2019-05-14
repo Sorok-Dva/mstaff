@@ -161,7 +161,7 @@
 <script>
   $('button[data-action="sendVerifEmail"]').click(function () {
     console.log($(this));
-    let _csrf = $('#csrfToken').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
     let email = $(this).attr('data-email');
 
     $.post(`/api/back-office/candidates/sendVerifEmail`, {_csrf, email}, (data) => {

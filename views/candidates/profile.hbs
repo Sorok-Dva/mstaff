@@ -15,8 +15,8 @@
       <div class="image"></div>
       <div class="content">
         <div class="card-profile">
-          <div class="avatar avatar-xxl avatar-online">
-            <img {{#if candidate.photo }} src="/static/uploads/{{candidate.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-blue" alt="avatar">
+          <div class="avatar avatar-xxl {{#if candidate.is_available}}on{{else}}off{{/if}}line">
+            <img src="/static/uploads/{{candidate.photo}}" class="avatar-img rounded-circle border-blue" alt="avatar">
           </div>
           <div class="rank-label-container">
             <span class="label label-default rank-label">{{{candidateProfilePercentage candidate.percentage}}}</span>

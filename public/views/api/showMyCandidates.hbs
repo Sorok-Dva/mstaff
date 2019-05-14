@@ -1,5 +1,6 @@
 <div class="row">
   {{#each this as |data|}}
+    {{log data.Wish.Candidate.id}}
     <div class="col-12 col-md-6 col-lg-3" data-card-user="{{data.Wish.Candidate.id}}"
       {{#if data.Establishment.ArchivedCandidates.0.candidate_id}}
          data-archived="true" style="display:none"{{else}} data-archived="false"{{/if}}
@@ -98,7 +99,7 @@
   {{/each}}
 </div>
 {{#unless this}}
-  <h1 class="text-center">Aucun candidats n'a encore postuler dans votre établissement.</h1>
+  <h1 class="text-center">Aucun candidats ne correspond à ce critère de recherche.</h1>
 {{else}}
   <script>
     need.selectedCandidates.forEach(e => {

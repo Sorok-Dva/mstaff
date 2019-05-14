@@ -17,7 +17,7 @@
   $('#btnEditESROle').click(function () {
     let newRole = $('select[name="role"] option').filter(":selected").val();
     $.post(`/api/back-office/establishment/{{this.esId}}/edit/user/{{this.userId}}`,
-      {newRole, _csrf: $('#csrfToken').val()}, (data) => {
+      {newRole, _csrf: $('meta[name="csrf-token"]').attr('content')}, (data) => {
         if (data.status === 'Not linked to this es.') {
           notification({
             icon: 'exclamation',

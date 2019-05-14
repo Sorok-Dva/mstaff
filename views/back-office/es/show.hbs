@@ -196,7 +196,7 @@
     let userId = $(this).attr('data-uid');
     if (confirm('Voulez-vous vraiment supprimer cet utilisateur de cet établissement ?')) {
       $.post(`/api/back-office/establishment/{{es.id}}/remove/user/${userId}`, {
-        _csrf: $('#csrfToken').val()
+        _csrf: $('meta[name="csrf-token"]').attr('content')
       }, (data) => {
         if (data.user_id !== parseInt(userId)) {
           notification({
@@ -245,7 +245,7 @@
   });
 
   let showCandidateProfile = userId => {
-    $.post(`/api/back-office/candidate/${userId}`, {_csrf: $('#csrfToken').val()}, data => {
+    $.post(`/api/back-office/candidate/${userId}`, {_csrf: $('meta[name="csrf-token"]').attr('content')}, data => {
       createModal({
         id: 'viewCandidateProfileModal',
         modal: 'es/viewCandidateProfile',
