@@ -7,8 +7,22 @@ const _ = require('lodash');
 const moment = require('moment');
 const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
+/*const AvatarStorage = require('../../../helpers/avatar.storage');*/
+const path = require('path');
+const multer = require('multer');
 
 const User_Candidate = {};
+/*const storage = AvatarStorage({
+  square: true,
+  responsive: true,
+  greyscale: true,
+  quality: 90
+});*/
+const limits = {
+  files: 1, // allow only 1 file per request
+  fileSize: 1024 * 1024, // 1 MB (max file size)
+};
+const allowedMimes = ['image/jpeg', 'image/png'];
 
 User_Candidate.getProfile = (req, res, next) => {
   Models.Candidate.findOne({
@@ -133,10 +147,6 @@ User_Candidate.deleteDocument = (req, res, next) => {
   });
 };
 
-User_Candidate.uploadAvatar = (req, res, next) => {
-  console.log(req.file);
-};
-
 User_Candidate.viewProfile = (req, res, next) => {
   Models.Candidate.findOne({
     where: { user_id: req.user.id },
@@ -225,6 +235,16 @@ User_Candidate.EditProfile = (req, res, next) => {
         });
       });
     })
+  }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+};
+
+User_Candidate.UploadImageProfile = (req, res, next) => {
+  Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+    user.photo = req.body.filename;
+    user.save().then(() => {
+      req.flash('success_msg', 'Votre photo a été sauvegardée.');
+      return res.redirect('/profile/edit');
+    });
   }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
 };
 

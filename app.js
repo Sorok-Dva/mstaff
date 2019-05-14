@@ -3,6 +3,7 @@ const { ErrorHandler, Express } = require('./middlewares');
 const Sentry = require('./bin/sentry');
 const path = require('path');
 const express = require('express');
+const dotenv = require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');

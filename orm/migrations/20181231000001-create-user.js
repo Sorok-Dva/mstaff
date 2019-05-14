@@ -50,6 +50,9 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'User'
       },
+      photo: {
+        type: Sequelize.STRING
+      },
       type: {
         type: Sequelize.ENUM,
         values: ['admin', 'candidate', 'es', 'demo'],
