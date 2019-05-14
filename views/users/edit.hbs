@@ -44,15 +44,12 @@
         <div class="author">
           <div style="padding-top: 10px;">
             <div class="avatar avatar-xxl">
-            <img id="candidateAvatar" src="/static/uploads/{{usr.candidate.photo}}" class="avatar-img rounded-circle border-black" alt="avatar">
+              <img id="candidateAvatar" {{#if usr.candidate.photo }} src="/static/uploads/{{usr.candidate.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
         </div>
         <form action="/profile/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
         <span id="editAvatar" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px; background-color: white;">
             <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
-          </span>
-        <span onclick="$('#validateAvatarButton').click()" id="validateAvatar" class="btn btn-default btn-file rounded-circle" style="display: none; border: 1px solid black; margin-top: -42px; background-color: white">
-            <i class="fal fa-check"></i>
           </span>
         <button id="validateAvatarButton" type="submit" class="btn btn-primary" style="display:none"> Valider </button>
         </form>
@@ -173,8 +170,7 @@
 </div>
 <script>
   let avatarSelected = () => {
-    $('#editAvatar').toggle();
-    $('#validateAvatar').toggle();
+    $('#validateAvatarButton').click()
   };
 
   $(document).ready(function () {
