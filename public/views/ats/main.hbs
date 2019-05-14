@@ -1,6 +1,5 @@
 <a href="/"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
-<!-- Heading -->
 <div class="row justify-content-center mb-6">
   <h1 class="text-center col-12">
     C'est votre toute première fois sur Mstaff ?
@@ -17,14 +16,10 @@
           onclick="$(location).attr('href', 'https://v2.mstaff.co/login');">Se connecter à mon espace candidat</button>
 </div>
 
-<!--  <input type="hidden" name="_csrf" value="{{csrfToken}}"/>-->
-
 <script>
-
   $('#toPost').click(function() {
-    loadTemplate('/static/views/ats/experience.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/post.hbs', {atsData, test: {}}, (html) => {
       $('#atsPart').html(html);
     })
   });
-
 </script>
