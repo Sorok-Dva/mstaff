@@ -27,7 +27,7 @@ function createServicesSelect(services, input){
 };
 
 function createPostsList(posts, input){
-  console.log(posts);
+  // console.log(posts);
   // TODO VOIR POUR CALER L ID DANS AUTOCOMPLETE POUR RECUP POUR LA BDD PARCE QUE
   arrays.posts = [];
   posts.forEach( post => {
@@ -38,7 +38,7 @@ function createPostsList(posts, input){
     source: arrays.posts,
     minLength: 1,
     select: (event, ui) => {
-      console.log(ui, event);
+      // console.log(ui, event);
     }
   });
 };
@@ -50,7 +50,6 @@ function verifyInputs(){
 function notify(error){
   switch (error) {
     case 'inputPost':
-      console.log('on rentre');
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -96,7 +95,6 @@ function postListener(){
       $('#InputServices').prop('disabled', true);
     }
   });
-
 };
 
 function init_post(){
@@ -105,8 +103,14 @@ function init_post(){
     placeholder: "Selectionnez un poste pour accéder au service.",
     disabled: true,
   });
-  if (arrays.posts.length === 0)
-    createPostsList(databaseDatas.allPosts, $('#InputPosts'));
+  createPostsList(databaseDatas.allPosts, $('#InputPosts'));
+};
+
+function reload_post(){
+  $('#InputPosts').trigger('keyup');
+  $('#InputServices').val(candidateDatas.application.services).trigger('change');
 };
 
 init_post();
+if(candidateDatas.application.post)
+  reload_post();

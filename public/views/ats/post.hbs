@@ -1,18 +1,16 @@
 <a href="#" id="backToMain"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
+{{log databaseDatas}}
+{{log candidateDatas}}
+
 <form>
   <div class="form-group">
     <label for="InputPosts">Poste* </label>
-    <input type="text" class="form-control" id="InputPosts">
+    <input type="text" class="form-control" id="InputPosts" value="{{candidateDatas.application.post}}">
   </div>
   <div class="form-group">
     <label for="InputServices">Service (facultatif)</label>
-    <select class="form-control" data-toggle="select" multiple id="InputServices">
-      <option>CSS</option>
-      <option>HTML</option>
-      <option>JavaScript</option>
-      <option>Bootstrap</option>
-    </select>
+    <select class="form-control" data-toggle="select" multiple id="InputServices"></select>
   </div>
 </form>
 

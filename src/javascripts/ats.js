@@ -485,10 +485,10 @@ let loadModal = (current, target) => {
 let loadClearModal = (target) => {
   generateGlobalRecap(target);
   switch (target) {
-    case 'postModal':
-      if (postsArray.length === 0)
-        createPostsList(allPosts, $('#InputPosts'));
-      break;
+    // case 'postModal':
+    //   if (postsArray.length === 0)
+    //     createPostsList(allPosts, $('#InputPosts'));
+    //   break;
     case 'experienceModal':
       createPostsList(allPosts, $('#xpPost'));
       break;
@@ -511,10 +511,10 @@ let loadClearModal = (target) => {
 let loadEditModal = (target) => {
   generateDatasRecap(target);
   switch (target) {
-    case 'postModal':
-      $('#InputPosts').val(application.post);
-      //Load services
-      break;
+    // case 'postModal':
+    //   $('#InputPosts').val(application.post);
+    //   //Load services
+    //   break;
     case 'contractModal':
       break;
     case 'timeModal':
@@ -563,14 +563,14 @@ let hasDatas = (modal) => {
 let saveDatas = (modal) => {
   let current;
   switch (modal) {
-    case 'postModal':
-      let services = $('#InputServices').select2('data');
-      application.post = $('#InputPosts').val();
-      application.services = [];
-      services.forEach( service => {
-        application.services.push(service.text);
-      });
-      break;
+    // case 'postModal':
+    //   let services = $('#InputServices').select2('data');
+    //   application.post = $('#InputPosts').val();
+    //   application.services = [];
+    //   services.forEach( service => {
+    //     application.services.push(service.text);
+    //   });
+    //   break;
     case 'contractModal':
       application.contractType = $('.contractChoices input:checked').prop('name');
       break;

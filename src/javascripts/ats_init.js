@@ -39,12 +39,12 @@ let getAtsDatas = () => {
 };
 let initApplication = () => {
   return new Promise( resolve => {
-    candidateDatas.application.post = false;
-    candidateDatas.application.contractType = false;
-    candidateDatas.application.fullTime = false;
-    candidateDatas.application.partTime = false;
-    candidateDatas.application.dayTime = false;
-    candidateDatas.application.nightTime = false;
+    // candidateDatas.application.post = false;
+    // candidateDatas.application.contractType = false;
+    // candidateDatas.application.fullTime = false;
+    // candidateDatas.application.partTime = false;
+    // candidateDatas.application.dayTime = false;
+    // candidateDatas.application.nightTime = false;
     getAtsDatas().then (() => resolve());
   });
 };
