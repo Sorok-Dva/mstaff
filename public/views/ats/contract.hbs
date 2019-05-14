@@ -14,13 +14,14 @@
   <h1 class="text-center col-12 underline">Que recherchez-vous ?</h1>
 </div>
 
-<div class="row justify-content-center">
+<div id="contractChoices" class="row justify-content-center">
   <div class="card text-center col-6">
     <div class="card-body">
       <i class="fal fa-infinity fa-3x"></i>
       <h1 class="card-title">Un travail durable</h1>
       <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="cdiToggle" name="cdi">
+        <input type="checkbox" class="custom-control-input" id="cdiToggle" name="cdi"
+              {{#ifCond candidateDatas.application.contractType '===' 'cdi'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="cdiToggle"></label>
       </div>
 
@@ -33,7 +34,8 @@
       <i class="fal fa-calendar-alt fa-3x"></i>
       <h1 class="card-title">Des missions ponctuelles</h1>
       <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="vacationToggle" name="vacation">
+        <input type="checkbox" class="custom-control-input" id="vacationToggle" name="vacation"
+          {{#ifCond candidateDatas.application.contractType '===' 'vacation'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="vacationToggle"></label>
       </div>
     </div>
@@ -45,7 +47,8 @@
       <i class="fal fa-smile fa-3x"></i>
       <h1 class="card-title">Un stage</h1>
       <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="internshipToggle" name="internship">
+        <input type="checkbox" class="custom-control-input" id="internshipToggle" name="internship"
+          {{#ifCond candidateDatas.application.contractType '===' 'internship'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="internshipToggle"></label>
       </div>
     </div>

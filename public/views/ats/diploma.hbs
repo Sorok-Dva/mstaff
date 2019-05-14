@@ -60,13 +60,13 @@
   });
 
   $('#backToExperience').click(function() {
-    loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas}, (html) => {
+    loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toQualification').click(function() {
-    loadTemplate('/static/views/ats/qualification.hbs', {candidateDatas, databaseDatas}, (html) => {
+    loadTemplate('/static/views/ats/qualification.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
   });

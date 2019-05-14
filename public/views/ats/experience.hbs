@@ -7,6 +7,9 @@
   }
 </style>
 
+{{log databaseDatas}}
+{{log candidateDatas}}
+
 <a href="#" id="backToContract"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
@@ -92,13 +95,13 @@
   });
 
   $('#backToContract').click(function() {
-    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas}, (html) => {
+    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toDiploma').click(function() {
-    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas}, (html) => {
+    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
   });

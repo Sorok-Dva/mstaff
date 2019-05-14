@@ -1,3 +1,6 @@
+{{log databaseDatas}}
+{{log candidateDatas}}
+
 <a href="#" id="backToContract"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
 
 <div class="row justify-content-around">
@@ -57,13 +60,13 @@
 
 <script>
   $('#backToContract').click(function() {
-    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas}, (html) => {
+    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toExperience').click(function() {
-    loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas}, (html) => {
+    loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
   });

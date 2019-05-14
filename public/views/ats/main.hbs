@@ -18,7 +18,7 @@
 
 <script>
   $('#toPost').click(function() {
-    loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas}, (html) => {
+    loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
   });

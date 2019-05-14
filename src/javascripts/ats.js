@@ -508,29 +508,27 @@ let loadClearModal = (target) => {
 
 };
 
-let loadEditModal = (target) => {
-  generateDatasRecap(target);
-  switch (target) {
-    // case 'postModal':
-    //   $('#InputPosts').val(application.post);
-    //   //Load services
-    //   break;
-    case 'contractModal':
-      break;
-    case 'timeModal':
-      break;
-    case 'experienceModal':
-      break;
-    case 'diplomaModal':
-      break;
-    case 'otherDiplomaModal':
-      break;
-    case 'skillModal':
-      break;
-    case 'identityModal':
-      break;
-  }
-};
+// let loadEditModal = (target) => {
+//   generateDatasRecap(target);
+//   switch (target) {
+//     // case 'postModal':
+//     //   $('#InputPosts').val(application.post);
+//     //   //Load services
+//     //   break;
+//     case 'timeModal':
+//       break;
+//     case 'experienceModal':
+//       break;
+//     case 'diplomaModal':
+//       break;
+//     case 'otherDiplomaModal':
+//       break;
+//     case 'skillModal':
+//       break;
+//     case 'identityModal':
+//       break;
+//   }
+// };
 
 let hasDatas = (modal) => {
   switch (modal) {
@@ -691,9 +689,9 @@ let isAvailableMail = (mail) => {
 let verifyDatas = (modal) => {
   let now = moment().startOf('day');
   switch (modal) {
-    case 'postModal':
-      return postsArray.includes($('#InputPosts').val()) ? true : notify('inputPost');
-      break;
+    // case 'postModal':
+    //   return postsArray.includes($('#InputPosts').val()) ? true : notify('inputPost');
+    //   break;
     case 'contractModal':
       return ($('.contractChoices input:checked').length) ? true : notify('contractChoice');
       break;
@@ -1061,30 +1059,30 @@ let finalize = (es_finess) => {
 //   });
 // };
 
-let postModalListener = () => {
-  $('#postModal').on('hide.bs.modal', () => toPreviousModal('postModal', 'mainModal'));
-
-  $('#InputPosts').on( 'keyup autocompleteclose', () => {
-    let isValidPost = postsArray.includes($('#InputPosts').val());
-    if (isValidPost){
-      let post = $('#InputPosts').val();
-      let category = allPosts.find(item => item.name === post).categoriesPS_id;
-      generateServiceListByCategory(category, $('#InputServices'));
-      $('.select-holder > div').show();
-    } else {
-      $('.select-holder > div').hide();
-      $('#InputServices').val(null).trigger('change');
-
-    }
-  });
-
-  $('#toStep2').on('click', () => {
-    if (verifyDatas('postModal')){
-      saveDatas('postModal');
-      loadModal('postModal','contractModal');
-    }
-  });
-};
+// let postModalListener = () => {
+//   $('#postModal').on('hide.bs.modal', () => toPreviousModal('postModal', 'mainModal'));
+//
+//   $('#InputPosts').on( 'keyup autocompleteclose', () => {
+//     let isValidPost = postsArray.includes($('#InputPosts').val());
+//     if (isValidPost){
+//       let post = $('#InputPosts').val();
+//       let category = allPosts.find(item => item.name === post).categoriesPS_id;
+//       generateServiceListByCategory(category, $('#InputServices'));
+//       $('.select-holder > div').show();
+//     } else {
+//       $('.select-holder > div').hide();
+//       $('#InputServices').val(null).trigger('change');
+//
+//     }
+//   });
+//
+//   $('#toStep2').on('click', () => {
+//     if (verifyDatas('postModal')){
+//       saveDatas('postModal');
+//       loadModal('postModal','contractModal');
+//     }
+//   });
+// };
 
 let contractModalListener = () => {
   $('#contractModal').on('hide.bs.modal', () => toPreviousModal('contractModal', 'postModal'));

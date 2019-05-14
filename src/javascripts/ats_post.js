@@ -44,7 +44,7 @@ function createPostsList(posts, input){
 };
 
 function verifyInputs(){
-  return arrays.posts.includes($('#InputPosts').val()) ? true : notify('inputPost');;
+  return arrays.posts.includes($('#InputPosts').val()) ? true : notify('inputPost');
 };
 
 function notify(error){
@@ -72,14 +72,14 @@ function saveDatas(){
 
 function postListener(){
   $('#backToMain').click(function() {
-    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas}, (html) => {
+    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
   });
   $('#toContract').click(function() {
     if (verifyInputs()){
       saveDatas();
-      loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas}, (html) => {
+      loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
         $('#atsPart').html(html);
       })
     }
