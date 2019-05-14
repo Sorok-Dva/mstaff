@@ -110,7 +110,7 @@
     formData.internship = formData.internship === 'on';
     formData.start = new Date(formData.start.split('/')[1], formData.start.split('/')[0] - 1);
     formData.end = new Date(formData.end.split('/')[1], formData.end.split('/')[0] - 1);
-    formData._csrf = $('#csrfToken').val();
+    formData._csrf = $('meta[name="csrf-token"]').attr('content');
 
     if (isNaN(formData.start.getTime())) {
       notification(

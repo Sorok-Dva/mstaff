@@ -363,7 +363,7 @@ let loadResult = (list) => {
 };
 
 let getEsList = (query) => {
-  let _csrf = $('#csrfToken').val();
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
 
   if (query.type === 'aroundMe'){
     let p = query.position;
@@ -550,7 +550,7 @@ noUiSlider.create(slider, {
   }
 });
 slider.noUiSlider.on('change', function (){
-  let activeId = $('#tabsStep3 li.active a').attr('id');
+  let activeId = $('#tabsStep3 li a.active').attr('id');
   pos.rayon = kmArray[parseInt(slider.noUiSlider.get()) - 1];
   cityCircle.setRadius(pos.rayon * 1000);
   highlightLabel(parseInt(slider.noUiSlider.get()));
@@ -690,7 +690,7 @@ $(document).ready(function () {
   });
 
   geoLocFilter.on('change', () => {
-    let activeId = $('#tabsStep3 li.active a').attr('id');
+    let activeId = $('#tabsStep3 li a.active').attr('id');
 
     filter = parseInt(geoLocFilter.selectpicker('val'));
     if (activeId === 'searchAroundMe')

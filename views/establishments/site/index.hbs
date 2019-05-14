@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
   <nav class="navbar navbar-expand-md navbar-light d-none d-md-flex" id="topbar" style="display: none !important">
@@ -1504,92 +1505,78 @@
     </div> <!-- / .row -->
   </div>
 
-<!--  <script src="/static/assets/dist/js/ats.min.js"></script>-->
-{{!--
+    <div class="col-12 col-xl-4">
 
-<nav class="navbar navbar-color-on-scroll navbar-transparent fixed-top navbar-expand-lg" id="sectionsNav">
-  <div class="container">
-    <div class="navbar-translate">
-      <a class="navbar-brand" href="https://mstaff.co">
-        <img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff"></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
-              aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        <span class="navbar-toggler-icon"></span>
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ml-auto">
-
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<div class="main main-raised">
-  <div class="profile-content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="profile">
-            <div class="logo">
-              <div id="logo" class="img-raised rounded-circle img-fluid"></div>
+      <!-- Projects -->
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Title -->
+              <h4 class="card-header-title">
+                Informations
+              </h4>
             </div>
-            <div class="name">
-              <div class="col-md-12">
-                <a class="btn btn-info myBtn" title="Candidature Spontanée" data-target="#mainModal" data-toggle="modal">Candidature Spontanée</a>
-              </div>
-            </div>
-          </div>
+          </div> <!-- / .row -->
         </div>
-        <div class="col-md-8">
-          <div class="col-md-4" style="padding: 10px">
-            <div class="col-md-1">
-              <h3 style="padding:15px"><i class="fal fa-map-marker fa-2x"></i></h3>
-            </div>
-            <div class="col-md-10" style="padding: 20px;">
-              <h3 class="text-center">{{es.address}}</h3>
-              <h3 class="text-center">{{es.town}}</h3>
-            </div>
-          </div>
-          <div class="col-md-4"
-               style="padding: 10px; border-left: 1px solid grey; border-right: 1px solid grey; cursor: pointer;">
-            <div class="col-md-1">
-              <h3><img
+        <div class="card-body">
+          <table class="table">
+            <tbody>
+            <tr>
+              <td style="border-top: none !important">Adresse</td>
+              <td style="border-top: none !important">{{#if es.phone}}{{es.address}} {{es.town}}{{else}}Non communiqué{{/if}}</td>
+            </tr>
+            <tr>
+              <td>Téléphone</td>
+              <td>{{#if es.phone}}+33 {{es.phone}}{{else}}Non communiqué{{/if}}</td>
+            </tr>
+            <tr>
+              <td>Site Web</td>
+              <td>{{#if es.url}}{{es.url}}{{else}}Non communiqué{{/if}}</td>
+            </tr>
+            <tr>
+              <td>Habiter dans le quartier</td>
+              <td><img
                   src="https://www.bienici.com/cacheForever/284ab4e26baea248f8da4e920b77bdfff29327d8/images/share.png"
-                  alt="Bien Ici" width="65"></h3>
-            </div>
-            <div class="col-md-10" style="padding: 20px;">
-              <h3 class="text-center">Habiter dans le quartier</h3>
-            </div>
-          </div>
-          <div class="col-md-4"
-               style="padding: 10px; cursor: pointer;">
-            <div class="col-md-1">
-              <h3></h3>
-            </div>
-            <div class="col-md-10" style="padding: 20px;">
-              <h3 class="text-center">Site de l'établissement</h3>
-            </div>
-          </div>
-          <div class="col-md-4"></div>
-        </div>
-      </div>
-      <div class="description text-center" style="margin-top:2%">
-        <hr>
-        <h3>
-          Bientôt seront affichées ici les offres d'emploi proposées par {{es.name}}
-        </h3>
-        <hr>
-      </div>
-      <div class="row">
-        <div class="col-md-6 ml-auto mr-auto">
-          <div class="profile-tabs">
-          </div>
-        </div>
-      </div>
+                  alt="Bien Ici" width="65"></td>
+            </tr>
+            {{#if ref.lat}}
+              <tr>
+                <td style="width: 24%;">Localisation</td>
+                <td>
+                  <div id="map" style="height: 450px;width: 100%;"></div>
+                </td>
+              </tr>
+            {{/if}}
+            </tbody>
+          </table>
+        </div> <!-- / .card-body -->
+      </div> <!-- / .card -->
     </div>
-  </div>
-</div>--}}
+  </div> <!-- / .row -->
+</div>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script>
+  if (document.getElementById('map')) {
+    let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};
+    let map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: pos
+    });
+    marker = new google.maps.Marker({
+      position: pos,
+      map: map
+    });
+    cityCircle = new google.maps.Circle({
+      strokeColor: '#337AB7',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#5BBBE5',
+      fillOpacity: 0.35,
+      map: map,
+      center: pos,
+      radius: pos.rayon * 1000 || 10000
+    });
+  }
+</script>
