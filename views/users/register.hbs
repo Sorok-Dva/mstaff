@@ -1,12 +1,22 @@
+<link rel="stylesheet" href="/static/assets/css/telinput/intlTelInput.css">
+<style>
+  .iti-flag {
+    background-image: url("/static/assets/images/telinput/flags.png");
+  }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti-flag {
+      background-image: url("/static/assets/images/telinput/flags@2x.png");
+    }
+  }
+</style>
+
 <div class="container-fluid">
   <div class="row align-items-center justify-content-center">
     <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
-      <a href="/"><i class="fal fa-chevron-circle-left fa-2x"></i></a>
       <!-- Heading -->
       <h1 class="display-4 text-center mb-3">
         Inscription
       </h1>
-
       <!-- Subheading -->
       <p class="text-muted text-center mb-5">
         {{tr.pages.register.title_card_header}}
@@ -70,7 +80,7 @@
         </div>
         <div class="form-group phone">
           <label for="phone">{{tr.pages.register.form_phoneNumber_label}}</label>
-          <input id="phone" name="phone" type="text"
+          <input id="phone" name="phone" type="tel"
                  placeholder="{{tr.pages.register.form_phoneNumber_label_ph}}"
                  class="form-control" value="{{body.phone}}" required="">
         </div>
@@ -113,7 +123,6 @@
             </ul>
           </div>
         </div>
-
         <!-- Terms -->
         <p class="text-center">
           <small class="text-muted text-center">
@@ -141,28 +150,32 @@
     </div>
   </div>
 </div>
-<script>
-  $('#email').blur(() => {
-    let email = $('#email').val();
-    $.get(`/api/user/emailAvailable/${email}`, (result) => {
-      if (!result.available) {
-        $('.form-group.email').addClass('has-error');
-        $('#emailTaken').show();
-      } else {
-        $('.form-group.email').addClass('has-success').removeClass('has-error');
+  <script src="/static/assets/js/telinput/intlTelInput.js"></script>
+  <script>
+    $('#email').blur(() => {
+      let email = $('#email').val();
+      $.get(`/api/user/emailAvailable/${email}`, (result) => {
+        if (!result.available) {
+          $('.form-group.email').addClass('has-error');
+          $('#emailTaken').show();
+        } else {
+          $('.form-group.email').addClass('has-success').removeClass('has-error');
+          $('#emailTaken').hide();
+        }
+      }).catch(error => {
         $('#emailTaken').hide();
-      }
-    }).catch(error => {
-      $('#emailTaken').hide();
-      $('.form-group.email').addClass('has-error').removeClass('has-success');
+        $('.form-group.email').addClass('has-error').removeClass('has-success');
+      });
     });
-  });
-
-  $('#password').focus(() => {
-    $('.passwordStrength').show();
-  });
-  $('#password').blur(() => {
-    $('.passwordStrength').hide();
-  });
-</script>
-<script src="/static/assets/dist/js/passwordStrengthChecker.min.js"></script>
+    $(document).ready(function () {
+      let input = document.querySelector("#phone");
+      window.intlTelInput(input);
+    });
+    $('#password').focus(() => {
+      $('.passwordStrength').show();
+    });
+    $('#password').blur(() => {
+      $('.passwordStrength').hide();
+    });
+  </script>
+  <script src="/static/assets/dist/js/passwordStrengthChecker.min.js"></script>

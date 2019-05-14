@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     es_id: DataTypes.INTEGER,
     description: DataTypes.TEXT,
-    photo: DataTypes.STRING,
     video: DataTypes.STRING,
     status: DataTypes.STRING,
     note: DataTypes.STRING,
