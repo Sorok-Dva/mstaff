@@ -26,9 +26,9 @@ module.exports = (sequelize, DataTypes) => {
     contact_phone: DataTypes.STRING
   }, {});
   Establishment.associate = function (models) {
-    Establishment.hasOne(models.Demo, {
-      foreignKey: 'es_name',
-      as: 'demo'
+    Establishment.hasOne(models.EstablishmentReference, {
+      foreignKey: 'finess_et',
+      as: 'ref'
     });
     Establishment.hasMany(models.ESAccount, {
       foreignKey: 'es_id',

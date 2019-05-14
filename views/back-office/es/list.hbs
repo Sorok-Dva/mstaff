@@ -30,7 +30,7 @@
               <td>{{es.finess}}</td>
               <td>{{es.sector}}</td>
               <td>{{es.status}}</td>
-              <td>{{es.Applications.length}}</td>
+              <td>{{es.dataValues.applications}}</td>
               <td>{{es.Needs.length}}</td>
               <td>{{es.ESAccounts.length}}</td>
               <td>
@@ -75,7 +75,7 @@
         if (confirm('ATTENTION:\n\n ' +
           'Cette action est irreversible et supprimera toutes les données liées à l\'établissement.\n\n' +
           'Voulez vous continuer ?')) {
-          $.delete('/')
+          // $.delete('/')
 
           table.bootstrapTable('remove', {
             field: 'id',

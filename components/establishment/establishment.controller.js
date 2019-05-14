@@ -45,17 +45,11 @@ Establishment.Select = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-Establishment.findBySubdomain = (req, res, next) => {
-  let term;
-  if (req.get('host') === 'postuler.croix-rouge.fr') term = 'postuler.crf';
-  else term = req.subdomains[0];
+Establishment.find = (id, next) => {
   Models.Establishment.findOne({
-    where: {
-      domain_name: term,
-      domain_enable: true
-    }
+    where: { id }
   }).then(es => {
-    if (_.isNil(es)) return res.redirect('https://mstaff.co');
+    if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
     else next(es);
   })
 };
