@@ -48,6 +48,7 @@
 </script>
 <div class="col-md-12">
   <h1 class="text-center">Vous avez accès à <span class="badge badge-soft-primary" id="cvCount">{{candidatesCount.length}}</span> professionnels au sein de votre CVthèque.</h1>
+  <h4 id="searchCount" class="text-center" style="display: none;"></h4>
 </div>
 <div class="row d-flex justify-content-center">
   <div class="col-12 col-md-8 col-lg-8">
@@ -113,6 +114,7 @@
     </div>
   </div>
   <div id="searchResult" class="col-12" style="display:none"></div>
+  <div id="myCandidates" class="col-12" style="display:none"></div>
 </div>
 <div class="col-12" id="paginationContainer"{{#if need}} style="display: none"{{/if}}>
   <nav class="col-12 mt-3">
@@ -129,14 +131,16 @@
     </div>
   </div>
 </div>
-<select class="form-control" id="selectServiceType" data-live-search="true"
+<select class="form-control" id="selectServiceType" data-toggle="" data-live-search="true"
         title="Séléctionner un type de service" style="display: none">
+  <option>Séléctionner un type de service</option>
   {{#each services as |service|}}
     <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
   {{/each}}
 </select>
 <select class="form-control" id="selectDiplomaType" data-live-search="true"
         title="Séléctionner un diplôme" style="display: none">
+  <option>Séléctionner un diplôme</option>
   {{#each formations as |formation|}}
     <option value="{{formation.id}}">{{formation.name}}</option>
   {{/each}}

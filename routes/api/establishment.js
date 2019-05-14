@@ -14,6 +14,11 @@ router.post('/:esId(\\d+)/paginate/candidates/:page(\\d+)/:size(\\d+)',
   Establishment.Application.CVsPaginationQuery
 );
 
+router.post('/:esId(\\d+)/candidates/:type',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Application.CVsMyCandidatesQuery
+);
+
 router.post('/:esId(\\d+)/get/candidate/:userId(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   User.Candidate.getProfile

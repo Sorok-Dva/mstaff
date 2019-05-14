@@ -57,7 +57,7 @@
         }, () => {
           $('button#btnEditEquipment').click(function () {
             if ($('input#equipmentValueEdit').val() != '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#equipmentValueEdit').val();
               $.put(`/api/back-office/references/equipments/${row.id}`, {
                 promptInput,
@@ -90,7 +90,7 @@
           title: 'Supprimer une compétence',
           modal: 'back-office/removeEquipment'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveEquipment').click(function () {
             $.delete(`/api/back-office/references/equipments/${row.id}`, {
               _csrf
@@ -147,7 +147,7 @@
     }, () => {
       $('button#validateEquipment').click(function () {
         if ($('input#equipmentValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#equipmentValue').val();
           $.post(`/api/back-office/references/equipments/`, {
             promptInput,

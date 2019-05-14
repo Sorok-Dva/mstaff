@@ -71,7 +71,7 @@
     });
     let removeRO = () => {
       let password = $('#removeROPassword').val();
-      let _csrf = $('#csrfToken').val();
+      let _csrf = $('meta[name="csrf-token"]').attr('content');
       $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
         if (data.status === 'send') {
           $("#removeReadOnlyModal").modal('hide');

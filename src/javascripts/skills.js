@@ -24,7 +24,7 @@ toAutocomplete.forEach((ac) => {
   let messageSuccess, messageError, titleSuccess;
   $(`#addNew${eCapitalize}`).click(() => {
     let name = $(`#${ac}`).val();
-    let _csrf = $('#csrfToken').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
     $.post(`/api/candidate/type/${e}/add`, { name, _csrf }, (data) => {
       switch (ac) {
         case 'skills':
@@ -113,7 +113,7 @@ let autocompleteTrigger = (elements, contain) => {
 };
 
 let removeSkill = (type, id) => {
-  let _csrf = $('#csrfToken').val();
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
   $.delete(`/api/candidate/type/${type}/${id}`, { _csrf }, (data) => {
     if (data.deleted) {
       notification({
