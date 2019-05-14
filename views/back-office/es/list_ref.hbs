@@ -29,7 +29,7 @@
   let table = $('#esref-table');
 
   let showEsInfo = id => {
-    let _csrf = $('#csrfToken').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
     $.post(`/api/back-office/establishmentsReferences/info/${id}`, {_csrf}, data => {
       createModal({
         id: 'viewESProfileModal',
@@ -43,7 +43,7 @@
   };
 
   let addES = id => {
-    let _csrf = $('#csrfToken').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
     $.post(`/api/back-office/establishmentsReferences/info/${id}/toCreate`, {_csrf}, data => {
       createModal({
         id: 'addESfromREFModal',

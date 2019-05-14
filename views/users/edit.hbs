@@ -219,7 +219,7 @@
     }, () => {
       $('button#ChangePassValidation').click(function () {
         if ($('input#newPassword').val() != '' && $('input#newPasswordVerification').val() != '' && $('input#oldPassword').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let newPassword = $('input#newPassword').val();
           let newPasswordVerification = $('input#newPasswordVerification ').val();
           let oldPassword = $('input#oldPassword ').val();

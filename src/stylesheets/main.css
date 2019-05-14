@@ -190,11 +190,11 @@ li.wish {
 }
 
 .no-ui-slider .slider-labels li:hover {
-  color: #333333;
+  color: #03a9de;
 }
 
 .no-ui-slider .slider-labels li.slideActive {
-  color: #333333;
+  color: #03a9de;
 }
 
 .noUi-target,
@@ -1326,4 +1326,23 @@ td.fc-day.fc-past {
   text-align: center;
   background: #d3d3d37d;
   display: none;
+}
+
+.bad-rule {
+  color: red;
+}
+
+.good-rule {
+  color: green;
+}
+
+.wrapword{
+  white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+  white-space: -webkit-pre-wrap; /*Chrome & Safari */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  white-space: pre-wrap;       /* css-3 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  word-break: break-all;
+  white-space: normal;
 }

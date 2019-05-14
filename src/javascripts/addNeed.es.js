@@ -1,4 +1,6 @@
+let loadingCandidateHTML = $('#loadingCandidates').html();
 need.notifyCandidates = false;
+
 $(`#post`).autocomplete({
   source: list,
   minLength: 2,
@@ -36,11 +38,14 @@ let searchCandidates = () => {
   if (need.firstSearch) {
     return showContractModal();
   } else {
+    $('#baseResult').hide();
+    $('#paginationContainer').hide();
+    $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
     $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
       loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
         $('#resetSearch').show();
         $('#searchResult').html(html).show();
-        $('#baseResult').hide();
+        $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
       });
     }).catch(error => errorsHandler(error));
   }
@@ -84,8 +89,10 @@ let showDiplomaModal = () => {
 let resetSearch = () => {
   $('input#post').val('');
   $('#cvCount').text(baseCVCount);
+  $('#searchCount').empty().hide();
   $('#searchResult').empty().hide();
   $('#baseResult').show();
+  $('#paginationContainer').show();
   $('#btnContractType').empty();
   $('#btnTimeType').empty();
   need.firstSearch = true;
@@ -101,8 +108,7 @@ let addCandidate = (id, type) => {
         $(`i.selectCandidate[data-id="${id}"]`).hide();
         $(`i.unselectCandidate[data-id="${id}"]`).show();
         need.selectedCandidates.push(id);
-        /*$('#selectedEsCount').html(need.selectedCandidates.length);
-        $('#es_selected').append($(`#es${id}`).clone().attr('class', 'col-md-3'));*/
+        $('#saveNeed').attr('data-original-title', `Enregister ma recherche (${need.selectedCandidates.length} candidat sélectionnés)`)
       }
       break;
     case 'favorite':
@@ -201,31 +207,92 @@ let removeCandidate = (id, type) => {
 
 let showArchived = () =>{
   if($('#showArchived').hasClass('Show')) {
-    $('div[data-archived="false"]').hide();
-    $('div[data-archived="true"]').show();
-    $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
+    if ($('#showFavorites').hasClass('Hide')) {
+      showFavorites();
+    }
+    $.post(`/api/es/${esId}/candidates/archived/`, { _csrf }, (data) => {
+      $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
+      loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
+        $('#baseResult').hide();
+        $('#searchResult').hide();
+        $('#paginationContainer').hide();
+        $('#myCandidates').html(html).show();
+        $('#searchCount').html(`${data.length} candidats archivés.`).show();
+      });
+    }).catch(errors => errorsHandler(errors));
   } else {
-    $('div[data-archived="true"]').hide();
-    $('div[data-archived="false"]').show();
-    $('#showArchived').removeClass('Hide').addClass('Show').css('color', 'black');
+    $('#myCandidates').empty().hide();
+    $('#showArchived').removeClass('Hide').addClass('Show').css('color', '#9e9e9e');
+    if ($('#searchResult').text().length === 0) {
+      $('#baseResult').show();
+      $('#searchResult').hide();
+      $('#paginationContainer').show();
+      $('#searchCount').empty().hide();
+    } else {
+      $('#baseResult').hide();
+      $('#searchResult').show();
+      $('#paginationContainer').hide();
+    }
   }
 };
 
 let showFavorites = () => {
   if($('#showFavorites').hasClass('Show')) {
-    $('div[data-favorite="false"][data-archived="false"]').hide();
-    $('div[data-favorite="true"][data-archived="false"]').show();
-    $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
+    if ($('#showArchived').hasClass('Hide')) {
+      showArchived();
+    }
+    $.post(`/api/es/${esId}/candidates/favorites/`, { _csrf }, (data) => {
+      $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
+      loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
+        $('#baseResult').hide();
+        $('#searchResult').hide();
+        $('#paginationContainer').hide();
+        $('#myCandidates').html(html).show();
+        $('#searchCount').html(`${data.length} candidats favoris.`).show();
+      });
+    }).catch(errors => errorsHandler(errors));
   } else {
-    $('div[data-favorite="true"][data-archived="false"]').show();
-    $('div[data-favorite="false"][data-archived="false"]').show();
-    $('#showFavorites').removeClass('Hide').addClass('Show').css('color', 'black');
+    $('#showFavorites').removeClass('Hide').addClass('Show').css('color', '#9e9e9e');
+    if ($('#searchResult').text().length === 0) {
+      $('#baseResult').show();
+      $('#searchResult').hide();
+      $('#paginationContainer').show();
+      $('#searchCount').empty().hide();
+    } else {
+      $('#baseResult').hide();
+      $('#searchResult').show();
+      $('#paginationContainer').hide();
+    }
+    $('#myCandidates').empty().hide();
   }
 };
 
 $(document).ready(() => {
   need._csrf = _csrf;
 
+  $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
+    loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+      $('#baseResult').empty().html(html);
+    });
+  }).catch(errors => errorsHandler(errors));
+  $('.pagination').twbsPagination({
+    totalPages: baseCVCount / size,
+    visiblePages: 3,
+    first: '<i class="fal fa-chevron-double-left"></i>',
+    prev: '<i class="fal fa-chevron-left"></i>',
+    next: '<i class="fal fa-chevron-right"></i>',
+    last: '<i class="fal fa-chevron-double-right"></i>',
+    pageClass: 'page-item',
+    anchorClass: 'page-link',
+    onPageClick: function (event, page) {
+      $('#baseResult').empty().html(loadingCandidateHTML);
+      $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
+        loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+          $('#baseResult').empty().html(html);
+        });
+      }).catch(errors => errorsHandler(errors));
+    }
+  });
   $('button#saveNeed').click(function () {
     if ($(this).is("[data-need-id]")) {
       createModal({

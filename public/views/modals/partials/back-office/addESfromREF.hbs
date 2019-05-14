@@ -147,7 +147,7 @@
       data[kv.name] = kv.value;
     });
     data.address = `${data.addr_num} ${data.addr_type} ${data.addr_name}`;
-    data._csrf = $('#csrfToken').val();
+    data._csrf = $('meta[name="csrf-token"]').attr('content');
     delete data.addr_num;
     delete data.addr_type;
     delete data.addr_name;

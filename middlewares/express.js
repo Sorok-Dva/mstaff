@@ -116,6 +116,7 @@ module.exports = {
       return next();
     EstablishmentController.Establishment.Main.findBySubdomain(req, res, (data) => {
       res.locals.es = data;
+      req.es = data;
       req.url = `/esDomain${req.url}`;
       next();
     });

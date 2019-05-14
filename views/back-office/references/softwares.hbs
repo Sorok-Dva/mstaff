@@ -59,7 +59,7 @@
         }, () => {
           $('button#btnEditSoftware').click(function () {
             if ($('input#softwareValueEdit').val() != '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#softwareValueEdit').val();
               $.put(`/api/back-office/references/softwares/${row.id}`, {
                 promptInput,
@@ -92,7 +92,7 @@
           title: 'Supprimer un logiciel',
           modal: 'back-office/removeSoftware'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveSoftware').click(function () {
             $.delete(`/api/back-office/references/softwares/${row.id}`, {
               _csrf
@@ -150,7 +150,7 @@
     }, () => {
       $('button#validateSoftware').click(function () {
         if ($('input#softwareValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#softwareValue').val();
           $.post(`/api/back-office/references/softwares/`, {
             promptInput,

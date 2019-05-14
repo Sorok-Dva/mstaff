@@ -104,7 +104,7 @@ function uploadFile(f, i) {
 
       // Start upload
       xhr.open('POST', document.getElementById('file-upload-form').action, true);
-      xhr.setRequestHeader('x-csrf-token', $('#csrfToken').val());
+      xhr.setRequestHeader('x-csrf-token', $('meta[name="csrf-token"]').attr('content'));
       xhr.setRequestHeader('X-File-Name', file.name);
       xhr.setRequestHeader('X-File-Size', file.size);
       let formdata = new FormData();

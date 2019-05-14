@@ -54,7 +54,7 @@
           title: 'Supprimer une configuration',
           modal: 'back-office/removeConfigSkill'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveConfigSkill').click(function () {
             $.delete(`/api/back-office/configuration/skills/${row.id}`, {
               _csrf
@@ -106,7 +106,7 @@
     }, () => {
       $('button#validateConfigSkill').click(function () {
         if ($('select#skillID').val() != '' && $('select#postID').val() != '' && $('select#serviceID').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let skillID = $('select#skillID').val();
           let postID = $('select#postID').val();
           let serviceID = $('select#serviceID').val();

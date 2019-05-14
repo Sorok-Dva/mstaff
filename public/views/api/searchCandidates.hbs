@@ -13,9 +13,7 @@
             <div class="actions float-right p-2">
               <i class="fal fa-archive fa-1d3x" onclick="addCandidate({{this.Wish.Candidate.id}}, 'archive')"
                      style="cursor: pointer"></i>
-
                   <i class="fal fa-star favCandidate fa-1d3x" data-id="{{this.Wish.Candidate.id}}"
-                     title="Ajouté par {{this.Establishment.FavoriteCandidates.0.User.firstName}} {{this.Establishment.FavoriteCandidates.0.User.lastName}}"
                     {{#if this.Establishment.FavoriteCandidates.0.candidate_id}}
                      onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unfav')" style="cursor: pointer; color: gold"
                     {{else}}
@@ -26,7 +24,7 @@
           </div>
           <div class="content">
             <div class="card-profile">
-              <div class="avatar avatar-xxl avatar-online" style="margin-top: -30px;">
+              <div class="avatar avatar-xxl avatar-{{#if this.Wish.Candidate.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
                 <img src="/static/assets/images/face-0.jpg" id="candidateAvatar" class="avatar-img rounded-circle border-blue" alt="avatar">
               </div>
               <div class="rank-label-container">
@@ -49,7 +47,7 @@
                 <i class="fal fa-moon fa-2x"{{#if this.Wish.night_time}} style="color: #04e900"{{/if}}></i>
               </h4>
               {{#if this.Wish.posts}}
-                <h4><label class="badge badge-soft-success">{{this.Wish.posts}}</label></h4>
+                <h4><label class="col-8 wrapword badge badge-soft-success">{{this.Wish.posts}}</label></h4>
               {{/if}}
               {{#if this.Wish.services}}
                 <hr style="width: 45%; margin: auto">
@@ -81,11 +79,11 @@
       </div>
     {{/unless}}
   {{/each}}
-  {{#unless this}}
-  {{!--<script>$('#cvCount').text('0');</script>--}}
-    <h3>Aucun candidats ne répond à vos critères, essayez une nouvelle recherche.</h3>
-  {{/unless}}
 </div>
+{{#unless this}}
+{{!--<script>$('#cvCount').text('0');</script>--}}
+  <h1 class="text-center">Aucun candidats ne répond à vos critères, essayez une nouvelle recherche.</h1>
+{{/unless}}
 <script>
   need.selectedCandidates.forEach(e => {
     $(`i.selectCandidate[data-id="${e}"]`).hide();
