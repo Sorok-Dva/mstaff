@@ -205,7 +205,7 @@ User_Candidate.ViewEditProfile = (req, res, next) => {
       as: 'candidate'
     }]
   }).then(usr => {
-    return res.render('users/edit', { usr, a: { main: 'profile' }, avatar_field: process.env.AVATAR_FIELD })
+    return res.render('users/edit', { usr, a: { main: 'profile' } })
   }).catch(error => next(error));
 };
 
@@ -239,10 +239,9 @@ User_Candidate.EditProfile = (req, res, next) => {
 };
 
 User_Candidate.UploadImageProfile = (req, res, next) => {
-  console.log('Bonjour ' + req.body.filename);
-  Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
-    candidate.photo = req.body.filename;
-    candidate.save().then(() => {
+  Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+    user.photo = req.body.filename;
+    user.save().then(() => {
       req.flash('success_msg', 'Votre photo a été sauvegardée.');
       return res.redirect('/profile/edit');
     });
