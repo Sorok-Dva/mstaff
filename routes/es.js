@@ -71,4 +71,20 @@ router.get('/history',
   Authentication.ensureIsEs,
   Establishment.Need.ViewClosed);
 
+/**
+ * @Route('/pool') GET;
+ * Show Pools page
+ */
+router.get('/pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.viewPools);
+
+/**
+ * @Route('/my-pool') GET;
+ * Show his pools page
+ */
+router.get('/my-pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.viewMyPools);
+
 module.exports = router;
