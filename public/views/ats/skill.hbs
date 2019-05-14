@@ -53,13 +53,13 @@
   });
 
   $('#backToQualification').click(function() {
-    loadTemplate('/static/views/ats/qualification.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/qualification.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toIdentity').click(function() {
-    loadTemplate('/static/views/ats/identity.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/identity.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });

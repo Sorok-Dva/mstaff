@@ -1,62 +1,63 @@
-let postsArray = [], servicesArray = [], diplomaArray = [], qualificationArray = [], skillArray = [];
-let experiences = [], diplomas = [], qualifications = [], skills = [];
-let application = {}, identity = {};
+// let postsArray = [], servicesArray = [], diplomaArray = [], qualificationArray = [], skillArray = [];
+// let experiences = [], diplomas = [], qualifications = [], skills = [];
+// let application = {};
+// let identity = {};
 let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1, skillId: 1};
 let toNextModal = false;
-let allPosts, allServices, allDiplomas, allQualifications, allSkills;
-let iti;
+// let allPosts, allServices, allDiplomas, allQualifications, allSkills;
+// let iti;
 let checkingMail = null;
 const verifiedEvent = new Event('verified');
 
 
-let initApplication = () => {
-  return new Promise( resolve => {
-    application.post = false;
-    application.contractType = false;
-    application.fullTime = false;
-    application.partTime = false;
-    application.dayTime = false;
-    application.nightTime = false;
-    getAtsDatas().then (() => resolve());
-  });
-};
+// let initApplication = () => {
+//   return new Promise( resolve => {
+//     application.post = false;
+//     application.contractType = false;
+//     application.fullTime = false;
+//     application.partTime = false;
+//     application.dayTime = false;
+//     application.nightTime = false;
+//     getAtsDatas().then (() => resolve());
+//   });
+// };
 
 // Retrieval datas into BDD
 
-let getAtsDatas = () => {
-  return new Promise( resolve => {
-    $.get('/atsDatas/all', function(datas) {
-      allPosts = datas.posts;
-      allServices = datas.services;
-      allDiplomas = datas.diplomas;
-      allQualifications = datas.qualifications;
-      allSkills = datas.skills;
-
-      // Quick fix to remove non-break-space (encodeURI to see them)
-      allPosts.forEach( post => post.name = post.name.replace(/\s/g,' '));
-      resolve();
-    });
-  });
-};
+// let getAtsDatas = () => {
+//   return new Promise( resolve => {
+//     $.get('/atsDatas/all', function(datas) {
+//       allPosts = datas.posts;
+//       allServices = datas.services;
+//       allDiplomas = datas.diplomas;
+//       allQualifications = datas.qualifications;
+//       allSkills = datas.skills;
+//
+//       // Quick fix to remove non-break-space (encodeURI to see them)
+//       allPosts.forEach( post => post.name = post.name.replace(/\s/g,' '));
+//       resolve();
+//     });
+//   });
+// };
 
 // Initialize Lists
 
-let createPostsList = (posts, input) => {
-  console.log(posts);
-  // TODO VOIR POUR CALER L ID DANS AUTOCOMPLETE POUR RECUP POUR LA BDD PARCE QUE
-  postsArray = [];
-  posts.forEach( post => {
-    postsArray.push(post.name);
-  });
-  postsArray.sort();
-  input.autocomplete({
-    source: postsArray,
-    minLength: 1,
-    select: (event, ui) => {
-      console.log(ui, event);
-    }
-  });
-};
+// let createPostsList = (posts, input) => {
+//   console.log(posts);
+//   // TODO VOIR POUR CALER L ID DANS AUTOCOMPLETE POUR RECUP POUR LA BDD PARCE QUE
+//   postsArray = [];
+//   posts.forEach( post => {
+//     postsArray.push(post.name);
+//   });
+//   postsArray.sort();
+//   input.autocomplete({
+//     source: postsArray,
+//     minLength: 1,
+//     select: (event, ui) => {
+//       console.log(ui, event);
+//     }
+//   });
+// };
 
 let createServicesList = (services, input) => {
   servicesArray = [];
@@ -106,34 +107,34 @@ let createSkillList = (skills, input) => {
   });
 };
 
-let createServicesSelect = (services, input) => {
-  input.empty().select2({
-    data: services.sort(),
-    placeholder: "Service(s) ?",
-    minimumInputLength: 1,
-    minimumResultsForSearch: Infinity
-  });
-};
+// let createServicesSelect = (services, input) => {
+//   input.empty().select2({
+//     data: services.sort(),
+//     placeholder: "Service(s) ?",
+//     minimumInputLength: 1,
+//     minimumResultsForSearch: Infinity
+//   });
+// };
 
 // Filter and Generate Lists
 
-let filterServicesByCategory = (services ,category) => {
-  let filteredServices = [];
-  services.forEach( service => {
-    if (service.categoriesPS_id === category)
-      filteredServices.push(service.name);
-    if (service.categoriesPS_id === 2 && category === 3)
-      filteredServices.push(service.name);
-  });
-  return filteredServices;
-};
+// let filterServicesByCategory = (services ,category) => {
+//   let filteredServices = [];
+//   services.forEach( service => {
+//     if (service.categoriesPS_id === category)
+//       filteredServices.push(service.name);
+//     if (service.categoriesPS_id === 2 && category === 3)
+//       filteredServices.push(service.name);
+//   });
+//   return filteredServices;
+// };
 
-let generateServiceListByCategory = (category, input) => {
-    if (category !== undefined) {
-      let currentServices = filterServicesByCategory(allServices, category);
-      createServicesSelect(currentServices, input);
-    }
-};
+// let generateServiceListByCategory = (category, input) => {
+//     if (category !== undefined) {
+//       let currentServices = filterServicesByCategory(allServices, category);
+//       createServicesSelect(currentServices, input);
+//     }
+// };
 
 // Logic to next step
 
@@ -1054,11 +1055,11 @@ let finalize = (es_finess) => {
 
 // LISTENERS ---------------------------------------------------------------------------------------
 
-let mainModalListener = () => {
-  $('#toStep1').on('click', () => {
-    loadModal('mainModal','postModal');
-  });
-};
+// let mainModalListener = () => {
+//   $('#toStep1').on('click', () => {
+//     loadModal('mainModal','postModal');
+//   });
+// };
 
 let postModalListener = () => {
   $('#postModal').on('hide.bs.modal', () => toPreviousModal('postModal', 'mainModal'));

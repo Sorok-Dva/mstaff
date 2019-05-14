@@ -57,13 +57,13 @@
 
 <script>
   $('#backToContract').click(function() {
-    loadTemplate('/static/views/ats/contract.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toExperience').click(function() {
-    loadTemplate('/static/views/ats/experience.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });

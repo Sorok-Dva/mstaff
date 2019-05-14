@@ -92,13 +92,13 @@
   });
 
   $('#backToContract').click(function() {
-    loadTemplate('/static/views/ats/contract.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toDiploma').click(function() {
-    loadTemplate('/static/views/ats/diploma.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });

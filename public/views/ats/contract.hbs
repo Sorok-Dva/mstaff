@@ -57,7 +57,7 @@
 
 <script>
   $('#backToPost').click(function() {
-    loadTemplate('/static/views/ats/post.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });
@@ -69,7 +69,7 @@
     //TODO else toggle = stage : template = internshipTime.hbs
     //TODO else toggle = missions ponctuelles : template = experience.hbs
 
-    loadTemplate(`/static/views/ats/${template}.hbs`, {atsData, test: {}}, (html) => {
+    loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     });
     //TODO if toggle = travail durable :

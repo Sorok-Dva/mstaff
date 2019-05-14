@@ -55,13 +55,13 @@
   });
 
   $('#backToDiploma').click(function() {
-    loadTemplate('/static/views/ats/diploma.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toSkill').click(function() {
-    loadTemplate('/static/views/ats/skill.hbs', {atsData, test: {}}, (html) => {
+    loadTemplate('/static/views/ats/skill.hbs', {candidateDatas, databaseDatas}, (html) => {
       $('#atsPart').html(html);
     })
   });
