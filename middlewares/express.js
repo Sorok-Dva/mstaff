@@ -110,7 +110,7 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'v2')
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'dev' || req.subdomains[0] === 'pre-prod')
       return next();
     Subdomain.Main.find(req, res, (subdomain) => {
       if (subdomain.es_id) {
