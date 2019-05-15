@@ -100,20 +100,32 @@ li.wish {
   transition: transform 0.05s linear 0.17s;
 }
 
+.available-target {
+  display: none;
+}
+
+@media only screen and (min-width: 1000px) {
+  .available-target {
+    display: block;
+  }
+}
+
 .state-available {
   border:1px solid #09c800;
   border-radius: 25px;
-  width: 50%;
+  width: 15vw;
   margin: 0 auto;
-  height: 2.2em;
+  height: 6%;
+  max-width: 220px;
 }
 
 .state-unavailable {
   border:1px solid #c81d26;
   border-radius: 25px;
-  width: 50%;
+  width: 15vw;
   margin: 0 auto;
-  height: 2.2em;
+  height: 6%;
+  max-width: 220px;
 }
 
 .toggle-state {
