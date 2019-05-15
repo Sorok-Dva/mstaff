@@ -42,7 +42,7 @@ function filterServicesByCategory(services ,category){
   return filteredServices;
 };
 
-let createServicesList = (services, input) => {
+function createServicesList(services, input){
   arrays.services = [];
   services.forEach( service => {
     arrays.services.push(service);
@@ -54,7 +54,12 @@ let createServicesList = (services, input) => {
   });
 };
 
-let resetPostRadioService = () => {
+function resetForm(){
+  $('#experienceForm').trigger("reset");
+  resetPostRadioService();
+};
+
+function resetPostRadioService(){
   $('#salaried').attr('disabled', false);
   $('#internship').attr('disabled', false);
   $('#liberal').prop('checked', false);
@@ -77,7 +82,6 @@ function setLiberalPost(){
   $('#xpService').siblings().show();
 };
 
-
 function experienceListener(){
   //TODO l open + close du recap
   $('#recap').addClass('d-lg-block');
@@ -86,8 +90,10 @@ function experienceListener(){
 
   $('.save').click(function() {
     if (verifyInputs()){
+      saveDatas(permissions.editMode);
       //TODO SAVE, verifier si save ou editSave
       saveDatas();
+      resetForm();
     }
   });
 
@@ -125,13 +131,13 @@ function experienceListener(){
 
   $('#backToContract').click(function() {
     let template = selectTemplate(candidateDatas.application.contractType);
-    loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toDiploma').click(function() {
-    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
@@ -230,7 +236,30 @@ function notify(error){
   return false;
 };
 
-function saveDatas(){
+function saveDatas(editMode){
+  let current = {};
+  if (editMode){
+    let experiences = candidateDatas.experiences;
+    current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
+  } else {
+    current.id = permissions.experienceId;
+    permissions.experienceId += 1;
+  }
+  current.name = $('#xpEstablishment').val();
+  current.post_id = $('#xpPost').val();
+  // current.contract = $('#radioContract input:checked').attr('id');
+  //Todo a modifier par la suite (voir si on reste sur cette structure)
+  current.internship = 0;
+  current.service_id = $('#xpService').val();
+  current.start = new Date($('#xpStart').data("DateTimePicker").date());
+  current.end = null;
+  if ($('#xpEnd').data("DateTimePicker").date())
+    current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+  if (editMode){
+    permissions.editMode = false;
+  } else {
+    candidateDatas.experiences.push(current);
+  }
 };
 
 function init_experience(){

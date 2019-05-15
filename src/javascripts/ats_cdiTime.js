@@ -8,7 +8,7 @@ function resetAvailability(){
 function cdiTimeListener(){
   $('#backToContract').click(function() {
     resetAvailability();
-    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });

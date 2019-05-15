@@ -120,13 +120,13 @@
 
 <script>
   $('#backToIdentity').click(function() {
-    loadTemplate('/static/views/ats/identity.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/identity.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toLegal').click(function() {
-    loadTemplate('/static/views/ats/legal.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/legal.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });

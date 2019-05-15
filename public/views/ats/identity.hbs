@@ -109,13 +109,13 @@
   };
 
   $('#backToSkill').click(function() {
-    loadTemplate('/static/views/ats/skill.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/skill.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
 
   $('#toRecap').click(function() {
-    loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });

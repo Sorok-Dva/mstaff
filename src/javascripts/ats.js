@@ -2,7 +2,7 @@
 // let experiences = [], diplomas = [], qualifications = [], skills = [];
 // let application = {};
 // let identity = {};
-let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1, skillId: 1};
+// let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1, skillId: 1};
 let toNextModal = false;
 // let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 // let iti;
@@ -140,12 +140,12 @@ let createSkillList = (skills, input) => {
 
 let resetForm = (form) => {
   switch (form) {
-    case 'xp':
-      $('.inputsXp').trigger("reset");
-      $('#xpStart').data("DateTimePicker").clear();
-      $('#xpEnd').data("DateTimePicker").clear();
-      resetPostRadioService();
-      break;
+    // case 'xp':
+    //   $('.inputsXp').trigger("reset");
+    //   $('#xpStart').data("DateTimePicker").clear();
+    //   $('#xpEnd').data("DateTimePicker").clear();
+    //   resetPostRadioService();
+    //   break;
     case 'diploma':
       $('.inputsDiploma').trigger("reset");
       $('#diplomaStart').data("DateTimePicker").clear();
@@ -582,22 +582,22 @@ let saveDatas = (modal) => {
     //   application.start = new Date($('#start').data("DateTimePicker").date());
     //   application.end = new Date($('#end').data("DateTimePicker").date());
     //   break;
-    case 'experienceModal':
-      current = {};
-      current.id = permissions.experienceId;
-      permissions.experienceId += 1;
-      current.name = $('#xpEstablishment').val();
-      current.post_id = $('#xpPost').val();
-      // current.contract = $('#radioContract input:checked').attr('id');
-      //Todo a modifier par la suite (voir si on reste sur cette structure)
-      current.internship = 0;
-      current.service_id = $('#xpService').val();
-      current.start = new Date($('#xpStart').data("DateTimePicker").date());
-      current.end = null;
-      if ($('#xpEnd').data("DateTimePicker").date())
-        current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-      experiences.push(current);
-      break;
+    // case 'experienceModal':
+    //   current = {};
+    //   current.id = permissions.experienceId;
+    //   permissions.experienceId += 1;
+    //   current.name = $('#xpEstablishment').val();
+    //   current.post_id = $('#xpPost').val();
+    //   // current.contract = $('#radioContract input:checked').attr('id');
+    //   //Todo a modifier par la suite (voir si on reste sur cette structure)
+    //   current.internship = 0;
+    //   current.service_id = $('#xpService').val();
+    //   current.start = new Date($('#xpStart').data("DateTimePicker").date());
+    //   current.end = null;
+    //   if ($('#xpEnd').data("DateTimePicker").date())
+    //     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+    //   experiences.push(current);
+    //   break;
     case 'diplomaModal':
       current = {};
       current.id = permissions.diplomaId;
@@ -645,16 +645,16 @@ let saveDatas = (modal) => {
 let saveEditDatas = (modal) => {
   let current = null;
   switch (modal) {
-    case 'experienceModal':
-      current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
-      current.establishment = $('#xpEstablishment').val();
-      current.post = $('#xpPost').val();
-      current.contract = $('#radioContract input:checked').attr('id');
-      current.service = $('#xpService').val();
-      current.start = new Date($('#xpStart').data("DateTimePicker").date());
-      if ($('#xpEnd').data("DateTimePicker").date())
-        current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-      break;
+    // case 'experienceModal':
+    //   current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
+    //   current.establishment = $('#xpEstablishment').val();
+    //   current.post = $('#xpPost').val();
+    //   current.contract = $('#radioContract input:checked').attr('id');
+    //   current.service = $('#xpService').val();
+    //   current.start = new Date($('#xpStart').data("DateTimePicker").date());
+    //   if ($('#xpEnd').data("DateTimePicker").date())
+    //     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+    //   break;
     case 'diplomaModal':
       current =  diplomas[diplomas.map(diploma => diploma.id).indexOf(permissions.editId)];
       current.diploma = $('#diploma').val();
@@ -1164,7 +1164,7 @@ let finalize = (es_finess) => {
 // };
 
 let experienceModalListener = () => {
-  $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('experienceModal', 'contractModal'));
+  // $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('experienceModal', 'contractModal'));
 
   //Initialize
   // $('#xpDate input').datetimepicker({
@@ -1195,9 +1195,9 @@ let experienceModalListener = () => {
 
   $('#saveXp').on('click', () => {
     if (verifyDatas('experienceModal')){
-      permissions.editMode ? saveEditDatas('experienceModal') : saveDatas('experienceModal');
+      // permissions.editMode ? saveEditDatas('experienceModal') : saveDatas('experienceModal');
       generateDatasRecap('experienceModal');
-      resetForm('xp');
+      // resetForm('xp');
     }
   });
 

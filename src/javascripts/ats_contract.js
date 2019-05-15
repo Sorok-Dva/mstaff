@@ -16,7 +16,7 @@ function selectTemplate(checkedSwitch){
 
 function contractListener(){
   $('#backToPost').click(function () {
-    loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
@@ -25,7 +25,7 @@ function contractListener(){
       saveDatas();
       let selected = $('#contractChoices input:checked').attr('name');
       let template = selectTemplate(selected);
-      loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays}, (html) => {
+      loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       });
     }

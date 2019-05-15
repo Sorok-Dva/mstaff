@@ -31,7 +31,7 @@
 
 <script>
   $('#backToRecap').click(function() {
-    loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });

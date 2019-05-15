@@ -22,6 +22,16 @@ let arrays = {
   skill: []
 };
 
+let permissions = {
+  editMode: false,
+  editId: 0,
+  experienceId: 1,
+  diplomaId: 1,
+  qualificationId: 1,
+  skillId: 1
+};
+
+
 let getAtsDatas = () => {
   return new Promise( resolve => {
     $.get('/atsDatas/all', function(datas) {
@@ -51,7 +61,7 @@ let initApplication = () => {
 
 $(document).ready(() => {
   initApplication().then( () => {
-    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
+    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
