@@ -4,68 +4,58 @@
 <div class="custom-cursor" id="backToContract"><i class="fal fa-arrow-circle-left fa-2x"></i></div>
 
 <div class="height-80 d-flex flex-column justify-content-center">
-  <div class="row justify-content-around" style="">
-  <div class="card text-center col-5 height-25" style="">
-    <div class="card-body d-flex flex-column justify-content-between">
-      <i class="fal fa-calendar-star fa-3x"></i>
-      <h1 class="card-title">Temps plein</h1>
-      <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="full_time" name="full_time">
-        <label class="custom-control-label" for="full_time"></label>
+  <div class="row justify-content-center underline">
+    <h1>Choisissez ici vos disponibilités</h1>
+  </div>
+  <div id="cdiSchedule" class="row justify-content-around">
+    <div class="card text-center col-5 height-25 full-part">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <i class="fal fa-calendar-star fa-3x"></i>
+        <h1 class="card-title">Temps plein</h1>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="full_time" name="full_time">
+          <label class="custom-control-label" for="full_time"></label>
+        </div>
       </div>
     </div>
-  </div>
 
 
-  <div class="card text-center col-5 height-25" style="">
-    <div class="card-body d-flex flex-column justify-content-between">
-      <i class="fal fa-calendar-day fa-3x"></i>
-      <h1 class="card-title">Temps partiel</h1>
-      <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="part_time" name="part_time">
-        <label class="custom-control-label" for="part_time"></label>
+    <div class="card text-center col-5 height-25 full-part">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <i class="fal fa-calendar-day fa-3x"></i>
+        <h1 class="card-title">Temps partiel</h1>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="part_time" name="part_time">
+          <label class="custom-control-label" for="part_time"></label>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="card text-center col-5 height-25" style="">
-    <div class="card-body d-flex flex-column justify-content-between">
-      <i class="fal fa-sun fa-3x"></i>
-      <h1 class="card-title">Jour</h1>
-      <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="day_time" name="day_time">
-        <label class="custom-control-label" for="day_time"></label>
+    <div class="card text-center col-5 height-25 day-night">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <i class="fal fa-sun fa-3x"></i>
+        <h1 class="card-title">Jour</h1>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="day_time" name="day_time">
+          <label class="custom-control-label" for="day_time"></label>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="card text-center col-5 height-25">
-    <div class="card-body d-flex flex-column justify-content-between">
-      <i class="fal fa-moon-stars fa-3x"></i>
-      <h1 class="card-title">Nuit</h1>
-      <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="night_time" name="night_time">
-        <label class="custom-control-label" for="night_time"></label>
+    <div class="card text-center col-5 height-25 day-night">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <i class="fal fa-moon-stars fa-3x"></i>
+        <h1 class="card-title">Nuit</h1>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="night_time" name="night_time">
+          <label class="custom-control-label" for="night_time"></label>
+        </div>
       </div>
     </div>
-  </div>
 </div>
 </div>
 <div class="row justify-content-end">
   <div class="custom-cursor" id="toExperience"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
-
-<script>
-  $('#backToContract').click(function() {
-    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-
-  $('#toExperience').click(function() {
-    loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-</script>
+<script src="/static/assets/dist/js/ats_cdiTime.min.js"></script>

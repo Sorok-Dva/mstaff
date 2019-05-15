@@ -13,6 +13,7 @@ function selectTemplate(checkedSwitch){
       return null;
   }
 };
+
 function contractListener(){
   $('#backToPost').click(function () {
     loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
@@ -29,7 +30,6 @@ function contractListener(){
       });
     }
   });
-
   $('#contractChoices input').change(function () {
     if (this.checked){
       switch(this.id){
@@ -73,10 +73,4 @@ function init_contract(){
   contractListener();
 };
 
-function reload_contract(){
-  //todo recheck
-};
-
 init_contract();
-if(candidateDatas.application.contractType)
-  reload_contract();
