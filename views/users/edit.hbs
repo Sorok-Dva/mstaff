@@ -223,10 +223,10 @@
           }, (response) => {
             console.log(response);
             if (response.status === 'invalid password') {
-              $('input#oldPassword').addClass('error');
+              $('input#oldPassword').addClass('is-invalid');
               setTimeout(function () {
-                $('input#oldPassword').removeClass('error');
-              }, 1000);
+                $('input#oldPassword').removeClass('is-invalid');
+              }, 2000);
               notification({
                 icon: 'exclamation',
                 type: 'danger',
@@ -235,14 +235,14 @@
               });
             }
             if (response.status === 'new password cannot be your old password') {
-              $('input#oldPassword').addClass('error');
-              $('input#newPassword').addClass('error');
-              $('input#newPasswordVerification').addClass('error');
+              $('input#oldPassword').addClass('is-invalid');
+              $('input#newPassword').addClass('is-invalid');
+              $('input#newPasswordVerification').addClass('is-invalid');
               setTimeout(function () {
-                $('input#oldPassword').removeClass('error');
-                $('input#newPassword').removeClass('error');
-                $('input#newPasswordVerification').removeClass('error');
-              }, 1000);
+                $('input#oldPassword').removeClass('is-invalid');
+                $('input#newPassword').removeClass('is-invalid');
+                $('input#newPasswordVerification').removeClass('is-invalid');
+              }, 2000);
               notification({
                 icon: 'exclamation',
                 type: 'danger',
@@ -251,12 +251,12 @@
               });
             }
             if (response.status === 'password verification is incorrect') {
-              $('input#newPassword').addClass('error');
-              $('input#newPasswordVerification').addClass('error');
+              $('input#newPassword').addClass('is-invalid');
+              $('input#newPasswordVerification').addClass('is-invalid');
               setTimeout(function () {
-                $('input#newPassword').removeClass('error');
-                $('input#newPasswordVerification').removeClass('error');
-              }, 1000);
+                $('input#newPassword').removeClass('is-invalid');
+                $('input#newPasswordVerification').removeClass('is-invalid');
+              }, 2000);
               notification({
                 icon: 'exclamation',
                 type: 'danger',
