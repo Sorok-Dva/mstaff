@@ -83,10 +83,6 @@ function setLiberalPost(){
 };
 
 function experienceListener(){
-  //TODO l open + close du recap
-  $('#recap').addClass('d-lg-block');
-
-  //TODO FIN
 
   $('.save').click(function() {
     if (verifyInputs()){
@@ -97,9 +93,8 @@ function experienceListener(){
     }
   });
 
-  $('.closeRecap').click(function() {
-    $('#recap').removeClass('d-lg-block');
-  });
+  $('.openRecap').click(() => $('#recap').addClass('d-lg-block'));
+  $('.closeRecap').click(() => $('#recap').removeClass('d-lg-block'));
 
   $('#xpPost').on( 'keyup autocompleteclose', () => {
     let isValidPost = arrays.posts.includes($('#xpPost').val());
