@@ -118,6 +118,10 @@ router.get('/es/:id(\\d+)',
  * @Route('/back-office/references/:type') GET;
  * Show Reference Model data
  */
+router.get('/references/categories',
+  Authentication.ensureIsAdmin,
+  BackOffice.Reference.ViewCategories);
+
 router.get('/references/:type',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.View);
@@ -139,6 +143,12 @@ router.get('/super-groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewS
  * Show configuration of skills
  */
 router.get('/configuration/skills', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewSkills);
+
+/**
+ * @Route('/back-office/configuration/skills') GET;
+ * Show configuration of categories
+ */
+router.get('/configuration/categories', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewCategories);
 
 /**
  * @Route('/back-office/configuration/equipments') GET;

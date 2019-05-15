@@ -1,7 +1,6 @@
 const __ = process.cwd();
 const _ = require('lodash');
 const { validationResult } = require('express-validator/check');
-const { Sequelize, Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 
@@ -18,6 +17,18 @@ BackOffice_References.View = (req, res, next) => {
       layout, references, a: { main: 'references', sub: req.params.type } })
   });
 };
+
+BackOffice_References.ViewCategories = (req, res, next) => {
+  return Models.MstaffCategories.findAll().then(categories => {
+    res.render('back-office/references/categories', {
+      layout,
+      title: 'Catégories mstaff',
+      categories,
+      a: { main: 'references', sub: 'categories' },
+    })
+  });
+};
+
 
 BackOffice_References.Add = (req, res, next) => {
   let model = req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
@@ -39,6 +50,24 @@ BackOffice_References.Add = (req, res, next) => {
   })
 };
 
+BackOffice_References.AddCategory = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+  return Models.MstaffCategories.findOrCreate({
+    where: {
+      name: req.body.promptInput
+    }
+  }).spread((category, created) => {
+    if (created) {
+      return res.status(200).json({ status: 'Created', category });
+    } else {
+      return res.status(200).json({ status: 'Already exists', category });
+    }
+  })
+};
+
 BackOffice_References.Edit = (req, res, next) => {
   let model = req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
@@ -56,6 +85,20 @@ BackOffice_References.Edit = (req, res, next) => {
   })
 };
 
+BackOffice_References.EditCategory = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+  return Models.MstaffCategories.findOne({ where: { id: req.params.id } }).then ( category => {
+    if (req.body.promptInput) {
+      category.name = req.body.promptInput;
+    }
+    category.save();
+    return res.status(200).json({ status: 'Modified' });
+  })
+};
+
 BackOffice_References.Delete = (req, res, next) => {
   let model = req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
@@ -69,4 +112,14 @@ BackOffice_References.Delete = (req, res, next) => {
   }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
 };
 
+BackOffice_References.DeleteCategory = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+  return Models.MstaffCategories.findOne({ where: { id: req.params.id } }).then ( category => {
+    if (!category) return res.status(400).send({ body: req.body, error: 'This category does not exist' });
+    return category.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+};
 module.exports = BackOffice_References;

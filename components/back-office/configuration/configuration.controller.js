@@ -125,6 +125,29 @@ BackOffice_Configuration.AddEquipment = (req, res, next) => {
     }
   })
 };
+BackOffice_Configuration.LinkCategory = (req, res, next) => {
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+  return Models.MstaffCategories.findOne({
+    where: {
+      id: req.params.id
+    }
+  }).then(category => {
+    category.medical = req.body.medical;
+    category.paramedical = req.body.paramedical;
+    category.admin_and_tech = req.body.administrative;
+    category.liberal = req.body.liberal;
+    category.cdi_cdd = req.body.contract;
+    category.vacation = req.body.vacation;
+    category.internship = req.body.internship;
+    category.service = req.body.service;
+    category.save();
+    return res.status(200).json({ status: 'Modified' });
+  })
+};
 
 BackOffice_Configuration.RemoveSkill = (req, res, next) => {
   return Models.ConfigSkills.findOne({ where: { id: req.params.id } }).then(configskill => {
@@ -138,6 +161,17 @@ BackOffice_Configuration.RemoveEquipment = (req, res, next) => {
     if (!configequipment) return res.status(400).send({ body: req.body, error: 'This configuration does not exist' });
     return configequipment.destroy().then(data => res.status(201).send({ deleted: true, data }));
   }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Configuration.ViewCategories = (req, res, next) => {
+  return Models.MstaffCategories.findAll().then(categories => {
+    res.render('back-office/configuration/category', {
+      layout,
+      title: 'Configuration des catégories mstaff',
+      categories,
+      a: { main: 'configuration', sub: 'categoryconfig' },
+    })
+  });
 };
 
 module.exports = BackOffice_Configuration;
