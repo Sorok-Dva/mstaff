@@ -1,16 +1,7 @@
-<style>
-  .underline{
-    text-decoration: underline;
-  }
-  .custom-cursor{
-    cursor: pointer;
-  }
-</style>
-
 {{log databaseDatas}}
 {{log candidateDatas}}
 
-<div class="custom-cursor" id="backToContract"><i class="fal fa-arrow-circle-left fa-2x"></i></div>
+<i id="backToContract" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
@@ -26,7 +17,7 @@
 
     <div class="form-group">
       <label for="xpPost">Quel était votre poste ?</label>
-      <input type="text" class="form-control" id="xpPost">
+      <input type="text" class="form-control white" id="xpPost">
     </div>
 
     <label for="radioContract">En tant que :</label>
@@ -52,7 +43,7 @@
 
       <div class="form-group">
         <label for="xpService">Au sein de quel service ?</label>
-        <input type="text" class="form-control" id="xpService">
+        <input type="text" class="form-control white" id="xpService">
       </div>
 
       <div class="form-group">
@@ -60,12 +51,12 @@
           <div class="col-6 text-center">
             <label for="xpStart">Début</label>
             <input id="xpStart" name="xpStart" type="text"
-                   class="form-control datetimepicker-input" readonly>
+                   class="form-control datetimepicker-input text-center" readonly>
           </div>
           <div class="col-6 text-center">
             <label for="xpEnd">Fin</label>
             <input id="xpEnd" name="xpEnd" type="text"
-                   class="form-control datetimepicker-input" readonly>
+                   class="form-control datetimepicker-input text-center" readonly>
               <input id="xpOngoing" type="checkbox">
               <label for="xpOngoing">Actuellement en poste</label>
           </div>

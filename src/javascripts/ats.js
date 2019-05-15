@@ -59,17 +59,17 @@ const verifiedEvent = new Event('verified');
 //   });
 // };
 
-let createServicesList = (services, input) => {
-  servicesArray = [];
-  services.forEach( service => {
-    servicesArray.push(service);
-  });
-  servicesArray.sort();
-  input.autocomplete({
-    source: servicesArray,
-    minLength: 1
-  });
-};
+// let createServicesList = (services, input) => {
+//   servicesArray = [];
+//   services.forEach( service => {
+//     servicesArray.push(service);
+//   });
+//   servicesArray.sort();
+//   input.autocomplete({
+//     source: servicesArray,
+//     minLength: 1
+//   });
+// };
 
 let createDiplomaList = (diplomas, input) => {
   diplomaArray = [];
@@ -267,28 +267,28 @@ let generateDatasRecap = (current) => {
 
 // EXPERIENCE-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let setLiberalPost = () => {
-  $('#liberal').trigger('click');
-  $('#salaried').attr('disabled', true);
-  $('#internship').attr('disabled', true);
-  $('#xpService').val('Services Libéraux');
-  $('#xpService').attr('disabled', true);
-  $('#xpService').siblings().show();
-};
+// let setLiberalPost = () => {
+//   $('#liberal').trigger('click');
+//   $('#salaried').attr('disabled', true);
+//   $('#internship').attr('disabled', true);
+//   $('#xpService').val('Services Libéraux');
+//   $('#xpService').attr('disabled', true);
+//   $('#xpService').siblings().show();
+// };
 
-let setAdministrativeService = () => {
-  $('#xpService').val('Services généraux');
-  $('#xpService').attr('disabled', true);
-  $('#xpService').siblings().show();
-};
+// let setAdministrativeService = () => {
+//   $('#xpService').val('Services généraux');
+//   $('#xpService').attr('disabled', true);
+//   $('#xpService').siblings().show();
+// };
 
-let resetPostRadioService = () => {
-  $('#salaried').attr('disabled', false);
-  $('#internship').attr('disabled', false);
-  $('#liberal').prop('checked', false);
-  $('#xpService').attr('disabled', false);
-  $('#xpService').val(null).trigger('change');
-};
+// let resetPostRadioService = () => {
+//   $('#salaried').attr('disabled', false);
+//   $('#internship').attr('disabled', false);
+//   $('#liberal').prop('checked', false);
+//   $('#xpService').attr('disabled', false);
+//   $('#xpService').val(null).trigger('change');
+// };
 
 let atsEditXp = (id) => {
   permissions.editMode = true;
@@ -489,9 +489,9 @@ let loadClearModal = (target) => {
     //   if (postsArray.length === 0)
     //     createPostsList(allPosts, $('#InputPosts'));
     //   break;
-    case 'experienceModal':
-      createPostsList(allPosts, $('#xpPost'));
-      break;
+    // case 'experienceModal':
+    //   createPostsList(allPosts, $('#xpPost'));
+    //   break;
     case 'diplomaModal':
       createDiplomaList(allDiplomas, $('#diploma'));
       break;
@@ -711,22 +711,22 @@ let verifyDatas = (modal) => {
     //   }
     //   return notify('noDateInternship');
     //   break;
-    case 'experienceModal':
-      let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) ? true : notify('xpEtablishment');
-      let xpPost = postsArray.includes($('#xpPost').val()) ? true : notify('xpPost');
-      let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
-      let xpService = servicesArray.includes($('#xpService').val()) ? true : notify('xpService');
-      let xpStart = $('#xpStart').data("DateTimePicker").date();
-      let xpEnd = $('#xpEnd').data("DateTimePicker").date();
-      if (xpStart !== null){
-        let validXpStart = xpStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
-        let validXpEnd = true;
-        if (xpEnd !== null)
-          validXpEnd = xpEnd.startOf('day').isSameOrAfter(xpStart.startOf('day')) ? true : notify('endDateBeforeStart');
-        return (xpEtablishment && xpPost && radioContract && xpService && validXpStart && validXpEnd);
-      }
-      return notify('noStartDate');
-      break;
+    // case 'experienceModal':
+    //   let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) ? true : notify('xpEtablishment');
+    //   let xpPost = postsArray.includes($('#xpPost').val()) ? true : notify('xpPost');
+    //   let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
+    //   let xpService = servicesArray.includes($('#xpService').val()) ? true : notify('xpService');
+    //   let xpStart = $('#xpStart').data("DateTimePicker").date();
+    //   let xpEnd = $('#xpEnd').data("DateTimePicker").date();
+    //   if (xpStart !== null){
+    //     let validXpStart = xpStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
+    //     let validXpEnd = true;
+    //     if (xpEnd !== null)
+    //       validXpEnd = xpEnd.startOf('day').isSameOrAfter(xpStart.startOf('day')) ? true : notify('endDateBeforeStart');
+    //     return (xpEtablishment && xpPost && radioContract && xpService && validXpStart && validXpEnd);
+    //   }
+    //   return notify('noStartDate');
+    //   break;
     case 'diplomaModal':
       let diploma = !$.isEmptyObject($('#diploma').val()) ? true : notify('noDiploma');
       let diplomaStart = $('#diplomaStart').data("DateTimePicker").date();
@@ -848,70 +848,70 @@ let notify = (error) => {
     //   message: `Merci de choisir une date de fin postérieure à celle de départ.`
     // });
     //   break;
-    case 'xpEtablishment':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer un établissement.`
-      });
-      break;
-    case 'xpPost':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer un poste valide.`
-      });
-      break;
-    case 'radioContract':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de sélectionner un type de contrat.`
-      });
-      break;
-    case 'xpService':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer un service valide.`
-      });
-      break;
-    case 'noDateInternship':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer une date de début ainsi qu'une date de fin.`
-      });
-      break;
-    case 'noStartDate':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer une date de début.`
-      });
-      break;
-    case 'startDateAfterNow':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de choisir une date antérieure ou égale à la date du jour.`
-      });
-      break;
-    case 'endDateBeforeStart':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de choisir une date de fin postérieure ou égale à celle de départ.`
-      });
-      break;
+    // case 'xpEtablishment':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci d'indiquer un établissement.`
+    //   });
+    //   break;
+    // case 'xpPost':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci d'indiquer un poste valide.`
+    //   });
+    //   break;
+    // case 'radioContract':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci de sélectionner un type de contrat.`
+    //   });
+    //   break;
+    // case 'xpService':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci d'indiquer un service valide.`
+    //   });
+    //   break;
+    // case 'noDateInternship':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci d'indiquer une date de début ainsi qu'une date de fin.`
+    //   });
+    //   break;
+    // case 'noStartDate':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci d'indiquer une date de début.`
+    //   });
+    //   break;
+    // case 'startDateAfterNow':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci de choisir une date antérieure ou égale à la date du jour.`
+    //   });
+    //   break;
+    // case 'endDateBeforeStart':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci de choisir une date de fin postérieure ou égale à celle de départ.`
+    //   });
+    //   break;
     case 'noDiploma':
       notification({
         icon: 'exclamation',
@@ -1167,31 +1167,31 @@ let experienceModalListener = () => {
   $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('experienceModal', 'contractModal'));
 
   //Initialize
-  $('#xpDate input').datetimepicker({
-    format: 'D MMMM YYYY',
-    useCurrent: false,
-    ignoreReadonly: true,
-    maxDate: moment().startOf('day'),
-    widgetPositioning: {vertical: 'top'}
-  });
+  // $('#xpDate input').datetimepicker({
+  //   format: 'D MMMM YYYY',
+  //   useCurrent: false,
+  //   ignoreReadonly: true,
+  //   maxDate: moment().startOf('day'),
+  //   widgetPositioning: {vertical: 'top'}
+  // });
 
-  $('#xpPost').on( 'keyup autocompleteclose', () => {
-    let isValidPost = postsArray.includes($('#xpPost').val());
-    if (isValidPost){
-      let post = $('#xpPost').val();
-      let category = allPosts.find(item => item.name === post).categoriesPS_id;
-      switch (category) {
-        case 4:
-          setAdministrativeService();
-          break;
-        case 5:
-          setLiberalPost();
-          break;
-      }
-      let currentServices = filterServicesByCategory(allServices, category);
-      createServicesList(currentServices, $('#xpService'));
-    } else resetPostRadioService();
-  });
+  // $('#xpPost').on( 'keyup autocompleteclose', () => {
+  //   let isValidPost = postsArray.includes($('#xpPost').val());
+  //   if (isValidPost){
+  //     let post = $('#xpPost').val();
+  //     let category = allPosts.find(item => item.name === post).categoriesPS_id;
+  //     switch (category) {
+  //       case 4:
+  //         setAdministrativeService();
+  //         break;
+  //       case 5:
+  //         setLiberalPost();
+  //         break;
+  //     }
+  //     let currentServices = filterServicesByCategory(allServices, category);
+  //     createServicesList(currentServices, $('#xpService'));
+  //   } else resetPostRadioService();
+  // });
 
   $('#saveXp').on('click', () => {
     if (verifyDatas('experienceModal')){
@@ -1201,10 +1201,10 @@ let experienceModalListener = () => {
     }
   });
 
-  $('#xpOngoing').on('change', (event) => {
-    if (event.currentTarget.checked){
-    }
-  });
+  // $('#xpOngoing').on('change', (event) => {
+  //   if (event.currentTarget.checked){
+  //   }
+  // });
 
   //Next Step
   $('#emptyXp').on('click', () => {

@@ -14,13 +14,113 @@ function selectTemplate(savedValue){
   }
 };
 
+function createPostsList(posts, input){
+  // console.log(posts);
+  // TODO VOIR POUR CALER L ID DANS AUTOCOMPLETE POUR RECUP POUR LA BDD PARCE QUE
+  arrays.posts = [];
+  posts.forEach( post => {
+    arrays.posts.push(post.name);
+  });
+  arrays.posts.sort();
+  input.autocomplete({
+    source: arrays.posts,
+    minLength: 1,
+    select: (event, ui) => {
+      // console.log(ui, event);
+    }
+  });
+};
+
+function filterServicesByCategory(services ,category){
+  let filteredServices = [];
+  services.forEach( service => {
+    if (service.categoriesPS_id === category)
+      filteredServices.push(service.name);
+    if (service.categoriesPS_id === 2 && category === 3)
+      filteredServices.push(service.name);
+  });
+  return filteredServices;
+};
+
+let createServicesList = (services, input) => {
+  arrays.services = [];
+  services.forEach( service => {
+    arrays.services.push(service);
+  });
+  arrays.services.sort();
+  input.autocomplete({
+    source: arrays.services,
+    minLength: 1,
+  });
+};
+
+let resetPostRadioService = () => {
+  $('#salaried').attr('disabled', false);
+  $('#internship').attr('disabled', false);
+  $('#liberal').prop('checked', false);
+  $('#xpService').attr('disabled', false);
+  $('#xpService').val(null).trigger('change');
+};
+
+function setAdministrativeService(){
+  $('#xpService').val('Services généraux');
+  $('#xpService').attr('disabled', true);
+  $('#xpService').siblings().show();
+};
+
+function setLiberalPost(){
+  $('#liberal').trigger('click');
+  $('#salaried').attr('disabled', true);
+  $('#internship').attr('disabled', true);
+  $('#xpService').val('Services Libéraux');
+  $('#xpService').attr('disabled', true);
+  $('#xpService').siblings().show();
+};
+
+
 function experienceListener(){
+  //TODO l open + close du recap
+  $('#recap').addClass('d-lg-block');
+
+  //TODO FIN
+
   $('.save').click(function() {
-    $('#recap').addClass('d-lg-block');
+    if (verifyInputs()){
+      //TODO SAVE, verifier si save ou editSave
+      saveDatas();
+    }
   });
 
   $('.closeRecap').click(function() {
     $('#recap').removeClass('d-lg-block');
+  });
+
+  $('#xpPost').on( 'keyup autocompleteclose', () => {
+    let isValidPost = arrays.posts.includes($('#xpPost').val());
+    if (isValidPost){
+      let post = $('#xpPost').val();
+      let category = databaseDatas.allPosts.find(item => item.name === post).categoriesPS_id;
+      switch (category) {
+        case 4:
+          setAdministrativeService();
+          break;
+        case 5:
+          setLiberalPost();
+          break;
+      }
+      let currentServices = filterServicesByCategory(databaseDatas.allServices, category);
+      createServicesList(currentServices, $('#xpService'));
+    } else {
+      resetPostRadioService();
+    }
+  });
+
+  $('#xpOngoing').on('change', (event) => {
+    if (event.currentTarget.checked){
+      $('#xpEnd').data("DateTimePicker").clear().disable();
+    } else {
+      $('#xpEnd').data("DateTimePicker").clear().enable();
+    }
   });
 
   $('#backToContract').click(function() {
@@ -38,9 +138,96 @@ function experienceListener(){
 };
 
 function verifyInputs(){
+  let now = moment().startOf('day');
+  let xpOngoing = $('#xpOngoing').prop('checked');
+  let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) ? true : notify('xpEtablishment');
+  let xpPost = arrays.posts.includes($('#xpPost').val()) ? true : notify('xpPost');
+  let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
+  let xpService = arrays.services.includes($('#xpService').val()) ? true : notify('xpService');
+  let xpStart = $('#xpStart').data("DateTimePicker").date();
+  let xpEnd = $('#xpEnd').data("DateTimePicker").date();
+  if (xpStart !== null){
+    let validXpStart = xpStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
+    let validXpEnd = true;
+    if (xpEnd !== null)
+      validXpEnd = xpEnd.startOf('day').isSameOrAfter(xpStart.startOf('day')) ? true : notify('endDateBeforeStart');
+    if (xpEnd === null && !xpOngoing){
+      validXpEnd = notify('xpOngoingNotChecked');
+    }
+    return (xpEtablishment && xpPost && radioContract && xpService && validXpStart && validXpEnd);
+  }
+  return notify('noStartDate');
 };
 
 function notify(error){
+  switch (error) {
+    case 'xpEtablishment':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer un établissement.`
+      });
+      break;
+    case 'xpPost':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer un poste valide.`
+      });
+      break;
+    case 'radioContract':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de sélectionner un type de contrat.`
+      });
+      break;
+    case 'xpService':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer un service valide.`
+      });
+      break;
+    case 'noStartDate':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer une date de début.`
+      });
+      break;
+    case 'startDateAfterNow':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir une date antérieure ou égale à la date du jour.`
+      });
+      break;
+    case 'endDateBeforeStart':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de choisir une date de fin postérieure ou égale à celle de départ.`
+      });
+      break;
+    case 'xpOngoingNotChecked':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer une date de fin ou de cocher "Actuellement en poste" le cas échéant.`
+      });
+
+      break
+  }
+  return false;
 };
 
 function saveDatas(){
@@ -48,8 +235,13 @@ function saveDatas(){
 
 function init_experience(){
   experienceListener();
+  $('#xpStart, #xpEnd').datetimepicker({
+    format: 'D MMMM YYYY',
+    useCurrent: false,
+    ignoreReadonly: true,
+    maxDate: moment().startOf('day')
+  });
+  createPostsList(databaseDatas.allPosts, $('#xpPost'));
 };
 
 init_experience();
-
-//TODO a FAIRE
