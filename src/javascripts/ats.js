@@ -578,10 +578,10 @@ let saveDatas = (modal) => {
     //   application.dayTime = $('#day_time').prop('checked');
     //   application.nightTime = $('#night_time').prop('checked');
     //   break;
-    case 'timeModalInternship':
-      application.start = new Date($('#start').data("DateTimePicker").date());
-      application.end = new Date($('#end').data("DateTimePicker").date());
-      break;
+    // case 'timeModalInternship':
+    //   application.start = new Date($('#start').data("DateTimePicker").date());
+    //   application.end = new Date($('#end').data("DateTimePicker").date());
+    //   break;
     case 'experienceModal':
       current = {};
       current.id = permissions.experienceId;
@@ -700,17 +700,17 @@ let verifyDatas = (modal) => {
     //   let daynight = ($('#day-night input:checked').length > 0) ? true : notify('daynight');
     //   return (fullpart && daynight);
     //   break;
-    case 'timeModalInternship':
-      let start = $('#start').data("DateTimePicker").date();
-      let end = $('#end').data("DateTimePicker").date();
-
-      if (start !== null && end !== null){
-        let validStart = start.startOf('day').isSameOrAfter(now) ? true : notify('internshipWrongStart');
-        let validEnd = end.startOf('day').isAfter(start.startOf('day')) ? true : notify('internshipWrongEnd');
-        return (validStart && validEnd);
-      }
-      return notify('noDateInternship');
-      break;
+    // case 'timeModalInternship':
+    //   let start = $('#start').data("DateTimePicker").date();
+    //   let end = $('#end').data("DateTimePicker").date();
+    //
+    //   if (start !== null && end !== null){
+    //     let validStart = start.startOf('day').isSameOrAfter(now) ? true : notify('internshipWrongStart');
+    //     let validEnd = end.startOf('day').isAfter(start.startOf('day')) ? true : notify('internshipWrongEnd');
+    //     return (validStart && validEnd);
+    //   }
+    //   return notify('noDateInternship');
+    //   break;
     case 'experienceModal':
       let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) ? true : notify('xpEtablishment');
       let xpPost = postsArray.includes($('#xpPost').val()) ? true : notify('xpPost');
@@ -832,22 +832,22 @@ let notify = (error) => {
     //     message: `Merci d'indiquer si vous souhaitez travailler de jour / nuit, ou les deux.`
     //   });
     //   break;
-    case 'internshipWrongStart':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de choisir une date postérieure ou égale à la date du jour.`
-      });
-      break;
-    case 'internshipWrongEnd':
-    notification({
-      icon: 'exclamation',
-      type: 'danger',
-      title: 'Informations manquantes :',
-      message: `Merci de choisir une date de fin postérieure à celle de départ.`
-    });
-      break;
+    // case 'internshipWrongStart':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci de choisir une date postérieure ou égale à la date du jour.`
+    //   });
+    //   break;
+    // case 'internshipWrongEnd':
+    // notification({
+    //   icon: 'exclamation',
+    //   type: 'danger',
+    //   title: 'Informations manquantes :',
+    //   message: `Merci de choisir une date de fin postérieure à celle de départ.`
+    // });
+    //   break;
     case 'xpEtablishment':
       notification({
         icon: 'exclamation',
@@ -1132,36 +1132,36 @@ let finalize = (es_finess) => {
 //   });
 // };
 
-let timeModalListener = () => {
-  // $('#timeModal').on('hide.bs.modal', () => toPreviousModal('timeModal', 'contractModal'));
-  //
-  // $('#cdiSchedule input').bootstrapToggle({
-  //   on: '',
-  //   off: '',
-  //   onstyle: 'success',
-  //   offstyle: 'secondary',
-  //   size: 'lg'
-  // });
-
-  $('#internshipDate input').datetimepicker({
-    format: 'D MMMM YYYY',
-    useCurrent: false,
-    ignoreReadonly: true,
-    minDate: moment().startOf('day')
-  });
-
-  // $('#toStep4').on('click', () => {
-  //   let modal = null;
-  //   if (application.contractType === 'cdi')
-  //     modal = 'timeModalCdi';
-  //   else if (application.contractType === 'internship')
-  //     modal = 'timeModalInternship';
-  //   if (verifyDatas(modal)){
-  //     saveDatas(modal);
-  //     loadModal('timeModal','experienceModal');
-  //   }
-  // });
-};
+// let timeModalListener = () => {
+//   // $('#timeModal').on('hide.bs.modal', () => toPreviousModal('timeModal', 'contractModal'));
+//   //
+//   // $('#cdiSchedule input').bootstrapToggle({
+//   //   on: '',
+//   //   off: '',
+//   //   onstyle: 'success',
+//   //   offstyle: 'secondary',
+//   //   size: 'lg'
+//   // });
+//
+//   // $('#internshipDate input').datetimepicker({
+//   //   format: 'D MMMM YYYY',
+//   //   useCurrent: false,
+//   //   ignoreReadonly: true,
+//   //   minDate: moment().startOf('day')
+//   // });
+//
+//   // $('#toStep4').on('click', () => {
+//   //   let modal = null;
+//   //   if (application.contractType === 'cdi')
+//   //     modal = 'timeModalCdi';
+//   //   else if (application.contractType === 'internship')
+//   //     modal = 'timeModalInternship';
+//   //   if (verifyDatas(modal)){
+//   //     saveDatas(modal);
+//   //     loadModal('timeModal','experienceModal');
+//   //   }
+//   // });
+// };
 
 let experienceModalListener = () => {
   $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('experienceModal', 'contractModal'));

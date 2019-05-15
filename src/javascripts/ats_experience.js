@@ -4,16 +4,15 @@ function selectTemplate(savedValue){
       return 'cdiTime';
       break;
     case 'vacation':
-      return 'experience';
+      return 'contract';
       break;
     case 'internship':
       return 'internshipTime';
       break;
     default:
-      return null;
+      return 'contract';
   }
 };
-
 
 function experienceListener(){
   $('.save').click(function() {
@@ -52,3 +51,5 @@ function init_experience(){
 };
 
 init_experience();
+
+//TODO a FAIRE

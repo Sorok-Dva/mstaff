@@ -10,7 +10,7 @@ function selectTemplate(checkedSwitch){
       return 'internshipTime';
       break;
     default:
-      return null;
+      return 'experience';
   }
 };
 
