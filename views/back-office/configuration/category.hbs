@@ -1,0 +1,112 @@
+<!--<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css" rel="stylesheet">-->
+<!--<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>-->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+        </div>
+        <table id="categories-table" class="table">
+          <thead>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="name" data-sortable="true">Nom</th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions
+          </th>
+          </thead>
+          <tbody>
+          {{#each categories as |category|}}
+            <tr data-id="{{category.id}}">
+              <td>{{category.id}}</td>
+              <td>{{category.name}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let table = $('#categories-table');
+  let optionjson = {{{json categories}}};
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Edit" class="btn btn-simple btn-info btn-icon table-action edit" href="javascript:void(0)">',
+      '<i class="ti-link"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .edit': (e, value, row, index) => {
+        createModal({
+          id: 'linkCategoryModal',
+          title: 'Liaison de catégories Mstaff',
+          modal: 'back-office/linkCategory',
+          row: row.id
+        }, () => {
+          $('button#validateCategory').click(function () {
+            let _csrf = $('#csrfToken').val();
+            let medical = $("#medicalToggle").prop("checked") ? 1 : 0;
+            let paramedical = $("#paramedicalToggle").prop("checked") ? 1 : 0;
+            let administrative = $("#administrativeToggle").prop("checked") ? 1 : 0;
+            let liberal = $("#liberalToggle").prop("checked") ? 1 : 0;
+            let contract = $("#contractToggle").prop("checked") ? 1 : 0;
+            let vacation = $("#vacationToggle").prop("checked") ? 1 : 0;
+            let internship = $("#internshipToggle").prop("checked") ? 1 : 0;
+            let service = $("#serviceToggle").prop("checked") ? 1 : 0;
+            $.put(`/api/back-office/configuration/category/${row.id}`, {
+              medical,
+              paramedical,
+              administrative,
+              liberal,
+              contract,
+              vacation,
+              internship,
+              service,
+              _csrf
+            }, () => {
+              $('#linkCategoryModal').modal('hide');
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'configuration modifiée.',
+                message: ``
+              });
+            });
+          });
+        });
+      },
+    };
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10, 25, 50, 100, 200, 500],
+      formatRecordsPerPage: (pageNumber) => {
+        return pageNumber + " rows visible";
+      },
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
+    });
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+  let i = 0;
+</script>

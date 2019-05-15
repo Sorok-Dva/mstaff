@@ -14,6 +14,9 @@ module.exports = {
         primaryKey: true,
         unique: true
       },
+      category: {
+        type: Sequelize.STRING,
+      },
       finess: {
         type: Sequelize.STRING,
         allowNull: false,
