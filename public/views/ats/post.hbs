@@ -1,18 +1,20 @@
-<a href="#" id="backToMain"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<div class="custom-cursor" id="backToMain"><i class="fal fa-arrow-circle-left fa-2x"></i></div>
 
-<form>
-  <div class="form-group">
-    <label for="InputPosts">Poste* </label>
-    <input type="text" class="form-control" id="InputPosts" value="{{candidateDatas.application.post}}">
-  </div>
-  <div class="form-group">
-    <label for="InputServices">Service (facultatif)</label>
-    <select class="form-control" data-toggle="select" multiple id="InputServices"></select>
-  </div>
-</form>
+<div class="height-80 d-flex flex-column justify-content-center">
+  <form>
+    <div class="form-group">
+      <label for="InputPosts">Poste* </label>
+      <input type="text" class="form-control" id="InputPosts" value="{{candidateDatas.application.post}}">
+    </div>
+    <div class="form-group">
+      <label for="InputServices">Service (facultatif)</label>
+      <select class="form-control" data-toggle="select" multiple id="InputServices"></select>
+    </div>
+  </form>
+</div>
 
 <div class="row justify-content-end">
-  <a href="#" id="toContract"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
+  <div class="custom-cursor" id="toContract"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
 <script src="/static/assets/dist/js/ats_post.min.js"></script>

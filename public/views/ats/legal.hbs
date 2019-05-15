@@ -1,29 +1,30 @@
-<a href="#" id="backToRecap"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<div class="custom-cursor" id="backToRecap"><i class="fal fa-arrow-circle-left fa-2x"></i></div>
 
-<div class="row m-4">
-  <div class="card text-center col-12">
-    <div class="card-body">
-      <h2 class="card-title">En cochant cette case,  j'accepte les Conditions Générales d'Utilisation et autorise la société Mstaff à publier mon profil auprès des établissements de santé.</h2>
-      <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="legal-first" name="legal-first">
-        <label class="custom-control-label" for="legal-first"></label>
+<div class="height-80 d-flex flex-column justify-content-center">
+  <div class="row m-4">
+    <div class="card text-center col-12">
+      <div class="card-body">
+        <h2 class="card-title">En cochant cette case,  j'accepte les Conditions Générales d'Utilisation et autorise la société Mstaff à publier mon profil auprès des établissements de santé.</h2>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="legal-first" name="legal-first">
+          <label class="custom-control-label" for="legal-first"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-4">
+    <div class="card text-center col-12">
+      <div class="card-body">
+        <h2 class="card-title">En cochant cette case, j'accepte que mon profil soit visible auprès des établissements sélectionnés lors de ma création de souhaits de candidature. Les établissements pourront imprimer et partager ma candidature. Mstaff s'engage à ne pas utiliser vos informations à des fins commerciales.</h2>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="legal-second" name="legal-second">
+          <label class="custom-control-label" for="legal-second"></label>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<div class="row m-4">
-  <div class="card text-center col-12">
-    <div class="card-body">
-      <h2 class="card-title">En cochant cette case, j'accepte que mon profil soit visible auprès des établissements sélectionnés lors de ma création de souhaits de candidature. Les établissements pourront imprimer et partager ma candidature. Mstaff s'engage à ne pas utiliser vos informations à des fins commerciales.</h2>
-      <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="legal-second" name="legal-second">
-        <label class="custom-control-label" for="legal-second"></label>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="row justify-content-center">
   <button type="button" class="btn btn-success" onclick="finalize('{{es.finess}}')">Confirmer et Publier mon profil</button>
 </div>

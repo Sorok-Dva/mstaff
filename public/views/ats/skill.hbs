@@ -10,37 +10,38 @@
   }
 </style>
 
-<a href="#" id="backToQualification"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<div class="custom-cursor" id="backToQualification"><i class="fal fa-arrow-circle-left fa-2x"></i></div>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
   <h2 class="text-center underline">Aperçu de vos compétences</h2>
 </nav>
 
-<form>
-  <div class="form-group text-center">
-    <label for="skill">Indiquez ici une compétence</label>
-    <input type="text" class="form-control" id="skill">
-  </div>
-  <div id="skillStars" class="form-group text-center">
-    <span class="text-muted" id="legend">Notez-vous !</span>
-    <div id="stars" class="d-flex justify-content-center">
-      <div id="star1" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
-      <div id="star2" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
-      <div id="star3" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
+<div class="height-80 d-flex flex-column justify-content-center">
+  <form>
+    <div class="form-group text-center">
+      <label for="skill">Indiquez ici une compétence</label>
+      <input type="text" class="form-control" id="skill">
+    </div>
+    <div id="skillStars" class="form-group text-center">
+      <span class="text-muted" id="legend">Notez-vous !</span>
+      <div id="stars" class="d-flex justify-content-center">
+        <div id="star1" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
+        <div id="star2" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
+        <div id="star3" class="custom-cursor m-1"><i class="fal fa-star"></i><i class="fas fa-star"></i></div>
+      </div>
+    </div>
+  </form>
+
+  <div class="row text-center justify-content-center mt-5">
+    <div class="custom-cursor save">
+      <i class="fal fa-check-circle fa-2x col-12"></i>
+      <p class="col-12">Enregistrer</p>
     </div>
   </div>
-</form>
-
-<div class="row text-center justify-content-center mt-5">
-  <div class="custom-cursor save">
-    <i class="fal fa-check-circle fa-2x col-12"></i>
-    <p class="col-12">Enregistrer</p>
-  </div>
 </div>
-
 <div class="row justify-content-end">
-  <a href="#" id="toIdentity"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
+  <div class="custom-cursor" id="toIdentity"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
 <script>

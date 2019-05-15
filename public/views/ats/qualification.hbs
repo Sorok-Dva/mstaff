@@ -7,42 +7,43 @@
   }
 </style>
 
-<a href="#" id="backToDiploma"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+<div class="custom-cursor" id="backToDiploma"><i class="fal fa-arrow-circle-left fa-2x"></i></div>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
   <h2 class="text-center underline">Aperçu de vos diplômes</h2>
 </nav>
 
-<form>
-  <div class="form-group text-center">
-    <label for="diploma">Choisissez votre diplôme</label>
-    <input type="text" class="form-control" id="qualification">
-  </div>
-
-  <div id="diplomaDate" class="row justify-content-around">
-    <div class="col-6 text-center">
-      <label for="qualificationStart">Début</label>
-      <input id="qualificationStart" name="qualificationStart" type="text"
-             class="form-control datetimepicker-input" readonly>
+<div class="height-80 d-flex flex-column justify-content-center">
+  <form>
+    <div class="form-group text-center">
+      <label for="diploma">Choisissez votre diplôme</label>
+      <input type="text" class="form-control" id="qualification">
     </div>
-    <div class="col-6 text-center">
-      <label for="qualificationEnd">Fin</label>
-      <input id="qualificationEnd" name="qualificationEnd" type="text"
-             class="form-control datetimepicker-input" readonly>
-    </div>
-  </div>
-</form>
 
-<div class="row text-center justify-content-center mt-5">
-  <div class="custom-cursor save">
-    <i class="fal fa-check-circle fa-2x col-12"></i>
-    <p class="col-12">Enregistrer</p>
+    <div id="diplomaDate" class="row justify-content-around">
+      <div class="col-6 text-center">
+        <label for="qualificationStart">Début</label>
+        <input id="qualificationStart" name="qualificationStart" type="text"
+               class="form-control datetimepicker-input" readonly>
+      </div>
+      <div class="col-6 text-center">
+        <label for="qualificationEnd">Fin</label>
+        <input id="qualificationEnd" name="qualificationEnd" type="text"
+               class="form-control datetimepicker-input" readonly>
+      </div>
+    </div>
+  </form>
+
+  <div class="row text-center justify-content-center mt-5">
+    <div class="custom-cursor save">
+      <i class="fal fa-check-circle fa-2x col-12"></i>
+      <p class="col-12">Enregistrer</p>
+    </div>
   </div>
 </div>
-
 <div class="row justify-content-end">
-  <a href="#" id="toSkill"><i class="fal fa-arrow-circle-right fa-2x"></i></a>
+  <div class="custom-cursor" id="toSkill"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
 <script>
