@@ -85,25 +85,4 @@
   <div class="custom-cursor" id="toDiploma"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
-<script>
-
-  $('.save').click(function() {
-      $('#recap').addClass('d-lg-block');
-  });
-
-  $('.closeRecap').click(function() {
-    $('#recap').removeClass('d-lg-block');
-  });
-
-  $('#backToContract').click(function() {
-    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-
-  $('#toDiploma').click(function() {
-    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-</script>
+<script src="/static/assets/dist/js/ats_experience.min.js"></script>

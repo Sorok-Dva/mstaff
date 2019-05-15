@@ -1,5 +1,13 @@
+function resetAvailability(){
+  candidateDatas.application.fullTime = false;
+  candidateDatas.application.partTime = false;
+  candidateDatas.application.dayTime = false;
+  candidateDatas.application.nightTime = false;
+};
+
 function cdiTimeListener(){
   $('#backToContract').click(function() {
+    resetAvailability();
     loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays}, (html) => {
       $('#atsPart').html(html);
     })
@@ -39,6 +47,7 @@ function notify(error){
       });
       break;
   }
+  return false;
 };
 
 function saveDatas(){

@@ -13,7 +13,8 @@
         <i class="fal fa-calendar-star fa-3x"></i>
         <h1 class="card-title">Temps plein</h1>
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="full_time" name="full_time">
+          <input type="checkbox" class="custom-control-input" id="full_time" name="full_time"
+            {{#ifCond candidateDatas.application.fullTime '===' true}} checked{{/ifCond}}>
           <label class="custom-control-label" for="full_time"></label>
         </div>
       </div>
@@ -25,7 +26,8 @@
         <i class="fal fa-calendar-day fa-3x"></i>
         <h1 class="card-title">Temps partiel</h1>
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="part_time" name="part_time">
+          <input type="checkbox" class="custom-control-input" id="part_time" name="part_time"
+            {{#ifCond candidateDatas.application.partTime '===' true}} checked{{/ifCond}}>
           <label class="custom-control-label" for="part_time"></label>
         </div>
       </div>
@@ -36,7 +38,8 @@
         <i class="fal fa-sun fa-3x"></i>
         <h1 class="card-title">Jour</h1>
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="day_time" name="day_time">
+          <input type="checkbox" class="custom-control-input" id="day_time" name="day_time"
+            {{#ifCond candidateDatas.application.dayTime '===' true}} checked{{/ifCond}}>
           <label class="custom-control-label" for="day_time"></label>
         </div>
       </div>
@@ -47,7 +50,8 @@
         <i class="fal fa-moon-stars fa-3x"></i>
         <h1 class="card-title">Nuit</h1>
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="night_time" name="night_time">
+          <input type="checkbox" class="custom-control-input" id="night_time" name="night_time"
+            {{#ifCond candidateDatas.application.nightTime '===' true}} checked{{/ifCond}}>
           <label class="custom-control-label" for="night_time"></label>
         </div>
       </div>

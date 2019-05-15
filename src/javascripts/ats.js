@@ -532,13 +532,13 @@ let loadClearModal = (target) => {
 
 let hasDatas = (modal) => {
   switch (modal) {
-    case 'postModal':
-        return !$.isEmptyObject(application.post);
-      break;
-    case 'contractModal':
-      break;
-    case 'timeModal':
-      break;
+    // case 'postModal':
+    //     return !$.isEmptyObject(application.post);
+    //   break;
+    // case 'contractModal':
+    //   break;
+    // case 'timeModal':
+    //   break;
     case 'experienceModal':
       return experiences.length > 0;
       break;
@@ -572,12 +572,12 @@ let saveDatas = (modal) => {
     // case 'contractModal':
     //   application.contractType = $('.contractChoices input:checked').prop('name');
     //   break;
-    case 'timeModalCdi':
-      application.fullTime = $('#full_time').prop('checked');
-      application.partTime = $('#part_time').prop('checked');
-      application.dayTime = $('#day_time').prop('checked');
-      application.nightTime = $('#night_time').prop('checked');
-      break;
+    // case 'timeModalCdi':
+    //   application.fullTime = $('#full_time').prop('checked');
+    //   application.partTime = $('#part_time').prop('checked');
+    //   application.dayTime = $('#day_time').prop('checked');
+    //   application.nightTime = $('#night_time').prop('checked');
+    //   break;
     case 'timeModalInternship':
       application.start = new Date($('#start').data("DateTimePicker").date());
       application.end = new Date($('#end').data("DateTimePicker").date());
@@ -1150,17 +1150,17 @@ let timeModalListener = () => {
     minDate: moment().startOf('day')
   });
 
-  $('#toStep4').on('click', () => {
-    let modal = null;
-    if (application.contractType === 'cdi')
-      modal = 'timeModalCdi';
-    else if (application.contractType === 'internship')
-      modal = 'timeModalInternship';
-    if (verifyDatas(modal)){
-      saveDatas(modal);
-      loadModal('timeModal','experienceModal');
-    }
-  });
+  // $('#toStep4').on('click', () => {
+  //   let modal = null;
+  //   if (application.contractType === 'cdi')
+  //     modal = 'timeModalCdi';
+  //   else if (application.contractType === 'internship')
+  //     modal = 'timeModalInternship';
+  //   if (verifyDatas(modal)){
+  //     saveDatas(modal);
+  //     loadModal('timeModal','experienceModal');
+  //   }
+  // });
 };
 
 let experienceModalListener = () => {
