@@ -978,6 +978,10 @@ User_Candidate.viewMyPools = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+User_Candidate.addPoolServices = (req, res, next) => {
+
+};
+
 User_Candidate.setAvailability = (req, res, next) => {
   Models.User.findOne({
     where: { id: req.user.id },

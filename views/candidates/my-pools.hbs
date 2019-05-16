@@ -58,7 +58,7 @@
             </div>
             <div class="col-md-3 class-icon">
               <a href="#">
-                <i title="Choisir mes services" class="fal fa-stethoscope fa-2x" onclick="servicesEdit()"></i>
+                <i title="Choisir mes services" class="fal fa-stethoscope fa-2x" data-pool="{{pool.id}}" onclick="servicesEdit(this)"></i>
               </a>
             </div>
           </div>
@@ -78,13 +78,30 @@
     })
   };
   let serviceArray = [];
-  let servicesEdit = () => {
+  let servicesEdit = (selectedPool) => {
     createModal({
       id: 'serviceEditModal',
+      title: `Ajouter un service`,
+      modal: 'candidate/serviceAdd'
+    }, () => {
+      $('#addServiceButton').click(function () {
+        if ($('#servicesSelect').val() !== '' && $('#experienceInput').val()) {
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
+          let pool = selectedPool.dataset.pool;
+          let service =
+          $.post(``)
+        }
+      })
+    })
+  };
+  let seeMyServices = () => {
+    $('#serviceEditModal').modal('hide');
+    createModal({
+      id: 'seeServicesModal',
       title: `Modifier les services désirés`,
       modal: 'candidate/serviceEdit'
     }, () => {
 
     })
-  };
+  }
 </script>

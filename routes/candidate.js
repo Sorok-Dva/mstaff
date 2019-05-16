@@ -148,6 +148,10 @@ router.get('/pools',
 
 router.get('/my-pools',
   Authentication.ensureIsCandidate,
-  User.Candidate.viewMyPools);
+  User.Candidate.viewMyPools
+).post('/my-pools',
+  Authentication.ensureAuthenticated,
+  User.Candidate.addPoolServices
+);
 
 module.exports = router;
