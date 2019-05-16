@@ -179,12 +179,13 @@ let addToGlobalRecap = (customTitle, colorCheck, currentModal, linkedModal) => {
   $(`<div class="recap-item">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
 };
 
-let addToDatasRecap = (customTitle, item, postfix) => {
-  let title = `<div>${customTitle} ${item.id}</div>`;
-  let editButton = `<button class="btn" onclick="atsEdit${postfix}(${item.id})"><i class="fal fa-edit"></i></button>`;
-  let deleteButton = `<button class="btn" onclick="atsDelete${postfix}(${item.id})"><i class="fal fa-trash-alt"></i></button>`;
-  $(`<div class="recap-item" data-id="${item.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
-};
+// let addToDatasRecap = (customTitle, item, postfix) => {
+//   let title = `<h3>${customTitle} ${item.id}</h3>`;
+//   let customClass = `class="row justify-content-between align-items-center mt-3"`;
+//   let editButton = `<button class="btn padding-0" onclick="atsEdit${postfix}(${item.id})"><i class="fal fa-edit"></i></button>`;
+//   let deleteButton = `<button class="btn padding-0" onclick="atsDelete${postfix}(${item.id})"><i class="fal fa-trash-alt"></i></button>`;
+//   $(`<div ${customClass} data-id="${item.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
+// };
 
 let generateContratRecap = (current) => {
   let color = application.post ? 'green' : 'grey';
@@ -244,12 +245,10 @@ let generateDatasRecap = (current) => {
   currentParaph.first().hide();
   $('.recap-item').remove();
   switch (current) {
-    case 'contractModal':
-      break;
-    case 'experienceModal':
-      $('.recap p').last().html('Aperçu de vos expériences');
-      experiences.forEach( xp => addToDatasRecap('#Expérience n°', xp, 'Xp'));
-      break;
+    // case 'experienceModal':
+    //   $('.recap p').last().html('Aperçu de vos expériences');
+    //   experiences.forEach( xp => addToDatasRecap('#Expérience n°', xp, 'Xp'));
+    //   break;
     case 'diplomaModal':
       $('.recap p').last().html('Aperçu de vos formations');
       diplomas.forEach( diploma => addToDatasRecap('#Formation n°', diploma, 'Diploma'));

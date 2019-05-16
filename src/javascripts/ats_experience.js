@@ -57,6 +57,7 @@ function createServicesList(services, input){
 function resetForm(){
   $('#experienceForm').trigger("reset");
   resetPostRadioService();
+  $('#xpEnd').attr('disabled', false);
 };
 
 function resetPostRadioService(){
@@ -82,13 +83,50 @@ function setLiberalPost(){
   $('#xpService').siblings().show();
 };
 
+function editXp(id){
+  permissions.editMode = true;
+  permissions.editId = id;
+  let i = candidateDatas.experiences.map(xp => xp.id).indexOf(id);
+  resetForm();
+  $('#xpEstablishment').val(candidateDatas.experiences[i].name).trigger('keyup');
+  $('#xpPost').val(candidateDatas.experiences[i].post_id).trigger('keyup');
+  $(`#${candidateDatas.experiences[i].contract}`).trigger('click');
+  $('#xpService').val(candidateDatas.experiences[i].service_id).trigger('change');
+  $('#xpStart').data("DateTimePicker").date(candidateDatas.experiences[i].start);
+  if (candidateDatas.experiences[i].end)
+    $('#xpEnd').data("DateTimePicker").date(candidateDatas.experiences[i].end);
+  else
+    $('#xpOngoing').trigger('click');
+  $('#xpDate').trigger('change');
+};
+
+function deleteXp(id){
+  resetForm();
+  permissions.editMode = false;
+  let i = candidateDatas.experiences.map(xp => xp.id).indexOf(id);
+  candidateDatas.experiences.splice(i, 1);
+  $(`div [data-id=${id}]`).remove();
+};
+
+function addToDatasRecap(item){
+  let title = `<h3>#Expérience n° ${item.id}</h3>`;
+  let customClass = `class="row justify-content-between align-items-center mt-3 recap-item"`;
+  let editButton = `<button class="btn padding-0 mr-3" onclick="editXp(${item.id})"><i class="fal fa-edit"></i></button>`;
+  let deleteButton = `<button class="btn padding-0" onclick="deleteXp(${item.id})"><i class="fal fa-trash-alt"></i></button>`;
+  $(`<div ${customClass} data-id="${item.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
+};
+
+function generateDatasRecap(){
+  $('.recap-item').remove();
+  candidateDatas.experiences.forEach( xp => addToDatasRecap(xp));
+};
+
 function experienceListener(){
 
   $('.save').click(function() {
     if (verifyInputs()){
       saveDatas(permissions.editMode);
-      //TODO SAVE, verifier si save ou editSave
-      saveDatas();
+      generateDatasRecap();
       resetForm();
     }
   });
@@ -242,8 +280,8 @@ function saveDatas(editMode){
   }
   current.name = $('#xpEstablishment').val();
   current.post_id = $('#xpPost').val();
-  // current.contract = $('#radioContract input:checked').attr('id');
-  //Todo a modifier par la suite (voir si on reste sur cette structure)
+  //Todo a modifier par la suite (voir si on garde le .contract ou pas)
+  current.contract = $('#radioContract input:checked').attr('id');
   current.internship = 0;
   current.service_id = $('#xpService').val();
   current.start = new Date($('#xpStart').data("DateTimePicker").date());
@@ -269,3 +307,5 @@ function init_experience(){
 };
 
 init_experience();
+if(candidateDatas.experiences.length > 0)
+  generateDatasRecap();
