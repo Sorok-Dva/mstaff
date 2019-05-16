@@ -19,7 +19,7 @@
 
 <script>
   $('#toPost').click(function() {
-    loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    loadTemplate('/static/views/ats/skill.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
