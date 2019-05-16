@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <div class="row align-items-center justify-content-center">
+    <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+      <a href="/"><i class="fal fa-chevron-circle-left fa-2x mb-4"></i></a>
+      <!-- Heading -->
+      <h1 class="display-4 text-center mb-3">
+        Mot de passe oublié ?
+      </h1>
+
+      <!-- Subheading -->
+      <p class="text-muted text-center mb-5">
+        Indiquez votre adresse e-mail afin de recevoir un lien de réinitialisation de mot de passe.
+      </p>
+
+      <!-- Form -->
+      <form action="/reset/password" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+
+        <div class="form-group email">
+          <label for="email">{{tr.pages.register.form_email_label}}</label>
+          <input id="email" name="email" type="email" email="true"
+                 placeholder="{{tr.pages.register.form_email_ph}}"
+                 class="form-control" value="{{body.email}}" required="">
+        </div>
+
+        <!-- Submit -->
+        <button class="btn btn-lg btn-block btn-primary mb-3">
+          Demander une réinitialisation de mot de passe
+        </button>
+
+        <!-- Link -->
+        <p class="text-center">
+          <small class="text-muted text-center">
+            Vous vous souvenez de votre mot de passe ? <a href="/login">Se connecter</a>.
+          </small>
+        </p>
+      </form>
+    </div>
+    <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+      <!-- Image -->
+      <div class="bg-cover vh-100 mt-n1 mr-n3"
+           style="background-image: url(/static/assets/images/password-reset.jpg);"></div>
+    </div>
+  </div>
+</div>

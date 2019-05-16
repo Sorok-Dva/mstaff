@@ -1,0 +1,54 @@
+<div class="modal-body">
+  <p>Votre recherche va être enregistrée dans <b>Mes Besoins</b>.<p>
+  <p><b>Souhaitez-vous notifier dès maintenant les candidats sélectionnés afin que ces derniers confirment leurs disponibilités ?</b></p>
+</div>
+<div class="modal-footer">
+  <button type="button" id="nop" class="btn btn-default pull-left"
+          data-dismiss="modal">Non, je le ferai plus tard
+  </button>
+  <button type="button" id="yep" class="btn btn-outline-info float-right">Oui
+  </button>
+</div>
+<script>
+  $('#nop').click(function() {
+    if (need.selectedCandidates.length > 0 && need.name.length > 2) {
+      need._csrf = _csrf;
+      $.post(`/api/es/${esId}/addNeed`, need, (data) => {
+        if (data.id) {
+          createModal({
+            id: 'needSavedModal',
+            modal: 'es/need/saved',
+            title: 'Besoin enregistré avec succès !',
+            needId: data.id
+          })
+        }
+      });
+    } else {
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Impossible de créer cette recherche',
+        message: `Vous devez spécifier un nom de recherche et sélectionner au moins un candidat.`
+      });
+    }
+  });
+
+  $('#yep').click(function() {
+    if (need.selectedCandidates.length > 0 && need.name.length > 2) {
+      need._csrf = _csrf;
+      need.notifyCandidates = true;
+      $.post(`/api/es/${esId}/addNeed`, need, (data) => {
+        if (data.id) {
+          $(location).attr('href', `/need/${data.id}`);
+        }
+      });
+    } else {
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Impossible de créer cette recherche',
+        message: `Vous devez spécifier un nom de recherche et sélectionner au moins un candidat.`
+      });
+    }
+  });
+</script>

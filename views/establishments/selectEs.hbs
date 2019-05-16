@@ -1,7 +1,67 @@
 <div class="row">
   {{#each esAccounts as |account|}}
-    <div class="col-md-3 card">
-      {{account.Establishment.name}}
+    <div class="col-4 col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <!-- Avatar -->
+          <div class="text-center">
+            <span class="card-avatar avatar avatar-lg mx-auto">
+              {{#if account.Establishment.logo}}
+                <img alt="Logo {{account.Establishment.name}}" src="{{account.Establishment.logo}}" class="avatar-img rounded">
+              {{else}}
+                <img alt="Logo {{account.Establishment.name}}" src="/static/assets/images/default_hospital.jpg" class="avatar-img rounded">
+              {{/if}}
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h2 class="card-title text-center mb-3">
+            <a href="/select/es/{{account.Establishment.id}}">{{account.Establishment.name}}</a>
+          </h2>
+
+       {{!--   <!-- Text -->
+          {{#if account.Establishment.domain_enable}}
+            <p class="card-text text-center text-muted mb-4">
+              (<a target="_blank" href="https://{{account.Establishment.domain_name}}.{{@root.domain}}">
+              https://{{account.Establishment.domain_name}}.{{@root.domain}}</a> )
+            </p>
+          {{/if}}
+--}}
+          {{!--<!-- Divider -->
+          <hr>
+          <div class="row align-items-center">
+            <div class="col ml-2">
+              <!-- Time -->
+              <p class="card-text small text-muted">
+                <i class="fe fe-clock"></i> Dernière connexion
+              </p>
+
+            </div>
+            <div class="col-auto">
+              <!-- Avatar group -->
+              <div class="avatar-group">
+                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Ab Hadley">
+                  <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+                </span>
+                <span  class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Adolfo Hess">
+                  <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+                </span>
+                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Daniela Dewitt">
+                  <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+                </span>
+                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Miyah Myles">
+                  <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+                </span>
+                <div class="avatar avatar-xs">
+                  <div class="avatar-title rounded-circle">+7</div>
+                </div>
+              </div>
+
+            </div>
+          </div> <!-- / .row -->--}}
+
+        </div> <!-- / .card-body -->
+      </div>
     </div>
   {{/each}}
 </div>

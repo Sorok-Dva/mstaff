@@ -1,4 +1,3 @@
-
 # Mstaff Project
 
 ## Prerequisites
@@ -6,7 +5,7 @@
 Install the following software in your computer:
 
 - XCode and command line tools by Apple if you're on MacOs
-- [Node.js](https://nodejs.org/en/download/package-manager/) (version 10.4 or higher)
+- Node.js (version 10.4 or higher) (`sudo n stable`)
     - NPM
     - N enables the user to switch versions easily (`npm i -g n`)
     - gulp (tasks manager) (`npm i -g gulp`)
@@ -26,11 +25,37 @@ Create local database:
 mysql> CREATE DATABASE mstaff;
 ```
 
+Recreate development database:
+
+`DROP all mstaff_developement tables`
+
+```bash
+npm run db:migrate;
+```
+`Execute EstablishmentReferencesINSERTseeds.sql (/sql/) on database`
+```bash
+npm run db:seed;
+```
 Run migrations and seeds:
 
 ```bash
 npm run db:migrate
 npm run db:seed
+```
+
+Run migrations or seeds in specific db:
+
+```bash
+npm run db:migrate -- --env test
+npm run db:seed -- --env e2e
+```
+
+Build uploads folder:
+
+```bash
+mkdir -p  public/uploads/candidates/documents
+mkdir -p  public/uploads/candidates/videos
+mkdir -p  public/uploads/candidates/photos
 ```
 
 Build and run local server:
@@ -55,6 +80,12 @@ node_modules/.bin/sequelize model:generate --name TableName --attributes column1
 Create new seed :  
 ```bash
 node_modules/.bin/sequelize seed:generate --name seed-name
+``` 
+
+Execute seed file alone :  
+```bash
+cd orm/
+sequelize db:seed --seed [seed filename]
 ``` 
 
 ## Some useful documentations

@@ -1,0 +1,65 @@
+<div class="modal-body">
+  <p>Votre besoin est clôturé. Racontez-nous votre expérience !</p>
+    <form role="form" class="form-horizontal">
+      <hr style="border-color: darkgrey;width:75%">
+
+      <div class="row">
+        <div class="col-md-12">
+          <select class="form-control" name="how" id="how">
+            <option value="">Comment avez vous recruter ?</option>
+            <option value="mstaff">J'ai recruté avec Mstaff</option>
+            <option value="other">J'ai recruté avec un autre moyen</option>
+          </select>
+        </div>
+      </div>
+      <hr style="border-color: darkgrey;width:75%">
+      <div class="row" id="otherWhyReason" style="display: none">
+        <div class="col-md-12">
+          <label for="whyReason">Pour quelles raisons ? (facultatif)</label>
+          <textarea class="form-control rounded-0" placeholder="(facultatif)" id="whyReason" rows="5"></textarea>
+          <button class="btn btn-outline-info float-right" id="closeFeedback" type="button" style="margin-top: 5px">Envoyer</button>
+        </div>
+      </div>
+    </form>
+</div>
+<script>
+  $('select#how').on('change', function () {
+    if (this.value === '') {
+      $('select#how').addClass('error');
+      return false;
+    }
+    $('select#how').removeClass('error').addClass('success');
+    feedback.how = this.value;
+
+    if (feedback.how === 'mstaff') {
+      $('#otherWhyReason').hide();
+      $('.modal#startFeedbackModal').modal('hide');
+      createModal({
+        id: 'feedbackNextHowModal',
+        modal: 'es/need/feedback/withMstaffWho',
+        title: 'Quels candidats avez vous fini par recruter ?',
+        cantBeClose: true,
+        needId: {{this.needId}}
+      })
+    } else if(feedback.how === 'other') {
+      $('#otherWhyReason').show();
+    }
+  });
+
+  $('#closeFeedback').click(function(){
+    feedback.feedback = $('#whyReason').val();
+    feedback._csrf = _csrf;
+    feedback.needId = {{this.needId}};
+    $.post(`/api/es/${esId}/feedback`, feedback, (data) => {
+      if (data.closed) {
+        $('#startFeedbackModal').modal('hide');
+        createModal({
+          id: 'thanksFeedbackModal',
+          modal: 'es/need/feedback/thanks',
+          title: 'Merci !',
+          cantBeClose: true
+        })
+      }
+    }).catch(errors => errorsHandler(errors));
+  })
+</script>

@@ -1,27 +1,22 @@
 <div class="modal-body">
-  <p>Êtes-vous sûr de vouloir supprimer la lecture seule ? Cette action ne doit être destinée qu'à des fins de débug.</p>
-  <p>Veuillez entrer votre mot de passe pour confirmer cette action</p>
+  <p>Êtes-vous sûr de vouloir supprimer la lecture seule ? Cette action ne doit être destinée qu'à des fins de
+    débug.</p>
+  <p><b>Veuillez entrer votre mot de passe pour confirmer cette action.</b></p>
   <form role="form" class="form-horizontal">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <label class="col-md-3 control-label" for="removeROPassword">Mot de passe *</label>
-          <div class="col-md-9">
-            <input id="removeROPassword" type="password" class="form-control input-md">
-          </div>
-        </div>
-      </div>
+    <div class="form-group">
+      <label class="control-label" for="removeROPassword">Mot de passe *</label>
+      <input id="removeROPassword" type="password" class="form-control input-md">
     </div>
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
-  <button type="button" id="btnRemoveRO" onclick="removeRO()" class="btn btn-danger">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+  <button type="button" id="btnRemoveRO" onclick="removeRO()" class="btn btn-outline-danger">
     Valider
   </button>
 </div>
 <script>
-  $('input#removeROPassword').on('keydown', function(e) {
+  $('input#removeROPassword').on('keydown', function (e) {
     if (e.which === 13) {
       e.preventDefault();
       $('button#btnRemoveRO').prop('disabled', true);

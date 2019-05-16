@@ -121,7 +121,16 @@ let removeCandidate = (needId, cID) => {
       });
       $(`li[data-candidateid="${cID}"]`).remove();
     }
-  }).catch(err => errorsHandler(err));;
+  }).catch(err => errorsHandler(err));
+};
+
+let closeNeed = (needId) => {
+  createModal({
+    id: 'closeNeedModal',
+    modal: 'es/need/close',
+    title: 'Vous êtes sur le point de clôturer ce besoin',
+    needId
+  })
 };
 
 $(document).ready(() => {
@@ -146,4 +155,34 @@ $(document).ready(() => {
       });
     } else removeCandidate(needId, cID);
   });
+
+  $('i[data-action="videoconf"]').click(function() {
+    let needId = $(this).closest('li').attr('data-needid');
+    let cID = $(this).closest('li').attr('data-candidateid');
+    createModal({
+      id: 'createConferenceModal',
+      modal: 'es/need/createConference',
+      title: 'Entretien vidéo',
+      needId, cID, type: 'online'
+    });
+  });
+
+  $('i[data-action="physconf"]').click(function() {
+    let needId = $(this).closest('li').attr('data-needid');
+    let cID = $(this).closest('li').attr('data-candidateid');
+    createModal({
+      id: 'createConferenceModal',
+      modal: 'es/need/createConference',
+      title: 'Entretien physique',
+      needId, cID, type: 'physical'
+    });
+  });
+
+  $.get(`/api/es/${esId}/need/${nId}/newCandidates`, (data) => {
+    if (data.length === 0) {
+      $('#searchNewCandidates').html('Pas de nouveaux candidats')
+    } else {
+      $('#searchNewCandidates').html(`${data.length} nouveaux candidats`)
+    }
+  }).catch(errors => errorsHandler(errors))
 });

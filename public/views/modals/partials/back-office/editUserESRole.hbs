@@ -1,0 +1,38 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label for="userEditESRole">Choisissez un role</label>
+    <select id="userEditESRole" name="role" class="form-control">
+      <option value="">Choisir un role</option>
+      <option value="Admin">Administrateur</option>
+      <option value="DRH">DRH</option>
+      <option value="User">Utilisateur</option>
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+  <button type="button" class="btn btn-success" id="btnEditESROle">Modifier le role</button>
+</div>
+<script>
+  $('#btnEditESROle').click(function () {
+    let newRole = $('select[name="role"] option').filter(":selected").val();
+    $.post(`/api/back-office/establishment/{{this.esId}}/edit/user/{{this.userId}}`,
+      {newRole, _csrf: $('meta[name="csrf-token"]').attr('content')}, (data) => {
+        if (data.status === 'Not linked to this es.') {
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Cet utilisateur n\'est pas lié à cet établissement.',
+          });
+        } else {
+          $('#editESRoleModal').modal('hide');
+          $(`#esUsers > li#${data.user_id} span.role`).html(`[${data.role}]`);
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Role de l\'utilisateur modifié avec succès.'
+          });
+        }
+      });
+  });
+</script>

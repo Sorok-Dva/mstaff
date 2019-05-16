@@ -1,0 +1,106 @@
+<div id="my-tab-content-step3" class="tab-content text-center">
+  <div class="tab-pane active" id="gps">
+    <div class="row mb-4">
+      <div class="col-8 text-center mx-auto" style="color: #02AED7">
+        <strong style="color: #02AED7">J'indique un rayon kilométrique</strong>
+        <div id="radius-slider" class="no-ui-slider" style="margin-top:15px; margin-bottom: 50px">
+          <div id="radius" class="slider slider-info"></div>
+          <ul class="slider-labels ten-columns">
+            <li data-step="1">1km</li>
+            <li data-step="2">2km</li>
+            <li class="slideActive" data-step="3">5km</li>
+            <li data-step="4">10km</li>
+            <li data-step="5">15km</li>
+            <li data-step="6">20km</li>
+            <li data-step="7">30km</li>
+            <li data-step="8">50km</li>
+            <li data-step="9">70km</li>
+            <li data-step="10">100km</li>
+          </ul>
+        </div>
+        <strong style="color: #02AED7">Catégorie d'établissement</strong>
+        <div class="mt-1">
+          <select class="geolocationFilter form-control" id="geolocationFilter" style="width:100%;">
+            <option label="Etablissements MCO / SSR " value="3" selected>Etablissements MCO / SSR</option>
+            <option label="Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)" value="4">Lieux de vie (EHPAD / FOYER / CMP
+              / HAD / SSIAD)
+            </option>
+            <option label="Centres de Santé" value="2">Centres de Santé</option>
+            <option label="Etab. Médico-psychologique pour Personnes handicapés" value="1">Etab. Médico-psychologique
+              pour Personnes handicapés
+            </option>
+          </select>
+        </div>
+      </div>
+      <div id="myAddress" class="col-8 text-center mx-auto" style="display: none;">
+        <div class="row" style="margin-top: 10px;">
+          <input id="searchAddress" type="text" class="form-control" placeholder="Saisir votre adresse">
+        </div>
+        <div class="row" style="margin-top: 10px;">
+          <button type="button" class="btn btn-info" onclick="generateByAddress()">Rechercher</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="nogps">
+    <div class="row" style="margin-bottom: 40px;">
+      <form class="form-inline">
+        <div class="form-group col-10">
+          <input id="searchCity" type="text" class="form-control"
+                 placeholder="Renseigner ici un établissement, une ville ou un code postal">
+        </div>
+        <div class="form-group col-1">
+          <button type="button" class="btn btn-info" onclick="generateAllOver()">Rechercher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="nav-tabs-navigation">
+    <div class="nav-tabs-wrapper">
+      <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+        <li class="active"><a href="#result" data-toggle="tab" aria-expanded="true">Résultat de la recherche <span
+            class="esCount"></span></a></li>
+        <li><a href="#es_selected" data-toggle="tab" aria-expanded="false">Établissement(s) séléctionné(s) <span
+            id="selectedEsCount"></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div id="my-tab-content" class="tab-content text-center">
+    <div class="tab-pane active" id="result">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-5 map">
+            <div id="map" style="height: 544px;width: 100%;"></div>
+          </div>
+          <div class="col-7 resultList">
+            <div class="row">
+              <div class="col-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm float-left" onclick="selectAll()">
+                  Tout sélectionner
+                </button>
+              </div>
+
+              <div id="esList" class="col-12 animate-bottom"></div>
+              <div class="row">
+                <div class="col-12">
+                  <span class="esCount"></span> établissement(s) trouvé(s)
+                </div>
+               {{!-- <div class="col-6">
+                  <div style="display: inline-block;width:16px;height: 16px;background-color: #019ED1"></div>
+                  <h5 style="display: inline-block;">Etablissements MSTAFF </h5>
+                </div>--}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="es_selected">
+    </div>
+  </div>
+
+</div>

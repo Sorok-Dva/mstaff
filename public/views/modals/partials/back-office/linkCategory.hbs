@@ -1,0 +1,79 @@
+<style>
+  .grossdiv {
+    display: flex;
+    justify-content: space-around;
+  }
+
+</style>
+<div class="modal-body">
+  <div class="form-group">
+    <div class="grossdiv">
+      <div class="categoryOptions">
+        <div class="categoryOption">
+          <p>Médical</p>
+          <input id="medicalToggle" type="checkbox" name="medical">
+        </div>
+        <div class="categoryOption">
+          <p>Paramédical</p>
+          <input id="paramedicalToggle" type="checkbox" name="paramedical">
+        </div>
+
+        <div class="categoryOption">
+          <p>Administratif et technique</p>
+          <input id="administrativeToggle" type="checkbox" name="administrative">
+        </div>
+        <div class="categoryOption">
+          <p>Libéral</p>
+          <input id="liberalToggle" type="checkbox" name="liberal" >
+        </div>
+      </div>
+      <div class="categoryOptions">
+        <div class="categoryOption">
+          <p>CDI/CDD</p>
+          <input id="contractToggle" type="checkbox" name="contract" >
+        </div>
+        <div class="categoryOption">
+          <p> Vacations </p>
+          <input id="vacationToggle" type="checkbox" name="vacation" >
+        </div>
+        <div class="categoryOption">
+          <p>Stages</p>
+          <input id="internshipToggle" type="checkbox" name="internship" >
+        </div>
+        <div class="categoryOption">
+          <p>Bouton "Services"</p>
+          <input id="serviceToggle" type="checkbox" name="service">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" id="validateCategory"> Valider les modifications</button>
+</div>
+<script>
+  i=0;
+  console.log(optionjson);
+  while (optionjson[i].id !== {{this.row}}) {
+    i++
+  }
+  $("#medicalToggle").prop("checked", optionjson[i].medical);
+  $("#paramedicalToggle").prop("checked", optionjson[i].paramedical);
+  $("#administrativeToggle").prop("checked", optionjson[i].admin_and_tech);
+  $("#liberalToggle").prop("checked", optionjson[i].liberal);
+  $("#contractToggle").prop("checked", optionjson[i].cdi_cdd);
+  $("#vacationToggle").prop("checked", optionjson[i].vacation);
+  $("#internshipToggle").prop("checked", optionjson[i].internship);
+  $("#serviceToggle").prop("checked", optionjson[i].service);
+
+  //$(document).ready(function () {
+  //  $('.categoryOptions input').bootstrapToggle({
+  //    on: '',
+  //    off: '',
+  //    onstyle: 'success',
+  //    offstyle: 'secondary',
+  //    size: 'md'
+  //  });
+  //});
+
+</script>

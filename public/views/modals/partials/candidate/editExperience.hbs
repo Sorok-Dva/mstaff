@@ -1,0 +1,160 @@
+<div class="modal-body">
+  <form role="form" class="form-horizontal" id="editExperience">
+    <div class="row">
+      <div class="col-md-12">
+        <input type="hidden" id="editXPId" value="">
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="editName">Établissement *</label>
+          <div class="col-md-9">
+            <input id="editName" name="name" type="text"
+                   placeholder="Clinique, hopital ..."
+                   class="form-control input-md" value="{{this.experience.name}}" required="">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="editPost_id">Poste *</label>
+          <div class="col-md-9" id="selectPostModalTarget">
+            <br>
+            <div class="checkbox">
+              <input id="editInternship" name="internship" type="checkbox">
+              <label for="editInternship">
+                En tant que stagiaire
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="editService_id">Service *</label>
+          <div class="col-md-9" id="selectServiceModalTarget">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="editStart">Début *</label>
+          <div class="col-sm-3 col-md-3">
+            <input id="editStart" name="start" type="text"
+                   class="form-control input-md monthpicker from" required="" autocomplete="false">
+          </div>
+          <label class="col-md-2 control-label" for="editEnd">Fin *</label>
+          <div class="col-sm-3 col-md-3">
+            <input id="editEnd" name="end" type="text"
+                   class="form-control input-md monthpicker to" autocomplete="false">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="col-md-3 control-label"></label>
+          <div class="col-md-9">
+            <div class="checkbox">
+              <input id="editCurrent" name="current" type="checkbox">
+              <label class="control-label" for="editCurrent">
+                J'occupe actuellement ce poste
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="submit" class="btn btn-secondary float-left" data-dismiss="modal">Annuler</button>
+  <button type="button" id="editXP" data-id="" class="btn btn-outline-info float-right" style="margin-bottom: 5px;">
+    <i class="fa fa-pencil-square" aria-hidden="true"></i> Modifier
+  </button>
+</div>
+
+<script>
+  $('#post_id').clone().prependTo('#selectPostModalTarget');
+  $('#selectPostModalTarget > #post_id').attr('id', 'editPost');
+  $('#editPost').removeClass('select2-hidden-accessible');
+  $('#editPost option[value="{{this.experience.poste_id}}"]').attr('selected', true);
+
+  $('#service_id').clone().prependTo('#selectServiceModalTarget');
+  $('#selectServiceModalTarget > #service_id').attr('id', 'editService');
+  $('#editService').removeClass('select2-hidden-accessible');
+  $('#editService option[value="{{this.experience.service_id}}"]').attr('selected', true);
+
+  //keep it var or redeclaration error
+  var editStart = new Date('{{this.experience.start}}');
+  var editEnd = _.isNil('{{this.experience.start}}') ? null : new Date('{{this.experience.end}}');
+
+  $('#editStart').val(`${("0" + (editStart.getMonth() + 1)).slice(-2)}/${editStart.getFullYear()}`);
+  $('#editInternship').prop('checked', !!{{this.experience.internship}});
+  $('#editCurrent').prop('checked', !!{{this.experience.current}});
+
+  if (editEnd === null) {
+    $('#editEnd').prop('disabled', true);
+  } else {
+    $('#editEnd').prop('disabled', false);
+    $('#editEnd').val(`${("0" + (editEnd.getMonth() + 1)).slice(-2)}/${editEnd.getFullYear()}`);
+  }
+  $('#editXP').click(function () {
+    var formArray = $(`form#editExperience`).serializeArray(), formData = {}, stop = false;
+    $.each(formArray, (i, field) => formData[field.name] = field.value);
+    formData.current = formData.current === 'on';
+    formData.internship = formData.internship === 'on';
+    formData.start = new Date(formData.start.split('/')[1], formData.start.split('/')[0] - 1);
+    formData.end = new Date(formData.end.split('/')[1], formData.end.split('/')[0] - 1);
+    formData._csrf = $('meta[name="csrf-token"]').attr('content');
+
+    if (isNaN(formData.start.getTime())) {
+      notification(
+        {
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Champ invalide :',
+          message: `Vous devez indiquer une date de début valide.`
+        }
+      );
+      stop = true;
+    }
+    if (formData.name === '' || null) {
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Champ invalide :',
+        message: `Vous devez indiquer une nom pour votre expérience.`
+      });
+      stop = true
+    }
+    if (!formData.current && isNaN(formData.end.getTime())) {
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Champ invalide :',
+        message: `Vous devez indiquer une date de fin valide.`
+      });
+      stop = true
+    }
+    if (!stop) {
+      if (isNaN(formData.end.getTime())) delete formData.end;
+      $.put(`/api/candidate/xp/{{this.experience.id}}`, formData, (data) => {
+        if (data.result === 'updated') {
+          $('#editXPModal').modal('hide');
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Expérience mise à jour avec succès.',
+            message: `La page va s'actualiser dans quelques secondes.`,
+            onClosed: () => $(location).attr('href', `/formations`)
+          });
+        }
+      }).catch(errors => errorsHandler(errors));
+    }
+  });
+</script>

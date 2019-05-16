@@ -1,29 +1,63 @@
 <style>
   h1 {
-    margin: 100px auto 0 auto;
     color: var(--stroke-color);
     font-family: 'Encode Sans Semi Condensed', Verdana, sans-serif;
-    font-size: 10rem; line-height: 10rem;
+    font-size: 10rem;
+    line-height: 10rem;
     font-weight: 200;
     text-align: center;
   }
+
   h2 {
     margin: 20px auto 30px auto;
     font-family: 'Encode Sans Semi Condensed', Verdana, sans-serif;
     font-weight: 200;
     text-align: center;
   }
-  h1, h2 {
-    -webkit-transition: opacity 0.5s linear, margin-top 0.5s linear; /* Safari */
-    transition: opacity 0.5s linear, margin-top 0.5s linear;
-  }
 </style>
 <link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
-<div style="margin-top: -5%">
-  <h1>{{error.status}}</h1>
-  <h2>{{error.message}}</h2>
+<div class="container mt-8">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-6 offset-xl-2 offset-md-1 order-md-2 mb-md-0">
+
+      <!-- Image -->
+      <div class="text-center">
+        <img src="/static/assets/images/illustrations/lost.svg" alt="404 page not found" class="img-fluid">
+      </div>
+
+    </div>
+    <div class="col-12 col-md-5 col-xl-4 order-md-1 my-5">
+      <div class="text-center">
+
+        <!-- Preheading -->
+        <h1 class="text-uppercase text-muted">{{error.status}}</h1>
+
+        <!-- Heading -->
+        <h1 class="display-4 mb-3">
+          {{error.message}} 😭
+        </h1>
+
+        <!-- Subheading -->
+        <p class="text-muted mb-4">
+        </p>
+
+        <!-- Button -->
+        <a href="/" class="btn btn-lg btn-primary">
+          Retour à l'accueil
+        </a>
+      </div>
+    </div>
+  </div> <!-- / .row -->
   {{#if error.stack}}
-    <pre>{{error.stack}}</pre>
+    {{#ifCond error.status '!==' '404'}}
+      <div class="row">
+        <div class="col-12">
+          <div style="padding: 15px;">
+            <pre style="color: white">{{error.stack}}</pre>
+          </div>
+        </div>
+      </div>
+    {{/ifCond}}
   {{/if}}
 </div>
-<script src="js/main.js" type="text/javascript"></script>
+

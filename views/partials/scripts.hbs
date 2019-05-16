@@ -1,6 +1,8 @@
-<script src="/static/assets/js/perfect-scrollbar.min.js" type="text/javascript"></script>
+<script src="/static/assets/js/bootstrap-notify.js"></script>
+<script src="/static/assets/js/jquery.validate.min.js"></script>
+<script src="/static/assets/js/bootstrap-switch-tags.js"></script>
 <script src="/static/assets/js/star-rating.min.js" type="text/javascript"></script>
-<script src="/static/assets/js/dashboard.js"></script>
+{{!--<script src="/static/assets/js/dashboard.js"></script>--}}
 <script src="/static/assets/js/timepicker.js"></script>
 <script src="/static/assets/js/jquery.ultima.block.min.js"></script>
 <script>
@@ -69,7 +71,7 @@
     });
     let removeRO = () => {
       let password = $('#removeROPassword').val();
-      let _csrf = $('#csrfToken').val();
+      let _csrf = $('meta[name="csrf-token"]').attr('content');
       $.post('/back-office/impersonateRemoveReadOnly', { password, _csrf }, (data) => {
         if (data.status === 'send') {
           $("#removeReadOnlyModal").modal('hide');
@@ -87,7 +89,7 @@
                 message: `Vous pouvez maintenant intéragir sur ce compte.`
               });
             }
-          });
+          }).catch(error => errorsHandler(error));
         } else {
           $('button#btnRemoveRO').prop('disabled', false);
           $('#removeROPassword').addClass('error').val('');
@@ -100,7 +102,7 @@
             });
           }
         }
-      });
+      }).catch(error => errorsHandler(error));
     };
     {{/if}}
 </script>

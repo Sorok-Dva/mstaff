@@ -1,0 +1,42 @@
+<div class="modal-body">
+  <form role="form" class="form-horizontal">
+    <div class="row">
+      <div class="col-md-12" id="selectServiceTypeTrg">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" id="ignoreService" class="btn btn-default pull-left"
+          data-dismiss="modal" onclick="">Ignorer
+  </button>
+</div>
+<script>
+  $('#selectServiceType').clone().appendTo('#selectServiceTypeTrg');
+  $('#selectServiceTypeTrg > #selectServiceType').attr('id', 'serviceTypeSelect');
+  $('#serviceTypeSelect').select2();
+  $('#serviceTypeSelect').show();
+  $('select#serviceTypeSelect').on('change', function () {
+    if (this.value === '') {
+      $('select#serviceTypeSelect').addClass('error');
+      return false;
+    }
+    $('select#serviceTypeSelect').removeClass('error').addClass('success');
+    need.filterQuery.service = $('#serviceTypeSelect option:selected').text();
+
+    $('.modal#serviceType').modal('hide');
+    $('#btnServiceType').html(need.filterQuery.service);
+
+    if (need.firstSearch) return showContractModal();
+    else return searchCandidates();
+  });
+
+  $('#ignoreService').click(function() {
+    need.firstSearch = false;
+    if(!_.isNil(need.filterQuery.service)) {
+      delete need.filterQuery.service;
+      $('#btnServiceType').empty();
+    }
+    searchCandidates();
+  });
+</script>

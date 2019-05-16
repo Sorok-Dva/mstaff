@@ -1,55 +1,62 @@
 <div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title pull-left"><i class="fa fa-balance-scale"></i> Mes candidatures</h4>
-                <hr style="width:85%; margin-top: 14px;">
-            </div>
-            <div class="card-content">
-                <div class="row">
-                    <div class="col-md-12 table-responsive table-full-width">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr class="info">
-                                    <th>Souhait</th>
-                                    <th>Type de contrat</th>
-                                    <th>Établissement(s)</th>
-                                    <th>Mes disponibilités</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="applicationTbody">
-                                {{#if wishes}}
-                                {{#each wishes as |wish|}}
-                                    <tr data-applicationId="{{wish.id}}">
-                                        <td>{{wish.name}}</td>
-                                        <td></td>
-                                        <td>{{wish.es_count}}</td>
-                                        <td></td>
-                                        <td>
-                                            <button class="btn btn-simple btn-warning btn-icon editApplication" data-id="{{wish.id}}">
-                                                <i class="ti-pencil-alt"></i>
-                                            </button>
-                                            <button class="btn btn-simple btn-danger btn-icon removeApplication" data-id="{{wish.id}}">
-                                                <i class="ti-close"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                            {{else}}
-                                <tr class="text-center noXPAvailable">
-                                    <td colspan="5">Aucune donnée disponible</td>
-                                </tr>
-                            {{/if}}
-                            </tbody>
-                        </table>
-                        <hr>
-                        <a href="/applications/new" class="btn btn-success pull-right" style="margin-bottom: 5px;">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
-                        </a>
-                    </div>
-                </div>
-            </div>
+  <div class="col-12 col-lg-12 col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title pull-left"><i class="fa fa-balance-scale"></i> Mes candidatures</h4>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col-md-12 table-responsive table-full-width">
+            <table class="table table-hover">
+              <thead>
+              <tr class="info">
+                <th>Souhait</th>
+                <th>Type de contrat</th>
+                <th>Établissement(s)</th>
+                <th>Validité</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody id="applicationTbody">
+              {{#if wishes}}
+                {{#each wishes as |wish|}}
+                  <tr data-applicationId="{{wish.id}}">
+                    <td>{{wish.name}}</td>
+                    <td>{{wish.contract_type}}</td>
+                    <td>{{wish.es_count}}</td>
+                    <td>
+                      {{{wishValidity wish}}}
+                    </td>
+                    <td>
+                      <a href="/wish/edit/{{wish.id}}">
+                        <button class="btn btn-simple btn-outline-warning btn-icon editWish" data-id="{{wish.id}}">
+                          <i class="ti-pencil-alt"></i>
+                        </button>
+                      </a>
+                      <button class="btn btn-simple btn-outline-danger btn-icon removeWish" data-id="{{wish.id}}">
+                        <i class="ti-close"></i>
+                      </button>
+                    </td>
+                  </tr>
+                {{/each}}
+              {{else}}
+                <tr class="text-center noXPAvailable">
+                  <td colspan="5">Aucune donnée disponible</td>
+                </tr>
+              {{/if}}
+              </tbody>
+            </table>
+            <hr>
+          </div>
         </div>
+        <div class="col-12">
+          <a href="/applications/new" class="btn btn-success float-right" style="margin-bottom: 5px;">
+            <i class="fa fa-plus" aria-hidden="true"></i> Ajouter
+          </a>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
+
+<script src="/static/assets/dist/js/removeApplication.min.js"></script>

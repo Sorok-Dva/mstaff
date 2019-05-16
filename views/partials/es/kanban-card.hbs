@@ -1,22 +1,39 @@
 <li class="drag-item card" data-status="{{this.this.status}}" data-needid="{{@root.need.id}}"
-    data-candidateId="{{this.Candidate.id}}">
-  <div class="card-header">
-    <i class="fal fa-times pull-right" data-action="remove"></i>
-    <div class="row" style="cursor:pointer;"
+    data-candidateId="{{this.Candidate.id}}" {{#ifCond this.availability '===' 'unavailable'}}style="background-color: #bdbdbd"{{/ifCond}}>
+  <div class="card-content">
+    <i class="fal fa-times float-right p-2" data-action="remove" style="cursor: pointer"></i>
+    <div class="row p-4" style="cursor:pointer;"
          onclick="showCandidateProfile({{this.Candidate.User.id}})">
-      <div class="col-md-3 col-sm-3 col-xs-3">
-        <img src="/static/assets/images/face-0.jpg"
-             style="border-radius: 50%;border:3px solid #019ED1; width: 50px;">
+      <div class="col-12 col-md-4 col-lg-3">
+        <div class="icon-big text-center" style="margin-top: 5px;width: 65px;">
+          <img src="/static/assets/images/face-0.jpg" style="border-radius: 50%;border:3px solid #019ED1; width: 75px;">
+        </div>
       </div>
-      <div class="col-md-9 col-sm-9 col-xs-9">
-        <h4 class="text-capitalize ng-binding">
-          {{this.Candidate.User.firstName}} {{this.Candidate.User.lastName}}
-          (
-          <small>{{age this.Candidate.User.birthday 'years'}} ans</small>
-          )
-        </h4>
-        </h5>
+      <div class="col-12 col-md-8 col-lg-9 mt-3">
+        <h2 class="text-capitalize">{{this.Candidate.User.firstName}} {{this.Candidate.User.lastName}}</h2>
+        <h4 style="word-break: break-all;">{{this.Candidate.applications.0.Wish.posts}}</h4>
       </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="stats actions-selected float-left" style="margin-top:-3px">
+     {{#ifCond this.status '===' 'selected'}}
+       <div class="col-md-12 selected-actions">
+           <i class="fal fa-map-marker-alt fa-2x" data-action="physconf" style="cursor: pointer; color: crimson; margin-right: 10px"></i>
+           <i class="fal fa-video fa-2x" data-action="videoconf" style="cursor: pointer;color: darkorange; margin-right: 10px"></i>
+       </div>
+     {{/ifCond}}
+    </div>
+    <div class="stats float-right">
+      {{#ifCond this.availability '===' 'pending'}}
+        <b style="color: darkorange">En attente...</b>
+      {{/ifCond}}
+      {{#ifCond this.availability '===' 'available'}}
+        <b style="color: green">Disponible !</b>
+      {{/ifCond}}
+      {{#ifCond this.availability '===' 'unavailable'}}
+        <b style="color: grey">Indisponible</b>
+      {{/ifCond}}
     </div>
   </div>
 </li>

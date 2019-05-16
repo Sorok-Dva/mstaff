@@ -24,8 +24,8 @@ toAutocomplete.forEach((ac) => {
   let messageSuccess, messageError, titleSuccess;
   $(`#addNew${eCapitalize}`).click(() => {
     let name = $(`#${ac}`).val();
-    let _csrf = $('#csrfToken').val();
-    $.post(`/api/candidate/${e}/add`, { name, _csrf }, (data) => {
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    $.post(`/api/candidate/type/${e}/add`, { name, _csrf }, (data) => {
       switch (ac) {
         case 'skills':
           messageSuccess = `Cette compétence "${data.name}" vient d'être ajoutée à votre liste.`;
@@ -97,7 +97,7 @@ toAutocomplete.forEach((ac) => {
 $('body').on('click', '.remove', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   let type = $(event.target).attr('data-type') || $(event.target).parent().attr('data-type');
-  createModal({ id: 'removeSkillModal', modal: 'removeSkill', title: 'Confirmation' }, () => {
+  createModal({ id: 'removeSkillModal', modal: 'candidate/removeSkill', title: 'Confirmation' }, () => {
     $('#btnRemoveSkill').attr('onclick', `removeSkill('${type}', ${id})`);
   })
 });
@@ -113,8 +113,8 @@ let autocompleteTrigger = (elements, contain) => {
 };
 
 let removeSkill = (type, id) => {
-  let _csrf = $('#csrfToken').val();
-  $.delete(`/api/candidate/${type}/${id}`, { _csrf }, (data) => {
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
+  $.delete(`/api/candidate/type/${type}/${id}`, { _csrf }, (data) => {
     if (data.deleted) {
       notification({
         icon: 'check-circle',

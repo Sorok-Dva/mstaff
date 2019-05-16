@@ -1,24 +1,26 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const Models = require('../models');
-const UserController = require('../controllers/user');
+const Models = require('../orm/models');
+const UserComponent = require('../components/user');
 
-let attributes = ['id', 'email', 'firstName', 'lastName', 'type', 'role'];
+let attributes = ['id', 'email', 'firstName', 'lastName', 'type', 'role', 'photo', 'opts'];
 
 passport.use(new LocalStrategy({ passReqToCallback: true }, (req, email, password, done) => {
   Models.User.findOne({
     where: { email },
-    attributes: ['id', 'password', 'email', 'role']
+    attributes: ['id', 'password', 'email', 'role', 'opts', 'photo']
   }).then(user => {
     if (!user) return done(null, false, req.flash('error_msg', 'Utilisateur inconnu.'));
-    UserController.comparePassword(password, user.dataValues.password, (err, isMatch) => {
+    UserComponent.Main.comparePassword(password, user.dataValues.password, (err, isMatch) => {
       if (err) return done(null, false, err);
       if (isMatch) {
         let session = {
           id: user.dataValues.id,
           email: user.dataValues.email,
-          role: user.dataValues.role
+          role: user.dataValues.role,
+          opts: user.opts,
+          photo: user.photo
         };
         return done(null, session);
       } else {
@@ -39,7 +41,9 @@ passport.deserializeUser((id, done) => {
       email: user.dataValues.email,
       fullName: `${user.dataValues.firstName} ${user.dataValues.lastName}`,
       type: user.dataValues.type,
-      role: user.dataValues.role
+      role: user.dataValues.role,
+      opts: user.opts,
+      photo: user.photo
     };
     done(null, session)
   });

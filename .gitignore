@@ -70,3 +70,6 @@ gen
 
 /public/assets/dist
 /public/uploads
+
+# ORM Config
+/orm/config/

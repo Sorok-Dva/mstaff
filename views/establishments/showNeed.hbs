@@ -1,228 +1,72 @@
-<style>
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .drag-list {
-    display: flex;
-    align-items: flex-start;
-  }
-
-  @media (max-width: 690px) {
-    .drag-list {
-      display: block;
-    }
-  }
-
-  .drag-column {
-    flex: 1;
-    margin: 0 10px;
-    position: relative;
-    background: rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-
-  @media (max-width: 690px) {
-    .drag-column {
-      margin-bottom: 30px;
-    }
-  }
-
-  .drag-column h5 {
-    margin: 0;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  .drag-column-on-hold .drag-column-header,
-  .drag-column-on-hold .is-moved,
-  .drag-column-on-hold .drag-options {
-    background: #FB7D44;
-  }
-
-  .drag-column-in-progress .drag-column-header,
-  .drag-column-in-progress .is-moved,
-  .drag-column-in-progress .drag-options {
-    background: #2A92BF;
-  }
-
-  .drag-column-needs-review .drag-column-header,
-  .drag-column-needs-review .is-moved,
-  .drag-column-needs-review .drag-options {
-    background: #F4CE46;
-  }
-
-  .drag-column-approved .drag-column-header,
-  .drag-column-approved .is-moved,
-  .drag-column-approved .drag-options {
-    background: #00B961;
-  }
-
-  .drag-column-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px;
-  }
-
-  .drag-inner-list {
-    min-height: 50px;
-  }
-
-  .drag-item {
-    margin: 10px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.8);
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .drag-item.is-moving {
-    transform: scale(1.05);
-    background: rgba(255, 255, 255, 0.8);
-  }
-
-  .drag-header-more {
-    cursor: pointer;
-  }
-
-  .drag-options {
-    position: absolute;
-    top: 44px;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    transform: translateX(100%);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .drag-options.active {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  .drag-options-label {
-    display: block;
-    margin: 0 0 5px 0;
-  }
-
-  .drag-options-label input {
-    opacity: 0.6;
-  }
-
-  .drag-options-label span {
-    display: inline-block;
-    font-size: 0.9rem;
-    font-weight: 400;
-    margin-left: 5px;
-  }
-
-  /* Dragula CSS  */
-  .gu-mirror {
-    position: fixed !important;
-    margin: 0 !important;
-    z-index: 9999 !important;
-    opacity: 0.8;
-    list-style-type: none;
-  }
-
-  .gu-hide {
-    display: none !important;
-  }
-
-  .gu-unselectable {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
-  }
-
-  .gu-transit {
-    opacity: 0.2;
-  }
-
-  /* Demo info */
-  .section {
-    padding: 20px;
-    text-align: center;
-  }
-
-  .section a {
-    color: white;
-    text-decoration: none;
-    font-weight: 300;
-  }
-
-  .section h4 {
-    font-weight: 400;
-  }
-
-  .section h4 a {
-    font-weight: 600;
-  }
-</style>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="pull-right">Clôturer le besoin</h5>
-        <h4 class="card-title">{{need.name}}</h4>
-        <div class="label-container">
-          <div class="label label-default">{{need.post}}</div>
-          <div class="label label-warning">
+<div class="col-12">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">{{need.name}}</h2>
+      <div class="label-container">
+        {{#if need.post}}
+          <div class="badge badge-secondary">{{need.post}}</div>
+        {{/if}}
+        {{#if need.contract_type}}
+          <div class="badge badge-warning">
             {{need.contract_type}}
           </div>
-          <div class="label label-success ">
+        {{/if}}
+        {{#if need.start}}
+          <div class="badge badge-success ">
             {{date need.start 'DD/MM/YYYY'}}
+            {{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}
           </div>
-        </div>
+        {{/if}}
       </div>
-      <div class="card-body" style="margin-top: -10px">
-        <div class="row">
-          <div class="col-md-12" style="padding: 25px;">
-            <div class="drag-container">
-              <ul class="drag-list">
-                <li class="drag-column drag-column-on-hold">
-                  <span class="drag-column-header">
-                    <h5>Pré-séléctionnés</h5>
-                  </span>
-                  <ul class="drag-inner-list" id="1">
-                    {{#each need.candidates as |data|}}
-                      {{#ifCond data.status '===' 'pre-selected'}}
-                        {{> es/kanban-card data}}
-                      {{/ifCond}}
-                    {{/each}}
-                  </ul>
-                </li>
-                <li class="drag-column drag-column-in-progress">
+      <a class="btn btn-outline-primary col-2" id="searchNewCandidates" href="/need/{{need.id}}/edit">Recherche de
+        nouveaux candidats en cours</a> {{!--// aucun nouveau candidats--}}
+      <button type="button" class="btn btn-outline-warning col-2 ml-2" style="margin-left: 3px"
+              onclick="closeNeed({{need.id}})">
+        Clôturer le besoin
+      </button>
+    </div>
+    <div class="card-body" style="margin-top: -10px">
+      <div class="row">
+        <div class="col-md-12" style="padding: 25px;">
+          <div class="drag-container">
+            <ul class="drag-list">
+              <li class="drag-column drag-column-on-hold">
+                <span class="drag-column-header">
+                  <h5>Pré-séléctionnés</h5>
+                </span>
+                <ul class="drag-inner-list" id="1">
+                  {{#each need.candidates as |data|}}
+                    {{#ifCond data.status '===' 'pre-selected'}}
+                      {{> es/kanban-card data}}
+                    {{/ifCond}}
+                  {{/each}}
+                </ul>
+              </li>
+              <li class="drag-column drag-column-in-progress">
                   <span class="drag-column-header">
                     <h5>Notifiés</h5>
                   </span>
-                  <ul class="drag-inner-list" id="2">
-                    {{#each need.candidates as |data|}}
-                      {{#ifCond data.status '===' 'notified'}}
-                        {{> es/kanban-card data}}
-                      {{/ifCond}}
-                    {{/each}}
-                  </ul>
-                </li>
-                <li class="drag-column drag-column-approved">
+                <ul class="drag-inner-list" id="2">
+                  {{#each need.candidates as |data|}}
+                    {{#ifCond data.status '===' 'notified'}}
+                      {{> es/kanban-card data}}
+                    {{/ifCond}}
+                  {{/each}}
+                </ul>
+              </li>
+              <li class="drag-column drag-column-approved">
                   <span class="drag-column-header">
                     <h5>Sélectionnés</h5>
                   </span>
-                  <ul class="drag-inner-list" id="3">
-                    {{#each need.candidates as |data|}}
-                      {{#ifCond data.status '===' 'selected'}}
-                        {{> es/kanban-card data }}
-                      {{/ifCond}}
-                    {{/each}}
-                  </ul>
-                </li>
-              </ul>
-            </div>
+                <ul class="drag-inner-list" id="3">
+                  {{#each need.candidates as |data|}}
+                    {{#ifCond data.status '===' 'selected'}}
+                      {{> es/kanban-card data }}
+                    {{/ifCond}}
+                  {{/each}}
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -231,11 +75,12 @@
 </div>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
 <script>
+  let feedback = {};
   let showNotifyModalObject = {
     id: 'showNotifyCandidateModal',
     modal: 'es/showNotifyCandidate',
     cantBeClose: true,
-    title: '<img src="{{need.Establishment.logo}}" />',
+    title: '<img style="height: 75px;" src="{{need.Establishment.logo}}" />',
     Establishment: {
       address: '{{need.Establishment.address}}',
       postal_code: '{{need.Establishment.postal_code}}',
@@ -248,5 +93,6 @@
     }
   };
   let esId = {{need.es_id}};
+  let nId = {{need.id}};
 </script>
 <script src="/static/assets/dist/js/showNeed.es.min.js"></script>

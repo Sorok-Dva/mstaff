@@ -1,0 +1,152 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showSkillModal()"><i class="fal fa-plus"></i></a>
+        </div>
+
+        <table id="skills-table" class="table">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="skill" data-sortable="true">Compétence</th>
+          <th data-field="post" data-sortable="true">Poste</th>
+          <th data-field="service" data-sortable="true">Service</th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions</th>
+          </thead>
+          <tbody>
+          {{#each skillslinks as |skillslink|}}
+            <tr data-id="{{skill.id}}">
+              <td></td>
+              <td>{{skillslink.id}}</td>
+              <td>{{skillslink.Skill.name}}</td>
+              <td>{{skillslink.Post.name}}</td>
+              <td>{{skillslink.Service.name}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let table = $('#skills-table');
+
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<i class="ti-close"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .remove': (e, value, row, index) => {
+        createModal({
+          id: 'removeConfigSkillModal',
+          title: 'Supprimer une configuration',
+          modal: 'back-office/removeConfigSkill'
+        }, () => {
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
+          $('button#btnRemoveConfigSkill').click(function () {
+            $.delete(`/api/back-office/configuration/skills/${row.id}`, {
+              _csrf
+            }, () => {
+              table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Configuration supprimée.',
+                message: ``
+              });
+            });
+          });
+        });
+      }
+    };
+
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10,25,50,100,200,500],
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
+    });
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+
+  let showSkillModal = () => {
+    createModal({
+      id: 'configSkillModal',
+      title: 'Ajouter une prédiction de compétence',
+      modal: 'back-office/configSkillModal'
+    }, () => {
+      $('button#validateConfigSkill').click(function () {
+        if ($('select#skillID').val() != '' && $('select#postID').val() != '' && $('select#serviceID').val() != '') {
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
+          let skillID = $('select#skillID').val();
+          let postID = $('select#postID').val();
+          let serviceID = $('select#serviceID').val();
+          console.log(skillID, postID, serviceID);
+          $.post(`/api/back-office/configuration/skills/`, {
+            skillID,
+            postID,
+            serviceID,
+            _csrf
+          }, (response) => {
+            if (response.status === 'Already exists') {
+              notification({
+                icon: 'exclamation',
+                type: 'danger',
+                title: 'Cette configuration existe déjà.',
+                message: ``
+              });
+            }
+            else {
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.configskill.id,
+                  skill: $('select#skillID :selected').text(),
+                  post: $('select#postID :selected').text(),
+                  service: $('select#serviceID :selected').text(),
+                }
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'configuration créée.',
+                message: ``
+              });
+            }
+          });
+          $('#configSkillModal').modal('hide');
+        }
+      })
+    })
+  };
+
+</script>
