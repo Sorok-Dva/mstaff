@@ -36,12 +36,12 @@ BackOffice_Pool.linkDependencies = (req, res, next) => {
   Models.Pool.findAll().then( pools =>
   {
     dependencies.push(pools);
-    Models.User.findAll({ attributes: {
+    Models.User.findAll({ limit: 250, where: { type: 'candidate' }, attributes: {
       exclude: ['password', 'photo', 'birthday', 'postal_code', 'town', 'country', 'key',
         'validated', 'opts', 'createdAt', 'updatedAt']
     } }).then( users => {
       dependencies.push(users);
-      Models.Establishment.findAll({ attributes: { exclude: ['oldId', 'category', 'finess', 'finesse_ej', 'siret', 'phone', 'sector',
+      Models.Establishment.findAll({ attributes: { exclude: ['oldId', 'category', 'finess', 'finess_ej', 'siret', 'phone', 'sector',
         'address', 'town', 'status', 'url', 'description', 'logo', 'banner', 'domain_name', 'domain_enable',
         'salaries_count', 'contact_identity', 'contact_post', 'contact_email', 'contact_phone',
         'createdAt', 'updatedAt'] } }).then(es => {
