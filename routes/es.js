@@ -89,6 +89,9 @@ router.get('/my-pool',
 ).post('/my-pool',
   Authentication.ensureIsEs,
   Establishment.Pool.newPool
+).put('/my-pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.editPool
 );
 
 router.post('/pool-invite',
