@@ -100,20 +100,32 @@ li.wish {
   transition: transform 0.05s linear 0.17s;
 }
 
+.available-target {
+  display: none;
+}
+
+@media only screen and (min-width: 1000px) {
+  .available-target {
+    display: block;
+  }
+}
+
 .state-available {
   border:1px solid #09c800;
   border-radius: 25px;
-  width: 50%;
+  width: 15vw;
   margin: 0 auto;
-  height: 2.2em;
+  height: 6%;
+  max-width: 220px;
 }
 
 .state-unavailable {
   border:1px solid #c81d26;
   border-radius: 25px;
-  width: 50%;
+  width: 15vw;
   margin: 0 auto;
-  height: 2.2em;
+  height: 6%;
+  max-width: 220px;
 }
 
 .toggle-state {
@@ -190,11 +202,11 @@ li.wish {
 }
 
 .no-ui-slider .slider-labels li:hover {
-  color: #333333;
+  color: #03a9de;
 }
 
 .no-ui-slider .slider-labels li.slideActive {
-  color: #333333;
+  color: #03a9de;
 }
 
 .noUi-target,
@@ -461,14 +473,85 @@ span.round-tab:hover {
   border: 2px solid #333;
 }
 
-.wizard .nav-tabs-wizard > li {
-  width: 25%;
+.wizard {
+  margin: 20px auto;
 }
 
-.wizard li:after {
-  content: " ";
+.wizard .nav-tabs {
+  position: relative;
+  margin: 40px auto;
+  margin-bottom: 0;
+  border: none;
+}
+
+.wizard > div.wizard-inner {
+  position: relative;
+}
+
+.connecting-line {
+  height: 2px;
+  background: #e0e0e0;
   position: absolute;
+  width: 80%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 1;
+}
+
+.wizard .nav-tabs > li.active > a,
+.wizard .nav-tabs > li.active > a:hover,
+.wizard .nav-tabs > li.active > a:focus {
+  color: #555555;
+  cursor: default;
+  border: 0;
+  border-bottom-color: transparent;
+}
+
+span.round-tab {
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  display: inline-block;
+  border-radius: 100px;
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  font-size: 25px;
+}
+
+span.round-tab i {
+  color: #555555;
+}
+
+.wizard li a.active span.round-tab {
+  background: #fff;
+  border: 2px solid #5bc0de;
+
+}
+
+.wizard li a.active span.round-tab i {
+  color: #5bc0de;
+}
+
+span.round-tab:hover {
+  color: #333;
+  border: 2px solid #333;
+}
+
+.wizard .nav-tabs > li {
+  width: 20%;
+}
+
+.wizard li a:after {
+  content: " ";
+  position: relative;
   left: 46%;
+  top: -20px;
   opacity: 0;
   margin: 0 auto;
   bottom: 0px;
@@ -477,35 +560,65 @@ span.round-tab:hover {
   transition: 0.1s ease-in-out;
 }
 
-.wizard li.active:after {
+.wizard li.active.nav-item:after {
   content: " ";
-  position: absolute;
-  left: 48%;
+  position: relative;
+  left: 5%;
+  top: 50px;
   opacity: 1;
   margin: 0 auto;
-  bottom: 10px;
+  bottom: 0px;
   border: 10px solid transparent;
   border-bottom-color: #5bc0de;
 }
 
-.wizard .nav-tabs-wizard > li a {
+.wizard .nav-tabs > li a {
   width: 70px;
   height: 70px;
   margin: 20px auto;
   border-radius: 100%;
   padding: 0;
+  position: relative;
 }
 
-.wizard .nav-tabs-wizard > li a:hover {
+.wizard .nav-tabs > li a:hover {
   background: transparent;
 }
 
 .wizard .tab-pane {
   position: relative;
+  padding-top: 50px;
 }
 
 .wizard h3 {
   margin-top: 0;
+}
+
+@media( max-width: 585px) {
+
+  .wizard {
+    width: 90%;
+    height: auto !important;
+  }
+
+  span.round-tab {
+    font-size: 16px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .wizard .nav-tabs > li a {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .wizard li.active:after {
+    content: " ";
+    position: absolute;
+    left: 35%;
+  }
 }
 
 .small-box-es-add {
@@ -1225,4 +1338,23 @@ td.fc-day.fc-past {
   text-align: center;
   background: #d3d3d37d;
   display: none;
+}
+
+.bad-rule {
+  color: red;
+}
+
+.good-rule {
+  color: green;
+}
+
+.wrapword{
+  white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+  white-space: -webkit-pre-wrap; /*Chrome & Safari */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  white-space: pre-wrap;       /* css-3 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  word-break: break-all;
+  white-space: normal;
 }

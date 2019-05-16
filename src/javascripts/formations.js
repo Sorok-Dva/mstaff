@@ -7,7 +7,7 @@ $('.add').click(function () {
   }
   formData.start = new Date(formData.start.split('/')[1], formData.start.split('/')[0] - 1);
   formData.end = new Date(formData.end.split('/')[1], formData.end.split('/')[0] - 1);
-  formData._csrf = $('#csrfToken').val();
+  formData._csrf = $('meta[name="csrf-token"]').attr('content');
   if (isNaN(formData.start.getTime())) {
     notification(
       {
@@ -252,7 +252,7 @@ $('body').on('click', 'button.removeXP', (event) => {
 });
 
 let removeCandidateExperience = id => {
-  let _csrf = $('#csrfToken').val();
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
   $.delete(`/api/candidate/xp/${id}`, { _csrf }, (data) => {
     if (data.done) {
       $(`tr[data-xpId="${id}"]`).remove();
@@ -274,7 +274,7 @@ let removeCandidateExperience = id => {
 };
 
 let removeCandidateFormation = id => {
-  let _csrf = $('#csrfToken').val();
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
   $.delete(`/api/candidate/formation/${id}`, { _csrf }, (data) => {
     if (data.done) {
       $(`tr[data-formationId="${id}"]`).remove();
@@ -296,7 +296,7 @@ let removeCandidateFormation = id => {
 };
 
 let removeCandidateDiploma = id => {
-  let _csrf = $('#csrfToken').val();
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
   $.delete(`/api/candidate/diploma/${id}`, { _csrf }, (data) => {
     if (data.done) {
       $(`tr[data-diplomaId="${id}"]`).remove();
@@ -318,7 +318,7 @@ let removeCandidateDiploma = id => {
 };
 
 let editFormation = (id) => {
-  let _csrf = $('#csrfToken').val();
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
   let startDate = $('#editFStart').val().split('/');
   let endDate = $('#editFEnd').val().split('/');
   let start = new Date(startDate[1], startDate[0] - 1);
@@ -347,7 +347,7 @@ let editFormation = (id) => {
 };
 
 let editDiploma = (id) => {
-  let _csrf = $('#csrfToken').val();
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
   let startDate = $('#editDStart').val().split('/');
   let endDate = $('#editDEnd').val().split('/');
   let start = new Date(startDate[1], startDate[0] - 1);
@@ -376,27 +376,42 @@ let editDiploma = (id) => {
 };
 
 $(document).ready(() => {
+  let dtargv = {
+    format: 'MM/YYYY',
+    useCurrent: false
+  };
   //XP Datepicker
-  $('#xpFrom').datetimepicker().on('dp.change', (e) => {
+  $('#xpStart').datetimepicker(dtargv).on('dp.change', (e) => {
     let incrementDay = moment(new Date(e.date));
     incrementDay.add(1, 'days');
-    $('#xpTo').data('DateTimePicker').minDate(incrementDay);
+    $('#xpEnd').data('DateTimePicker').minDate(incrementDay);
   });
-  $('#xpTo').datetimepicker().on('dp.change', (e) => {
+  $('#xpEnd').datetimepicker(dtargv).on('dp.change', (e) => {
     let decrementDay = moment(new Date(e.date));
     decrementDay.subtract(1, 'days');
-    $('#xpFrom').data('DateTimePicker').maxDate(decrementDay);
+    $('#xpStart').data('DateTimePicker').maxDate(decrementDay);
   });
   // Formations datepicker
-  $('#fFrom').datetimepicker().on('dp.change', (e) => {
+  $('#fStart').datetimepicker(dtargv).on('dp.change', (e) => {
     let incrementDay = moment(new Date(e.date));
     incrementDay.add(1, 'days');
-    $('#fTo').data('DateTimePicker').minDate(incrementDay);
+    $('#fEnd').data('DateTimePicker').minDate(incrementDay);
   });
-  $('#fTo').datetimepicker().on('dp.change', (e) => {
+  $('#fEnd').datetimepicker(dtargv).on('dp.change', (e) => {
     let decrementDay = moment(new Date(e.date));
     decrementDay.subtract(1, 'days');
-    $('#fFrom').data('DateTimePicker').maxDate(decrementDay);
+    $('#fStart').data('DateTimePicker').maxDate(decrementDay);
+  });
+  // Diplomas datepicker
+  $('#dStart').datetimepicker(dtargv).on('dp.change', (e) => {
+    let incrementDay = moment(new Date(e.date));
+    incrementDay.add(1, 'days');
+    $('#dEnd').data('DateTimePicker').minDate(incrementDay);
+  });
+  $('#dEnd').datetimepicker(dtargv).on('dp.change', (e) => {
+    let decrementDay = moment(new Date(e.date));
+    decrementDay.subtract(1, 'days');
+    $('#dStart').data('DateTimePicker').maxDate(decrementDay);
   });
 
   let formationAutocomplete = [];
@@ -420,5 +435,5 @@ $(document).ready(() => {
   $('#dName').autocomplete({
     source: qualificationAutocomplete
   });
-})
+});
 

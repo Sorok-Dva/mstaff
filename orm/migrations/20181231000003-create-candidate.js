@@ -24,9 +24,6 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
-      photo: {
-        type: Sequelize.STRING
-      },
       video: {
         type: Sequelize.STRING
       },

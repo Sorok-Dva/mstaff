@@ -23,22 +23,21 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     postal_code: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     town: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     country: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     phone: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     role: {
+      type: DataTypes.STRING
+    },
+    photo: {
       type: DataTypes.STRING
     },
     type: {
@@ -57,7 +56,8 @@ module.exports = (sequelize, DataTypes) => {
     opts: {
       type: DataTypes.JSON,
       get() {
-        return JSON.parse(this.getDataValue('opts'))
+        let opts = this.getDataValue('opts') === undefined ? '{}' : this.getDataValue('opts');
+        return JSON.parse(opts);
       },
       set(data) {
         this.setDataValue('opts', JSON.stringify(data));

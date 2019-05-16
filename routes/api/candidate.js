@@ -1,12 +1,13 @@
 const __ = process.cwd();
 const { Authentication, HTTPValidation } = require(`${__}/middlewares/index`);
 const { User, Establishment, Conference } = require(`${__}/components`);
+const mkdirp = require('mkdirp');
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const storage = (path, type) => multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, `./public/uploads/${path}`)
+    mkdirp(`./public/uploads/${path}`, err => cb(err, `./public/uploads/${path}`));
   },
   filename: (req, file, cb) => {
     let filename = type === 'video' ? `${req.user.id}${Date.now()}` : `${req.user.id}${Date.now()}_${file.fieldname}`;
@@ -49,11 +50,6 @@ router.post('/add/document',
 router.delete('/document/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.deleteDocument);
-
-router.post('/add/photo',
-  Authentication.ensureIsCandidate,
-  avatarUpload,
-  User.Candidate.uploadAvatar);
 
 router.get('/xp/:id(\\d+)',
   Authentication.ensureIsCandidate,

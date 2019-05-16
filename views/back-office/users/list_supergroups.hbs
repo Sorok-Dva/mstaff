@@ -61,7 +61,7 @@
         }, () => {
           $('button#validateLinkSuperGroup').click(function () {
             if ($('select#establishmentsID').val() !== '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let selectInput = $('select#groupsID').val();
               $.put(`/api/back-office/linkGroup/${row.id}`, {
                 selectInput,
@@ -87,7 +87,7 @@
         }, () => {
           $('button#btnEditSuperGroup').click(function () {
             if ($('input#superGroupValueEdit').val() !== '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#superGroupValueEdit').val();
               $.put(`/api/back-office/super-groups/${row.id}`, {
                 promptInput,
@@ -120,7 +120,7 @@
           title: 'Supprimer un super groupe',
           modal: 'back-office/removeSuperGroups'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveSuperGroup').click(function () {
             $.delete(`/api/back-office/super-groups/${row.id}`, {
               _csrf
@@ -176,7 +176,7 @@
     }, () => {
       $('button#validateSuperGroup').click(function () {
         if ($('input#superGroupValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#superGroupValue').val();
           $.post(`/api/back-office/super-groups/`, {
             promptInput,

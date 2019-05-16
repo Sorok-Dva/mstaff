@@ -9,6 +9,16 @@ router.post('/:esId(\\d+)/search/candidates',
   Establishment.Application.getCandidates
 );
 
+router.post('/:esId(\\d+)/paginate/candidates/:page(\\d+)/:size(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Application.CVsPaginationQuery
+);
+
+router.post('/:esId(\\d+)/candidates/:type',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Application.CVsMyCandidatesQuery
+);
+
 router.post('/:esId(\\d+)/get/candidate/:userId(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   User.Candidate.getProfile
