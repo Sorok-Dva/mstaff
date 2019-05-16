@@ -55,7 +55,7 @@
         }, () => {
           $('button#btnEditSkill').click(function () {
             if ($('input#skillValueEdit').val() != '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#skillValueEdit').val();
               $.put(`/api/back-office/references/skills/${row.id}`, {
                 promptInput,
@@ -88,7 +88,7 @@
           title: 'Supprimer une skill',
           modal: 'back-office/removeSkill'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveSkill').click(function () {
             $.delete(`/api/back-office/references/skills/${row.id}`, {
               _csrf
@@ -142,7 +142,7 @@
     }, () => {
       $('button#validateSkill').click(function () {
         if ($('input#skillValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#skillValue').val();
           $.post(`/api/back-office/references/skills/`, {
             promptInput,

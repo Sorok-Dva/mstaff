@@ -1,7 +1,7 @@
 const __ = process.cwd();
 const { validationResult } = require('express-validator/check');
 const { BackError } = require(`${__}/helpers/back.error`);
-const { Candidate } = require(`./candidate/candidate.controller`);
+const Candidate = require(`./candidate/candidate.controller`);
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -15,27 +15,14 @@ const User = {};
 User.create = (req, res, next) => {
   const errors = validationResult(req);
   let { password } = req.body;
-  let { esCode } = req.params;
   let esId = null;
 
   if (!errors.isEmpty()) {
     if (req.xhr) {
       return res.status(httpStatus.BAD_REQUEST).send({ body: req.body, errors: errors.array() });
+    } else {
+      return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
     }
-    return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
-  }
-
-  if (esCode) {
-    Models.Establishment.findOne({
-      attributes: ['id', 'code'],
-      where: {
-        code: esCode
-      }
-    }).then(es => {
-      if (es) {
-        esId = es.dataValues.id;
-      }
-    });
   }
   let usr;
   bcrypt.hash(password, 10).then(hash => {
@@ -69,24 +56,33 @@ User.create = (req, res, next) => {
         },
         es_id: esId || null
       })
-    }).then(candidate => {
-      Mailer.sendUserVerificationEmail(usr);
+    }).then( () => {
+      Mailer.Main.sendUserVerificationEmail(usr);
       if (req.xhr) {
+        req.session.newAtsUserId = usr.id;
         return res.status(httpStatus.CREATED).send({ result: 'created' });
-      } else res.redirect('login');
-    }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
+      } else {
+        return res.redirect('login');
+      }
+    }).catch(error => {
+      if (req.xhr){
+        return next(new BackError('Une erreur est survenue lors de la creation de votre compte', 500));
+      } else {
+        res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error });
+      }
+    });
   });
 };
 
 User.ValidateAccount = (req, res, next) => {
   if (req.params.key) {
     Models.User.findOne({
-      where: { key: req.params.key }
+      where: { key: req.params.key, validated: false }
     }).then(user => {
       if (_.isNil(user)) {
-        req.flash('error_msg', 'Clé de validation invalide.');
-        return res.render('/', { layout: 'landing' });
+        return next(new BackError('Clé de validation invalide ou compte déjà validé.', 403));
       }
+      user.key = crypto.randomBytes(20).toString('hex');
       user.validated = true;
       user.save().then(result => {
         req.flash('success_msg', 'Compte validé avec succès. Vous pouvez désormais vous connecter.');
@@ -98,6 +94,7 @@ User.ValidateAccount = (req, res, next) => {
         });
         Candidate.updatePercentage(user, 'identity');
         req.logIn(user, (err) => !_.isNil(err) ? next(new BackError(err)) : null);
+        res.render('users/account-validated', { layout: 'onepage' });
       })
     });
   } else {

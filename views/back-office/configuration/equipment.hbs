@@ -54,7 +54,7 @@
           title: 'Supprimer une configuration',
           modal: 'back-office/removeConfigEquipment'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveConfigEquipment').click(function () {
             $.delete(`/api/back-office/configuration/equipments/${row.id}`, {
               _csrf
@@ -107,7 +107,7 @@
     }, () => {
       $('button#validateConfigEquipment').click(function () {
         if ($('select#equipmentID').val() != '' && $('select#postID').val() != '' && $('select#serviceID').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let equipmentID = $('select#equipmentID').val();
           let postID = $('select#postID').val();
           let serviceID = $('select#serviceID').val();

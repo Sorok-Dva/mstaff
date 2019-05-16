@@ -10,108 +10,103 @@
     font-size: 21px;
   }
 
-  h3, .h3 {
-    font-size: 1.825em;
-    line-height: 2.2 !important;
-  }
-
-  .form-group {
-    margin-bottom: 0 !important;
+  .nav-tabs .nav-item:first-child {
+    margin-left: 15%;
   }
 </style>
-
+<link rel="stylesheet" href="/static/assets/css/nouislider.css"/>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css"/>
 <div class="row">
-  <div class="col-lg-12 col-md-12">
-    <div class="wizard">
-      <div class="wizard-inner">
-        <div class="connecting-line"></div>
-        <ul class="nav nav-tabs nav-tabs-wizard" role="tablist">
-          <li role="presentation" class="active">
+  <div class="col-lg-12 col-12">
+    <div class="wizard card">
+      <div class="card-header wizard-inner">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active nav-item">
             <a class="tabWizard" href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Contrat">
-                            <span class="round-tab">
-                                <i class="fal fa-handshake"></i>
-                            </span>
+              <span class="round-tab">
+                <i class="fal fa-handshake"></i>
+              </span>
             </a>
           </li>
-          <li role="presentation" class="disabled">
+          <li role="presentation" class="disabled nav-item">
             <a class="tabWizard" href="#step2" data-toggle="tab" aria-controls="step2" role="tab"
                title="Disponibilités">
-                            <span class="round-tab">
-                                <i class="fal fa-calendar-check"></i>
-                            </span>
+              <span class="round-tab">
+                <i class="fal fa-calendar-check"></i>
+              </span>
             </a>
           </li>
-          <li role="presentation" class="disabled">
+          <li role="presentation" class="disabled nav-item">
             <a class="tabWizard" href="#step3" data-toggle="tab" aria-controls="step3" role="tab"
                title="Établissements">
-                            <span class="round-tab">
-                                <i class="fal fa-hospital"></i>
-                            </span>
+              <span class="round-tab">
+                <i class="fal fa-hospital"></i>
+              </span>
             </a>
           </li>
-          <li role="presentation" class="disabled">
+          <li role="presentation" class="disabled nav-item">
             <a class="tabWizard" href="#complete" data-toggle="tab" aria-controls="complete" role="tab"
                title="Validation">
-                            <span class="round-tab">
-                                <i class="fal fa-check"></i>
-                            </span>
+              <span class="round-tab">
+                <i class="fal fa-check"></i>
+              </span>
             </a>
           </li>
         </ul>
       </div>
-
       <form role="form">
         <div class="tab-content" style="padding:30px">
           <div class="tab-pane active" role="tabpanel" id="step1">
             <div class="row">
               <div class="col-sm-12">
-                <h4 class="text-bold">Sélectionnez votre type de contrat</h4>
+                <h1 class="text-bold">Sélectionnez votre type de contrat</h1>
               </div>
             </div>
             <hr>
             <div id="contractType" class="row">
               <div class="col-sm-3">
-                <h4 class="text-bold">Type de contrat *:</h4>
+                <h2 class="text-bold mt-5">Type de contrat *:</h2>
               </div>
               <div class="col-sm-9">
                 <div id="contracts" class="row sub-step">
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-4 mt-5">
                     <div class="checkbox">
                       <input id="cdi-cdd" name="cdi-cdd" type="checkbox">
                       <label for="cdi-cdd">
-                        <h3>CDI / CDD</h3>
+                        <h1>CDI / CDD</h1>
                       </label>
                     </div>
                   </div>
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-4 mt-5">
                     <div class="checkbox">
                       <input id="vacation" name="vacation" type="checkbox">
                       <label for="vacation">
-                        <h3>VACATION</h3>
+                        <h1>VACATION</h1>
                       </label>
                     </div>
                   </div>
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-4 mt-5">
                     <div class="checkbox">
                       <input id="internship" name="internship" type="checkbox">
                       <label for="internship">
-                        <h3>STAGE</h3>
+                        <h1>STAGE</h1>
                       </label>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-12">
+              <div class="col-12">
                 <hr>
               </div>
             </div>
             <div id="activityType" class="row" style="display: none;">
-              <div class="col-sm-3">
-                <h4 class="text-bold">Type d'activité *:</h4>
+              <div class="col-sm-3 mt-3">
+                <h2 class="text-bold">Type d'activité *:</h2>
               </div>
               <div class="col-sm-9">
                 <div id="activity" class="row sub-step">
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-4 mt-3">
                     <div class="checkbox">
                       <input id="full_time" name="full_time" type="checkbox">
                       <label for="full_time">
@@ -119,7 +114,7 @@
                       </label>
                     </div>
                   </div>
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-4 mt-3">
                     <div class="checkbox">
                       <input id="part_time" name="part_time" type="checkbox">
                       <label for="part_time">
@@ -129,17 +124,17 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-12">
+              <div class="col-12">
                 <hr>
               </div>
             </div>
             <div id="timeType" class="row" style="display: none;">
-              <div class="col-sm-3">
-                <h4 class="text-bold">Aménagement horaire *:</h4>
+              <div class="col-sm-3 mt-3">
+                <h2 class="text-bold">Aménagement horaire *:</h2>
               </div>
               <div class="col-sm-9">
                 <div id="time" class="row sub-step">
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-4 mt-3">
                     <div class="checkbox">
                       <input id="daytime" name="daytime" type="checkbox">
                       <label for="daytime">
@@ -147,7 +142,7 @@
                       </label>
                     </div>
                   </div>
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-4 mt-3">
                     <div class="checkbox">
                       <input id="nighttime" name="nighttime" type="checkbox">
                       <label for="nighttime">
@@ -157,123 +152,111 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-12">
+              <div class="col-12">
                 <hr>
               </div>
             </div>
             <div id="postType" class="row">
-              <div class="col-sm-3">
-                <h4 class="text-bold">Type de poste *:</h4>
+              <div class="col-3">
+                <h2 class="text-bold mt-5">Type de poste *:</h2>
               </div>
-              <div class="col-sm-9">
-                <div class="form-group col-sm-12" style="margin-top: 25px">
-                  <label for="selectPostType">
-                    <select class="form-control" id="selectPostType" multiple="multiple">
-                      {{#each posts as |post|}}
-                        <option value="{{post.id}}" data-categorie="{{post.categoriesPS_id}}">{{post.name}}</option>
-                      {{/each}}
-                    </select>
-                  </label>
+              <div class="col-9">
+                <div class="form-group col-8" style="margin-top: 25px">
+                  <select class="form-control" id="selectPostType">
+                    {{#each posts as |post|}}
+                      <option value="{{post.id}}" data-categorie="{{post.categoriesPS_id}}">{{post.name}}</option>
+                    {{/each}}
+                  </select>
                 </div>
               </div>
-              <div class="col-md-12">
+              <div class="col-12">
                 <hr>
               </div>
             </div>
             <div id="serviceType" class="row">
-              <div class="col-sm-3">
-                <h4 class="text-bold">Préférence de service (facultatif) :</h4>
+              <div class="col-3">
+                <h2 class="text-bold mt-4">Préférence de service (facultatif) :</h2>
               </div>
-              <div class="col-sm-9">
-                <div class="form-group col-sm-12" style="margin-top: 25px">
-                  <label for="selectServiceType">
-                    <select class=selectpicker" id="selectServiceType" multiple data-live-search="true"
-                            title="Services" disabled>
-                      {{#each services as |service|}}
-                        <option value="{{service.id}}"
-                                data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
-                      {{/each}}
-                    </select>
-                  </label>
+              <div class="col-9">
+                <div class="form-group col-12">
+                  <select class="selectpicker mt-3 col-5" id="selectServiceType" multiple data-live-search="true"
+                          title="Services" disabled>
+                    {{#each services as |service|}}
+                      <option value="{{service.id}}"
+                              data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
+                    {{/each}}
+                  </select>
                 </div>
               </div>
-              <div class="col-md-12">
+              <div class="col-12">
                 <hr>
               </div>
             </div>
-            <ul class="list-inline pull-right">
+            <ul class="list-inline float-right">
               <li>
                 <button type="button" class="btn btn-danger stop-step">Annuler</button>
-              </li>
-              <li>
                 <button type="button" data-step="1" class="btn btn-info next-step">Continuer</button>
               </li>
             </ul>
           </div>
           <div class="tab-pane" role="tabpanel" id="step2">
             <div class="row">
-              <div class="col-sm-12">
-                <h4 class="text-bold">Votre disponibilité</h4>
+              <div class="col-12">
+                <h1 class="text-bold">Votre disponibilité</h1>
+              </div>
+              <div class="col-12">
+                <div id="internshipDate">
+                  <div class="row">
+                    <div class="col-6"><label for="start">Du *</label>
+                      <input id="start" name="start" type="text"
+                             class="form-control input-md from" required="" autocomplete="off">
+                    </div>
+                    <div class="col-6">
+                      <label for="end">Au *</label>
+                      <input id="end" name="end" type="text"
+                             class="form-control input-md to" autocomplete="off">
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <hr>
-            <div class="row">
-              <div id="internshipDate">
-                <div class="col-md-6"><label for="start">Du *</label>
-                  <input id="start" name="start" type="text"
-                         class="form-control input-md from" required="" autocomplete="off">
-                </div>
-                <div class="col-md-6">
-                  <label for="end">Au *</label>
-                  <input id="end" name="end" type="text"
-                         class="form-control input-md to" autocomplete="off">
-                </div>
-              </div>
-              <ul class="list-inline pull-right">
-                <li>
-                  <button type="button" class="btn btn-default prev-step">Précédent</button>
+            <ul class="list-inline float-right">
+              <li>
+                <button type="button" class="btn btn-secondary prev-step">Précédent</button>
+                <button type="button" class="btn btn-danger stop-step">Annuler</button>
+                <button type="button" data-step="2" class="btn btn-primary next-step">Continuer</button>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-pane" role="tabpanel" id="step3">
+            <div class="col-12">
+              <h1 class="text-bold">Où souhaitez-vous postuler ?</h1>
+            </div>
+            <div class="col-12">
+              <ul id="tabsStep3" class="nav nav-tabs mx-auto" data-tabs="tabs">
+                <li class="nav-item">
+                  <a id="searchAroundMe" class="active ml-7" href="#gps" data-toggle="tab" aria-expanded="true">
+                    Autour de moi
+                  </a>
                 </li>
-                <li>
-                  <button type="button" class="btn btn-danger stop-step">Annuler</button>
+                <li class="nav-item">
+                  <a id="searchByAddress" class="ml-7" href="#gps" data-toggle="tab" aria-expanded="false">
+                    A partir d'une adresse
+                  </a>
                 </li>
-                <li>
-                  <button type="button" data-step="2" class="btn btn-primary next-step">Continuer</button>
+                <li class="nav-item">
+                  <a id="searchAllOver" class="ml-7" href="#nogps" data-toggle="tab" aria-expanded="false">Partout en France</a>
                 </li>
               </ul>
-            </div>
-          </div>
-
-          <div class="tab-pane" role="tabpanel" id="step3">
-
-            <div class="row">
-              <div class="col-sm-12">
-                <h4 class="text-bold">Où souhaitez-vous postuler ?</h4>
-              </div>
-            </div>
-
-            <div class="nav-tabs-navigation">
-              <div class="nav-tabs-wrapper">
-                <ul id="tabsStep3" class="nav nav-tabs" data-tabs="tabs">
-                  <li class="active"><a id="searchAroundMe" href="#gps" data-toggle="tab" aria-expanded="true">Autour de
-                    moi</a></li>
-                  <li><a id="searchByAddress" href="#gps" data-toggle="tab" aria-expanded="false">A partir d'une
-                    adresse</a></li>
-                  <li><a id="searchAllOver" href="#nogps" data-toggle="tab" aria-expanded="false">Partout en France</a>
-                  </li>
-                </ul>
-              </div>
             </div>
 
             {{>candidate/geolocation}}
 
-            <ul class="list-inline pull-right">
+            <ul class="list-inline float-right">
               <li>
-                <button type="button" class="btn btn-default prev-step">Précédent</button>
-              </li>
-              <li>
+                <button type="button" class="btn btn-secondary prev-step">Précédent</button>
                 <button type="button" class="btn btn-danger stop-step">Annuler</button>
-              </li>
-              <li>
                 <button type="button" data-step="3" class="btn btn-info btn-info-full next-step">Continuer</button>
               </li>
             </ul>
@@ -281,37 +264,37 @@
 
           <div class="tab-pane" role="tabpanel" id="complete">
             <div class="row">
-              <div class="col-sm-12 text-center">
-                <h3>Récapitulatif</h3>
+              <div class="col-12 text-center">
+                <h1>Récapitulatif</h1>
                 <hr>
               </div>
-              <div id="recapContractType" class="col-md-4">
+              <div id="recapContractType" class="col-4">
                 <div class="panel panel-resume">
                   <div class="panel-heading">
                     Type de contrat souhaité
                   </div>
-                  <div class="panel-body text-center">
+                  <div class="panel-body text-center p-4">
                     <h3></h3>
                   </div>
                 </div>
               </div>
-              <div id="recapActivityType" class="col-md-4">
+              <div id="recapActivityType" class="col-4">
                 <div class="panel panel-resume">
                   <div class="panel-heading">
                     Type d'activité
                   </div>
-                  <div class="panel-body text-center">
+                  <div class="panel-body text-center p-4">
                     <h3></h3>
                     <h3></h3>
                   </div>
                 </div>
               </div>
-              <div id="recapHourType" class="col-md-4">
+              <div id="recapHourType" class="col-4">
                 <div class="panel panel-resume">
                   <div class="panel-heading">
                     Amenagement horaire
                   </div>
-                  <div class="panel-body text-center">
+                  <div class="panel-body text-center p-4">
                     <i></i>
                     <i></i>
                   </div>
@@ -319,18 +302,17 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-sm-12">
+              <div class="col-12">
                 <div class="panel panel-resume">
                   <div class="panel-heading">
                     Mes disponibilités
                   </div>
-                  <div id="availability" class="panel-body text-center">
+                  <div id="availability" class="panel-body text-center p-4">
                     <h3></h3>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
+              <div class="col-12 mt-2">
                   <div class="panel panel-resume">
                     <div class="panel-heading">
                       Etablissement(s) choisi(s)
@@ -352,19 +334,12 @@
                     </div>
                   </div>
                 </div>
-              </div>
             </div>
-            <ul class="list-inline pull-right">
+            <ul class="list-inline float-right">
               <li>
                 <button type="button" class="btn btn-danger stop-step">Annuler</button>
-              </li>
-              <li>
-                <button type="button" class="btn btn-default prev-step">Précédent</button>
-              </li>
-              <li>
-                <button type="button" class="btn btn-success btn-info-full" onclick="addWishName()">Valider et
-                  sauvegarder
-                </button>
+                <button type="button" class="btn btn-secondary prev-step">Précédent</button>
+                <button type="button" class="btn btn-success btn-info-full" onclick="addWishName()">Valider et sauvegarder</button>
               </li>
             </ul>
           </div>
@@ -374,7 +349,8 @@
     </div>
   </div>
 </div>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script src="/static/assets/js/nouislider.min.js"></script>
 <script src="/static/assets/dist/js/application.min.js"></script>
 <script src="/static/assets/dist/js/addApplication.min.js"></script>

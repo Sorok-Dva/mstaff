@@ -9,6 +9,7 @@
           <thead>
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
+          <th data-field="category" data-sortable="true">Catégorie</th>
           <th data-field="finess" data-sortable="true">Finess</th>
           <th data-field="sector" data-sortable="true">Secteur</th>
           <th data-field="status" data-sortable="true">Status</th>
@@ -25,10 +26,11 @@
             <tr>
               <td>{{es.id}}</td>
               <td>{{es.name}}</td>
+              <td>{{es.category}}</td>
               <td>{{es.finess}}</td>
               <td>{{es.sector}}</td>
               <td>{{es.status}}</td>
-              <td>{{es.Applications.length}}</td>
+              <td>{{es.dataValues.applications}}</td>
               <td>{{es.Needs.length}}</td>
               <td>{{es.ESAccounts.length}}</td>
               <td>
@@ -73,7 +75,7 @@
         if (confirm('ATTENTION:\n\n ' +
           'Cette action est irreversible et supprimera toutes les données liées à l\'établissement.\n\n' +
           'Voulez vous continuer ?')) {
-          $.delete('/')
+          // $.delete('/')
 
           table.bootstrapTable('remove', {
             field: 'id',

@@ -64,6 +64,7 @@ BackOffice_Establishment.Edit = (req, res, next) => {
       if (_.isNil(es)) return next();
       es.update({
         name: req.body.name,
+        category: req.body.category,
         finess_ej: req.body.finess_ej,
         siret: req.body.siret,
         phone: req.body.phone,
@@ -371,12 +372,12 @@ BackOffice_Establishment.View = (req, res, next) => {
 
 BackOffice_Establishment.ViewList = (req, res, next) => {
   Models.Establishment.findAll({
+    attributes: [
+      'id', 'name', 'finess', 'sector', 'status', 'domain_enable', 'domain_name',
+      [Sequelize.literal(
+        '(SELECT COUNT(id) FROM Applications WHERE `Establishment`.`finess` = `Applications`.`ref_es_id`)'), 'applications']],
     include: [{
       model: Models.Need,
-      attributes: ['id'],
-      required: false
-    }, {
-      model: Models.Application,
       attributes: ['id'],
       required: false
     }, {

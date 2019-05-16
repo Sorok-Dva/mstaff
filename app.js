@@ -3,11 +3,13 @@ const { ErrorHandler, Express } = require('./middlewares');
 const Sentry = require('./bin/sentry');
 const path = require('path');
 const express = require('express');
+const dotenv = require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const esRouter = require('./routes/es');
 const esSubDomainRouter = require('./routes/esSubdomain');
+const groupSubDomainRouter = require('./routes/groupSubdomain');
 const candidateRouter = require('./routes/candidate');
 const boRouter = require('./routes/backOffice');
 const apiRouter = require('./routes/api/api');
@@ -50,8 +52,9 @@ app.use(Express.wildcardSubdomains);
 app.use(Express.readOnlySessionForImpersonation);
 
 process.on('unhandledRejection', reason => {
-  if (Env.isPreProd || Env.isProd) Sentry.send(reason, { context: 'unhandledRejection' });
-  else console.log(reason);
+  //@TODO Fix Sentry.send for unhandled rejection in prod or pre-prod env
+  /*if (Env.isPreProd || Env.isProd) Sentry.send(reason, { context: 'unhandledRejection' });
+  else*/ console.log(reason);
 });
 
 // ------ ROUTES
@@ -59,6 +62,7 @@ app.use('/', indexRouter);
 app.use('/', candidateRouter); //candidate
 app.use('/', esRouter); //recruiter
 app.use('/esDomain', esSubDomainRouter);
+app.use('/groupDomain', groupSubDomainRouter);
 app.use('/user', usersRouter);
 app.use('/back-office', boRouter);
 app.use('/api', apiRouter);

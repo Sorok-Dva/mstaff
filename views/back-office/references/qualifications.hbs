@@ -57,7 +57,7 @@
         }, () => {
           $('button#btnEditQualification').click(function () {
             if ($('input#qualificationValueEdit').val() != '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#qualificationValueEdit').val();
               $.put(`/api/back-office/references/qualifications/${row.id}`, {
                 promptInput,
@@ -90,7 +90,7 @@
           title: 'Supprimer un diplôme',
           modal: 'back-office/removeQualification'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveQualification').click(function () {
             $.delete(`/api/back-office/references/qualifications/${row.id}`, {
               _csrf
@@ -146,7 +146,7 @@
     }, () => {
       $('button#validateQualification').click(function () {
         if ($('input#qualificationValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#qualificationValue').val();
           $.post(`/api/back-office/references/qualifications/`, {
             promptInput,

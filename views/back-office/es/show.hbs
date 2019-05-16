@@ -51,6 +51,17 @@
               <option value="public"{{#ifCond es.sector '===' 'public'}} selected="selected"{{/ifCond}}>PUBLIC</option>
             </select>
           </div>
+          <div class="form-group col-md-3">
+            <label for="category">Catégorie</label>
+            <select class="form-control" id="category" name="category">
+              <option value=""> </option>
+              <option value="CH"{{#ifCond es.category '===' 'CH'}} selected="selected"{{/ifCond}}>CH & CHU</option>
+              <option value="clinique"{{#ifCond es.category '===' 'clinique'}} selected="selected"{{/ifCond}}>Clinique</option>
+              <option value="medico-social"{{#ifCond es.category '===' 'medico-social'}} selected="selected"{{/ifCond}}>Médico-Social</option>
+              <option value="liberal"{{#ifCond es.category '===' 'liberal'}} selected="selected"{{/ifCond}}>Structure Libérale</option>
+              <option value="divers"{{#ifCond es.category '===' 'divers'}} selected="selected"{{/ifCond}}>Divers</option>
+            </select>
+          </div>
         </div>
       </fieldset>
       <fieldset>
@@ -185,7 +196,7 @@
     let userId = $(this).attr('data-uid');
     if (confirm('Voulez-vous vraiment supprimer cet utilisateur de cet établissement ?')) {
       $.post(`/api/back-office/establishment/{{es.id}}/remove/user/${userId}`, {
-        _csrf: $('#csrfToken').val()
+        _csrf: $('meta[name="csrf-token"]').attr('content')
       }, (data) => {
         if (data.user_id !== parseInt(userId)) {
           notification({
@@ -212,7 +223,7 @@
         id: 'showNeedsModal',
         modal: 'back-office/showNeeds',
         title: 'Les besoins de cet établissement',
-        size: 'modal-lg',
+        size: 'modal-xl',
         style: 'width:60%',
         esId: '{{es.id}}',
         needs
@@ -234,11 +245,11 @@
   });
 
   let showCandidateProfile = userId => {
-    $.post(`/api/back-office/candidate/${userId}`, {_csrf: $('#csrfToken').val()}, data => {
+    $.post(`/api/back-office/candidate/${userId}`, {_csrf: $('meta[name="csrf-token"]').attr('content')}, data => {
       createModal({
         id: 'viewCandidateProfileModal',
         modal: 'es/viewCandidateProfile',
-        size: 'modal-lg',
+        size: 'modal-xl',
         style: 'width:80%',
         title: `Profil de ${data.User.firstName} ${data.User.lastName}`,
         candidate: data

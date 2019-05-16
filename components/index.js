@@ -4,6 +4,8 @@ const Establishment = require('./establishment');
 const Mailer = require('./mailer');
 const Notification = require('./notification');
 const Render = require('./render');
+const Server = require('./server');
+const Subdomain = require('./subdomain');
 const User = require('./user');
 
 module.exports = {
@@ -13,5 +15,7 @@ module.exports = {
   Mailer,
   Notification,
   Render,
+  Server,
+  Subdomain,
   User
 };

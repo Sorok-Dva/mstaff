@@ -9,7 +9,7 @@
   $('div#selected').find('ul#3').attr('id', 'selectedList');
   $('#selectedList').removeClass(['drag-item', 'card']);
   $('#selectedList').find('i[data-action="remove"]').attr({
-    class: 'finalCandidates fal fa-check-square fa-2x pull-right',
+    class: 'finalCandidates fal fa-check-square fa-2x float-right',
     'data-action': 'unselect',
     style: 'cursor: pointer'
   });
@@ -20,7 +20,7 @@
     let needId = $(this).parent('div').parent('li.card').attr('data-needid');
     if (action === 'unselect') {
       $(this).attr({
-        class: 'finalCandidates fal fa-square fa-2x pull-right',
+        class: 'finalCandidates fal fa-square fa-2x float-right',
         'data-action': 'select',
         style: 'cursor: pointer'
       });
@@ -29,7 +29,7 @@
           .catch(err => errorsHandler(err));
     } else {
       $(this).attr({
-        class: 'finalCandidates fal fa-check-square fa-2x pull-right',
+        class: 'finalCandidates fal fa-check-square fa-2x float-right',
         'data-action': 'unselect',
         style: 'cursor: pointer'
       });

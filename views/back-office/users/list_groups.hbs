@@ -61,7 +61,7 @@
         }, () => {
           $('button#validateLinkGroup').click(function () {
             if ($('select#establishmentsID').val() !== '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let selectInput = $('select#establishmentsID').val();
               $.put(`/api/back-office/linkES/${row.id}`, {
                 selectInput,
@@ -87,7 +87,7 @@
         }, () => {
           $('button#btnEditGroup').click(function () {
             if ($('input#groupValueEdit').val() !== '') {
-              let _csrf = $('#csrfToken').val();
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#groupValueEdit').val();
               $.put(`/api/back-office/groups/${row.id}`, {
                 promptInput,
@@ -120,7 +120,7 @@
           title: 'Supprimer un groupe',
           modal: 'back-office/removeGroup'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveGroup').click(function () {
             $.delete(`/api/back-office/groups/${row.id}`, {
               _csrf
@@ -177,8 +177,8 @@
       modal: 'back-office/addGroup'
     }, () => {
       $('button#validateGroup').click(function () {
-        if ($('input#groupValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+        if ($('input#groupValue').val() !== '') {
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#groupValue').val();
           $.post(`/api/back-office/groups/`, {
             promptInput,

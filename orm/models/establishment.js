@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Establishment = sequelize.define('Establishment', {
     name: DataTypes.STRING,
+    category: DataTypes.STRING,
     finess: DataTypes.STRING,
     finess_ej: DataTypes.STRING,
     siret: DataTypes.STRING,
@@ -25,9 +26,9 @@ module.exports = (sequelize, DataTypes) => {
     contact_phone: DataTypes.STRING
   }, {});
   Establishment.associate = function (models) {
-    Establishment.hasOne(models.Demo, {
-      foreignKey: 'es_name',
-      as: 'demo'
+    Establishment.hasOne(models.EstablishmentReference, {
+      foreignKey: 'finess_et',
+      as: 'ref'
     });
     Establishment.hasMany(models.ESAccount, {
       foreignKey: 'es_id',

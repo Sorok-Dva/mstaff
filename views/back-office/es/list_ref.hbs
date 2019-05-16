@@ -29,12 +29,12 @@
   let table = $('#esref-table');
 
   let showEsInfo = id => {
-    let _csrf = $('#csrfToken').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
     $.post(`/api/back-office/establishmentsReferences/info/${id}`, {_csrf}, data => {
       createModal({
         id: 'viewESProfileModal',
         modal: 'back-office/viewESProfile',
-        size: 'modal-lg',
+        size: 'modal-xl',
         style: 'width:80%',
         title: `Établissement ${data.name}`,
         es: data
@@ -43,12 +43,12 @@
   };
 
   let addES = id => {
-    let _csrf = $('#csrfToken').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
     $.post(`/api/back-office/establishmentsReferences/info/${id}/toCreate`, {_csrf}, data => {
       createModal({
         id: 'addESfromREFModal',
         modal: 'back-office/addESfromREF',
-        size: 'modal-lg',
+        size: 'modal-xl',
         style: 'width:80%',
         title: `Brancher l'établissement ${data.name} à Mstaff`,
         es: data

@@ -3,7 +3,7 @@ let showCandidateProfile = userId => {
     createModal({
       id: 'viewCandidateProfileModal',
       modal: 'es/viewCandidateProfile',
-      size: 'modal-lg',
+      size: 'modal-xl',
       style: 'width:80%',
       title: `Profil de ${data.User.firstName} ${data.User.lastName}`,
       candidate: data

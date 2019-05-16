@@ -6,7 +6,8 @@
   }
 
   .label-text {
-    margin-left: 8px;
+    margin-top: 4px;
+    margin-right: 8px;
   }
 </style>
 <div class="row">
@@ -15,8 +16,8 @@
       <div class="image"></div>
       <div class="content">
         <div class="card-profile">
-          <div class="avatar avatar-xxl avatar-online">
-            <img src="/static/assets/images/face-0.jpg" class="avatar-img rounded-circle border-blue" alt="avatar">
+          <div class="avatar avatar-xxl avatar-{{#if candidate.is_available}}on{{else}}off{{/if}}line">
+            <img id="candidateAvatar"{{#if user.photo }} src="/static/uploads/candidates/avatars/{{user.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
           <div class="rank-label-container">
             <span class="label label-default rank-label">{{{candidateProfilePercentage candidate.percentage}}}</span>
@@ -28,10 +29,10 @@
         <div class="col-md-12">
           <div id="ctaAvailability" class="text-center state-{{#unless candidate.is_available}}un{{/unless}}available">
             <label class="label">
-              <div class="label-text label-text-{{#unless candidate.is_available}}un{{/unless}}available">
-               <b>Je suis {{#unless candidate.is_available}}in{{/unless}}disponible</b>
+              <div class="label-text label-text-{{#unless candidate.is_available}}un{{/unless}}available available-target">
+               <b> Je suis {{#unless candidate.is_available}}in{{/unless}}disponible</b>
               </div>
-              <div class="toggle mt-1" style="margin-left:15px">
+              <div class="toggle mt-1">
                 <input class="toggle-state" type="checkbox" name="is_available" {{#if candidate.is_available}}checked{{/if}} />
                 <div class="toggle-inner">
                   <div class="indicator"></div>
