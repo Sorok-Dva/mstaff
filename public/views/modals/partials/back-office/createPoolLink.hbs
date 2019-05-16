@@ -23,13 +23,30 @@
 <script>
   $.get('/back-office/pool-dependencies/all', function (data) {
     console.log(data);
-    $.each(data, function (i, pool) {
+    $.each(data[0], function (i, pool) {
       $('#poolName').append($('<option>', {
         value: pool.id,
         text: pool.name,
       }));
       $('#poolName').selectpicker('refresh');
     });
+
+    $.each(data[1], function (i, candidate) {
+      $('#poolUser').append($('<option>', {
+        value: candidate.id,
+        text: candidate.firstName + ' ' + candidate.lastName + ' (' + candidate.email + ')',
+      }));
+      $('#poolUser').selectpicker('refresh');
+    });
+
+    $.each(data[0], function (i, pool) {
+      $('#poolName').append($('<option>', {
+        value: pool.id,
+        text: pool.name,
+      }));
+      $('#poolName').selectpicker('refresh');
+    });
+
     let Pooloptions = $("#poolName option");
     Pooloptions.sort(function (a, b) {
       if (a.text > b.text) return 1;

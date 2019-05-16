@@ -32,26 +32,24 @@ BackOffice_Pool.createPool = (req, res, next) => {
 };
 
 BackOffice_Pool.linkDependencies = (req, res, next) => {
-  Models.UserPool.findAll({
-    include: [{
-      model: Models.User,
-      where: { role: 'User' },
-      attributes: {
-        exclude: ['password', 'photo', 'birthday', 'postal_code', 'town', 'country', 'key',
-          'validated', 'opts', 'createdAt', 'updatedAt']
-      }
-    },
-    {
-      model: Models.Pool,
-    },
-    {
-      model: Models.Establishment,
-      attributes: { exclude: ['oldId', 'category', 'finess', 'finesse_ej', 'siret', 'phone', 'sector',
+  let dependencies = [];
+  Models.Pool.findAll().then( pools =>
+  {
+    dependencies.push(pools);
+    Models.User.findAll({ attributes: {
+      exclude: ['password', 'photo', 'birthday', 'postal_code', 'town', 'country', 'key',
+        'validated', 'opts', 'createdAt', 'updatedAt']
+    } }).then( users => {
+      dependencies.push(users);
+      Models.Establishment.findAll({ attributes: { exclude: ['oldId', 'category', 'finess', 'finesse_ej', 'siret', 'phone', 'sector',
         'address', 'town', 'status', 'url', 'description', 'logo', 'banner', 'domain_name', 'domain_enable',
         'salaries_count', 'contact_identity', 'contact_post', 'contact_email', 'contact_phone',
-        'createdAt', 'updatedAt'] }
-    }]
-  }).then(dependencies => res.status(200).send(dependencies));
+        'createdAt', 'updatedAt'] } }).then(es => {
+        dependencies.push(es);
+        res.status(200).send(dependencies);
+      });
+    });
+  });
 };
 
 BackOffice_Pool.viewLinks = (req, res, next) => {
