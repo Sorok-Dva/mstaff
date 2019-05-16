@@ -952,7 +952,7 @@ User_Candidate.viewConferences = (req, res, next) => {
       let a = { main: 'conferences' };
       return res.render('candidates/calendar', { a, conferences });
     })
-  })
+  }).catch(error => next(new BackError(error)));
 };
 
 User_Candidate.viewPools = (req, res, next) => {
@@ -961,8 +961,21 @@ User_Candidate.viewPools = (req, res, next) => {
 };
 
 User_Candidate.viewMyPools = (req, res, next) => {
-  let a = { main: 'pools' };
-  return res.render('candidates/my-pools', { a } );
+  Models.UserPool.findAll({
+    where: { user_id: req.user.id },
+    include: {
+      model: Models.Pool,
+      as: 'pool',
+      on: {
+        '$UserPool.pool_id$': {
+          [Op.col]: 'pool.id'
+        }
+      }
+    }
+  }).then(pools => {
+    let a = { main: 'pools' };
+    return res.render('candidates/my-pools', { a, pools } );
+  }).catch(error => next(new BackError(error)));
 };
 
 User_Candidate.setAvailability = (req, res, next) => {

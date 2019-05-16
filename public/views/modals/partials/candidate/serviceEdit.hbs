@@ -1,0 +1,30 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label for="servicesSelect"> Sélectionner un service </label>
+    <select id="servicesSelect" name="selectName" class="select2-class col-md-12">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-primary" id="editServiceButton"> Valider </button>
+</div>
+<script>
+  $(document).ready(function() {
+    $('.select2-class').select2();
+    console.log("ouin");
+    $.get(`/api/services/all`, function (data) {
+      data.services.forEach(service => {
+        let serviceObject = {};
+        serviceObject.id = service.id;
+        serviceObject.text = service.name;
+        serviceArray.push(serviceObject);
+      });
+      $('#servicesSelect').empty().select2({
+        data: serviceArray.sort(),
+        placeholder: "Service ?",
+        minimumResultsForSearch: Infinity
+      });
+      serviceArray=[];
+    });
+  });
+</script>

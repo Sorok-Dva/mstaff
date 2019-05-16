@@ -42,6 +42,13 @@ module.exports = {
           key: 'id'
         }
       },
+      available: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
+      month_experience: {
+        type: Sequelize.INTEGER
+      },
       planning: {
         type: Sequelize.STRING
       },

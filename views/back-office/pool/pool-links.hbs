@@ -16,6 +16,7 @@
           <th data-field="availability" data-sortable="true"> Disponibilités </th>
           <th data-field="establishment" data-sortable="true"> Établissements </th>
           <th data-field="service" data-sortable="true"> Services </th>
+          <th data-field="planning" data-sortable="true"> Planning </th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions
           </th>
@@ -25,10 +26,12 @@
             <tr data-id="{{link.id}}">
               <td></td>
               <td>{{link.id}}</td>
-              <td>{{link.name}}</td>
-              <td>{{link.referent}}</td>
-              <td>{{link.owner}}</td> <!-- TODO : Afficher le nom complet du créateur -->
-              <td>{{link.active}}</td>
+              <td>{{link.pool_id}}</td>
+              <td>{{link.user_id}}</td>
+              <td>{{link.availability}}</td>
+              <td>{{link.establishment}}</td>
+              <td>{{link.service}}</td>
+              <td>{{link.planning}}</td>
               <td></td>
             </tr>
           {{/each}}
@@ -40,7 +43,6 @@
 </div>
 <script type="text/javascript"> // TODO : Modifier le javascript pour pouvoir modifier ou supprimer des POOLS
 let table = $('#formations-table');
-console.log({{poollinks}});
 
 operateFormatter = (value, row, index) => {
   return [

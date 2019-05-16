@@ -5,11 +5,14 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER,
     availability: DataTypes.JSON,
     establishment: DataTypes.INTEGER,
-    service: DataTypes.INTEGER
+    service: DataTypes.INTEGER,
+    available: DataTypes.BOOLEAN,
+    month_experience: DataTypes.INTEGER,
   }, {});
   UserPool.associate = function (models) {
     UserPool.belongsTo(models.Pool, {
       foreignKey: 'id',
+      as: 'pool',
       onDelete: 'CASCADE'
     });
     UserPool.belongsTo(models.User, {
