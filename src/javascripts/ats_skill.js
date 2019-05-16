@@ -45,7 +45,7 @@ function deleteSkill(id){
 
 };
 
-let editSkill = (id) => {
+function editSkill(id){
   permissions.editMode = true;
   permissions.editId = id;
   let i = skills.map(skill => skill.id).indexOf(id);
@@ -54,7 +54,7 @@ let editSkill = (id) => {
   starsSelector(`star${skills[i].stars}`);
 };
 
-let deleteSkill = (id) => {
+function deleteSkill(id){
   resetForm('skill');
   permissions.editMode = false;
   let i = skills.map(skill => skill.id).indexOf(id);
@@ -78,7 +78,7 @@ function generateDatasRecap(){
   candidateDatas.skills.forEach( skill => addToDatasRecap(skill));
 };
 
-let starsSelector = (id) => {
+function starsSelector(id){
   $('#stars div i').css('display', 'none');
   switch (id) {
     case 'reset':
@@ -108,7 +108,7 @@ let starsSelector = (id) => {
   }
 };
 
-let starsSelected = () => {
+function starsSelected(){
   if ($('#star3 i.fas.fa-star').prop('style').display === 'inline-block')
     return 3;
   if ($('#star2 i.fas.fa-star').prop('style').display === 'inline-block')
