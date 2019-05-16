@@ -83,6 +83,7 @@
   "devDependencies": {
     "browser-sync": "^2.26.3",
     "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^5.15.3",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-async-await": "0.0.0",
