@@ -1,27 +1,39 @@
-<i id="backToDiploma" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+<div class="row justify-content-between align-items-center openRecap">
+  <i id="backToDiploma" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+  <div class="text-center col-3 d-none d-lg-block custom-cursor openRecap">
+    <i class="fal fa-low-vision col-5"></i>
+    <p>Afficher mes diplômes</p>
+  </div>
+</div>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
-  <h2 class="text-center underline">Aperçu de vos diplômes</h2>
+  <h2 class="text-center underline recap">Aperçu de vos diplômes</h2>
 </nav>
 
 <div class="height-80 d-flex flex-column justify-content-center">
-  <form>
+  <form id="qualificationForm">
     <div class="form-group text-center">
       <label for="diploma">Choisissez votre diplôme</label>
-      <input type="text" class="form-control" id="qualification">
+      <input type="text" class="form-control white" id="qualification">
     </div>
 
     <div id="diplomaDate" class="row justify-content-around">
       <div class="col-6 text-center">
         <label for="qualificationStart">Début</label>
         <input id="qualificationStart" name="qualificationStart" type="text"
-               class="form-control datetimepicker-input" readonly>
+               class="form-control datetimepicker-input text-center" readonly>
       </div>
       <div class="col-6 text-center">
         <label for="qualificationEnd">Fin</label>
         <input id="qualificationEnd" name="qualificationEnd" type="text"
-               class="form-control datetimepicker-input" readonly>
+               class="form-control datetimepicker-input text-center" readonly>
+      </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+      <i class="fal fa-info-circle col-12 text-center"></i>
+      <div class="col-9 text-center">
+        <p>Indiquez ici vos <b>diplômes complémentaires</b> ou bien sélectionnez-les depuis la liste.</p>
       </div>
     </div>
   </form>
@@ -37,24 +49,4 @@
   <div class="custom-cursor" id="toSkill"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
-<script>
-  $('.save').click(function() {
-    $('#recap').addClass('d-lg-block');
-  });
-
-  $('.closeRecap').click(function() {
-    $('#recap').removeClass('d-lg-block');
-  });
-
-  $('#backToDiploma').click(function() {
-    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-
-  $('#toSkill').click(function() {
-    loadTemplate('/static/views/ats/skill.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-</script>
+<script src="/static/assets/dist/js/ats_qualification.min.js"></script>

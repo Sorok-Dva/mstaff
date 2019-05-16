@@ -83,17 +83,17 @@ const verifiedEvent = new Event('verified');
 //   });
 // };
 
-let createQualificationList = (qualifications, input) => {
-  qualificationArray = [];
-  qualifications.forEach( qualification => {
-    qualificationArray.push(qualification.name);
-  });
-  qualificationArray.sort();
-  input.autocomplete({
-    source: qualificationArray,
-    minLength: 1
-  });
-};
+// let createQualificationList = (qualifications, input) => {
+//   qualificationArray = [];
+//   qualifications.forEach( qualification => {
+//     qualificationArray.push(qualification.name);
+//   });
+//   qualificationArray.sort();
+//   input.autocomplete({
+//     source: qualificationArray,
+//     minLength: 1
+//   });
+// };
 
 let createSkillList = (skills, input) => {
   skillArray = [];
@@ -317,53 +317,53 @@ let generateDatasRecap = (current) => {
 
 // DIPLOMA-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let atsEditDiploma = (id) => {
-  permissions.editMode = true;
-  permissions.editId = id;
-  let i = diplomas.map(diploma => diploma.id).indexOf(id);
-  resetForm('diploma');
-  $('#diploma').val(diplomas[i].diploma).trigger('keyup');
-  $('#diplomaStart').data("DateTimePicker").date(diplomas[i].start);
-  if (diplomas[i].end)
-    $('#diplomaEnd').data("DateTimePicker").date(diplomas[i].end);
-  $('#diplomaDate').trigger('change');
-};
-
-let atsDeleteDiploma = (id) => {
-  resetForm('diploma');
-  permissions.editMode = false;
-  let i = diplomas.map(diploma => diploma.id).indexOf(id);
-  diplomas.splice(i, 1);
-  $(`div [data-id=${id}]`).remove();
-  if (diplomas.length === 0){
-    generateGlobalRecap('diplomaModal');
-  }
-};
+// let atsEditDiploma = (id) => {
+//   permissions.editMode = true;
+//   permissions.editId = id;
+//   let i = diplomas.map(diploma => diploma.id).indexOf(id);
+//   resetForm('diploma');
+//   $('#diploma').val(diplomas[i].diploma).trigger('keyup');
+//   $('#diplomaStart').data("DateTimePicker").date(diplomas[i].start);
+//   if (diplomas[i].end)
+//     $('#diplomaEnd').data("DateTimePicker").date(diplomas[i].end);
+//   $('#diplomaDate').trigger('change');
+// };
+//
+// let atsDeleteDiploma = (id) => {
+//   resetForm('diploma');
+//   permissions.editMode = false;
+//   let i = diplomas.map(diploma => diploma.id).indexOf(id);
+//   diplomas.splice(i, 1);
+//   $(`div [data-id=${id}]`).remove();
+//   if (diplomas.length === 0){
+//     generateGlobalRecap('diplomaModal');
+//   }
+// };
 
 // QUALIFICATION-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let atsEditQualification = (id) => {
-  permissions.editMode = true;
-  permissions.editId = id;
-  let i = qualifications.map(qualification => qualification.id).indexOf(id);
-  resetForm('qualification');
-  $('#qualification').val(qualifications[i].qualification).trigger('keyup');
-  $('#qualificationStart').data("DateTimePicker").date(qualifications[i].start);
-  if (qualifications[i].end)
-    $('#qualificationEnd').data("DateTimePicker").date(qualifications[i].end);
-  $('#qualificationDate').trigger('change');
-};
+// let atsEditQualification = (id) => {
+//   permissions.editMode = true;
+//   permissions.editId = id;
+//   let i = qualifications.map(qualification => qualification.id).indexOf(id);
+//   resetForm('qualification');
+//   $('#qualification').val(qualifications[i].qualification).trigger('keyup');
+//   $('#qualificationStart').data("DateTimePicker").date(qualifications[i].start);
+//   if (qualifications[i].end)
+//     $('#qualificationEnd').data("DateTimePicker").date(qualifications[i].end);
+//   $('#qualificationDate').trigger('change');
+// };
 
-let atsDeleteQualification = (id) => {
-  resetForm('qualification');
-  permissions.editMode = false;
-  let i = qualifications.map(qualification => qualification.id).indexOf(id);
-  qualifications.splice(i, 1);
-  $(`div [data-id=${id}]`).remove();
-  if (qualifications.length === 0){
-    generateGlobalRecap('qualificationModal');
-  }
-};
+// let atsDeleteQualification = (id) => {
+//   resetForm('qualification');
+//   permissions.editMode = false;
+//   let i = qualifications.map(qualification => qualification.id).indexOf(id);
+//   qualifications.splice(i, 1);
+//   $(`div [data-id=${id}]`).remove();
+//   if (qualifications.length === 0){
+//     generateGlobalRecap('qualificationModal');
+//   }
+// };
 
 // SKILL-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
@@ -494,9 +494,9 @@ let loadClearModal = (target) => {
     // case 'diplomaModal':
     //   createDiplomaList(allDiplomas, $('#diploma'));
     //   break;
-    case 'qualificationModal':
-      createQualificationList(allQualifications, $('#qualification'));
-      break;
+    // case 'qualificationModal':
+    //   createQualificationList(allQualifications, $('#qualification'));
+    //   break;
     case 'skillModal':
       createSkillList(allSkills, $('#skill'));
       break;
@@ -597,17 +597,17 @@ let saveDatas = (modal) => {
     //     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
     //   experiences.push(current);
     //   break;
-    case 'diplomaModal':
-      current = {};
-      current.id = permissions.diplomaId;
-      permissions.diplomaId += 1;
-      current.diploma = $('#diploma').val();
-      current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
-      current.end = null;
-      if ($('#diplomaEnd').data("DateTimePicker").date())
-        current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
-      diplomas.push(current);
-      break;
+    // case 'diplomaModal':
+    //   current = {};
+    //   current.id = permissions.diplomaId;
+    //   permissions.diplomaId += 1;
+    //   current.diploma = $('#diploma').val();
+    //   current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
+    //   current.end = null;
+    //   if ($('#diplomaEnd').data("DateTimePicker").date())
+    //     current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
+    //   diplomas.push(current);
+    //   break;
     case 'qualificationModal':
       current = {};
       current.id = permissions.qualificationId;
@@ -654,20 +654,20 @@ let saveEditDatas = (modal) => {
     //   if ($('#xpEnd').data("DateTimePicker").date())
     //     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
     //   break;
-    case 'diplomaModal':
-      current =  diplomas[diplomas.map(diploma => diploma.id).indexOf(permissions.editId)];
-      current.diploma = $('#diploma').val();
-      current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
-      if ($('#diplomaEnd').data("DateTimePicker").date())
-        current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
-      break;
-    case 'qualificationModal':
-      current =  qualifications[qualifications.map(qualification => qualification.id).indexOf(permissions.editId)];
-      current.qualification = $('#qualification').val();
-      current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
-      if ($('#qualificationEnd').data("DateTimePicker").date())
-        current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
-      break;
+    // case 'diplomaModal':
+    //   current =  diplomas[diplomas.map(diploma => diploma.id).indexOf(permissions.editId)];
+    //   current.diploma = $('#diploma').val();
+    //   current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
+    //   if ($('#diplomaEnd').data("DateTimePicker").date())
+    //     current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
+    //   break;
+    // case 'qualificationModal':
+    //   current =  qualifications[qualifications.map(qualification => qualification.id).indexOf(permissions.editId)];
+    //   current.qualification = $('#qualification').val();
+    //   current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
+    //   if ($('#qualificationEnd').data("DateTimePicker").date())
+    //     current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
+    //   break;
     case 'skillModal':
       current =  skills[skills.map(skill => skill.id).indexOf(permissions.editId)];
       current.skill = $('#skill').val();
@@ -739,19 +739,19 @@ let verifyDatas = (modal) => {
     //   }
     //   return notify('noStartDate');
     //   break;
-    case 'qualificationModal':
-      let qualification = !$.isEmptyObject($('#qualification').val()) ? true : notify('noQualification');
-      let qualificationStart = $('#qualificationStart').data("DateTimePicker").date();
-      let qualificationEnd = $('#qualificationEnd').data("DateTimePicker").date();
-      if (qualificationStart !== null){
-        let validQualificationStart = qualificationStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
-        let validQualificationEnd = true;
-        if (qualificationEnd !== null)
-          validQualificationEnd = qualificationEnd.startOf('day').isSameOrAfter(qualificationStart.startOf('day')) ? true : notify('endDateBeforeStart');
-        return (qualification && validQualificationStart && validQualificationEnd);
-      }
-      return notify('noStartDate');
-      break;
+    // case 'qualificationModal':
+    //   let qualification = !$.isEmptyObject($('#qualification').val()) ? true : notify('noQualification');
+    //   let qualificationStart = $('#qualificationStart').data("DateTimePicker").date();
+    //   let qualificationEnd = $('#qualificationEnd').data("DateTimePicker").date();
+    //   if (qualificationStart !== null){
+    //     let validQualificationStart = qualificationStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
+    //     let validQualificationEnd = true;
+    //     if (qualificationEnd !== null)
+    //       validQualificationEnd = qualificationEnd.startOf('day').isSameOrAfter(qualificationStart.startOf('day')) ? true : notify('endDateBeforeStart');
+    //     return (qualification && validQualificationStart && validQualificationEnd);
+    //   }
+    //   return notify('noStartDate');
+    //   break;
     case 'skillModal':
       let skill = !$.isEmptyObject($('#skill').val()) ? true : notify('noSkill');
       let stars = starsSelected() > 0 ? true : notify('noStars')
@@ -919,14 +919,14 @@ let notify = (error) => {
     //     message: `Merci d'indiquer une formation.`
     //   });
     //   break;
-    case 'noQualification':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer un diplôme.`
-      });
-      break;
+    // case 'noQualification':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci d'indiquer un diplôme.`
+    //   });
+    //   break;
     case 'noSkill':
       notification({
         icon: 'exclamation',
@@ -1247,16 +1247,16 @@ let diplomaModalListener = () => {
 };
 
 let qualificationModalListener = () => {
-  $('#qualificationModal').on('hide.bs.modal', () => toPreviousModal('qualificationModal', 'diplomaModal'));
+  // $('#qualificationModal').on('hide.bs.modal', () => toPreviousModal('qualificationModal', 'diplomaModal'));
 
   //Initialize
-  $('#qualificationDate input').datetimepicker({
-    format: 'D MMMM YYYY',
-    useCurrent: false,
-    ignoreReadonly: true,
-    maxDate: moment().startOf('day'),
-    widgetPositioning: {vertical: 'top'}
-  });
+  // $('#qualificationDate input').datetimepicker({
+  //   format: 'D MMMM YYYY',
+  //   useCurrent: false,
+  //   ignoreReadonly: true,
+  //   maxDate: moment().startOf('day'),
+  //   widgetPositioning: {vertical: 'top'}
+  // });
 
   $('#saveQualification').on('click', () => {
     if (verifyDatas('qualificationModal')){
