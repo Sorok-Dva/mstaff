@@ -75,6 +75,7 @@
     "sequelize-cli": "^5.4.0",
     "sha1": "^1.1.1",
     "socket.io": "^2.2.0",
+    "staticify": "^3.3.2",
     "statuses": "^1.5.0",
     "streamifier": "^0.1.1",
     "wildcard-subdomains": "^1.1.0"
