@@ -304,6 +304,7 @@ function init_experience(){
     maxDate: moment().startOf('day')
   });
   createPostsList(databaseDatas.allPosts, $('#xpPost'));
+  $('.pop-me-over').tooltip();
 };
 
 init_experience();
