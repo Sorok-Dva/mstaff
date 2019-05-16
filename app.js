@@ -19,6 +19,7 @@ const apiBackOfficeRouter = require('./routes/api/backOffice');
 const apiEsRouter = require('./routes/api/establishment');
 
 const app = express();
+let staticMaxAge = null;
 
 if (Env.isProd || Env.isPreProd) app.use(Express.sentryRequestHandler);
 if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
@@ -29,7 +30,10 @@ app.set('trust proxy', true);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-if (Env.isProd) app.set('view cache', true);
+if (Env.isProd) {
+  app.set('view cache', true);
+  staticMaxAge = { maxAge: '30 days' };
+}
 
 // ------ Express
 app.engine('hbs', Express.exphbs);
@@ -38,8 +42,8 @@ app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.compress);
 app.use(Express.methodOverride);
 app.use(Express.helmet);
+app.use('/static', express.static(path.join(__dirname, 'public'), staticMaxAge));
 app.use(Express.staticify);
-app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: '30 days' }));
 app.use(Express.cookieParser);
 app.use(Express.csurf);
 app.use(Express.session);
