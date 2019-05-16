@@ -1,0 +1,22 @@
+<link href="/static/assets/css/multiple-emails.css" rel="stylesheet">
+<script src="/static/assets/js/multiple-emails.js"></script>
+<div class="modal-body">
+  <div class="form-group">
+    <label for="newPersonnelMails"> Ajoutez des soignants à votre pool </label>
+    <input id="newPersonnelMails" type="text" class="form-control">
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="createPoolButton" class="btn btn-outline-info float-right">
+    Valider
+  </button>
+</div>
+<script>
+  $(document).ready(function() {
+    $('#newPersonnelMails').multiple_emails({
+      position: 'top',
+      theme: 'bootstrap',
+      checkDupEmail: true
+    });
+  });
+</script>

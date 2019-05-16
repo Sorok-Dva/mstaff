@@ -20,138 +20,44 @@
     <button class="btn btn-info rounded-circle" style="width: 50px; height: 50px;" onclick="createPool()"> + </button>
     <span style="margin-top: 15px; margin-left: 10px"><h2> Créer un nouveau pool</h2></span>
   </div>
-  <div class="col-12 col-md-12 col-lg-4 card-competence">
-    <div class="card">
-      <div class="card-header header-spacing">
-        <div class="row">
-          <div class="col-md-10">
-            <h3 class="card-title"><i class="fal fa-school"></i> EHPAD LE FLORAL</h3>
-          </div>
-          <div class="col-md-2">
-            <input type="checkbox" checked data-toggle="toggle" data-style="ios">
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-5" >
-            <a href="#">
-              <button class="btn btn-outline-primary" style="width:100%"> Volontaires </button>
-            </a>
-          </div>
-          <div class="col-lg-5">
-            <a href="#">
-              <button class="btn btn-outline-primary" style="width:100%"> Inviter </button>
-            </a>
-          </div>
-          <div class="col-lg-2">
-            <a href="#">
-              <button class="btn btn-outline-secondary" style="width:100%"> <i class="fal fa-cog"></i> </button>
-            </a>
+  {{#each pools as |pool|}}
+    <div class="col-12 col-md-12 col-lg-4 card-competence">
+      <div class="card">
+        <div class="card-header header-spacing">
+          <div class="row">
+            <div class="col-md-10">
+              <h3 class="card-title"><i class="fal fa-school"></i> {{pool.name}}</h3>
+            </div>
+            <div class="col-md-2">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" name="poolActive" id="{{pool.id}}" {{#ifCond pool.active '===' true}} checked {{/ifCond}}>
+                <label class="custom-control-label" for="{{pool.id}}"></label>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-12 col-md-12 col-lg-4 card-competence">
-    <div class="card">
-      <div class="card-header header-spacing">
-        <div class="row">
-          <div class="col-md-10">
-            <h3 class="card-title"><i class="fal fa-school"></i> CH DE MONTARGIS</h3>
-          </div>
-          <div class="col-md-2">
-            <input type="checkbox" checked data-toggle="toggle" data-style="ios">
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-5">
-            <a href="#">
-              <button class="btn btn-outline-primary" style="width:100%"> Volontaires </button>
-            </a>
-          </div>
-          <div class="col-md-5">
-            <a href="#">
-              <button class="btn btn-outline-primary" style="width:100%"> Inviter </button>
-            </a>
-          </div>
-          <div class="col-md-2">
-            <a href="#">
-              <button class="btn btn-outline-secondary" style="width:100%"> <i class="fal fa-cog"></i> </button>
-            </a>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-5" >
+              <a href="#">
+                <button class="btn btn-outline-primary" style="width:100%"> Volontaires </button>
+              </a>
+            </div>
+            <div class="col-lg-5">
+              <a href="#">
+                <button class="btn btn-outline-primary" style="width:100%" data-pool="{{pool.id}}" onclick="poolInvitation(this)"> Inviter </button>
+              </a>
+            </div>
+            <div class="col-lg-2">
+              <a href="#">
+                <button class="btn btn-outline-secondary" style="width:100%" data-pool="{{pool.id}}"> <i class="fal fa-cog"></i> </button>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-12 col-md-12 col-lg-4 card-competence">
-    <div class="card">
-      <div class="card-header header-spacing">
-        <div class="row">
-          <div class="col-md-10">
-            <h3 class="card-title"><i class="fal fa-school"></i> ESTABLISHMENT #3</h3>
-          </div>
-          <div class="col-md-2">
-            <input type="checkbox" checked data-toggle="toggle" data-style="ios">
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-5">
-            <a href="#">
-              <button class="btn btn-outline-primary" style="width:100%"> Volontaires </button>
-            </a>
-          </div>
-          <div class="col-md-5">
-            <a href="#">
-              <button class="btn btn-outline-primary" style="width:100%"> Inviter </button>
-            </a>
-          </div>
-          <div class="col-md-2">
-            <a href="#">
-              <button class="btn btn-outline-secondary" style="width:100%"> <i class="fal fa-cog"></i> </button>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-12 col-md-12 col-lg-4 card-competence">
-    <div class="card">
-      <div class="card-header header-spacing">
-        <div class="row">
-          <div class="col-md-10">
-            <h3 class="card-title"><i class="fal fa-school"></i> ESTABLISHMENT #4</h3>
-          </div>
-          <div class="col-md-2">
-            <input type="checkbox" checked data-toggle="toggle" data-style="ios">
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-5">
-            <a href="#">
-              <button class="btn btn-outline-primary" style="width:100%"> Volontaires </button>
-            </a>
-          </div>
-          <div class="col-md-5">
-            <a href="#">
-              <button class="btn btn-outline-primary" style="width:100%"> Inviter </button>
-            </a>
-          </div>
-          <div class="col-md-2">
-            <a href="#">
-              <button class="btn btn-outline-secondary" style="width:100%"> <i class="fal fa-cog"></i> </button>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  {{/each}}
 </div>
 <script>
   let createPool = () => {
@@ -159,11 +65,99 @@
       id: 'createPoolModal',
       modal: 'es/createPool',
       title: 'Créer un pool de remplaçant'
+    }, () => {
+      $('button#createPoolButton').click(function () {
+        if ($('#personnelMails').val() !== '') { // && $('#personnelMails').val() !== [] TODO: Comprendre pourquoi cette comparaison ne fonctionne pas
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
+          let pool = $('#poolName').val();
+          let referent = $('#referentName').val();
+          let mails = $('#personnelMails').val();
+          $.post(`/my-pool`, {
+            _csrf,
+            pool,
+            referent,
+            mails
+          }, () => {
+            window.location.href = "/my-pool";
+          })
+        }
+      });
     });
   };
+  let editPool = (poolToEdit) => {
+    createModal({
+      id: 'editPoolModal',
+      modal: 'es/editPool',
+      title: 'Modifier un pool de remplaçant'
+    }, () => {
+      $('button#createPoolButton').click(function () {
+        let _csrf = $('meta[name="csrf-token"]').attr('content');
+        let name = $('#newPoolName').val();
+        let referent = $('#newReferentName').val();
+        let pool = poolToEdit.data-pool;
+        $.put(`/my-pool`, {
+          _csrf,
+          pool,
+          referent,
+        }, () => {
+          if (response === 'Modifications done') {
+            $('#editPoolModal').modal('hide');
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Modifications effectuées',
+              message: ``
+            });
+          }
+        })
+      });
+    });
+  };
+  let poolInvitation = (selectedPool) => {
+    createModal({
+      id: 'invitePoolModal',
+      modal: 'es/poolInvitation',
+      title: 'Inviter des soignants'
+    }, () => {
+      $('button#createPoolButton').click(function () {
+        if ($('#newPersonnelMails').val() !== '') { // && $('#personnelMails').val() !== [] TODO: Comprendre pourquoi cette comparaison ne fonctionne pas
+          let mails = $('#newPersonnelMails').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
+          let pool_id = selectedPool.data-pool;
+          $.post(`/pool-invite`, {
+            _csrf,
+            mails,
+            pool_id
+          }, (response) => {
+            if (response === 'Invitations sent') {
+              $('#invitePoolModal').modal('hide');
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Invitation(s) envoyée(s)',
+                message: ``
+              });
+            }
+          });
+        }
+      });
+    })
+  };
   let personnelStep = () => {
-    $('#label').text('Ajouter un soignant:');
-    $('#addPersonnelButton').toggle();
-    $('#createPoolButton').toggle();
+    if ($('#poolName').val() !== '' && $('#referentName').val() !== '')
+    {
+      $('#addPersonnelButton').toggle();
+      $('#label').toggle();
+      $('#label2').toggle();
+      $('#label3').toggle();
+      $('#referentName').toggle();
+      $('#poolName').toggle();
+      $('#createPoolButton').toggle();
+      $('#personnelMails').multiple_emails({
+        position: 'top',
+        theme: 'bootstrap',
+        checkDupEmail: true
+      });
+    }
   };
 </script>

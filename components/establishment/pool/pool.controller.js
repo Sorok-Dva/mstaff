@@ -18,7 +18,27 @@ Establishment_Pool.viewPools = (req, res, next) => {
 
 Establishment_Pool.viewMyPools = (req, res, next) => {
   let a = { main: 'pools' };
-  return res.render('establishments/my-pool', { a } );
+  Models.Pool.findAll({ where: { owner: req.user.id } }).then( pools => {
+    return res.render('establishments/my-pool', { a, pools } );
+  });
+};
+
+Establishment_Pool.newPool = (req, res, next) => {
+  let mailarray = JSON.parse(req.body.mails);
+  console.log(req.user.id);
+  Models.Pool.create({
+    name: req.body.pool,
+    referent: req.body.referent,
+    owner: req.user.id
+  }).then(pool => {
+    res.status(200).send({ pool });
+  });
+};
+
+Establishment_Pool.inviteInPool = (req, res, next) => {
+  let mailarray = JSON.parse(req.body.mails);
+  console.log('Invitez les candidats:' + mailarray);
+  res.status(200).json('Invitations sent');
 };
 
 module.exports = Establishment_Pool;

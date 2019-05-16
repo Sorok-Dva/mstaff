@@ -85,6 +85,15 @@ router.get('/pool',
  */
 router.get('/my-pool',
   Authentication.ensureIsEs,
-  Establishment.Pool.viewMyPools);
+  Establishment.Pool.viewMyPools
+).post('/my-pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.newPool
+);
+
+router.post('/pool-invite',
+  Authentication.ensureIsEs,
+  Establishment.Pool.inviteInPool
+);
 
 module.exports = router;
