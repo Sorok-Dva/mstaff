@@ -1,3 +1,58 @@
+function experienceListener(){
+
+  $('.save').click(function() {
+    if (verifyInputs()){
+      saveDatas(permissions.editMode);
+      generateDatasRecap();
+      resetForm();
+    }
+  });
+
+  $('.openRecap').click(() => $('#recap').addClass('d-lg-block'));
+  $('.closeRecap').click(() => $('#recap').removeClass('d-lg-block'));
+
+  $('#xpPost').on( 'keyup autocompleteclose', () => {
+    let isValidPost = arrays.posts.includes($('#xpPost').val());
+    if (isValidPost){
+      let post = $('#xpPost').val();
+      let category = databaseDatas.allPosts.find(item => item.name === post).categoriesPS_id;
+      switch (category) {
+        case 4:
+          setAdministrativeService();
+          break;
+        case 5:
+          setLiberalPost();
+          break;
+      }
+      let currentServices = filterServicesByCategory(databaseDatas.allServices, category);
+      createServicesList(currentServices, $('#xpService'));
+    } else {
+      resetPostRadioService();
+    }
+  });
+
+  $('#xpOngoing').on('change', (event) => {
+    if (event.currentTarget.checked){
+      $('#xpEnd').data("DateTimePicker").clear().disable();
+    } else {
+      $('#xpEnd').data("DateTimePicker").clear().enable();
+    }
+  });
+
+  $('#backToContract').click(function() {
+    let template = selectTemplate(candidateDatas.application.contractType);
+    loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
+  $('#toDiploma').click(function() {
+    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+};
+
 function selectTemplate(savedValue){
   switch (savedValue) {
     case 'cdi':
@@ -119,61 +174,6 @@ function addToDatasRecap(item){
 function generateDatasRecap(){
   $('.recap-item').remove();
   candidateDatas.experiences.forEach( xp => addToDatasRecap(xp));
-};
-
-function experienceListener(){
-
-  $('.save').click(function() {
-    if (verifyInputs()){
-      saveDatas(permissions.editMode);
-      generateDatasRecap();
-      resetForm();
-    }
-  });
-
-  $('.openRecap').click(() => $('#recap').addClass('d-lg-block'));
-  $('.closeRecap').click(() => $('#recap').removeClass('d-lg-block'));
-
-  $('#xpPost').on( 'keyup autocompleteclose', () => {
-    let isValidPost = arrays.posts.includes($('#xpPost').val());
-    if (isValidPost){
-      let post = $('#xpPost').val();
-      let category = databaseDatas.allPosts.find(item => item.name === post).categoriesPS_id;
-      switch (category) {
-        case 4:
-          setAdministrativeService();
-          break;
-        case 5:
-          setLiberalPost();
-          break;
-      }
-      let currentServices = filterServicesByCategory(databaseDatas.allServices, category);
-      createServicesList(currentServices, $('#xpService'));
-    } else {
-      resetPostRadioService();
-    }
-  });
-
-  $('#xpOngoing').on('change', (event) => {
-    if (event.currentTarget.checked){
-      $('#xpEnd').data("DateTimePicker").clear().disable();
-    } else {
-      $('#xpEnd').data("DateTimePicker").clear().enable();
-    }
-  });
-
-  $('#backToContract').click(function() {
-    let template = selectTemplate(candidateDatas.application.contractType);
-    loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-
-  $('#toDiploma').click(function() {
-    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
 };
 
 function verifyInputs(){

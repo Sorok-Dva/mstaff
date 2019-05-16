@@ -71,17 +71,17 @@ const verifiedEvent = new Event('verified');
 //   });
 // };
 
-let createDiplomaList = (diplomas, input) => {
-  diplomaArray = [];
-  diplomas.forEach( diploma => {
-    diplomaArray.push(diploma.name);
-  });
-  diplomaArray.sort();
-  input.autocomplete({
-    source: diplomaArray,
-    minLength: 1
-  });
-};
+// let createDiplomaList = (diplomas, input) => {
+//   diplomaArray = [];
+//   diplomas.forEach( diploma => {
+//     diplomaArray.push(diploma.name);
+//   });
+//   diplomaArray.sort();
+//   input.autocomplete({
+//     source: diplomaArray,
+//     minLength: 1
+//   });
+// };
 
 let createQualificationList = (qualifications, input) => {
   qualificationArray = [];
@@ -146,11 +146,11 @@ let resetForm = (form) => {
     //   $('#xpEnd').data("DateTimePicker").clear();
     //   resetPostRadioService();
     //   break;
-    case 'diploma':
-      $('.inputsDiploma').trigger("reset");
-      $('#diplomaStart').data("DateTimePicker").clear();
-      $('#diplomaEnd').data("DateTimePicker").clear();
-      break;
+    // case 'diploma':
+    //   $('.inputsDiploma').trigger("reset");
+    //   $('#diplomaStart').data("DateTimePicker").clear();
+    //   $('#diplomaEnd').data("DateTimePicker").clear();
+    //   break;
     case 'qualification':
       $('.inputsQualification').trigger("reset");
       $('#qualificationStart').data("DateTimePicker").clear();
@@ -289,31 +289,31 @@ let generateDatasRecap = (current) => {
 //   $('#xpService').val(null).trigger('change');
 // };
 
-let atsEditXp = (id) => {
-  permissions.editMode = true;
-  permissions.editId = id;
-  let i = experiences.map(xp => xp.id).indexOf(id);
-  resetForm('xp');
-  $('#xpEstablishment').val(experiences[i].establishment).trigger('keyup');
-  $('#xpPost').val(experiences[i].post).trigger('keyup');
-  $(`#${experiences[i].contract}`).trigger('click');
-  $('#xpService').val(experiences[i].service).trigger('change');
-  $('#xpStart').data("DateTimePicker").date(experiences[i].start);
-  if (experiences[i].end)
-    $('#xpEnd').data("DateTimePicker").date(experiences[i].end);
-  $('#xpDate').trigger('change');
-};
-
-let atsDeleteXp = (id) => {
-  resetForm('xp');
-  permissions.editMode = false;
-  let i = experiences.map(xp => xp.id).indexOf(id);
-  experiences.splice(i, 1);
-  $(`div [data-id=${id}]`).remove();
-  if (experiences.length === 0){
-    generateGlobalRecap('experienceModal');
-  }
-};
+// let atsEditXp = (id) => {
+//   permissions.editMode = true;
+//   permissions.editId = id;
+//   let i = experiences.map(xp => xp.id).indexOf(id);
+//   resetForm('xp');
+//   $('#xpEstablishment').val(experiences[i].establishment).trigger('keyup');
+//   $('#xpPost').val(experiences[i].post).trigger('keyup');
+//   $(`#${experiences[i].contract}`).trigger('click');
+//   $('#xpService').val(experiences[i].service).trigger('change');
+//   $('#xpStart').data("DateTimePicker").date(experiences[i].start);
+//   if (experiences[i].end)
+//     $('#xpEnd').data("DateTimePicker").date(experiences[i].end);
+//   $('#xpDate').trigger('change');
+// };
+//
+// let atsDeleteXp = (id) => {
+//   resetForm('xp');
+//   permissions.editMode = false;
+//   let i = experiences.map(xp => xp.id).indexOf(id);
+//   experiences.splice(i, 1);
+//   $(`div [data-id=${id}]`).remove();
+//   if (experiences.length === 0){
+//     generateGlobalRecap('experienceModal');
+//   }
+// };
 
 // DIPLOMA-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
@@ -491,9 +491,9 @@ let loadClearModal = (target) => {
     // case 'experienceModal':
     //   createPostsList(allPosts, $('#xpPost'));
     //   break;
-    case 'diplomaModal':
-      createDiplomaList(allDiplomas, $('#diploma'));
-      break;
+    // case 'diplomaModal':
+    //   createDiplomaList(allDiplomas, $('#diploma'));
+    //   break;
     case 'qualificationModal':
       createQualificationList(allQualifications, $('#qualification'));
       break;
@@ -726,19 +726,19 @@ let verifyDatas = (modal) => {
     //   }
     //   return notify('noStartDate');
     //   break;
-    case 'diplomaModal':
-      let diploma = !$.isEmptyObject($('#diploma').val()) ? true : notify('noDiploma');
-      let diplomaStart = $('#diplomaStart').data("DateTimePicker").date();
-      let diplomaEnd = $('#diplomaEnd').data("DateTimePicker").date();
-      if (diplomaStart !== null){
-        let validDiplomaStart = diplomaStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
-        let validDiplomaEnd = true;
-        if (diplomaEnd !== null)
-          validDiplomaEnd = diplomaEnd.startOf('day').isSameOrAfter(diplomaStart.startOf('day')) ? true : notify('endDateBeforeStart');
-        return (diploma && validDiplomaStart && validDiplomaEnd);
-      }
-      return notify('noStartDate');
-      break;
+    // case 'diplomaModal':
+    //   let diploma = !$.isEmptyObject($('#diploma').val()) ? true : notify('noDiploma');
+    //   let diplomaStart = $('#diplomaStart').data("DateTimePicker").date();
+    //   let diplomaEnd = $('#diplomaEnd').data("DateTimePicker").date();
+    //   if (diplomaStart !== null){
+    //     let validDiplomaStart = diplomaStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
+    //     let validDiplomaEnd = true;
+    //     if (diplomaEnd !== null)
+    //       validDiplomaEnd = diplomaEnd.startOf('day').isSameOrAfter(diplomaStart.startOf('day')) ? true : notify('endDateBeforeStart');
+    //     return (diploma && validDiplomaStart && validDiplomaEnd);
+    //   }
+    //   return notify('noStartDate');
+    //   break;
     case 'qualificationModal':
       let qualification = !$.isEmptyObject($('#qualification').val()) ? true : notify('noQualification');
       let qualificationStart = $('#qualificationStart').data("DateTimePicker").date();
@@ -911,14 +911,14 @@ let notify = (error) => {
     //     message: `Merci de choisir une date de fin postérieure ou égale à celle de départ.`
     //   });
     //   break;
-    case 'noDiploma':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer une formation.`
-      });
-      break;
+    // case 'noDiploma':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci d'indiquer une formation.`
+    //   });
+    //   break;
     case 'noQualification':
       notification({
         icon: 'exclamation',
@@ -1162,71 +1162,71 @@ let finalize = (es_finess) => {
 //   // });
 // };
 
-let experienceModalListener = () => {
-  // $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('experienceModal', 'contractModal'));
+// let experienceModalListener = () => {
+//   // $('#experienceModal').on('hide.bs.modal', () => toPreviousModal('experienceModal', 'contractModal'));
+//
+//   //Initialize
+//   // $('#xpDate input').datetimepicker({
+//   //   format: 'D MMMM YYYY',
+//   //   useCurrent: false,
+//   //   ignoreReadonly: true,
+//   //   maxDate: moment().startOf('day'),
+//   //   widgetPositioning: {vertical: 'top'}
+//   // });
+//
+//   // $('#xpPost').on( 'keyup autocompleteclose', () => {
+//   //   let isValidPost = postsArray.includes($('#xpPost').val());
+//   //   if (isValidPost){
+//   //     let post = $('#xpPost').val();
+//   //     let category = allPosts.find(item => item.name === post).categoriesPS_id;
+//   //     switch (category) {
+//   //       case 4:
+//   //         setAdministrativeService();
+//   //         break;
+//   //       case 5:
+//   //         setLiberalPost();
+//   //         break;
+//   //     }
+//   //     let currentServices = filterServicesByCategory(allServices, category);
+//   //     createServicesList(currentServices, $('#xpService'));
+//   //   } else resetPostRadioService();
+//   // });
+//
+//   $('#saveXp').on('click', () => {
+//     if (verifyDatas('experienceModal')){
+//       // permissions.editMode ? saveEditDatas('experienceModal') : saveDatas('experienceModal');
+//       generateDatasRecap('experienceModal');
+//       // resetForm('xp');
+//     }
+//   });
+//
+//   // $('#xpOngoing').on('change', (event) => {
+//   //   if (event.currentTarget.checked){
+//   //   }
+//   // });
+//
+//   //Next Step
+//   $('#emptyXp').on('click', () => {
+//     experiences = [];
+//     loadModal('experienceModal', 'diplomaModal')
+//   });
+//
+//   $('#toStep5').on('click', () => {
+//     loadModal('experienceModal','diplomaModal');
+//   });
+// };
+
+let diplomaModalListener = () => {
+  // $('#diplomaModal').on('hide.bs.modal', () => toPreviousModal('diplomaModal', 'experienceModal'));
 
   //Initialize
-  // $('#xpDate input').datetimepicker({
+  // $('#diplomaDate input').datetimepicker({
   //   format: 'D MMMM YYYY',
   //   useCurrent: false,
   //   ignoreReadonly: true,
   //   maxDate: moment().startOf('day'),
   //   widgetPositioning: {vertical: 'top'}
   // });
-
-  // $('#xpPost').on( 'keyup autocompleteclose', () => {
-  //   let isValidPost = postsArray.includes($('#xpPost').val());
-  //   if (isValidPost){
-  //     let post = $('#xpPost').val();
-  //     let category = allPosts.find(item => item.name === post).categoriesPS_id;
-  //     switch (category) {
-  //       case 4:
-  //         setAdministrativeService();
-  //         break;
-  //       case 5:
-  //         setLiberalPost();
-  //         break;
-  //     }
-  //     let currentServices = filterServicesByCategory(allServices, category);
-  //     createServicesList(currentServices, $('#xpService'));
-  //   } else resetPostRadioService();
-  // });
-
-  $('#saveXp').on('click', () => {
-    if (verifyDatas('experienceModal')){
-      // permissions.editMode ? saveEditDatas('experienceModal') : saveDatas('experienceModal');
-      generateDatasRecap('experienceModal');
-      // resetForm('xp');
-    }
-  });
-
-  // $('#xpOngoing').on('change', (event) => {
-  //   if (event.currentTarget.checked){
-  //   }
-  // });
-
-  //Next Step
-  $('#emptyXp').on('click', () => {
-    experiences = [];
-    loadModal('experienceModal', 'diplomaModal')
-  });
-
-  $('#toStep5').on('click', () => {
-    loadModal('experienceModal','diplomaModal');
-  });
-};
-
-let diplomaModalListener = () => {
-  $('#diplomaModal').on('hide.bs.modal', () => toPreviousModal('diplomaModal', 'experienceModal'));
-
-  //Initialize
-  $('#diplomaDate input').datetimepicker({
-    format: 'D MMMM YYYY',
-    useCurrent: false,
-    ignoreReadonly: true,
-    maxDate: moment().startOf('day'),
-    widgetPositioning: {vertical: 'top'}
-  });
 
   $('#saveDiploma').on('click', () => {
     if (verifyDatas('diplomaModal')){
@@ -1236,14 +1236,14 @@ let diplomaModalListener = () => {
     }
   });
 
-  $('#emptyDiploma').on('click', () => {
-    diplomas = [];
-    loadModal('diplomaModal', 'qualificationModal')
-  });
+  // $('#emptyDiploma').on('click', () => {
+  //   diplomas = [];
+  //   loadModal('diplomaModal', 'qualificationModal')
+  // });
 
-  $('#toStep6').on('click', () => {
-    loadModal('diplomaModal','qualificationModal');
-  });
+  // $('#toStep6').on('click', () => {
+  //   loadModal('diplomaModal','qualificationModal');
+  // });
 };
 
 let qualificationModalListener = () => {

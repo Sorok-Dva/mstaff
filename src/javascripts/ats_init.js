@@ -17,9 +17,9 @@ let databaseDatas = {
 let arrays = {
   posts: [],
   services: [],
-  diploma: [],
-  qualification: [],
-  skill: []
+  diplomas: [],
+  qualifications: [],
+  skills: []
 };
 
 let permissions = {
