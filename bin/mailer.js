@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const env = require('dotenv').config().parsed;
+const { Env } = require('../helpers/helpers');
 const Mailer = {};
 
 const options = {
@@ -31,6 +32,7 @@ const transporter = nodemailer.createTransport({
 transporter.use('compile', hbs(options));
 
 Mailer.sendEmail = (opts) => {
+  if (Env.isTest) return false;
   transporter.sendMail({
     from: `"${env.SITE_TITLE}" \<${env.GMAIL_EMAIL}\>`,
     to: opts.to,
