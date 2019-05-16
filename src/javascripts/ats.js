@@ -95,17 +95,17 @@ const verifiedEvent = new Event('verified');
 //   });
 // };
 
-let createSkillList = (skills, input) => {
-  skillArray = [];
-  skills.forEach( skill => {
-    skillArray.push(skill.name);
-  });
-  skillArray.sort();
-  input.autocomplete({
-    source: skillArray,
-    minLength: 1
-  });
-};
+// let createSkillList = (skills, input) => {
+//   skillArray = [];
+//   skills.forEach( skill => {
+//     skillArray.push(skill.name);
+//   });
+//   skillArray.sort();
+//   input.autocomplete({
+//     source: skillArray,
+//     minLength: 1
+//   });
+// };
 
 // let createServicesSelect = (services, input) => {
 //   input.empty().select2({
@@ -138,36 +138,36 @@ let createSkillList = (skills, input) => {
 
 // Logic to next step
 
-let resetForm = (form) => {
-  switch (form) {
-    // case 'xp':
-    //   $('.inputsXp').trigger("reset");
-    //   $('#xpStart').data("DateTimePicker").clear();
-    //   $('#xpEnd').data("DateTimePicker").clear();
-    //   resetPostRadioService();
-    //   break;
-    // case 'diploma':
-    //   $('.inputsDiploma').trigger("reset");
-    //   $('#diplomaStart').data("DateTimePicker").clear();
-    //   $('#diplomaEnd').data("DateTimePicker").clear();
-    //   break;
-    case 'qualification':
-      $('.inputsQualification').trigger("reset");
-      $('#qualificationStart').data("DateTimePicker").clear();
-      $('#qualificationEnd').data("DateTimePicker").clear();
-      break;
-    case 'skill':
-      $('.inputsSkill').trigger("reset");
-      starsSelector('reset');
-      break;
-  }
-};
+// let resetForm = (form) => {
+//   switch (form) {
+//     // case 'xp':
+//     //   $('.inputsXp').trigger("reset");
+//     //   $('#xpStart').data("DateTimePicker").clear();
+//     //   $('#xpEnd').data("DateTimePicker").clear();
+//     //   resetPostRadioService();
+//     //   break;
+//     // case 'diploma':
+//     //   $('.inputsDiploma').trigger("reset");
+//     //   $('#diplomaStart').data("DateTimePicker").clear();
+//     //   $('#diplomaEnd').data("DateTimePicker").clear();
+//     //   break;
+//     // case 'qualification':
+//     //   $('.inputsQualification').trigger("reset");
+//     //   $('#qualificationStart').data("DateTimePicker").clear();
+//     //   $('#qualificationEnd').data("DateTimePicker").clear();
+//     //   break;
+//     // case 'skill':
+//     //   $('.inputsSkill').trigger("reset");
+//     //   starsSelector('reset');
+//     //   break;
+//   }
+// };
 
-let toPreviousModal = (current, target) => {
-  if (!toNextModal){
-    loadModal(current, target);
-  }
-};
+// let toPreviousModal = (current, target) => {
+//   if (!toNextModal){
+//     loadModal(current, target);
+//   }
+// };
 
 
 // GLOBAL FUNCTIONS ---------------------------------------------------------------------------------------
@@ -367,65 +367,65 @@ let generateDatasRecap = (current) => {
 
 // SKILL-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let starsSelector = (id) => {
-  $('#stars div i').css('display', 'none');
-  switch (id) {
-    case 'reset':
-      $(`#star1 i:nth-child(1)`).css('display', 'inline-block');
-      $(`#star2 i:nth-child(1)`).css('display', 'inline-block');
-      $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
-      $('#legend').html('Notez-vous !');
-      break;
-    case 'star1':
-      $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
-      $(`#star2 i:nth-child(1)`).css('display', 'inline-block');
-      $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
-      $('#legend').html('Je sais faire avec tutorat');
-      break;
-    case 'star2':
-      $(`#star1 i:nth-child(2)`).css('display', 'inline-block');
-      $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
-      $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
-      $('#legend').html('Je sais faire en autonomie');
-      break;
-    case 'star3':
-      $(`#star1 i:nth-child(2)`).css('display', 'inline-block');
-      $(`#star2 i:nth-child(2)`).css('display', 'inline-block');
-      $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
-      $('#legend').html('Je sais former');
-      break;
-  }
-};
+// let starsSelector = (id) => {
+//   $('#stars div i').css('display', 'none');
+//   switch (id) {
+//     case 'reset':
+//       $(`#star1 i:nth-child(1)`).css('display', 'inline-block');
+//       $(`#star2 i:nth-child(1)`).css('display', 'inline-block');
+//       $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
+//       $('#legend').html('Notez-vous !');
+//       break;
+//     case 'star1':
+//       $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
+//       $(`#star2 i:nth-child(1)`).css('display', 'inline-block');
+//       $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
+//       $('#legend').html('Je sais faire avec tutorat');
+//       break;
+//     case 'star2':
+//       $(`#star1 i:nth-child(2)`).css('display', 'inline-block');
+//       $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
+//       $(`#star3 i:nth-child(1)`).css('display', 'inline-block');
+//       $('#legend').html('Je sais faire en autonomie');
+//       break;
+//     case 'star3':
+//       $(`#star1 i:nth-child(2)`).css('display', 'inline-block');
+//       $(`#star2 i:nth-child(2)`).css('display', 'inline-block');
+//       $(`#${id} i:nth-child(2)`).css('display', 'inline-block');
+//       $('#legend').html('Je sais former');
+//       break;
+//   }
+// };
 
-let starsSelected = () => {
-  if ($('#star3 i.fas.fa-star').prop('style').display === 'inline-block')
-    return 3;
-  if ($('#star2 i.fas.fa-star').prop('style').display === 'inline-block')
-    return 2;
-  if ($('#star1 i.fas.fa-star').prop('style').display === 'inline-block')
-    return 1;
-  return 0;
-};
+// let starsSelected = () => {
+//   if ($('#star3 i.fas.fa-star').prop('style').display === 'inline-block')
+//     return 3;
+//   if ($('#star2 i.fas.fa-star').prop('style').display === 'inline-block')
+//     return 2;
+//   if ($('#star1 i.fas.fa-star').prop('style').display === 'inline-block')
+//     return 1;
+//   return 0;
+// };
 
-let atsEditSkill = (id) => {
-  permissions.editMode = true;
-  permissions.editId = id;
-  let i = skills.map(skill => skill.id).indexOf(id);
-  resetForm('skill');
-  $('#skill').val(skills[i].skill).trigger('keyup');
-  starsSelector(`star${skills[i].stars}`);
-};
-
-let atsDeleteSkill = (id) => {
-  resetForm('skill');
-  permissions.editMode = false;
-  let i = skills.map(skill => skill.id).indexOf(id);
-  skills.splice(i, 1);
-  $(`div [data-id=${id}]`).remove();
-  if (skills.length === 0){
-    generateGlobalRecap('skillModal');
-  }
-};
+// let atsEditSkill = (id) => {
+//   permissions.editMode = true;
+//   permissions.editId = id;
+//   let i = skills.map(skill => skill.id).indexOf(id);
+//   resetForm('skill');
+//   $('#skill').val(skills[i].skill).trigger('keyup');
+//   starsSelector(`star${skills[i].stars}`);
+// };
+//
+// let atsDeleteSkill = (id) => {
+//   resetForm('skill');
+//   permissions.editMode = false;
+//   let i = skills.map(skill => skill.id).indexOf(id);
+//   skills.splice(i, 1);
+//   $(`div [data-id=${id}]`).remove();
+//   if (skills.length === 0){
+//     generateGlobalRecap('skillModal');
+//   }
+// };
 
 // IDENTITY-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
@@ -497,9 +497,9 @@ let loadClearModal = (target) => {
     // case 'qualificationModal':
     //   createQualificationList(allQualifications, $('#qualification'));
     //   break;
-    case 'skillModal':
-      createSkillList(allSkills, $('#skill'));
-      break;
+    // case 'skillModal':
+    //   createSkillList(allSkills, $('#skill'));
+    //   break;
     case 'recapModal':
       generateFinalRecap();
       break;
@@ -608,17 +608,17 @@ let saveDatas = (modal) => {
     //     current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
     //   diplomas.push(current);
     //   break;
-    case 'qualificationModal':
-      current = {};
-      current.id = permissions.qualificationId;
-      permissions.qualificationId += 1;
-      current.qualification = $('#qualification').val();
-      current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
-      current.end = null;
-      if ($('#qualificationEnd').data("DateTimePicker").date())
-        current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
-      qualifications.push(current);
-      break;
+    // case 'qualificationModal':
+    //   current = {};
+    //   current.id = permissions.qualificationId;
+    //   permissions.qualificationId += 1;
+    //   current.qualification = $('#qualification').val();
+    //   current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
+    //   current.end = null;
+    //   if ($('#qualificationEnd').data("DateTimePicker").date())
+    //     current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
+    //   qualifications.push(current);
+    //   break;
     case 'skillModal':
       current = {};
       current.id = permissions.skillId;
@@ -1216,68 +1216,68 @@ let finalize = (es_finess) => {
 //   });
 // };
 
-let diplomaModalListener = () => {
-  // $('#diplomaModal').on('hide.bs.modal', () => toPreviousModal('diplomaModal', 'experienceModal'));
+// let diplomaModalListener = () => {
+//   // $('#diplomaModal').on('hide.bs.modal', () => toPreviousModal('diplomaModal', 'experienceModal'));
+//
+//   //Initialize
+//   // $('#diplomaDate input').datetimepicker({
+//   //   format: 'D MMMM YYYY',
+//   //   useCurrent: false,
+//   //   ignoreReadonly: true,
+//   //   maxDate: moment().startOf('day'),
+//   //   widgetPositioning: {vertical: 'top'}
+//   // });
+//   //
+//   // $('#saveDiploma').on('click', () => {
+//   //   if (verifyDatas('diplomaModal')){
+//   //     permissions.editMode ? saveEditDatas('diplomaModal') : saveDatas('diplomaModal');
+//   //     generateDatasRecap('diplomaModal');
+//   //     resetForm('diploma');
+//   //   }
+//   // });
+//
+//   // $('#emptyDiploma').on('click', () => {
+//   //   diplomas = [];
+//   //   loadModal('diplomaModal', 'qualificationModal')
+//   // });
+//
+//   // $('#toStep6').on('click', () => {
+//   //   loadModal('diplomaModal','qualificationModal');
+//   // });
+// };
 
-  //Initialize
-  // $('#diplomaDate input').datetimepicker({
-  //   format: 'D MMMM YYYY',
-  //   useCurrent: false,
-  //   ignoreReadonly: true,
-  //   maxDate: moment().startOf('day'),
-  //   widgetPositioning: {vertical: 'top'}
-  // });
-
-  $('#saveDiploma').on('click', () => {
-    if (verifyDatas('diplomaModal')){
-      permissions.editMode ? saveEditDatas('diplomaModal') : saveDatas('diplomaModal');
-      generateDatasRecap('diplomaModal');
-      resetForm('diploma');
-    }
-  });
-
-  // $('#emptyDiploma').on('click', () => {
-  //   diplomas = [];
-  //   loadModal('diplomaModal', 'qualificationModal')
-  // });
-
-  // $('#toStep6').on('click', () => {
-  //   loadModal('diplomaModal','qualificationModal');
-  // });
-};
-
-let qualificationModalListener = () => {
-  // $('#qualificationModal').on('hide.bs.modal', () => toPreviousModal('qualificationModal', 'diplomaModal'));
-
-  //Initialize
-  // $('#qualificationDate input').datetimepicker({
-  //   format: 'D MMMM YYYY',
-  //   useCurrent: false,
-  //   ignoreReadonly: true,
-  //   maxDate: moment().startOf('day'),
-  //   widgetPositioning: {vertical: 'top'}
-  // });
-
-  $('#saveQualification').on('click', () => {
-    if (verifyDatas('qualificationModal')){
-      permissions.editMode ? saveEditDatas('qualificationModal') : saveDatas('qualificationModal');
-      generateDatasRecap('qualificationModal');
-      resetForm('qualification');
-    }
-  });
-
-  $('#emptyQualification').on('click', () => {
-    qualifications = [];
-    loadModal('qualificationModal', 'skillModal')
-  });
-
-  $('#toStep7').on('click', () => {
-    loadModal('qualificationModal','skillModal');
-  });
-};
+// // let qualificationModalListener = () => {
+//   // $('#qualificationModal').on('hide.bs.modal', () => toPreviousModal('qualificationModal', 'diplomaModal'));
+//
+//   //Initialize
+//   // $('#qualificationDate input').datetimepicker({
+//   //   format: 'D MMMM YYYY',
+//   //   useCurrent: false,
+//   //   ignoreReadonly: true,
+//   //   maxDate: moment().startOf('day'),
+//   //   widgetPositioning: {vertical: 'top'}
+//   // });
+//
+//   $('#saveQualification').on('click', () => {
+//     if (verifyDatas('qualificationModal')){
+//       permissions.editMode ? saveEditDatas('qualificationModal') : saveDatas('qualificationModal');
+//       generateDatasRecap('qualificationModal');
+//       resetForm('qualification');
+//     }
+//   });
+//
+//   $('#emptyQualification').on('click', () => {
+//     qualifications = [];
+//     loadModal('qualificationModal', 'skillModal')
+//   });
+//
+//   $('#toStep7').on('click', () => {
+//     loadModal('qualificationModal','skillModal');
+//   });
+// };
 
 let skillModalListener = () => {
-  $('#skillModal').on('hide.bs.modal', () => toPreviousModal('skillModal', 'qualificationModal'));
+  // $('#skillModal').on('hide.bs.modal', () => toPreviousModal('skillModal', 'qualificationModal'));
 
   $('#stars div').on('click',(e) => {
     starsSelector(e.currentTarget.id);

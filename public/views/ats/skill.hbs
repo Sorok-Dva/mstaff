@@ -4,15 +4,21 @@
   }
 </style>
 
-<i id="backToQualification" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+<div class="row justify-content-between align-items-center openRecap">
+  <i id="backToQualification" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+  <div class="text-center col-3 d-none d-lg-block custom-cursor openRecap">
+    <i class="fal fa-low-vision col-5"></i>
+    <p>Afficher mes diplômes</p>
+  </div>
+</div>
 
 <nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
   <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
-  <h2 class="text-center underline">Aperçu de vos compétences</h2>
+  <h2 class="text-center underline recap">Aperçu de vos compétences</h2>
 </nav>
 
 <div class="height-80 d-flex flex-column justify-content-center">
-  <form>
+  <form id="skillForm">
     <div class="form-group text-center">
       <label for="skill">Indiquez ici une compétence</label>
       <input type="text" class="form-control" id="skill">
@@ -38,24 +44,4 @@
   <div class="custom-cursor" id="toIdentity"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
-<script>
-  $('.save').click(function() {
-    $('#recap').addClass('d-lg-block');
-  });
-
-  $('.closeRecap').click(function() {
-    $('#recap').removeClass('d-lg-block');
-  });
-
-  $('#backToQualification').click(function() {
-    loadTemplate('/static/views/ats/qualification.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-
-  $('#toIdentity').click(function() {
-    loadTemplate('/static/views/ats/identity.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-</script>
+<script src="/static/assets/dist/js/ats_skill.min.js"></script>
