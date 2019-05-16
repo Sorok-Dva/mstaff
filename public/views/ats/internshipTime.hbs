@@ -1,0 +1,24 @@
+{{log databaseDatas}}
+{{log candidateDatas}}
+
+<i id="backToContract" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+
+<div class="height-80 d-flex flex-column justify-content-center">
+  <div id="internshipDate" class="row justify-content-around mb-4">
+    <div class="col-6 text-center">
+      <label for="start">Du :</label>
+      <input id="start" name="start" type="text"
+             class="form-control datetimepicker-input text-center" data-toggle="datetimepicker" data-target="#start" readonly>
+    </div>
+    <div class="col-6 text-center">
+      <label for="end">Au :</label>
+      <input id="end" name="end" type="text"
+             class="form-control datetimepicker-input text-center" data-toggle="datetimepicker" data-target="#end" readonly>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-end">
+  <div class="custom-cursor" id="toExperience"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
+</div>
+
+<script src="/static/assets/dist/js/ats_internshipTime.min.js"></script>
