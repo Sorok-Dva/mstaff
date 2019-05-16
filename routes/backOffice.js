@@ -178,7 +178,11 @@ router.get('/pools/pool-list',
  */
 router.get('/pools/pool-links',
   Authentication.ensureIsAdmin,
-  BackOffice.Pool.viewLinks);
+  BackOffice.Pool.viewLinks
+).post('/pools/pool-links',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.forceLink
+);
 
 /** @Route('/back-office/rh/all') GET;
  * Get the list of es accounts

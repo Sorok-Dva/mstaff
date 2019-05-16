@@ -64,4 +64,14 @@ BackOffice_Pool.viewLinks = (req, res, next) => {
   });
 };
 
+BackOffice_Pool.forceLink = (req, res, next) => {
+  Models.UserPool.create({
+    pool_id: req.body.pool_id,
+    user_id: req.body.user_id,
+    establishment: req.body.establishment
+  }).then(link => {
+    res.status(200).json({ result: link, message: 'link created' });
+  }).catch(error => next(new Error(error)));
+};
+
 module.exports = BackOffice_Pool;

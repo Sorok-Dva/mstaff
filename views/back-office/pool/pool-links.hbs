@@ -153,7 +153,30 @@ let createPoolLink = () => {
     title: 'Générer une liaison à un pool',
     modal: 'back-office/createPoolLink'
   }, () => {
-
+    $('button#createPoolButton').click(function() {
+      if ($('#poolName').val() !== '' && $('#poolUser').val() !== '') {
+        let _csrf = $('meta[name="csrf-token"]').attr('content');
+        let pool_id = $('#poolName').val();
+        let user_id = $('#poolUser').val();
+        let establishment = $('#poolEstablishment').val();
+        $.post(`/back-office/pools/pool-links`, {
+          _csrf,
+          pool_id,
+          user_id,
+          establishment
+        }, (response) => {
+          if (response.message === 'link created') {
+            $('#createPoolLinkModal').modal('hide');
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Lien généré',
+              message: ``
+            });
+          }
+        })
+      }
+    })
   });
 };
 </script>

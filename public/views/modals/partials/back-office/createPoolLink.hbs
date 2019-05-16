@@ -42,13 +42,10 @@
         value: establishment.id,
         text: establishment.name,
       }));
-      $('#poolEstablishment').selectpicker('refresh');
-      $("#poolEstablishment").removeAttr("selected");
+      $('#poolEstablishment').selectpicker('refresh'); // TODO: Unselect this, idk why it's prefilled
     });
   });
-
   $('#poolName').selectpicker();
   $('#poolUser').selectpicker();
   $('#poolEstablishment').selectpicker();
-
 </script>
