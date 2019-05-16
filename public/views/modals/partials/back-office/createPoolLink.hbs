@@ -1,0 +1,46 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label for="poolName"> Sélectionner un pool </label>
+    <select id="poolName" name="selectPool" class="selectpicker col-md-12"
+            data-live-search="true">
+    </select>
+    <label for="poolUser"> Sélectionner un candidat : </label>
+    <select id="poolUser" name="selectUser" class="selectpicker col-md-12"
+            data-live-search="true">
+    </select>
+    <label for="poolEstablishment">Assigner un établissement <i>(optionnel)</i> :</label>
+    <select id="poolEstablishment" name="selectEstablishment" class="selectpicker col-md-12"
+            data-live-search="true">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="createPoolButton" class="btn btn-outline-info float-right">
+    Valider
+  </button>
+</div>
+
+<script>
+  $.get('/back-office/pool-dependencies/all', function (data) {
+    console.log(data);
+    $.each(data, function (i, pool) {
+      $('#poolName').append($('<option>', {
+        value: pool.id,
+        text: pool.name,
+      }));
+      $('#poolName').selectpicker('refresh');
+    });
+    let Pooloptions = $("#poolName option");
+    Pooloptions.sort(function (a, b) {
+      if (a.text > b.text) return 1;
+      else if (a.text < b.text) return -1;
+      else return 0;
+    });
+    $("#poolName").empty().append(Pooloptions).selectpicker("refresh");
+  });
+
+  $('#poolName').selectpicker();
+  $('#poolUser').selectpicker();
+  $('#poolEstablishment').selectpicker();
+
+</script>

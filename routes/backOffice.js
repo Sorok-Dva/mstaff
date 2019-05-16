@@ -163,6 +163,9 @@ router.get('/settings',
   Authentication.ensureIsAdmin,
   BackOffice.Main.ViewSettings);
 
+/** @Route('/back-office/pool-list') GET, POST;
+ * Show and configure pools
+ */
 router.get('/pools/pool-list',
   Authentication.ensureIsAdmin,
   BackOffice.Pool.viewList
@@ -170,13 +173,26 @@ router.get('/pools/pool-list',
   Authentication.ensureIsAdmin,
   BackOffice.Pool.createPool);
 
+/** @Route('/back-office/pool-links/') GET;
+ * Show and configure links between pools and user
+ */
 router.get('/pools/pool-links',
   Authentication.ensureIsAdmin,
   BackOffice.Pool.viewLinks);
 
+/** @Route('/back-office/rh/all') GET;
+ * Get the list of es accounts
+ */
 router.get('/rh/all',
   Authentication.ensureIsAdmin,
   BackOffice.User.listRH);
+
+/** @Route('/back-office/pool-dependencies/all') GET;
+ * Get all dependencies to make new links
+ */
+router.get('/pool-dependencies/all',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.linkDependencies);
 
 
 module.exports = router;

@@ -31,24 +31,32 @@ BackOffice_Pool.createPool = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
-BackOffice_Pool.viewLinks = (req, res, next) => {
+BackOffice_Pool.linkDependencies = (req, res, next) => {
   Models.UserPool.findAll({
-    include: {
+    include: [{
       model: Models.User,
-      attributes: { exclude: ['password', 'photo', 'birthday', 'postal_code', 'town', 'country', 'key', 
-        'validated', 'opts', 'createdAt', 'updatedAt'] },
-      include: {
-        model: Models.Pool,
-        include: {
-          model: Models.Establishment,
-          attributes: { exclude: ['oldId', 'category', 'finess', 'finesse_ej', 'siret', 'phone', 'sector',
-            'address', 'town', 'status', 'url', 'description', 'logo', 'banner', 'domain_name', 'domain_enable',
-            'salaries_count', 'contact_identity', 'contact_post', 'contact_email', 'contact_phone',
-            'createdAt', 'updatedAt'] }
-        }
+      where: { role: 'User' },
+      attributes: {
+        exclude: ['password', 'photo', 'birthday', 'postal_code', 'town', 'country', 'key',
+          'validated', 'opts', 'createdAt', 'updatedAt']
       }
-    }
-  }).then(poollinks => {
+    },
+    {
+      model: Models.Pool,
+    },
+    {
+      model: Models.Establishment,
+      attributes: { exclude: ['oldId', 'category', 'finess', 'finesse_ej', 'siret', 'phone', 'sector',
+        'address', 'town', 'status', 'url', 'description', 'logo', 'banner', 'domain_name', 'domain_enable',
+        'salaries_count', 'contact_identity', 'contact_post', 'contact_email', 'contact_phone',
+        'createdAt', 'updatedAt'] }
+    }]
+  }).then(dependencies => res.status(200).send(dependencies));
+};
+
+BackOffice_Pool.viewLinks = (req, res, next) => {
+  Models.UserPool.findAll().then(poollinks => {
+    console.log(poollinks);
     res.render('back-office/pool/pool-links', {
       layout,
       poollinks,

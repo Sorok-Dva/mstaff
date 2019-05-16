@@ -40,6 +40,7 @@
 </div>
 <script type="text/javascript"> // TODO : Modifier le javascript pour pouvoir modifier ou supprimer des POOLS
 let table = $('#formations-table');
+console.log({{poollinks}});
 
 operateFormatter = (value, row, index) => {
   return [
@@ -145,4 +146,14 @@ $(document).ready(() => {
     table.bootstrapTable('resetView');
   });
 });
+
+let createPoolLink = () => {
+  createModal({
+    id: 'createPoolLinkModal',
+    title: 'Générer une liaison à un pool',
+    modal: 'back-office/createPoolLink'
+  }, () => {
+
+  });
+};
 </script>
