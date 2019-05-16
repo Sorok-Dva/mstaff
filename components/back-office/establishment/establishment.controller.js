@@ -90,6 +90,7 @@ BackOffice_Establishment.Edit = (req, res, next) => {
                 req.flash('error_msg', `Ce sous domaine est déjà utilisé.`);
                 req.body.domaine_name = esSubdomain.domain_name;
               }
+              else subCheckOk = true
             } else subCheckOk = true;
 
             es.update({
@@ -112,6 +113,7 @@ BackOffice_Establishment.Edit = (req, res, next) => {
               banner: req.body.banner,
             }).then(savedEs => {
               if (subCheckOk) {
+                console.log(savedEs.domain_enable);
                 if (subESExist) {
                   esSubdomain.update({
                     name: savedEs.domain_name,
@@ -127,6 +129,7 @@ BackOffice_Establishment.Edit = (req, res, next) => {
                 req.flash('success_msg', 'Établissement mis à jour.');
                 return res.redirect(`/back-office/es/${savedEs.id}`);
               } else {
+                console.log('subnotexist');
                 req.flash('success_msg', 'Établissement mis à jour.');
                 return res.redirect(`/back-office/es/${savedEs.id}`);
               }
