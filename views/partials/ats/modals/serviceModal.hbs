@@ -1,0 +1,63 @@
+<style>
+  .select2-container{
+    display: flex;
+    flex-grow: 1;
+  }
+  .select2-container > .selection{
+    color: white;
+    font-size: 3em;
+  }
+  .select2-container > .selection > .select2-selection--multiple{
+    background-color: transparent;
+    border: none;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__rendered{
+    max-height: 10vh;
+    overflow-y: scroll;
+  }
+  .select2-container > .select2-dropdown--below{
+    background-color: transparent;
+    color: white;
+    font-size: 2.5em;
+    border: none;
+  }
+  .select2-container .select2-results__options{
+    scrollbar-width: none;
+  }
+  .select2-container--default .select2-search--inline .select2-search__field{
+    width: 100% !important;
+  }
+  .select2-container--default .select2-results__option--highlighted[aria-selected]{
+    background-color: transparent;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    float: none;
+    background: transparent;
+    border: none;
+  }
+  .select2-results{
+    margin-top: 5%;
+  }
+
+</style>
+
+<div class="modal customModal darkModal" id="serviceModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="selectPost">
+          <div class="selectParaph">
+            <p>Vous souhaitez travailler dans le service ...</p>
+          </div>
+          <div class="select-holder">
+            <i class="fal fa-search"></i>
+            <select id="InputServices"  multiple="multiple"></select>
+          </div>
+          <div class="next-modal">
+            <i id="toStep3" class="fal fa-arrow-circle-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
