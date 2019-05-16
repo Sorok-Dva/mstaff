@@ -165,10 +165,18 @@ router.get('/settings',
 
 router.get('/pools/pool-list',
   Authentication.ensureIsAdmin,
-  BackOffice.Pool.viewList);
+  BackOffice.Pool.viewList
+).post('/pools/pool-list',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.createPool);
 
 router.get('/pools/pool-links',
   Authentication.ensureIsAdmin,
   BackOffice.Pool.viewLinks);
+
+router.get('/rh/all',
+  Authentication.ensureIsAdmin,
+  BackOffice.User.listRH);
+
 
 module.exports = router;

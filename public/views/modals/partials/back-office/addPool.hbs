@@ -1,0 +1,38 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label for="poolName"> Nom de votre pool </label>
+    <input id="poolName" type="text" class="form-control">
+    <label for="ReferentName"> Nom du référent du pool </label>
+    <input id="ReferentName" type="text" class="form-control">
+    <label for="poolOwner">Assigner le pool au RH : </label>
+    <select id="poolOwner" name="selectName" class="selectpicker col-md-12"
+            data-live-search="true">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="createPoolButton" class="btn btn-outline-info float-right">
+    Valider
+  </button>
+</div>
+<script>
+  $.get('/back-office/rh/all', function (data) {
+    console.log(data);
+    $.each(data, function (i, rh) {
+      $('#poolOwner').append($('<option>', {
+        value: rh.id,
+        text: rh.lastName + ' ' + rh.firstName
+      }));
+      $('#poolOwner').selectpicker('refresh');
+    });
+    let Pooloptions = $("#poolOwner option");
+    Pooloptions.sort(function (a, b) {
+      if (a.text > b.text) return 1;
+      else if (a.text < b.text) return -1;
+      else return 0;
+    });
+    $("#poolOwner").empty().append(Pooloptions).selectpicker("refresh");
+  });
+  $('#poolOwner').selectpicker();
+
+</script>

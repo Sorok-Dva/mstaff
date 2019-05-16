@@ -4,6 +4,7 @@
     <div class="card">
       <div class="card-content">
         <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="createPool()"> <i class="fal fa-plus"></i></a>
         </div>
 
         <table id="formations-table" class="table">
@@ -20,7 +21,7 @@
           </thead>
           <tbody>
           {{#each pools as |pool|}}
-            <tr data-id="{{formations.id}}">
+            <tr data-id="{{pool.id}}">
               <td></td>
               <td>{{pool.id}}</td>
               <td>{{pool.name}}</td>
@@ -143,4 +144,37 @@
       table.bootstrapTable('resetView');
     });
   });
+
+  let createPool = () => {
+    createModal({
+      id: 'addPoolModal',
+      title: 'Créer manuellement un pool',
+      modal: 'back-office/addPool'
+    }, () => {
+      $('button#createPoolButton').click(function () {
+        if ($('#poolName').val() !== '' && $('#ReferentName').val() !== '' && $('#poolOwner').val() !== '') {
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
+          let name = $('#poolName').val();
+          let referent = $('#ReferentName').val();
+          let owner = $('#poolOwner').val();
+          $.post(`/back-office/pools/pool-list`, {
+            _csrf,
+            name,
+            referent,
+            owner
+          }, (response) => {
+            if (response.message === 'pool created') {
+              $('#addPoolModal').modal('hide');
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'pool créé et assigné',
+                message: ``
+              });
+            }
+          })
+        }
+      })
+    });
+  }
 </script>

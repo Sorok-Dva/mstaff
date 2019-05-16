@@ -4,29 +4,31 @@
     <div class="card">
       <div class="card-content">
         <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="createPoolLink()"> <i class="fal fa-plus"></i></a>
         </div>
 
         <table id="formations-table" class="table">
           <thead>
           <th data-field="state" data-checkbox="true"></th>
           <th data-field="id" class="text-center">ID</th>
-          <th data-field="name" data-sortable="true">Nom</th>
-          <th data-field="referent" data-sortable="true">Référent</th>
-          <th data-field="owner" data-sortable="true">Créateur </th>
-          <th data-field="active" data-sortable="true"> Activé </th>
+          <th data-field="pool_id" data-sortable="true">Nom du Pool</th>
+          <th data-field="user_id" data-sortable="true">Utilisateur</th>
+          <th data-field="availability" data-sortable="true"> Disponibilités </th>
+          <th data-field="establishment" data-sortable="true"> Établissements </th>
+          <th data-field="service" data-sortable="true"> Services </th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions
           </th>
           </thead>
           <tbody>
-          {{#each pools as |pool|}}
-            <tr data-id="{{formations.id}}">
+          {{#each poollinks as |link|}}
+            <tr data-id="{{link.id}}">
               <td></td>
-              <td>{{pool.id}}</td>
-              <td>{{pool.name}}</td>
-              <td>{{pool.referent}}</td>
-              <td>{{pool.owner}}</td> <!-- TODO : Afficher le nom complet du créateur -->
-              <td>{{pool.active}}</td>
+              <td>{{link.id}}</td>
+              <td>{{link.name}}</td>
+              <td>{{link.referent}}</td>
+              <td>{{link.owner}}</td> <!-- TODO : Afficher le nom complet du créateur -->
+              <td>{{link.active}}</td>
               <td></td>
             </tr>
           {{/each}}

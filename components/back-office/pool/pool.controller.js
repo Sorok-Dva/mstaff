@@ -21,11 +21,40 @@ BackOffice_Pool.viewList = (req, res, next) => {
   });
 };
 
+BackOffice_Pool.createPool = (req, res, next) => {
+  Models.Pool.create({
+    name: req.body.name,
+    referent: req.body.referent,
+    owner: req.body.owner
+  }).then(pool => {
+    res.status(200).json({ result: pool, message: 'pool created' });
+  }).catch(error => next(new Error(error)));
+};
+
 BackOffice_Pool.viewLinks = (req, res, next) => {
-  res.render('back-office/pool/pool-links', {
-    layout,
-    title: `Liste des liaisons de pool`,
-    a: { main: 'pools', sub: 'pool-links' },
+  Models.UserPool.findAll({
+    include: {
+      model: Models.User,
+      attributes: { exclude: ['password', 'photo', 'birthday', 'postal_code', 'town', 'country', 'key', 
+        'validated', 'opts', 'createdAt', 'updatedAt'] },
+      include: {
+        model: Models.Pool,
+        include: {
+          model: Models.Establishment,
+          attributes: { exclude: ['oldId', 'category', 'finess', 'finesse_ej', 'siret', 'phone', 'sector',
+            'address', 'town', 'status', 'url', 'description', 'logo', 'banner', 'domain_name', 'domain_enable',
+            'salaries_count', 'contact_identity', 'contact_post', 'contact_email', 'contact_phone',
+            'createdAt', 'updatedAt'] }
+        }
+      }
+    }
+  }).then(poollinks => {
+    res.render('back-office/pool/pool-links', {
+      layout,
+      poollinks,
+      title: `Liste des liaisons de pool`,
+      a: { main: 'pools', sub: 'pool-links' },
+    });
   });
 };
 

@@ -77,6 +77,16 @@ BackOffice_Users.sendVerificationEmail = (req, res, next) => {
   });
 };
 
+BackOffice_Users.listRH = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
+  Models.User.findAll({ where: { type: 'es' }, attributes: { exclude: ['password'] } }).then( rh => {
+    return res.status(200).send(rh)
+  });
+};
+
 BackOffice_Users.getAll = (req, res, next) => {
   Models.User.findAll({
     attributes: {
