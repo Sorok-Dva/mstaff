@@ -92,6 +92,9 @@ router.get('/my-pool',
 ).put('/my-pool',
   Authentication.ensureIsEs,
   Establishment.Pool.editPool
+).delete('/my-pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.deletePool
 );
 
 router.post('/pool-invite',

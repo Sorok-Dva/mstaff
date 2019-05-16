@@ -112,6 +112,33 @@
           }
         })
       });
+      $('button#deletePoolButton').click(function () {
+        $('#editPoolModal').modal('hide');
+        createModal({
+            id: 'removePoolModal',
+            modal: 'es/removePool',
+            title: 'Supprimer un pool de remplaçants'
+        }, () => {
+          $('#confirmRemoveButton').click(function () {
+            let _csrf = $('meta[name="csrf-token"]').attr('content');
+            let pool = poolToEdit.dataset.pool;
+            $.delete(`/my-pool`, {
+              _csrf,
+              pool
+            }, (response) => {
+              if (response === 'Pool removed') {
+                $('#removePoolModal').modal('hide');
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Pool supprimé avec succès',
+                  message: ``
+                });
+              }
+            })
+          });
+        });
+      });
     });
   };
   let poolInvitation = (selectedPool) => {
