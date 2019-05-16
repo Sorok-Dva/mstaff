@@ -16,6 +16,10 @@
 </style>
 
 <div class="row">
+  <div class="col-12 col-md-12 col-lg-12" style="margin-bottom: 25px; display:flex">
+    <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" onclick="helpMe()"> <i class="fal fa-question"></i> </button>
+    <span style="margin-top: 15px; margin-left: 10px"><h2> Besoin d'aide ?</h2></span>
+  </div>
   <div class="col-12 col-md-12 col-lg-4 card-competence">
     <div class="card">
       <div class="card-header header-spacing">
@@ -24,7 +28,10 @@
             <h3 class="card-title"><i class="fal fa-school"></i> EHPAD LE FLORAL</h3>
           </div>
           <div class="col-md-2">
-            <input type="checkbox" checked data-toggle="toggle" data-style="ios">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="toggle1" name="PoolState" checked="">
+              <label class="custom-control-label" for="toggle1"></label>
+            </div>
           </div>
           <div class="col-md-12">
             <h5><i> Référent: Céline Dupond</i></h5>
@@ -181,3 +188,14 @@
     </div>
   </div>
 </div>
+<script>
+  let helpMe = () => {
+    createModal({
+      id: 'helpModal',
+      title: `Notices d'utilisation des pools`,
+      modal: 'candidate/helpPool'
+    }, () => {
+
+    })
+  }
+</script>

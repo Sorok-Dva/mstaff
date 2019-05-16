@@ -102,4 +102,14 @@ router.post('/pool-invite',
   Establishment.Pool.inviteInPool
 );
 
+router.post('/pool-enable',
+  Authentication.ensureIsEs,
+  Establishment.Pool.enablePool
+);
+
+router.post('/pool-disable',
+  Authentication.ensureIsEs,
+  Establishment.Pool.disablePool
+);
+
 module.exports = router;

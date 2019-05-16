@@ -163,4 +163,12 @@ router.get('/settings',
   Authentication.ensureIsAdmin,
   BackOffice.Main.ViewSettings);
 
+router.get('/pools/pool-list',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.viewList);
+
+router.get('/pools/pool-links',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.viewLinks);
+
 module.exports = router;

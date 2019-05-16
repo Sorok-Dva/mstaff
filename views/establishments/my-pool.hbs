@@ -30,7 +30,7 @@
             </div>
             <div class="col-md-2">
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" name="poolActive" id="{{pool.id}}" {{#ifCond pool.active '===' true}} checked {{/ifCond}}>
+                <input type="checkbox" class="custom-control-input" name="poolActive" data-pool="{{pool.id}}" id="{{pool.id}}" {{#ifCond pool.active '===' true}} checked {{/ifCond}} onclick="changeState(this)">
                 <label class="custom-control-label" for="{{pool.id}}"></label>
               </div>
             </div>
@@ -188,4 +188,42 @@
       });
     }
   };
+  let changeState = (selectedToggle) => {
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    let checked = selectedToggle.checked;
+    let pool = selectedToggle.dataset.pool;
+    console.log(pool);
+    if (checked === true) {
+      $.post(`/pool-enable`, {
+        _csrf,
+        checked,
+        pool
+      }, (response) => {
+        if (response === 'pool unabled') {
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Pool activé',
+            message: ``
+          })
+        }
+      })
+    }
+    if (checked === false) {
+      $.post(`/pool-disable`, {
+        _csrf,
+        checked,
+        pool
+      }, (response) => {
+        if (response === 'pool disabled') {
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Pool désactivé',
+            message: ``
+          })
+        }
+      })
+    }
+  }
 </script>

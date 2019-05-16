@@ -54,6 +54,22 @@ Establishment_Pool.deletePool = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
+Establishment_Pool.enablePool = (req, res, next) => {
+  Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
+    pool.active = true;
+    pool.save();
+    res.status(200).json('pool unabled');
+  })
+};
+
+Establishment_Pool.disablePool = (req, res, next) => {
+  Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
+    pool.active = false;
+    pool.save();
+    res.status(200).json('pool disabled');
+  })
+};
+
 Establishment_Pool.sendMail = (mails) => {
   console.log(mails);
 };
