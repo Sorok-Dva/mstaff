@@ -1,6 +1,9 @@
 const { check } = require('express-validator/check');
 const HTTPValidation = {};
 
+HTTPValidation.normalizeEmail = [
+  check('email').isEmail().normalizeEmail()
+];
 HTTPValidation.create = [
   check('email').isEmail().normalizeEmail(),
   check('password')
