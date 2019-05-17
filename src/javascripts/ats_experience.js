@@ -179,7 +179,7 @@ function generateDatasRecap(){
 function verifyInputs(){
   let now = moment().startOf('day');
   let xpOngoing = $('#xpOngoing').prop('checked');
-  let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) ? true : notify('xpEtablishment');
+  let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) && $('#xpEstablishment').val().length > 2 ? true : notify('xpEtablishment');
   let xpPost = arrays.posts.includes($('#xpPost').val()) ? true : notify('xpPost');
   let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
   let xpService = arrays.services.includes($('#xpService').val()) ? true : notify('xpService');
@@ -205,7 +205,7 @@ function notify(error){
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer un établissement.`
+        message: `Merci d'indiquer un établissement (3 caractères minimum).`
       });
       break;
     case 'xpPost':
