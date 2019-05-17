@@ -27,7 +27,7 @@
       <div class="col-md-4 col-6 text-right">
      <span>
         <i class="fas fa-check-circle final-green mr-1"></i>
-        <i class="fal fa-edit custom-cursor"></i>
+        <i id="editPost" class="fal fa-edit custom-cursor"></i>
       </span>
       </div>
     </div>
@@ -40,7 +40,7 @@
       <div class="col-md-4 col-6 text-right">
      <span>
         <i class="fas fa-check-circle final-green mr-1"></i>
-        <i class="fal fa-edit custom-cursor"></i>
+        <i id="editContract" class="fal fa-edit custom-cursor"></i>
       </span>
       </div>
     </div>
@@ -52,8 +52,8 @@
       </div>
       <div class="col-md-4 col-6 text-right">
      <span>
-        <i class="fas fa-check-circle final-green mr-1"></i>
-        <i class="fal fa-edit custom-cursor"></i>
+        <i class="fas fa-check-circle {{#ifCond candidateDatas.experiences.length '>' 0}}final-green{{else}}final-grey{{/ifCond}} mr-1"></i>
+        <i id="editExperience" class="fal fa-edit custom-cursor"></i>
       </span>
       </div>
     </div>
@@ -65,8 +65,8 @@
       </div>
       <div class="col-md-4 col-6 text-right">
      <span>
-        <i class="fas fa-check-circle final-green mr-1"></i>
-        <i class="fal fa-edit custom-cursor"></i>
+        <i class="fas fa-check-circle {{#ifCond candidateDatas.diplomas.length '>' 0}}final-green{{else}}final-grey{{/ifCond}} mr-1"></i>
+        <i id="editDiploma" class="fal fa-edit custom-cursor"></i>
       </span>
       </div>
     </div>
@@ -78,8 +78,8 @@
       </div>
       <div class="col-md-4 col-6 text-right">
      <span>
-        <i class="fas fa-check-circle final-green mr-1"></i>
-        <i class="fal fa-edit custom-cursor"></i>
+        <i class="fas fa-check-circle {{#ifCond candidateDatas.qualifications.length '>' 0}}final-green{{else}}final-grey{{/ifCond}} mr-1"></i>
+        <i id="editQualification" class="fal fa-edit custom-cursor"></i>
       </span>
       </div>
     </div>
@@ -91,8 +91,8 @@
       </div>
       <div class="col-md-4 col-6 text-right">
      <span>
-        <i class="fas fa-check-circle final-green mr-1"></i>
-        <i class="fal fa-edit custom-cursor"></i>
+        <i class="fas fa-check-circle {{#ifCond candidateDatas.skills.length '>' 0}}final-green{{else}}final-grey{{/ifCond}} mr-1"></i>
+        <i id="editSkill" class="fal fa-edit custom-cursor"></i>
       </span>
       </div>
     </div>
@@ -105,7 +105,7 @@
       <div class="col-md-4 col-6 text-right">
      <span>
         <i class="fas fa-check-circle final-green mr-1"></i>
-        <i class="fal fa-edit custom-cursor"></i>
+        <i id="editIdentity" class="fal fa-edit custom-cursor"></i>
       </span>
       </div>
     </div>
@@ -118,16 +118,4 @@
 </div>
 
 
-<script>
-  $('#backToIdentity').click(function() {
-    loadTemplate('/static/views/ats/identity.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-
-  $('#toLegal').click(function() {
-    loadTemplate('/static/views/ats/legal.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-</script>
+<script src="/static/assets/dist/js/ats_recap.min.js"></script>

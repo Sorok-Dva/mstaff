@@ -1,10 +1,10 @@
 <i id="backToRecap" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
 
-<div class="height-80 d-flex flex-column justify-content-center">
+<div id="final-text" class="height-80 d-flex flex-column justify-content-center">
   <div class="row m-4">
     <div class="card text-center col-12">
       <div class="card-body">
-        <h2 class="card-title">En cochant cette case,  j'accepte les Conditions Générales d'Utilisation et autorise la société Mstaff à publier mon profil auprès des établissements de santé.</h2>
+        <h2 class="card-title">En cochant cette case, j'accepte les Conditions Générales d'Utilisation et autorise la société Mstaff à publier mon profil auprès des établissements de santé.</h2>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="legal-first" name="legal-first">
           <label class="custom-control-label" for="legal-first"></label>
@@ -26,13 +26,7 @@
   </div>
 </div>
 <div class="row justify-content-center">
-  <button type="button" class="btn btn-success" onclick="finalize('{{es.finess}}')">Confirmer et Publier mon profil</button>
+  <button type="button" class="btn btn-success final-button" style="visibility: hidden" onclick="finalize('{{es.finess}}')">Confirmer et Publier mon profil</button>
 </div>
 
-<script>
-  $('#backToRecap').click(function() {
-    loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-</script>
+<script src="/static/assets/dist/js/ats_legal.min.js"></script>

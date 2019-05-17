@@ -5,7 +5,6 @@ let candidateDatas = {
   diplomas : [],
   qualifications : [],
   skills : [],
-
 };
 let databaseDatas = {
   allPosts : [],

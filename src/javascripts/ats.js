@@ -3,7 +3,7 @@
 // let application = {};
 // let identity = {};
 // let permissions = {editMode: false, editId: 0, experienceId: 1, diplomaId: 1, qualificationId: 1, skillId: 1};
-let toNextModal = false;
+// let toNextModal = false;
 // let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 // let iti;
 // let checkingMail = null;
@@ -172,12 +172,12 @@ let toNextModal = false;
 
 // GLOBAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let addToGlobalRecap = (customTitle, colorCheck, currentModal, linkedModal) => {
-  let title = `<div>${customTitle}</div>`;
-  let check = `<i class="fas fa-check-circle ${colorCheck} center-icon"></i>`;
-  let editButton = `<button class="btn" onclick="loadModal('${currentModal}','${linkedModal}')"><i class="fal fa-edit"></i></button>`;
-  $(`<div class="recap-item">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
-};
+// let addToGlobalRecap = (customTitle, colorCheck, currentModal, linkedModal) => {
+//   let title = `<div>${customTitle}</div>`;
+//   let check = `<i class="fas fa-check-circle ${colorCheck} center-icon"></i>`;
+//   let editButton = `<button class="btn" onclick="loadModal('${currentModal}','${linkedModal}')"><i class="fal fa-edit"></i></button>`;
+//   $(`<div class="recap-item">${title}<div>${check}${editButton}</div></div>`).appendTo($('.recap'));
+// };
 
 // let addToDatasRecap = (customTitle, item, postfix) => {
 //   let title = `<h3>${customTitle} ${item.id}</h3>`;
@@ -187,82 +187,82 @@ let addToGlobalRecap = (customTitle, colorCheck, currentModal, linkedModal) => {
 //   $(`<div ${customClass} data-id="${item.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
 // };
 
-let generateContratRecap = (current) => {
-  let color = application.post ? 'green' : 'grey';
-  addToGlobalRecap('A quel poste ?', color, current, 'postModal');
-};
-
-let generateExperienceRecap = (current) => {
-  generateContratRecap(current);
-  let color = application.contractType ? 'green' : 'grey';
-  addToGlobalRecap('Quel type de contract ?', color, current, 'contractModal');
-};
-
-let generateDiplomaRecap = (current) => {
-  generateExperienceRecap(current);
-  let color = experiences.length > 0 ? 'green' : 'grey';
-  addToGlobalRecap('Expériences', color, current, 'experienceModal');
-};
-
-let generateQualificationRecap = (current) => {
-  generateDiplomaRecap(current);
-  let color = diplomas.length > 0 ? 'green' : 'grey';
-  addToGlobalRecap('Formations', color, current, 'diplomaModal');
-};
-
-let generateSkillRecap = (current) => {
-  generateQualificationRecap(current);
-  let color = qualifications.length > 0 ? 'green' : 'grey';
-  addToGlobalRecap('Diplômes', color, current, 'qualificationModal');
-};
-
-let generateGlobalRecap = (current) => {
-  let currentParaph = $(`#${current}.recap > p`)
-  currentParaph.first().show();
-  currentParaph.last().html('Votre récap');
-  $('.recap-item').remove();
-  switch (current) {
-    case 'contractModal':
-      generateContratRecap(current);
-      break;
-    case 'experienceModal':
-      generateExperienceRecap(current);
-      break;
-    case 'diplomaModal':
-      generateDiplomaRecap(current);
-      break;
-    case 'qualificationModal':
-      generateQualificationRecap(current);
-      break;
-    case 'skillModal':
-      generateSkillRecap(current);
-      break;
-  }
-};
-
-let generateDatasRecap = (current) => {
-  let currentParaph = $(`#${current}.recap > p`)
-  currentParaph.first().hide();
-  $('.recap-item').remove();
-  switch (current) {
-    // case 'experienceModal':
-    //   $('.recap p').last().html('Aperçu de vos expériences');
-    //   experiences.forEach( xp => addToDatasRecap('#Expérience n°', xp, 'Xp'));
-    //   break;
-    case 'diplomaModal':
-      $('.recap p').last().html('Aperçu de vos formations');
-      diplomas.forEach( diploma => addToDatasRecap('#Formation n°', diploma, 'Diploma'));
-      break;
-    case 'qualificationModal':
-      $('.recap p').last().html('Aperçu de vos diplômes');
-      qualifications.forEach( qualification => addToDatasRecap('#Diplôme n°', qualification, 'Qualification'));
-      break;
-    case 'skillModal':
-      $('.recap p').last().html('Aperçu de vos compétences');
-      skills.forEach( skill => addToDatasRecap('#Compétence n°', skill, 'Skill'));
-      break;
-  }
-};
+// let generateContratRecap = (current) => {
+//   let color = application.post ? 'green' : 'grey';
+//   addToGlobalRecap('A quel poste ?', color, current, 'postModal');
+// };
+//
+// let generateExperienceRecap = (current) => {
+//   generateContratRecap(current);
+//   let color = application.contractType ? 'green' : 'grey';
+//   addToGlobalRecap('Quel type de contract ?', color, current, 'contractModal');
+// };
+//
+// let generateDiplomaRecap = (current) => {
+//   generateExperienceRecap(current);
+//   let color = experiences.length > 0 ? 'green' : 'grey';
+//   addToGlobalRecap('Expériences', color, current, 'experienceModal');
+// };
+//
+// let generateQualificationRecap = (current) => {
+//   generateDiplomaRecap(current);
+//   let color = diplomas.length > 0 ? 'green' : 'grey';
+//   addToGlobalRecap('Formations', color, current, 'diplomaModal');
+// };
+//
+// let generateSkillRecap = (current) => {
+//   generateQualificationRecap(current);
+//   let color = qualifications.length > 0 ? 'green' : 'grey';
+//   addToGlobalRecap('Diplômes', color, current, 'qualificationModal');
+// };
+//
+// let generateGlobalRecap = (current) => {
+//   let currentParaph = $(`#${current}.recap > p`)
+//   currentParaph.first().show();
+//   currentParaph.last().html('Votre récap');
+//   $('.recap-item').remove();
+//   switch (current) {
+//     case 'contractModal':
+//       generateContratRecap(current);
+//       break;
+//     case 'experienceModal':
+//       generateExperienceRecap(current);
+//       break;
+//     case 'diplomaModal':
+//       generateDiplomaRecap(current);
+//       break;
+//     case 'qualificationModal':
+//       generateQualificationRecap(current);
+//       break;
+//     case 'skillModal':
+//       generateSkillRecap(current);
+//       break;
+//   }
+// };
+//
+// let generateDatasRecap = (current) => {
+//   let currentParaph = $(`#${current}.recap > p`)
+//   currentParaph.first().hide();
+//   $('.recap-item').remove();
+//   switch (current) {
+//     // case 'experienceModal':
+//     //   $('.recap p').last().html('Aperçu de vos expériences');
+//     //   experiences.forEach( xp => addToDatasRecap('#Expérience n°', xp, 'Xp'));
+//     //   break;
+//     case 'diplomaModal':
+//       $('.recap p').last().html('Aperçu de vos formations');
+//       diplomas.forEach( diploma => addToDatasRecap('#Formation n°', diploma, 'Diploma'));
+//       break;
+//     case 'qualificationModal':
+//       $('.recap p').last().html('Aperçu de vos diplômes');
+//       qualifications.forEach( qualification => addToDatasRecap('#Diplôme n°', qualification, 'Qualification'));
+//       break;
+//     case 'skillModal':
+//       $('.recap p').last().html('Aperçu de vos compétences');
+//       skills.forEach( skill => addToDatasRecap('#Compétence n°', skill, 'Skill'));
+//       break;
+//   }
+// };
 
 // EXPERIENCE-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
@@ -454,22 +454,22 @@ let generateDatasRecap = (current) => {
 
 // RECAP-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let generateFinalRecap = () => {
-  let xp = $('#finalExperience div > i');
-  let diploma = $('#finalDiploma div > i');
-  let qualif = $('#finalQualification div > i');
-  let skill = $('#finalSkill div > i');
-
-  xp.removeClass('final-green final-grey');
-  diploma.removeClass('final-green final-grey');
-  qualif.removeClass('final-green final-grey');
-  skill.removeClass('final-green final-grey');
-
-  experiences.length > 0 ? xp.addClass('final-green') : xp.addClass('final-grey');
-  diplomas.length > 0 ? diploma.addClass('final-green') : diploma.addClass('final-grey');
-  qualifications.length > 0 ? qualif.addClass('final-green') : qualif.addClass('final-grey');
-  skills.length > 0 ? skill.addClass('final-green') : skill.addClass('final-grey');
-};
+// let generateFinalRecap = () => {
+//   let xp = $('#finalExperience div > i');
+//   let diploma = $('#finalDiploma div > i');
+//   let qualif = $('#finalQualification div > i');
+//   let skill = $('#finalSkill div > i');
+//
+//   xp.removeClass('final-green final-grey');
+//   diploma.removeClass('final-green final-grey');
+//   qualif.removeClass('final-green final-grey');
+//   skill.removeClass('final-green final-grey');
+//
+//   experiences.length > 0 ? xp.addClass('final-green') : xp.addClass('final-grey');
+//   diplomas.length > 0 ? diploma.addClass('final-green') : diploma.addClass('final-grey');
+//   qualifications.length > 0 ? qualif.addClass('final-green') : qualif.addClass('final-grey');
+//   skills.length > 0 ? skill.addClass('final-green') : skill.addClass('final-grey');
+// };
 
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
 
@@ -481,31 +481,31 @@ let generateFinalRecap = () => {
 //   toNextModal = false;
 // };
 
-let loadClearModal = (target) => {
-  generateGlobalRecap(target);
-  switch (target) {
-    // case 'postModal':
-    //   if (postsArray.length === 0)
-    //     createPostsList(allPosts, $('#InputPosts'));
-    //   break;
-    // case 'experienceModal':
-    //   createPostsList(allPosts, $('#xpPost'));
-    //   break;
-    // case 'diplomaModal':
-    //   createDiplomaList(allDiplomas, $('#diploma'));
-    //   break;
-    // case 'qualificationModal':
-    //   createQualificationList(allQualifications, $('#qualification'));
-    //   break;
-    // case 'skillModal':
-    //   createSkillList(allSkills, $('#skill'));
-    //   break;
-    case 'recapModal':
-      generateFinalRecap();
-      break;
-  }
-
-};
+// let loadClearModal = (target) => {
+//   generateGlobalRecap(target);
+//   switch (target) {
+//     // case 'postModal':
+//     //   if (postsArray.length === 0)
+//     //     createPostsList(allPosts, $('#InputPosts'));
+//     //   break;
+//     // case 'experienceModal':
+//     //   createPostsList(allPosts, $('#xpPost'));
+//     //   break;
+//     // case 'diplomaModal':
+//     //   createDiplomaList(allDiplomas, $('#diploma'));
+//     //   break;
+//     // case 'qualificationModal':
+//     //   createQualificationList(allQualifications, $('#qualification'));
+//     //   break;
+//     // case 'skillModal':
+//     //   createSkillList(allSkills, $('#skill'));
+//     //   break;
+//     case 'recapModal':
+//       generateFinalRecap();
+//       break;
+//   }
+//
+// };
 
 // let loadEditModal = (target) => {
 //   generateDatasRecap(target);
@@ -1020,27 +1020,27 @@ let loadClearModal = (target) => {
 //
 // };
 
-let finalize = (es_finess) => {
-  identity._csrf = $('#csrfToken').val();
-  $.post('/register/', identity, (data) => {
-    if (data.result === 'created'){
-      if (experiences.length > 0){
-        //TODO A FINIR
-        $.post('/add/experience', { experiences, _csrf: $('#csrfToken').val() }, (data) => {
-          console.log(data);
-        });
-      }
-      console.log(es_finess);
-      console.log(application);
-      console.log(experiences);
-      console.log(diplomas);
-      console.log(qualifications);
-      console.log(skills);
-    }
-  }).catch(error => errorsHandler(error));
-  //TODO
-
-};
+// let finalize = (es_finess) => {
+//   identity._csrf = $('#csrfToken').val();
+//   $.post('/register/', identity, (data) => {
+//     if (data.result === 'created'){
+//       if (experiences.length > 0){
+//         //TODO A FINIR
+//         $.post('/add/experience', { experiences, _csrf: $('#csrfToken').val() }, (data) => {
+//           console.log(data);
+//         });
+//       }
+//       console.log(es_finess);
+//       console.log(application);
+//       console.log(experiences);
+//       console.log(diplomas);
+//       console.log(qualifications);
+//       console.log(skills);
+//     }
+//   }).catch(error => errorsHandler(error));
+//   //TODO
+//
+// };
 
 // LISTENERS ---------------------------------------------------------------------------------------
 
@@ -1332,41 +1332,41 @@ let finalize = (es_finess) => {
 //
 // };
 
-let recapModalListener = () => {
-  $('#recapModal').on('hide.bs.modal', () => toPreviousModal('recapModal', 'identityModal'));
+// let recapModalListener = () => {
+//   // $('#recapModal').on('hide.bs.modal', () => toPreviousModal('recapModal', 'identityModal'));
+//
+//   $('#toStep10').on('click', () => loadModal('recapModal','legalModal'));
+// };
 
-  $('#toStep10').on('click', () => loadModal('recapModal','legalModal'));
-};
+// let legalModalListener = () => {
+//   $('#legalModal').on('hide.bs.modal', () => toPreviousModal('legalModal', 'recapModal'));
+//
+//   $('.final-text input').bootstrapToggle({
+//     on: '',
+//     off: '',
+//     onstyle: 'success',
+//     offstyle: 'secondary',
+//     size: 'lg'
+//   }).change( () => {
+//     let first = $('#legal-first').prop('checked');
+//     let second = $('#legal-second').prop('checked');
+//     let button = $('.final-button button');
+//     (first && second) ? button.show() : button.hide();
+//   });
+// };
 
-let legalModalListener = () => {
-  $('#legalModal').on('hide.bs.modal', () => toPreviousModal('legalModal', 'recapModal'));
-
-  $('.final-text input').bootstrapToggle({
-    on: '',
-    off: '',
-    onstyle: 'success',
-    offstyle: 'secondary',
-    size: 'lg'
-  }).change( () => {
-    let first = $('#legal-first').prop('checked');
-    let second = $('#legal-second').prop('checked');
-    let button = $('.final-button button');
-    (first && second) ? button.show() : button.hide();
-  });
-};
-
-$(document).ready(function () {
-  initApplication().then( () => {
-    mainModalListener();
-    postModalListener();
-    contractModalListener();
-    timeModalListener();
-    experienceModalListener();
-    diplomaModalListener();
-    qualificationModalListener();
-    skillModalListener();
-    identityModalListener();
-    recapModalListener();
-    legalModalListener();
-  });
-});
+// $(document).ready(function () {
+//   initApplication().then( () => {
+//     mainModalListener();
+//     postModalListener();
+//     contractModalListener();
+//     timeModalListener();
+//     experienceModalListener();
+//     diplomaModalListener();
+//     qualificationModalListener();
+//     skillModalListener();
+//     identityModalListener();
+//     recapModalListener();
+//     legalModalListener();
+//   });
+// });
