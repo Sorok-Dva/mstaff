@@ -285,9 +285,13 @@ function saveDatas(editMode){
   current.internship = 0;
   current.service_id = $('#xpService').val();
   current.start = new Date($('#xpStart').data("DateTimePicker").date());
-  current.end = null;
-  if ($('#xpEnd').data("DateTimePicker").date())
+  if ($('#xpEnd').data("DateTimePicker").date()){
     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+    current.current = false;
+  } else {
+    current.end = null;
+    current.current = true;
+  }
   if (editMode){
     permissions.editMode = false;
   } else {
