@@ -60,6 +60,11 @@
   {{/each}}
 </div>
 <script>
+  let es_id = [];
+  {{#each group as |es|}}
+    console.log('{{es.es_id}}');
+  {{/each}}
+  console.log(es_id);
   let createPool = () => {
     createModal({
       id: 'createPoolModal',

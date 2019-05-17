@@ -18,8 +18,10 @@ Establishment_Pool.viewPools = (req, res, next) => {
 
 Establishment_Pool.viewMyPools = (req, res, next) => {
   let a = { main: 'pools' };
-  Models.Pool.findAll({ where: { owner: req.user.id } }).then( pools => {
-    return res.render('establishments/my-pool', { a, pools } );
+  Models.Pool.findAll({ where: { owner: req.user.id } }).then(pools => {
+    Models.ESAccount.findAll({ where: { user_id: req.user.id } } ).then(group => {
+      return res.render('establishments/my-pool', { a, pools, group } );
+    }).catch(error => next(new Error(error)));
   }).catch(error => next(new Error(error)));
 };
 
