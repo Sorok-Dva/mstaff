@@ -1,6 +1,5 @@
 const { Env } = require('./helpers/helpers');
 const { ErrorHandler, Express } = require('./middlewares');
-const Sentry = require('./bin/sentry');
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv').config();
@@ -19,6 +18,7 @@ const apiBackOfficeRouter = require('./routes/api/backOffice');
 const apiEsRouter = require('./routes/api/establishment');
 
 const app = express();
+let staticMaxAge = null;
 
 if (Env.isProd || Env.isPreProd) app.use(Express.sentryRequestHandler);
 if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
@@ -29,7 +29,10 @@ app.set('trust proxy', true);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-if (Env.isProd) app.set('view cache', true);
+if (Env.isProd) {
+  app.set('view cache', true);
+  staticMaxAge = { maxAge: '30 days' };
+}
 
 // ------ Express
 app.engine('hbs', Express.exphbs);
@@ -38,7 +41,8 @@ app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.compress);
 app.use(Express.methodOverride);
 app.use(Express.helmet);
-app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use(Express.staticify);
+app.use('/static', express.static(path.join(__dirname, 'public'), staticMaxAge));
 app.use(Express.cookieParser);
 app.use(Express.csurf);
 app.use(Express.session);
@@ -53,11 +57,11 @@ app.use(Express.readOnlySessionForImpersonation);
 
 process.on('unhandledRejection', reason => {
   //@TODO Fix Sentry.send for unhandled rejection in prod or pre-prod env
-  /*if (Env.isPreProd || Env.isProd) Sentry.send(reason, { context: 'unhandledRejection' });
-  else*/ console.log(reason);
+  if (Env.isPreProd || Env.isProd) Express.sentryUnhandledRejection(reason);
+  else console.log(reason);
 });
 
-// ------ ROUTES
+// ------ ROUTESm
 app.use('/', indexRouter);
 app.use('/', candidateRouter); //candidate
 app.use('/', esRouter); //recruiter

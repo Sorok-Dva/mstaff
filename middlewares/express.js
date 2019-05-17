@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const conf = require('dotenv').config().parsed;
 const packageJson = require('../package');
 const path = require('path');
@@ -19,6 +20,7 @@ const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
+const staticify = require('staticify')(path.join(__dirname, '../public'));
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -79,11 +81,14 @@ module.exports = {
       next();
     } else next();
   },
+  staticify: staticify.middleware,
   sentryErrorHandler: Sentry.Handlers.errorHandler(),
   sentryRequestHandler: Sentry.Handlers.requestHandler(),
+  sentryUnhandledRejection: (reason) => Sentry.captureMessage(reason),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';
+    res.locals.getVersionedPath = staticify.getVersionedPath;
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
@@ -92,6 +97,11 @@ module.exports = {
     res.locals.v = packageJson.version;
     res.locals.domain = conf.DOMAIN;
     res.locals.csrfToken = req.csrfToken();
+    if ((Env.isProd || Env.isPreProd) && !_.isNil(req.user)) {
+      Sentry.configureScope((scope) => {
+        scope.setUser(req.user);
+      });
+    }
     next();
   },
   session: session({
