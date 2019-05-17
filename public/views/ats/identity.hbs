@@ -11,7 +11,15 @@
   .intl-tel-input .country-list{
     background-color: rgba(0,0,0,0.8) !important;
   }
-
+  .disc{
+    list-style-type: disc;
+  }
+  .bad-rule{
+    color:red;
+  }
+  .good-rule{
+    color: greenyellow;
+  }
 </style>
 
 <i id="backToSkill" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
@@ -22,11 +30,11 @@
     <div class="row">
       <div class="col-6">
         <label for="identityForename">Prénom*</label>
-        <input id="identityForename" type="text" class="form-control">
+        <input id="identityForename" type="text" class="form-control" value="{{candidateDatas.identity.firstName}}">
       </div>
       <div class="col-6">
         <label for="identityName">Nom*</label>
-        <input id="identityName" type="text" class="form-control">
+        <input id="identityName" type="text" class="form-control" value="{{candidateDatas.identity.lastName}}">
       </div>
     </div>
   </div>
@@ -35,11 +43,11 @@
     <div class="row">
       <div class="col-6">
         <label for="identityBirth">Date de naissance*</label>
-        <input id="identityBirth" type="date" class="form-control">
+        <input id="identityBirth" type="date" class="form-control" value="{{candidateDatas.identity.birthday}}">
       </div>
       <div class="col-6">
         <label for="identityPostal">Code postal*</label>
-        <input id="identityPostal" type="text" class="form-control">
+        <input id="identityPostal" type="text" class="form-control" value="{{candidateDatas.identity.postal_code}}">
       </div>
     </div>
   </div>
@@ -48,11 +56,11 @@
     <div class="row">
       <div class="col-6">
         <label for="identityCity">Ville*</label>
-        <input id="identityCity" type="text" class="form-control">
+        <input id="identityCity" type="text" class="form-control" value="{{candidateDatas.identity.town}}">
       </div>
       <div class="col-6">
         <label for="identityCountry">Pays*</label>
-        <input id="identityCountry" type="text" class="form-control">
+        <input id="identityCountry" type="text" class="form-control" value="{{candidateDatas.identity.country}}">
       </div>
     </div>
   </div>
@@ -61,11 +69,11 @@
     <div class="row">
       <div class="col-6">
         <label for="identityPhone">Numéro de téléphone*</label>
-        <input id="identityPhone" type="tel" class="form-control">
+        <input id="identityPhone" type="tel" class="form-control" value="{{candidateDatas.identity.phone}}">
       </div>
       <div class="col-6">
         <label for="identityMail">Adresse e-mail*</label>
-        <input id="identityMail" type="text" class="form-control">
+        <input id="identityMail" type="text" class="form-control" value="{{candidateDatas.identity.email}}">
       </div>
     </div>
   </div>
@@ -73,50 +81,24 @@
   <div class="form-group">
     <label for="identityPassword">Mot de passe*</label>
     <div class="input-group mb-3">
-      <input id="identityPassword" type="password" class="form-control">
-      <div class="input-group-append">
-        <span class="input-group-text"><i class="fal fa-low-vision col-5 custom-cursor" onclick="togglePasswordVisibility()"></i></span>
+      <input id="identityPassword" type="password" class="form-control" value="{{candidateDatas.identity.password}}">
+      <div class="input-group-append custom-cursor" onclick="togglePasswordVisibility()">
+        <span class="input-group-text"><i class="fal fa-low-vision col-5"></i></span>
       </div>
     </div>
   </div>
+    <div class="password-indicator ml-5">
+      <ul style="visibility: hidden;">
+        <li id="length" class="bad-rule disc">Minimum 8 caractères</li>
+        <li id="uppercase" class="bad-rule disc">Au moins une majuscule</li>
+        <li id="symbol" class="bad-rule disc">Au moins un caractère spécial (!@#$%^&*)</li>
+        <li id="number" class="bad-rule disc">Au moins un chiffre</li>
+      </ul>
+    </div>
 </form>
 </div>
 <div class="row justify-content-end">
   <div class="custom-cursor" id="toRecap"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
-<script>
-
-  iti = intlTelInput(document.querySelector("#identityPhone"), {
-    utilsScript: '/static/assets/js/utils.js',
-    preferredCountries: ["fr", "gb", "us"],
-    initialCountry: "auto",
-    geoIpLookup: function(success, failure) {
-      $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
-        let countryCode = (resp && resp.country) ? resp.country : "";
-        success(countryCode);
-      });
-    },
-  });
-
-  function togglePasswordVisibility() {
-    let x = document.getElementById("identityPassword");
-    if (x.type === "password") {
-      x.type = "text";
-    } else {
-      x.type = "password";
-    }
-  };
-
-  $('#backToSkill').click(function() {
-    loadTemplate('/static/views/ats/skill.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-
-  $('#toRecap').click(function() {
-    loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
-</script>
+<script src="/static/assets/dist/js/ats_identity.min.js"></script>

@@ -28,7 +28,9 @@ let permissions = {
   experienceId: 1,
   diplomaId: 1,
   qualificationId: 1,
-  skillId: 1
+  skillId: 1,
+  checkingMail: null,
+  verifiedEvent: new Event('verified')
 };
 
 
@@ -49,12 +51,6 @@ let getAtsDatas = () => {
 };
 let initApplication = () => {
   return new Promise( resolve => {
-    // candidateDatas.application.post = false;
-    // candidateDatas.application.contractType = false;
-    // candidateDatas.application.fullTime = false;
-    // candidateDatas.application.partTime = false;
-    // candidateDatas.application.dayTime = false;
-    // candidateDatas.application.nightTime = false;
     getAtsDatas().then (() => resolve());
   });
 };

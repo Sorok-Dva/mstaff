@@ -6,8 +6,8 @@
 let toNextModal = false;
 // let allPosts, allServices, allDiplomas, allQualifications, allSkills;
 // let iti;
-let checkingMail = null;
-const verifiedEvent = new Event('verified');
+// let checkingMail = null;
+// const verifiedEvent = new Event('verified');
 
 
 // let initApplication = () => {
@@ -429,28 +429,28 @@ let generateDatasRecap = (current) => {
 
 // IDENTITY-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
-let togglePasswordVisibility = () => {
-  let x = document.getElementById("identityPassword");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-};
+// let togglePasswordVisibility = () => {
+//   let x = document.getElementById("identityPassword");
+//   if (x.type === "password") {
+//     x.type = "text";
+//   } else {
+//     x.type = "password";
+//   }
+// };
 
-let displayIndicator = () => {
-  let password = $('#identityPassword').val();
-  let rules = [
-    { Pattern: '[A-Z]', Target: 'uppercase' },
-    { Pattern: '[0-9]', Target: 'number' },
-    { Pattern: '[!@#$%^&*]', Target: 'symbol' }
-    ];
-
-  $('#length').removeClass('bad-rule good-rule').addClass(password.length < 8 ? 'bad-rule' : 'good-rule');
-  rules.forEach( rule => {
-    $('#' + rule.Target).removeClass('bad-rule good-rule').addClass(new RegExp(rule.Pattern).test(password) ? 'good-rule' : 'bad-rule');
-  });
-};
+// let displayIndicator = () => {
+//   let password = $('#identityPassword').val();
+//   let rules = [
+//     { Pattern: '[A-Z]', Target: 'uppercase' },
+//     { Pattern: '[0-9]', Target: 'number' },
+//     { Pattern: '[!@#$%^&*]', Target: 'symbol' }
+//     ];
+//
+//   $('#length').removeClass('bad-rule good-rule').addClass(password.length < 8 ? 'bad-rule' : 'good-rule');
+//   rules.forEach( rule => {
+//     $('#' + rule.Target).removeClass('bad-rule good-rule').addClass(new RegExp(rule.Pattern).test(password) ? 'good-rule' : 'bad-rule');
+//   });
+// };
 
 // RECAP-MODAL FUNCTIONS ---------------------------------------------------------------------------------------
 
@@ -473,13 +473,13 @@ let generateFinalRecap = () => {
 
 // MAIN FUNCTIONS ---------------------------------------------------------------------------------------
 
-let loadModal = (current, target) => {
-  toNextModal = true;
-  $(`#${current}`).modal('hide');
-  $(`#${target}`).modal('show');
-  hasDatas(target) ? loadEditModal(target) : loadClearModal(target);
-  toNextModal = false;
-};
+// let loadModal = (current, target) => {
+//   toNextModal = true;
+//   $(`#${current}`).modal('hide');
+//   $(`#${target}`).modal('show');
+//   hasDatas(target) ? loadEditModal(target) : loadClearModal(target);
+//   toNextModal = false;
+// };
 
 let loadClearModal = (target) => {
   generateGlobalRecap(target);
@@ -529,504 +529,496 @@ let loadClearModal = (target) => {
 //   }
 // };
 
-let hasDatas = (modal) => {
-  switch (modal) {
-    // case 'postModal':
-    //     return !$.isEmptyObject(application.post);
-    //   break;
-    // case 'contractModal':
-    //   break;
-    // case 'timeModal':
-    //   break;
-    case 'experienceModal':
-      return experiences.length > 0;
-      break;
-    case 'diplomaModal':
-      return diplomas.length > 0;
-      break;
-    case 'qualificationModal':
-      return qualifications.length > 0;
-      break;
-    case 'skillModal':
-      return skills.length > 0;
-      break;
-    case 'identityModal':
-      break;
-    case 'recapModal':
-      break;
-  }
-};
+// let hasDatas = (modal) => {
+//   switch (modal) {
+//     // case 'postModal':
+//     //     return !$.isEmptyObject(application.post);
+//     //   break;
+//     // case 'contractModal':
+//     //   break;
+//     // case 'timeModal':
+//     //   break;
+//     case 'experienceModal':
+//       return experiences.length > 0;
+//       break;
+//     case 'diplomaModal':
+//       return diplomas.length > 0;
+//       break;
+//     case 'qualificationModal':
+//       return qualifications.length > 0;
+//       break;
+//     case 'skillModal':
+//       return skills.length > 0;
+//       break;
+//     case 'identityModal':
+//       break;
+//     case 'recapModal':
+//       break;
+//   }
+// };
 
-let saveDatas = (modal) => {
-  let current;
-  switch (modal) {
-    // case 'postModal':
-    //   let services = $('#InputServices').select2('data');
-    //   application.post = $('#InputPosts').val();
-    //   application.services = [];
-    //   services.forEach( service => {
-    //     application.services.push(service.text);
-    //   });
-    //   break;
-    // case 'contractModal':
-    //   application.contractType = $('.contractChoices input:checked').prop('name');
-    //   break;
-    // case 'timeModalCdi':
-    //   application.fullTime = $('#full_time').prop('checked');
-    //   application.partTime = $('#part_time').prop('checked');
-    //   application.dayTime = $('#day_time').prop('checked');
-    //   application.nightTime = $('#night_time').prop('checked');
-    //   break;
-    // case 'timeModalInternship':
-    //   application.start = new Date($('#start').data("DateTimePicker").date());
-    //   application.end = new Date($('#end').data("DateTimePicker").date());
-    //   break;
-    // case 'experienceModal':
-    //   current = {};
-    //   current.id = permissions.experienceId;
-    //   permissions.experienceId += 1;
-    //   current.name = $('#xpEstablishment').val();
-    //   current.post_id = $('#xpPost').val();
-    //   // current.contract = $('#radioContract input:checked').attr('id');
-    //   //Todo a modifier par la suite (voir si on reste sur cette structure)
-    //   current.internship = 0;
-    //   current.service_id = $('#xpService').val();
-    //   current.start = new Date($('#xpStart').data("DateTimePicker").date());
-    //   current.end = null;
-    //   if ($('#xpEnd').data("DateTimePicker").date())
-    //     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-    //   experiences.push(current);
-    //   break;
-    // case 'diplomaModal':
-    //   current = {};
-    //   current.id = permissions.diplomaId;
-    //   permissions.diplomaId += 1;
-    //   current.diploma = $('#diploma').val();
-    //   current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
-    //   current.end = null;
-    //   if ($('#diplomaEnd').data("DateTimePicker").date())
-    //     current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
-    //   diplomas.push(current);
-    //   break;
-    // case 'qualificationModal':
-    //   current = {};
-    //   current.id = permissions.qualificationId;
-    //   permissions.qualificationId += 1;
-    //   current.qualification = $('#qualification').val();
-    //   current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
-    //   current.end = null;
-    //   if ($('#qualificationEnd').data("DateTimePicker").date())
-    //     current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
-    //   qualifications.push(current);
-    //   break;
-    case 'skillModal':
-      current = {};
-      current.id = permissions.skillId;
-      permissions.skillId += 1;
-      current.skill = $('#skill').val();
-      current.stars = starsSelected();
-      skills.push(current);
-      break;
-    case 'identityModal':
-      identity.firstName = $('#identityForename').val();
-      identity.lastName = $('#identityName').val();
-      identity.phone = iti.getNumber();
-      identity.country = iti.getSelectedCountryData().name;
-      identity.email = $('#identityMail').val();
-      identity.password = $('#identityPassword').val();
-      identity.birthday = $('#identityBirth').val();
-      identity.postal_code = $('#identityPostal').val();
-      identity.town = $('#identityCity').val();
-      break;
-  }
-};
+// let saveDatas = (modal) => {
+//   let current;
+//   switch (modal) {
+//     // case 'postModal':
+//     //   let services = $('#InputServices').select2('data');
+//     //   application.post = $('#InputPosts').val();
+//     //   application.services = [];
+//     //   services.forEach( service => {
+//     //     application.services.push(service.text);
+//     //   });
+//     //   break;
+//     // case 'contractModal':
+//     //   application.contractType = $('.contractChoices input:checked').prop('name');
+//     //   break;
+//     // case 'timeModalCdi':
+//     //   application.fullTime = $('#full_time').prop('checked');
+//     //   application.partTime = $('#part_time').prop('checked');
+//     //   application.dayTime = $('#day_time').prop('checked');
+//     //   application.nightTime = $('#night_time').prop('checked');
+//     //   break;
+//     // case 'timeModalInternship':
+//     //   application.start = new Date($('#start').data("DateTimePicker").date());
+//     //   application.end = new Date($('#end').data("DateTimePicker").date());
+//     //   break;
+//     // case 'experienceModal':
+//     //   current = {};
+//     //   current.id = permissions.experienceId;
+//     //   permissions.experienceId += 1;
+//     //   current.name = $('#xpEstablishment').val();
+//     //   current.post_id = $('#xpPost').val();
+//     //   // current.contract = $('#radioContract input:checked').attr('id');
+//     //   //Todo a modifier par la suite (voir si on reste sur cette structure)
+//     //   current.internship = 0;
+//     //   current.service_id = $('#xpService').val();
+//     //   current.start = new Date($('#xpStart').data("DateTimePicker").date());
+//     //   current.end = null;
+//     //   if ($('#xpEnd').data("DateTimePicker").date())
+//     //     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+//     //   experiences.push(current);
+//     //   break;
+//     // case 'diplomaModal':
+//     //   current = {};
+//     //   current.id = permissions.diplomaId;
+//     //   permissions.diplomaId += 1;
+//     //   current.diploma = $('#diploma').val();
+//     //   current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
+//     //   current.end = null;
+//     //   if ($('#diplomaEnd').data("DateTimePicker").date())
+//     //     current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
+//     //   diplomas.push(current);
+//     //   break;
+//     // case 'qualificationModal':
+//     //   current = {};
+//     //   current.id = permissions.qualificationId;
+//     //   permissions.qualificationId += 1;
+//     //   current.qualification = $('#qualification').val();
+//     //   current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
+//     //   current.end = null;
+//     //   if ($('#qualificationEnd').data("DateTimePicker").date())
+//     //     current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
+//     //   qualifications.push(current);
+//     //   break;
+//     // case 'skillModal':
+//     //   current = {};
+//     //   current.id = permissions.skillId;
+//     //   permissions.skillId += 1;
+//     //   current.skill = $('#skill').val();
+//     //   current.stars = starsSelected();
+//     //   skills.push(current);
+//     //   break;
+//     case 'identityModal':
+//       identity.firstName = $('#identityForename').val();
+//       identity.lastName = $('#identityName').val();
+//       identity.phone = iti.getNumber();
+//       identity.country = iti.getSelectedCountryData().name;
+//       identity.email = $('#identityMail').val();
+//       identity.password = $('#identityPassword').val();
+//       identity.birthday = $('#identityBirth').val();
+//       identity.postal_code = $('#identityPostal').val();
+//       identity.town = $('#identityCity').val();
+//       break;
+//   }
+// };
 
-let saveEditDatas = (modal) => {
-  let current = null;
-  switch (modal) {
-    // case 'experienceModal':
-    //   current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
-    //   current.establishment = $('#xpEstablishment').val();
-    //   current.post = $('#xpPost').val();
-    //   current.contract = $('#radioContract input:checked').attr('id');
-    //   current.service = $('#xpService').val();
-    //   current.start = new Date($('#xpStart').data("DateTimePicker").date());
-    //   if ($('#xpEnd').data("DateTimePicker").date())
-    //     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-    //   break;
-    // case 'diplomaModal':
-    //   current =  diplomas[diplomas.map(diploma => diploma.id).indexOf(permissions.editId)];
-    //   current.diploma = $('#diploma').val();
-    //   current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
-    //   if ($('#diplomaEnd').data("DateTimePicker").date())
-    //     current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
-    //   break;
-    // case 'qualificationModal':
-    //   current =  qualifications[qualifications.map(qualification => qualification.id).indexOf(permissions.editId)];
-    //   current.qualification = $('#qualification').val();
-    //   current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
-    //   if ($('#qualificationEnd').data("DateTimePicker").date())
-    //     current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
-    //   break;
-    // case 'skillModal':
-    //   current =  skills[skills.map(skill => skill.id).indexOf(permissions.editId)];
-    //   current.skill = $('#skill').val();
-    //   current.stars = starsSelected();
-    //   break;
-  }
-  permissions.editMode = false;
-};
+// let saveEditDatas = (modal) => {
+//   let current = null;
+//   switch (modal) {
+//     // case 'experienceModal':
+//     //   current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
+//     //   current.establishment = $('#xpEstablishment').val();
+//     //   current.post = $('#xpPost').val();
+//     //   current.contract = $('#radioContract input:checked').attr('id');
+//     //   current.service = $('#xpService').val();
+//     //   current.start = new Date($('#xpStart').data("DateTimePicker").date());
+//     //   if ($('#xpEnd').data("DateTimePicker").date())
+//     //     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+//     //   break;
+//     // case 'diplomaModal':
+//     //   current =  diplomas[diplomas.map(diploma => diploma.id).indexOf(permissions.editId)];
+//     //   current.diploma = $('#diploma').val();
+//     //   current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
+//     //   if ($('#diplomaEnd').data("DateTimePicker").date())
+//     //     current.end = new Date($('#diplomaEnd').data("DateTimePicker").date());
+//     //   break;
+//     // case 'qualificationModal':
+//     //   current =  qualifications[qualifications.map(qualification => qualification.id).indexOf(permissions.editId)];
+//     //   current.qualification = $('#qualification').val();
+//     //   current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
+//     //   if ($('#qualificationEnd').data("DateTimePicker").date())
+//     //     current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
+//     //   break;
+//     // case 'skillModal':
+//     //   current =  skills[skills.map(skill => skill.id).indexOf(permissions.editId)];
+//     //   current.skill = $('#skill').val();
+//     //   current.stars = starsSelected();
+//     //   break;
+//   }
+//   permissions.editMode = false;
+// };
 
-let isAvailableMail = (mail) => {
-  return new Promise( resolve => {
-    $.get(`/emailAvailable/${mail}`, (data) => {
-      resolve(data);
-    }).catch(error => errorsHandler(error));
-  });
-};
+// let isAvailableMail = (mail) => {
+//   return new Promise( resolve => {
+//     $.get(`/emailAvailable/${mail}`, (data) => {
+//       resolve(data);
+//     }).catch(error => errorsHandler(error));
+//   });
+// };
 
-let verifyDatas = (modal) => {
-  let now = moment().startOf('day');
-  switch (modal) {
-    // case 'postModal':
-    //   return postsArray.includes($('#InputPosts').val()) ? true : notify('inputPost');
-    //   break;
-    // case 'contractModal':
-    //   return ($('.contractChoices input:checked').length) ? true : notify('contractChoice');
-    //   break;
-    // case 'timeModalCdi':
-    //   let fullpart = ($('#full-part input:checked').length > 0) ? true : notify('fullpart');
-    //   let daynight = ($('#day-night input:checked').length > 0) ? true : notify('daynight');
-    //   return (fullpart && daynight);
-    //   break;
-    // case 'timeModalInternship':
-    //   let start = $('#start').data("DateTimePicker").date();
-    //   let end = $('#end').data("DateTimePicker").date();
-    //
-    //   if (start !== null && end !== null){
-    //     let validStart = start.startOf('day').isSameOrAfter(now) ? true : notify('internshipWrongStart');
-    //     let validEnd = end.startOf('day').isAfter(start.startOf('day')) ? true : notify('internshipWrongEnd');
-    //     return (validStart && validEnd);
-    //   }
-    //   return notify('noDateInternship');
-    //   break;
-    // case 'experienceModal':
-    //   let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) ? true : notify('xpEtablishment');
-    //   let xpPost = postsArray.includes($('#xpPost').val()) ? true : notify('xpPost');
-    //   let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
-    //   let xpService = servicesArray.includes($('#xpService').val()) ? true : notify('xpService');
-    //   let xpStart = $('#xpStart').data("DateTimePicker").date();
-    //   let xpEnd = $('#xpEnd').data("DateTimePicker").date();
-    //   if (xpStart !== null){
-    //     let validXpStart = xpStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
-    //     let validXpEnd = true;
-    //     if (xpEnd !== null)
-    //       validXpEnd = xpEnd.startOf('day').isSameOrAfter(xpStart.startOf('day')) ? true : notify('endDateBeforeStart');
-    //     return (xpEtablishment && xpPost && radioContract && xpService && validXpStart && validXpEnd);
-    //   }
-    //   return notify('noStartDate');
-    //   break;
-    // case 'diplomaModal':
-    //   let diploma = !$.isEmptyObject($('#diploma').val()) ? true : notify('noDiploma');
-    //   let diplomaStart = $('#diplomaStart').data("DateTimePicker").date();
-    //   let diplomaEnd = $('#diplomaEnd').data("DateTimePicker").date();
-    //   if (diplomaStart !== null){
-    //     let validDiplomaStart = diplomaStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
-    //     let validDiplomaEnd = true;
-    //     if (diplomaEnd !== null)
-    //       validDiplomaEnd = diplomaEnd.startOf('day').isSameOrAfter(diplomaStart.startOf('day')) ? true : notify('endDateBeforeStart');
-    //     return (diploma && validDiplomaStart && validDiplomaEnd);
-    //   }
-    //   return notify('noStartDate');
-    //   break;
-    // case 'qualificationModal':
-    //   let qualification = !$.isEmptyObject($('#qualification').val()) ? true : notify('noQualification');
-    //   let qualificationStart = $('#qualificationStart').data("DateTimePicker").date();
-    //   let qualificationEnd = $('#qualificationEnd').data("DateTimePicker").date();
-    //   if (qualificationStart !== null){
-    //     let validQualificationStart = qualificationStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
-    //     let validQualificationEnd = true;
-    //     if (qualificationEnd !== null)
-    //       validQualificationEnd = qualificationEnd.startOf('day').isSameOrAfter(qualificationStart.startOf('day')) ? true : notify('endDateBeforeStart');
-    //     return (qualification && validQualificationStart && validQualificationEnd);
-    //   }
-    //   return notify('noStartDate');
-    //   break;
-    // case 'skillModal':
-    //   let skill = !$.isEmptyObject($('#skill').val()) ? true : notify('noSkill');
-    //   let stars = starsSelected() > 0 ? true : notify('noStars')
-    //   return (skill && stars);
-    //   break;
-    case 'identityModal':
-      let mail = $('#identityMail').val();
-      let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
-      let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
-      if (isValidMail){
-        if (mail !== checkingMail){
-          checkingMail = mail;
-          isAvailableMail(mail).then(data => {
-            if (data.available){
-              let forename = $('#identityForename').val();
-              let name = $('#identityName').val();
-              let birthDate = $('#identityBirth').val();
-              let postal = $('#identityPostal').val();
-              let city = $('#identityCity').val();
-              let password = $('#identityPassword').val();
-              let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
-              let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
-              let isValidPostal = !isNaN(postal) ? true : notify('wrongPostalCode');;
-              let isValidCity = !$.isEmptyObject(city);
-              let isValidBirthDate = new Date(birthDate) !== 'Invalid Date' ? true : notify('wrongBirthDateFormat');
-              if (isValidBirthDate)
-                isValidBirthDate = moment(birthDate).isBefore(moment().subtract(18, 'years')) ? true : notify('wrongBirthDate');
-              let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
-              let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
-              let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
-              if (isValidForename && isValidName && isValidPostal && isValidCity && isValidBirthDate && isValidPhone && isValidPassword){
-                checkingMail = null;
-                document.getElementById('toStep9').dispatchEvent(verifiedEvent);
-              }
-            }
-            else notify('mailAlreadyUse');
-          });
-        } else {
-          notify('mailAlreadyUse');
-        }
-      }
-      break;
-  }
-};
+// let verifyDatas = (modal) => {
+//   let now = moment().startOf('day');
+//   switch (modal) {
+//     // case 'postModal':
+//     //   return postsArray.includes($('#InputPosts').val()) ? true : notify('inputPost');
+//     //   break;
+//     // case 'contractModal':
+//     //   return ($('.contractChoices input:checked').length) ? true : notify('contractChoice');
+//     //   break;
+//     // case 'timeModalCdi':
+//     //   let fullpart = ($('#full-part input:checked').length > 0) ? true : notify('fullpart');
+//     //   let daynight = ($('#day-night input:checked').length > 0) ? true : notify('daynight');
+//     //   return (fullpart && daynight);
+//     //   break;
+//     // case 'timeModalInternship':
+//     //   let start = $('#start').data("DateTimePicker").date();
+//     //   let end = $('#end').data("DateTimePicker").date();
+//     //
+//     //   if (start !== null && end !== null){
+//     //     let validStart = start.startOf('day').isSameOrAfter(now) ? true : notify('internshipWrongStart');
+//     //     let validEnd = end.startOf('day').isAfter(start.startOf('day')) ? true : notify('internshipWrongEnd');
+//     //     return (validStart && validEnd);
+//     //   }
+//     //   return notify('noDateInternship');
+//     //   break;
+//     // case 'experienceModal':
+//     //   let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) ? true : notify('xpEtablishment');
+//     //   let xpPost = postsArray.includes($('#xpPost').val()) ? true : notify('xpPost');
+//     //   let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
+//     //   let xpService = servicesArray.includes($('#xpService').val()) ? true : notify('xpService');
+//     //   let xpStart = $('#xpStart').data("DateTimePicker").date();
+//     //   let xpEnd = $('#xpEnd').data("DateTimePicker").date();
+//     //   if (xpStart !== null){
+//     //     let validXpStart = xpStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
+//     //     let validXpEnd = true;
+//     //     if (xpEnd !== null)
+//     //       validXpEnd = xpEnd.startOf('day').isSameOrAfter(xpStart.startOf('day')) ? true : notify('endDateBeforeStart');
+//     //     return (xpEtablishment && xpPost && radioContract && xpService && validXpStart && validXpEnd);
+//     //   }
+//     //   return notify('noStartDate');
+//     //   break;
+//     // case 'diplomaModal':
+//     //   let diploma = !$.isEmptyObject($('#diploma').val()) ? true : notify('noDiploma');
+//     //   let diplomaStart = $('#diplomaStart').data("DateTimePicker").date();
+//     //   let diplomaEnd = $('#diplomaEnd').data("DateTimePicker").date();
+//     //   if (diplomaStart !== null){
+//     //     let validDiplomaStart = diplomaStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
+//     //     let validDiplomaEnd = true;
+//     //     if (diplomaEnd !== null)
+//     //       validDiplomaEnd = diplomaEnd.startOf('day').isSameOrAfter(diplomaStart.startOf('day')) ? true : notify('endDateBeforeStart');
+//     //     return (diploma && validDiplomaStart && validDiplomaEnd);
+//     //   }
+//     //   return notify('noStartDate');
+//     //   break;
+//     // case 'qualificationModal':
+//     //   let qualification = !$.isEmptyObject($('#qualification').val()) ? true : notify('noQualification');
+//     //   let qualificationStart = $('#qualificationStart').data("DateTimePicker").date();
+//     //   let qualificationEnd = $('#qualificationEnd').data("DateTimePicker").date();
+//     //   if (qualificationStart !== null){
+//     //     let validQualificationStart = qualificationStart.startOf('day').isSameOrBefore(now) ? true : notify('startDateAfterNow');
+//     //     let validQualificationEnd = true;
+//     //     if (qualificationEnd !== null)
+//     //       validQualificationEnd = qualificationEnd.startOf('day').isSameOrAfter(qualificationStart.startOf('day')) ? true : notify('endDateBeforeStart');
+//     //     return (qualification && validQualificationStart && validQualificationEnd);
+//     //   }
+//     //   return notify('noStartDate');
+//     //   break;
+//     // case 'skillModal':
+//     //   let skill = !$.isEmptyObject($('#skill').val()) ? true : notify('noSkill');
+//     //   let stars = starsSelected() > 0 ? true : notify('noStars')
+//     //   return (skill && stars);
+//     //   break;
+//     // case 'identityModal':
+//     //   let mail = $('#identityMail').val();
+//     //   let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
+//     //   let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
+//     //   if (isValidMail){
+//     //     if (mail !== checkingMail){
+//     //       checkingMail = mail;
+//     //       isAvailableMail(mail).then(data => {
+//     //         if (data.available){
+//     //           let forename = $('#identityForename').val();
+//     //           let name = $('#identityName').val();
+//     //           let birthDate = $('#identityBirth').val();
+//     //           let postal = $('#identityPostal').val();
+//     //           let city = $('#identityCity').val();
+//     //           let password = $('#identityPassword').val();
+//     //           let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
+//     //           let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
+//     //           let isValidPostal = !isNaN(postal) ? true : notify('wrongPostalCode');;
+//     //           let isValidCity = !$.isEmptyObject(city);
+//     //           let isValidBirthDate = new Date(birthDate) !== 'Invalid Date' ? true : notify('wrongBirthDateFormat');
+//     //           if (isValidBirthDate)
+//     //             isValidBirthDate = moment(birthDate).isBefore(moment().subtract(18, 'years')) ? true : notify('wrongBirthDate');
+//     //           let isValidPhone = iti.isValidNumber() ? true : notify('wrongPhoneNumber');
+//     //           let passwordRegex = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])([!@#$%^&*\\w]{8,})$';
+//     //           let isValidPassword = password.match(passwordRegex) !== null ? true : notify('wrongPasswordFormat');
+//     //           if (isValidForename && isValidName && isValidPostal && isValidCity && isValidBirthDate && isValidPhone && isValidPassword){
+//     //             checkingMail = null;
+//     //             document.getElementById('toStep9').dispatchEvent(verifiedEvent);
+//     //           }
+//     //         }
+//     //         else notify('mailAlreadyUse');
+//     //       });
+//     //     } else {
+//     //       notify('mailAlreadyUse');
+//     //     }
+//     //   }
+//     //   break;
+//   }
+// };
 
-let notify = (error) => {
-  switch(error) {
-    // case 'inputPost':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci de choisir un poste valide.`
-    //   });
-    //   break;
-    // case 'contractChoice':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci de sélectionner un type de contrat.`
-    //   });
-    //   break;
-    // case 'fullpart':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer si vous souhaitez travailler à temps plein / partiel, ou les deux.`
-    //   });
-    //   break;
-    // case 'daynight':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer si vous souhaitez travailler de jour / nuit, ou les deux.`
-    //   });
-    //   break;
-    // case 'internshipWrongStart':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci de choisir une date postérieure ou égale à la date du jour.`
-    //   });
-    //   break;
-    // case 'internshipWrongEnd':
-    // notification({
-    //   icon: 'exclamation',
-    //   type: 'danger',
-    //   title: 'Informations manquantes :',
-    //   message: `Merci de choisir une date de fin postérieure à celle de départ.`
-    // });
-    //   break;
-    // case 'xpEtablishment':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer un établissement.`
-    //   });
-    //   break;
-    // case 'xpPost':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer un poste valide.`
-    //   });
-    //   break;
-    // case 'radioContract':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci de sélectionner un type de contrat.`
-    //   });
-    //   break;
-    // case 'xpService':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer un service valide.`
-    //   });
-    //   break;
-    // case 'noDateInternship':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer une date de début ainsi qu'une date de fin.`
-    //   });
-    //   break;
-    // case 'noStartDate':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer une date de début.`
-    //   });
-    //   break;
-    // case 'startDateAfterNow':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci de choisir une date antérieure ou égale à la date du jour.`
-    //   });
-    //   break;
-    // case 'endDateBeforeStart':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci de choisir une date de fin postérieure ou égale à celle de départ.`
-    //   });
-    //   break;
-    // case 'noDiploma':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer une formation.`
-    //   });
-    //   break;
-    // case 'noQualification':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer un diplôme.`
-    //   });
-    //   break;
-    // case 'noSkill':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci d'indiquer une compétence.`
-    //   });
-    //   break;
-    // case 'noStars':
-    //   notification({
-    //     icon: 'exclamation',
-    //     type: 'danger',
-    //     title: 'Informations manquantes :',
-    //     message: `Merci de noter votre compétence.`
-    //   });
-    //   break;
-    case 'noForename':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer votre prénom.`
-      });
-      break;
-    case 'noName':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer votre nom.`
-      });
-      break;
-    case 'wrongPostalCode':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer un code postal valide.`
-      });
-      break;
-    case 'wrongBirthDateFormat':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de saisir un format de date valide.`
-      });
-      break;
-    case 'wrongBirthDate':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `L'age légal minimum requis pour vous inscrire sur Mstaff est de 18 ans.`
-      });
-      break;
-    case 'wrongPhoneNumber':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de saisir un numéro de téléphone valide.`
-      });
-      break;
-    case 'wrongMailFormat':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de saisir un mail valide, exemple : identifiant@domain.xxx .`
-      });
-      break;
-    case 'wrongPhoneFormat':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de saisir un numéro de téléphone valide.`
-      });
-      break;
-    case 'wrongPasswordFormat':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de saisir un password valide.`
-      });
-      break;
-    case 'mailAlreadyUse':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Cet email est déjà utilisé.`
-      });
-      break;
-  }
-  return false;
-
-};
+// let notify = (error) => {
+//   switch(error) {
+//     // case 'inputPost':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de choisir un poste valide.`
+//     //   });
+//     //   break;
+//     // case 'contractChoice':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de sélectionner un type de contrat.`
+//     //   });
+//     //   break;
+//     // case 'fullpart':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer si vous souhaitez travailler à temps plein / partiel, ou les deux.`
+//     //   });
+//     //   break;
+//     // case 'daynight':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer si vous souhaitez travailler de jour / nuit, ou les deux.`
+//     //   });
+//     //   break;
+//     // case 'internshipWrongStart':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de choisir une date postérieure ou égale à la date du jour.`
+//     //   });
+//     //   break;
+//     // case 'internshipWrongEnd':
+//     // notification({
+//     //   icon: 'exclamation',
+//     //   type: 'danger',
+//     //   title: 'Informations manquantes :',
+//     //   message: `Merci de choisir une date de fin postérieure à celle de départ.`
+//     // });
+//     //   break;
+//     // case 'xpEtablishment':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer un établissement.`
+//     //   });
+//     //   break;
+//     // case 'xpPost':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer un poste valide.`
+//     //   });
+//     //   break;
+//     // case 'radioContract':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de sélectionner un type de contrat.`
+//     //   });
+//     //   break;
+//     // case 'xpService':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer un service valide.`
+//     //   });
+//     //   break;
+//     // case 'noDateInternship':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer une date de début ainsi qu'une date de fin.`
+//     //   });
+//     //   break;
+//     // case 'noStartDate':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer une date de début.`
+//     //   });
+//     //   break;
+//     // case 'startDateAfterNow':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de choisir une date antérieure ou égale à la date du jour.`
+//     //   });
+//     //   break;
+//     // case 'endDateBeforeStart':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de choisir une date de fin postérieure ou égale à celle de départ.`
+//     //   });
+//     //   break;
+//     // case 'noDiploma':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer une formation.`
+//     //   });
+//     //   break;
+//     // case 'noQualification':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer un diplôme.`
+//     //   });
+//     //   break;
+//     // case 'noSkill':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer une compétence.`
+//     //   });
+//     //   break;
+//     // case 'noStars':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de noter votre compétence.`
+//     //   });
+//     //   break;
+//     // case 'noForename':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer votre prénom.`
+//     //   });
+//     //   break;
+//     // case 'noName':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer votre nom.`
+//     //   });
+//     //   break;
+//     // case 'wrongPostalCode':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci d'indiquer un code postal valide.`
+//     //   });
+//     //   break;
+//     // case 'wrongBirthDateFormat':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de saisir un format de date valide.`
+//     //   });
+//     //   break;
+//     // case 'wrongBirthDate':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `L'age légal minimum requis pour vous inscrire sur Mstaff est de 18 ans.`
+//     //   });
+//     //   break;
+//     // case 'wrongPhoneNumber':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de saisir un numéro de téléphone valide.`
+//     //   });
+//     //   break;
+//     // case 'wrongMailFormat':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de saisir un mail valide, exemple : identifiant@domain.xxx .`
+//     //   });
+//     //   break;
+//     // case 'wrongPasswordFormat':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Merci de saisir un password valide.`
+//     //   });
+//     //   break;
+//     // case 'mailAlreadyUse':
+//     //   notification({
+//     //     icon: 'exclamation',
+//     //     type: 'danger',
+//     //     title: 'Informations manquantes :',
+//     //     message: `Cet email est déjà utilisé.`
+//     //   });
+//     //   break;
+//   }
+//   return false;
+//
+// };
 
 let finalize = (es_finess) => {
   identity._csrf = $('#csrfToken').val();
@@ -1276,69 +1268,69 @@ let finalize = (es_finess) => {
 //   });
 // };
 
-let skillModalListener = () => {
-  // $('#skillModal').on('hide.bs.modal', () => toPreviousModal('skillModal', 'qualificationModal'));
-  //
-  // $('#stars div').on('click',(e) => {
-  //   starsSelector(e.currentTarget.id);
-  // });
+// let skillModalListener = () => {
+//   // $('#skillModal').on('hide.bs.modal', () => toPreviousModal('skillModal', 'qualificationModal'));
+//   //
+//   // $('#stars div').on('click',(e) => {
+//   //   starsSelector(e.currentTarget.id);
+//   // });
+//
+//   $('#saveSkill').on('click', () => {
+//     if (verifyDatas('skillModal')){
+//       permissions.editMode ? saveEditDatas('skillModal') : saveDatas('skillModal');
+//       generateDatasRecap('skillModal');
+//       resetForm('skill');
+//     }
+//   });
+//
+//   // $('#emptySkill').on('click', () => {
+//   //   skills = [];
+//   //   loadModal('skillModal', 'identityModal')
+//   // });
+//   //
+//   // $('#toStep8').on('click', () => {
+//   //   loadModal('skillModal','identityModal');
+//   // });
+//
+// };
 
-  $('#saveSkill').on('click', () => {
-    if (verifyDatas('skillModal')){
-      permissions.editMode ? saveEditDatas('skillModal') : saveDatas('skillModal');
-      generateDatasRecap('skillModal');
-      resetForm('skill');
-    }
-  });
-
-  // $('#emptySkill').on('click', () => {
-  //   skills = [];
-  //   loadModal('skillModal', 'identityModal')
-  // });
-  //
-  // $('#toStep8').on('click', () => {
-  //   loadModal('skillModal','identityModal');
-  // });
-
-};
-
-let identityModalListener = () => {
-  $('#identityModal').on('hide.bs.modal', () => toPreviousModal('identityModal', 'skillModal'));
-
-  let input = document.querySelector("#identityPhone");
-  let password = $('#identityPassword');
-  let passwordIndicator = $('.password-indicator ul');
-
-  iti = intlTelInput(input, {
-    utilsScript: '/static/assets/js/utils.js',
-    preferredCountries: ["fr", "gb", "us"],
-    initialCountry: "auto",
-    geoIpLookup: function(success, failure) {
-      $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
-        let countryCode = (resp && resp.country) ? resp.country : "";
-        success(countryCode);
-      });
-    },
-  });
-
-  password.on('focus', () => {
-    passwordIndicator.css('display', 'block');
-  }).on('blur', () => {
-    passwordIndicator.css('display', 'none');
-  }).on('keyup', () => {
-    displayIndicator();
-  });
-
-  document.getElementById('toStep9').addEventListener('verified', () => {
-    saveDatas('identityModal');
-    loadModal('identityModal','recapModal');
-  }, false);
-
-  $('#toStep9').on('click', () => {
-    verifyDatas('identityModal');
-  });
-
-};
+// let identityModalListener = () => {
+//   // $('#identityModal').on('hide.bs.modal', () => toPreviousModal('identityModal', 'skillModal'));
+//
+//   // let input = document.querySelector("#identityPhone");
+//   // let password = $('#identityPassword');
+//   // let passwordIndicator = $('.password-indicator ul');
+//
+//   // iti = intlTelInput(input, {
+//   //   utilsScript: '/static/assets/js/utils.js',
+//   //   preferredCountries: ["fr", "gb", "us"],
+//   //   initialCountry: "auto",
+//   //   geoIpLookup: function(success, failure) {
+//   //     $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+//   //       let countryCode = (resp && resp.country) ? resp.country : "";
+//   //       success(countryCode);
+//   //     });
+//   //   },
+//   // });
+//
+//   // password.on('focus', () => {
+//   //   passwordIndicator.css('display', 'block');
+//   // }).on('blur', () => {
+//   //   passwordIndicator.css('display', 'none');
+//   // }).on('keyup', () => {
+//   //   displayIndicator();
+//   // });
+//
+//   // document.getElementById('toStep9').addEventListener('verified', () => {
+//   //   saveDatas('identityModal');
+//   //   loadModal('identityModal','recapModal');
+//   // }, false);
+//   //
+//   // $('#toStep9').on('click', () => {
+//   //   verifyDatas('identityModal');
+//   });
+//
+// };
 
 let recapModalListener = () => {
   $('#recapModal').on('hide.bs.modal', () => toPreviousModal('recapModal', 'identityModal'));
