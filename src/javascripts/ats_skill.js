@@ -38,31 +38,20 @@ function resetForm(){
 }
 
 function editSkill(id){
-
-};
-
-function deleteSkill(id){
-
-};
-
-function editSkill(id){
   permissions.editMode = true;
   permissions.editId = id;
-  let i = skills.map(skill => skill.id).indexOf(id);
-  resetForm('skill');
-  $('#skill').val(skills[i].skill).trigger('keyup');
-  starsSelector(`star${skills[i].stars}`);
+  let i = candidateDatas.skills.map(skill => skill.id).indexOf(id);
+  resetForm();
+  $('#skill').val(candidateDatas.skills[i].skill).trigger('keyup');
+  starsSelector(`star${candidateDatas.skills[i].stars}`);
 };
 
 function deleteSkill(id){
-  resetForm('skill');
+  resetForm();
   permissions.editMode = false;
-  let i = skills.map(skill => skill.id).indexOf(id);
-  skills.splice(i, 1);
+  let i = candidateDatas.skills.map(skill => skill.id).indexOf(id);
+  candidateDatas.skills.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
-  if (skills.length === 0){
-    generateGlobalRecap('skillModal');
-  }
 };
 
 function addToDatasRecap(item){
@@ -131,11 +120,29 @@ function createSkillList(skills, input){
 };
 
 function verifyInputs(){
+  let skill = !$.isEmptyObject($('#skill').val()) ? true : notify('noSkill');
+  let stars = starsSelected() > 0 ? true : notify('noStars')
+  return (skill && stars);
 };
 
 function notify(error){
   switch (error) {
-
+    case 'noSkill':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer une compétence.`
+      });
+      break;
+    case 'noStars':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci de noter votre compétence.`
+      });
+      break;
   }
   return false;
 };
@@ -143,21 +150,18 @@ function notify(error){
 function saveDatas(editMode){
   let current = {};
   if (editMode){
-  let qualifications = candidateDatas.qualifications;
-  current =  qualifications[qualifications.map(qualification => qualification.id).indexOf(permissions.editId)];
+  let skills = candidateDatas.skills;
+  current =  skills[skills.map(skill => skill.id).indexOf(permissions.editId)];
   } else {
-  current.id = permissions.qualificationId;
-  permissions.qualificationId += 1;
+    current.id = permissions.skillId;
+    permissions.skillId += 1;
   }
-  current.qualification = $('#qualification').val();
-  current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
-  current.end = null;
-  if ($('#qualificationEnd').data("DateTimePicker").date())
-  current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
+  current.skill = $('#skill').val();
+  current.stars = starsSelected();
   if (editMode){
   permissions.editMode = false;
   } else {
-  candidateDatas.qualifications.push(current);
+    candidateDatas.skills.push(current);
   }
 };
 

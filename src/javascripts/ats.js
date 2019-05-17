@@ -668,11 +668,11 @@ let saveEditDatas = (modal) => {
     //   if ($('#qualificationEnd').data("DateTimePicker").date())
     //     current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
     //   break;
-    case 'skillModal':
-      current =  skills[skills.map(skill => skill.id).indexOf(permissions.editId)];
-      current.skill = $('#skill').val();
-      current.stars = starsSelected();
-      break;
+    // case 'skillModal':
+    //   current =  skills[skills.map(skill => skill.id).indexOf(permissions.editId)];
+    //   current.skill = $('#skill').val();
+    //   current.stars = starsSelected();
+    //   break;
   }
   permissions.editMode = false;
 };
@@ -752,11 +752,11 @@ let verifyDatas = (modal) => {
     //   }
     //   return notify('noStartDate');
     //   break;
-    case 'skillModal':
-      let skill = !$.isEmptyObject($('#skill').val()) ? true : notify('noSkill');
-      let stars = starsSelected() > 0 ? true : notify('noStars')
-      return (skill && stars);
-      break;
+    // case 'skillModal':
+    //   let skill = !$.isEmptyObject($('#skill').val()) ? true : notify('noSkill');
+    //   let stars = starsSelected() > 0 ? true : notify('noStars')
+    //   return (skill && stars);
+    //   break;
     case 'identityModal':
       let mail = $('#identityMail').val();
       let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
@@ -927,22 +927,22 @@ let notify = (error) => {
     //     message: `Merci d'indiquer un diplôme.`
     //   });
     //   break;
-    case 'noSkill':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci d'indiquer une compétence.`
-      });
-      break;
-    case 'noStars':
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Informations manquantes :',
-        message: `Merci de noter votre compétence.`
-      });
-      break;
+    // case 'noSkill':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci d'indiquer une compétence.`
+    //   });
+    //   break;
+    // case 'noStars':
+    //   notification({
+    //     icon: 'exclamation',
+    //     type: 'danger',
+    //     title: 'Informations manquantes :',
+    //     message: `Merci de noter votre compétence.`
+    //   });
+    //   break;
     case 'noForename':
       notification({
         icon: 'exclamation',
@@ -1278,10 +1278,10 @@ let finalize = (es_finess) => {
 
 let skillModalListener = () => {
   // $('#skillModal').on('hide.bs.modal', () => toPreviousModal('skillModal', 'qualificationModal'));
-
-  $('#stars div').on('click',(e) => {
-    starsSelector(e.currentTarget.id);
-  });
+  //
+  // $('#stars div').on('click',(e) => {
+  //   starsSelector(e.currentTarget.id);
+  // });
 
   $('#saveSkill').on('click', () => {
     if (verifyDatas('skillModal')){
@@ -1291,14 +1291,14 @@ let skillModalListener = () => {
     }
   });
 
-  $('#emptySkill').on('click', () => {
-    skills = [];
-    loadModal('skillModal', 'identityModal')
-  });
-
-  $('#toStep8').on('click', () => {
-    loadModal('skillModal','identityModal');
-  });
+  // $('#emptySkill').on('click', () => {
+  //   skills = [];
+  //   loadModal('skillModal', 'identityModal')
+  // });
+  //
+  // $('#toStep8').on('click', () => {
+  //   loadModal('skillModal','identityModal');
+  // });
 
 };
 
