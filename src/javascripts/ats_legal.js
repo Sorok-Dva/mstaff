@@ -14,24 +14,25 @@ function legalListener(){
 };
 
 function finalize(es_finess){
-  candidateDatas.identity._csrf = $('meta[name="csrf-token"]').attr('content');
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
+  candidateDatas.identity._csrf = _csrf;
   console.log(es_finess);
-  // $.post('/register/', candidateDatas.identity, (data) => {
-  //   if (data.result === 'created'){
-  //     if (candidateDatas.experiences.length > 0){
-  //       //TODO A FINIR
-  //       $.post('/add/experience', { experiences, _csrf: $('#csrfToken').val() }, (data) => {
-  //         console.log(data);
-  //       });
-  //     }
-  //     console.log(es_finess);
-  //     console.table(candidateDatas.application);
-  //     console.table(candidateDatas.experiences);
-  //     console.table(candidateDatas.diplomas);
-  //     console.table(candidateDatas.qualifications);
-  //     console.table(candidateDatas.skills);
-  //   }
-  // }).catch(error => errorsHandler(error));
+  $.post('/register/', candidateDatas.identity, (data) => {
+    if (data.result === 'created'){
+      console.log('user created');
+      if (candidateDatas.experiences.length > 0){
+        $.post('/add/experience', { experiences : candidateDatas.experiences, _csrf }, (data) => {
+          console.log(data);
+        });
+      }
+      // console.log(es_finess);
+      // console.table(candidateDatas.application);
+      // console.table(candidateDatas.experiences);
+      // console.table(candidateDatas.diplomas);
+      // console.table(candidateDatas.qualifications);
+      // console.table(candidateDatas.skills);
+    }
+  }).catch(error => errorsHandler(error));
   //TODO
 
 };
