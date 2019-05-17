@@ -1,6 +1,5 @@
 const { Env } = require('./helpers/helpers');
 const { ErrorHandler, Express } = require('./middlewares');
-const Sentry = require('./bin/sentry');
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv').config();
@@ -42,8 +41,8 @@ app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.compress);
 app.use(Express.methodOverride);
 app.use(Express.helmet);
-app.use('/static', express.static(path.join(__dirname, 'public'), staticMaxAge));
 app.use(Express.staticify);
+app.use('/static', express.static(path.join(__dirname, 'public'), staticMaxAge));
 app.use(Express.cookieParser);
 app.use(Express.csurf);
 app.use(Express.session);
@@ -58,11 +57,11 @@ app.use(Express.readOnlySessionForImpersonation);
 
 process.on('unhandledRejection', reason => {
   //@TODO Fix Sentry.send for unhandled rejection in prod or pre-prod env
-  /*if (Env.isPreProd || Env.isProd) Sentry.send(reason, { context: 'unhandledRejection' });
-  else*/ console.log(reason);
+  if (Env.isPreProd || Env.isProd) Express.sentryUnhandledRejection(reason);
+  else console.log(reason);
 });
 
-// ------ ROUTES
+// ------ ROUTESm
 app.use('/', indexRouter);
 app.use('/', candidateRouter); //candidate
 app.use('/', esRouter); //recruiter
