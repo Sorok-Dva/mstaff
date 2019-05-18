@@ -461,14 +461,12 @@ User_Candidate.AddExperience = (req, res, next) => {
 User_Candidate.AddExperiences = (req, res, next) => {
   let user = {};
   user.id = req.session.atsUserId;
-  console.log('user.id : ' + user.id);
   // req.body.experiences.forEach(experience => {
   //   console.log(experience);
   // });
 
 
   //TODO FIXE LE HTTP VALIDATION (check req.body actuellement)
-  //TODO verifier le NAN cote front sur Service Liberaux / Generaux
 
   // check('start').isBefore(new Date());
   // check('start').isBefore(req.body.end);
@@ -479,15 +477,12 @@ User_Candidate.AddExperiences = (req, res, next) => {
   //   console.log('ta race maudit de requete de mes deux');
   //   return res.status(400).send({ body: req.body, errors: errors.array() });
   // }
-  let xp = {};
   return Models.Candidate.findOne({
     where: {user_id: user.id}
   }).then(candidate => {
-    console.log(candidate);
-
-    let bulk = [];
+    let experiences = [];
     req.body.experiences.forEach( experience => {
-      bulk.push({
+      experiences.push({
         name: experience.name,
         candidate_id: candidate.id,
         poste_id: parseInt(experience.post_id),
@@ -499,16 +494,9 @@ User_Candidate.AddExperiences = (req, res, next) => {
         end: experience.end || null
       });
     });
-    Models.Experience.bulkCreate(bulk).then(exp => {
+    Models.Experience.bulkCreate(experiences).then(() => {
       User_Candidate.updatePercentage(user, 'experiences');
-      xp = exp.dataValues;
-      Models.Service.findOne({ where: { id: exp.service_id } }).then(service => {
-        xp.service = service.dataValues;
-        return Models.Post.findOne({ where: { id: exp.poste_id } });
-      }).then(poste => {
-        xp.poste = poste.dataValues;
-        // res.status(200).send({ experience: xp });
-      });
+      res.status(200).send({ result: 'created' });
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   });
 };

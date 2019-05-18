@@ -70,6 +70,17 @@ function isInArrayService(){
   return isValidService;
 };
 
+function foundIdByLabel(label){
+  let id = null;
+  arrays.services.forEach( service => {
+    console.log('service label : ',service.label);
+    if (service.label === label){
+      id = service.value.toString();
+    }
+  });
+  return id;
+};
+
 function selectTemplate(savedValue){
   switch (savedValue) {
     case 'cdi':
@@ -305,8 +316,8 @@ function saveDatas(editMode){
   current.post_label = $('#xpPost').val();
   current.contract = $('#radioContract input:checked').attr('id');
   current.internship = 0;
-  current.service_id = $('#xpService').attr('data-id');
   current.service_label = $('#xpService').val();
+  current.service_id = foundIdByLabel(current.service_label);
   current.start = new Date($('#xpStart').data("DateTimePicker").date());
   if ($('#xpEnd').data("DateTimePicker").date()){
     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
