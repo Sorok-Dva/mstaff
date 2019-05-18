@@ -59,7 +59,7 @@ User.create = (req, res, next) => {
     }).then( () => {
       Mailer.Main.sendUserVerificationEmail(usr);
       if (req.xhr) {
-        req.session.newAtsUserId = usr.id;
+        req.session.atsUserId = usr.id;
         return res.status(httpStatus.CREATED).send({ result: 'created' });
       } else {
         return res.redirect('login');

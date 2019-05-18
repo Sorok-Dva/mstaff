@@ -20,6 +20,7 @@ function finalize(es_finess){
   $.post('/register/', candidateDatas.identity, (data) => {
     if (data.result === 'created'){
       console.log('user created');
+      console.log(data);
       if (candidateDatas.experiences.length > 0){
         $.post('/add/experience', { experiences : candidateDatas.experiences, _csrf }, (data) => {
           console.log(data);

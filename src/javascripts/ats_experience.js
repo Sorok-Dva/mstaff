@@ -12,8 +12,7 @@ function experienceListener(){
   $('.closeRecap').click(() => $('#recap').removeClass('d-lg-block'));
 
   $('#xpPost').on( 'keyup autocompleteclose', () => {
-    let isValidPost = arrays.posts.includes($('#xpPost').val());
-    if (isValidPost){
+    if (isInArrayPost()){
       let post = $('#xpPost').val();
       let category = databaseDatas.allPosts.find(item => item.name === post).categoriesPS_id;
       switch (category) {
@@ -53,6 +52,24 @@ function experienceListener(){
   });
 };
 
+function isInArrayPost(){
+  let isValidPost = false;
+  arrays.posts.forEach( post => {
+    if (post.label === $('#xpPost').val())
+      isValidPost = true;
+  });
+  return isValidPost;
+};
+
+function isInArrayService(){
+  let isValidService = false;
+  arrays.services.forEach( service => {
+    if (service.label === $('#xpService').val())
+      isValidService = true;
+  });
+  return isValidService;
+};
+
 function selectTemplate(savedValue){
   switch (savedValue) {
     case 'cdi':
@@ -70,18 +87,37 @@ function selectTemplate(savedValue){
 };
 
 function createPostsList(posts, input){
-  // console.log(posts);
-  // TODO VOIR POUR CALER L ID DANS AUTOCOMPLETE POUR RECUP POUR LA BDD PARCE QUE
   arrays.posts = [];
   posts.forEach( post => {
-    arrays.posts.push(post.name);
+    let item = { label: post.name, value: post.id};
+    arrays.posts.push(item);
   });
   arrays.posts.sort();
   input.autocomplete({
     source: arrays.posts,
     minLength: 1,
     select: (event, ui) => {
-      // console.log(ui, event);
+      event.preventDefault();
+      input.val(ui.item.label);
+      input.attr('data-id', ui.item.value);
+    }
+  });
+};
+
+function createServicesList(services, input){
+  arrays.services = [];
+  services.forEach( service => {
+    let item = { label: service.name, value: service.id};
+    arrays.services.push(item);
+  });
+  arrays.services.sort();
+  input.autocomplete({
+    source: arrays.services,
+    minLength: 1,
+    select: (event, ui) => {
+      event.preventDefault();
+      input.val(ui.item.label);
+      input.attr('data-id', ui.item.value);
     }
   });
 };
@@ -90,23 +126,11 @@ function filterServicesByCategory(services ,category){
   let filteredServices = [];
   services.forEach( service => {
     if (service.categoriesPS_id === category)
-      filteredServices.push(service.name);
+      filteredServices.push({name: service.name, id: service.id});
     if (service.categoriesPS_id === 2 && category === 3)
-      filteredServices.push(service.name);
+      filteredServices.push({name: service.name, id: service.id});
   });
   return filteredServices;
-};
-
-function createServicesList(services, input){
-  arrays.services = [];
-  services.forEach( service => {
-    arrays.services.push(service);
-  });
-  arrays.services.sort();
-  input.autocomplete({
-    source: arrays.services,
-    minLength: 1,
-  });
 };
 
 function resetForm(){
@@ -144,9 +168,9 @@ function editXp(id){
   let i = candidateDatas.experiences.map(xp => xp.id).indexOf(id);
   resetForm();
   $('#xpEstablishment').val(candidateDatas.experiences[i].name).trigger('keyup');
-  $('#xpPost').val(candidateDatas.experiences[i].post_id).trigger('keyup');
+  $('#xpPost').val(candidateDatas.experiences[i].post_label).trigger('keyup');
   $(`#${candidateDatas.experiences[i].contract}`).trigger('click');
-  $('#xpService').val(candidateDatas.experiences[i].service_id).trigger('change');
+  $('#xpService').val(candidateDatas.experiences[i].service_label).trigger('change');
   $('#xpStart').data("DateTimePicker").date(candidateDatas.experiences[i].start);
   if (candidateDatas.experiences[i].end)
     $('#xpEnd').data("DateTimePicker").date(candidateDatas.experiences[i].end);
@@ -180,9 +204,9 @@ function verifyInputs(){
   let now = moment().startOf('day');
   let xpOngoing = $('#xpOngoing').prop('checked');
   let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) && $('#xpEstablishment').val().length > 2 ? true : notify('xpEtablishment');
-  let xpPost = arrays.posts.includes($('#xpPost').val()) ? true : notify('xpPost');
+  let xpPost = isInArrayPost() ? true : notify('xpPost');
   let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
-  let xpService = arrays.services.includes($('#xpService').val()) ? true : notify('xpService');
+  let xpService = isInArrayService() ? true : notify('xpService');
   let xpStart = $('#xpStart').data("DateTimePicker").date();
   let xpEnd = $('#xpEnd').data("DateTimePicker").date();
   if (xpStart !== null){
@@ -279,11 +303,12 @@ function saveDatas(editMode){
     permissions.experienceId += 1;
   }
   current.name = $('#xpEstablishment').val();
-  current.post_id = $('#xpPost').val();
-  //Todo a modifier par la suite (voir si on garde le .contract ou pas)
+  current.post_id = $('#xpPost').attr('data-id');
+  current.post_label = $('#xpPost').val();
   current.contract = $('#radioContract input:checked').attr('id');
   current.internship = 0;
-  current.service_id = $('#xpService').val();
+  current.service_id = $('#xpService').attr('data-id');
+  current.service_label = $('#xpService').val();
   current.start = new Date($('#xpStart').data("DateTimePicker").date());
   if ($('#xpEnd').data("DateTimePicker").date()){
     current.end = new Date($('#xpEnd').data("DateTimePicker").date());

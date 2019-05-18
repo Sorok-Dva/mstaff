@@ -419,6 +419,9 @@ User_Candidate.removeDiploma = (req, res, next) => {
 };
 
 User_Candidate.AddExperience = (req, res, next) => {
+
+  console.log('req');
+  console.log(req.user);
   check('start').isBefore(new Date());
   check('start').isBefore(req.body.end);
 
@@ -454,6 +457,58 @@ User_Candidate.AddExperience = (req, res, next) => {
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   })
 };
+
+User_Candidate.AddExperiences = (req, res, next) => {
+  let user = {};
+  user.id = req.session.atsUserId;
+  console.log('user.id : ' + user.id);
+  // req.body.experiences.forEach(experience => {
+  //   console.log(experience);
+  // });
+
+
+  // check('start').isBefore(new Date());
+  // check('start').isBefore(req.body.end);
+  //
+  // const errors = validationResult(req);
+  //
+  // if (!errors.isEmpty()) {
+  //   console.log('ta race maudit de requete de mes deux');
+  //   return res.status(400).send({ body: req.body, errors: errors.array() });
+  // }
+  let xp = {};
+
+  return Models.Candidate.findOne({
+    where: {user_id: user.id}
+  }).then(candidate => {
+    console.log(candidate);
+    req.body.experiences.forEach( experience => {
+      console.log(experience);
+      Models.Experience.create({
+        name: experience.name,
+        candidate_id: candidate.id,
+        poste_id: parseInt(experience.post_id),
+        service_id: parseInt(experience.service_id),
+        internship: experience.internship,
+        liberal: experience.liberal || null,
+        current: experience.current,
+        start: experience.start,
+        end: experience.end || null
+      }).then(exp => {
+        User_Candidate.updatePercentage(user, 'experiences');
+        xp = exp.dataValues;
+        Models.Service.findOne({ where: { id: exp.service_id } }).then(service => {
+          xp.service = service.dataValues;
+          return Models.Post.findOne({ where: { id: exp.poste_id } });
+        }).then(poste => {
+          xp.poste = poste.dataValues;
+          // res.status(200).send({ experience: xp });
+        });
+      }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+    });
+  });
+};
+
 
 User_Candidate.AddFormation = (req, res, next) => {
   const errors = validationResult(req);
