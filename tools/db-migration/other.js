@@ -10,8 +10,8 @@ let migrateOtherData = () => {
     migrate.other = () => {
       // migrate.groupsAndSuperGroups();
       // migrate.esAccounts();
-      // migrate.wishes();
-      migrate.needs();
+      migrate.wishes();
+      // migrate.needs();
     };
 
     migrate.groupsAndSuperGroups = () => {
@@ -36,15 +36,15 @@ let migrateOtherData = () => {
           });
         });
 
-        log('GET PgSQL Groups Data ("groupe" table)');
+        log('GET PgSQL Groups Data ("sgroupe" table)');
         pgsql.get({
-          name: 'get-groups',
+          name: 'get-sgroups',
           text: 'SELECT * FROM super_groupe'
         }, (err, superGroups) => {
           if (err) console.log(err);
           log(`${superGroups.rows.length} rows founded (SuperGroups).`);
           superGroups.rows.forEach((superG, i) => {
-            console.log(superG.groupes);
+            console.log(superG);
             let SgroupData = {
               name: superG.libelle,
               oldId: superG.id,

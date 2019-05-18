@@ -27,7 +27,7 @@ let migrateESData = () => {
             address: es.adresse,
             town: `${es.code_postal} ${es.ville}`,
             contact_identity: es.contacts,
-            logo: es.logo,
+            // logo: es.logo,
             domain_name: es.domain_name,
             domain_enable: es.domain_enable,
             createdAt: es.created_at || new Date(),

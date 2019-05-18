@@ -1,7 +1,7 @@
 const mysql = require('./bin/mysql');
 const pgsql = require('./bin/pgsql');
 const _ = require('lodash');
-const { validator } = require('validator');
+const validator = require('validator');
 
 let migrateUsersData = () => {
   mysql.get('mstaff', (err, con) => {
@@ -77,7 +77,6 @@ let migrateUsersData = () => {
         user_id: userRes.insertId,
         oldId: candidate.id,
         description: candidate.description,
-        photo: candidate.photo,
         video: candidate.video,
         status: candidate.status,
         views: candidate.vue,
