@@ -193,7 +193,8 @@ let removeCandidate = (id, type) => {
       $(`i.archiveCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'archive')`);
       $.post(`/api/es/${esId}/candidate/${id}/unarchive/`, { _csrf }, (data) => {
         if (data.status === 'deleted') {
-          $(`div[data-card-user="${id}"]`).attr('data-archived', 'false').hide();
+          $(`#myCandidates div[data-card-user="${id}"]`).remove();
+          $(`div[data-card-user="${id}"]`).attr('data-archived', 'false').show();
           notification({
             icon: 'check-circle',
             type: 'success',
@@ -275,24 +276,27 @@ $(document).ready(() => {
       $('#baseResult').empty().html(html);
     });
   }).catch(errors => errorsHandler(errors));
-  $('.pagination').twbsPagination({
-    totalPages: baseCVCount / size,
-    visiblePages: 3,
-    first: '<i class="fal fa-chevron-double-left"></i>',
-    prev: '<i class="fal fa-chevron-left"></i>',
-    next: '<i class="fal fa-chevron-right"></i>',
-    last: '<i class="fal fa-chevron-double-right"></i>',
-    pageClass: 'page-item',
-    anchorClass: 'page-link',
-    onPageClick: function (event, page) {
-      $('#baseResult').empty().html(loadingCandidateHTML);
-      $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
-        loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
-          $('#baseResult').empty().html(html);
-        });
-      }).catch(errors => errorsHandler(errors));
-    }
-  });
+  if(Math.round(baseCVCount / size) > 0) {
+    $('.pagination').twbsPagination({
+      totalPages: Math.round(baseCVCount / size),
+      visiblePages: 4,
+      first: '<i class="fal fa-chevron-double-left"></i>',
+      prev: '<i class="fal fa-chevron-left"></i>',
+      next: '<i class="fal fa-chevron-right"></i>',
+      last: '<i class="fal fa-chevron-double-right"></i>',
+      pageClass: 'page-item',
+      anchorClass: 'page-link',
+      onPageClick: function (event, page) {
+        $('#baseResult').empty().html(loadingCandidateHTML);
+        $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
+          loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+            $('#baseResult').empty().html(html);
+          });
+        }).catch(errors => errorsHandler(errors));
+      }
+    });
+  }
+
   $('button#saveNeed').click(function () {
     if ($(this).is("[data-need-id]")) {
       createModal({
