@@ -16,11 +16,12 @@ function legalListener(){
 function finalize(es_finess){
   let _csrf = $('meta[name="csrf-token"]').attr('content');
   candidateDatas.identity._csrf = _csrf;
-  console.log(es_finess);
   $.post('/register/', candidateDatas.identity, (data) => {
     if (data.result === 'created'){
       console.log('user created');
       console.log(data);
+      console.log('experience');
+      console.log(candidateDatas.experiences);
       if (candidateDatas.experiences.length > 0){
         $.post('/add/experience', { experiences : candidateDatas.experiences, _csrf }, (data) => {
           console.log(data);

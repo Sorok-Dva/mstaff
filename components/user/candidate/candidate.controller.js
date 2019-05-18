@@ -420,8 +420,6 @@ User_Candidate.removeDiploma = (req, res, next) => {
 
 User_Candidate.AddExperience = (req, res, next) => {
 
-  console.log('req');
-  console.log(req.user);
   check('start').isBefore(new Date());
   check('start').isBefore(req.body.end);
 
@@ -461,22 +459,33 @@ User_Candidate.AddExperience = (req, res, next) => {
 User_Candidate.AddExperiences = (req, res, next) => {
   let user = {};
   user.id = req.session.atsUserId;
-  // req.body.experiences.forEach(experience => {
-  //   console.log(experience);
-  // });
 
+  let isBoolean = (val) => {
+    if (val == true || val == false)
+      return true;
+    return false;
+  };
 
-  //TODO FIXE LE HTTP VALIDATION (check req.body actuellement)
+  let errors = [];
+  req.body.experiences.forEach( experience => {
+    if (experience.name.length < 3)
+      errors.push('name doit avoir au minimum 3 caractères');
+    else if (isNaN(experience.post_id))
+      errors.push('post_id doit être numérique');
+    else if (isNaN(experience.service_id))
+      errors.push('service_id doit être numérique');
+    else if (!isBoolean(experience.internship))
+      errors.push('internship doit être un booléen');
+    else if (!isBoolean(experience.current))
+      errors.push('current doit être un booléen');
+    else if (moment(experience.start).isAfter(new Date()) && moment(experience.start).isAfter(experience.end))
+      errors.push("la date de départ doit être antérieur à celle la date courante et d'arrivée");
+  });
 
-  // check('start').isBefore(new Date());
-  // check('start').isBefore(req.body.end);
-  //
-  // const errors = validationResult(req);
-  //
-  // if (!errors.isEmpty()) {
-  //   console.log('ta race maudit de requete de mes deux');
-  //   return res.status(400).send({ body: req.body, errors: errors.array() });
-  // }
+  if (errors.length > 0) {
+    return res.status(400).send({ body: req.body, errors: errors });
+  }
+
   return Models.Candidate.findOne({
     where: {user_id: user.id}
   }).then(candidate => {

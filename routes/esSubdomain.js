@@ -21,7 +21,7 @@ router.get('/register',
 router.post('/add/experience',
   //TODO verifier user id si pas d authentification
   // Authentication.ensureIsNotAuthenticated,
-  HTTPValidation.CandidateController.postAddExperience,
+  // HTTPValidation.CandidateController.postAddExperience,
   User.Candidate.AddExperiences
 );
 

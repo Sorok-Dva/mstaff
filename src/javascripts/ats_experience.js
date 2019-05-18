@@ -73,7 +73,6 @@ function isInArrayService(){
 function foundIdByLabel(label){
   let id = null;
   arrays.services.forEach( service => {
-    console.log('service label : ',service.label);
     if (service.label === label){
       id = service.value.toString();
     }
@@ -321,10 +320,10 @@ function saveDatas(editMode){
   current.start = new Date($('#xpStart').data("DateTimePicker").date());
   if ($('#xpEnd').data("DateTimePicker").date()){
     current.end = new Date($('#xpEnd').data("DateTimePicker").date());
-    current.current = false;
+    current.current = 0;
   } else {
     current.end = null;
-    current.current = true;
+    current.current = 1;
   }
   if (editMode){
     permissions.editMode = false;
