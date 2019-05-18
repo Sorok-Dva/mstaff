@@ -213,14 +213,13 @@ User_Candidate.EditProfile = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).send({ body: req.body, errors: errors.array() });
+    return res.render('users/edit', { body: req.body, a: { main: 'profile' }, errors: errors.array() });
   }
 
   return Models.User.findOne({ where: { id: req.user.id } }).then(user => {
     Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
-      user.email = req.body.email;
       user.birthday = req.body.birthday;
       user.postal_code = req.body.postal_code;
       user.town = req.body.town;
@@ -231,7 +230,18 @@ User_Candidate.EditProfile = (req, res, next) => {
         candidate.save().then(() => {
           req.flash('success_msg', 'Vos informations ont été sauvegardées.');
           User_Candidate.updatePercentage(req.user, 'identity');
-          return res.redirect('/profile/edit');
+          if (req.body.email !== user.email) {
+            Models.User.findOne({ where: { email: req.body.email } }).then(verifEmail => {
+              if (!_.isNil(verifEmail)) {
+                req.flash('error_msg', 'Cet adresse e-mail est déjà utilisée.');
+                console.log('fail');
+              } else {
+                user.email = req.body.email;
+                user.save();
+              }
+              return res.redirect('/profile/edit');
+            });
+          } else return res.redirect('/profile/edit');
         });
       });
     })
@@ -962,7 +972,8 @@ User_Candidate.setAvailability = (req, res, next) => {
       model: Models.Candidate,
       as: 'candidate',
       required: true
-    } }).then(user => {
+    }
+  }).then(user => {
     if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
     user.candidate.is_available = req.body.available;
     user.candidate.save().then(result => {
