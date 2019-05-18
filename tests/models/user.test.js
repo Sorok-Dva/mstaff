@@ -19,6 +19,7 @@ describe('# ORM User Model - CRUD Operations', () => {
         birthday: new Date(),
         postal_code: '75000',
         town: 'Paris',
+        country: 'France',
         phone: '+33602030507',
         type: 'candidate',
         key: 'anyRandomKey'

@@ -11,6 +11,10 @@ Mailer.sendUserVerificationEmail = (user) => {
       mailObject.subject = 'Création de votre compte sur Mstaff.';
       mailObject.template = 'candidate/emailValidation';
       break;
+    default:
+      mailObject.subject = 'Création de votre compte sur Mstaff.';
+      mailObject.template = 'default/emailValidation';
+      break;
   }
   mailer.sendEmail({
     to: user.email,

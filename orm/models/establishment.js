@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'finess_et',
       as: 'ref'
     });
+    Establishment.hasOne(models.Subdomain, {
+      foreignKey: 'es_id',
+      as: 'subdomain'
+    });
     Establishment.hasMany(models.ESAccount, {
       foreignKey: 'es_id',
       sourceKey: 'id'
