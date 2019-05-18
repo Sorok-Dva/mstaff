@@ -72,4 +72,4 @@ gen
 /public/uploads
 
 # ORM Config
-/orm/config/
+/orm/config/config.json
