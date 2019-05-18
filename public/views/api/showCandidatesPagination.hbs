@@ -38,7 +38,7 @@
         <div class="content">
           <div class="card-profile">
             <div class="avatar avatar-xxl avatar-{{#if data.Wish.Candidate.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
-              <img src="/static/assets/images/face-0.jpg" id="candidateAvatar"
+              <img {{#if data.Wish.Candidate.photo}}src="/static/uploads/candidates/avatars/{{data.Wish.Candidate.photo}}"{{else}}src="/static/assets/images/face-0.jpg"{{/if}} id="candidateAvatar"
                    class="avatar-img rounded-circle border-blue" alt="avatar">
             </div>
             <div class="rank-label-container">
