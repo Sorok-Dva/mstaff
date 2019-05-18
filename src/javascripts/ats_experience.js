@@ -150,7 +150,6 @@ function resetPostRadioService(){
 function setAdministrativeService(){
   $('#xpService').val('Services généraux');
   $('#xpService').attr('disabled', true);
-  $('#xpService').siblings().show();
 };
 
 function setLiberalPost(){
@@ -159,7 +158,6 @@ function setLiberalPost(){
   $('#internship').attr('disabled', true);
   $('#xpService').val('Services Libéraux');
   $('#xpService').attr('disabled', true);
-  $('#xpService').siblings().show();
 };
 
 function editXp(id){

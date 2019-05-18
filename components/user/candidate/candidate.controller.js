@@ -467,6 +467,9 @@ User_Candidate.AddExperiences = (req, res, next) => {
   // });
 
 
+  //TODO FIXE LE HTTP VALIDATION (check req.body actuellement)
+  //TODO verifier le NAN cote front sur Service Liberaux / Generaux
+
   // check('start').isBefore(new Date());
   // check('start').isBefore(req.body.end);
   //
@@ -477,14 +480,14 @@ User_Candidate.AddExperiences = (req, res, next) => {
   //   return res.status(400).send({ body: req.body, errors: errors.array() });
   // }
   let xp = {};
-
   return Models.Candidate.findOne({
     where: {user_id: user.id}
   }).then(candidate => {
     console.log(candidate);
+
+    let bulk = [];
     req.body.experiences.forEach( experience => {
-      console.log(experience);
-      Models.Experience.create({
+      bulk.push({
         name: experience.name,
         candidate_id: candidate.id,
         poste_id: parseInt(experience.post_id),
@@ -494,18 +497,19 @@ User_Candidate.AddExperiences = (req, res, next) => {
         current: experience.current,
         start: experience.start,
         end: experience.end || null
-      }).then(exp => {
-        User_Candidate.updatePercentage(user, 'experiences');
-        xp = exp.dataValues;
-        Models.Service.findOne({ where: { id: exp.service_id } }).then(service => {
-          xp.service = service.dataValues;
-          return Models.Post.findOne({ where: { id: exp.poste_id } });
-        }).then(poste => {
-          xp.poste = poste.dataValues;
-          // res.status(200).send({ experience: xp });
-        });
-      }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+      });
     });
+    Models.Experience.bulkCreate(bulk).then(exp => {
+      User_Candidate.updatePercentage(user, 'experiences');
+      xp = exp.dataValues;
+      Models.Service.findOne({ where: { id: exp.service_id } }).then(service => {
+        xp.service = service.dataValues;
+        return Models.Post.findOne({ where: { id: exp.poste_id } });
+      }).then(poste => {
+        xp.poste = poste.dataValues;
+        // res.status(200).send({ experience: xp });
+      });
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   });
 };
 
