@@ -120,7 +120,7 @@ Establishment_Application.getCVs = (req, res, next) => {
 
 Establishment_Application.CVsPaginationQuery = (req, res, next) => {
   if (isNaN(parseInt(req.params.page)) || isNaN(parseInt(req.params.size))) return next();
-  let offset = parseInt(req.params.page) * parseInt(req.params.size);
+  let offset = parseInt(req.params.page - 1) * parseInt(req.params.size);
   let limit = parseInt(req.params.size);
   let query = {
     where: { es_id: req.user.opts.currentEs },
