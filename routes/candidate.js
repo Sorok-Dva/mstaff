@@ -1,4 +1,5 @@
 const { Authentication, HTTPValidation } = require('../middlewares/index');
+const { BackError } = require('../helpers/back.error');
 const { User } = require('../components');
 const multer  = require('multer');
 const path = require('path');
@@ -15,7 +16,7 @@ const upload = multer({ storage: storage,
   fileFilter: function (req, file, callback) {
     let ext = path.extname(file.originalname);
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
-      return callback(new Error('Only images are allowed'))
+      return callback(new BackError('Seul les formats .png, .jpg et .jpeg sont autorisés.', 403))
     }
     callback(null, true)
   },
