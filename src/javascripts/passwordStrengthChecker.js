@@ -11,15 +11,13 @@ let ValidatePassword = function () {
   }, {
     Pattern: '[!@#$%^&*]',
     Target: 'symbol'
-  }, {
-    Pattern: ($('#passwordConfirm').val() === $('#password').val()),
-    Target: 'same'
   }];
 
   let password = $(this).val();
 
-  $('#length').removeClass(password.length > 8 ? 'bad-rule' : 'good-rule');
-  $('#length').addClass(password.length > 8 ? 'good-rule' : 'bad-rule');
+  $('#length')
+    .removeClass(password.length > 8 ? 'bad-rule' : 'good-rule')
+    .addClass(password.length > 8 ? 'good-rule' : 'bad-rule');
 
   if ($('#passwordConfirm').val() === password && password.length > 8) {
     $('#password').removeClass('is-invalid').addClass('is-valid');
