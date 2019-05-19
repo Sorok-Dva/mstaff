@@ -23,7 +23,7 @@ let ValidatePassword = function () {
 
   if ($('#passwordConfirm').val() === password) {
     $('#password').removeClass('is-invalid').addClass('is-valid');
-    ('#same').removeClass('bad-rule').addClass('good-rule');
+    $('#same').removeClass('bad-rule').addClass('good-rule');
   } else {
     $('#password').removeClass('is-valid').addClass('is-invalid');
     $('#same').removeClass('good-rule').addClass('bad-rule');
