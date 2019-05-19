@@ -2,7 +2,7 @@
   {{#each this}}
     <div id="es{{this.id}}" data-type="es" data-es_type="{{this.category_name}}"
          onmouseover="addMarker({lat: {{this.lat}}, lon: {{this.lon}} })" onmouseleave="removeAllMarker()"
-         class="col-6 es-card">
+         class="col-12 col-lg-6 es-card">
       <div class="small-box bg-gray-light text-center small-box-es-add">
         <h5 style="margin-top: 0px;margin-bottom: 5px;cursor: pointer;">
          {{!-- <i class="fa fa-info-circle text-blue" onmouseover="$('#esInfo{{this.id}}').show();"
