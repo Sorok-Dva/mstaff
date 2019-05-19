@@ -47,7 +47,7 @@ Mailer.notifyCandidatesNeedClosed = (email, context) => {
 };
 
 Mailer.notifyCandidatesNeedSelect = (email, context) => {
- /* let mailObject = {
+  /* let mailObject = {
     subject: 'Vous avez été sélectionné pour l\'offre suivante',
     template: 'candidate/needSelected'
   };
