@@ -99,12 +99,12 @@ $('.add').click(function () {
             .append($('<td>').html(`${start} - ${end}`))
             .append($('<td>').text(`${data.formation.name}`))
             .append($('<td>').append($('<button>').attr({
-              class: 'btn btn-simple btn-warning btn-icon editFormation',
+              class: 'btn btn-simple btn-outline-warning btn-icon editFormation',
               'data-id': data.formation.id,
               type: 'button'
             }).html('<i class="ti-pencil-alt"></i>'))
               .append($('<button>').attr({
-                class: 'btn btn-simple btn-danger btn-icon removeFormation',
+                class: 'btn btn-simple btn-outline-danger btn-icon removeFormation',
                 'data-id': data.formation.id,
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
@@ -126,12 +126,12 @@ $('.add').click(function () {
             .append($('<td>').html(`${start} - ${end}`))
             .append($('<td>').text(`${data.diploma.name}`))
             .append($('<td>').append($('<button>').attr({
-              class: 'btn btn-simple btn-warning btn-icon editDiploma',
+              class: 'btn btn-simple btn-outline-warning btn-icon editDiploma',
               'data-id': data.diploma.id,
               type: 'button'
             }).html('<i class="ti-pencil-alt"></i>'))
               .append($('<button>').attr({
-                class: 'btn btn-simple btn-danger btn-icon removeDiploma',
+                class: 'btn btn-simple btn-outline-danger btn-icon removeDiploma',
                 'data-id': data.diploma.id,
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
