@@ -21,11 +21,12 @@ let ValidatePassword = function () {
   $('#length').removeClass(password.length > 8 ? 'bad-rule' : 'good-rule');
   $('#length').addClass(password.length > 8 ? 'good-rule' : 'bad-rule');
 
-  if ($('#passwordConfirm').val() === password) {
+  if ($('#passwordConfirm').val() === password && password.length > 8) {
     $('#password').removeClass('is-invalid').addClass('is-valid');
     $('#same').removeClass('bad-rule').addClass('good-rule');
   } else {
     $('#password').removeClass('is-valid').addClass('is-invalid');
+    $('#passwordConfirm').removeClass('is-valid').addClass('is-invalid');
     $('#same').removeClass('good-rule').addClass('bad-rule');
     $('button#validateForm').attr('disabled', 'disabled');
   }
