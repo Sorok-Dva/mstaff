@@ -410,7 +410,7 @@ let addEs = (data) => {
     application.selectedES.push(finess);
     application.selectedESId.push(esId);
     $('#selectedEsCount').html(application.selectedES.length);
-    $('#es_selected').append($(`#es${data.id}`).clone().attr('class', 'col-md-3'));
+    $('#es_selected').append($(`#es${data.id}`).clone().attr('class', 'col-12 col-lg-6 d-inline-block'));
   }
 };
 
@@ -434,7 +434,7 @@ let selectAll = () => {
   if (selectedAll === true) {
     $(`#esList i.selectEs`).hide();
     $(`#esList i.unselectEs`).show();
-    $('#es_selected').append($(`#esList .es-card`).clone().attr('class', 'col-md-3'));
+    $('#es_selected').append($(`#esList .es-card`).clone().attr('class', 'col-12 col-lg-6'));
     allEs.map((es, i) => {
       application.selectedES.push(parseInt(es.finess_et))
       application.selectedESId.push(parseInt(es.id))

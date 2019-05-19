@@ -2,7 +2,7 @@
   {{#each this as |data|}}
     <div class="col-12 col-md-6 col-lg-3" data-card-user="{{data.Wish.Candidate.id}}"
       {{#if data.Establishment.ArchivedCandidates.0.candidate_id}}
-         data-archived="true" style="display:none"{{else}} data-archived="false"{{/if}}
+         data-archived="true" {{else}} data-archived="false"{{/if}}
       {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
          data-favorite="true"{{else}} data-favorite="false"{{/if}}>
       <div class="card card-user">
@@ -38,7 +38,7 @@
         <div class="content">
           <div class="card-profile">
             <div class="avatar avatar-xxl avatar-{{#if data.Wish.Candidate.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
-              <img src="/static/assets/images/face-0.jpg" id="candidateAvatar"
+              <img {{#if data.Wish.Candidate.User.photo}}src="/static/uploads/candidates/avatars/{{data.Wish.Candidate.User.photo}}"{{else}}src="/static/assets/images/face-0.jpg"{{/if}}  id="candidateAvatar"
                    class="avatar-img rounded-circle border-blue" alt="avatar">
             </div>
             <div class="rank-label-container">

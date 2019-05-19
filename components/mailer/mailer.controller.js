@@ -11,6 +11,10 @@ Mailer.sendUserVerificationEmail = (user) => {
       mailObject.subject = 'Création de votre compte sur Mstaff.';
       mailObject.template = 'candidate/emailValidation';
       break;
+    default:
+      mailObject.subject = 'Création de votre compte sur Mstaff.';
+      mailObject.template = 'default/emailValidation';
+      break;
   }
   mailer.sendEmail({
     to: user.email,
@@ -34,7 +38,7 @@ Mailer.sendUserResetPasswordLink = (user) => {
 
 
 Mailer.notifyCandidatesNeedClosed = (email, context) => {
-  /*let mailObject = {
+  let mailObject = {
     subject: 'Besoin clôturé !',
     template: 'candidate/needClosed'
   };
@@ -43,11 +47,11 @@ Mailer.notifyCandidatesNeedClosed = (email, context) => {
     subject: mailObject.subject,
     template: mailObject.template,
     context
-  });*/
+  });
 };
 
 Mailer.notifyCandidatesNeedSelect = (email, context) => {
-  /* let mailObject = {
+  let mailObject = {
     subject: 'Vous avez été sélectionné pour l\'offre suivante',
     template: 'candidate/needSelected'
   };
@@ -56,11 +60,11 @@ Mailer.notifyCandidatesNeedSelect = (email, context) => {
     subject: mailObject.subject,
     template: mailObject.template,
     context
-  });*/
+  });
 };
 
 Mailer.notifyCandidatesNeedConference = (email, context) => {
-  /*let mailObject = {
+  let mailObject = {
     subject: 'Un entretien vous a été proposé !',
     template: 'candidate/needConference-' + context.conference.type
   };
@@ -69,11 +73,11 @@ Mailer.notifyCandidatesNeedConference = (email, context) => {
     subject: mailObject.subject,
     template: mailObject.template,
     context
-  });*/
+  });
 };
 
 Mailer.notifyCandidatesNeedConferenceDeleted = (email, context) => {
-  /*let mailObject = {
+  let mailObject = {
     subject: 'Un entretien a été annulé.',
     template: 'candidate/needConference-delete'
   };
@@ -82,7 +86,7 @@ Mailer.notifyCandidatesNeedConferenceDeleted = (email, context) => {
     subject: mailObject.subject,
     template: mailObject.template,
     context
-  });*/
+  });
 };
 
 

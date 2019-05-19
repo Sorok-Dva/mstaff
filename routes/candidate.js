@@ -44,6 +44,7 @@ router.get(
 ).post(
   '/profile/edit',
   Authentication.ensureIsCandidate,
+  HTTPValidation.UserController.normalizeEmail,
   User.Candidate.EditProfile);
 
 /**
