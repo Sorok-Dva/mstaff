@@ -7,8 +7,8 @@ const router = express.Router();
 router.get('/',
   Subdomain.Establishment.ViewIndex);
 
-router.get('/join',
-  Subdomain.Establishment.ViewATS);
+// router.get('/join',
+//   Subdomain.Establishment.ViewATS);
 
 router.get('/register',
   Authentication.ensureIsNotAuthenticated,
