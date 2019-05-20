@@ -211,7 +211,7 @@ function generateDatasRecap(){
 function verifyInputs(){
   let now = moment().startOf('day');
   let xpOngoing = $('#xpOngoing').prop('checked');
-  let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) && $('#xpEstablishment').val().length > 2 ? true : notify('xpEtablishment');
+  let xpEtablishment = !$.isEmptyObject($('#xpEstablishment').val()) && $('#xpEstablishment').val().length > 2 ? true : notify('xpEstablishment');
   let xpPost = isInArrayPost() ? true : notify('xpPost');
   let radioContract = ($('#radioContract input:checked').attr('id') !== undefined) ? true : notify('radioContract');
   let xpService = isInArrayService() ? true : notify('xpService');
@@ -232,7 +232,7 @@ function verifyInputs(){
 
 function notify(error){
   switch (error) {
-    case 'xpEtablishment':
+    case 'xpEstablishment':
       notification({
         icon: 'exclamation',
         type: 'danger',

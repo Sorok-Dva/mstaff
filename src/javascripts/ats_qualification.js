@@ -79,7 +79,7 @@ function createQualificationList(qualifications, input){
 
 function verifyInputs(){
   let now = moment().startOf('day');
-  let qualification = !$.isEmptyObject($('#qualification').val()) ? true : notify('noQualification');
+  let qualification = !$.isEmptyObject($('#qualification').val()) && $('#qualification').val().length > 2  ? true : notify('noQualification');
   let qualificationStart = $('#qualificationStart').data("DateTimePicker").date();
   let qualificationEnd = $('#qualificationEnd').data("DateTimePicker").date();
   if (qualificationStart !== null){
@@ -99,7 +99,7 @@ function notify(error){
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer un diplôme.`
+        message: `Merci d'indiquer un diplôme (3 caractères minimum).`
       });
       break;
     case 'startDateAfterNow':
@@ -139,7 +139,7 @@ function saveDatas(editMode){
     current.id = permissions.qualificationId;
     permissions.qualificationId += 1;
   }
-  current.qualification = $('#qualification').val();
+  current.name = $('#qualification').val();
   current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
   current.end = null;
   if ($('#qualificationEnd').data("DateTimePicker").date())

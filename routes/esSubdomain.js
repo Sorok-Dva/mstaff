@@ -7,8 +7,8 @@ const router = express.Router();
 router.get('/',
   Subdomain.Establishment.ViewIndex);
 
-// router.get('/join',
-//   Subdomain.Establishment.ViewATS);
+router.get('/join',
+  Subdomain.Establishment.ViewATS);
 
 router.get('/register',
   Authentication.ensureIsNotAuthenticated,
@@ -18,11 +18,14 @@ router.get('/register',
     HTTPValidation.UserController.create,
     User.Main.create);
 
-router.post('/add/experience',
+router.post('/ats/add/all',
   //TODO verifier user id si pas d authentification
   // Authentication.ensureIsNotAuthenticated,
-  // HTTPValidation.CandidateController.postAddExperience,
-  User.Candidate.AddExperiences
+  HTTPValidation.CandidateController.ats,
+  User.Candidate.ATSAddExperiences,
+  // User.Candidate.ATSAddDiplomas,
+  // User.Candidate.ATSAddQualifications,
+  // User.Candidate.ATSAddSkills
 );
 
 router.post('/add/diploma',

@@ -456,34 +456,20 @@ User_Candidate.AddExperience = (req, res, next) => {
   })
 };
 
-User_Candidate.AddExperiences = (req, res, next) => {
+// ATS -----------------------------------------------------------
+
+User_Candidate.ATSAddExperiences = (req, res, next) => {
+
+  //TODO verif si req.body.experiences empty => next();
+
+
   let user = {};
   user.id = req.session.atsUserId;
 
-  let isBoolean = (val) => {
-    if (val == true || val == false)
-      return true;
-    return false;
-  };
+  const errors = validationResult(req);
 
-  let errors = [];
-  req.body.experiences.forEach( experience => {
-    if (experience.name.length < 3)
-      errors.push('name doit avoir au minimum 3 caractères');
-    else if (isNaN(experience.post_id))
-      errors.push('post_id doit être numérique');
-    else if (isNaN(experience.service_id))
-      errors.push('service_id doit être numérique');
-    else if (!isBoolean(experience.internship))
-      errors.push('internship doit être un booléen');
-    else if (!isBoolean(experience.current))
-      errors.push('current doit être un booléen');
-    else if (moment(experience.start).isAfter(new Date()) && moment(experience.start).isAfter(experience.end))
-      errors.push("la date de départ doit être antérieur à celle la date courante et d'arrivée");
-  });
-
-  if (errors.length > 0) {
-    return res.status(400).send({ body: req.body, errors: errors });
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
   }
 
   return Models.Candidate.findOne({
@@ -510,6 +496,19 @@ User_Candidate.AddExperiences = (req, res, next) => {
   });
 };
 
+User_Candidate.ATSAddDiplomas = (req, res, next) => {
+
+};
+
+User_Candidate.ATSAddQualifications = (req, res, next) => {
+
+};
+
+User_Candidate.ATSAddSkills = (req, res, next) => {
+
+};
+
+// ----------------------------------------------------------------
 
 User_Candidate.AddFormation = (req, res, next) => {
   const errors = validationResult(req);

@@ -79,7 +79,7 @@ function createDiplomaList(diplomas, input){
 
 function verifyInputs(){
   let now = moment().startOf('day');
-  let diploma = !$.isEmptyObject($('#diploma').val()) ? true : notify('noDiploma');
+  let diploma = !$.isEmptyObject($('#diploma').val()) && $('#diploma').val().length > 2 ? true : notify('noDiploma');
   let diplomaStart = $('#diplomaStart').data("DateTimePicker").date();
   let diplomaEnd = $('#diplomaEnd').data("DateTimePicker").date();
   if (diplomaStart !== null){
@@ -99,7 +99,7 @@ function notify(error){
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer une formation.`
+        message: `Merci d'indiquer une formation (3 caractères minimum).`
       });
       break;
     case 'startDateAfterNow':
@@ -139,7 +139,7 @@ function saveDatas(editMode){
     current.id = permissions.diplomaId;
     permissions.diplomaId += 1;
   }
-  current.diploma = $('#diploma').val();
+  current.name = $('#diploma').val();
   current.start = new Date($('#diplomaStart').data("DateTimePicker").date());
   current.end = null;
   if ($('#diplomaEnd').data("DateTimePicker").date())

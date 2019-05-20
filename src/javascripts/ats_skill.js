@@ -120,7 +120,7 @@ function createSkillList(skills, input){
 };
 
 function verifyInputs(){
-  let skill = !$.isEmptyObject($('#skill').val()) ? true : notify('noSkill');
+  let skill = !$.isEmptyObject($('#skill').val()) && $('#skill').val().length > 2 ? true : notify('noSkill');
   let stars = starsSelected() > 0 ? true : notify('noStars')
   return (skill && stars);
 };
@@ -132,7 +132,7 @@ function notify(error){
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer une compétence.`
+        message: `Merci d'indiquer une compétence (3 caractères minimum).`
       });
       break;
     case 'noStars':
@@ -156,7 +156,7 @@ function saveDatas(editMode){
     current.id = permissions.skillId;
     permissions.skillId += 1;
   }
-  current.skill = $('#skill').val();
+  current.name = $('#skill').val();
   current.stars = starsSelected();
   if (editMode){
   permissions.editMode = false;

@@ -22,11 +22,15 @@ function finalize(es_finess){
       console.log(data);
       console.log('experience');
       console.log(candidateDatas.experiences);
-      if (candidateDatas.experiences.length > 0){
-        $.post('/add/experience', { experiences : candidateDatas.experiences, _csrf }, (data) => {
-          console.log(data);
-        });
-      }
+      $.post('/ats/add/all', {
+        experiences: candidateDatas.experiences,
+        diplomas: candidateDatas.diplomas,
+        qualifications: candidateDatas.qualifications,
+        skills: candidateDatas.skills,
+        _csrf
+      }, (data) => {
+        console.log(data);
+      });
       // console.log(es_finess);
       // console.table(candidateDatas.application);
       // console.table(candidateDatas.experiences);

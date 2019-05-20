@@ -1,5 +1,51 @@
 const { check } = require('express-validator/check');
+const _ = require('lodash');
+const moment = require('moment');
 const HTTPValidation = {};
+
+
+HTTPValidation.ats = [
+  check('experiences').custom((value) => {
+    value.forEach(xp => {
+      if (xp.name.length < 3)
+        throw new Error('name doit avoir au minimum 3 caractères');
+      else if (isNaN(xp.post_id))
+        throw new Error('post_id doit être numérique');
+      else if (isNaN(xp.service_id))
+        throw new Error('service_id doit être numérique');
+      else if (!_.isBoolean(xp.internship))
+        throw new Error('internship doit être un booléen');
+      else if (!_.isBoolean(xp.current))
+        throw new Error('current doit être un booléen');
+      else if (moment(xp.start).isAfter(new Date()) && moment(xp.start).isAfter(xp.end))
+        throw new Error("la date de départ doit être antérieur à la date courante et d'arrivée");
+    });
+  }),
+  check('diplomas').custom((value) => {
+    value.forEach(diploma => {
+      if (diploma.name.length < 3)
+        throw new Error('Name doit avoir au minimum 3 caractères');
+      else if (moment(diploma.start).isAfter(new Date()) && moment(diploma.start).isAfter(diploma.end))
+        throw new Error("La date de départ doit être antérieur à la date courante et d'arrivée");
+    });
+  }),
+  check('qualifications').custom((value) => {
+    value.forEach(qualification => {
+      if (qualification.name.length < 3)
+        throw new Error('Name doit avoir au minimum 3 caractères');
+      else if (moment(qualification.start).isAfter(new Date()) && moment(qualification.start).isAfter(qualification.end))
+        throw new Error("La date de départ doit être antérieur à la date courante et d'arrivée");
+    });
+  }),
+  check('skills').custom((value) => {
+    value.forEach(skill => {
+      if (skill.name.length < 3)
+        throw new Error('Name doit avoir au minimum 3 caractères');
+      else if (isNaN(skill.stars))
+        throw new Error('stars doit être numérique');
+    });
+  }),
+];
 
 HTTPValidation.postAddExperience = [
   check('name').isLength({ min: 3 }),
