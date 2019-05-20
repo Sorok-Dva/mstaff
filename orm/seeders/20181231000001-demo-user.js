@@ -31,7 +31,7 @@ let users = [
   }, {
     firstName: 'Llyam',
     lastName: 'Garcia',
-    email: 'garcia.llyam@gmail.com',
+    email: 'garciallyam@gmail.com',
     password: '$2a$10$CeXEN8LzC6YFe7GQ/Qh23OH7oalSeFJBwDVqxI4Z2RiSaU4WdpJVu',
     birthday: new Date(1998, 7, 10),
     postal_code: '93400',
@@ -42,8 +42,20 @@ let users = [
     type: 'admin'
   }, {
     firstName: 'Romain',
-    lastName: 'Piccolo  ',
-    email: 'piccolo.rom@gmail.com',
+    lastName: 'Piccolo',
+    email: 'piccolorom@gmail.com',
+    password: '$2a$10$Jpo0iPvwuzBzFt.i8qmvie8Yx7BIs6MfvnaQZS23qwWuIMmvzfD.G',
+    birthday: new Date(rand(1950, 2001), rand(1, 12), rand(1, 30)),
+    postal_code: '82000',
+    town: 'Montauban',
+    country: 'France',
+    phone: '0629326630',
+    role: 'Admin',
+    type: 'admin'
+  }, {
+    firstName: 'Christopher',
+    lastName: 'Laurant',
+    email: 'christopher@medikstaff.com',
     password: '$2a$10$Jpo0iPvwuzBzFt.i8qmvie8Yx7BIs6MfvnaQZS23qwWuIMmvzfD.G',
     birthday: new Date(rand(1950, 2001), rand(1, 12), rand(1, 30)),
     postal_code: '82000',
