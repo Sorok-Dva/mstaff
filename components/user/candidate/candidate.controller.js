@@ -271,7 +271,6 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
     include: [{
       model: Models.Experience, // Experiences Associations (user.candidate.experiences)
       as: 'experiences',
-      required: true,
       include: [{
         model: Models.Service,
         as: 'service',
@@ -332,8 +331,7 @@ User_Candidate.getDocuments = (req, res, next) => {
     where: { user_id: req.user.id },
     include: {
       model: Models.CandidateDocument,
-      as: 'documents',
-      required: true
+      as: 'documents'
     }
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
