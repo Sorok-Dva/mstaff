@@ -91,18 +91,15 @@ let migrateUsersData = () => {
     migrate.searchCandidateData = (oldId, newId) => {
       log(`Searching Candidate Data of candidate_id ${oldId} (old id) to insert for candidate_id ${newId} (new id)`);
       migrate.candidateExperiences(oldId, newId);
-      migrate.candidateEquipments(oldId, newId);
-      migrate.candidateFormations(oldId, newId);
-      migrate.candidateQualifications(oldId, newId);
-      migrate.candidateSoftwares(oldId, newId);
-      migrate.candidateSkills(oldId, newId);
     };
 
     migrate.candidateExperiences = (oldId, newId) => {
-      log(`GET PgSQL Candidate Experiences Data ("candidat_experiences" table) of candidate id ${oldId}`);
       pgsql.get({
         name: 'get-candidateXP', text: 'SELECT * FROM experience WHERE candidat_id = $1', values: [oldId]
       }, (err, experiences) => {
+        log(`GET PgSQL Candidate Experiences Data ("candidat_experiences" table) of candidate id ${oldId} 
+        (${experiences.rows.length} rows founded)`);
+
         let candidateExperiences = experiences.rows;
         candidateExperiences.forEach(e => {
           let data = {
@@ -117,7 +114,7 @@ let migrateUsersData = () => {
             updatedAt:  new Date()
           };
           if (_.isNil(e.etablissement_custom_libelle)) {
-            pgsql.get({ name: 'get-skillName', text: 'SELECT libelle FROM etablissement_gouv WHERE id = $1', values: [e.etablissement_gouv_id]},
+            pgsql.get({ name: 'get-esName', text: 'SELECT libelle FROM etablissement_gouv WHERE id = $1', values: [e.etablissement_gouv_id]},
               (err, es) => data.name =  !_.isNil(es.rows[0]) ? es.rows[0].libelle : ' - ')
           } else {
             data.name = e.etablissement_custom_libelle;
@@ -126,13 +123,15 @@ let migrateUsersData = () => {
           con.query('INSERT INTO Experiences SET ?', data);
         });
       });
+      migrate.candidateEquipments(oldId, newId);
     };
 
     migrate.candidateSoftwares = (oldId, newId) => {
-      log(`GET PgSQL Candidate Softwares Data ("candidat_logiciels" table) of candidate id ${oldId}`);
       pgsql.get({
         name: 'get-candidateSoft', text: 'SELECT * FROM candidat_logiciels WHERE candidat_id = $1', values: [oldId]
       }, (err, candidatLogiciels) => {
+        log(`GET PgSQL Candidate Softwares Data ("candidat_logiciels" table) of candidate id ${oldId} 
+        (${candidatLogiciels.rows.length} rows founded)`);
         let candidateSoftwares = candidatLogiciels.rows;
         candidateSoftwares.forEach(e => {
           con.query('INSERT INTO CandidateSoftwares SET ?', {
@@ -142,14 +141,17 @@ let migrateUsersData = () => {
           });
         });
       });
+
+      migrate.candidateSkills(oldId, newId);
     };
 
     migrate.candidateSkills = (oldId, newId) => {
-      log(`GET PgSQL Candidate Skills Data ("candidat_competence" table) of candidate id ${oldId}`);
       pgsql.get({
         name: 'get-candidateSkills', text: 'SELECT * FROM candidat_competences WHERE candidat_id = $1', values: [oldId]
       }, (err, candidatCompetences) => {
         if (err) console.log(err);
+        log(`GET PgSQL Candidate Skills Data ("candidat_competence" table) of candidate id ${oldId}
+        (${candidatCompetences.rows.length} rows founded)`);
         let candidateSkills = candidatCompetences.rows;
         candidateSkills.forEach(e => {
           let data;
@@ -165,10 +167,11 @@ let migrateUsersData = () => {
     };
 
     migrate.candidateEquipments = (oldId, newId) => {
-      log(`GET PgSQL Candidate Softwares Data ("candidat_logiciels" table) of candidate id ${oldId}`);
       pgsql.get({
         name: 'get-candidateEquipment', text: 'SELECT * FROM candidat_materiels WHERE candidat_id = $1', values: [oldId]
       }, (err, candidatEquipments) => {
+        log(`GET PgSQL Candidate Equipments Data ("candidat_materiels" table) of candidate id ${oldId}
+        (${candidatEquipments.rows.length} rows founded)`);
         let candidateEquipments = candidatEquipments.rows;
         candidateEquipments.forEach(e => {
           con.query('INSERT INTO CandidateEquipments SET ?', {
@@ -178,13 +181,16 @@ let migrateUsersData = () => {
           });
         });
       });
+
+      migrate.candidateFormations(oldId, newId);
     };
 
     migrate.candidateFormations = (oldId, newId) => {
-      log(`GET PgSQL Candidate Formations Data ("candidat_formations" table) of candidate id ${oldId}`);
       pgsql.get({
         name: 'get-candidateFormations', text: 'SELECT * FROM candidat_formations WHERE candidat_id = $1', values: [oldId]
       }, (err, candidatFormations) => {
+        log(`GET PgSQL Candidate Formations Data ("candidat_formations" table) of candidate id ${oldId}
+        (${candidatFormations.rows.length} rows founded)`);
         let candidatFormation = candidatFormations.rows;
         candidatFormation.forEach(e => {
           con.query('INSERT INTO CandidateFormations SET ?', {
@@ -195,13 +201,16 @@ let migrateUsersData = () => {
           });
         });
       });
+
+      migrate.candidateQualifications(oldId, newId);
     };
 
     migrate.candidateQualifications = (oldId, newId) => {
-      log(`GET PgSQL Candidate Qualifications Data ("candidat_diplome_universitaires" table) of candidate id ${oldId}`);
       pgsql.get({
         name: 'get-candidateQualifications', text: 'SELECT * FROM candidat_diplome_universitaires WHERE candidat_id = $1', values: [oldId]
       }, (err, candidateQualifications) => {
+        log(`GET PgSQL Candidate Qualifications Data ("candidat_diplome_universitaires" table) of candidate id ${oldId}
+        (${candidateQualifications.rows.length} rows founded)`);
         let candidateQualification = candidateQualifications.rows;
         candidateQualification.forEach(e => {
           con.query('INSERT INTO CandidateQualifications SET ?', {
@@ -212,6 +221,8 @@ let migrateUsersData = () => {
           });
         });
       });
+
+      migrate.candidateSoftwares(oldId, newId);
     };
     log('Starting DBs Migration');
     migrate.users();

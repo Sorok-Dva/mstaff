@@ -13,7 +13,7 @@ exports.connect = (done) => {
     host: conf.MYSQL_DATABASE_URL,
     user: conf.MYSQL_DATABASE_USER,
     password: conf.MYSQL_DATABASE_PASS,
-    database: 'mstaff_migration'
+    database: 'migration'
   });
 
   this.get('mstaff', (err, res) => done(err, res));

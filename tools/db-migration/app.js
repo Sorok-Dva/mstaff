@@ -40,6 +40,6 @@ pgsql.connect(err => {
 // Sec Es Part
 // migrateESData();
 // Then Other Part
-migrateOtherData();
+// migrateOtherData();
 
 module.exports = app;
