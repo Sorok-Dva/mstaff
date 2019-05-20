@@ -180,7 +180,7 @@ function saveDatas(){
   candidateDatas.identity.firstName = $('#identityForename').val();
   candidateDatas.identity.lastName = $('#identityName').val();
   candidateDatas.identity.phone = iti.getNumber();
-  candidateDatas.identity.country = iti.getSelectedCountryData().name;
+  candidateDatas.identity.country = $('#identityCountry').val();
   candidateDatas.identity.email = $('#identityMail').val();
   candidateDatas.identity.password = $('#identityPassword').val();
   candidateDatas.identity.birthday = $('#identityBirth').val();

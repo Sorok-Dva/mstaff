@@ -458,6 +458,72 @@ User_Candidate.AddExperience = (req, res, next) => {
 
 // ATS -----------------------------------------------------------
 
+function isBoolean(value){
+  if (value == true || value == false)
+    return true;
+  return false;
+}
+
+function errorsExperiences(experiences){
+  let errors = [];
+  experiences.forEach(xp => {
+    if (xp.name.length < 3)
+      errors.push('name doit avoir au minimum 3 caractères');
+    else if (isNaN(xp.post_id))
+      errors.push('post_id doit être numérique');
+    else if (isNaN(xp.service_id))
+      errors.push('service_id doit être numérique');
+    else if (!isBoolean(xp.internship))
+      errors.push('internship doit être un booléen');
+    else if (!isBoolean(xp.current))
+      errors.push('current doit être un booléen');
+    else if (moment(xp.start).isAfter(new Date()) && moment(xp.start).isAfter(xp.end))
+      errors.push("la date de départ doit être antérieur à la date courante et d'arrivée");
+  });
+  return errors;
+}
+
+User_Candidate.ATSAddAll = (req, res, next) => {
+
+  let user = {};
+  user.id = req.session.atsUserId;
+  let errors;
+
+  if (req.body.experiences !== 'none'){
+    errors = errorsExperiences(req.body.experiences);
+
+    if (errors.length > 0) {
+      return res.status(400).send({ body: req.body, errors: errors });
+    }
+
+    return Models.Candidate.findOne({
+      where: {user_id: user.id}
+    }).then(candidate => {
+      let experiences = [];
+      req.body.experiences.forEach( experience => {
+        experiences.push({
+          name: experience.name,
+          candidate_id: candidate.id,
+          poste_id: parseInt(experience.post_id),
+          service_id: parseInt(experience.service_id),
+          internship: experience.internship,
+          liberal: experience.liberal || null,
+          current: experience.current,
+          start: experience.start,
+          end: experience.end || null
+        });
+      });
+      Models.Experience.bulkCreate(experiences).then(() => {
+        User_Candidate.updatePercentage(user, 'experiences');
+        res.status(200).send({ result: 'created' });
+      }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+    });
+  }
+
+
+
+};
+
 User_Candidate.ATSAddExperiences = (req, res, next) => {
 
   //TODO verif si req.body.experiences empty => next();
@@ -472,6 +538,7 @@ User_Candidate.ATSAddExperiences = (req, res, next) => {
     return res.status(400).send({ body: req.body, errors: errors.array() });
   }
 
+  console.log('EXPERIENCES LENGTH', req.body.experiences.length);
   return Models.Candidate.findOne({
     where: {user_id: user.id}
   }).then(candidate => {
@@ -494,6 +561,7 @@ User_Candidate.ATSAddExperiences = (req, res, next) => {
       res.status(200).send({ result: 'created' });
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
   });
+
 };
 
 User_Candidate.ATSAddDiplomas = (req, res, next) => {
@@ -505,6 +573,10 @@ User_Candidate.ATSAddQualifications = (req, res, next) => {
 };
 
 User_Candidate.ATSAddSkills = (req, res, next) => {
+
+};
+
+User_Candidate.ATSAddWish = (req, res, next) => {
 
 };
 

@@ -15,15 +15,27 @@ function legalListener(){
 
 function finalize(es_finess){
   let _csrf = $('meta[name="csrf-token"]').attr('content');
+
   candidateDatas.identity._csrf = _csrf;
   $.post('/register/', candidateDatas.identity, (data) => {
     if (data.result === 'created'){
       console.log('user created');
       console.log(data);
-      console.log('experience');
-      console.log(candidateDatas.experiences);
+
+      // // FOR TEST VALUES ----------------------------
+      // console.log(candidateDatas.experiences, candidateDatas.diplomas, candidateDatas.qualifications, candidateDatas.skills, candidateDatas.application);
+      // candidateDatas.experiences = [];
+      // candidateDatas.diplomas = [];
+      // candidateDatas.qualifications = [];
+      // candidateDatas.skills = [];
+      // candidateDatas.application = [];
+      // console.log(candidateDatas.experiences.length, candidateDatas.diplomas.length, candidateDatas.qualifications.length, candidateDatas.skills.length, candidateDatas.application.length);
+      // // --------------------------------------------
+
+
+
       $.post('/ats/add/all', {
-        experiences: candidateDatas.experiences,
+        experiences: candidateDatas.experiences.length > 0 ? candidateDatas.experiences : 'none',
         diplomas: candidateDatas.diplomas,
         qualifications: candidateDatas.qualifications,
         skills: candidateDatas.skills,
@@ -31,12 +43,6 @@ function finalize(es_finess){
       }, (data) => {
         console.log(data);
       });
-      // console.log(es_finess);
-      // console.table(candidateDatas.application);
-      // console.table(candidateDatas.experiences);
-      // console.table(candidateDatas.diplomas);
-      // console.table(candidateDatas.qualifications);
-      // console.table(candidateDatas.skills);
     }
   }).catch(error => errorsHandler(error));
   //TODO

@@ -21,11 +21,13 @@ router.get('/register',
 router.post('/ats/add/all',
   //TODO verifier user id si pas d authentification
   // Authentication.ensureIsNotAuthenticated,
-  HTTPValidation.CandidateController.ats,
-  User.Candidate.ATSAddExperiences,
+  // HTTPValidation.CandidateController.ats,
+  // User.Candidate.ATSAddExperiences,
   // User.Candidate.ATSAddDiplomas,
   // User.Candidate.ATSAddQualifications,
   // User.Candidate.ATSAddSkills
+  // User.Candidate.ATSAddWish
+  User.Candidate.ATSAddAll
 );
 
 router.post('/add/diploma',
