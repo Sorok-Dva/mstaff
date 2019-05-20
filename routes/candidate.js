@@ -1,11 +1,12 @@
 const { Authentication, HTTPValidation } = require('../middlewares/index');
 const { BackError } = require('../helpers/back.error');
 const { User } = require('../components');
+const mkdirp = require('mkdirp');
 const multer  = require('multer');
 const path = require('path');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/candidates/avatars/')
+    mkdirp(`./public/uploads/avatars`, err => cb(null, './public/uploads/avatars/'));
   },
   filename: function (req, file, cb) {
     req.body.filename = Date.now() + '.png';
