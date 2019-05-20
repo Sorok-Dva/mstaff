@@ -25,7 +25,7 @@
           <div class="content">
             <div class="card-profile">
               <div class="avatar avatar-xxl avatar-{{#if this.Wish.Candidate.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
-                <img {{#if this.Wish.Candidate.User.photo}}src="/static/uploads/candidates/avatars/{{this.Wish.Candidate.User.photo}}"{{else}}src="/static/assets/images/face-0.jpg"{{/if}} id="candidateAvatar" class="avatar-img rounded-circle border-blue" alt="avatar">
+                <img {{#if this.Wish.Candidate.User.photo}}src="/static/uploads/avatars/{{this.Wish.Candidate.User.photo}}"{{else}}src="/static/assets/images/face-0.jpg"{{/if}} id="candidateAvatar" class="avatar-img rounded-circle border-blue" alt="avatar">
               </div>
               <div class="rank-label-container">
                 <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate.percentage}}}</span>

@@ -217,7 +217,9 @@ User_Candidate.EditProfile = (req, res, next) => {
   }
 
   return Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+    if (_.isNil(user)) return next(new BackError('Utilisateur introuvable', 404));
     Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+      if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
       user.birthday = req.body.birthday;
@@ -441,6 +443,7 @@ User_Candidate.AddExperience = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Utilisateur introuvable', 404));
     Models.Experience.create({
       name: req.body.name,
       candidate_id: candidate.id,
