@@ -72,13 +72,13 @@ $('.add').click(function () {
             .append($('<td>').text(`${data.experience.poste.name}`))
             .append($('<td>').append($('<label>').attr('class', 'label label-warning').text(`${data.experience.service.name}`)))
             .append($('<td>').append($('<button>').attr({
-              class: 'btn btn-simple btn-outline-warning btn-icon',
-              onclick: `showEditXPModal(${data.experience.id})`,
+              class: 'btn btn-simple btn-outline-warning btn-icon editXP',
+              'data-id': data.experience.id,
               type: 'button'
             }).html('<i class="ti-pencil-alt"></i>'))
               .append($('<button>').attr({
-                class: 'btn btn-simple btn-outline-danger btn-icon',
-                onclick: `showRemoveXPModal(${data.experience.id})`,
+                class: 'btn btn-simple btn-outline-danger btn-icon removeXP',
+                'data-id': data.experience.id,
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
