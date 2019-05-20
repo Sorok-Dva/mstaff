@@ -6,8 +6,7 @@ $(`#post`).autocomplete({
   minLength: 2,
   select: (event, ui) => {
     need.post = ui.item.label;
-    if (need.firstSearch) return showContractModal();
-    else return searchCandidates();
+    return searchCandidates();
   },
 });
 

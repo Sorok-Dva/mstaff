@@ -806,6 +806,7 @@ User_Candidate.editWish = (req, res, next) => {
       where: { id: req.params.id }
     }).then(wish => {
       if (!wish) return res.status(400).send({ errors: 'Souhait introuvable.' });
+      if (!_.isNil(req.body.es)) req.body.es.replace('NaN,', '');
       wish.name = req.body.name;
       wish.contract_type = req.body.contractType;
       wish.posts = req.body.posts;
