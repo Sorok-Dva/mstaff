@@ -12,8 +12,7 @@ const Models = require(`${__}/orm/models/index`);
 const User = {};
 
 User.create = (req, res, next) => {
-  return res.render('index', { layout: 'maintenance' });
-  /* const errors = validationResult(req);
+  const errors = validationResult(req);
   let { password } = req.body;
 
   if (!errors.isEmpty()) {
@@ -53,7 +52,7 @@ User.create = (req, res, next) => {
         return res.render('users/register-email-send', { layout: 'onepage' });
       }).catch(error => next(new BackError(error)));
     }).catch(error => next(new BackError(error)));
-  });*/
+  });
 };
 
 User.ValidateAccount = (req, res, next) => {

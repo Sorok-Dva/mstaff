@@ -41,10 +41,7 @@ Render.Redirect = (req, res) => res.redirect('/');
 
 Render.Logout = (req, res) => req.logout() + req.session.destroy() + res.redirect('/');
 
-Render.Register = (req, res) => {
-  return res.render('index', { layout: 'maintenance' });
-  // res.render('users/register', { layout: 'onepage' });
-};
+Render.Register = (req, res) => res.render('users/register', { layout: 'onepage' });
 
 Render._404 = (req, res) => res.render('error', { error: 'Lien invalide' });
 
