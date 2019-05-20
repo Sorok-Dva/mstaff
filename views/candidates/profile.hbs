@@ -146,9 +146,9 @@
       </div>
       <div class="card-content">
         {{#if candidate.documents}}
-          <ul style="word-break: break-all;">
+          <ul class="mt-3" style="word-break: break-all;">
             {{#each candidate.documents as |document|}}
-              <li>
+              <li class="wish">
                 <h5>
                   <a href="/static/uploads/candidates/documents/{{document.filename}}">{{document.name}}</a>
                 </h5>
