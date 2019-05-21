@@ -533,9 +533,9 @@ User_Candidate.putFormation = (req, res, next) => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.CandidateFormation.findOne({ where: { id: req.params.id, candidate_id: candidate.id } }).then(formation => {
       if (!formation) return res.status(400).send({ errors: 'Formation not found' });
-      formation.name = req.body.name;
-      formation.start = req.body.start;
-      formation.end = req.body.end;
+      formation.name = req.body.name || formation.name;
+      formation.start = req.body.start || formation.start;
+      formation.end = req.body.end || formation.end;
       formation.save().then(() => {
         return res.status(200).send({ result: 'updated' });
       });

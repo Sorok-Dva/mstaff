@@ -1,4 +1,5 @@
 const { check } = require('express-validator/check');
+const _ = require('lodash');
 const HTTPValidation = {};
 
 HTTPValidation.postAddExperience = [
@@ -10,15 +11,21 @@ HTTPValidation.postAddExperience = [
 ];
 
 HTTPValidation.postAddFormation = [
-  check('name').isLength({ min: 3 })
+  check('name').isLength({ min: 3 }),
+  check('start').exists(),
+  check('end').exists()
 ];
 
 HTTPValidation.postAddDiploma = [
-  check('name').isLength({ min: 3 })
+  check('name').isLength({ min: 3 }),
+  check('start').exists(),
+  check('end').exists()
 ];
 
 HTTPValidation.putFormation = [
-  check('name').isLength({ min: 4 })
+  check('name').isLength({ min: 4 }),
+  check('start').exists(),
+  check('end').exists()
 ];
 
 HTTPValidation.getWish = [
