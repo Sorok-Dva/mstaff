@@ -373,7 +373,7 @@ User_Candidate.getXpById = (req, res, next) => {
       required: true
     }
   }).then(candidate => {
-    if (!candidate) return res.status(400).send({ errors: 'Candidat ou expérience introuvable.' });
+    if (_.isNil(candidate)) return next(new BackError('Experience introuvable', 404));
     res.status(200).send(candidate.experiences[0]);
   }).catch(error => next(new BackError(error)));
 };
@@ -385,6 +385,7 @@ User_Candidate.removeXP = (req, res, next) => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.Experience.findOne(opts).then(experience => {
+      if (_.isNil(experience)) return next(new BackError('Experience introuvable', 404));
       experience.destroy().then(() => User_Candidate.updatePercentage(req.user, 'experiences'));
       res.status(200).send({ done: true });
     }).catch(error => next(error));
@@ -398,6 +399,7 @@ User_Candidate.getFormationById = (req, res, next) => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateFormation.findOne(opts).then(formation => {
+      if (_.isNil(formation)) return next(new BackError('Formation introuvable', 404));
       res.status(200).send({ formation });
     }).catch(error => next(error));
   });
@@ -410,6 +412,7 @@ User_Candidate.removeFormation = (req, res, next) => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateFormation.findOne(opts).then(formation => {
+      if (_.isNil(formation)) return next(new BackError('Formation introuvable', 404));
       formation.destroy().then(() => User_Candidate.updatePercentage(req.user, 'formations'));
       res.status(200).send({ done: true });
     }).catch(error => next(error));
@@ -423,6 +426,7 @@ User_Candidate.getDiplomaById = (req, res, next) => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateQualification.findOne(opts).then(diploma => {
+      if (_.isNil(diploma)) return next(new BackError('Diplôme introuvable', 404));
       res.status(200).send({ diploma });
     }).catch(error => next(error));
   });
@@ -435,6 +439,7 @@ User_Candidate.removeDiploma = (req, res, next) => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateQualification.findOne(opts).then(diploma => {
+      if (_.isNil(diploma)) return next(new BackError('Diplôme introuvable', 404));
       diploma.destroy();
       res.status(200).send({ done: true });
     }).catch(error => next(error));
