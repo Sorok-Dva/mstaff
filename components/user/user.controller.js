@@ -51,7 +51,7 @@ User.create = (req, res, next) => {
         Mailer.Main.sendUserVerificationEmail(user);
         return res.render('users/register-email-send', { layout: 'onepage' });
       }).catch(error => next(new BackError(error)));
-    }).catch(error => next(new BackError(error)));
+    }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
   });
 };
 
