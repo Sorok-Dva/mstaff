@@ -668,8 +668,8 @@
       // to-do: replace with more advanced template/customization options
       BUTTONCLASS: 'btn-default',
       POPOVERHEADER: 'popover-title',
-      ICONBASE: 'glyphicon',
-      TICKICON: 'glyphicon-ok'
+      ICONBASE: 'fal',
+      TICKICON: 'fa-check'
     }
 
     var Selector = {
