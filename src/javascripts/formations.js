@@ -319,10 +319,16 @@ let removeCandidateDiploma = id => {
 
 let editFormation = (id) => {
   let _csrf = $('meta[name="csrf-token"]').attr('content');
-  let startDate = $('#editFStart').val().split('/');
-  let endDate = $('#editFEnd').val().split('/');
-  let start = new Date(startDate[1], startDate[0] - 1);
-  let end = new Date(endDate[1], endDate[0] - 1);
+  let startDate = $('#editFStart').val().length === 7 ? $('#editFStart').val().split('/') : null;
+  let endDate = $('#editFEnd').val().length === 7 ? $('#editFEnd').val().split('/') : null;
+  let start = !_.isNil(startDate) ? `${startDate[1]}/${startDate[0]}` : null;
+  let end = !_.isNil(endDate) ? `${endDate[1]}/${endDate[0]}` : null;
+  if (_.isNil(start) || _.isNil(end)) return notification({
+    icon: 'exclamation',
+    type: 'danger',
+    title: 'Champ invalide :',
+    message: `Veuillez vérifier vos dates`
+  });
   $.put(`/api/candidate/formation/${id}`, {
     name: $('#editFName').val(),
     start,
