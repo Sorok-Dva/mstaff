@@ -1,6 +1,6 @@
 function resetInternshipDate(){
-  candidateDatas.application.start = null;
-  candidateDatas.application.end = null;
+  candidateDatas.wish.start = null;
+  candidateDatas.wish.end = null;
 };
 
 function internshipTimeListener(){
@@ -65,8 +65,8 @@ function notify(error){
 };
 
 function saveDatas(){
-  candidateDatas.application.start = new Date($('#start').data("DateTimePicker").date());
-  candidateDatas.application.end = new Date($('#end').data("DateTimePicker").date());
+  candidateDatas.wish.start = new Date($('#start').data("DateTimePicker").date());
+  candidateDatas.wish.end = new Date($('#end').data("DateTimePicker").date());
 };
 
 function init_internshipTime(){
@@ -81,10 +81,10 @@ function init_internshipTime(){
 };
 
 function reload_internshipTime(){
-  $('#start').data("DateTimePicker").date(candidateDatas.application.start);
-  $('#end').data("DateTimePicker").date(candidateDatas.application.end);
+  $('#start').data("DateTimePicker").date(candidateDatas.wish.start);
+  $('#end').data("DateTimePicker").date(candidateDatas.wish.end);
 };
 
 init_internshipTime();
-if(candidateDatas.application.start && candidateDatas.application.end)
+if(candidateDatas.wish.start && candidateDatas.wish.end)
   reload_internshipTime();

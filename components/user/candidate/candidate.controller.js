@@ -468,7 +468,7 @@ function errorsExperiences(experiences){
   let errors = [];
   experiences.forEach(xp => {
     if (xp.name.length < 3)
-      errors.push('name doit avoir au minimum 3 caractères');
+      errors.push('experience name doit avoir au minimum 3 caractères');
     else if (isNaN(xp.post_id))
       errors.push('post_id doit être numérique');
     else if (isNaN(xp.service_id))
@@ -483,18 +483,48 @@ function errorsExperiences(experiences){
   return errors;
 }
 
+function errorsDiplomasQualifications(entities){
+  let errors = [];
+  entities.forEach(entity => {
+    if (entity.name.length < 3)
+      errors.push('name doit avoir au minimum 3 caractères');
+    else if (moment(entity.start).isAfter(new Date()) && moment(entity.start).isAfter(entity.end))
+      errors.push("la date de départ doit être antérieur à la date courante et d'arrivée");
+  });
+  return errors;
+}
+
+function errorsSkills(skills){
+  let errors = [];
+  skills.forEach(skill => {
+    if (skill.name.length < 185)
+      errors.push('name doit avoir au minimum 3 caractères');
+    else if (_.isNaN(skill.stars))
+      errors.push('stars doit être numérique');
+  });
+  return errors;
+}
+
 User_Candidate.ATSAddAll = (req, res, next) => {
 
   let user = {};
   user.id = req.session.atsUserId;
-  let errors;
 
-  if (req.body.experiences !== 'none'){
-    errors = errorsExperiences(req.body.experiences);
+  let errors = [];
+  if (req.body.experiences !== 'none')
+    errors.concat(errorsExperiences(req.body.experiences));
+  if (req.body.diplomas !== 'none')
+    errors.concat(errorsDiplomasQualifications(req.body.diplomas));
+  if (req.body.qualifications !== 'none')
+    errors.concat(errorsDiplomasQualifications(req.body.qualifications));
+  if (req.body.skills !== 'none')
+    errors.concat(errorsSkills(req.body.skills));
 
-    if (errors.length > 0) {
-      return res.status(400).send({ body: req.body, errors: errors });
-    }
+  if (errors.length > 0) {
+    return res.status(400).send({ body: req.body, errors: errors });
+  } else {
+
+    // CREATION DES BULKS + REQUETES
 
     return Models.Candidate.findOne({
       where: {user_id: user.id}
@@ -519,9 +549,6 @@ User_Candidate.ATSAddAll = (req, res, next) => {
       }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
     });
   }
-
-
-
 };
 
 User_Candidate.ATSAddExperiences = (req, res, next) => {

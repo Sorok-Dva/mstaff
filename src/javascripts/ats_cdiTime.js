@@ -1,8 +1,8 @@
 function resetAvailability(){
-  candidateDatas.application.fullTime = false;
-  candidateDatas.application.partTime = false;
-  candidateDatas.application.dayTime = false;
-  candidateDatas.application.nightTime = false;
+  candidateDatas.wish.fullTime = false;
+  candidateDatas.wish.partTime = false;
+  candidateDatas.wish.dayTime = false;
+  candidateDatas.wish.nightTime = false;
 };
 
 function cdiTimeListener(){
@@ -51,10 +51,10 @@ function notify(error){
 };
 
 function saveDatas(){
-  candidateDatas.application.fullTime = $('#full_time').prop('checked');
-  candidateDatas.application.partTime = $('#part_time').prop('checked');
-  candidateDatas.application.dayTime = $('#day_time').prop('checked');
-  candidateDatas.application.nightTime = $('#night_time').prop('checked');
+  candidateDatas.wish.fullTime = $('#full_time').prop('checked');
+  candidateDatas.wish.partTime = $('#part_time').prop('checked');
+  candidateDatas.wish.dayTime = $('#day_time').prop('checked');
+  candidateDatas.wish.nightTime = $('#night_time').prop('checked');
 };
 
 function init_cdiTime(){

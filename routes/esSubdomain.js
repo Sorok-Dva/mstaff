@@ -19,14 +19,6 @@ router.get('/register',
     User.Main.create);
 
 router.post('/ats/add/all',
-  //TODO verifier user id si pas d authentification
-  // Authentication.ensureIsNotAuthenticated,
-  // HTTPValidation.CandidateController.ats,
-  // User.Candidate.ATSAddExperiences,
-  // User.Candidate.ATSAddDiplomas,
-  // User.Candidate.ATSAddQualifications,
-  // User.Candidate.ATSAddSkills
-  // User.Candidate.ATSAddWish
   User.Candidate.ATSAddAll
 );
 

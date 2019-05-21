@@ -23,30 +23,30 @@ function finalize(es_finess){
       console.log(data);
 
       // // FOR TEST VALUES ----------------------------
-      // console.log(candidateDatas.experiences, candidateDatas.diplomas, candidateDatas.qualifications, candidateDatas.skills, candidateDatas.application);
+      // console.log(candidateDatas.experiences, candidateDatas.diplomas, candidateDatas.qualifications, candidateDatas.skills, candidateDatas.wish);
       // candidateDatas.experiences = [];
       // candidateDatas.diplomas = [];
       // candidateDatas.qualifications = [];
       // candidateDatas.skills = [];
-      // candidateDatas.application = [];
-      // console.log(candidateDatas.experiences.length, candidateDatas.diplomas.length, candidateDatas.qualifications.length, candidateDatas.skills.length, candidateDatas.application.length);
+      // candidateDatas.wish = [];
+      // console.log(candidateDatas.experiences.length, candidateDatas.diplomas.length, candidateDatas.qualifications.length, candidateDatas.skills.length, candidateDatas.wish.length);
       // // --------------------------------------------
 
-
+      console.log(candidateDatas.experiences, candidateDatas.diplomas, candidateDatas.qualifications, candidateDatas.skills, candidateDatas.wish);
+      //TODO add application
 
       $.post('/ats/add/all', {
         experiences: candidateDatas.experiences.length > 0 ? candidateDatas.experiences : 'none',
-        diplomas: candidateDatas.diplomas,
-        qualifications: candidateDatas.qualifications,
-        skills: candidateDatas.skills,
+        diplomas: candidateDatas.diplomas.length > 0 ? candidateDatas.diplomas : 'none',
+        qualifications: candidateDatas.qualifications.length > 0 ? candidateDatas.qualifications : 'none',
+        skills: candidateDatas.skills.length > 0 ? candidateDatas.skills : 'none',
+        application: candidateDatas.wish.length > 0 ? candidateDatas.wish : 'none',
         _csrf
       }, (data) => {
         console.log(data);
       });
     }
   }).catch(error => errorsHandler(error));
-  //TODO
-
 };
 
 legalListener();

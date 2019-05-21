@@ -39,7 +39,7 @@ function experienceListener(){
   });
 
   $('#backToContract').click(function() {
-    let template = selectTemplate(candidateDatas.application.contractType);
+    let template = selectTemplate(candidateDatas.wish.contractType);
     loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })

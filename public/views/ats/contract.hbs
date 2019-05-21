@@ -1,6 +1,3 @@
-{{log databaseDatas}}
-{{log candidateDatas}}
-
 <i id="backToPost" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
 <!-- Heading -->
 <div class="height-80 d-flex flex-column justify-content-center">
@@ -15,7 +12,7 @@
       <h1 class="card-title">Un travail durable</h1>
       <div class="custom-control custom-switch">
         <input type="checkbox" class="custom-control-input" id="cdiToggle" name="cdi"
-              {{#ifCond candidateDatas.application.contractType '===' 'cdi'}} checked{{/ifCond}}>
+              {{#ifCond candidateDatas.wish.contractType '===' 'cdi'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="cdiToggle"></label>
       </div>
 
@@ -29,7 +26,7 @@
       <h1 class="card-title">Des missions ponctuelles</h1>
       <div class="custom-control custom-switch">
         <input type="checkbox" class="custom-control-input" id="vacationToggle" name="vacation"
-          {{#ifCond candidateDatas.application.contractType '===' 'vacation'}} checked{{/ifCond}}>
+          {{#ifCond candidateDatas.wish.contractType '===' 'vacation'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="vacationToggle"></label>
       </div>
     </div>
@@ -42,7 +39,7 @@
       <h1 class="card-title">Un stage</h1>
       <div class="custom-control custom-switch">
         <input type="checkbox" class="custom-control-input" id="internshipToggle" name="internship"
-          {{#ifCond candidateDatas.application.contractType '===' 'internship'}} checked{{/ifCond}}>
+          {{#ifCond candidateDatas.wish.contractType '===' 'internship'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="internshipToggle"></label>
       </div>
     </div>

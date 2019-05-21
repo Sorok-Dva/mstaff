@@ -66,7 +66,7 @@ function notify(error){
 };
 
 function saveDatas(){
-  candidateDatas.application.contractType = $('#contractChoices input:checked').prop('name');
+  candidateDatas.wish.contractType = $('#contractChoices input:checked').prop('name');
 };
 
 function init_contract(){

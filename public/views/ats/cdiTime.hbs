@@ -1,6 +1,3 @@
-{{log databaseDatas}}
-{{log candidateDatas}}
-
 <i id="backToContract" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
 
 <div class="height-80 d-flex flex-column justify-content-center">
@@ -14,7 +11,7 @@
         <h1 class="card-title">Temps plein</h1>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="full_time" name="full_time"
-            {{#ifCond candidateDatas.application.fullTime '===' true}} checked{{/ifCond}}>
+            {{#ifCond candidateDatas.wish.fullTime '===' true}} checked{{/ifCond}}>
           <label class="custom-control-label" for="full_time"></label>
         </div>
       </div>
@@ -27,7 +24,7 @@
         <h1 class="card-title">Temps partiel</h1>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="part_time" name="part_time"
-            {{#ifCond candidateDatas.application.partTime '===' true}} checked{{/ifCond}}>
+            {{#ifCond candidateDatas.wish.partTime '===' true}} checked{{/ifCond}}>
           <label class="custom-control-label" for="part_time"></label>
         </div>
       </div>
@@ -39,7 +36,7 @@
         <h1 class="card-title">Jour</h1>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="day_time" name="day_time"
-            {{#ifCond candidateDatas.application.dayTime '===' true}} checked{{/ifCond}}>
+            {{#ifCond candidateDatas.wish.dayTime '===' true}} checked{{/ifCond}}>
           <label class="custom-control-label" for="day_time"></label>
         </div>
       </div>
@@ -51,7 +48,7 @@
         <h1 class="card-title">Nuit</h1>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="night_time" name="night_time"
-            {{#ifCond candidateDatas.application.nightTime '===' true}} checked{{/ifCond}}>
+            {{#ifCond candidateDatas.wish.nightTime '===' true}} checked{{/ifCond}}>
           <label class="custom-control-label" for="night_time"></label>
         </div>
       </div>

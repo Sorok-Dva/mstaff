@@ -63,10 +63,10 @@ function notify(error){
 
 function saveDatas(){
   let services = $('#InputServices').select2('data');
-  candidateDatas.application.post = $('#InputPosts').val();
-  candidateDatas.application.services = [];
+  candidateDatas.wish.post = $('#InputPosts').val();
+  candidateDatas.wish.services = [];
   services.forEach( service => {
-    candidateDatas.application.services.push(service.text);
+    candidateDatas.wish.services.push(service.text);
   });
 };
 
@@ -108,9 +108,9 @@ function init_post(){
 
 function reload_post(){
   $('#InputPosts').trigger('keyup');
-  $('#InputServices').val(candidateDatas.application.services).trigger('change');
+  $('#InputServices').val(candidateDatas.wish.services).trigger('change');
 };
 
 init_post();
-if(candidateDatas.application.post)
+if(candidateDatas.wish.post)
   reload_post();

@@ -1,5 +1,5 @@
 let candidateDatas = {
-  application : {},
+  wish : {},
   identity : {},
   experiences : [],
   diplomas : [],
