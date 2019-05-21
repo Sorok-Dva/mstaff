@@ -7,6 +7,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
+const Sequelize = require(`${__}/bin/sequelize`);
 /*const AvatarStorage = require('../../../helpers/avatar.storage');*/
 const path = require('path');
 const multer = require('multer');
@@ -458,13 +459,13 @@ User_Candidate.AddExperience = (req, res, next) => {
 
 // ATS -----------------------------------------------------------
 
-function isBoolean(value){
+function isBoolean(value) {
   if (value == true || value == false)
     return true;
   return false;
 }
 
-function errorsExperiences(experiences){
+function errorsExperiences(experiences) {
   let errors = [];
   experiences.forEach(xp => {
     if (xp.name.length < 3)
@@ -478,23 +479,23 @@ function errorsExperiences(experiences){
     else if (!isBoolean(xp.current))
       errors.push('current doit être un booléen');
     else if (moment(xp.start).isAfter(new Date()) && moment(xp.start).isAfter(xp.end))
-      errors.push("la date de départ doit être antérieur à la date courante et d'arrivée");
+      errors.push('la date de départ doit être antérieur à la date courante et d\'arrivée');
   });
   return errors;
 }
 
-function errorsDiplomasQualifications(entities){
+function errorsDiplomasQualifications(entities) {
   let errors = [];
   entities.forEach(entity => {
     if (entity.name.length < 3)
       errors.push('name doit avoir au minimum 3 caractères');
     else if (moment(entity.start).isAfter(new Date()) && moment(entity.start).isAfter(entity.end))
-      errors.push("la date de départ doit être antérieur à la date courante et d'arrivée");
+      errors.push('la date de départ doit être antérieur à la date courante et d\'arrivée');
   });
   return errors;
 }
 
-function errorsSkills(skills){
+function errorsSkills(skills) {
   let errors = [];
   skills.forEach(skill => {
     if (skill.name.length < 185)
@@ -505,49 +506,104 @@ function errorsSkills(skills){
   return errors;
 }
 
+// function errorsWish(wish){
+//   let errors = [];
+//   if (wish.name.length < 185)
+//     errors.push('name doit avoir au minimum 3 caractères');
+//   else if (_.isNaN(skill.stars))
+//     errors.push('stars doit être numérique');
+//   return errors;
+// }
+
+function initBulks(bulks, candidate, req) {
+  if (bulks.createXp) {
+    bulks.experiences = [];
+    req.body.experiences.forEach(experience => {
+      bulks.experiences.push({
+        name: experience.name,
+        candidate_id: candidate.id,
+        poste_id: parseInt(experience.post_id),
+        service_id: parseInt(experience.service_id),
+        internship: experience.internship,
+        liberal: experience.liberal || null,
+        current: experience.current,
+        start: experience.start,
+        end: experience.end || null
+      });
+    });
+  }
+  if (bulks.createDiplomas) {
+    //TODO
+  }
+  if (bulks.createQualifications) {
+    //TODO
+  }
+  if (bulks.createSkills) {
+    //TODO
+  }
+
+}
+
 User_Candidate.ATSAddAll = (req, res, next) => {
 
   let user = {};
   user.id = req.session.atsUserId;
 
   let errors = [];
-  if (req.body.experiences !== 'none')
-    errors.concat(errorsExperiences(req.body.experiences));
-  if (req.body.diplomas !== 'none')
-    errors.concat(errorsDiplomasQualifications(req.body.diplomas));
-  if (req.body.qualifications !== 'none')
-    errors.concat(errorsDiplomasQualifications(req.body.qualifications));
-  if (req.body.skills !== 'none')
-    errors.concat(errorsSkills(req.body.skills));
+  let bulks = {
+    createXp: false,
+    createDiplomas: false,
+    createQualifications: false,
+    createSkills: false
+  };
 
+  if (req.body.experiences !== 'none') {
+    errors.concat(errorsExperiences(req.body.experiences));
+    bulks.createXp = true;
+  }
+  if (req.body.diplomas !== 'none') {
+    errors.concat(errorsDiplomasQualifications(req.body.diplomas));
+    bulks.createDiplomas = true;
+  }
+  if (req.body.qualifications !== 'none') {
+    errors.concat(errorsDiplomasQualifications(req.body.qualifications));
+    bulks.createQualifications = true;
+  }
+  if (req.body.skills !== 'none') {
+    errors.concat(errorsSkills(req.body.skills));
+    bulks.createSkills = true;
+  }
   if (errors.length > 0) {
     return res.status(400).send({ body: req.body, errors: errors });
-  } else {
+  }
+  else {
+
+    return Sequelize.transaction(t => {
+      return Models.Candidate.findOne({
+        where: { user_id: user.id }
+      }, { transaction: t }).then(candidate => {
+        initBulks(bulks, candidate, req);
+        if (!_.isEmpty(bulks.experiences)){
+          return Models.Experience.bulkCreate(bulks.experiences).then(() => {
+            return User_Candidate.updatePercentage(user, 'experiences');
+            // res.status(200).send({ result: 'created' });
+          }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+        }
+      }, { transaction: t});
+    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
 
     // CREATION DES BULKS + REQUETES
-
-    return Models.Candidate.findOne({
-      where: {user_id: user.id}
-    }).then(candidate => {
-      let experiences = [];
-      req.body.experiences.forEach( experience => {
-        experiences.push({
-          name: experience.name,
-          candidate_id: candidate.id,
-          poste_id: parseInt(experience.post_id),
-          service_id: parseInt(experience.service_id),
-          internship: experience.internship,
-          liberal: experience.liberal || null,
-          current: experience.current,
-          start: experience.start,
-          end: experience.end || null
-        });
-      });
-      Models.Experience.bulkCreate(experiences).then(() => {
-        User_Candidate.updatePercentage(user, 'experiences');
-        res.status(200).send({ result: 'created' });
-      }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
-    });
+    // return Models.Candidate.findOne({
+    //   where: { user_id: user.id }
+    // }).then(candidate => {
+    //   initBulks(bulks, candidate, req);
+    //   if (!_.isEmpty(bulks.experiences)){
+    //     Models.Experience.bulkCreate(bulks.experiences).then(() => {
+    //       User_Candidate.updatePercentage(user, 'experiences');
+    //       res.status(200).send({ result: 'created' });
+    //     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+    //   }
+    // });
   }
 };
 
@@ -567,10 +623,10 @@ User_Candidate.ATSAddExperiences = (req, res, next) => {
 
   console.log('EXPERIENCES LENGTH', req.body.experiences.length);
   return Models.Candidate.findOne({
-    where: {user_id: user.id}
+    where: { user_id: user.id }
   }).then(candidate => {
     let experiences = [];
-    req.body.experiences.forEach( experience => {
+    req.body.experiences.forEach(experience => {
       experiences.push({
         name: experience.name,
         candidate_id: candidate.id,
@@ -1117,7 +1173,8 @@ User_Candidate.setAvailability = (req, res, next) => {
       model: Models.Candidate,
       as: 'candidate',
       required: true
-    } }).then(user => {
+    }
+  }).then(user => {
     if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
     user.candidate.is_available = req.body.available;
     user.candidate.save().then(result => {
