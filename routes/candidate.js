@@ -6,7 +6,8 @@ const multer  = require('multer');
 const path = require('path');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    mkdirp(`./public/uploads/avatars`, err => cb(null, './public/uploads/avatars/'));
+    console.log
+    mkdirp(`./public/uploads/avatars`, err => cb(err, './public/uploads/avatars/'));
   },
   filename: function (req, file, cb) {
     req.body.filename = Date.now() + '.png';
@@ -35,6 +36,14 @@ const router = express.Router();
 router.get('/profile',
   Authentication.ensureIsCandidate,
   User.Candidate.viewProfile);
+
+/**
+ * @Route('/welcome') GET;
+ * Show upload page.
+ */
+router.get('/welcome',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewUpload);
 
 /**
  * @Route('/profile/edit') GET | POST;
