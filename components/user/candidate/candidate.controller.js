@@ -7,22 +7,8 @@ const _ = require('lodash');
 const moment = require('moment');
 const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
-/*const AvatarStorage = require('../../../helpers/avatar.storage');*/
-const path = require('path');
-const multer = require('multer');
 
 const User_Candidate = {};
-/*const storage = AvatarStorage({
-  square: true,
-  responsive: true,
-  greyscale: true,
-  quality: 90
-});*/
-const limits = {
-  files: 1, // allow only 1 file per request
-  fileSize: 1024 * 1024, // 1 MB (max file size)
-};
-const allowedMimes = ['image/jpeg', 'image/png'];
 
 User_Candidate.getProfile = (req, res, next) => {
   Models.Candidate.findOne({
@@ -241,7 +227,6 @@ User_Candidate.EditProfile = (req, res, next) => {
             Models.User.findOne({ where: { email: req.body.email } }).then(verifEmail => {
               if (!_.isNil(verifEmail)) {
                 req.flash('error_msg', 'Cet adresse e-mail est déjà utilisée.');
-                console.log('fail');
               } else {
                 user.email = req.body.email;
                 user.save();
@@ -259,8 +244,13 @@ User_Candidate.UploadImageProfile = (req, res, next) => {
   Models.User.findOne({ where: { id: req.user.id } }).then(user => {
     user.photo = req.body.filename;
     user.save().then(() => {
+      User_Candidate.updatePercentage(req.user, 'photo');
       req.flash('success_msg', 'Votre photo a été sauvegardée.');
-      return res.redirect('/profile/edit');
+      if (req.xhr) {
+        return res.status(200).send('saved');
+      } else {
+        return res.redirect('/profile/edit');
+      }
     });
   }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
 };
@@ -811,7 +801,6 @@ User_Candidate.editWish = (req, res, next) => {
       where: { id: req.params.id }
     }).then(wish => {
       if (!wish) return res.status(400).send({ errors: 'Souhait introuvable.' });
-      if (!_.isNil(req.body.es)) req.body.es.replace('NaN,', '');
       wish.name = req.body.name;
       wish.contract_type = req.body.contractType;
       wish.posts = req.body.posts;
@@ -918,7 +907,7 @@ User_Candidate.updatePercentage = (user, type) => {
         break;
       case 'photo':
         if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };
-        if (candidate.photo) {
+        if (user.photo) {
           percentage.profile.photo = 10;
         } else percentage.profile.photo = 0;
         candidate.percentage = percentage;
@@ -996,6 +985,19 @@ User_Candidate.viewConferences = (req, res, next) => {
       let a = { main: 'conferences' };
       return res.render('candidates/calendar', { a, conferences });
     })
+  })
+};
+
+User_Candidate.viewUpload = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: {
+      user_id: req.user.id
+    }, include: {
+      model: Models.User
+    }
+  }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    return res.render('candidates/upload', { candidate, layout: 'onepage' });
   })
 };
 
