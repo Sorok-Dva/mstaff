@@ -29,12 +29,12 @@
     $('.modal#contractType').modal('hide');
     $('#btnContractType').html($('#contractType option:selected').text());
 
-    if (need.firstSearch) return showTimeModal();
-    else return searchCandidates();
+   /* if (need.firstSearch) return showTimeModal();
+    else */return searchCandidates();
   });
 
   $('#ignoreContract').click(function() {
-    need.firstSearch = false;
+    // need.firstSearch = false;
     if (!_.isNil(need.filterQuery.contractType)) {
       delete need.filterQuery.contractType;
       $('#btnContractType').empty();
