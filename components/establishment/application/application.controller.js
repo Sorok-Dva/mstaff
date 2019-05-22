@@ -6,7 +6,6 @@ const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 const moment = require('moment');
 
-const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
 
 const Establishment_Application = {};
@@ -129,6 +128,7 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
     subQuery: false,
     attributes: { exclude: ['lat', 'lon'] },
     group: ['Wish.candidate_id'],
+    order: Sequelize.literal('`Wish->Candidate`.`is_available` DESC'),
     include: [{
       model: Models.Wish,
       required: true,
@@ -155,6 +155,9 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
             }
           },
           required: true
+        }, {
+          model: Models.Experience,
+          as: 'experiences'
         }]
       }
     }, {
@@ -237,6 +240,9 @@ Establishment_Application.CVsMyCandidatesQuery = (req, res, next) => {
               }
             },
             required: true
+          }, {
+            model: Models.Experience,
+            as: 'experiences'
           }]
         }
       },
@@ -296,6 +302,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
   let query = {
     where: { es_id: filterQuery.establishments },
     attributes: { exclude: ['lat', 'lon'] },
+    order: Sequelize.literal('`Wish->Candidate`.`is_available` DESC'),
     group: ['Wish->Candidate.id'],
     include: [{
       model: Models.Wish,
@@ -329,6 +336,9 @@ Establishment_Application.getCandidates = (req, res, next) => {
         }, {
           model: Models.CandidateFormation,
           as: 'formations',
+        }, {
+          model: Models.Experience,
+          as: 'experiences'
         }]
       }
     }, {
@@ -377,9 +387,11 @@ Establishment_Application.getCandidates = (req, res, next) => {
 
   if (!_.isNil(filterQuery.contractType)) query.include[0].where.contract_type = filterQuery.contractType;
   if (!_.isNil(filterQuery.service)) {
-    query.include[0].where.services = {
+    /*query.include[0].where.services = {
       [Op.regexp]: Sequelize.literal(`"(${filterQuery.service})"`),
-    };
+    };*/
+    query.include[0].include.include[2].required = true;
+    query.include[0].include.include[2].where = { service_id: filterQuery.serviceId };
   }
   if (!_.isNil(filterQuery.diploma)) {
     query.include[0].include.include[1].required = true;
