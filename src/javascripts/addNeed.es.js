@@ -266,11 +266,6 @@ let showFavorites = () => {
 $(document).ready(() => {
   need._csrf = _csrf;
 
-  $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
-    loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
-      $('#baseResult').empty().html(html);
-    });
-  }).catch(errors => errorsHandler(errors));
   if(Math.round(baseCVCount / size) > 0) {
     $('.pagination').twbsPagination({
       totalPages: Math.round(baseCVCount / size),
