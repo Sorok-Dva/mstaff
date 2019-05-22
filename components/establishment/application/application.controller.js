@@ -148,7 +148,7 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
         required: true,
         include: [{
           model: Models.User,
-          attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt', 'createdAt'] },
+          attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt'] },
           on: {
             '$Wish->Candidate.user_id$': {
               [Op.col]: 'Wish->Candidate->User.id'
@@ -233,7 +233,7 @@ Establishment_Application.CVsMyCandidatesQuery = (req, res, next) => {
           required: true,
           include: [{
             model: Models.User,
-            attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt', 'createdAt'] },
+            attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt'] },
             on: {
               '$Wish->Candidate.user_id$': {
                 [Op.col]: 'Wish->Candidate->User.id'
@@ -326,7 +326,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
         required: true,
         include: [{
           model: Models.User,
-          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt'] },
           on: {
             '$Wish->Candidate.user_id$': {
               [Op.col]: 'Wish->Candidate->User.id'
