@@ -424,8 +424,8 @@ Establishment_Need.getNewCandidates = (req, res, next) => {
     };
 
     if (!_.isNil(need.contract_type)) query.where.contract_type = need.contract_type;
-    if (!_.isNil(need.services)) query.where.services = { [Op.regexp]: Sequelize.literal(`'(${need.service})'`) };
-    if (!_.isNil(need.post)) query.where.posts = { [Op.regexp]: Sequelize.literal(`'(${need.post})'`) };
+    if (!_.isNil(need.services)) query.where.services = { [Op.regexp]: Sequelize.literal(`"(${need.service})"`) };
+    if (!_.isNil(need.post)) query.where.posts = { [Op.regexp]: Sequelize.literal(`"(${need.post})"`) };
 
     Models.Wish.findAll(query).then(wishes => {
       //remove existing candidates of wishes object if they're in need.needCandidates
