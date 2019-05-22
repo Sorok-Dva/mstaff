@@ -34,20 +34,16 @@ let searchCandidates = () => {
   }
   // }
   need.post = need.post || $('input#post').val();
-  if (need.firstSearch) {
-    return showContractModal();
-  } else {
-    $('#baseResult').hide();
-    $('#paginationContainer').hide();
-    $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
-    $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
-      loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
-        $('#resetSearch').show();
-        $('#searchResult').html(html).show();
-        $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
-      });
-    }).catch(error => errorsHandler(error));
-  }
+  $('#baseResult').hide();
+  $('#paginationContainer').hide();
+  $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
+  $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
+    loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
+      $('#resetSearch').show();
+      $('#searchResult').html(html).show();
+      $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
+    });
+  }).catch(error => errorsHandler(error));
 };
 
 let showServiceModal = () => {
@@ -93,8 +89,8 @@ let resetSearch = () => {
   $('#baseResult').show();
   $('#paginationContainer').show();
   $('#btnContractType').empty();
+  $('#btnDiplomaType').empty();
   $('#btnTimeType').empty();
-  need.firstSearch = true;
   $('#resetSearch').hide();
 };
 
