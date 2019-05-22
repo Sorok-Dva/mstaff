@@ -23,18 +23,20 @@
     }
     $('select#serviceTypeSelect').removeClass('error').addClass('success');
     need.filterQuery.service = $('#serviceTypeSelect option:selected').text();
+    need.filterQuery.serviceId = $('#serviceTypeSelect option:selected').attr('value');
 
     $('.modal#serviceType').modal('hide');
     $('#btnServiceType').html(need.filterQuery.service);
 
-    if (need.firstSearch) return showContractModal();
-    else return searchCandidates();
+    /*if (need.firstSearch) return showContractModal();
+    else */return searchCandidates();
   });
 
   $('#ignoreService').click(function() {
     need.firstSearch = false;
     if(!_.isNil(need.filterQuery.service)) {
       delete need.filterQuery.service;
+      delete need.filterQuery.serviceId;
       $('#btnServiceType').empty();
     }
     searchCandidates();
