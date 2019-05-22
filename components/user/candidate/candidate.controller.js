@@ -993,6 +993,19 @@ User_Candidate.viewConferences = (req, res, next) => {
   })
 };
 
+User_Candidate.viewUpload = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: {
+      user_id: req.user.id
+    }, include: {
+      model: Models.User
+    }
+  }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    return res.render('candidates/upload', { candidate, layout: 'onepage' });
+  })
+};
+
 User_Candidate.setAvailability = (req, res, next) => {
   Models.User.findOne({
     where: { id: req.user.id },

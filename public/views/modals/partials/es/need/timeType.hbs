@@ -83,7 +83,7 @@
     }).on('dp.change', (e) => need.filterQuery.timeType.timeEnd = new Date(e.date));
   });
   $('button#searchProfiles').on('click', function() {
-    need.firstSearch = false;
+    // need.firstSearch = false;
     $('.modal#timeType').modal('hide');
     let dateRecap = `${moment(need.filterQuery.timeType.dateStart).format('DD/MM/YYYY')}`;
     if (need.filterQuery.timeType.dateEnd) dateRecap += ` - ${moment(need.filterQuery.timeType.dateEnd).format('DD/MM/YYYY')}`;
@@ -100,7 +100,7 @@
   });
 
   $('#ignoreTime').click(function() {
-    need.firstSearch = false;
+    // need.firstSearch = false;
     if (!_.isNil(need.filterQuery.timeType)) {
       delete need.filterQuery.timeType;
       $('#btnTimeType').empty();

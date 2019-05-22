@@ -1,0 +1,105 @@
+<div class="container-fluid">
+  <div class="row align-items-center justify-content-center">
+    <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6 my-5">
+      <!-- Heading -->
+      <h1 class="display-4 text-center mb-3">
+        Rendez vous attractif auprès des recruteurs en quelques clics !
+      </h1>
+
+      <!-- Avatar Upload -->
+      <div class="col-12 text-center mb-5">
+        <p class="text-muted text-center mb-5">
+          Téléchargez une photo de profil
+        </p>
+        <div class="card card-user">
+          <div class="image"></div>
+          <div class="content">
+            <div class="author">
+              <div style="padding-top: 10px;">
+                <div class="avatar avatar-xxl">
+                  <img id="candidateAvatar" {{#if candidate.User.photo}} src="/static/uploads/avatars/{{candidate.User.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
+                </div>
+              </div>
+              <form id="avatarForm" action="/profile/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
+                <span id="editAvatar" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px; background-color: #03a9de;">
+                  <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
+                </span>
+                <button id="validateAvatarButton" type="submit" class="btn btn-primary" style="display:none"> Valider </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="/" class="btn btn-lg btn-block btn-outline-warning mb-3">
+        Ignorer
+      </a>
+    </div>
+    <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
+      <!-- Image -->
+      <div class="bg-cover vh-100 mt-n1 mr-n3"
+           style="background-image: url(/static/assets/images/email-sent.jpg);"></div>
+    </div>
+  </div>
+</div>
+<script>
+  let avatarSelected = () => {
+    $('#validateAvatarButton').click()
+  };
+  $(document).ready(function () {
+
+    $('#avatarForm').on('submit', function(e) {
+      e.preventDefault();
+      let files = document.querySelector('[type=file]').files;
+      let formData = new FormData();
+      formData.append('avatar', files[0], files[0].name);
+      jQuery.ajax({
+        url: $(this).attr('action'),
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: (data) => {
+          if (data === 'saved') {
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Photo de profil sauvegardé !'
+            });
+            // show documents upload part
+          }
+        },
+        fail: (error) => errorsHandler(error)
+      });
+    });
+
+    $(document).on('change', '.btn-file :file', function () {
+      let input = $(this),
+          label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+      input.trigger('fileselect', [label]);
+    });
+
+    $('.btn-file :file').on('fileselect', function (event, label) {
+
+      let input = $(this).parents('.input-group').find(':text'),
+          log = label;
+    });
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        let reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#candidateAvatar').attr('src', e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    $("#imgInp").change(function () {
+      readURL(this);
+    });
+  });
+</script>

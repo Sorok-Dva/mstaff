@@ -153,3 +153,7 @@ $(document).ready(function () {
     history.back()
   });
 });
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+});

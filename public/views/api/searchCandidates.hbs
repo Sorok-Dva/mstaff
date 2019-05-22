@@ -27,7 +27,7 @@
               <div class="avatar avatar-xxl avatar-{{#if this.Wish.Candidate.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
                 <img {{#if this.Wish.Candidate.User.photo}}src="/static/uploads/avatars/{{this.Wish.Candidate.User.photo}}"{{else}}src="/static/assets/images/face-0.jpg"{{/if}} id="candidateAvatar" class="avatar-img rounded-circle border-blue" alt="avatar">
               </div>
-              <div class="rank-label-container">
+              <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> candidatePercentageTooltip this.Wish.Candidate.percentage}}">
                 <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate.percentage}}}</span>
               </div>
               <h4 class="title">{{this.Wish.Candidate.User.firstName}} {{this.Wish.Candidate.User.lastName}},
@@ -52,7 +52,7 @@
               {{#if this.Wish.services}}
                 <hr style="width: 45%; margin: auto">
                 <h4 class="text-muted mt-2">
-                  Intéressé(e) par les services
+                  Expérience dans les services
                 </h4>
                 <h5>
                   {{#each this.Wish.services as |service|}}
@@ -88,5 +88,8 @@
   need.selectedCandidates.forEach(e => {
     $(`i.selectCandidate[data-id="${e}"]`).hide();
     $(`i.unselectCandidate[data-id="${e}"]`).show();
-  })
+  });
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
 </script>
