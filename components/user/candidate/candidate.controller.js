@@ -242,6 +242,11 @@ User_Candidate.EditProfile = (req, res, next) => {
 
 User_Candidate.UploadImageProfile = (req, res, next) => {
   Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+    if (_.isNil(user.photo)) {
+      if (fs.existsSync(`./public/uploads/avatars/${user.photo}`)) {
+        fs.unlinkSync(`./public/uploads/avatars/${user.photo}`)
+      }
+    }
     user.photo = req.body.filename;
     user.save().then(() => {
       User_Candidate.updatePercentage(req.user, 'photo');
