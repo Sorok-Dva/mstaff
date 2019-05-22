@@ -1,20 +1,20 @@
 <h3>Taux de complétion</h3>
 <br>
 {{#if this}}
-<h5>Profil :</h5>
-<ul>
-  <li>- Informations principales : {{this.profile.main}}%</li>
-  <li>- Description : {{this.profile.description}}%</li>
-  <li>- Photo : {{this.profile.photo}}%</li>
-</ul>
-<h5>Expériences : {{this.experiences}}%</h5>
-<h5>Formations : {{this.formations}}%</h5>
-<h5>Documents :</h5>
-<ul>
-  <li>- Carte d'identité : {{this.documents.CNI}}%</li>
-  <li>- RIB : {{this.documents.RIB}}%</li>
-  <li>- Carte Vitale : {{this.documents.VIT}}%</li>
-  <li>- Diplôme : {{this.documents.DIP}}%</li>
-</ul>
+  <h5>Profil :</h5>
+  <ul>
+    <li>- Informations principales : {{#ifCond this.profile.main '==' '20'}}✔️{{else}}❌{{/ifCond}}</li>
+    <li>- Description : {{#ifCond this.profile.description '==' '30'}}✔️{{else}}❌{{/ifCond}}</li>
+    <li>- Photo : {{#ifCond this.profile.photo '==' '10'}}✔️{{else}}❌{{/ifCond}}</li>
+  </ul>
+  <h5>Expériences : {{#ifCond this.experiences '==' '10'}}✔️{{else}}❌{{/ifCond}}</h5>
+  <h5>Formations : {{#ifCond this.formations '==' '10'}}✔️{{else}}❌{{/ifCond}}</h5>
+  <h5>Documents :</h5>
+  <ul>
+    <li>- Carte d'identité : {{#ifCond this.documents.CNI '==' '5'}}✔️{{else}}❌{{/ifCond}}</li>
+    <li>- RIB : {{#ifCond this.documents.RIB '==' '5'}}✔️{{else}}❌{{/ifCond}}</li>
+    <li>- Carte Vitale : {{#ifCond this.documents.RIB '==' '5'}}✔️{{else}}❌{{/ifCond}}</li>
+    <li>- Diplôme : {{#ifCond this.documents.DIP '==' '5'}}✔️{{else}}❌{{/ifCond}}</li>
+  </ul>
 {{/if}}
-<h3>Total : {{#if this}}{{this.total}}{{else}}0{{/if}}%</h3>
+<h3>Total : {{candidateProfilePercentage this}}</h3>
