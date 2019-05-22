@@ -537,6 +537,7 @@ User_Candidate.putFormation = (req, res, next) => {
       formation.start = req.body.start || formation.start;
       formation.end = req.body.end || formation.end;
       formation.save().then(() => {
+        User_Candidate.updatePercentage(req.user, 'formations');
         return res.status(200).send({ result: 'updated' });
       });
     })
@@ -592,6 +593,7 @@ User_Candidate.putXP = (req, res, next) => {
     candidate.experiences[0].internship = req.body.internship;
     candidate.experiences[0].current = req.body.current;
     candidate.experiences[0].save().then(() => {
+      User_Candidate.updatePercentage(req.user, 'experiences');
       return res.status(200).send({ result: 'updated' });
     }).catch(error => next(new BackError(error)));
   }).catch(errors => next(new BackError(errors)))
