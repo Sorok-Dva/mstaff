@@ -1,0 +1,20 @@
+<h3>Taux de complétion</h3>
+<br>
+{{#if this}}
+  <h5>Profil :</h5>
+  <ul>
+    <li>- Informations principales : {{this.profile.main}}%</li>
+    <li>- Description : {{this.profile.description}}%</li>
+    <li>- Photo : {{this.profile.photo}}%</li>
+  </ul>
+  <h5>Expériences : {{this.experiences}}%</h5>
+  <h5>Formations : {{this.formations}}%</h5>
+  <h5>Documents :</h5>
+  <ul>
+    <li>- Carte d'identité : {{this.documents.CNI}}%</li>
+    <li>- RIB : {{this.documents.RIB}}%</li>
+    <li>- Carte Vitale : {{this.documents.VIT}}%</li>
+    <li>- Diplôme : {{this.documents.DIP}}%</li>
+  </ul>
+{{/if}}
+<h3>Total : {{#if this}}{{this.total}}{{else}}0{{/if}}%</h3>
