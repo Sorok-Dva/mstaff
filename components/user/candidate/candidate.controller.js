@@ -544,8 +544,12 @@ function errorsSkills(skills) {
 // }
 
 function initBulks(bulks, candidate, req) {
+  bulks.experiences = [];
+  bulks.diplomas = [];
+  bulks.qualifications = [];
+  bulks.skills = [];
+
   if (bulks.createXp) {
-    bulks.experiences = [];
     req.body.experiences.forEach(experience => {
       bulks.experiences.push({
         name: experience.name,
@@ -561,15 +565,34 @@ function initBulks(bulks, candidate, req) {
     });
   }
   if (bulks.createDiplomas) {
-    //TODO
+    req.body.diplomas.forEach(diploma => {
+      bulks.diplomas.push({
+        name: diploma.name,
+        candidate_id: candidate.id,
+        start: diploma.start,
+        end: diploma.end
+      });
+    });
   }
   if (bulks.createQualifications) {
-    //TODO
+    req.body.qualifications.forEach(qualification => {
+      bulks.qualifications.push({
+        name: qualification.name,
+        candidate_id: candidate.id,
+        start: qualification.start,
+        end: qualification.end
+      });
+    });
   }
   if (bulks.createSkills) {
-    //TODO
+    req.body.skills.forEach( skill => {
+      bulks.skills.push({
+        candidate_id: candidate.id,
+        name: skill.name,
+        stars: skill.stars
+      });
+    });
   }
-
 }
 
 User_Candidate.ATSAddAll = (req, res, next) => {
@@ -611,13 +634,23 @@ User_Candidate.ATSAddAll = (req, res, next) => {
         where: { user_id: user.id }
       }, { transaction: t }).then(candidate => {
         initBulks(bulks, candidate, req);
-        if (!_.isEmpty(bulks.experiences)){
-          return Models.Experience.bulkCreate(bulks.experiences).then(() => {
-            return User_Candidate.updatePercentage(user, 'experiences');
-            // res.status(200).send({ result: 'created' });
-          }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
-        }
+        return Models.Experience.bulkCreate(bulks.experiences, {transaction: t}).then(() => {
+          return Models.CandidateFormation.bulkCreate(bulks.diplomas, {transaction: t}).then( () => {
+            return Models.CandidateQualification.bulkCreate(bulks.qualifications, {transaction: t}).then( () => {
+              return Models.CandidateSkill.bulkCreate(bulks.skills, {transaction: t}).then( () => {
+              })
+            })
+          })
+        })
+
+
+
+        // UPDATE PERCENTAGE
+        // User_Candidate.updatePercentage(user, 'experiences');
+        // User_Candidate.updatePercentage(user, 'formations');
       }, { transaction: t});
+    }).then(result => {
+      res.status(200).send({ result: 'created', entities: result });
     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
 
     // CREATION DES BULKS + REQUETES
