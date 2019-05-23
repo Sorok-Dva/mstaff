@@ -386,7 +386,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
   };
 
   if (!_.isNil(filterQuery.contractType)) query.include[0].where.contract_type = filterQuery.contractType;
-  if (!_.isNil(filterQuery.serviceId)) {a
+  if (!_.isNil(filterQuery.serviceId)) {
     /*query.include[0].where.services = {
       [Op.regexp]: Sequelize.literal(`"(${filterQuery.service})"`),
     };*/

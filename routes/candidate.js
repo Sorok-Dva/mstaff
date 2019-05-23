@@ -6,7 +6,6 @@ const multer  = require('multer');
 const path = require('path');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log
     mkdirp(`./public/uploads/avatars`, err => cb(err, './public/uploads/avatars/'));
   },
   filename: function (req, file, cb) {
