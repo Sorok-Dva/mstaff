@@ -32,7 +32,7 @@ function finalize(es_finess){
         _csrf
       }, (data) => {
         if (data.result === 'created'){
-          console.log(data.entities);
+          console.log(data.result);
         }
       })
     }

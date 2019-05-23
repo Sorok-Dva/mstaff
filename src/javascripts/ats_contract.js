@@ -1,6 +1,6 @@
 function selectTemplate(checkedSwitch){
   switch (checkedSwitch) {
-    case 'cdi':
+    case 'cdi-cdd':
       return 'cdiTime';
       break;
     case 'vacation':

@@ -8,6 +8,8 @@ const moment = require('moment');
 const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
 const Sequelize = require(`${__}/bin/sequelize`);
+const Mailer = require(`${__}/components/mailer`);
+
 /*const AvatarStorage = require('../../../helpers/avatar.storage');*/
 const path = require('path');
 const multer = require('multer');
@@ -633,7 +635,6 @@ User_Candidate.ATSAddAll = (req, res, next) => {
     createSkills: false,
     createWish: false
   };
-  let candidateId;
 
   if (req.body.experiences !== 'none') {
     errors.concat(errorsExperiences(req.body.experiences));
@@ -676,20 +677,26 @@ User_Candidate.ATSAddAll = (req, res, next) => {
                     return Models.Application.create({
                       name: 'Ma première candidature',
                       wish_id: wish[0].id,
-                      candidate_id: 'a',
+                      candidate_id: candidate.id,
                       ref_es_id: req.body.finess,
                       es_id: !_.isNil(es) ? es.id : null,
                       new: true
-                    }, { transaction: t });
+                    }, { transaction: t }).then( () => {
+                      return Models.User.findOne({
+                        where: { id: user.id}
+                      }, { transaction: t}).then(user => {
+                        User_Candidate.updatePercentage(user, 'identity');
+                        User_Candidate.updatePercentage(user, 'experiences');
+                        User_Candidate.updatePercentage(user, 'formations');
+                        Mailer.Main.sendUserVerificationEmail(user);
+                      })
+                    });
                   })
                 })
               })
             })
           })
         })
-        // UPDATE PERCENTAGE
-        // User_Candidate.updatePercentage(user, 'experiences');
-        // User_Candidate.updatePercentage(user, 'formations');
       }, { transaction: t});
     }).then(result => {
       res.status(200).send({ result: 'created', entities: result });

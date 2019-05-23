@@ -57,11 +57,11 @@ User.create = (req, res, next) => {
         es_id: esId || null
       })
     }).then( () => {
-      Mailer.Main.sendUserVerificationEmail(usr);
       if (req.xhr) {
         req.session.atsUserId = usr.id;
         return res.status(httpStatus.CREATED).send({ result: 'created' });
       } else {
+        Mailer.Main.sendUserVerificationEmail(usr);
         return res.redirect('login');
       }
     }).catch(error => {
