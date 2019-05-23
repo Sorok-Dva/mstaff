@@ -628,7 +628,6 @@ User_Candidate.ATSAddAll = (req, res, next) => {
     return res.status(400).send({ body: req.body, errors: errors });
   }
   else {
-
     return Sequelize.transaction(t => {
       return Models.Candidate.findOne({
         where: { user_id: user.id }
@@ -638,13 +637,29 @@ User_Candidate.ATSAddAll = (req, res, next) => {
           return Models.CandidateFormation.bulkCreate(bulks.diplomas, {transaction: t}).then( () => {
             return Models.CandidateQualification.bulkCreate(bulks.qualifications, {transaction: t}).then( () => {
               return Models.CandidateSkill.bulkCreate(bulks.skills, {transaction: t}).then( () => {
+                return  Models.Wish.create({
+                  candidate_id: candidate.id,
+                  name: req.body.name || 'Candidature sans nom',
+                  contract_type: req.body.contractType,
+                  posts: req.body.posts,
+                  services: !_.isNil(req.body.services) ? req.body.services : null,
+                  full_time: req.body.fullTime,
+                  part_time: req.body.partTime,
+                  day_time: req.body.dayTime,
+                  night_time: req.body.nightTime,
+                  liberal_cabinets: req.body.liberal,
+                  availability: req.body.availability,
+                  start: req.body.start,
+                  end: req.body.end,
+                  lat: req.body.lat,
+                  lon: req.body.lon,
+                  geolocation: !!req.body.lat,
+                  es_count: req.body.es_count
+                })
               })
             })
           })
         })
-
-
-
         // UPDATE PERCENTAGE
         // User_Candidate.updatePercentage(user, 'experiences');
         // User_Candidate.updatePercentage(user, 'formations');
@@ -666,62 +681,6 @@ User_Candidate.ATSAddAll = (req, res, next) => {
     //   }
     // });
   }
-};
-
-User_Candidate.ATSAddExperiences = (req, res, next) => {
-
-  //TODO verif si req.body.experiences empty => next();
-
-
-  let user = {};
-  user.id = req.session.atsUserId;
-
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).send({ body: req.body, errors: errors.array() });
-  }
-
-  console.log('EXPERIENCES LENGTH', req.body.experiences.length);
-  return Models.Candidate.findOne({
-    where: { user_id: user.id }
-  }).then(candidate => {
-    let experiences = [];
-    req.body.experiences.forEach(experience => {
-      experiences.push({
-        name: experience.name,
-        candidate_id: candidate.id,
-        poste_id: parseInt(experience.post_id),
-        service_id: parseInt(experience.service_id),
-        internship: experience.internship,
-        liberal: experience.liberal || null,
-        current: experience.current,
-        start: experience.start,
-        end: experience.end || null
-      });
-    });
-    Models.Experience.bulkCreate(experiences).then(() => {
-      User_Candidate.updatePercentage(user, 'experiences');
-      res.status(200).send({ result: 'created' });
-    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
-  });
-
-};
-
-User_Candidate.ATSAddDiplomas = (req, res, next) => {
-
-};
-
-User_Candidate.ATSAddQualifications = (req, res, next) => {
-
-};
-
-User_Candidate.ATSAddSkills = (req, res, next) => {
-
-};
-
-User_Candidate.ATSAddWish = (req, res, next) => {
-
 };
 
 // ----------------------------------------------------------------
