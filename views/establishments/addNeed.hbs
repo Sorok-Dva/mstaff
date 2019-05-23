@@ -157,6 +157,7 @@
       {{/if}}
       {{#if need.service}}
         need.filterQuery.service = '{{need.service}}';
+        need.filterQuery.serviceId = $('#selectServiceType').find('option[text="{{need.service}}"]').val();
       {{/if}}
       {{#if need.diploma}}
         need.filterQuery.diploma = '{{need.diploma}}';
