@@ -51,7 +51,6 @@ Authentication.ensureIsAdmin = (req, res, next) => {
     if (['Admin'].includes(req.user.role) || ['Admin'].includes(req.session.role)) {
       next();
     } else {
-      console.log(req.user, req.session);
       return next(new BackError('Vous n\'avez pas accès à cette page.', httpsStatus.FORBIDDEN));
     }
   } else {
