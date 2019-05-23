@@ -566,7 +566,6 @@ slider.noUiSlider.on('slide', function (){
 // ------------------------------------- FINAL STEP ------------------------------------- //
 
 let createRecap = () => {
-  console.log('createRecap');
   $('#recapContractType').find('h3').html(application.contractType.value);
   $('#recapActivityType').hide().find('h3').html('');
   $('#recapHourType').hide();
