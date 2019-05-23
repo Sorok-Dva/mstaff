@@ -6,8 +6,7 @@ $(`#post`).autocomplete({
   minLength: 2,
   select: (event, ui) => {
     need.post = ui.item.label;
-    if (need.firstSearch) return showContractModal();
-    else return searchCandidates();
+    return searchCandidates();
   },
 });
 
@@ -35,20 +34,17 @@ let searchCandidates = () => {
   }
   // }
   need.post = need.post || $('input#post').val();
-  if (need.firstSearch) {
-    return showContractModal();
-  } else {
-    $('#baseResult').hide();
-    $('#paginationContainer').hide();
-    $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
-    $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
-      loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
-        $('#resetSearch').show();
-        $('#searchResult').html(html).show();
-        $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
-      });
-    }).catch(error => errorsHandler(error));
-  }
+  $('#baseResult').hide();
+  $('#paginationContainer').hide();
+  $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
+  $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
+    data.partials = ['candidatePercentageTooltip'];
+    loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
+      $('#resetSearch').show();
+      $('#searchResult').html(html).show();
+      $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
+    });
+  }).catch(error => errorsHandler(error));
 };
 
 let showServiceModal = () => {
@@ -94,8 +90,8 @@ let resetSearch = () => {
   $('#baseResult').show();
   $('#paginationContainer').show();
   $('#btnContractType').empty();
+  $('#btnDiplomaType').empty();
   $('#btnTimeType').empty();
-  need.firstSearch = true;
   $('#resetSearch').hide();
 };
 
@@ -213,6 +209,7 @@ let showArchived = () =>{
     }
     $.post(`/api/es/${esId}/candidates/archived/`, { _csrf }, (data) => {
       $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
+      data.partials = ['candidatePercentageTooltip'];
       loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
         $('#baseResult').hide();
         $('#searchResult').hide();
@@ -244,6 +241,7 @@ let showFavorites = () => {
     }
     $.post(`/api/es/${esId}/candidates/favorites/`, { _csrf }, (data) => {
       $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
+      data.partials = ['candidatePercentageTooltip'];
       loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
         $('#baseResult').hide();
         $('#searchResult').hide();
@@ -271,11 +269,6 @@ let showFavorites = () => {
 $(document).ready(() => {
   need._csrf = _csrf;
 
-  $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
-    loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
-      $('#baseResult').empty().html(html);
-    });
-  }).catch(errors => errorsHandler(errors));
   if(Math.round(baseCVCount / size) > 0) {
     $('.pagination').twbsPagination({
       totalPages: Math.round(baseCVCount / size),
@@ -289,6 +282,7 @@ $(document).ready(() => {
       onPageClick: function (event, page) {
         $('#baseResult').empty().html(loadingCandidateHTML);
         $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
+          data.partials = ['candidatePercentageTooltip'];
           loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
             $('#baseResult').empty().html(html);
           });

@@ -7,7 +7,7 @@ const rateLimit = require('express-rate-limit');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
-  max: 3, // start blocking after 3 requests
+  max: 10, // start blocking after 3 requests
   handler: (req, res, next) => {
     req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réesayer dans 15 minutes.');
     return res.redirect('/login');

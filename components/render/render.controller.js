@@ -41,26 +41,7 @@ Render.Redirect = (req, res) => res.redirect('/');
 
 Render.Logout = (req, res) => req.logout() + req.session.destroy() + res.redirect('/');
 
-Render.Register = (req, res) => {
-  if (req.params.esCode) {
-    Models.Establishment.findOne({
-      attributes: ['id', 'name', 'code'],
-      where: {
-        code: req.params.esCode
-      }
-    }).then(es => {
-      if (!es) {
-        req.flash('error_msg', 'Code ES invalide.');
-        return res.redirect('/register');
-      } else {
-        es = es.dataValues;
-        res.render('users/register', { layout: 'onepage', es });
-      }
-    });
-  } else {
-    res.render('users/register', { layout: 'onepage' });
-  }
-};
+Render.Register = (req, res) => res.render('users/register', { layout: 'onepage' });
 
 Render._404 = (req, res) => res.render('error', { error: 'Lien invalide' });
 

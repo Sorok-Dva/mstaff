@@ -44,7 +44,7 @@
         <div class="author">
           <div style="padding-top: 10px;">
             <div class="avatar avatar-xxl">
-              <img id="candidateAvatar" {{#if usr.photo}} src="/static/uploads/candidates/avatars/{{usr.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
+              <img id="candidateAvatar" {{#if usr.photo}} src="/static/uploads/avatars/{{usr.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
         </div>
         <form action="/profile/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">

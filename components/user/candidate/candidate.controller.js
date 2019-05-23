@@ -12,18 +12,8 @@ const Sequelize = require(`${__}/bin/sequelize`);
 const path = require('path');
 const multer = require('multer');
 
+
 const User_Candidate = {};
-/*const storage = AvatarStorage({
-  square: true,
-  responsive: true,
-  greyscale: true,
-  quality: 90
-});*/
-const limits = {
-  files: 1, // allow only 1 file per request
-  fileSize: 1024 * 1024, // 1 MB (max file size)
-};
-const allowedMimes = ['image/jpeg', 'image/png'];
 
 User_Candidate.getProfile = (req, res, next) => {
   Models.Candidate.findOne({
@@ -67,6 +57,7 @@ User_Candidate.getProfile = (req, res, next) => {
       as: 'documents'
     }]
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     candidate.views += 1;
     candidate.save();
     return res.status(200).send(candidate);
@@ -84,6 +75,7 @@ User_Candidate.addVideo = (req, res, next) => {
   }
 
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     if (!_.isNil(candidate.video)) {
       mkdirIfNotExists(`${__}/public/uploads/candidates/videos/`);
       if (fs.existsSync(`${__}/public/uploads/candidates/videos/${candidate.video}`)) {
@@ -105,6 +97,7 @@ User_Candidate.uploadDocument = (req, res, next) => {
   let file = Object.values(req.files)[0][0];
   let candidate;
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
+    if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
     candidate = result;
     return Models.CandidateDocument.findOne({ where: { name: file.originalname, type: file.fieldname } });
   }).then(document => {
@@ -131,6 +124,7 @@ User_Candidate.uploadDocument = (req, res, next) => {
 User_Candidate.deleteDocument = (req, res, next) => {
   let candidate;
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
+    if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
     candidate = result;
     return Models.CandidateDocument.findOne({ where: { id: req.params.id } });
   }).then(document => {
@@ -193,6 +187,7 @@ User_Candidate.viewProfile = (req, res, next) => {
       as: 'wishes'
     }]
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
   }).catch(error => next(new BackError(error)));
 };
@@ -214,14 +209,15 @@ User_Candidate.EditProfile = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).send({ body: req.body, errors: errors.array() });
+    return res.render('users/edit', { body: req.body, a: { main: 'profile' }, errors: errors.array() });
   }
 
   return Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+    if (_.isNil(user)) return next(new BackError('Utilisateur introuvable', 404));
     Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+      if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
-      user.email = req.body.email;
       user.birthday = req.body.birthday;
       user.postal_code = req.body.postal_code;
       user.town = req.body.town;
@@ -232,7 +228,17 @@ User_Candidate.EditProfile = (req, res, next) => {
         candidate.save().then(() => {
           req.flash('success_msg', 'Vos informations ont été sauvegardées.');
           User_Candidate.updatePercentage(req.user, 'identity');
-          return res.redirect('/profile/edit');
+          if (req.body.email !== user.email) {
+            Models.User.findOne({ where: { email: req.body.email } }).then(verifEmail => {
+              if (!_.isNil(verifEmail)) {
+                req.flash('error_msg', 'Cet adresse e-mail est déjà utilisée.');
+              } else {
+                user.email = req.body.email;
+                user.save();
+              }
+              return res.redirect('/profile/edit');
+            });
+          } else return res.redirect('/profile/edit');
         });
       });
     })
@@ -241,10 +247,20 @@ User_Candidate.EditProfile = (req, res, next) => {
 
 User_Candidate.UploadImageProfile = (req, res, next) => {
   Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+    if (!_.isNil(user.photo)) {
+      if (fs.existsSync(`./public/uploads/avatars/${user.photo}`)) {
+        fs.unlinkSync(`./public/uploads/avatars/${user.photo}`)
+      }
+    }
     user.photo = req.body.filename;
     user.save().then(() => {
+      User_Candidate.updatePercentage(req.user, 'photo');
       req.flash('success_msg', 'Votre photo a été sauvegardée.');
-      return res.redirect('/profile/edit');
+      if (req.xhr) {
+        return res.status(200).send('saved');
+      } else {
+        return res.redirect('/profile/edit');
+      }
     });
   }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
 };
@@ -255,7 +271,6 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
     include: [{
       model: Models.Experience, // Experiences Associations (user.candidate.experiences)
       as: 'experiences',
-      required: true,
       include: [{
         model: Models.Service,
         as: 'service',
@@ -271,6 +286,7 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
       as: 'formations'
     }]
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Post.findAll().then(posts => {
       Models.Service.findAll().then(services => {
         return res.render('candidates/formations', { candidate, posts, services, a: { main: 'cv' } })
@@ -294,6 +310,7 @@ User_Candidate.getKnowledge = (req, res, next) => {
       as: 'softwares'
     }]
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     render.candidate = candidate;
     return Models.Skill.findAll();
   }).then(skills => {
@@ -314,10 +331,10 @@ User_Candidate.getDocuments = (req, res, next) => {
     where: { user_id: req.user.id },
     include: {
       model: Models.CandidateDocument,
-      as: 'documents',
-      required: true
+      as: 'documents'
     }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     render.candidate = candidate;
     return res.render('candidates/documents', render)
   }).catch(error => next(new BackError(error)));
@@ -356,7 +373,7 @@ User_Candidate.getXpById = (req, res, next) => {
       required: true
     }
   }).then(candidate => {
-    if (!candidate) return res.status(400).send({ errors: 'Candidat ou expérience introuvable.' });
+    if (_.isNil(candidate)) return next(new BackError('Experience introuvable', 404));
     res.status(200).send(candidate.experiences[0]);
   }).catch(error => next(new BackError(error)));
 };
@@ -365,8 +382,10 @@ User_Candidate.removeXP = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.Experience.findOne(opts).then(experience => {
+      if (_.isNil(experience)) return next(new BackError('Experience introuvable', 404));
       experience.destroy().then(() => User_Candidate.updatePercentage(req.user, 'experiences'));
       res.status(200).send({ done: true });
     }).catch(error => next(error));
@@ -377,8 +396,10 @@ User_Candidate.getFormationById = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateFormation.findOne(opts).then(formation => {
+      if (_.isNil(formation)) return next(new BackError('Formation introuvable', 404));
       res.status(200).send({ formation });
     }).catch(error => next(error));
   });
@@ -388,8 +409,10 @@ User_Candidate.removeFormation = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateFormation.findOne(opts).then(formation => {
+      if (_.isNil(formation)) return next(new BackError('Formation introuvable', 404));
       formation.destroy().then(() => User_Candidate.updatePercentage(req.user, 'formations'));
       res.status(200).send({ done: true });
     }).catch(error => next(error));
@@ -400,8 +423,10 @@ User_Candidate.getDiplomaById = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateQualification.findOne(opts).then(diploma => {
+      if (_.isNil(diploma)) return next(new BackError('Diplôme introuvable', 404));
       res.status(200).send({ diploma });
     }).catch(error => next(error));
   });
@@ -411,8 +436,10 @@ User_Candidate.removeDiploma = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     let opts = { where: { id: req.params.id, candidate_id: candidate.id } };
     Models.CandidateQualification.findOne(opts).then(diploma => {
+      if (_.isNil(diploma)) return next(new BackError('Diplôme introuvable', 404));
       diploma.destroy();
       res.status(200).send({ done: true });
     }).catch(error => next(error));
@@ -433,6 +460,7 @@ User_Candidate.AddExperience = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Utilisateur introuvable', 404));
     Models.Experience.create({
       name: req.body.name,
       candidate_id: candidate.id,
@@ -674,6 +702,7 @@ User_Candidate.AddFormation = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id },
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.CandidateFormation.create({
       name: req.body.name,
       candidate_id: candidate.id,
@@ -696,6 +725,7 @@ User_Candidate.AddDiploma = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.CandidateQualification.create({
       name: req.body.name,
       candidate_id: candidate.id,
@@ -715,11 +745,12 @@ User_Candidate.putFormation = (req, res, next) => {
   }
 
   return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.CandidateFormation.findOne({ where: { id: req.params.id, candidate_id: candidate.id } }).then(formation => {
       if (!formation) return res.status(400).send({ errors: 'Formation not found' });
-      formation.name = req.body.name;
-      formation.start = req.body.start;
-      formation.end = req.body.end;
+      formation.name = req.body.name || formation.name;
+      formation.start = req.body.start || formation.start;
+      formation.end = req.body.end || formation.end;
       formation.save().then(() => {
         return res.status(200).send({ result: 'updated' });
       });
@@ -735,6 +766,7 @@ User_Candidate.putDiploma = (req, res, next) => {
   }
 
   return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.CandidateQualification.findOne({ where: { id: req.params.id, candidate_id: candidate.id } }).then(diploma => {
       if (!diploma) return res.status(400).send({ errors: 'Diplôme introuvable.' });
       diploma.name = req.body.name;
@@ -886,6 +918,7 @@ User_Candidate.addWish = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Wish.create({
       candidate_id: candidate.id,
       name: req.body.name || 'Candidature sans nom',
@@ -933,10 +966,11 @@ User_Candidate.getWish = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Wish.findOne({
-      where: { id: req.params.id }
+      where: { id: req.params.id, candidate_id: candidate.id }
     }).then(wish => {
-      if (!wish) return res.status(400).send({ body: req.body, error: 'Not exists' });
+      if (!wish) return res.status(404).send({ body: req.body, error: 'Souhait introuvable.' });
       res.status(201).send({ get: true, wish })
     })
   })
@@ -966,6 +1000,7 @@ User_Candidate.getEditWish = (req, res, next) => {
       }
     }]
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     render.candidate = candidate;
     render.wish = candidate.wishes[0];
     render.applications = candidate.applications;
@@ -981,6 +1016,7 @@ User_Candidate.getEditWish = (req, res, next) => {
 
 User_Candidate.editWish = (req, res, next) => {
   return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Wish.findOne({
       where: { id: req.params.id }
     }).then(wish => {
@@ -1029,9 +1065,11 @@ User_Candidate.editWish = (req, res, next) => {
 
 User_Candidate.refreshWish = (req, res, next) => {
   return Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Wish.findOne({
       where: {
         id: req.params.id,
+        candidate_id: candidate.id,
         renewed_date: {
           [Op.lte]: moment().subtract(1, 'months').toDate()
         }
@@ -1055,6 +1093,7 @@ User_Candidate.removeWish = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Wish.findOne({
       where: { id: req.params.id, candidate_id: candidate.id }
     }).then(wish => {
@@ -1067,6 +1106,7 @@ User_Candidate.removeWish = (req, res, next) => {
 User_Candidate.updatePercentage = (user, type) => {
   if (_.isNil(type)) return false;
   Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return false;
     let { percentage } = candidate;
     if (_.isNil(percentage)) percentage = {};
     switch (type) {
@@ -1087,7 +1127,7 @@ User_Candidate.updatePercentage = (user, type) => {
         break;
       case 'photo':
         if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };
-        if (candidate.photo) {
+        if (user.photo) {
           percentage.profile.photo = 10;
         } else percentage.profile.photo = 0;
         candidate.percentage = percentage;
@@ -1137,6 +1177,7 @@ User_Candidate.updatePercentage = (user, type) => {
 };
 
 User_Candidate.updateTotalPercentage = (candidate, percentage) => {
+  if (_.isNil(candidate)) return false;
   if (Object.keys(percentage).length < 1) return false;
   if ('total' in percentage) delete percentage.total;
   percentage.total = 0;
@@ -1159,10 +1200,24 @@ User_Candidate.viewConferences = (req, res, next) => {
       model: Models.User
     }
   }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Conference.findAll({ where: { candidate_id: candidate.id } }).then(conferences => {
       let a = { main: 'conferences' };
       return res.render('candidates/calendar', { a, conferences });
     })
+  })
+};
+
+User_Candidate.viewUpload = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: {
+      user_id: req.user.id
+    }, include: {
+      model: Models.User
+    }
+  }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    return res.render('candidates/upload', { candidate, layout: 'onepage' });
   })
 };
 

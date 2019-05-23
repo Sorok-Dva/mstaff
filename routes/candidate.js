@@ -1,10 +1,13 @@
 const { Authentication, HTTPValidation } = require('../middlewares/index');
+const { BackError } = require('../helpers/back.error');
 const { User } = require('../components');
+const mkdirp = require('mkdirp');
 const multer  = require('multer');
 const path = require('path');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/candidates/avatars/')
+    console.log
+    mkdirp(`./public/uploads/avatars`, err => cb(err, './public/uploads/avatars/'));
   },
   filename: function (req, file, cb) {
     req.body.filename = Date.now() + '.png';
@@ -15,7 +18,7 @@ const upload = multer({ storage: storage,
   fileFilter: function (req, file, callback) {
     let ext = path.extname(file.originalname);
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
-      return callback(new Error('Only images are allowed'))
+      return callback(new BackError('Seul les formats .png, .jpg et .jpeg sont autorisés.', 403))
     }
     callback(null, true)
   },
@@ -33,6 +36,14 @@ const router = express.Router();
 router.get('/profile',
   Authentication.ensureIsCandidate,
   User.Candidate.viewProfile);
+
+/**
+ * @Route('/welcome') GET;
+ * Show upload page.
+ */
+router.get('/welcome',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewUpload);
 
 /**
  * @Route('/profile/edit') GET | POST;
