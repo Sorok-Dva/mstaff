@@ -67,6 +67,10 @@ function notify(error){
 
 function saveDatas(){
   candidateDatas.wish.contractType = $('#contractChoices input:checked').prop('name');
+  candidateDatas.wish.fullTime = false;
+  candidateDatas.wish.partTime = false;
+  candidateDatas.wish.dayTime = false;
+  candidateDatas.wish.nightTime = false;
 };
 
 function init_contract(){

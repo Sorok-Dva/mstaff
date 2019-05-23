@@ -534,20 +534,28 @@ function errorsSkills(skills) {
   return errors;
 }
 
-// function errorsWish(wish){
-//   let errors = [];
-//   if (wish.name.length < 185)
-//     errors.push('name doit avoir au minimum 3 caractères');
-//   else if (_.isNaN(skill.stars))
-//     errors.push('stars doit être numérique');
-//   return errors;
-// }
+function errorsWish(wish){
+  let errors = [];
+
+  if (!isBoolean(wish.fullTime))
+    errors.push('fullTime doit être un booléen');
+  else if (!isBoolean(wish.partTime))
+    errors.push('partTime doit être un booléen');
+  else if (!isBoolean(wish.dayTime))
+    errors.push('dayTime doit être un booléen');
+  else if (!isBoolean(wish.nightTime))
+    errors.push('nightTime doit être un booléen');
+  else if (moment(wish.start).isAfter(wish.end))
+    errors.push('la date de départ doit être antérieur à la date courante et d\'arrivée');
+  return errors;
+}
 
 function initBulks(bulks, candidate, req) {
   bulks.experiences = [];
   bulks.diplomas = [];
   bulks.qualifications = [];
   bulks.skills = [];
+  bulks.wish = [];
 
   if (bulks.createXp) {
     req.body.experiences.forEach(experience => {
@@ -593,6 +601,22 @@ function initBulks(bulks, candidate, req) {
       });
     });
   }
+  if (bulks.createWish){
+    bulks.wish.push({
+      candidate_id: candidate.id,
+      name: 'Ma première candidature',
+      contract_type: req.body.wish.contractType,
+      posts: req.body.wish.post,
+      services: !_.isNil(req.body.wish.services) ? req.body.wish.services : null,
+      full_time: req.body.wish.fullTime,
+      part_time: req.body.wish.partTime,
+      day_time: req.body.wish.dayTime,
+      night_time: req.body.wish.nightTime,
+      start: req.body.wish.start,
+      end: req.body.wish.end,
+      es_count: 1
+    });
+  }
 }
 
 User_Candidate.ATSAddAll = (req, res, next) => {
@@ -602,11 +626,14 @@ User_Candidate.ATSAddAll = (req, res, next) => {
 
   let errors = [];
   let bulks = {
+    createContact: false,
     createXp: false,
     createDiplomas: false,
     createQualifications: false,
-    createSkills: false
+    createSkills: false,
+    createWish: false
   };
+  let candidateId;
 
   if (req.body.experiences !== 'none') {
     errors.concat(errorsExperiences(req.body.experiences));
@@ -624,6 +651,11 @@ User_Candidate.ATSAddAll = (req, res, next) => {
     errors.concat(errorsSkills(req.body.skills));
     bulks.createSkills = true;
   }
+  if (req.body.wish !== 'none'){
+    errors.concat(errorsWish(req.body.wish));
+    bulks.createWish = true;
+  }
+
   if (errors.length > 0) {
     return res.status(400).send({ body: req.body, errors: errors });
   }
@@ -633,28 +665,23 @@ User_Candidate.ATSAddAll = (req, res, next) => {
         where: { user_id: user.id }
       }, { transaction: t }).then(candidate => {
         initBulks(bulks, candidate, req);
-        return Models.Experience.bulkCreate(bulks.experiences, {transaction: t}).then(() => {
-          return Models.CandidateFormation.bulkCreate(bulks.diplomas, {transaction: t}).then( () => {
-            return Models.CandidateQualification.bulkCreate(bulks.qualifications, {transaction: t}).then( () => {
-              return Models.CandidateSkill.bulkCreate(bulks.skills, {transaction: t}).then( () => {
-                return  Models.Wish.create({
-                  candidate_id: candidate.id,
-                  name: req.body.name || 'Candidature sans nom',
-                  contract_type: req.body.contractType,
-                  posts: req.body.posts,
-                  services: !_.isNil(req.body.services) ? req.body.services : null,
-                  full_time: req.body.fullTime,
-                  part_time: req.body.partTime,
-                  day_time: req.body.dayTime,
-                  night_time: req.body.nightTime,
-                  liberal_cabinets: req.body.liberal,
-                  availability: req.body.availability,
-                  start: req.body.start,
-                  end: req.body.end,
-                  lat: req.body.lat,
-                  lon: req.body.lon,
-                  geolocation: !!req.body.lat,
-                  es_count: req.body.es_count
+        return Models.Experience.bulkCreate(bulks.experiences, { transaction: t }).then(() => {
+          return Models.CandidateFormation.bulkCreate(bulks.diplomas, { transaction: t }).then( () => {
+            return Models.CandidateQualification.bulkCreate(bulks.qualifications, { transaction: t }).then( () => {
+              return Models.CandidateSkill.bulkCreate(bulks.skills, { transaction: t }).then( () => {
+                return  Models.Wish.bulkCreate(bulks.wish, { transaction: t }).then(wish => {
+                  return Models.Establishment.findOne({
+                    where: { finess: req.body.finess }
+                  }, { transaction: t }).then(es => {
+                    return Models.Application.create({
+                      name: 'Ma première candidature',
+                      wish_id: wish[0].id,
+                      candidate_id: 'a',
+                      ref_es_id: req.body.finess,
+                      es_id: !_.isNil(es) ? es.id : null,
+                      new: true
+                    }, { transaction: t });
+                  })
                 })
               })
             })
@@ -666,20 +693,15 @@ User_Candidate.ATSAddAll = (req, res, next) => {
       }, { transaction: t});
     }).then(result => {
       res.status(200).send({ result: 'created', entities: result });
-    }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
-
-    // CREATION DES BULKS + REQUETES
-    // return Models.Candidate.findOne({
-    //   where: { user_id: user.id }
-    // }).then(candidate => {
-    //   initBulks(bulks, candidate, req);
-    //   if (!_.isEmpty(bulks.experiences)){
-    //     Models.Experience.bulkCreate(bulks.experiences).then(() => {
-    //       User_Candidate.updatePercentage(user, 'experiences');
-    //       res.status(200).send({ result: 'created' });
-    //     }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
-    //   }
-    // });
+    }).catch(error => {
+      Models.Candidate.destroy({
+        where: { user_id: user.id }
+      }).then( () => {
+        Models.User.destroy({
+          where: { id: user.id }
+        }).then( () => res.status(400).send({ body: req.body, sequelizeError: error }))
+      });
+    });
   }
 };
 

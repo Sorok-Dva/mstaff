@@ -19,6 +19,7 @@ router.get('/register',
     User.Main.create);
 
 router.post('/ats/add/all',
+  Authentication.ensureIsNotAuthenticated,
   User.Candidate.ATSAddAll
 );
 
