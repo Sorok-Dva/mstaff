@@ -552,6 +552,16 @@ function errorsWish(wish){
   return errors;
 }
 
+function initPercentage(candidate, bulks){
+  let percentage = {};
+  percentage.profile = { main: 0, description: 0, photo: 0 };
+  percentage.profile.main = 20;
+  bulks.createXp ? percentage.experiences = 10 : percentage.experiences = 0;
+  bulks.createDiplomas ? percentage.formations = 10 : percentage.formations = 0;
+  percentage.total = percentage.main + percentage.experiences + percentage.formations;
+  User_Candidate.updateTotalPercentage(candidate, percentage);
+}
+
 function initBulks(bulks, candidate, req) {
   bulks.experiences = [];
   bulks.diplomas = [];
@@ -666,6 +676,7 @@ User_Candidate.ATSAddAll = (req, res, next) => {
         where: { user_id: user.id }
       }, { transaction: t }).then(candidate => {
         initBulks(bulks, candidate, req);
+        initPercentage(candidate, bulks);
         return Models.Experience.bulkCreate(bulks.experiences, { transaction: t }).then(() => {
           return Models.CandidateFormation.bulkCreate(bulks.diplomas, { transaction: t }).then( () => {
             return Models.CandidateQualification.bulkCreate(bulks.qualifications, { transaction: t }).then( () => {
@@ -684,11 +695,8 @@ User_Candidate.ATSAddAll = (req, res, next) => {
                     }, { transaction: t }).then( () => {
                       return Models.User.findOne({
                         where: { id: user.id}
-                      }, { transaction: t}).then(user => {
-                        User_Candidate.updatePercentage(user, 'identity');
-                        User_Candidate.updatePercentage(user, 'experiences');
-                        User_Candidate.updatePercentage(user, 'formations');
-                        Mailer.Main.sendUserVerificationEmail(user);
+                      }, { transaction: t}).then(item => {
+                        user = item;
                       })
                     });
                   })
@@ -699,6 +707,7 @@ User_Candidate.ATSAddAll = (req, res, next) => {
         })
       }, { transaction: t});
     }).then(result => {
+      Mailer.Main.sendUserVerificationEmail(user);
       res.status(200).send({ result: 'created', entities: result });
     }).catch(error => {
       Models.Candidate.destroy({
