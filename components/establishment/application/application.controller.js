@@ -128,7 +128,7 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
     subQuery: false,
     attributes: { exclude: ['lat', 'lon'] },
     group: ['Wish.candidate_id'],
-    order: Sequelize.literal('`Wish->Candidate`.`is_available` DESC'),
+    order: Sequelize.literal('`Wish->Candidate->User`.`createdAt` DESC'),
     include: [{
       model: Models.Wish,
       required: true,
@@ -302,7 +302,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
   let query = {
     where: { es_id: filterQuery.establishments },
     attributes: { exclude: ['lat', 'lon'] },
-    order: Sequelize.literal('`Wish->Candidate`.`is_available` DESC'),
+    order: Sequelize.literal('`Wish->Candidate->User`.`createdAt` DESC'),
     group: ['Wish->Candidate.id'],
     include: [{
       model: Models.Wish,
