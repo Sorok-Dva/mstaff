@@ -11,6 +11,9 @@ const layout = 'admin';
 const BackOffice_Group = {};
 
 BackOffice_Group.EditLinkES = (req, res, next) => {
+  if (!req.body.selectInput || !req.params.id) {
+    return res.status(400).json({ status: 'invalid input' })
+  }
   return Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(esGroup => {
     if (esGroup.length !== 0) {
       Models.EstablishmentGroups.destroy({ where: { id_group: req.params.id } });
