@@ -14,6 +14,22 @@ function legalListener(){
 
 };
 
+function notify(error){
+  switch (error) {
+    case 'creationError':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Erreur :',
+        message: `Une erreur est survenue durant la création de votre compte.`
+      });
+
+      break
+  }
+  return false;
+};
+
+
 function finalize(){
   let _csrf = $('meta[name="csrf-token"]').attr('content');
 
@@ -30,11 +46,11 @@ function finalize(){
         _csrf
       }, (data) => {
         if (data.result === 'created'){
-          //TODO redirect page login
+          $(location).attr('href',"https://mstaff.co/login");
         }
-      })
+      }).catch(() => notify('creationError'));
     }
-  }).catch(error => errorsHandler(error));
+  }).catch(() => notify('creationError'));
 };
 
 

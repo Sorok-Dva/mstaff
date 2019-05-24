@@ -708,14 +708,16 @@ User_Candidate.ATSAddAll = (req, res, next) => {
       }, { transaction: t});
     }).then(result => {
       Mailer.Main.sendUserVerificationEmail(user);
-      res.status(200).send({ result: 'created', entities: result });
+      return res.status(200).send({ result: 'created', entities: result });
     }).catch(error => {
       Models.Candidate.destroy({
         where: { user_id: user.id }
       }).then( () => {
         Models.User.destroy({
           where: { id: user.id }
-        }).then( () => res.status(400).send({ body: req.body, sequelizeError: error }))
+        }).then( () => {
+          return res.status(400).send({ body: req.body, sequelizeError: error })
+        })
       });
     });
   }
