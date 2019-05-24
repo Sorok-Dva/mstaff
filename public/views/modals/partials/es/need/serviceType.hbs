@@ -27,6 +27,7 @@
 
     $('.modal#serviceType').modal('hide');
     $('#btnServiceType').html(need.filterQuery.service);
+    $('#btnServiceType').parent().removeClass('btn-outline-info').addClass('btn-info');
 
     /*if (need.firstSearch) return showContractModal();
     else */return searchCandidates();

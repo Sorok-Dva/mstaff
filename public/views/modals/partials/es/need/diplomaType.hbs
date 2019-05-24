@@ -26,6 +26,7 @@
 
     $('.modal#diplomaType').modal('hide');
     $('#btnDiplomaType').html(need.filterQuery.diploma);
+    $('#btnDiplomaType').parent().removeClass('btn-outline-info').addClass('btn-info');;
 
     return searchCandidates();
   });

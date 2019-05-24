@@ -90,8 +90,13 @@ let resetSearch = () => {
   $('#baseResult').show();
   $('#paginationContainer').show();
   $('#btnContractType').empty();
+  $('#btnServiceType').empty();
+  $('#btnServiceType').parent().removeClass('btn-info').addClass('btn-outline-info');
+  $('#btnContractType').parent().removeClass('btn-info').addClass('btn-outline-info');
   $('#btnDiplomaType').empty();
+  $('#btnDiplomaType').parent().removeClass('btn-info').addClass('btn-outline-info');
   $('#btnTimeType').empty();
+  $('#btnTimeType').parent().removeClass('btn-info').addClass('btn-outline-info');
   $('#resetSearch').hide();
 };
 
