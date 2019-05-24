@@ -10,8 +10,18 @@ HTTPValidation.create = [
     .isLength({ min: 8 }).withMessage('must be at least 8 chars long')
     .matches(/\d/).withMessage('must contain a number'),
   check('country').exists(),
-  check('firstName').exists().isAlpha().withMessage(`mustn't contain numbers.`),
-  check('lastName').exists().isAlpha().withMessage(`mustn't contain numbers.`),
+  check('firstName').exists().custom( (value) => {
+    let regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+    if (!regName.test(value)){
+      throw new Error('Le prénom doit contenir uniquement des caractères alphabétiques')
+    }
+  }),
+  check('lastName').exists().custom( (value) => {
+    let regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+    if (!regName.test(value)){
+      throw new Error('Le nom doit contenir uniquement des caractères alphabétiques')
+    }
+  }),
   check('phone').exists().isLength({ min: 10, max: 14 }).withMessage('Invalid phone number')
 ];
 
