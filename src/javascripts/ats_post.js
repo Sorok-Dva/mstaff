@@ -111,6 +111,10 @@ function reload_post(){
   $('#InputServices').val(candidateDatas.wish.services).trigger('change');
 };
 
-init_post();
-if(candidateDatas.wish.post)
-  reload_post();
+$(document).ready(() => {
+  init_post();
+  if(candidateDatas.wish.post)
+    reload_post();
+});
+
+

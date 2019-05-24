@@ -162,6 +162,10 @@ function init_diploma(){
   });
 };
 
-init_diploma();
-if(candidateDatas.diplomas.length > 0)
-  generateDatasRecap();
+
+$(document).ready(() => {
+  init_diploma();
+  if(candidateDatas.diplomas.length > 0)
+    generateDatasRecap();
+});
+

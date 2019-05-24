@@ -39,4 +39,7 @@ function finalize(es_finess){
   }).catch(error => errorsHandler(error));
 };
 
-legalListener();
+
+$(document).ready(() => {
+  legalListener();
+});

@@ -54,4 +54,6 @@ function recapListener(){
   });
 };
 
-recapListener();
+$(document).ready(() => {
+  recapListener();
+});

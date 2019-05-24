@@ -163,6 +163,9 @@ function init_qualification(){
 
 };
 
-init_qualification();
-if(candidateDatas.qualifications.length > 0)
-  generateDatasRecap();
+
+$(document).ready(() => {
+  init_qualification();
+  if(candidateDatas.qualifications.length > 0)
+    generateDatasRecap();
+});

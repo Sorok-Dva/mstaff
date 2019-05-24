@@ -203,4 +203,6 @@ function init_identity(){
   });
 };
 
-init_identity();
+$(document).ready(() => {
+  init_identity();
+});

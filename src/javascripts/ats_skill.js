@@ -170,6 +170,9 @@ function init_skill(){
   createSkillList(databaseDatas.allSkills, $('#skill'));
 };
 
-init_skill();
-if(candidateDatas.skills.length > 0)
-  generateDatasRecap();
+$(document).ready(() => {
+  init_skill();
+  if(candidateDatas.skills.length > 0)
+    generateDatasRecap();
+});
+

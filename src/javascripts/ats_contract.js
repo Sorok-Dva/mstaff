@@ -77,4 +77,7 @@ function init_contract(){
   contractListener();
 };
 
-init_contract();
+$(document).ready(() => {
+  init_contract();
+});
+

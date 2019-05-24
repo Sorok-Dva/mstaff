@@ -85,6 +85,12 @@ function reload_internshipTime(){
   $('#end').data("DateTimePicker").date(candidateDatas.wish.end);
 };
 
-init_internshipTime();
-if(candidateDatas.wish.start && candidateDatas.wish.end)
-  reload_internshipTime();
+
+$(document).ready(() => {
+  init_internshipTime();
+  if(candidateDatas.wish.start && candidateDatas.wish.end)
+    reload_internshipTime();
+});
+
+
+

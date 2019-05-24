@@ -61,4 +61,6 @@ function init_cdiTime(){
   cdiTimeListener();
 };
 
-init_cdiTime();
+$(document).ready(() => {
+  init_cdiTime();
+});

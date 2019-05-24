@@ -344,6 +344,9 @@ function init_experience(){
   $('.pop-me-over').tooltip();
 };
 
-init_experience();
-if(candidateDatas.experiences.length > 0)
-  generateDatasRecap();
+
+$(document).ready(() => {
+  init_experience();
+  if(candidateDatas.experiences.length > 0)
+    generateDatasRecap();
+});
