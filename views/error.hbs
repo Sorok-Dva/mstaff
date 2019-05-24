@@ -61,3 +61,24 @@
   {{/if}}
 </div>
 
+{{#ifCond error.status '==' '500'}}
+  {{#if @root.error.sentry}}
+    <script src="https://browser.sentry-cdn.com/5.3.0/bundle.min.js" crossorigin="anonymous"></script>
+
+    <script>
+      Sentry.init({
+        dsn: 'https://4e13b8ebcfcc4e56beb0e0e18fc31d31@sentry.io/1405846',
+      });
+      Sentry.showReportDialog({
+        eventId: '{{ @root.error.sentry }}',
+        user: {
+          email: '{{user.email}}',
+          name: '{{user.fullName}}'
+        },
+        lang: 'fr',
+        title: 'Oops... Une erreur interne est survenue.',
+        successMessage: 'Votre commentaire a été envoyé. Merci de nous aider à améliorer Mstaff !'
+      });
+    </script>
+  {{/if}}
+{{/ifCond}}
