@@ -83,6 +83,9 @@ let showDiplomaModal = () => {
 };
 
 let resetSearch = () => {
+  let esSave = need.filterQuery.establishments;
+  delete need.filterQuery;
+  need.filterQuery = { establishments: esSave };
   $('input#post').val('');
   $('#cvCount').text(baseCVCount);
   $('#searchCount').empty().hide();
