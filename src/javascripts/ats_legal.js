@@ -12,11 +12,9 @@ function legalListener(){
     (first && second) ? button.css('visibility', '') : button.css('visibility', 'hidden');
   });
 
-  console.log(candidateDatas.experiences, candidateDatas.diplomas, candidateDatas.qualifications, candidateDatas.skills, candidateDatas.wish);
-
 };
 
-function finalize(es_finess){
+function finalize(){
   let _csrf = $('meta[name="csrf-token"]').attr('content');
 
   candidateDatas.identity._csrf = _csrf;
@@ -32,7 +30,7 @@ function finalize(es_finess){
         _csrf
       }, (data) => {
         if (data.result === 'created'){
-          console.log(data.result);
+          //TODO redirect page login
         }
       })
     }

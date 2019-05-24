@@ -37,7 +37,7 @@ function editDiploma(id){
   permissions.editId = id;
   let i = candidateDatas.diplomas.map(diploma => diploma.id).indexOf(id);
   resetForm();
-  $('#diploma').val(candidateDatas.diplomas[i].diploma).trigger('keyup');
+  $('#diploma').val(candidateDatas.diplomas[i].name).trigger('keyup');
   $('#diplomaStart').data("DateTimePicker").date(candidateDatas.diplomas[i].start);
   if (candidateDatas.diplomas[i].end)
     $('#diplomaEnd').data("DateTimePicker").date(candidateDatas.diplomas[i].end);

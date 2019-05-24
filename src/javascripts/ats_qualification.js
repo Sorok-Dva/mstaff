@@ -37,7 +37,7 @@ function editQualification(id){
   permissions.editId = id;
   let i = candidateDatas.qualifications.map(qualification => qualification.id).indexOf(id);
   resetForm();
-  $('#qualification').val(candidateDatas.qualifications[i].qualification).trigger('keyup');
+  $('#qualification').val(candidateDatas.qualifications[i].name).trigger('keyup');
   $('#qualificationStart').data("DateTimePicker").date(candidateDatas.qualifications[i].start);
   if (candidateDatas.qualifications[i].end)
     $('#qualificationEnd').data("DateTimePicker").date(candidateDatas.qualifications[i].end);

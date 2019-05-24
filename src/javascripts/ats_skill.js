@@ -42,7 +42,7 @@ function editSkill(id){
   permissions.editId = id;
   let i = candidateDatas.skills.map(skill => skill.id).indexOf(id);
   resetForm();
-  $('#skill').val(candidateDatas.skills[i].skill).trigger('keyup');
+  $('#skill').val(candidateDatas.skills[i].name).trigger('keyup');
   starsSelector(`star${candidateDatas.skills[i].stars}`);
 };
 

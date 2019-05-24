@@ -27,8 +27,6 @@ function createServicesSelect(services, input){
 };
 
 function createPostsList(posts, input){
-  // console.log(posts);
-  // TODO VOIR POUR CALER L ID DANS AUTOCOMPLETE POUR RECUP POUR LA BDD PARCE QUE
   arrays.posts = [];
   posts.forEach( post => {
     arrays.posts.push(post.name);
@@ -36,10 +34,7 @@ function createPostsList(posts, input){
   arrays.posts.sort();
   input.autocomplete({
     source: arrays.posts,
-    minLength: 1,
-    select: (event, ui) => {
-      // console.log(ui, event);
-    }
+    minLength: 1
   });
 };
 
