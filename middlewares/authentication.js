@@ -48,6 +48,7 @@ Authentication.ensureAuthenticated = (req, res, next) => {
  */
 Authentication.ensureIsAdmin = (req, res, next) => {
   if (req.isAuthenticated()) {
+    if (_.isNil(req.user)) return next(new BackError('Vous devez être connecté.', httpsStatus.FORBIDDEN));
     if (['Admin'].includes(req.user.role) || ['Admin'].includes(req.session.role)) {
       next();
     } else {
@@ -68,6 +69,7 @@ Authentication.ensureIsAdmin = (req, res, next) => {
  */
 Authentication.ensureIsCandidate = (req, res, next) => {
   if (req.isAuthenticated()) {
+    if (_.isNil(req.user)) return next(new BackError('Vous devez être connecté.', httpsStatus.FORBIDDEN));
     if (['candidate'].includes(req.user.type)) {
       next();
     } else {
@@ -88,6 +90,7 @@ Authentication.ensureIsCandidate = (req, res, next) => {
  */
 Authentication.ensureIsEs = (req, res, next) => {
   if (req.isAuthenticated()) {
+    if (_.isNil(req.user)) return next(new BackError('Vous devez être connecté.', httpsStatus.FORBIDDEN));
     if (['es'].includes(req.user.type)) {
       if ((_.isNil(req.user.opts) || !('currentEs' in req.user.opts)) && req.url.search('/select/es') === -1) return res.redirect('/select/es');
       next();
@@ -107,6 +110,7 @@ Authentication.ensureIsEs = (req, res, next) => {
  * @description ensure that the current user belongs to the establishment call in the route.
  */
 Authentication.verifyEsAccess = (req, res, next) => {
+  if (_.isNil(req.user)) return next(new BackError('Vous devez être connecté.', httpsStatus.FORBIDDEN));
   Models.Establishment.findOne({
     where: { id: req.params.esId || req.user.opts.currentEs },
     include: {
