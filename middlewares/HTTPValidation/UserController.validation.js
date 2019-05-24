@@ -11,13 +11,13 @@ HTTPValidation.create = [
     .matches(/\d/).withMessage('must contain a number'),
   check('country').exists(),
   check('firstName').exists().custom( (value) => {
-    let regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+    let regName = /^([a-zA-Z \-]){3,30}$/;
     if (!regName.test(value)){
       throw new Error('Le prénom doit contenir uniquement des caractères alphabétiques')
     }
   }),
   check('lastName').exists().custom( (value) => {
-    let regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+    let regName = /^([a-zA-Z \-]){3,30}$/;
     if (!regName.test(value)){
       throw new Error('Le nom doit contenir uniquement des caractères alphabétiques')
     }
