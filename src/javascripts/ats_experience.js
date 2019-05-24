@@ -82,7 +82,7 @@ function foundIdByLabel(label){
 
 function selectTemplate(savedValue){
   switch (savedValue) {
-    case 'cdi':
+    case 'cdi-cdd':
       return 'cdiTime';
       break;
     case 'vacation':

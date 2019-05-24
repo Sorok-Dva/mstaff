@@ -590,7 +590,7 @@ function initBulks(bulks, candidate, req) {
         name: diploma.name,
         candidate_id: candidate.id,
         start: diploma.start,
-        end: diploma.end
+        end: diploma.end || null
       });
     });
   }
@@ -600,7 +600,7 @@ function initBulks(bulks, candidate, req) {
         name: qualification.name,
         candidate_id: candidate.id,
         start: qualification.start,
-        end: qualification.end
+        end: qualification.end || null
       });
     });
   }
