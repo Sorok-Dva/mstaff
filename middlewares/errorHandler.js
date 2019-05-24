@@ -18,7 +18,7 @@ const sendError = (req, res, status, err) => {
   err.status = status;
   if (Env.current === 'production' || Env.current === 'pre-prod') {
     delete err.stack;
-    err.sentry = Sentry.captureException(err);
+    if (err.status === 500) err.sentry = Sentry.captureException(err);
   }
   if (req.xhr) return res.status(status).json(err);
   else return res.status(status).render('error', { layout, error: err });
