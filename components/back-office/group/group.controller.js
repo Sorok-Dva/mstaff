@@ -29,6 +29,9 @@ BackOffice_Group.EditLinkES = (req, res, next) => {
 };
 
 BackOffice_Group.EditLinkGroup = (req, res, next) => {
+  if (!req.body.selectInput || !req.params.id) {
+    return res.status(400).json({ status: 'invalid input' })
+  }
   return Models.GroupsSuperGroups.findAll({ where: { id_super_group: req.params.id } }).then(GroupSuperGroup => {
     if (GroupSuperGroup.length !== 0) {
       Models.GroupsSuperGroups.destroy({ where: { id_super_group: req.params.id } });
