@@ -1,0 +1,61 @@
+<style>
+  .ui-menu{
+    max-height: 30vh;
+    overflow: hidden scroll;
+  }
+</style>
+
+<div class="row justify-content-between align-items-center openRecap">
+  <i id="backToExperience" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+  <div class="text-center col-3 d-none d-lg-block custom-cursor openRecap">
+    <i class="fal fa-low-vision col-5"></i>
+    <p>Afficher mes formations</p>
+  </div>
+</div>
+
+<nav id="recap" class="navbar navbar-vertical fixed-right navbar-expand-md navbar-light d-none">
+  <i class="fal fa-arrow-alt-from-left custom-cursor closeRecap"></i>
+  <h2 class="text-center underline recap">Aperçu de vos formations</h2>
+</nav>
+
+<div class="height-80 d-flex flex-column justify-content-center">
+  <form id="diplomaForm">
+  <div class="form-group text-center">
+    <label for="diploma">Choisissez votre formation</label>
+    <input type="text" class="form-control white" id="diploma">
+  </div>
+
+  <div id="diplomaDate" class="row justify-content-around">
+    <div class="col-6 text-center">
+      <label for="diplomaStart">Début</label>
+      <input id="diplomaStart" name="diplomaStart" type="text"
+             class="form-control datetimepicker-input text-center" data-toggle="datetimepicker" data-target="#diplomaStart" readonly>
+    </div>
+    <div class="col-6 text-center">
+      <label for="diplomaEnd">Fin</label>
+      <input id="diplomaEnd" name="diplomaEnd" type="text"
+             class="form-control datetimepicker-input text-center" data-toggle="datetimepicker" data-target="#diplomaEnd" readonly>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mt-5">
+    <i class="fal fa-info-circle col-12 text-center"></i>
+    <div class="col-9 text-center">
+      <p>Indiquez ici votre <b>formation initiale</b> ou bien sélectionnez-la depuis la liste. Vous pourrez ajouter vos  <b>diplômes complémentaires (DU ...)</b>  à l'étape suivante.</p>
+      <p>Aucune formation ? Vous pouvez passer directement à l'étape suivante.</p>
+    </div>
+  </div>
+</form>
+
+  <div class="row text-center justify-content-center mt-5">
+    <div class="custom-cursor save">
+      <i class="fal fa-check-circle fa-2x col-12"></i>
+      <p class="col-12">Enregistrer</p>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-end">
+  <div class="custom-cursor" id="toQualification"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
+</div>
+
+<script src="/static/assets/dist/js/ats_diploma.min.js"></script>

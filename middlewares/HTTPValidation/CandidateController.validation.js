@@ -2,6 +2,7 @@ const { check } = require('express-validator/check');
 const _ = require('lodash');
 const HTTPValidation = {};
 
+
 HTTPValidation.postAddExperience = [
   check('name').isLength({ min: 3 }),
   check('post_id').isNumeric(),

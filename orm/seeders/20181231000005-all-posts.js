@@ -292,7 +292,7 @@ module.exports = {
       { name: 'Manipulateur en radiologie - MER - radiothérapie', categoriesPS_id: 3 },
       { name: 'Socio-esthéticienne', categoriesPS_id: 3 },
       { name: 'Assistant de vie aux familles (ADVF) - Auxiliaire de vie sociale (AVS)', categoriesPS_id: 3 },
-      { name: 'Infirmier Diplômé d\'Etat Libéral (IDEL)', categoriesPS_id: 3 },
+      { name: 'Infirmier Diplômé d\'Etat Libéral (IDEL)', categoriesPS_id: 5 },
       { name: 'Cadre de rééducation', categoriesPS_id: 3 },
       { name: 'Neuropsychologue', categoriesPS_id: 3 },
       { name: 'Art-thérapeute', categoriesPS_id: 3 },

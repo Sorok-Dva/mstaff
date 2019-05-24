@@ -48,4 +48,5 @@ module.exports = {
       res.status(200).send({ categories });
     }).catch(error => next(new BackError(error)));
   },
+
 };

@@ -1,0 +1,55 @@
+<style>
+  .height-20{
+    min-height: 20vh;
+  }
+  .height-25{
+    min-height: 25vh;
+  }
+  .height-80{
+    min-height: 80vh;
+  }
+  .underline{
+    text-decoration: underline;
+  }
+  .custom-cursor{
+    cursor: pointer;
+  }
+  .white{
+    color: white !important;
+  }
+  .padding-0{
+    padding: 0 !important;
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row align-items-center justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-6 px-lg-6 my-5" id="atsPart">
+      <div class="col-12" id="loadingCandidates">
+        <h1 class="text-center" style="padding-top: 30px">
+          Chargement du formulaire en cours...
+          <div class="spinner-border text-primary text-center" role="status">
+            <span class="sr-only">Veuillez patienter quelques instants</span>
+          </div>
+        </h1>
+      </div>
+
+    </div>
+    <div class="col-12 col-md-4 col-lg-6 col-xl-6 d-none d-lg-block" id="atsImage">
+      <!-- Image -->
+      <div class="bg-cover vh-100 mt-n1 mr-n3"
+           style="background-image: url(/static/assets/images/login-cover-hd.jpg);">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<link rel="stylesheet" href="/static/assets/css/intlTelInput.min.css">
+<script src="/static/assets/js/intlTelInput.min.js"></script>
+<script src="/static/assets/js/utils.js"></script>
+
+<script>
+  let es_finess = '{{es}}';
+</script>
+<script src="/static/assets/dist/js/ats_init.min.js"></script>
