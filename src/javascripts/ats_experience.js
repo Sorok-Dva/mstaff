@@ -5,6 +5,7 @@ function experienceListener(){
       saveDatas(permissions.editMode);
       generateDatasRecap();
       resetForm();
+      $('#recap').addClass('d-lg-block');
     }
   });
 

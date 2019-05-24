@@ -19,8 +19,8 @@ function filterServicesByCategory(services ,category){
 function createServicesSelect(services, input){
   input.empty().select2({
     data: services.sort(),
-    placeholder: "Service(s) ?",
     disabled: false,
+    formatInputTooShort: "Please add more text",
     minimumInputLength: 1,
     minimumResultsForSearch: Infinity
   });
