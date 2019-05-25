@@ -1,13 +1,5 @@
-function resetAvailability(){
-  candidateDatas.wish.fullTime = false;
-  candidateDatas.wish.partTime = false;
-  candidateDatas.wish.dayTime = false;
-  candidateDatas.wish.nightTime = false;
-};
-
 function cdiTimeListener(){
   $('#backToContract').click(function() {
-    resetAvailability();
     loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
@@ -15,7 +7,7 @@ function cdiTimeListener(){
   $('#toExperience').click(function() {
     if (verifyInputs()) {
       saveDatas();
-      loadTemplate('/static/views/ats/experience.hbs', { candidateDatas, databaseDatas, arrays }, (html) => {
+      loadTemplate('/static/views/ats/experience.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
         $('#atsPart').html(html);
       })
     }

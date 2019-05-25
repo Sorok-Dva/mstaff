@@ -1,3 +1,10 @@
+function resetAvailability(){
+  candidateDatas.wish.fullTime = false;
+  candidateDatas.wish.partTime = false;
+  candidateDatas.wish.dayTime = false;
+  candidateDatas.wish.nightTime = false;
+};
+
 function selectTemplate(checkedSwitch){
   switch (checkedSwitch) {
     case 'cdi-cdd':
@@ -38,9 +45,11 @@ function contractListener(){
           break;
         case 'vacationToggle':
           $('#cdiToggle, #internshipToggle').prop('checked', false);
+          resetAvailability();
           break;
         case 'internshipToggle':
           $('#cdiToggle, #vacationToggle').prop('checked', false);
+          resetAvailability();
           break;
       }
     }
@@ -67,10 +76,6 @@ function notify(error){
 
 function saveDatas(){
   candidateDatas.wish.contractType = $('#contractChoices input:checked').prop('name');
-  candidateDatas.wish.fullTime = false;
-  candidateDatas.wish.partTime = false;
-  candidateDatas.wish.dayTime = false;
-  candidateDatas.wish.nightTime = false;
 };
 
 function init_contract(){
