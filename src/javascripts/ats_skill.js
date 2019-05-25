@@ -66,6 +66,7 @@ $(`<div ${customClass} data-id="${item.id}">${title}<div>${editButton}${deleteBu
 function generateDatasRecap(){
   $('.recap-item').remove();
   candidateDatas.skills.forEach( skill => addToDatasRecap(skill));
+  $('#recap').addClass('d-lg-block');
 };
 
 function starsSelector(id){

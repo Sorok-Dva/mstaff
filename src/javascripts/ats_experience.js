@@ -207,6 +207,7 @@ function addToDatasRecap(item){
 function generateDatasRecap(){
   $('.recap-item').remove();
   candidateDatas.experiences.forEach( xp => addToDatasRecap(xp));
+  $('#recap').addClass('d-lg-block');
 };
 
 function verifyInputs(){

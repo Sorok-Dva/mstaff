@@ -64,6 +64,7 @@ function addToDatasRecap(item){
 function generateDatasRecap(){
   $('.recap-item').remove();
   candidateDatas.qualifications.forEach( qualification => addToDatasRecap(qualification));
+  $('#recap').addClass('d-lg-block');
 };
 
 function createQualificationList(qualifications, input){

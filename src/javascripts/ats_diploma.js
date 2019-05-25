@@ -64,6 +64,7 @@ function addToDatasRecap(item){
 function generateDatasRecap(){
   $('.recap-item').remove();
   candidateDatas.diplomas.forEach( diploma => addToDatasRecap(diploma));
+  $('#recap').addClass('d-lg-block');
 };
 
 function createDiplomaList(diplomas, input){
