@@ -46,12 +46,18 @@ function editQualification(id){
 };
 
 function deleteQualification(id){
+  createModal({ id: 'removeQualificationModal', modal: 'ats/removeQualification', title: 'Confirmation' }, () => {
+    $('#btnAtsRemoveQualification').attr('onclick', `validateDeleteQualification(${id})`);
+  });
+};
+
+function validateDeleteQualification(id){
   resetForm();
   permissions.editMode = false;
   let i = candidateDatas.qualifications.map(qualification => qualification.id).indexOf(id);
   candidateDatas.qualifications.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
-};
+}
 
 function addToDatasRecap(item){
   let title = `<h3>#Diplôme n° ${item.id}</h3>`;

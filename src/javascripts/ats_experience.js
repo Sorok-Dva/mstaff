@@ -189,12 +189,18 @@ function editXp(id){
 };
 
 function deleteXp(id){
+  createModal({ id: 'removeExperienceModal', modal: 'ats/removeExperience', title: 'Confirmation' }, () => {
+    $('#btnAtsRemoveExperience').attr('onclick', `validateDeleteExperience(${id})`);
+  });
+};
+
+function validateDeleteExperience(id){
   resetForm();
   permissions.editMode = false;
   let i = candidateDatas.experiences.map(xp => xp.id).indexOf(id);
   candidateDatas.experiences.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
-};
+}
 
 function addToDatasRecap(item){
   let title = `<h3>#Expérience n° ${item.id}</h3>`;

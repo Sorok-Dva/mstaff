@@ -48,12 +48,18 @@ function editSkill(id){
 };
 
 function deleteSkill(id){
+  createModal({ id: 'removeDiplomaSkill', modal: 'ats/removeSkill', title: 'Confirmation' }, () => {
+    $('#btnAtsRemoveSkill').attr('onclick', `validateDeleteSkill(${id})`);
+  });
+};
+
+function validateDeleteSkill(id){
   resetForm();
   permissions.editMode = false;
   let i = candidateDatas.skills.map(skill => skill.id).indexOf(id);
   candidateDatas.skills.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
-};
+}
 
 function addToDatasRecap(item){
 let title = `<h3>#Compétence n° ${item.id}</h3>`;

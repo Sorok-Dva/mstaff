@@ -46,12 +46,18 @@ function editDiploma(id){
 };
 
 function deleteDiploma(id){
+  createModal({ id: 'removeDiplomaModal', modal: 'ats/removeDiploma', title: 'Confirmation' }, () => {
+    $('#btnAtsRemoveDiploma').attr('onclick', `validateDeleteDiploma(${id})`);
+  });
+};
+
+function validateDeleteDiploma(id){
   resetForm();
   permissions.editMode = false;
   let i = candidateDatas.diplomas.map(diploma => diploma.id).indexOf(id);
   candidateDatas.diplomas.splice(i, 1);
   $(`div [data-id=${id}]`).remove();
-};
+}
 
 function addToDatasRecap(item){
   let title = `<h3>#Formation n° ${item.id}</h3>`;

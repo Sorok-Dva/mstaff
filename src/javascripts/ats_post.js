@@ -20,7 +20,6 @@ function createServicesSelect(services, input){
   input.empty().select2({
     data: services.sort(),
     disabled: false,
-    formatInputTooShort: "Please add more text",
     minimumInputLength: 1,
     minimumResultsForSearch: Infinity
   });
