@@ -78,7 +78,7 @@ function uploadFile(f, i) {
               icon: 'check-circle',
               type: 'success',
               title: 'Document sauvegardé :',
-              message: `Votre document a correctement été sauvegarder sur nos serveurs.`
+              message: `Votre document a correctement été sauvegardé sur nos serveurs.`
             });
             $(`#${type}List ul`).append(`<li data-document-id="${response.id}" data-type="${type}"><a href="${url}" target="_blank">${response.name}</a>${rmBtn}</li>`);
             $(`#${type}Count`).html(parseInt($(`#${type}Count`).html()) + 1);
