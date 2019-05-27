@@ -1010,6 +1010,35 @@ User_Candidate.getWish = (req, res, next) => {
   })
 };
 
+User_Candidate.getESWish = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+  return Models.Candidate.findOne({
+    where: { user_id: req.user.id }
+  }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    Models.Application.findAll({
+      where: { wish_id: req.params.id, candidate_id: candidate.id },
+      attributes: ['id', 'wish_id', 'candidate_id', 'es_id'],
+      include: {
+        model: Models.EstablishmentReference,
+        attributes: ['id', 'finess_et', 'name'],
+        on: {
+          '$Application.ref_es_id$': {
+            [Op.col]: 'EstablishmentReference.finess_et'
+          }
+        }
+      }
+    }).then(wish => {
+      if (!wish) return res.status(404).send({ body: req.body, error: 'Souhait introuvable.' });
+      res.status(201).send({ es: wish })
+    })
+  })
+};
+
 User_Candidate.getEditWish = (req, res, next) => {
   let render = { a: { main: 'applications' } };
   Models.Candidate.findOne({
@@ -1135,6 +1164,37 @@ User_Candidate.removeWish = (req, res, next) => {
       wish.destroy().then(wish => res.status(201).send({ deleted: true, wish }));
     }).catch(error => next(new Error(error)));
   }).catch(error => next(new Error(error)));
+};
+
+User_Candidate.removeApplicationWish = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+  return Models.Candidate.findOne({
+    where: { user_id: req.user.id }
+  }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    Models.Wish.findOne({ where: { id: req.params. id } }).then(wish => {
+      if (!wish) return res.status(400).send({ error: 'Souhait introuvable' });
+      Models.Application.findAll({
+        where: { wish_id: req.params.id, candidate_id: candidate.id }
+      }).then(countApp => {
+        if (countApp.length <= 1) return res.status(400).send({ error: 'Vous devez garder au minimum un établissement dans votre souhait.' });
+        Models.Application.findOne({
+          where: { wish_id: req.params.id, candidate_id: candidate.id, ref_es_id: req.params.applicationId }
+        }).then(application => {
+          if (!application) return res.status(400).send({ error: 'Not exists' });
+          application.destroy().then(application => {
+            wish.es_count = countApp.length;
+            wish.save();
+            res.status(201).send({ deleted: true, application, count: wish.es_count })
+          });
+        }).catch(error => next(new Error(error)));
+      }).catch(error => next(new Error(error)));
+    }).catch(error => next(new Error(error)));
+  });
 };
 
 User_Candidate.updatePercentage = (user, type) => {

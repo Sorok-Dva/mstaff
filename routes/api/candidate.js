@@ -110,6 +110,15 @@ router.get('/wish/:id(\\d+)',
     User.Candidate.editWish
   );
 
+router.get('/wish/:id(\\d+)/getEsList',
+  Authentication.ensureIsCandidate,
+  HTTPValidation.CandidateController.getWish,
+  User.Candidate.getESWish)
+  .delete('/wish/:id(\\d+)/deleteApplication/:applicationId(\\d+)',
+    Authentication.ensureIsCandidate,
+    HTTPValidation.CandidateController.removeWishApplication,
+    User.Candidate.removeApplicationWish);
+
 router.post('/wish/:id(\\d+)/refresh',
   Authentication.ensureIsCandidate,
   User.Candidate.refreshWish);

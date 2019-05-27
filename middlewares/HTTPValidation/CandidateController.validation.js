@@ -37,6 +37,11 @@ HTTPValidation.removeWish = [
   check('id').isNumeric()
 ];
 
+HTTPValidation.removeWishApplication = [
+  check('id').isNumeric(),
+  check('applicationId').isNumeric(),
+];
+
 HTTPValidation.getEditWish = [
   check('id').isNumeric()
 ];
