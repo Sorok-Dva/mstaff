@@ -46,27 +46,36 @@ let notification = (opts) => {
 };
 
 let errorsHandler = data => {
-  let error = data === undefined ? null : data.responseJSON;
-  if (error.errors) {
-    error.errors.forEach((e, i) => {
-      notification({
-        icon: 'exclamation',
-        type: 'danger',
-        title: 'Champ invalide :',
-        message: `${e.param}`
-      });
-    });
-  } else {
-    let message = error.sequelizeError ?
-      `<b>${errors.sequelizeError.name}</b>: ${errors.sequelizeError.original.sqlMessage}`
-      : error.message || error || 'Unknown Error';
-    message = (typeof message === 'object') ? message.name : message;
+  if (_.isNil(data.responseJSON)) {
     notification({
       icon: 'exclamation',
       type: 'danger',
       title: 'Une erreur est survenue :',
-      message
+      message: data.responseText
     });
+  } else {
+    let error = data === undefined ? null : data.responseJSON;
+    if (error.errors) {
+      error.errors.forEach((e, i) => {
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Champ invalide :',
+          message: `${e.param}`
+        });
+      });
+    } else {
+      let message = error.sequelizeError ?
+        `<b>${errors.sequelizeError.name}</b>: ${errors.sequelizeError.original.sqlMessage}`
+        : error.message || error || 'Unknown Error';
+      message = (typeof message === 'object') ? message.name : message;
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Une erreur est survenue :',
+        message
+      });
+    }
   }
 };
 

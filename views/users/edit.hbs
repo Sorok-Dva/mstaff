@@ -47,7 +47,7 @@
               <img id="candidateAvatar" {{#if usr.photo}} src="/static/uploads/avatars/{{usr.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
         </div>
-        <form action="/profile/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
+        <form id="avatarForm" action="/api/candidate/add/photo?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
         <span id="editAvatar" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px; background-color: white;">
             <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
           </span>
@@ -169,25 +169,63 @@
   </div>
 </div>
 <script>
+
   let avatarSelected = () => {
     $('#validateAvatarButton').click()
   };
-
   $(document).ready(function () {
+
+    $('#avatarForm').on('submit', function(e) {
+      e.preventDefault();
+      let files = document.querySelector('[type=file]').files;
+      let formData = new FormData();
+      let format = files[0].type.split('/')[1];
+      if (!['jpeg', 'jpg', 'png'].includes(format)) {
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: `Seul les formats jpeg, jpg et png sont autorisés.`
+        });
+        return false;
+      }
+      formData.append('photo', files[0], files[0].name);
+      jQuery.ajax({
+        url: $(this).attr('action'),
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: (data) => {
+          if (data === 'saved') {
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Photo de profil sauvegardée !'
+            });
+          }
+        },
+      }).catch(error => errorsHandler(error));
+    });
+
     $(document).on('change', '.btn-file :file', function () {
       let input = $(this),
-        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+          label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
       input.trigger('fileselect', [label]);
     });
 
     $('.btn-file :file').on('fileselect', function (event, label) {
 
       let input = $(this).parents('.input-group').find(':text'),
-        log = label;
+          log = label;
     });
 
     function readURL(input) {
-      if (input.files && input.files[0]) {
+      if (input.files && !_.isNil(input.files[0])) {
+        let format = input.files[0].type.split('/')[1];
+        if (!['jpeg', 'jpg', 'png'].includes(format)) {
+          return false;
+        }
         let reader = new FileReader();
 
         reader.onload = function (e) {

@@ -248,13 +248,27 @@ User_Candidate.EditProfile = (req, res, next) => {
 };
 
 User_Candidate.UploadImageProfile = (req, res, next) => {
+  if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
+  let photo = { filename: null };
+  if (req.params.action === 'add') {
+    if (Object.keys(req.file).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+    if (!['jpeg', 'jpg', 'png'].includes(req.file.mimetype.split('/')[1])) {
+      return res.status(400).send('Mauvais format, seul les formats jpeg, jpg et png sont autorisés.');
+    }
+    photo = req.file;
+  }
+
   Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+    if (_.isNil(user)) return next(new BackError('Utilisateur introuvable', 404));
     if (!_.isNil(user.photo)) {
+      mkdirIfNotExists(`${__}/public/uploads/avatars/`);
       if (fs.existsSync(`./public/uploads/avatars/${user.photo}`)) {
         fs.unlinkSync(`./public/uploads/avatars/${user.photo}`)
       }
     }
-    user.photo = req.body.filename;
+    user.photo = photo.filename;
     user.save().then(() => {
       User_Candidate.updatePercentage(req.user, 'photo');
       req.flash('success_msg', 'Votre photo a été sauvegardée.');
@@ -264,7 +278,7 @@ User_Candidate.UploadImageProfile = (req, res, next) => {
         return res.redirect('/profile/edit');
       }
     });
-  }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+  });
 };
 
 User_Candidate.getFormationsAndXP = (req, res, next) => {
