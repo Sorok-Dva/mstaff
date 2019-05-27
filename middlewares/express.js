@@ -122,19 +122,18 @@ module.exports = {
     Subdomain.Main.find(req, res, (subdomain) => {
       if (subdomain.es_id) {
         Establishment.Main.find(subdomain.es_id, (data) => {
-          return res.render('index', { layout: 'maintenance' });
-          /*res.locals.es = data;
+          res.locals.es = data;
           req.es = data;
           req.url = `/esDomain${req.url}`;
-          return next();*/
+          return next();
         });
       } else if (subdomain.group_id) {
         Subdomain.Group.find(subdomain.group_id, (data) => {
-          return res.render('index', { layout: 'maintenance' });
-          /* res.locals.group = data;
+          // return res.render('index', { layout: 'maintenance' });
+          res.locals.group = data;
           req.group = data;
           req.url = `/groupDomain${req.url}`;
-          return next();*/
+          return next();
         });
       } else {
         return next();

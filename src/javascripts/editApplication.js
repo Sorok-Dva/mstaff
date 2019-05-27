@@ -56,7 +56,6 @@ let rewritePosts = () => {
 let rewriteServices = () => {
   let sServiceType = $('#selectServiceType');
   let selected = [];
-
   application.serviceType.forEach( service => {
     let data = $(`#selectServiceType option:contains(${service})`).val();
     selected.push(data);
@@ -103,6 +102,7 @@ let rewriteSelectedES = () => {
 $(document).ready(() => {
   rewriteContractType();
   rewritePosts();
+
   rewriteServices();
   if (application.wish[0].contract_type === 'internship')
     rewriteDates();

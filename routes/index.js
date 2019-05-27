@@ -41,10 +41,10 @@ router.get('/login',
  * @Route('/register') GET + POST;
  * Show Register Page + Send Register Form (for new candidates)
  */
-router.get('/register',
+router.get('/register/',
   Authentication.ensureIsNotAuthenticated,
   Render.View.Register)
-  .post('/register',
+  .post('/register/',
     Authentication.ensureIsNotAuthenticated,
     HTTPValidation.UserController.create,
     User.Main.create);
