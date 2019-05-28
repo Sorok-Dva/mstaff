@@ -389,6 +389,9 @@
   </div>
 </div>
 <script src="/static/assets/dist/js/uploadVideo.min.js"></script>
+{{#unless candidate.percentage}}
+  <script src="/static/assets/dist/js/newMstaffCandidate.min.js"></script>
+{{/unless}}
 <script>
   $('input[name="is_available"]').change(function() {
     let available = false;

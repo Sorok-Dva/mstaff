@@ -23,7 +23,11 @@
                   <tr data-applicationId="{{wish.id}}">
                     <td>{{wish.name}}</td>
                     <td>{{wish.contract_type}}</td>
-                    <td>{{wish.es_count}}</td>
+                    <td>
+                      <span class="showEsList" style="cursor: pointer" data-applicationId="{{wish.id}}">
+                        {{wish.es_count}}
+                      </span>
+                    </td>
                     <td>
                       {{{wishValidity wish}}}
                     </td>

@@ -7,6 +7,13 @@ const _ = require('lodash');
 const moment = require('moment');
 const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
+const Sequelize = require(`${__}/bin/sequelize`);
+const Mailer = require(`${__}/components/mailer`);
+
+/*const AvatarStorage = require('../../../helpers/avatar.storage');*/
+const path = require('path');
+const multer = require('multer');
+
 
 const User_Candidate = {};
 
@@ -183,6 +190,9 @@ User_Candidate.viewProfile = (req, res, next) => {
     }]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    if (_.isNil(candidate.percentage)) {
+      User_Candidate.updateWholePercentage(req.user);
+    }
     return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
   }).catch(error => next(new BackError(error)));
 };
@@ -217,7 +227,7 @@ User_Candidate.EditProfile = (req, res, next) => {
       user.postal_code = req.body.postal_code;
       user.town = req.body.town;
       user.country = req.body.country;
-      // user.phone = req.body.phone;
+      user.phone = req.body.phone;
       user.save().then(() => {
         candidate.description = req.body.description;
         candidate.save().then(() => {
@@ -241,13 +251,27 @@ User_Candidate.EditProfile = (req, res, next) => {
 };
 
 User_Candidate.UploadImageProfile = (req, res, next) => {
+  if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
+  let photo = { filename: null };
+  if (req.params.action === 'add') {
+    if (Object.keys(req.file).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+    if (!['jpeg', 'jpg', 'png'].includes(req.file.mimetype.split('/')[1])) {
+      return res.status(400).send('Mauvais format, seul les formats jpeg, jpg et png sont autorisés.');
+    }
+    photo = req.file;
+  }
+
   Models.User.findOne({ where: { id: req.user.id } }).then(user => {
+    if (_.isNil(user)) return next(new BackError('Utilisateur introuvable', 404));
     if (!_.isNil(user.photo)) {
+      mkdirIfNotExists(`${__}/public/uploads/avatars/`);
       if (fs.existsSync(`./public/uploads/avatars/${user.photo}`)) {
         fs.unlinkSync(`./public/uploads/avatars/${user.photo}`)
       }
     }
-    user.photo = req.body.filename;
+    user.photo = photo.filename;
     user.save().then(() => {
       User_Candidate.updatePercentage(req.user, 'photo');
       req.flash('success_msg', 'Votre photo a été sauvegardée.');
@@ -257,7 +281,7 @@ User_Candidate.UploadImageProfile = (req, res, next) => {
         return res.redirect('/profile/edit');
       }
     });
-  }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+  });
 };
 
 User_Candidate.getFormationsAndXP = (req, res, next) => {
@@ -442,6 +466,7 @@ User_Candidate.removeDiploma = (req, res, next) => {
 };
 
 User_Candidate.AddExperience = (req, res, next) => {
+
   check('start').isBefore(new Date());
   check('start').isBefore(req.body.end);
 
@@ -461,6 +486,7 @@ User_Candidate.AddExperience = (req, res, next) => {
       poste_id: parseInt(req.body.post_id),
       service_id: parseInt(req.body.service_id),
       internship: req.body.internship,
+      liberal: req.body.liberal,
       current: req.body.current,
       start: req.body.start,
       end: req.body.end || null
@@ -478,6 +504,244 @@ User_Candidate.AddExperience = (req, res, next) => {
   })
 };
 
+// ATS -----------------------------------------------------------
+
+function isBoolean(value) {
+  if (value == true || value == false)
+    return true;
+  return false;
+}
+
+function errorsExperiences(experiences) {
+  let errors = [];
+  experiences.forEach(xp => {
+    if (xp.name.length < 3)
+      errors.push('experience name doit avoir au minimum 3 caractères');
+    else if (isNaN(xp.post_id))
+      errors.push('post_id doit être numérique');
+    else if (isNaN(xp.service_id))
+      errors.push('service_id doit être numérique');
+    else if (!isBoolean(xp.internship))
+      errors.push('internship doit être un booléen');
+    else if (!isBoolean(xp.current))
+      errors.push('current doit être un booléen');
+    else if (moment(xp.start).isAfter(new Date()) && moment(xp.start).isAfter(xp.end))
+      errors.push('la date de départ doit être antérieur à la date courante et d\'arrivée');
+  });
+  return errors;
+}
+
+function errorsDiplomasQualifications(entities) {
+  let errors = [];
+  entities.forEach(entity => {
+    if (entity.name.length < 3)
+      errors.push('name doit avoir au minimum 3 caractères');
+    else if (moment(entity.start).isAfter(new Date()) && moment(entity.start).isAfter(entity.end))
+      errors.push('la date de départ doit être antérieur à la date courante et d\'arrivée');
+  });
+  return errors;
+}
+
+function errorsSkills(skills) {
+  let errors = [];
+  skills.forEach(skill => {
+    if (skill.name.length < 185)
+      errors.push('name doit avoir au minimum 3 caractères');
+    else if (_.isNaN(skill.stars))
+      errors.push('stars doit être numérique');
+  });
+  return errors;
+}
+
+function errorsWish(wish){
+  let errors = [];
+
+  if (!isBoolean(wish.fullTime))
+    errors.push('fullTime doit être un booléen');
+  else if (!isBoolean(wish.partTime))
+    errors.push('partTime doit être un booléen');
+  else if (!isBoolean(wish.dayTime))
+    errors.push('dayTime doit être un booléen');
+  else if (!isBoolean(wish.nightTime))
+    errors.push('nightTime doit être un booléen');
+  else if (moment(wish.start).isAfter(wish.end))
+    errors.push('la date de départ doit être antérieur à la date courante et d\'arrivée');
+  return errors;
+}
+
+function initPercentage(candidate, bulks){
+  let percentage = {};
+  percentage.profile = { main: 0, description: 0, photo: 0 };
+  percentage.profile.main = 20;
+  bulks.createXp ? percentage.experiences = 10 : percentage.experiences = 0;
+  bulks.createDiplomas ? percentage.formations = 10 : percentage.formations = 0;
+  percentage.total = percentage.main + percentage.experiences + percentage.formations;
+  User_Candidate.updateTotalPercentage(candidate, percentage);
+}
+
+function initBulks(bulks, candidate, req) {
+  bulks.experiences = [];
+  bulks.diplomas = [];
+  bulks.qualifications = [];
+  bulks.skills = [];
+  bulks.wish = [];
+
+  if (bulks.createXp) {
+    req.body.experiences.forEach(experience => {
+      bulks.experiences.push({
+        name: experience.name,
+        candidate_id: candidate.id,
+        poste_id: parseInt(experience.post_id),
+        service_id: parseInt(experience.service_id),
+        internship: experience.internship,
+        liberal: experience.liberal || null,
+        current: experience.current,
+        start: experience.start,
+        end: experience.end || null
+      });
+    });
+  }
+  if (bulks.createDiplomas) {
+    req.body.diplomas.forEach(diploma => {
+      bulks.diplomas.push({
+        name: diploma.name,
+        candidate_id: candidate.id,
+        start: diploma.start,
+        end: diploma.end || null
+      });
+    });
+  }
+  if (bulks.createQualifications) {
+    req.body.qualifications.forEach(qualification => {
+      bulks.qualifications.push({
+        name: qualification.name,
+        candidate_id: candidate.id,
+        start: qualification.start,
+        end: qualification.end || null
+      });
+    });
+  }
+  if (bulks.createSkills) {
+    req.body.skills.forEach( skill => {
+      bulks.skills.push({
+        candidate_id: candidate.id,
+        name: skill.name,
+        stars: skill.stars
+      });
+    });
+  }
+  if (bulks.createWish){
+    bulks.wish.push({
+      candidate_id: candidate.id,
+      name: 'Ma première candidature',
+      contract_type: req.body.wish.contractType,
+      posts: req.body.wish.post,
+      services: !_.isNil(req.body.wish.services) ? req.body.wish.services : null,
+      full_time: req.body.wish.fullTime,
+      part_time: req.body.wish.partTime,
+      day_time: req.body.wish.dayTime,
+      night_time: req.body.wish.nightTime,
+      start: req.body.wish.start,
+      end: req.body.wish.end,
+      es_count: 1
+    });
+  }
+}
+
+User_Candidate.ATSAddAll = (req, res, next) => {
+
+  let user = {};
+  user.id = req.session.atsUserId;
+
+  let errors = [];
+  let bulks = {
+    createContact: false,
+    createXp: false,
+    createDiplomas: false,
+    createQualifications: false,
+    createSkills: false,
+    createWish: false
+  };
+
+  if (req.body.experiences !== 'none') {
+    errors.concat(errorsExperiences(req.body.experiences));
+    bulks.createXp = true;
+  }
+  if (req.body.diplomas !== 'none') {
+    errors.concat(errorsDiplomasQualifications(req.body.diplomas));
+    bulks.createDiplomas = true;
+  }
+  if (req.body.qualifications !== 'none') {
+    errors.concat(errorsDiplomasQualifications(req.body.qualifications));
+    bulks.createQualifications = true;
+  }
+  if (req.body.skills !== 'none') {
+    errors.concat(errorsSkills(req.body.skills));
+    bulks.createSkills = true;
+  }
+  if (req.body.wish !== 'none'){
+    errors.concat(errorsWish(req.body.wish));
+    bulks.createWish = true;
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).send({ body: req.body, errors: errors });
+  }
+  else {
+    return Sequelize.transaction(t => {
+      return Models.Candidate.findOne({
+        where: { user_id: user.id }
+      }, { transaction: t }).then(candidate => {
+        initBulks(bulks, candidate, req);
+        initPercentage(candidate, bulks);
+        return Models.Experience.bulkCreate(bulks.experiences, { transaction: t }).then(() => {
+          return Models.CandidateFormation.bulkCreate(bulks.diplomas, { transaction: t }).then( () => {
+            return Models.CandidateQualification.bulkCreate(bulks.qualifications, { transaction: t }).then( () => {
+              return Models.CandidateSkill.bulkCreate(bulks.skills, { transaction: t }).then( () => {
+                return  Models.Wish.bulkCreate(bulks.wish, { transaction: t }).then(wish => {
+                  return Models.Establishment.findOne({
+                    where: { finess: req.body.finess }
+                  }, { transaction: t }).then(es => {
+                    return Models.Application.create({
+                      name: 'Ma première candidature',
+                      wish_id: wish[0].id,
+                      candidate_id: candidate.id,
+                      ref_es_id: req.body.finess,
+                      es_id: !_.isNil(es) ? es.id : null,
+                      new: true
+                    }, { transaction: t }).then( () => {
+                      return Models.User.findOne({
+                        where: { id: user.id }
+                      }, { transaction: t }).then(item => {
+                        user = item;
+                      })
+                    });
+                  })
+                })
+              })
+            })
+          })
+        })
+      }, { transaction: t });
+    }).then(result => {
+      Mailer.Main.sendUserVerificationEmail(user);
+      return res.status(200).send({ result: 'created', entities: result });
+    }).catch(error => {
+      Models.Candidate.destroy({
+        where: { user_id: user.id }
+      }).then( () => {
+        Models.User.destroy({
+          where: { id: user.id }
+        }).then( () => {
+          return res.status(400).send({ body: req.body, sequelizeError: error })
+        })
+      });
+    });
+  }
+};
+
+// ----------------------------------------------------------------
+
 User_Candidate.AddFormation = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -485,7 +749,7 @@ User_Candidate.AddFormation = (req, res, next) => {
     return res.status(400).send({ body: req.body, errors: errors.array() });
   }
   return Models.Candidate.findOne({
-    where: { user_id: req.user.id }
+    where: { user_id: req.user.id },
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.CandidateFormation.create({
@@ -763,6 +1027,35 @@ User_Candidate.getWish = (req, res, next) => {
   })
 };
 
+User_Candidate.getESWish = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+  return Models.Candidate.findOne({
+    where: { user_id: req.user.id }
+  }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    Models.Application.findAll({
+      where: { wish_id: req.params.id, candidate_id: candidate.id },
+      attributes: ['id', 'wish_id', 'candidate_id', 'es_id'],
+      include: {
+        model: Models.EstablishmentReference,
+        attributes: ['id', 'finess_et', 'name'],
+        on: {
+          '$Application.ref_es_id$': {
+            [Op.col]: 'EstablishmentReference.finess_et'
+          }
+        }
+      }
+    }).then(wish => {
+      if (!wish) return res.status(404).send({ body: req.body, error: 'Souhait introuvable.' });
+      res.status(201).send({ es: wish })
+    })
+  })
+};
+
 User_Candidate.getEditWish = (req, res, next) => {
   let render = { a: { main: 'applications' } };
   Models.Candidate.findOne({
@@ -890,6 +1183,37 @@ User_Candidate.removeWish = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
+User_Candidate.removeApplicationWish = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+  return Models.Candidate.findOne({
+    where: { user_id: req.user.id }
+  }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    Models.Wish.findOne({ where: { id: req.params. id } }).then(wish => {
+      if (!wish) return res.status(400).send({ error: 'Souhait introuvable' });
+      Models.Application.findAll({
+        where: { wish_id: req.params.id, candidate_id: candidate.id }
+      }).then(countApp => {
+        if (countApp.length <= 1) return res.status(400).send({ error: 'Vous devez garder au minimum un établissement dans votre souhait.' });
+        Models.Application.findOne({
+          where: { wish_id: req.params.id, candidate_id: candidate.id, ref_es_id: req.params.applicationId }
+        }).then(application => {
+          if (!application) return res.status(400).send({ error: 'Not exists' });
+          application.destroy().then(application => {
+            wish.es_count = countApp.length;
+            wish.save();
+            res.status(201).send({ deleted: true, application, count: wish.es_count })
+          });
+        }).catch(error => next(new Error(error)));
+      }).catch(error => next(new Error(error)));
+    }).catch(error => next(new Error(error)));
+  });
+};
+
 User_Candidate.updatePercentage = (user, type) => {
   if (_.isNil(type)) return false;
   Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
@@ -960,6 +1284,64 @@ User_Candidate.updatePercentage = (user, type) => {
         });
         break;
     }
+  });
+};
+
+User_Candidate.updateWholePercentage = (user) => {
+  Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return false;
+    let { percentage } = candidate;
+    if (_.isNil(percentage)) percentage = {};
+
+    if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };
+    if (!('formations' in percentage)) percentage.formations = 0;
+    if (!('experiences' in percentage)) percentage.experiences = 0;
+    if (!('documents' in percentage)) percentage.documents = { DIP: 0, RIB: 0, CNI: 0, VIT: 0 };
+
+    Models.Experience.findAndCountAll({ where: { candidate_id: candidate.id } }).then(experiences => {
+      Models.CandidateFormation.findAndCountAll({ where: { candidate_id: candidate.id } }).then(formations => {
+        Models.CandidateDocument.findAll({ where: { candidate_id: candidate.id } }).then(documents => {
+          Models.User.findOne({ where: { id: user.id } }).then(user => {
+            if (user.firstName && user.lastName && user.phone && user.town) {
+              percentage.profile.main = 20;
+            } else percentage.profile.main = 0;
+
+            if (!_.isNil(candidate.description) && candidate.description.length > 10) {
+              percentage.profile.description = 30;
+            } else percentage.profile.description = 0;
+
+            if (user.photo) {
+              percentage.profile.photo = 10;
+            } else percentage.profile.photo = 0;
+
+            if (experiences.count > 0) percentage.experiences = 10;
+            else percentage.experiences = 0;
+
+            if (formations.count > 0) percentage.formations = 10;
+            else percentage.formations = 0;
+
+            let have = { DIP: false, CNI: false, RIB: false, VIT: false };
+            documents.forEach(document => {
+              if (document.type === 'DIP') have.DIP = true;
+              if (document.type === 'RIB') have.RIB = true;
+              if (document.type === 'CNI') have.CNI = true;
+              if (document.type === 'VIT') have.VIT = true;
+            });
+            if (have.DIP) percentage.documents.DIP = 5;
+            else percentage.documents.DIP = 0;
+            if (have.RIB) percentage.documents.RIB = 5;
+            else percentage.documents.RIB = 0;
+            if (have.CNI) percentage.documents.CNI = 5;
+            else percentage.documents.CNI = 0;
+            if (have.VIT) percentage.documents.VIT = 5;
+            else percentage.documents.VIT = 0;
+            candidate.percentage = percentage;
+
+            return User_Candidate.updateTotalPercentage(candidate, percentage);
+          });
+        });
+      });
+    });
   });
 };
 

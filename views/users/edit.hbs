@@ -1,4 +1,13 @@
+<link rel="stylesheet" href="/static/assets/css/telinput/intlTelInput.css">
 <style>
+  .iti-flag {
+    background-image: url("/static/assets/images/telinput/flags.png");
+  }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti-flag {
+      background-image: url("/static/assets/images/telinput/flags@2x.png");
+    }
+  }
   /* Container */
   .container {
     margin: 0 auto;
@@ -47,11 +56,11 @@
               <img id="candidateAvatar" {{#if usr.photo}} src="/static/uploads/avatars/{{usr.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
         </div>
-        <form action="/profile/upload?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
-        <span id="editAvatar" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px; background-color: white;">
-            <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
-          </span>
-        <button id="validateAvatarButton" type="submit" class="btn btn-primary" style="display:none"> Valider </button>
+        <form id="avatarForm" action="/api/candidate/add/photo?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
+          <span id="editAvatar" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px; background-color: white;">
+              <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
+            </span>
+          <button id="validateAvatarButton" type="submit" class="btn btn-primary" style="display:none"> Valider </button>
         </form>
           <h4 class="title">{{usr.firstName}} {{usr.lastName}}<br/>
           </h4>
@@ -127,22 +136,30 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
+                <label for="phone">{{tr.pages.register.form_phoneNumber_label}}</label>
+                <input id="phone" name="phone" type="tel"
+                       placeholder="{{tr.pages.register.form_phoneNumber_label_ph}}"
+                       class="form-control" value="{{usr.phone}}" required="">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
                 <label>Code Postal</label>
                 <input type="text" name="postal_code" class="form-control border-input" placeholder="Code Postal"
                        value="{{usr.postal_code}}" required>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
                 <label>Ville</label>
                 <input type="text" name="town" class="form-control border-input" placeholder="Ville"
                        value="{{usr.town}}" required>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
                 <label>Pays</label>
-                <input type="text" name="country" class="form-control border-input" placeholder="Code Postal"
+                <input type="text" name="country" class="form-control border-input" placeholder="Pays"
                        value="{{usr.country}}" required>
               </div>
             </div>
@@ -168,39 +185,12 @@
     </div>
   </div>
 </div>
+<script src="/static/assets/js/telinput/intlTelInput.js"></script>
+<script src="/static/assets/dist/js/uploadPhoto.min.js"></script>
 <script>
-  let avatarSelected = () => {
-    $('#validateAvatarButton').click()
-  };
-
   $(document).ready(function () {
-    $(document).on('change', '.btn-file :file', function () {
-      let input = $(this),
-        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-      input.trigger('fileselect', [label]);
-    });
-
-    $('.btn-file :file').on('fileselect', function (event, label) {
-
-      let input = $(this).parents('.input-group').find(':text'),
-        log = label;
-    });
-
-    function readURL(input) {
-      if (input.files && input.files[0]) {
-        let reader = new FileReader();
-
-        reader.onload = function (e) {
-          $('#candidateAvatar').attr('src', e.target.result);
-        };
-
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    $("#imgInp").change(function () {
-      readURL(this);
-    });
+    let input = document.querySelector("#phone");
+    window.intlTelInput(input);
   });
   $('#changePass').click(function () {
     createModal({

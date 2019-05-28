@@ -2,6 +2,7 @@ const { check } = require('express-validator/check');
 const _ = require('lodash');
 const HTTPValidation = {};
 
+
 HTTPValidation.postAddExperience = [
   check('name').isLength({ min: 3 }),
   check('post_id').isNumeric(),
@@ -34,6 +35,11 @@ HTTPValidation.getWish = [
 
 HTTPValidation.removeWish = [
   check('id').isNumeric()
+];
+
+HTTPValidation.removeWishApplication = [
+  check('id').isNumeric(),
+  check('applicationId').isNumeric(),
 ];
 
 HTTPValidation.getEditWish = [
