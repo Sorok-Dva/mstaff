@@ -47,9 +47,17 @@ function experienceListener(){
   });
 
   $('#toDiploma').click(function() {
-    loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
+    if (permissions.recap){
+      console.log('hop');
+      permissions.recap = false;
+      loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        $('#atsPart').html(html);
+      })
+    } else {
+      loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        $('#atsPart').html(html);
+      })
+    }
   });
 };
 

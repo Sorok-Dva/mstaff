@@ -30,7 +30,8 @@ let permissions = {
   qualificationId: 1,
   skillId: 1,
   checkingMail: null,
-  verifiedEvent: new Event('verified')
+  verifiedEvent: new Event('verified'),
+  recap: false
 };
 
 

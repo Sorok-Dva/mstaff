@@ -27,9 +27,16 @@ function skillListener() {
   });
 
   $('#toIdentity').click(function () {
-    loadTemplate('/static/views/ats/identity.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
-      $('#atsPart').html(html);
-    })
+    if (permissions.recap){
+      permissions.recap = false;
+      loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        $('#atsPart').html(html);
+      })
+    } else {
+      loadTemplate('/static/views/ats/identity.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
+        $('#atsPart').html(html);
+      })
+    }
   });
 }
 
