@@ -227,7 +227,7 @@ User_Candidate.EditProfile = (req, res, next) => {
       user.postal_code = req.body.postal_code;
       user.town = req.body.town;
       user.country = req.body.country;
-      // user.phone = req.body.phone;
+      user.phone = req.body.phone;
       user.save().then(() => {
         candidate.description = req.body.description;
         candidate.save().then(() => {
