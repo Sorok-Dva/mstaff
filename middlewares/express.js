@@ -129,7 +129,6 @@ module.exports = {
         });
       } else if (subdomain.group_id) {
         Subdomain.Group.find(subdomain.group_id, (data) => {
-          // return res.render('index', { layout: 'maintenance' });
           res.locals.group = data;
           req.group = data;
           req.url = `/groupDomain${req.url}`;
