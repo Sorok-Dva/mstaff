@@ -1,0 +1,41 @@
+<div class="modal-body">
+  {{#each this.data.es as |es|}}
+    <div id="applications-modal" class="card col-12" data-id="{{es.EstablishmentReference.finess_et}}">
+      {{es.EstablishmentReference.name}} - <a class="deleteApplication" data-id="{{es.EstablishmentReference.finess_et}}" href="#">Supprimer</a>
+    </div>
+  {{/each}}
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+</div>
+<script>
+  $('a.deleteApplication').click(function() {
+    if (confirm('Voulez-vous vraiment supprimer votre candidature de cet établissement ?')) {
+      let id = $(this).attr('data-id') || $(this).parent().attr('data-id');
+      $.delete(`/api/candidate/wish/{{this.wishId}}/deleteApplication/${id}`, { _csrf }, response => {
+        if (response.deleted) {
+          $(`#applications-modal[data-id="${id}"]`).remove();
+          $('.showEsList[data-applicationId="{{this.wishId}}"]').html(response.count);
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Candidature supprimée de cet établissement.',
+          });
+        } else {
+          notification({
+            icon: 'exclamation',
+            type: 'danger',
+            title: 'Une erreur est survenue lors de la suppression de cette candidature.',
+          });
+        }
+      }).catch(error => {
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Une erreur est survenue lors de la suppression de cette candidature : ',
+          message: error.responseJSON.error
+        });
+      });
+    }
+  });
+</script>
