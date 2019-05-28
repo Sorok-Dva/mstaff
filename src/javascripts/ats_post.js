@@ -20,6 +20,9 @@ function createServicesSelect(services, input){
   input.empty().select2({
     data: services.sort(),
     disabled: false,
+    language: {
+      inputTooShort: () => { return 'Veuillez entrer 1 ou plusieurs caractères' }
+    },
     minimumInputLength: 1,
     minimumResultsForSearch: Infinity
   });
