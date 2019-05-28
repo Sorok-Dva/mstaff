@@ -5,6 +5,11 @@ function resetAvailability(){
   candidateDatas.wish.nightTime = false;
 };
 
+function resetInternshipDate(){
+  candidateDatas.wish.start = null;
+  candidateDatas.wish.end = null;
+};
+
 function selectTemplate(checkedSwitch){
   switch (checkedSwitch) {
     case 'cdi-cdd':
@@ -32,9 +37,16 @@ function contractListener(){
       saveDatas();
       let selected = $('#contractChoices input:checked').attr('name');
       let template = selectTemplate(selected);
-      loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-        $('#atsPart').html(html);
-      });
+      if (selected === 'vacation' && permissions.recap){
+        permissions.recap = false;
+        loadTemplate(`/static/views/ats/recap.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+          $('#atsPart').html(html);
+        });
+      } else {
+        loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+          $('#atsPart').html(html);
+        });
+      }
     }
   });
   $('#contractChoices input').change(function () {
@@ -42,10 +54,12 @@ function contractListener(){
       switch(this.id){
         case 'cdiToggle':
           $('#vacationToggle, #internshipToggle').prop('checked', false);
+          resetInternshipDate();
           break;
         case 'vacationToggle':
           $('#cdiToggle, #internshipToggle').prop('checked', false);
           resetAvailability();
+          resetInternshipDate();
           break;
         case 'internshipToggle':
           $('#cdiToggle, #vacationToggle').prop('checked', false);

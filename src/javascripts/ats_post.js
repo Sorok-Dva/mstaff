@@ -76,9 +76,16 @@ function postListener(){
   $('#toContract').click(function() {
     if (verifyInputs()){
       saveDatas();
-      loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-        $('#atsPart').html(html);
-      })
+      if (permissions.recap){
+        permissions.recap = false;
+        loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+          $('#atsPart').html(html);
+        })
+      } else {
+        loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+          $('#atsPart').html(html);
+        })
+      }
     }
   });
   $('#InputPosts').on( 'keyup autocompleteclose', () => {

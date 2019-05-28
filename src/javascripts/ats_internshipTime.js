@@ -1,11 +1,5 @@
-function resetInternshipDate(){
-  candidateDatas.wish.start = null;
-  candidateDatas.wish.end = null;
-};
-
 function internshipTimeListener(){
   $('#backToContract').click(function() {
-    resetInternshipDate();
     loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
@@ -14,9 +8,16 @@ function internshipTimeListener(){
   $('#toExperience').click(function() {
     if (verifyInputs()){
       saveDatas();
-      loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-        $('#atsPart').html(html);
-      });
+      if (permissions.recap){
+        permissions.recap = false;
+        loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+          $('#atsPart').html(html);
+        });
+      } else {
+        loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+          $('#atsPart').html(html);
+        });
+      }
     }
   });
 };
