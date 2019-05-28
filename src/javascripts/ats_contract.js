@@ -6,8 +6,8 @@ function resetAvailability(){
 };
 
 function resetInternshipDate(){
-  candidateDatas.wish.start = null;
-  candidateDatas.wish.end = null;
+  candidateDatas.wish.start = undefined;
+  candidateDatas.wish.end = undefined;
 };
 
 function selectTemplate(checkedSwitch){

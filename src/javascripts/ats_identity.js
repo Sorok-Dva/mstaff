@@ -61,6 +61,8 @@ function togglePasswordVisibility() {
 function verifyInputs(){
   let mail = $('#identityMail').val();
   let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
+  // let nameRegex = /^([a-zA-Z \-]){2,30}$/;
+
   let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
   if (isValidMail){
     if (mail !== permissions.checkingMail){
@@ -68,6 +70,10 @@ function verifyInputs(){
       isAvailableMail(mail).then(data => {
         if (data.available){
           permissions.checkingMail = null;
+
+          // if (!nameRegex.test(value))
+
+
           let forename = $('#identityForename').val();
           let name = $('#identityName').val();
           let birthDate = $('#identityBirth').val();
