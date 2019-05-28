@@ -190,6 +190,9 @@ User_Candidate.viewProfile = (req, res, next) => {
     }]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    if (_.isNil(candidate.percentage)) {
+      User_Candidate.updateWholePercentage(req.user);
+    }
     return res.render('candidates/profile', { candidate, a: { main: 'profile' } })
   }).catch(error => next(new BackError(error)));
 };
@@ -1281,6 +1284,64 @@ User_Candidate.updatePercentage = (user, type) => {
         });
         break;
     }
+  });
+};
+
+User_Candidate.updateWholePercentage = (user) => {
+  Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return false;
+    let { percentage } = candidate;
+    if (_.isNil(percentage)) percentage = {};
+
+    if (!('profile' in percentage)) percentage.profile = { main: 0, description: 0, photo: 0 };
+    if (!('formations' in percentage)) percentage.formations = 0;
+    if (!('experiences' in percentage)) percentage.experiences = 0;
+    if (!('documents' in percentage)) percentage.documents = { DIP: 0, RIB: 0, CNI: 0, VIT: 0 };
+
+    Models.Experience.findAndCountAll({ where: { candidate_id: candidate.id } }).then(experiences => {
+      Models.CandidateFormation.findAndCountAll({ where: { candidate_id: candidate.id } }).then(formations => {
+        Models.CandidateDocument.findAll({ where: { candidate_id: candidate.id } }).then(documents => {
+          Models.User.findOne({ where: { id: user.id } }).then(user => {
+            if (user.firstName && user.lastName && user.phone && user.town) {
+              percentage.profile.main = 20;
+            } else percentage.profile.main = 0;
+
+            if (!_.isNil(candidate.description) && candidate.description.length > 10) {
+              percentage.profile.description = 30;
+            } else percentage.profile.description = 0;
+
+            if (user.photo) {
+              percentage.profile.photo = 10;
+            } else percentage.profile.photo = 0;
+
+            if (experiences.count > 0) percentage.experiences = 10;
+            else percentage.experiences = 0;
+
+            if (formations.count > 0) percentage.formations = 10;
+            else percentage.formations = 0;
+
+            let have = { DIP: false, CNI: false, RIB: false, VIT: false };
+            documents.forEach(document => {
+              if (document.type === 'DIP') have.DIP = true;
+              if (document.type === 'RIB') have.RIB = true;
+              if (document.type === 'CNI') have.CNI = true;
+              if (document.type === 'VIT') have.VIT = true;
+            });
+            if (have.DIP) percentage.documents.DIP = 5;
+            else percentage.documents.DIP = 0;
+            if (have.RIB) percentage.documents.RIB = 5;
+            else percentage.documents.RIB = 0;
+            if (have.CNI) percentage.documents.CNI = 5;
+            else percentage.documents.CNI = 0;
+            if (have.VIT) percentage.documents.VIT = 5;
+            else percentage.documents.VIT = 0;
+            candidate.percentage = percentage;
+
+            return User_Candidate.updateTotalPercentage(candidate, percentage);
+          });
+        });
+      });
+    });
   });
 };
 
