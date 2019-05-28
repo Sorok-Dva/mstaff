@@ -15,7 +15,7 @@ const storage = (path, type) => multer.diskStorage({
   }
 });
 const videoUpload = multer({ storage: storage('candidates/videos/', 'video') }).single('file');
-const avatarUpload = multer({ storage: storage('candidates/images/', 'photo') }).single('file');
+const avatarUpload = multer({ storage: storage('avatars/', 'photo') }).single('photo');
 const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).fields(
   [
     { name: 'CNI', maxCount: 1 }, // carte natinale d'identité
@@ -41,6 +41,15 @@ router.post('/:action/video',
   Authentication.ensureIsCandidate,
   videoUpload,
   User.Candidate.addVideo);
+
+/**
+ * @Route('/profile/upload') POST;
+ * Form for edit user avatar.
+ */
+router.post('/:action/photo',
+  Authentication.ensureIsCandidate,
+  avatarUpload,
+  User.Candidate.UploadImageProfile);
 
 router.post('/add/document',
   Authentication.ensureIsCandidate,
@@ -109,6 +118,15 @@ router.get('/wish/:id(\\d+)',
     Authentication.ensureIsCandidate,
     User.Candidate.editWish
   );
+
+router.get('/wish/:id(\\d+)/getEsList',
+  Authentication.ensureIsCandidate,
+  HTTPValidation.CandidateController.getWish,
+  User.Candidate.getESWish)
+  .delete('/wish/:id(\\d+)/deleteApplication/:applicationId(\\d+)',
+    Authentication.ensureIsCandidate,
+    HTTPValidation.CandidateController.removeWishApplication,
+    User.Candidate.removeApplicationWish);
 
 router.post('/wish/:id(\\d+)/refresh',
   Authentication.ensureIsCandidate,
