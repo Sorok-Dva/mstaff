@@ -711,8 +711,8 @@ User_Candidate.ATSAddAll = (req, res, next) => {
                       new: true
                     }, { transaction: t }).then( () => {
                       return Models.User.findOne({
-                        where: { id: user.id}
-                      }, { transaction: t}).then(item => {
+                        where: { id: user.id }
+                      }, { transaction: t }).then(item => {
                         user = item;
                       })
                     });
@@ -722,7 +722,7 @@ User_Candidate.ATSAddAll = (req, res, next) => {
             })
           })
         })
-      }, { transaction: t});
+      }, { transaction: t });
     }).then(result => {
       Mailer.Main.sendUserVerificationEmail(user);
       return res.status(200).send({ result: 'created', entities: result });
