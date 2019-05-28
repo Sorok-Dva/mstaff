@@ -140,6 +140,9 @@ function notify(error){
 
 function saveDatas(editMode){
   let current = {};
+  let qualificationStart = $('#qualificationStart').data("DateTimePicker");
+  let qualificationEnd = $('#qualificationEnd').data("DateTimePicker");
+
   if (editMode){
     let qualifications = candidateDatas.qualifications;
     current =  qualifications[qualifications.map(qualification => qualification.id).indexOf(permissions.editId)];
@@ -148,10 +151,13 @@ function saveDatas(editMode){
     permissions.qualificationId += 1;
   }
   current.name = $('#qualification').val();
-  current.start = new Date($('#qualificationStart').data("DateTimePicker").date());
+  current.start = new Date(qualificationStart.date());
+  qualificationStart.clear();
   current.end = null;
-  if ($('#qualificationEnd').data("DateTimePicker").date())
-    current.end = new Date($('#qualificationEnd').data("DateTimePicker").date());
+  if (qualificationEnd.date()){
+    current.end = new Date(qualificationEnd.date());
+    qualificationEnd.clear();
+  }
   if (editMode){
     permissions.editMode = false;
   } else {

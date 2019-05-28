@@ -311,6 +311,8 @@ function notify(error){
 
 function saveDatas(editMode){
   let current = {};
+  let xpStart = $('#xpStart').data("DateTimePicker");
+  let xpEnd = $('#xpEnd').data("DateTimePicker")
   if (editMode){
     let experiences = candidateDatas.experiences;
     current = experiences[experiences.map(xp => xp.id).indexOf(permissions.editId)];
@@ -325,9 +327,11 @@ function saveDatas(editMode){
   current.internship = 0;
   current.service_label = $('#xpService').val();
   current.service_id = foundIdByLabel(current.service_label);
-  current.start = new Date($('#xpStart').data("DateTimePicker").date());
-  if ($('#xpEnd').data("DateTimePicker").date()){
-    current.end = new Date($('#xpEnd').data("DateTimePicker").date());
+  current.start = new Date(xpStart.date());
+  xpStart.clear();
+  if (xpEnd.date()){
+    current.end = new Date(xpEnd.date());
+    xpEnd.clear();
     current.current = 0;
   } else {
     current.end = null;
