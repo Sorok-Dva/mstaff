@@ -7,4 +7,6 @@ const router = express.Router();
 router.get('/',
   Subdomain.Group.ViewIndex);
 
+// router.get('/postuler', (req, res, next) => res.redirect('/join'));
+
 module.exports = router;
