@@ -137,7 +137,7 @@ function notify(error){
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer un prénom comportant uniquement des caractères alphabétiques (espace ou trait d'union autorisé).`
+        message: `Merci d'indiquer un prénom comportant uniquement des caractères alphabétiques (espace et trait d'union autorisés).`
       });
       break;
 
@@ -154,7 +154,7 @@ function notify(error){
         icon: 'exclamation',
         type: 'danger',
         title: 'Informations manquantes :',
-        message: `Merci d'indiquer un nom comportant uniquement des caractères alphabétiques (espace ou trait d'union autorisé).`
+        message: `Merci d'indiquer un nom comportant uniquement des caractères alphabétiques (espace et trait d'union autorisés).`
       });
       break;
 
