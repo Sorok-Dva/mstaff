@@ -58,10 +58,29 @@ function togglePasswordVisibility() {
   }
 };
 
+function regexVerif(type, entity){
+  let nameRegex = /^([a-zA-Z \-]){2,30}$/;
+
+  if (type === 'forename'){
+    if ($.isEmptyObject(entity))
+      return notify('noForename');
+    else if (!nameRegex.test(entity))
+      return notify('wrongForenameFormat');
+    else
+      return true;
+  } else if (type === 'name'){
+    if ($.isEmptyObject(entity))
+      return  notify('noName');
+    else if (!nameRegex.test(entity))
+      return notify('wrongNameFormat');
+    else
+      return true;
+  }
+}
+
 function verifyInputs(){
   let mail = $('#identityMail').val();
   let mailRegex = '^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,4})+$';
-  // let nameRegex = /^([a-zA-Z \-]){2,30}$/;
 
   let isValidMail = mail.match(mailRegex) !== null ? true : notify('wrongMailFormat');
   if (isValidMail){
@@ -80,8 +99,8 @@ function verifyInputs(){
           let postal = $('#identityPostal').val();
           let city = $('#identityCity').val();
           let password = $('#identityPassword').val();
-          let isValidForename = !$.isEmptyObject(forename) ? true : notify('noForename');
-          let isValidName = !$.isEmptyObject(name) ? true : notify('noName');
+          let isValidForename = regexVerif('forename', forename);
+          let isValidName = regexVerif('name', name);
           let isValidPostal = !isNaN(postal) ? true : notify('wrongPostalCode');
           let isValidCity = !$.isEmptyObject(city);
           let isValidBirthDate = new Date(birthDate) !== 'Invalid Date' ? true : notify('wrongBirthDateFormat');
@@ -113,6 +132,15 @@ function notify(error){
         message: `Merci d'indiquer votre prénom.`
       });
       break;
+    case 'wrongForenameFormat':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer un prénom comportement uniquement des caractères alphabétiques (espace ou trait d'union autorisé).`
+      });
+      break;
+
     case 'noName':
       notification({
         icon: 'exclamation',
@@ -121,6 +149,15 @@ function notify(error){
         message: `Merci d'indiquer votre nom.`
       });
       break;
+    case 'wrongNameFormat':
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Merci d'indiquer un nom comportement uniquement des caractères alphabétiques (espace ou trait d'union autorisé).`
+      });
+      break;
+
     case 'wrongPostalCode':
       notification({
         icon: 'exclamation',
