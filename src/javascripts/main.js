@@ -105,8 +105,8 @@ let createModal = (opts, callback) => {
   $(`#${opts.id}`).remove();
   loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
     $('body').append(html);
-    if ('canBeClose' in opts) {
-      if (opts.canBeClose) {
+    if ('cantBeClose' in opts) {
+      if (opts.cantBeClose) {
         $(`#${opts.id}`).modal({
           backdrop: 'static',
           keyboard: false
