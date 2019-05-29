@@ -120,5 +120,3 @@ $(document).ready(() => {
   if(candidateDatas.wish.post)
     reload_post();
 });
-
-
