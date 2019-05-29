@@ -66,7 +66,7 @@ User.create = (req, res, next) => {
       }
     }).catch(error => {
       if (req.xhr){
-        return next(new BackError('Une erreur est survenue lors de la creation de votre compte', 500));
+        return res.status(httpStatus.BAD_REQUEST).send({ error: 'Une erreur est survenue lors de la creation de votre compte' });
       } else {
         res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error });
       }
