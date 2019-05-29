@@ -5,7 +5,7 @@ $(document).ready(() => {
   } else if (navigator.userAgent.indexOf('Safari') !== -1) {
     createModal({
       id: 'alertBadNavigatorModal',
-      title: 'Attention : navigateur obsolète détecté.',
+      title: 'Attention : navigateur obsolète détecté !',
       modal: 'badNavigator',
       cantBeClose: true,
       navigator: 'Safari'
@@ -13,7 +13,7 @@ $(document).ready(() => {
   } else if ((navigator.userAgent.indexOf('MSIE') !== -1) || (!!document.documentMode === true)) {
     createModal({
       id: 'alertBadNavigatorModal',
-      title: 'Attention : navigateur obsolète détecté.',
+      title: 'Attention : navigateur obsolète détecté !',
       modal: 'badNavigator',
       cantBeClose: true,
       navigator: 'Internet Explorer'
@@ -21,7 +21,7 @@ $(document).ready(() => {
   } else {
     createModal({
       id: 'alertBadNavigatorModal',
-      title: 'Attention : navigateur obsolète détecté.',
+      title: 'Attention : navigateur obsolète détecté !',
       modal: 'badNavigator',
       cantBeClose: true,
       navigator: 'Inconnu'
