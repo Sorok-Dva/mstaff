@@ -163,8 +163,8 @@
               <div class="col-9">
                 <div class="form-group col-8" style="margin-top: 25px">
                   <select class="form-control" id="selectPostType">
+                    <option>Sélectionnez un poste ci-dessous</option>
                     {{#each posts as |post|}}
-                      <option>Sélectionnez un poste ci-dessous</option>
                       <option value="{{post.id}}" data-categorie="{{post.categoriesPS_id}}">{{post.name}}</option>
                     {{/each}}
                   </select>
