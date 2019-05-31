@@ -156,6 +156,8 @@ Establishment_Need.edit = (req, res, next) => {
     post: !_.isNil(req.body.post) ? req.body.post || null : null,
     service: !_.isNil(req.body.filterQuery.service) ? req.body.filterQuery.service || null : null,
     diploma: !_.isNil(req.body.filterQuery.diploma) ? req.body.filterQuery.diploma || null : null,
+    is_available: !_.isNil(req.body.filterQuery.is_available) ? req.body.filterQuery.is_available || null : null,
+    postal_code: !_.isNil(req.body.filterQuery.postal_code) ? req.body.filterQuery.postal_code || null : null,
     start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart || null : null,
     end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd || null : null
   }, {
@@ -201,6 +203,8 @@ Establishment_Need.Create = (req, res, next) => {
     post: !_.isNil(req.body.post) ? req.body.post : null,
     service: !_.isNil(req.body.filterQuery.service) ? req.body.filterQuery.service : null,
     diploma: !_.isNil(req.body.filterQuery.diploma) ? req.body.filterQuery.diploma : null,
+    is_available: !_.isNil(req.body.filterQuery.is_available) ? req.body.filterQuery.is_available : null,
+    postal_code: !_.isNil(req.body.filterQuery.postal_code) ? req.body.filterQuery.postal_code : null,
     start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart : null,
     end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd : null,
     createdBy: req.user.id
