@@ -319,6 +319,13 @@ $(document).ready(() => {
         }).catch(errors => errorsHandler(errors));
       }
     });
+  } else {
+    $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
+      data.partials = ['candidatePercentageTooltip'];
+      loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+        $('#baseResult').empty().html(html);
+      });
+    }).catch(errors => errorsHandler(errors));
   }
 
   $('button#saveNeed').click(function () {
