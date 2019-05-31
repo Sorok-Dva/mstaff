@@ -82,25 +82,47 @@ let showDiplomaModal = () => {
   });
 };
 
+let showAvailabilityModal = () => {
+  createModal({
+    id: 'availabilityType',
+    modal: 'es/need/availabilityType',
+    title: 'Disponibilité',
+    checked: need.filterQuery.is_available
+  });
+};
+
+let showPostalCodeModal = () => {
+  createModal({
+    id: 'postalCodeType',
+    modal: 'es/need/postalCodeType',
+    title: 'Code Postal',
+    postalCode: need.filterQuery.postal_code
+  });
+};
+
 let resetSearch = () => {
   let esSave = need.filterQuery.establishments;
   delete need.filterQuery;
   need.filterQuery = { establishments: esSave };
   $('input#post').val('');
   $('#cvCount').text(baseCVCount);
+  $('#resetSearch').hide();
   $('#searchCount').empty().hide();
   $('#searchResult').empty().hide();
   $('#baseResult').show();
   $('#paginationContainer').show();
-  $('#btnContractType').empty();
   $('#btnServiceType').empty();
+  $('#btnContractType').empty();
+  $('#btnTimeType').empty();
+  $('#btnDiplomaType').empty();
+  $('#btnAvailability').empty();
+  $('#btnPostalCode').empty();
   $('#btnServiceType').parent().removeClass('btn-info').addClass('btn-outline-info');
   $('#btnContractType').parent().removeClass('btn-info').addClass('btn-outline-info');
-  $('#btnDiplomaType').empty();
   $('#btnDiplomaType').parent().removeClass('btn-info').addClass('btn-outline-info');
-  $('#btnTimeType').empty();
+  $('#btnAvailability').parent().removeClass('btn-info').addClass('btn-outline-info');
+  $('#btnPostalCode').parent().removeClass('btn-info').addClass('btn-outline-info');
   $('#btnTimeType').parent().removeClass('btn-info').addClass('btn-outline-info');
-  $('#resetSearch').hide();
 };
 
 let addCandidate = (id, type) => {

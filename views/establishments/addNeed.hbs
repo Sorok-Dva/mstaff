@@ -92,6 +92,12 @@
       <button class="btn btn-outline-info" onclick="return showDiplomaModal()">
         Diplômes Complémentaires <span id="btnDiplomaType">{{need.diploma}}</span>
       </button>
+      <button class="btn btn-outline-info" onclick="return showAvailabilityModal()">
+        Disponibilité <span id="btnAvailability">{{need.available}}</span>
+      </button>
+      <button class="btn btn-outline-info" onclick="return showPostalCodeModal()">
+        Code Postal <span id="btnPostalCode">{{need.postal_code}}</span>
+      </button>
     </div>
     <div class="text-center" style="padding: 10px">
       <i class="fal fa-archive fa-2x Show" id="showArchived" onclick="showArchived()" style="cursor: pointer; margin-left: 5px; color:#9e9e9e"
@@ -145,6 +151,7 @@
     <option value="{{formation.id}}">{{formation.name}}</option>
   {{/each}}
 </select>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.js"></script>
 <script src="/static/assets/dist/js/addNeed.es.min.js"></script>
 <script>
   let size = 52;
@@ -176,4 +183,3 @@
     });
     {{/if}}
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.js"></script>
