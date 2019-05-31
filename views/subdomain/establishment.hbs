@@ -26,17 +26,9 @@
         </div>
         <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
           <!-- Button -->
-
           <a href="/join?esList={{es.finess}}+55655454+515454541" class="btn btn-outline-primary d-block d-md-inline-block">
             Candidature spontanée
           </a>
-
-          <!--
-          <button class="btn btn-outline-primary d-block d-md-inline-block" onclick="launchAts()">
-            Candidature spontanée {{es.finess}}
-          </button>
-           -->
-
         </div>
       </div> <!-- / .row -->
     </div> <!-- / .header-body -->
@@ -106,13 +98,6 @@
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
-  function launchAts(){
-    esList = [];
-    let _csrf = $('meta[name="csrf-token"]').attr('content');
-    esList.push('{{es.finess}}');
-    $.post('/join', {es: esList, _csrf });
-  }
-
   if (document.getElementById('map')) {
     let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};
     let map = new google.maps.Map(document.getElementById('map'), {
