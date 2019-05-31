@@ -189,6 +189,20 @@ Establishment_Need.edit = (req, res, next) => {
   });
 };
 
+Establishment_Need.delete = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+  Models.Need.findOne({
+    where: { id: req.params.id, createdBy: req.user.id }
+  }).then(need => {
+    if (_.isNil(need)) return next(new BackError('Besoin introuvable.', 404));
+    return need.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  }).catch(error => new BackError(error));
+};
+
 Establishment_Need.Create = (req, res, next) => {
   const errors = validationResult(req);
 
