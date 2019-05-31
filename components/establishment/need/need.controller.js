@@ -15,6 +15,7 @@ const Establishment_Need = {};
 Establishment_Need.ViewAll = (req, res, next) => {
   Models.Need.findAll({
     where: { es_id: req.user.opts.currentEs, closed: false },
+    order: [['createdAt', 'DESC']],
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
