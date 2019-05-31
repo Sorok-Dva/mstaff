@@ -36,6 +36,7 @@
     if(!_.isNil(need.filterQuery.diploma)) {
       delete need.filterQuery.diploma;
       $('#btnDiplomaType').empty();
+      $('#btnDiplomaType').parent().removeClass('btn-info').addClass('btn-outline-info');
     }
     searchCandidates();
   });
