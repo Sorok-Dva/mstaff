@@ -93,7 +93,7 @@
         Diplômes Complémentaires <span id="btnDiplomaType">{{need.diploma}}</span>
       </button>
       <button class="btn btn-{{#unless need.is_available}}outline-{{/unless}}info" onclick="return showAvailabilityModal()">
-        Disponibilité <span id="btnAvailability">{{#ifCond need.is_available '===' 'true'}}D{{else}}Ind{{/ifCond}}isponible</span>
+        Disponibilité <span id="btnAvailability">{{#ifCond need.is_available '===' 'true'}}Disponible{{/ifCond}}{{#ifCond need.is_available '===' 'false'}}Indisponible{{/ifCond}}</span>
       </button>
       <button class="btn btn-{{#unless need.postal_code}}outline-{{/unless}}info" onclick="return showPostalCodeModal()">
         Code Postal <span id="btnPostalCode">{{need.postal_code}}</span>
@@ -168,6 +168,12 @@
       {{/if}}
       {{#if need.diploma}}
         need.filterQuery.diploma = '{{need.diploma}}';
+      {{/if}}
+      {{#if need.is_available}}
+        need.filterQuery.is_available = {{need.is_available}};
+      {{/if}}
+      {{#if need.postal_code}}
+        need.filterQuery.postal_code = '{{need.postal_code}}';
       {{/if}}
       need.filterQuery.timeType = {
         {{#if need.start}} dateStart: new Date('{{need.start}}'),{{/if}}
