@@ -258,12 +258,12 @@ Establishment_Need.notify = (req, i, needCandidate, need) => {
       },
       required: true
     }
-  }).then(user => {
-    if (_.isNil(user)) return false;
+  }).then(candidate => {
+    if (_.isNil(candidate)) return false;
     Models.Notification.create({
       fromUser: req.user.id,
       fromEs: req.params.esId,
-      to: user.id,
+      to: candidate.User.id,
       subject: 'Un établissement est intéressé par votre profil !',
       title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
       image: '/static/assets/images/happy.jpg',
@@ -299,7 +299,7 @@ Establishment_Need.notify = (req, i, needCandidate, need) => {
           end: _.isNil(need.end) ? null : moment(need.end).format('dddd Do MMMM YYYY'),
         };
         mailer.sendEmail({
-          to: user.email,
+          to: candidate.User.email,
           subject: 'Un établissement a consulté votre profil.',
           template: 'candidate/needNotification',
           context: {
