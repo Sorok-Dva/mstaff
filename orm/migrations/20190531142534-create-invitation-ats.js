@@ -9,10 +9,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       key: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
       es: {
-        type: Sequelize.JSON
+        type: Sequelize.JSON,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
