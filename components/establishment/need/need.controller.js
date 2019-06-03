@@ -15,6 +15,7 @@ const Establishment_Need = {};
 Establishment_Need.ViewAll = (req, res, next) => {
   Models.Need.findAll({
     where: { es_id: req.user.opts.currentEs, closed: false },
+    order: [['createdAt', 'DESC']],
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -188,6 +189,20 @@ Establishment_Need.edit = (req, res, next) => {
     }
     res.status(201).send({ need, status: 'updated' });
   });
+};
+
+Establishment_Need.delete = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+  Models.Need.findOne({
+    where: { id: req.params.id, createdBy: req.user.id }
+  }).then(need => {
+    if (_.isNil(need)) return next(new BackError('Besoin introuvable.', 404));
+    return need.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  }).catch(error => new BackError(error));
 };
 
 Establishment_Need.Create = (req, res, next) => {

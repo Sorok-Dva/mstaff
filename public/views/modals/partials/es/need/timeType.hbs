@@ -105,6 +105,7 @@
     if (!_.isNil(need.filterQuery.timeType)) {
       delete need.filterQuery.timeType;
       $('#btnTimeType').empty();
+      $('#btnTimeType').parent().removeClass('btn-info').addClass('btn-outline-info');
     }
     searchCandidates();
   });

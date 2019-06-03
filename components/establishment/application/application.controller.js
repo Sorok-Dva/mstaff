@@ -386,6 +386,13 @@ Establishment_Application.getCandidates = (req, res, next) => {
   };
 
   if (!_.isNil(filterQuery.contractType)) query.include[0].where.contract_type = filterQuery.contractType;
+  if (!_.isNil(filterQuery.is_available)) {
+    query.where[1] = {
+      [Op.and]: [
+        Sequelize.literal('`Wish->Candidate`.`is_available` = ' + `${filterQuery.is_available === 'true' ? '1' : '0'}`)
+      ]
+    };
+  }
   if (!_.isNil(filterQuery.serviceId)) {
     /*query.include[0].where.services = {
       [Op.regexp]: Sequelize.literal(`"(${filterQuery.service})"`),
@@ -397,6 +404,11 @@ Establishment_Application.getCandidates = (req, res, next) => {
     query.include[0].include.include[1].required = true;
     query.include[0].include.include[1].where = {
       name: { [Op.regexp]: filterQuery.diploma }
+    };
+  }
+  if (!_.isNil(filterQuery.postal_code)) {
+    query.include[0].include.include[0].where = {
+      postal_code: { [Op.regexp]: filterQuery.postal_code }
     };
   }
 

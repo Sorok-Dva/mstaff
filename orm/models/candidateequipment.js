@@ -3,12 +3,6 @@ module.exports = (sequelize, DataTypes) => {
   const CandidateEquipment = sequelize.define('CandidateEquipment', {
     candidate_id: {
       type: DataTypes.INTEGER,
-      references: {
-        model: 'Candidate',
-        key: 'id',
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
       allowNull: false
     },
     name: DataTypes.STRING,

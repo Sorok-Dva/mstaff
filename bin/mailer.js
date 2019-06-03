@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const env = require('dotenv').config().parsed;
 const { Env } = require('../helpers/helpers');
+const discord = require('./discord-bot');
 const Mailer = {};
 
 const options = {
@@ -42,8 +43,16 @@ if (!Env.isTest) {
     }, (error, info) => {
       transporter.close();
       /* eslint-disable no-console */
-      if (error) return console.log(`[MAIL_ERROR]`, JSON.stringify(info));
-      if (info) return console.log(`[MAIL_INFO]`, JSON.stringify(info));
+      if (error) {
+        discord(`**[MAIL_ERROR] - ${Env.current}** to : ${opts.to}, subject : "${opts.subject}", template: ${opts.template}.\n\n`
+          + `  **Error:** \n _${JSON.stringify(error)}_ \n`, 'emails');
+        return console.log(`[MAIL_ERROR]`, JSON.stringify(error));
+      }
+      if (info) {
+        discord(`**[MAIL_INFO] - ${Env.current}** to : ${opts.to}, subject : "${opts.subject}", template: ${opts.template}.\n\n`
+          + `  **Info:** \n _${JSON.stringify(info)}_ \n`, 'emails');
+        return console.log(`[MAIL_INFO]`, JSON.stringify(info));
+      }
       /* eslint-enable no-console */
     });
   };
