@@ -72,7 +72,8 @@
                   icon: 'check-circle',
                   type: 'success',
                   title: 'Groupe(s) lié(s)',
-                  message: ``
+                  message: ``,
+                  onClosed: () => $(location).attr('href',`/back-office/super-groups`)
                 });
               });
             }
