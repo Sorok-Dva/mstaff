@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     service: DataTypes.STRING,
     diploma: DataTypes.STRING,
     contract_type: DataTypes.STRING,
+    is_available: DataTypes.STRING,
+    postal_code: DataTypes.STRING,
     start: DataTypes.DATE,
     end: DataTypes.DATE,
     closed: DataTypes.BOOLEAN,

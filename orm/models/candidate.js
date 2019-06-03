@@ -30,47 +30,56 @@ module.exports = (sequelize, DataTypes) => {
     Candidate.hasMany(models.Experience, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'experiences'
+      as: 'experiences',
+      onDelete: 'CASCADE'
     });
     Candidate.hasMany(models.Wish, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'wishes'
+      as: 'wishes',
+      onDelete: 'CASCADE'
     });
     Candidate.hasMany(models.Application, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'applications'
+      as: 'applications',
+      onDelete: 'CASCADE'
     });
     Candidate.hasMany(models.CandidateQualification, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'qualifications'
+      as: 'qualifications',
+      onDelete: 'CASCADE'
     });
     Candidate.hasMany(models.CandidateFormation, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'formations'
+      as: 'formations',
+      onDelete: 'CASCADE'
     });
     Candidate.hasMany(models.CandidateSkill, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'skills'
+      as: 'skills',
+      onDelete: 'CASCADE'
     });
     Candidate.hasMany(models.CandidateEquipment, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'equipments'
+      as: 'equipments',
+      onDelete: 'CASCADE'
     });
     Candidate.hasMany(models.CandidateSoftware, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'softwares'
+      as: 'softwares',
+      onDelete: 'CASCADE'
     });
     Candidate.hasMany(models.CandidateDocument, {
       foreignKey: 'candidate_id',
       sourceKey: 'id',
-      as: 'documents'
+      as: 'documents',
+      onDelete: 'CASCADE'
     });
   };
   return Candidate;

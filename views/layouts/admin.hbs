@@ -8,7 +8,7 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
     <meta name="csrf-token" content="{{csrfToken}}">
-    
+
     <title>Mstaff - Back Office</title>
 
     <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/images/apple-icon.png">
@@ -87,6 +87,7 @@
   <script src="/static/assets/js/dashboard.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109194110-3"></script>
   <script>
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(() => {
       let sidebarMini = localStorage.getItem('sidebarMini') || 'false';
       if (sidebarMini === 'true') {

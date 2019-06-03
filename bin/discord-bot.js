@@ -10,6 +10,10 @@ module.exports = (text, bot) => {
       discord.hookId = '533663856631873547';
       discord.hookToken = 'd0AD1Grkz8qe5Q90sBXpvWyOiEqSnBoQKGjMyBvb_oVqLFdBISzVvVqYhL8CI3SMLnMv';
       break;
+    case 'emails':
+      discord.hookId = '584036778562813952';
+      discord.hookToken = 'DKNYQ24tcEd8enhLKVrSG1mJ1xc7FpRm6YOQ5glFCFjyoD3ouQ_QKV757jqGS84SdLQO';
+      break;
   }
   discord.sendMessage(text);
 };
