@@ -26,6 +26,6 @@ let addWish = () => {
       } else {
         notify('errorAddWish');
       }
-    });
+    }).catch(error => errorsHandler(error));;
   }
 };

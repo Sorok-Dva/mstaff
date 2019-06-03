@@ -19,6 +19,28 @@ Install project dependencies:
 npm install
 ```
 
+Create .env file:
+
+```bash
+touch .env
+```
+
+Env var:
+```
+SECRET=
+SITE_TITLE=Mstaff
+URL=localhost
+PORT=3001
+ENV=development
+DOMAIN=localhost
+GMAIL_EMAIL=
+GMAIL_CLIENT_ID=
+GMAIL_CLIENT_SECRET=
+GMAIL_REFRESH_TOKEN=
+GMAIL_ACCESS_TOKEN=
+SENTRY_DNS=
+```
+
 Create local database:
 
 ```bash
@@ -48,14 +70,6 @@ Run migrations or seeds in specific db:
 ```bash
 npm run db:migrate -- --env test
 npm run db:seed -- --env e2e
-```
-
-Build uploads folder:
-
-```bash
-mkdir -p  public/uploads/candidates/documents
-mkdir -p  public/uploads/candidates/videos
-mkdir -p  public/uploads/candidates/photos
 ```
 
 Build and run local server:

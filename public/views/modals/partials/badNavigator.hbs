@@ -1,0 +1,24 @@
+<div class="modal-body">
+  <p>Vous utilisez un navigateur obsolète qui ne correspond pas à nos critères pour une utilisation optimale de Mstaff.</p>
+  <p><b>Veuillez prendre connaissance des quelques navigateurs que nous vous proposons et téléchargez-en un.</b></p>
+  <ul>
+    <li><a href="https://www.google.com/intl/fr_fr/chrome/">Google Chrome</a></li>
+    <li><a href="https://www.mozilla.org/fr/firefox/campaign/">Mozilla Firefox</a></li>
+    <li><a href="https://www.opera.com/">Opera</a></li>
+    <li><a href="https://www.microsoft.com/fr-fr/windows/microsoft-edge">Microsoft Edge</a></li>
+  </ul>
+
+  <p><i>
+    <i class="fal fa-info-circle"
+       data-toggle="tooltip" data-placement="top"
+       title="Il semblerait que vous utilisez un navigateur ({{this.navigator}}) qui ne respecte pas certains standards du Web. Afin de vous proposer une expérience de navigation optimale sur Mstaff, nous vous recommandons vivement de télécharger un navigateur plus moderne.">
+    </i>
+    Pourquoi je vois ce message ?
+  </i></p>
+</div>
+
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+</script>

@@ -7,28 +7,26 @@ const router = express.Router();
 router.get('/',
   Subdomain.Establishment.ViewIndex);
 
+router.get('/postuler', (req, res, next) => res.redirect('/join'));
+
 router.get('/join',
   Subdomain.Establishment.ViewATS);
 
-router.get('/register',
+router.post('/register',
   Authentication.ensureIsNotAuthenticated,
-  Subdomain.Establishment.ViewRegister)
-  .post('/register',
-    Authentication.ensureIsNotAuthenticated,
-    HTTPValidation.UserController.create,
-    User.Main.create);
+  HTTPValidation.UserController.create,
+  User.Main.create
+);
+
+router.post('/ats/add/all',
+  Authentication.ensureIsNotAuthenticated,
+  User.Candidate.ATSAddAll
+);
 
 router.post('/add/diploma',
   Authentication.ensureIsNotAuthenticated,
   HTTPValidation.CandidateController.postAddDiploma,
   User.Candidate.AddDiploma
-);
-
-router.post('/add/experience',
-  //TODO verifier user id si pas d authentification
-  // Authentication.ensureIsNotAuthenticated,
-  HTTPValidation.CandidateController.postAddExperience,
-  User.Candidate.AddExperience
 );
 
 router.get('/emailAvailable/:email',

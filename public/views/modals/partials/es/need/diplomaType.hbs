@@ -26,15 +26,17 @@
 
     $('.modal#diplomaType').modal('hide');
     $('#btnDiplomaType').html(need.filterQuery.diploma);
+    $('#btnDiplomaType').parent().removeClass('btn-outline-info').addClass('btn-info');;
 
     return searchCandidates();
   });
 
   $('#ignoreDiploma').click(function() {
-    need.firstSearch = false;
+    // need.firstSearch = false;
     if(!_.isNil(need.filterQuery.diploma)) {
       delete need.filterQuery.diploma;
       $('#btnDiplomaType').empty();
+      $('#btnDiplomaType').parent().removeClass('btn-info').addClass('btn-outline-info');
     }
     searchCandidates();
   });

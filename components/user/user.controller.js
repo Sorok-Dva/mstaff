@@ -5,6 +5,7 @@ const Candidate = require(`./candidate/candidate.controller`);
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const httpStatus = require('http-status');
 const Mailer = require(`${__}/components/mailer`);
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
@@ -14,25 +15,16 @@ const User = {};
 User.create = (req, res, next) => {
   const errors = validationResult(req);
   let { password } = req.body;
-  let { esCode } = req.params;
   let esId = null;
 
   if (!errors.isEmpty()) {
-    return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
+    if (req.xhr) {
+      return res.status(httpStatus.BAD_REQUEST).send({ body: req.body, errors: errors.array() });
+    } else {
+      return res.render('users/register', { layout: 'onepage', body: req.body, errors: errors.array() });
+    }
   }
-
-  if (esCode) {
-    Models.Establishment.findOne({
-      attributes: ['id', 'code'],
-      where: {
-        code: esCode
-      }
-    }).then(es => {
-      if (es) {
-        esId = es.dataValues.id;
-      }
-    });
-  }
+  let usr;
   bcrypt.hash(password, 10).then(hash => {
     Models.User.create({
       firstName: req.body.firstName,
@@ -48,7 +40,8 @@ User.create = (req, res, next) => {
       type: 'candidate',
       key: crypto.randomBytes(20).toString('hex')
     }).then(user => {
-      Models.Candidate.create({
+      usr = user;
+      return Models.Candidate.create({
         user_id: user.id,
         percentage: {
           profile: {
@@ -62,11 +55,22 @@ User.create = (req, res, next) => {
           total: user.firstName && user.lastName && user.phone && user.town ? 20 : 0
         },
         es_id: esId || null
-      }).then(candidate => {
-        Mailer.Main.sendUserVerificationEmail(user);
-        return res.render('users/register-email-send', { layout: 'onepage' });
-      }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
-    }).catch(error => res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error }));
+      })
+    }).then( () => {
+      if (req.xhr) {
+        req.session.atsUserId = usr.id;
+        return res.status(httpStatus.CREATED).send({ result: 'created' });
+      } else {
+        Mailer.Main.sendUserVerificationEmail(usr);
+        return res.redirect('login');
+      }
+    }).catch(error => {
+      if (req.xhr){
+        return res.status(httpStatus.BAD_REQUEST).send({ error: 'Une erreur est survenue lors de la creation de votre compte' });
+      } else {
+        res.render('users/register', { layout: 'onepage', body: req.body, sequelizeError: error });
+      }
+    });
   });
 };
 

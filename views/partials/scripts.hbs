@@ -5,6 +5,9 @@
 {{!--<script src="/static/assets/js/dashboard.js"></script>--}}
 <script src="/static/assets/js/timepicker.js"></script>
 <script src="/static/assets/js/jquery.ultima.block.min.js"></script>
+{{#if user}}
+  <script src="/static/assets/dist/js/notifications.min.js"></script>
+{{/if}}
 <script>
   $(document).ready(() => {
     let sidebarMini = localStorage.getItem('sidebarMini') || 'false';

@@ -21,7 +21,7 @@
         <strong style="color: #02AED7">Catégorie d'établissement</strong>
         <div class="mt-1">
           <select class="geolocationFilter form-control" id="geolocationFilter" style="width:100%;">
-            <option label="Etablissements MCO / SSR " value="3" selected>Etablissements MCO / SSR</option>
+            <option label="Etablissements MCO / SSR " value="3" selected>Etablissements MCO / SSR (CHU / CH / ESPIC / CLINIQUE PRIVEE)</option>
             <option label="Lieux de vie (EHPAD / FOYER / CMP / HAD / SSIAD)" value="4">Lieux de vie (EHPAD / FOYER / CMP
               / HAD / SSIAD)
             </option>
@@ -59,10 +59,10 @@
 
   <div class="nav-tabs-navigation">
     <div class="nav-tabs-wrapper">
-      <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-        <li class="active"><a href="#result" data-toggle="tab" aria-expanded="true">Résultat de la recherche <span
+      <ul id="tabs" class="nav nav-tabs justify-content-center" data-tabs="tabs">
+        <li class="active col-12 col-lg-4"><a href="#result" data-toggle="tab" aria-expanded="true">Résultat de la recherche <span
             class="esCount"></span></a></li>
-        <li><a href="#es_selected" data-toggle="tab" aria-expanded="false">Établissement(s) séléctionné(s) <span
+        <li class="col-12 col-lg-4"><a href="#es_selected" data-toggle="tab" aria-expanded="false">Établissement(s) séléctionné(s) <span
             id="selectedEsCount"></span></a></li>
       </ul>
     </div>
@@ -73,10 +73,10 @@
     <div class="tab-pane active" id="result">
       <div class="col-12">
         <div class="row">
-          <div class="col-5 map">
+          <div class="col-12 col-lg-5 map">
             <div id="map" style="height: 544px;width: 100%;"></div>
           </div>
-          <div class="col-7 resultList">
+          <div class="col-12 col-lg-7 resultList">
             <div class="row">
               <div class="col-2">
                 <button type="button" class="btn btn-outline-secondary btn-sm float-left" onclick="selectAll()">
@@ -84,7 +84,7 @@
                 </button>
               </div>
 
-              <div id="esList" class="col-12 animate-bottom"></div>
+              <div id="esList" class="row col-12 justify-content-center animate-bottom"></div>
               <div class="row">
                 <div class="col-12">
                   <span class="esCount"></span> établissement(s) trouvé(s)

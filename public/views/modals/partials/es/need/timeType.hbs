@@ -83,11 +83,12 @@
     }).on('dp.change', (e) => need.filterQuery.timeType.timeEnd = new Date(e.date));
   });
   $('button#searchProfiles').on('click', function() {
-    need.firstSearch = false;
+    // need.firstSearch = false;
     $('.modal#timeType').modal('hide');
     let dateRecap = `${moment(need.filterQuery.timeType.dateStart).format('DD/MM/YYYY')}`;
     if (need.filterQuery.timeType.dateEnd) dateRecap += ` - ${moment(need.filterQuery.timeType.dateEnd).format('DD/MM/YYYY')}`;
     $('#btnTimeType').html(dateRecap);
+    $('#btnTimeType').parent().removeClass('btn-outline-info').addClass('btn-info');;
     return searchCandidates()
   });
   $('input.disableEndDate').change(function() {
@@ -100,10 +101,11 @@
   });
 
   $('#ignoreTime').click(function() {
-    need.firstSearch = false;
+    // need.firstSearch = false;
     if (!_.isNil(need.filterQuery.timeType)) {
       delete need.filterQuery.timeType;
       $('#btnTimeType').empty();
+      $('#btnTimeType').parent().removeClass('btn-info').addClass('btn-outline-info');
     }
     searchCandidates();
   });

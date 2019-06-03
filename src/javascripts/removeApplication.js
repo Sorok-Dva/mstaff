@@ -5,9 +5,41 @@ $('.removeWish').click(function() {
   });
 });
 
+$('.showEsList').click(function() {
+  let id = $(this).attr('data-applicationId') || $(this).parent().attr('data-applicationId');
+  $.get(`/api/candidate/wish/${id}/getEsList`, {}, (data) => {
+    createModal({ id: 'showEsListModal', modal: 'candidate/showEsList', title: 'Liste des établissements séléctionnés', data, wishId: id });
+  });
+});
+
 let removeWish = (id) => {
   let _csrf = $('meta[name="csrf-token"]').attr('content');
   $.delete(`/api/candidate/wish/${id}`, { _csrf }, (data) => {
+    if (data.deleted) {
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Candidature supprimée avec succès.',
+        message: ``
+      });
+      $(`tr[data-applicationid="${id}"]`).remove();
+    }
+  }).catch(error => {
+    error = error.responseJSON;
+    if (error !== undefined && error.error === 'Not exists') {
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Suppression impossible',
+        message: `Erreur lors de la suppression de la candidature.`
+      });
+    } else return errorsHandler(error);
+  });
+};
+
+let removeApplication = (id) => {
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
+  $.delete(`/api/candidate/wish/${id}/application/`, { _csrf }, (data) => {
     if (data.deleted) {
       notification({
         icon: 'check-circle',

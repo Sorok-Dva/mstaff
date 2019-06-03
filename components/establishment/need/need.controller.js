@@ -15,6 +15,7 @@ const Establishment_Need = {};
 Establishment_Need.ViewAll = (req, res, next) => {
   Models.Need.findAll({
     where: { es_id: req.user.opts.currentEs, closed: false },
+    order: [['createdAt', 'DESC']],
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
@@ -156,6 +157,8 @@ Establishment_Need.edit = (req, res, next) => {
     post: !_.isNil(req.body.post) ? req.body.post || null : null,
     service: !_.isNil(req.body.filterQuery.service) ? req.body.filterQuery.service || null : null,
     diploma: !_.isNil(req.body.filterQuery.diploma) ? req.body.filterQuery.diploma || null : null,
+    is_available: !_.isNil(req.body.filterQuery.is_available) ? req.body.filterQuery.is_available : null,
+    postal_code: !_.isNil(req.body.filterQuery.postal_code) ? req.body.filterQuery.postal_code : null,
     start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart || null : null,
     end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd || null : null
   }, {
@@ -188,6 +191,20 @@ Establishment_Need.edit = (req, res, next) => {
   });
 };
 
+Establishment_Need.delete = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+  Models.Need.findOne({
+    where: { id: req.params.id, createdBy: req.user.id }
+  }).then(need => {
+    if (_.isNil(need)) return next(new BackError('Besoin introuvable.', 404));
+    return need.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  }).catch(error => new BackError(error));
+};
+
 Establishment_Need.Create = (req, res, next) => {
   const errors = validationResult(req);
 
@@ -201,6 +218,8 @@ Establishment_Need.Create = (req, res, next) => {
     post: !_.isNil(req.body.post) ? req.body.post : null,
     service: !_.isNil(req.body.filterQuery.service) ? req.body.filterQuery.service : null,
     diploma: !_.isNil(req.body.filterQuery.diploma) ? req.body.filterQuery.diploma : null,
+    is_available: !_.isNil(req.body.filterQuery.is_available) ? req.body.filterQuery.is_available : null,
+    postal_code: !_.isNil(req.body.filterQuery.postal_code) ? req.body.filterQuery.postal_code : null,
     start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart : null,
     end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd : null,
     createdBy: req.user.id
@@ -424,8 +443,8 @@ Establishment_Need.getNewCandidates = (req, res, next) => {
     };
 
     if (!_.isNil(need.contract_type)) query.where.contract_type = need.contract_type;
-    if (!_.isNil(need.services)) query.where.services = { [Op.regexp]: Sequelize.literal(`'(${need.service})'`) };
-    if (!_.isNil(need.post)) query.where.posts = { [Op.regexp]: Sequelize.literal(`'(${need.post})'`) };
+    if (!_.isNil(need.services)) query.where.services = { [Op.regexp]: Sequelize.literal(`"(${need.service})"`) };
+    if (!_.isNil(need.post)) query.where.posts = { [Op.regexp]: Sequelize.literal(`"(${need.post})"`) };
 
     Models.Wish.findAll(query).then(wishes => {
       //remove existing candidates of wishes object if they're in need.needCandidates

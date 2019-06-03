@@ -36,6 +36,7 @@ passport.serializeUser((user, done) => done(null, user.id));
 
 passport.deserializeUser((id, done) => {
   Models.User.findOne({ attributes, where: { id } }).then(user => {
+    if (!user) return done('Utilisateur inconnu.', false);
     let session = {
       id: user.dataValues.id,
       email: user.dataValues.email,

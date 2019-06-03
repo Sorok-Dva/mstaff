@@ -6,8 +6,7 @@ $(`#post`).autocomplete({
   minLength: 2,
   select: (event, ui) => {
     need.post = ui.item.label;
-    if (need.firstSearch) return showContractModal();
-    else return searchCandidates();
+    return searchCandidates();
   },
 });
 
@@ -35,20 +34,17 @@ let searchCandidates = () => {
   }
   // }
   need.post = need.post || $('input#post').val();
-  if (need.firstSearch) {
-    return showContractModal();
-  } else {
-    $('#baseResult').hide();
-    $('#paginationContainer').hide();
-    $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
-    $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
-      loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
-        $('#resetSearch').show();
-        $('#searchResult').html(html).show();
-        $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
-      });
-    }).catch(error => errorsHandler(error));
-  }
+  $('#baseResult').hide();
+  $('#paginationContainer').hide();
+  $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
+  $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
+    data.partials = ['candidatePercentageTooltip'];
+    loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
+      $('#resetSearch').show();
+      $('#searchResult').html(html).show();
+      $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
+    });
+  }).catch(error => errorsHandler(error));
 };
 
 let showServiceModal = () => {
@@ -86,17 +82,47 @@ let showDiplomaModal = () => {
   });
 };
 
+let showAvailabilityModal = () => {
+  createModal({
+    id: 'availabilityType',
+    modal: 'es/need/availabilityType',
+    title: 'Disponibilité',
+    checked: need.filterQuery.is_available
+  });
+};
+
+let showPostalCodeModal = () => {
+  createModal({
+    id: 'postalCodeType',
+    modal: 'es/need/postalCodeType',
+    title: 'Code Postal',
+    postalCode: need.filterQuery.postal_code
+  });
+};
+
 let resetSearch = () => {
+  let esSave = need.filterQuery.establishments;
+  delete need.filterQuery;
+  need.filterQuery = { establishments: esSave };
   $('input#post').val('');
   $('#cvCount').text(baseCVCount);
+  $('#resetSearch').hide();
   $('#searchCount').empty().hide();
   $('#searchResult').empty().hide();
   $('#baseResult').show();
   $('#paginationContainer').show();
+  $('#btnServiceType').empty();
   $('#btnContractType').empty();
   $('#btnTimeType').empty();
-  need.firstSearch = true;
-  $('#resetSearch').hide();
+  $('#btnDiplomaType').empty();
+  $('#btnAvailability').empty();
+  $('#btnPostalCode').empty();
+  $('#btnServiceType').parent().removeClass('btn-info').addClass('btn-outline-info');
+  $('#btnContractType').parent().removeClass('btn-info').addClass('btn-outline-info');
+  $('#btnDiplomaType').parent().removeClass('btn-info').addClass('btn-outline-info');
+  $('#btnAvailability').parent().removeClass('btn-info').addClass('btn-outline-info');
+  $('#btnPostalCode').parent().removeClass('btn-info').addClass('btn-outline-info');
+  $('#btnTimeType').parent().removeClass('btn-info').addClass('btn-outline-info');
 };
 
 let addCandidate = (id, type) => {
@@ -193,7 +219,8 @@ let removeCandidate = (id, type) => {
       $(`i.archiveCandidate[data-id="${id}"]`).css('color', 'inherit').attr('onclick', `addCandidate(${id}, 'archive')`);
       $.post(`/api/es/${esId}/candidate/${id}/unarchive/`, { _csrf }, (data) => {
         if (data.status === 'deleted') {
-          $(`div[data-card-user="${id}"]`).attr('data-archived', 'false').hide();
+          $(`#myCandidates div[data-card-user="${id}"]`).remove();
+          $(`div[data-card-user="${id}"]`).attr('data-archived', 'false').show();
           notification({
             icon: 'check-circle',
             type: 'success',
@@ -212,6 +239,7 @@ let showArchived = () =>{
     }
     $.post(`/api/es/${esId}/candidates/archived/`, { _csrf }, (data) => {
       $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
+      data.partials = ['candidatePercentageTooltip'];
       loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
         $('#baseResult').hide();
         $('#searchResult').hide();
@@ -243,6 +271,7 @@ let showFavorites = () => {
     }
     $.post(`/api/es/${esId}/candidates/favorites/`, { _csrf }, (data) => {
       $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
+      data.partials = ['candidatePercentageTooltip'];
       loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
         $('#baseResult').hide();
         $('#searchResult').hide();
@@ -270,29 +299,35 @@ let showFavorites = () => {
 $(document).ready(() => {
   need._csrf = _csrf;
 
-  $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
-    loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
-      $('#baseResult').empty().html(html);
+  if(Math.round(baseCVCount / size) > 0) {
+    $('.pagination').twbsPagination({
+      totalPages: Math.round(baseCVCount / size),
+      visiblePages: 4,
+      first: '<i class="fal fa-chevron-double-left"></i>',
+      prev: '<i class="fal fa-chevron-left"></i>',
+      next: '<i class="fal fa-chevron-right"></i>',
+      last: '<i class="fal fa-chevron-double-right"></i>',
+      pageClass: 'page-item',
+      anchorClass: 'page-link',
+      onPageClick: function (event, page) {
+        $('#baseResult').empty().html(loadingCandidateHTML);
+        $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
+          data.partials = ['candidatePercentageTooltip'];
+          loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+            $('#baseResult').empty().html(html);
+          });
+        }).catch(errors => errorsHandler(errors));
+      }
     });
-  }).catch(errors => errorsHandler(errors));
-  $('.pagination').twbsPagination({
-    totalPages: baseCVCount / size,
-    visiblePages: 3,
-    first: '<i class="fal fa-chevron-double-left"></i>',
-    prev: '<i class="fal fa-chevron-left"></i>',
-    next: '<i class="fal fa-chevron-right"></i>',
-    last: '<i class="fal fa-chevron-double-right"></i>',
-    pageClass: 'page-item',
-    anchorClass: 'page-link',
-    onPageClick: function (event, page) {
-      $('#baseResult').empty().html(loadingCandidateHTML);
-      $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
-        loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
-          $('#baseResult').empty().html(html);
-        });
-      }).catch(errors => errorsHandler(errors));
-    }
-  });
+  } else {
+    $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
+      data.partials = ['candidatePercentageTooltip'];
+      loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+        $('#baseResult').empty().html(html);
+      });
+    }).catch(errors => errorsHandler(errors));
+  }
+
   $('button#saveNeed').click(function () {
     if ($(this).is("[data-need-id]")) {
       createModal({

@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const conf = require('dotenv').config().parsed;
 const packageJson = require('../package');
 const path = require('path');
@@ -81,6 +82,7 @@ module.exports = {
   },
   sentryErrorHandler: Sentry.Handlers.errorHandler(),
   sentryRequestHandler: Sentry.Handlers.requestHandler(),
+  sentryUnhandledRejection: (reason) => Sentry.captureMessage(reason),
   setLocals: (req, res, next) => {
     if (req.url.search('static') !== -1) return next();
     res.locals.readOnly = req.session.readOnly ? 'lock' : 'unlock';
@@ -92,6 +94,11 @@ module.exports = {
     res.locals.v = packageJson.version;
     res.locals.domain = conf.DOMAIN;
     res.locals.csrfToken = req.csrfToken();
+    if ((Env.isProd || Env.isPreProd) && !_.isNil(req.user)) {
+      Sentry.configureScope((scope) => {
+        scope.setUser(req.user);
+      });
+    }
     next();
   },
   session: session({

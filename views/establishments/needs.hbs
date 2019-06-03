@@ -92,3 +92,26 @@
     </div>
   </div>
 </div>
+<script>
+  $('button.removeApplication').click(function() {
+    let id = $(this).attr('data-id');
+    if (confirm('Voulez vous vraiment supprimer ce besoin ? Cette action est irréversible.')) {
+      $.delete(`/api/es/need/${id}`, { _csrf }, (data) => {
+        if (data.deleted) {
+          $(`tr[data-applicationId="${id}"]`).remove();
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Besoin supprimé avec succès.'
+          })
+        } else {
+          notification({
+            icon: 'exclamation-circle',
+            type: 'warning',
+            title: 'Une erreur est survenue lors de la suppression de ce besoin.'
+          })
+        }
+      }).catch(error => errorsHandler(error));
+    }
+  })
+</script>

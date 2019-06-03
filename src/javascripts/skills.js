@@ -62,7 +62,7 @@ toAutocomplete.forEach((ac) => {
               .append($('<li>').attr({ class: 'star', title: 'Excellent', 'data-value': 3 }).html('<i class="fa fa-star"></i>')))
           ))
           .append($('<td>').append($('<button>').attr({
-            class: 'btn btn-simple btn-danger btn-icon remove',
+            class: 'btn btn-simple btn-outline-danger btn-icon remove',
             'data-type': e,
             'data-id': data.id
           }).html('<i class="fa fa-trash"></i>')))

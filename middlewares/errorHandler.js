@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const statuses = require('statuses');
+const Sentry = require('../bin/sentry');
 const { BackError } = require('../helpers/back.error');
 const { Env } = require('../helpers/helpers');
 
@@ -15,7 +16,10 @@ const getStatus = (err) => {
 const sendError = (req, res, status, err) => {
   if (res.headersSent) return;
   err.status = status;
-  if (Env.current === 'production' || Env.current === 'pre-prod') delete err.stack;
+  if (Env.current === 'production' || Env.current === 'pre-prod') {
+    delete err.stack;
+    if (err.status === 500) err.sentry = Sentry.captureException(err);
+  }
   if (req.xhr) return res.status(status).json(err);
   else return res.status(status).render('error', { layout, error: err });
 };

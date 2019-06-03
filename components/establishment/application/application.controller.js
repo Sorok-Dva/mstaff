@@ -6,7 +6,6 @@ const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 const moment = require('moment');
 
-const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
 
 const Establishment_Application = {};
@@ -120,7 +119,7 @@ Establishment_Application.getCVs = (req, res, next) => {
 
 Establishment_Application.CVsPaginationQuery = (req, res, next) => {
   if (isNaN(parseInt(req.params.page)) || isNaN(parseInt(req.params.size))) return next();
-  let offset = parseInt(req.params.page) * parseInt(req.params.size);
+  let offset = parseInt(req.params.page - 1) * parseInt(req.params.size);
   let limit = parseInt(req.params.size);
   let query = {
     where: { es_id: req.user.opts.currentEs },
@@ -129,6 +128,7 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
     subQuery: false,
     attributes: { exclude: ['lat', 'lon'] },
     group: ['Wish.candidate_id'],
+    order: Sequelize.literal('`Wish->Candidate->User`.`createdAt` DESC'),
     include: [{
       model: Models.Wish,
       required: true,
@@ -148,13 +148,16 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
         required: true,
         include: [{
           model: Models.User,
-          attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt', 'createdAt'] },
+          attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt'] },
           on: {
             '$Wish->Candidate.user_id$': {
               [Op.col]: 'Wish->Candidate->User.id'
             }
           },
           required: true
+        }, {
+          model: Models.Experience,
+          as: 'experiences'
         }]
       }
     }, {
@@ -230,13 +233,16 @@ Establishment_Application.CVsMyCandidatesQuery = (req, res, next) => {
           required: true,
           include: [{
             model: Models.User,
-            attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt', 'createdAt'] },
+            attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt'] },
             on: {
               '$Wish->Candidate.user_id$': {
                 [Op.col]: 'Wish->Candidate->User.id'
               }
             },
             required: true
+          }, {
+            model: Models.Experience,
+            as: 'experiences'
           }]
         }
       },
@@ -296,6 +302,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
   let query = {
     where: { es_id: filterQuery.establishments },
     attributes: { exclude: ['lat', 'lon'] },
+    order: Sequelize.literal('`Wish->Candidate->User`.`createdAt` DESC'),
     group: ['Wish->Candidate.id'],
     include: [{
       model: Models.Wish,
@@ -319,7 +326,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
         required: true,
         include: [{
           model: Models.User,
-          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt', 'createdAt'] },
+          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt'] },
           on: {
             '$Wish->Candidate.user_id$': {
               [Op.col]: 'Wish->Candidate->User.id'
@@ -329,6 +336,9 @@ Establishment_Application.getCandidates = (req, res, next) => {
         }, {
           model: Models.CandidateFormation,
           as: 'formations',
+        }, {
+          model: Models.Experience,
+          as: 'experiences'
         }]
       }
     }, {
@@ -376,15 +386,29 @@ Establishment_Application.getCandidates = (req, res, next) => {
   };
 
   if (!_.isNil(filterQuery.contractType)) query.include[0].where.contract_type = filterQuery.contractType;
-  if (!_.isNil(filterQuery.service)) {
-    query.include[0].where.services = {
-      [Op.regexp]: Sequelize.literal(`'(${filterQuery.service})'`),
+  if (!_.isNil(filterQuery.is_available)) {
+    query.where[1] = {
+      [Op.and]: [
+        Sequelize.literal('`Wish->Candidate`.`is_available` = ' + `${filterQuery.is_available === 'true' ? '1' : '0'}`)
+      ]
     };
+  }
+  if (!_.isNil(filterQuery.serviceId)) {
+    /*query.include[0].where.services = {
+      [Op.regexp]: Sequelize.literal(`"(${filterQuery.service})"`),
+    };*/
+    query.include[0].include.include[2].required = true;
+    query.include[0].include.include[2].where = { service_id: filterQuery.serviceId };
   }
   if (!_.isNil(filterQuery.diploma)) {
     query.include[0].include.include[1].required = true;
     query.include[0].include.include[1].where = {
       name: { [Op.regexp]: filterQuery.diploma }
+    };
+  }
+  if (!_.isNil(filterQuery.postal_code)) {
+    query.include[0].include.include[0].where = {
+      postal_code: { [Op.regexp]: filterQuery.postal_code }
     };
   }
 

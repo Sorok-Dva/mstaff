@@ -28,16 +28,18 @@
 
     $('.modal#contractType').modal('hide');
     $('#btnContractType').html($('#contractType option:selected').text());
+    $('#btnContractType').parent().removeClass('btn-outline-info').addClass('btn-info');;
 
-    if (need.firstSearch) return showTimeModal();
-    else return searchCandidates();
+   /* if (need.firstSearch) return showTimeModal();
+    else */return searchCandidates();
   });
 
   $('#ignoreContract').click(function() {
-    need.firstSearch = false;
+    // need.firstSearch = false;
     if (!_.isNil(need.filterQuery.contractType)) {
       delete need.filterQuery.contractType;
       $('#btnContractType').empty();
+      $('#btnContractType').parent().removeClass('btn-info').addClass('btn-outline-info');
     }
     searchCandidates();
   });
