@@ -39,6 +39,7 @@
     if (!_.isNil(need.filterQuery.contractType)) {
       delete need.filterQuery.contractType;
       $('#btnContractType').empty();
+      $('#btnContractType').parent().removeClass('btn-info').addClass('btn-outline-info');
     }
     searchCandidates();
   });

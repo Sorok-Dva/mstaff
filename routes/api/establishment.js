@@ -73,6 +73,14 @@ router.post('/need/:editNeedId(\\d+)/edit',
   Establishment.Need.edit);
 
 /**
+ * @Route('/need/:id(\\d+)/') DELETE;
+ * DELETE need
+ */
+router.delete('/need/:id(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Need.delete);
+
+/**
  * @Route('/conference/:id(\\d+)') DELETE;
  * Delete conference
  */

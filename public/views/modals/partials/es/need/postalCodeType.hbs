@@ -1,0 +1,48 @@
+<div class="modal-body">
+  <form role="form" class="form-horizontal">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="text-center">N'afficher que les candidats qui habitent dans le</h3>
+        <div class="col-12 mt-2">
+          <input id="postal_code" name="postal_code" type="text"
+                 placeholder="75 ou 75018"
+                 class="form-control" value="{{this.postalCode}}">
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" id="ignorePostalCode" class="btn btn-default pull-left"
+          data-dismiss="modal">Ignorer
+  </button>
+  <button type="button" id="ChoosePostalCode" class="btn btn-outline-primary pull-right">Valider
+  </button>
+</div>
+<script>
+
+  $('#ignorePostalCode').click(function() {
+    if (!_.isNil(need.filterQuery.postal_code)) {
+      delete need.filterQuery.postal_code;
+      $('#btnPostalCode').empty();
+      $('#btnPostalCode').parent().removeClass('btn-info').addClass('btn-outline-info');
+    }
+    searchCandidates();
+  });
+
+  $('#ChoosePostalCode').click(function() {
+    if ($('input#postal_code').val().length < 2) {
+      alert('Merci de saisir un code postal valide (exemple 75 ou 75018)');
+      return false;
+    } else {
+      need.filterQuery.postal_code = $('input#postal_code').val();
+
+    }
+
+    $('.modal#postalCodeType').modal('hide');
+    $('#btnPostalCode').html(need.filterQuery.postal_code);
+    $('#btnPostalCode').parent().removeClass('btn-outline-info').addClass('btn-info');
+
+    return searchCandidates();
+  });
+</script>
