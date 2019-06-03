@@ -24,7 +24,7 @@ Establishment_Need.ViewAll = (req, res, next) => {
       model: Models.User,
     }]
   }).then(needs => {
-    res.render('establishments/needs', { needs,  a: { main: 'needs' } });
+    res.render('establishments/needs', { needs, a: { main: 'needs' } });
   }).catch(error => next(new BackError(error)));
 };
 
@@ -39,7 +39,7 @@ Establishment_Need.ViewClosed = (req, res, next) => {
       model: Models.User,
     }]
   }).then(needs => {
-    res.render('establishments/needs_closed', { needs,  a: { main: 'history' } });
+    res.render('establishments/needs_closed', { needs, a: { main: 'history' } });
   }).catch(error => next(new BackError(error)));
 };
 
@@ -157,8 +157,8 @@ Establishment_Need.edit = (req, res, next) => {
     post: !_.isNil(req.body.post) ? req.body.post || null : null,
     service: !_.isNil(req.body.filterQuery.service) ? req.body.filterQuery.service || null : null,
     diploma: !_.isNil(req.body.filterQuery.diploma) ? req.body.filterQuery.diploma || null : null,
-    is_available: !_.isNil(req.body.filterQuery.is_available) ? req.body.filterQuery.is_available : null,
-    postal_code: !_.isNil(req.body.filterQuery.postal_code) ? req.body.filterQuery.postal_code : null,
+    is_available: !_.isNil(req.body.filterQuery.is_available) ? req.body.filterQuery.is_available || null : null,
+    postal_code: !_.isNil(req.body.filterQuery.postal_code) ? req.body.filterQuery.postal_code || null : null,
     start: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateStart || null : null,
     end: !_.isNil(req.body.filterQuery.timeType) ? req.body.filterQuery.timeType.dateEnd || null : null
   }, {
@@ -246,45 +246,53 @@ Establishment_Need.Create = (req, res, next) => {
 };
 
 Establishment_Need.notify = (req, i, needCandidate, need) => {
-  Models.Notification.create({
-    fromUser: req.user.id,
-    fromEs: req.params.esId,
-    to: req.body.selectedCandidates[i],
-    subject: 'Un établissement est intéressé par votre profil !',
-    title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
-    image: '/static/assets/images/happy.jpg',
-    opts: {
-      type: 'NeedNotifyCandidate',
-      details: {
-        contract: need.contract_type,
-        post: need.post,
-        service: need.service,
-        start: need.start,
-        end: need.end
-      },
-      message: req.body.message,
-      actions: [{
-        'type': 'success',
-        'text': 'Disponible',
-        'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="available"`
-      }, {
-        'type': 'danger',
-        'text': 'Indisponible',
-        'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="unavailable"`
-      }],
-      needCandidateId: needCandidate.id
+  Models.Candidate.findOne({
+    where: { id: req.body.selectedCandidates[i] },
+    include: {
+      model: Models.User,
+      as: 'user',
+      attributes: ['id', 'firstName', 'lastName', 'email']
     }
-  }).then(notification => {
-    needCandidate.status = 'notified';
-    needCandidate.availability = 'pending';
-    needCandidate.notified = true;
-    needCandidate.save().then(result => {
-      moment.locale('fr');
-      let needObj = {
-        start: _.isNil(need.start) ? null : moment(need.start).format('dddd Do MMMM YYYY'),
-        end: _.isNil(need.end) ? null : moment(need.end).format('dddd Do MMMM YYYY'),
-      };
-      Models.User.findOne({ where: { id: req.body.selectedCandidates[i] } }).then(user => {
+  }).then(user => {
+    if (_.isNil(user)) return false;
+    Models.Notification.create({
+      fromUser: req.user.id,
+      fromEs: req.params.esId,
+      to: user.id,
+      subject: 'Un établissement est intéressé par votre profil !',
+      title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
+      image: '/static/assets/images/happy.jpg',
+      opts: {
+        type: 'NeedNotifyCandidate',
+        details: {
+          contract: need.contract_type,
+          post: need.post,
+          service: need.service,
+          start: need.start,
+          end: need.end
+        },
+        message: req.body.message,
+        actions: [{
+          'type': 'success',
+          'text': 'Disponible',
+          'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="available"`
+        }, {
+          'type': 'danger',
+          'text': 'Indisponible',
+          'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="unavailable"`
+        }],
+        needCandidateId: needCandidate.id
+      }
+    }).then(notification => {
+      needCandidate.status = 'notified';
+      needCandidate.availability = 'pending';
+      needCandidate.notified = true;
+      needCandidate.save().then(result => {
+        moment.locale('fr');
+        let needObj = {
+          start: _.isNil(need.start) ? null : moment(need.start).format('dddd Do MMMM YYYY'),
+          end: _.isNil(need.end) ? null : moment(need.end).format('dddd Do MMMM YYYY'),
+        };
         mailer.sendEmail({
           to: user.email,
           subject: 'Un établissement a consulté votre profil.',
@@ -296,8 +304,8 @@ Establishment_Need.notify = (req, i, needCandidate, need) => {
             es: req.es
           }
         });
-      });
-    })
+      })
+    });
   });
 };
 
@@ -419,8 +427,7 @@ Establishment_Need.getNewCandidates = (req, res, next) => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
 
     let query = {
-      where: {
-      },
+      where: {},
       include: [{
         model: Models.Application,
         where: { es_id: req.params.esId, status: { [Op.not]: 'viewed' } },

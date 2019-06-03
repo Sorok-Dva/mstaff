@@ -98,6 +98,9 @@ User_Candidate.uploadDocument = (req, res, next) => {
   /* eslint-disable-next-line prefer-destructuring */
   let file = Object.values(req.files)[0][0];
   let candidate;
+  if (!['jpeg', 'jpg', 'png', 'pdf'].includes(file.mimetype.split('/')[1])) {
+    return res.status(400).send('Mauvais format, seul les formats jpeg, jpg et png sont autorisés.');
+  }
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
     if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
     candidate = result;
