@@ -71,13 +71,28 @@
       },
       'click .remove': (e, value, row, index) => {
         if (confirm('ATTENTION:\n\n ' +
-          'Cette action est irreversible et supprimera toutes les données liées à l\'utilisateur.\n\n' +
-          'Voulez vous continuer ?')) {
-
-          table.bootstrapTable('remove', {
-            field: 'id',
-            values: [row.id]
-          });
+            'Cette action est irreversible et supprimera toutes les données liées à l\'utilisateur.\n\n' +
+            'Voulez vous continuer ?')) {
+          $.delete(`/back-office/user/${row.id}`, { _csrf }, (data) => {
+            if (data.deleted) {
+              table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+              });
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Utilisateur supprimé avec succès.'
+              })
+            } else {
+              notification({
+                icon: 'exclamation-circle',
+                type: 'warning',
+                title: 'Impossible de supprimer cet utilisateur : ',
+                message: JSON.stringify(data.result)
+              })
+            }
+          }).catch(errors => errorsHandler(errors));
         }
       }
     };

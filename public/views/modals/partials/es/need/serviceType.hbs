@@ -39,6 +39,7 @@
       delete need.filterQuery.service;
       delete need.filterQuery.serviceId;
       $('#btnServiceType').empty();
+      $('#btnServiceType').parent().removeClass('btn-info').addClass('btn-outline-info');
     }
     searchCandidates();
   });

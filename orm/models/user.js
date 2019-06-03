@@ -67,15 +67,13 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function (models) {
     User.hasOne(models.Candidate, {
       foreignKey: 'user_id',
-      as: 'candidate'
-    });
-    User.hasOne(models.Demo, {
-      foreignKey: 'email',
-      as: 'demo'
+      as: 'candidate',
+      onDelete: 'CASCADE'
     });
     User.hasMany(models.ESAccount, {
       foreignKey: 'user_id',
-      sourceKey: 'id'
+      sourceKey: 'id',
+      onDelete: 'CASCADE'
     });
   };
   return User;

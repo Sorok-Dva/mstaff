@@ -42,6 +42,12 @@ module.exports = {
       contract_type: {
         type: Sequelize.STRING
       },
+      is_available: {
+        type: Sequelize.STRING
+      },
+      postal_code: {
+        type: Sequelize.STRING
+      },
       start: {
         type: Sequelize.DATE
       },
