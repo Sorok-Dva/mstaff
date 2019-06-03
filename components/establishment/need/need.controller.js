@@ -250,8 +250,13 @@ Establishment_Need.notify = (req, i, needCandidate, need) => {
     where: { id: req.body.selectedCandidates[i] },
     include: {
       model: Models.User,
-      as: 'user',
-      attributes: ['id', 'firstName', 'lastName', 'email']
+      attributes: ['id', 'firstName', 'lastName', 'email'],
+      on: {
+        '$Candidate.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      },
+      required: true
     }
   }).then(user => {
     if (_.isNil(user)) return false;
