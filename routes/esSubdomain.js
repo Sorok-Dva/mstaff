@@ -9,8 +9,8 @@ router.get('/',
 
 router.get('/postuler', (req, res, next) => res.redirect('/join'));
 
-// router.get('/join',
-//   Subdomain.Establishment.ViewATS);
+router.get('/join',
+  Subdomain.Establishment.ViewATS);
 
 router.get('/join',
   HTTPValidation.EstablishmentController.createATS,
