@@ -971,16 +971,6 @@ User_Candidate.deleteRating = (req, res, next) => {
 User_Candidate.addWish = (req, res, next) => {
   return Models.Candidate.findOne({
     where: { user_id: req.user.id },
-    include: {
-      model: Models.User,
-      required: true,
-      on: {
-        '$Candidate.user_id$': {
-          [Op.col]: 'User.id'
-        }
-      },
-      attributes: ['id', 'email', 'firstName']
-    }
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Wish.create({
@@ -1003,10 +993,6 @@ User_Candidate.addWish = (req, res, next) => {
       es_count: req.body.es_count
     }).then(wish => {
       req.flash('success_msg', `Souhait ajouté avec succès auprès de ${req.body.es_count} établissements.`);
-      Mailer.Main.newWishCreated(candidate.User.email, {
-        count_es: req.body.es_count,
-        user: candidate.User
-      });
       res.status(201).send({ wish });
       req.body.es = JSON.parse(`[${req.body.es}]`);
       for (let i = 0; i < req.body.es.length; i++) {
