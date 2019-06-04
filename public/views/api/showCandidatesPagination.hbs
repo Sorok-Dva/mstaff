@@ -64,8 +64,8 @@
               <i class="fal fa-moon fa-2x"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
             </h4>
             {{#if data.Wish.posts}}
-              <h4 {{{otherPostsPopover this.Wish.posts}}}>
-                <label class="col-8 wrapword badge badge-soft-success">{{firstPost this.Wish.posts}}</label>
+              <h4>
+                <label class="col-8 wrapword badge badge-soft-success">{{this.Wish.posts}}</label>
               </h4>
             {{/if}}
             {{#if data.Wish.services}}
