@@ -46,7 +46,9 @@ function finalize(){
         _csrf
       }, (data) => {
         if (data.result === 'created'){
-          $(location).attr('href',"https://mstaff.co/login");
+          createModal({ id: 'showEndingAtsInfos', modal: 'ats/showEndingAtsInfos', title: 'Confirmation', cantBeClose: true }, () => {
+            $('#btnGoToLog').attr('onclick', `$(location).attr('href', \`https://mstaff.co/login\`)`);
+          });
         }
       }).catch(() => notify('creationError'));
     }
