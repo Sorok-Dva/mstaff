@@ -1,0 +1,35 @@
+<div class="modal-body">
+  <p>Vous êtes sur le point de supprimer votre profil Mstaff.</p>
+  <p>Vous ne ferez plus partie de la base candidats Mstaff.</p>
+  <p>Vous ne recevrez plus de mails de notifications de notre part.</p>
+  <p>
+    <small>
+      <i class="fal fa-info-circle"></i>
+      <i>Attention, vos candidatures en cours seront supprimées, les établissements ne verront plus votre profil.</i>
+    </small>
+  </p>
+  <h4>Pour confirmer la suppression de votre compte, veuillez saisir votre mot de passe</h4>
+  <div class="form-group">
+    <input class="form-control" type="password" id="delPassword">
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-info" data-dismiss="modal">Annuler</button>
+  <button type="button" class="btn btn-secondary" id="deleteAccount">Valider</button>
+</div>
+
+<script>
+  $('#deleteAccount').click(function() {
+    if (confirm("ATTENTION : Cette action est définitive ! \n\n Êtes-vous sur de vouloir supprimer votre compte ?")) {
+      let password = $('#delPassword').val();
+      $.delete('/api/user/account', { _csrf, password }, (data) => {
+        if (data.deleted) {
+          alert('Votre compte a correctement été supprimé de notre base. Vous allez maintenant être redirigé vers notre page d\'accueil.');
+          $(location).attr('href', 'https://mstaff.co');
+        } else {
+          errorsHandler('Une erreur est survenue');
+        }
+      }).catch(error => errorsHandler(error));
+    }
+  });
+</script>

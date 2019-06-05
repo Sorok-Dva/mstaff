@@ -41,6 +41,10 @@ HTTPValidation.changePassword = [
     .matches(/\d/).withMessage('must contain a number')
 ];
 
+HTTPValidation.ApiVerifyPassword = [
+  check('delPassword').exists()
+];
+
 HTTPValidation.ApiVerifyEmailAvailability = [
   check('email').isEmail().normalizeEmail()
 ];
