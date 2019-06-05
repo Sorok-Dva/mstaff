@@ -970,7 +970,7 @@ User_Candidate.deleteRating = (req, res, next) => {
 
 User_Candidate.addWish = (req, res, next) => {
   return Models.Candidate.findOne({
-    where: { user_id: req.user.id }
+    where: { user_id: req.user.id },
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Wish.create({
@@ -1231,7 +1231,7 @@ User_Candidate.updatePercentage = (user, type) => {
             percentage.profile.main = 20;
           } else percentage.profile.main = 0;
 
-          if (!_.isNil(candidate.description) && candidate.description.length > 10) {
+          if (!_.isNil(candidate.description) && candidate.description.length >= 500) {
             percentage.profile.description = 30;
           } else percentage.profile.description = 0;
 
@@ -1309,7 +1309,7 @@ User_Candidate.updateWholePercentage = (user) => {
               percentage.profile.main = 20;
             } else percentage.profile.main = 0;
 
-            if (!_.isNil(candidate.description) && candidate.description.length > 10) {
+            if (!_.isNil(candidate.description) && candidate.description.length >= 500) {
               percentage.profile.description = 30;
             } else percentage.profile.description = 0;
 
