@@ -6,7 +6,8 @@ let showCandidateProfile = userId => {
       size: 'modal-xl',
       style: 'width:80%',
       title: `Profil de ${data.User.firstName} ${data.User.lastName}`,
-      candidate: data
+      candidate: data,
+      partials: ['candidatePercentageTooltip']
     }, () => {
 
     });
