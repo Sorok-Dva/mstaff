@@ -22,7 +22,11 @@ let addWish = () => {
 
     $.post('/api/candidate/wish/add', opts, (data) => {
       if (data.wish) {
-        $(location).attr('href', `/applications`);
+        createModal({ id: 'showCreatedWishInfos', modal: 'candidate/showCreatedWishInfos', title: 'Confirmation', cantBeClose: true }, () => {
+          $('#btnNewWish').attr('onclick', `$(location).attr('href', \`/applications\`)`);
+          $('#btnGoToProfile').attr('onclick', `$(location).attr('href', \`/profile\`)`);
+
+        });
       } else {
         notify('errorAddWish');
       }
