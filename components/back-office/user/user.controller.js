@@ -133,7 +133,23 @@ let _getInclude = (type) => {
     case 'candidates':
       include = {
         model: Models.Candidate,
-        as: 'candidate'
+        as: 'candidate',
+        include: [{
+          model: Models.CandidateFormation,
+          attributes: ['name'],
+          as: 'formations',
+        }, {
+          model: Models.Experience,
+          attributes: ['poste_id', 'service_id'],
+          as: 'experiences',
+          include: [{
+            model: Models.Service,
+            as: 'service'
+          }, {
+            model: Models.Post,
+            as: 'poste'
+          }]
+        }]
       };
       break;
     case 'es':

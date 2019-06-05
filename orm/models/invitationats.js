@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     key: DataTypes.STRING,
     es: DataTypes.JSON
   }, {});
-  InvitationAts.associate = function(models) {
+  InvitationAts.associate = function (models) {
     // associations can be defined here
   };
   return InvitationAts;
