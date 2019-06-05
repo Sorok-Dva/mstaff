@@ -179,6 +179,7 @@
           <div class="text-center">
             <button type="submit" class="btn btn-info btn-fill btn-wd">Modifier le profil</button>
           </div>
+          <p id="removeAccount" class="text-muted text-center mt-2" style="cursor: pointer" onclick="deleteAccount()">Supprimer mon compte</p>
           <div class="clearfix"></div>
         </form>
       </div>
@@ -192,6 +193,13 @@
     let input = document.querySelector("#phone");
     window.intlTelInput(input);
   });
+  let deleteAccount = () => {
+    createModal({
+      id: 'removeAccountModal',
+      title: 'Supprimer mon compte',
+      modal: 'candidate/removeAccount'
+    });
+  };
   $('#changePass').click(function () {
     createModal({
       id: 'changePassword',
