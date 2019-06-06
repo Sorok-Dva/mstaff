@@ -34,7 +34,7 @@ server.listen(port, () => {
   console.log('Press %s to stop\n', chalk.red('CTRL-C'));
   sequelize.authenticate().then(() => {
     console.log('[SEQUELIZE] %s Connection has been established successfully.', chalk.green('✓'));
-    sequelize.close();
+    sequelize.connectionManager.close();
   }).catch(err => {
     console.log('[SEQUELIZE] %s Unable to connect to the database.', chalk.red('✗'), err.message);
     // process.exit(1);
