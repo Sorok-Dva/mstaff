@@ -28,7 +28,7 @@ BackOffice_Users_Impersonation.User = (req, res, next) => {
 BackOffice_Users_Impersonation.Remove = (req, res, next) => {
   Models.User.findOne({
     where: { id: req.session.originalUser },
-    attributes: { exclude: ['password', 'firstName', 'lastName'] }
+    attributes: { exclude: ['password'] }
   }).then(user => {
     if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
     delete req.session.originalUser;
