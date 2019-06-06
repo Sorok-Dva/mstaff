@@ -5,6 +5,10 @@ const router = express.Router();
 
 const { User, Notification } = require(`${__}/components`);
 
+router.delete('/account',
+  HTTPValidation.UserController.ApiVerifyPassword,
+  User.Main.Delete);
+
 router.get('/emailAvailable/:email',
   HTTPValidation.UserController.ApiVerifyEmailAvailability,
   User.Main.verifyEmailAvailability);

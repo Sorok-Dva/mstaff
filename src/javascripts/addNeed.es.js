@@ -43,6 +43,7 @@ let searchCandidates = () => {
       $('#resetSearch').show();
       $('#searchResult').html(html).show();
       $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
+      $('#selectAllSearch').show();
     });
   }).catch(error => errorsHandler(error));
 };
@@ -108,6 +109,7 @@ let resetSearch = () => {
   $('#cvCount').text(baseCVCount);
   $('#resetSearch').hide();
   $('#searchCount').empty().hide();
+  $('#selectAllSearch').hide();
   $('#searchResult').empty().hide();
   $('#baseResult').show();
   $('#paginationContainer').show();
@@ -124,6 +126,9 @@ let resetSearch = () => {
   $('#btnPostalCode').parent().removeClass('btn-info').addClass('btn-outline-info');
   $('#btnTimeType').parent().removeClass('btn-info').addClass('btn-outline-info');
 };
+
+let selectAllSearch = () => $('#searchResult .selectCandidate:visible').trigger('click');
+let unselectAllSearch = () => $('#searchResult .unselectCandidate:visible').trigger('click');
 
 let addCandidate = (id, type) => {
   id = parseInt(id);
@@ -246,6 +251,7 @@ let showArchived = () =>{
         $('#paginationContainer').hide();
         $('#myCandidates').html(html).show();
         $('#searchCount').html(`${data.length} candidats archivés.`).show();
+        $('#selectAllSearch').show();
       });
     }).catch(errors => errorsHandler(errors));
   } else {
@@ -256,6 +262,7 @@ let showArchived = () =>{
       $('#searchResult').hide();
       $('#paginationContainer').show();
       $('#searchCount').empty().hide();
+      $('#selectAllSearch').hide();
     } else {
       $('#baseResult').hide();
       $('#searchResult').show();
@@ -278,6 +285,7 @@ let showFavorites = () => {
         $('#paginationContainer').hide();
         $('#myCandidates').html(html).show();
         $('#searchCount').html(`${data.length} candidats favoris.`).show();
+        $('#selectAllSearch').show();
       });
     }).catch(errors => errorsHandler(errors));
   } else {
@@ -287,6 +295,7 @@ let showFavorites = () => {
       $('#searchResult').hide();
       $('#paginationContainer').show();
       $('#searchCount').empty().hide();
+      $('#selectAllSearch').hide();
     } else {
       $('#baseResult').hide();
       $('#searchResult').show();
@@ -298,6 +307,11 @@ let showFavorites = () => {
 
 $(document).ready(() => {
   need._csrf = _csrf;
+
+  $('input#searchSelectAll').change(function () {
+    if (this.checked) selectAllSearch();
+    else unselectAllSearch();
+  });
 
   if(Math.round(baseCVCount / size) > 0) {
     $('.pagination').twbsPagination({

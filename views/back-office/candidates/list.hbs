@@ -12,10 +12,14 @@
           <th data-field="identity" data-sortable="true">Identité</th>
           <th data-field="email" data-sortable="true">Email</th>
           <th data-field="age" data-sortable="true">Âge</th>
+          <th data-field="formations" data-sortable="true" data-visible="false">Formations</th>
+          <th data-field="poste" data-sortable="true" data-visible="false">Postes</th>
+          <th data-field="services" data-sortable="true" data-visible="false">Services</th>
           <th data-field="localisation" data-sortable="true">Localisation</th>
           <th data-field="phone" data-sortable="true">Téléphone</th>
           <th data-field="views" data-sortable="true">Vues</th>
           <th data-field="validated" data-sortable="true">État</th>
+          <th data-field="createdAt" data-sortable="true">Inscription</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions</th>
           </thead>
@@ -27,10 +31,14 @@
               <td>{{user.firstName}} {{user.lastName}}</td>
               <td>{{user.email}}</td>
               <td>{{age user.birthday 'years'}} ans</td>
+              <td>{{#each user.candidate.formations as |formation|}}{{formation.name}},{{/each}}</td>
+              <td>{{#each user.candidate.experiences as |xp|}}{{xp.poste.name}},{{/each}}</td>
+              <td>{{#each user.candidate.experiences as |xp|}}{{xp.service.name}},{{/each}}</td>
               <td>{{user.town}} ({{user.postal_code}})</td>
               <td>{{user.phone}}</td>
               <td>{{user.candidate.views}}</td>
               <td>{{#if user.validated}}Validé{{else}}En attente{{/if}}</td>
+              <td>{{date user.createdAt 'DD/MM/YYYY'}}</td>
               <td></td>
             </tr>
           {{/each}}
