@@ -89,5 +89,19 @@ Mailer.notifyCandidatesNeedConferenceDeleted = (email, context) => {
   });
 };
 
+Mailer.newWishCreated = (email, context) => {
+  let mailObject = {
+    subject: 'Votre souhait de candidature a été envoyé.',
+    template: 'candidate/newWish'
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
+
 
 module.exports = Mailer;
