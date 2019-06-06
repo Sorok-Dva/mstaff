@@ -7,7 +7,7 @@ HTTPValidation.create = [
   check('lastName').exists()
 ];
 
-HTTPValidation.createATS = [
+/*HTTPValidation.createATS = [
   check('esList').exists().custom((value, {req}) => {
     let esList = req.query.esList.split(' ');
     esList.forEach(val => {
@@ -16,6 +16,6 @@ HTTPValidation.createATS = [
     });
     return true;
   })
-]
+];*/
 
 module.exports = HTTPValidation;

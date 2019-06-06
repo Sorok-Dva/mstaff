@@ -21,7 +21,7 @@ Establishment_Website.ViewATS = (req, res, next) => {
   return res.render('establishments/site/ats/index', { es: req.es.finess, layout: 'onepage' })
 };
 
-Establishment_Website.ViewATSV2 = (req, res, next) => {
+/*Establishment_Website.ViewATSV2 = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -41,7 +41,7 @@ Establishment_Website.ViewATSV2 = (req, res, next) => {
   // return res.render('establishments/site/ats/index', { es: req.body.esList, layout: 'onepage' })
 
   // return res.render('establishments/site/ats/index', { es: req.body.esList, layout: 'onepage' })
-};
+};*/
 
 Establishment_Website.ViewRegister = (req, res, next) => {
   return res.render('users/register', { layout: 'onepage' })
