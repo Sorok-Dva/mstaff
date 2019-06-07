@@ -227,3 +227,18 @@ Handlebars.registerHelper('showVisioLink', conference => {
     return `Vous aurez accès au lien 15 minutes avant le début de l'entretien.`;
   }
 });
+
+Handlebars.registerHelper('firstPost', posts => {
+  if (_.isNil(posts)) return 'Aucun poste';
+  let other = '';
+  if (posts.length > 1) other = `... (${posts.length - 1} de plus)`;
+  return `${posts[0]}${other}`
+});
+
+Handlebars.registerHelper('otherPostsPopover', posts => {
+  if (_.isNil(posts)) return '';
+  if (posts.length < 2) return '';
+  posts.shift();
+  let string = posts.toString();
+  return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
+});

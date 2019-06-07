@@ -67,9 +67,11 @@
                       <a class="btn btn-simple btn-outline-warning btn-icon editApplication" href="/need/{{need.id}}/edit">
                         <i class="ti-pencil-alt"></i>
                       </a>
-                      <button class="btn btn-simple btn-outline-danger btn-icon removeApplication" data-id="{{need.id}}">
-                        <i class="ti-close"></i>
-                      </button>
+                      {{#ifCond need.createdBy '===' @root.user.id}}
+                        <button class="btn btn-simple btn-outline-danger btn-icon removeApplication" data-id="{{need.id}}">
+                          <i class="ti-close"></i>
+                        </button>
+                      {{/ifCond}}
                     </td>
                   </tr>
                 {{/each}}

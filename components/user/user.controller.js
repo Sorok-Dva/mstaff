@@ -74,6 +74,31 @@ User.create = (req, res, next) => {
   });
 };
 
+User.Delete = (req, res, next) => {
+  Models.User.findOne({
+    where: { id: req.user.id },
+    attributes: ['id', 'password']
+  }).then(user => {
+    if (_.isNil(user)) {
+      req.flash('error_msg', 'Utilisateur introuvable.');
+      return res.redirect('/');
+    }
+    User.comparePassword(req.body.password, user.dataValues.password, (err, isMatch) => {
+      if (err) return res.status(200).json({ error: err });
+      if (isMatch) {
+        user.destroy().then(() => {
+          req.logout();
+          req.session.destroy();
+          return res.status(201).send({ deleted: true });
+        }).catch(error => next(new BackError(error)))
+      } else {
+        return res.status(403).send('Mot de passe invalide.');
+      }
+    });
+
+  });
+};
+
 User.ValidateAccount = (req, res, next) => {
   if (req.params.key) {
     Models.User.findOne({
