@@ -12,6 +12,10 @@ router.get('/postuler', (req, res, next) => res.redirect('/join'));
 router.get('/join',
   Subdomain.Establishment.ViewATS);
 
+/*router.get('/join',
+  HTTPValidation.EstablishmentController.createATS,
+  Subdomain.Establishment.ViewATSV2);*/
+
 router.post('/register',
   Authentication.ensureIsNotAuthenticated,
   HTTPValidation.UserController.create,
