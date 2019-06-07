@@ -131,7 +131,7 @@ User_Candidate.deleteDocument = (req, res, next) => {
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
     if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
     candidate = result;
-    return Models.CandidateDocument.findOne({ where: { id: req.params.id } });
+    return Models.CandidateDocument.findOne({ where: { id: req.params.id, candidate_id: candidate.id } });
   }).then(document => {
     if (_.isNil(document)) {
       return res.status(404).send('Document introuvable.')
@@ -143,6 +143,21 @@ User_Candidate.deleteDocument = (req, res, next) => {
         User_Candidate.updatePercentage(req.user, 'documents');
         return res.status(200).send('Document supprimé.');
       });
+    }
+  });
+};
+
+User_Candidate.viewDocument = (req, res, next) => {
+  Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    return Models.CandidateDocument.findOne({ where: { id: req.params.id, candidate_id: candidate.id } });
+  }).then(document => {
+    if (_.isNil(document)) {
+      return next(new BackError('Document introuvable', 404));
+    } else {
+      if (fs.existsSync(`./public/uploads/candidates/documents/${document.filename}`)) {
+        return res.sendFile(`${__}/public/uploads/candidates/documents/${document.filename}`);
+      }
     }
   });
 };
