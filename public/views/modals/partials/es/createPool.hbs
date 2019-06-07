@@ -2,9 +2,14 @@
 <script src="/static/assets/js/multiple-emails.js"></script>
 <div class="modal-body">
   <div class="form-group">
-    <div class="custom-control custom-switch" style="margin-bottom: 30px">
-      <input type="checkbox" class="custom-control-input" name="poolActive" id="groupToggle">
+    <div id="toggleDiv" class="custom-control custom-switch" style="margin-bottom: 30px">
+      <input type="checkbox" class="custom-control-input" name="poolActive" id="groupToggle" onchange="hideEsList()">
       <label class="custom-control-label" for="groupToggle"> Inclure tous vos établissements à ce pool </label>
+    </div>
+    <div id="esNameDiv" style="margin-bottom: 30px">
+      <label for="esNameSelect" id="label"> Sélectionnez votre établissement </label>
+      <select id="esNameSelect" class="form-control">
+      </select>
     </div>
     <label for="poolName" id="label"> Nom de votre pool </label>
     <input id="poolName" type="text" class="form-control">
@@ -22,3 +27,12 @@
     Valider
   </button>
 </div>
+<script>
+  console.log("request linked establishements");
+  $.get('/establishement-list', function (data) {
+    console.log(data);
+    data.forEach((establishment) => {
+      $('#esNameSelect').append($('<option>', {value:establishment.Establishment.id, text: establishment.Establishment.name}));
+    });
+  });
+</script>

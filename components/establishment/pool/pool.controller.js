@@ -51,8 +51,10 @@ Establishment_Pool.inviteInPool = (req, res, next) => {
 };
 
 Establishment_Pool.deletePool = (req, res, next) => {
-  Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
-    pool.destroy().then(res.status(200).json('Pool removed')).catch(error => next(new Error(error)));
+  Models.UserPool.destroy({ where: { pool_id: req.body.pool } }).then( () => {
+    Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
+      pool.destroy().then(res.status(200).json('Pool removed')).catch(error => next(new Error(error)));
+    }).catch(error => next(new Error(error)));
   }).catch(error => next(new Error(error)));
 };
 
@@ -73,7 +75,7 @@ Establishment_Pool.disablePool = (req, res, next) => {
 };
 
 Establishment_Pool.sendMail = (mails) => {
-  console.log(mails);
+  console.log('send mail to ' + mails + ' adresses');
 };
 
 module.exports = Establishment_Pool;

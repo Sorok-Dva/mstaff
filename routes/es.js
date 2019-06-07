@@ -112,4 +112,9 @@ router.post('/pool-disable',
   Establishment.Pool.disablePool
 );
 
+router.get('/establishement-list',
+  Authentication.ensureIsEs,
+  Establishment.Application.getEstablishments
+);
+
 module.exports = router;

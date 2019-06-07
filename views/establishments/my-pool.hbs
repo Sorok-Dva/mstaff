@@ -75,10 +75,15 @@
         if ($('#personnelMails').val() !== '') { // && $('#personnelMails').val() !== [] TODO: Comprendre pourquoi cette comparaison ne fonctionne pas
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           let pool = $('#poolName').val();
+          let allEs = $('#groupToggle').prop('checked');
+          console.log(allEs);
+          let selectedEs = $('#esNameSelect').val();
           let referent = $('#referentName').val();
           let mails = $('#personnelMails').val();
           $.post(`/my-pool`, {
             _csrf,
+            selectedEs,
+            allEs,
             pool,
             referent,
             mails
@@ -133,6 +138,7 @@
             }, (response) => {
               if (response === 'Pool removed') {
                 $('#removePoolModal').modal('hide');
+                location.reload();
                 notification({
                   icon: 'check-circle',
                   type: 'success',
@@ -177,12 +183,14 @@
     })
   };
   let personnelStep = () => {
-    if ($('#poolName').val() !== '' && $('#referentName').val() !== '')
+    if ($('#p5oolName').val() !== '' && $('#referentName').val() !== '')
     {
       $('#addPersonnelButton').toggle();
       $('#label').toggle();
       $('#label2').toggle();
       $('#label3').toggle();
+      $('#esNameDiv').hide();
+      $('#toggleDiv').hide();
       $('#referentName').toggle();
       $('#poolName').toggle();
       $('#createPoolButton').toggle();
@@ -197,7 +205,6 @@
     let _csrf = $('meta[name="csrf-token"]').attr('content');
     let checked = selectedToggle.checked;
     let pool = selectedToggle.dataset.pool;
-    console.log(pool);
     if (checked === true) {
       $.post(`/pool-enable`, {
         _csrf,
@@ -230,5 +237,8 @@
         }
       })
     }
-  }
+  };
+  const hideEsList = () => {
+    $('#esNameDiv').toggle();
+  };
 </script>
