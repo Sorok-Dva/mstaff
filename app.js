@@ -41,6 +41,7 @@ app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.compress);
 app.use(Express.methodOverride);
 app.use(Express.helmet);
+app.use('/static', Express.unauthorizedStatics);
 app.use('/static', express.static(path.join(__dirname, 'public'), staticMaxAge));
 app.use(Express.cookieParser);
 app.use(Express.csurf);

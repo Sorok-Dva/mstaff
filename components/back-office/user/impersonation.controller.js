@@ -15,12 +15,12 @@ BackOffice_Users_Impersonation.User = (req, res, next) => {
     if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
     let originalUser = req.user.id;
     let originalRole = req.user.role;
-    let originalFullName = req.user.role;
+    let originalFullName = req.user.fullName;
     req.logIn(user, (err) => !_.isNil(err) ? next(new BackError(err)) : null);
     req.session.originalUser = originalUser;
     req.session.role = originalRole;
     req.session.readOnly = true;
-    discord(`**${originalFullName}** vient de se connecter en tant que **${user.dataValues.email}** sur Mstaff.`, 'infos');
+    discord(`**${originalFullName}** vient de se connecter en tant que **${user.firstName} ${user.lastName}** (${user.email}) sur Mstaff.`, 'infos');
     return res.redirect('/');
   });
 };
@@ -34,8 +34,9 @@ BackOffice_Users_Impersonation.Remove = (req, res, next) => {
     delete req.session.originalUser;
     delete req.session.role;
     delete req.session.readOnly;
+    let oldUser = req.user;
     req.logIn(user, (err) => !_.isNil(err) ? next(new BackError(err)) : null);
-    discord(`**${user.dataValues.email}** vient de se déconnecter du compte de **${req.user.fullName}**.`, 'infos');
+    discord(`**${user.firstName} ${user.lastName}** vient de se déconnecter du compte de **${oldUser.fullName}**.`, 'infos');
     return res.redirect('/');
   });
 };
@@ -43,7 +44,7 @@ BackOffice_Users_Impersonation.Remove = (req, res, next) => {
 BackOffice_Users_Impersonation.removeReadOnly = (req, res, next) => {
   Models.User.findOne({
     where: { id: req.session.originalUser },
-    attributes: ['password']
+    attributes: ['password', 'firstName', 'lastName']
   }).then(user => {
     if (_.isNil(user)) return res.status(400).send('User not found.');
     UserComponent.comparePassword(req.body.password, user.dataValues.password, (err, isMatch) => {
@@ -51,7 +52,7 @@ BackOffice_Users_Impersonation.removeReadOnly = (req, res, next) => {
       if (isMatch) {
         let pinCode = Math.floor(Math.random() * 90000) + 10000;
         req.session.pinCode = pinCode;
-        discord(`***Admin Mstaff** vient de demander une suppression de la lecture seule sur le compte de ${req.user.fullName}.
+        discord(`***${user.firstName} ${user.lastName}** vient de demander une suppression de la lecture seule sur le compte de ${req.user.fullName}.
            Code PIN : **${pinCode}***`, 'infos');
         return res.status(200).json({ status: 'send' });
       } else {
