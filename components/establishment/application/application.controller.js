@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
+const fs = require('fs');
 const httpStatus = require('http-status');
 const moment = require('moment');
 
@@ -114,6 +115,37 @@ Establishment_Application.getCVs = (req, res, next) => {
         return res.render('establishments/addNeed', render);
       }
     }).catch(error => next(new BackError(error)));
+  }).catch(error => next(new BackError(error)));
+};
+
+Establishment_Application.viewCandidateDocument = (req, res, next) => {
+  let query = {
+    where: { es_id: req.user.opts.currentEs, candidate_id: req.params.candidateId },
+    attributes: ['id', 'es_id', 'candidate_id'],
+    include: {
+      model: Models.Candidate,
+      attributes: ['id'],
+      on: {
+        '$Application.candidate_id$': {
+          [Op.col]: 'Candidate.id'
+        }
+      },
+      required: true,
+    }
+  };
+  Models.Application.findOne(query).then(application => {
+    if (_.isNil(application)) return next();
+    Models.CandidateDocument.findOne({ where: { id: req.params.id, candidate_id: req.params.candidateId } }).then(document => {
+      if (_.isNil(document)) {
+        return next(new BackError('Document introuvable', 404));
+      } else {
+        if (fs.existsSync(`./public/uploads/candidates/documents/${document.filename}`)) {
+          return res.sendFile(`${__}/public/uploads/candidates/documents/${document.filename}`);
+        } else {
+          return next(new BackError('Document introuvable sur ce serveur', 404));
+        }
+      }
+    });
   }).catch(error => next(new BackError(error)));
 };
 
