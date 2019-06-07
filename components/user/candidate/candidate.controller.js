@@ -157,6 +157,8 @@ User_Candidate.viewDocument = (req, res, next) => {
     } else {
       if (fs.existsSync(`./public/uploads/candidates/documents/${document.filename}`)) {
         return res.sendFile(`${__}/public/uploads/candidates/documents/${document.filename}`);
+      } else {
+        return next(new BackError('Document introuvable sur ce serveur', 404));
       }
     }
   });
