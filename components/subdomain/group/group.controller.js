@@ -48,8 +48,11 @@ Subdomain_Group.find = (id, next) => {
 };
 
 Subdomain_Group.ViewATS = (req, res, next) => {
-  console.log(req.group.es);
-  return res.render('establishments/site/ats/index', { es: req.group.finess, layout: 'onepage' })
+  let esList = [];
+  req.group.EstablishmentGroups.forEach( item => {
+    esList.push(item.es.finess);
+  });
+  return res.render('establishments/site/ats/index', { es: esList, layout: 'onepage' })
 };
 
 module.exports = Subdomain_Group;

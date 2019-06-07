@@ -668,6 +668,22 @@ function initBulks(bulks, candidate, req) {
   }
 }
 
+function createApplicationsBulk(wish, candidateId, esList){
+  let applicationsBulk = [];
+
+  esList.forEach( es => {
+    applicationsBulk.push({
+      name: 'Ma première candidature',
+      wish_id: wish,
+      candidate_id: candidateId,
+      ref_es_id: es.finess,
+      es_id: !_.isNil(es) ? es.id : null,
+      new: true
+    });
+  });
+  return applicationsBulk;
+}
+
 User_Candidate.ATSAddAll = (req, res, next) => {
 
   let user = {};
@@ -719,17 +735,11 @@ User_Candidate.ATSAddAll = (req, res, next) => {
             return Models.CandidateQualification.bulkCreate(bulks.qualifications, { transaction: t }).then( () => {
               return Models.CandidateSkill.bulkCreate(bulks.skills, { transaction: t }).then( () => {
                 return  Models.Wish.bulkCreate(bulks.wish, { transaction: t }).then(wish => {
-                  return Models.Establishment.findOne({
+                  return Models.Establishment.findAll({
                     where: { finess: req.body.finess }
                   }, { transaction: t }).then(es => {
-                    return Models.Application.create({
-                      name: 'Ma première candidature',
-                      wish_id: wish[0].id,
-                      candidate_id: candidate.id,
-                      ref_es_id: req.body.finess,
-                      es_id: !_.isNil(es) ? es.id : null,
-                      new: true
-                    }, { transaction: t }).then( () => {
+                    bulks.application = createApplicationsBulk(wish[0].id, candidate.id, es);
+                    return Models.Application.bulkCreate(bulks.application, { transaction: t }).then( () => {
                       return Models.User.findOne({
                         where: { id: user.id }
                       }, { transaction: t }).then(item => {

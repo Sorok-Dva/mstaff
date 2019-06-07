@@ -12,4 +12,22 @@ router.get('/',
 router.get('/join',
   Subdomain.Group.ViewATS);
 
+router.get('/atsDatas/all',
+  Subdomain.Establishment.GetAtsDatas);
+
+router.get('/emailAvailable/:email',
+  HTTPValidation.UserController.ApiVerifyEmailAvailability,
+  User.Main.verifyEmailAvailability);
+
+router.post('/register',
+  Authentication.ensureIsNotAuthenticated,
+  HTTPValidation.UserController.create,
+  User.Main.create
+);
+
+router.post('/ats/add/all',
+  Authentication.ensureIsNotAuthenticated,
+  User.Candidate.ATSAddAll
+);
+
 module.exports = router;
