@@ -425,7 +425,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
   }
   if (!_.isNil(filterQuery.postal_code)) {
     query.include[0].include.include[0].where = {
-      postal_code: { [Op.regexp]: filterQuery.postal_code }
+      postal_code: { [Op.startsWith]: filterQuery.postal_code }
     };
   }
 

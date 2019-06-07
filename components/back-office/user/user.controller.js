@@ -2,6 +2,7 @@ const __ = process.cwd();
 const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
 const { validationResult } = require('express-validator/check');
+const { BackError } = require(`${__}/helpers/back.error`);
 const Models = require(`${__}/orm/models/index`);
 const Mailer = require(`${__}/components/mailer`);
 
@@ -60,6 +61,22 @@ BackOffice_Users.edit = (req, res, next) => {
       return res.redirect('/back-office/users');
     });
   }).catch(errors => res.status(400).send({ body: req.body, sequelizeError: errors }))
+};
+
+BackOffice_Users.delete = (req, res, next) => {
+  Models.User.findOne({
+    where: {
+      id: req.params.id
+    }
+  }).then(user => {
+    if (_.isNil(user)) {
+      req.flash('error_msg', 'Cet utilisateur n\'existe pas.');
+      return res.redirect('/back-office/users');
+    }
+    user.destroy().then((deletedUser, result) => {
+      return res.status(201).send({ deleted: true, result });
+    }).catch(error => next(new BackError(error)))
+  });
 };
 
 BackOffice_Users.sendVerificationEmail = (req, res, next) => {
@@ -126,7 +143,23 @@ let _getInclude = (type) => {
     case 'candidates':
       include = {
         model: Models.Candidate,
-        as: 'candidate'
+        as: 'candidate',
+        include: [{
+          model: Models.CandidateFormation,
+          attributes: ['name'],
+          as: 'formations',
+        }, {
+          model: Models.Experience,
+          attributes: ['poste_id', 'service_id'],
+          as: 'experiences',
+          include: [{
+            model: Models.Service,
+            as: 'service'
+          }, {
+            model: Models.Post,
+            as: 'poste'
+          }]
+        }]
       };
       break;
     case 'es':

@@ -48,7 +48,11 @@ router.get(
 ).post(
   '/user/:id(\\d+)',
   Authentication.ensureIsAdmin,
-  BackOffice.User.edit);
+  BackOffice.User.edit
+).delete(
+  '/user/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.User.delete);
 
 /**
  * @Route('/back-office/impersonate/user/:id(\\d+)/') GET;

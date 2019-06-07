@@ -26,14 +26,26 @@ Establishment_Pool.viewMyPools = (req, res, next) => {
 };
 
 Establishment_Pool.newPool = (req, res, next) => {
-  Models.Pool.create({
-    name: req.body.pool,
-    referent: req.body.referent,
-    owner: req.user.id
-  }).then(pool => {
-    Establishment_Pool.sendMail(JSON.parse(req.body.mails));
-    res.status(200).send({ pool });
-  }).catch(error => next(new Error(error)));
+  if (req.body.allEs === 'false') {
+    Models.Pool.create({
+      name: req.body.pool,
+      referent: req.body.referent,
+      owner: req.user.id
+    }).then(pool => {
+      Establishment_Pool.sendMail(JSON.parse(req.body.mails));
+      res.status(200).send({ pool });
+    }).catch(error => next(new Error(error)));
+  }
+  else if (req.body.allEs === 'true') {
+    Models.Pool.create({
+      name: req.body.pool,
+      referent: req.body.referent,
+      owner: req.user.id
+    }).then(pool => {
+      Establishment_Pool.sendMail(JSON.parse(req.body.mails));
+      res.status(200).send({ pool });
+    }).catch(error => next(new Error(error)));
+  }
 };
 
 Establishment_Pool.editPool = (req, res, next) => {
