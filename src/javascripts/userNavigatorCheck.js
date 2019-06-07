@@ -2,7 +2,7 @@ $(document).ready(() => {
   if ((navigator.userAgent.indexOf('Opera') || navigator.userAgent.indexOf('OPR')) !== -1) {
   } else if (navigator.userAgent.indexOf('Chrome') !== -1) {
   } else if (navigator.userAgent.indexOf('Firefox') !== -1) {
-  } else if (navigator.userAgent.indexOf('Safari') !== -1) {
+  } else if (navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1) {
     createModal({
       id: 'alertBadNavigatorModal',
       title: 'Attention : navigateur obsolète détecté !',
