@@ -72,8 +72,7 @@
                   icon: 'check-circle',
                   type: 'success',
                   title: 'Etablissement(s) lié(s)',
-                  message: ``,
-                  onClosed: () => $(location).attr('href',`/back-office/groups`)
+                  message: ``
                 });
               });
             }
@@ -204,7 +203,8 @@
                 icon: 'check-circle',
                 type: 'success',
                 title: 'Groupe créé.',
-                message: ``
+                message: ``,
+                onClosed: location.reload()
               });
             }
           });

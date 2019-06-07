@@ -73,7 +73,6 @@
                   type: 'success',
                   title: 'Groupe(s) lié(s)',
                   message: ``,
-                  onClosed: () => $(location).attr('href',`/back-office/super-groups`)
                 });
               });
             }
@@ -202,7 +201,8 @@
                 icon: 'check-circle',
                 type: 'success',
                 title: 'Super Groupe créé.',
-                message: ``
+                message: ``,
+                onClosed: location.reload()
               });
             }
           });
