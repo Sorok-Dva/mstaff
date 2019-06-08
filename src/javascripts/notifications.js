@@ -93,7 +93,7 @@ let appNotifications = {
     // Every 3 minutes we check if new notifications
     setInterval(function () {
       appNotifications.loadNumber();
-    }, 180000);
+    }, 900000);
 
     // Binding de marquage comme lue desktop
     $('.notification-read-desktop').on('click', function (event) {

@@ -25,11 +25,11 @@ let output = (msg) => $('#messages').html(msg);
 
 let parseFile = (f, i) => {
   file = f;
-  let imageName = file.name;
+  let imageName = decodeURI(file.name);
   let isGood = (/\.(?=pdf|png|jpeg|jpg)/gi).test(imageName);
 
   if (isGood) {
-    $('#response').append(`<div id="title${i}">${encodeURI(file.name)}</div><progress class="progress" id="file-progress${i}" value="0"></progress>`);
+    $('#response').append(`<div id="title${i}">${file.name}</div><progress class="progress" id="file-progress${i}" value="0"></progress>`);
 
     $('#start').hide();
     $('#notgoodfile').hide();
@@ -72,7 +72,7 @@ function uploadFile(f, i) {
         if (xhr.readyState === 4 && xhr.status === 200) {
           let response = JSON.parse(xhr.response);
           if (response.id) {
-            let url = `/static/uploads/candidates/documents/${response.filename}`;
+            let url = `/document/view/${response.id}`;
             let rmBtn = ` - <button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="${response.id}"><i class="fa fa-trash"></i></button>`;
             notification({
               icon: 'check-circle',

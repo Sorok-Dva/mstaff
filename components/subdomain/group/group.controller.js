@@ -15,24 +15,44 @@ Subdomain_Group.ViewIndex = (req, res, next) => {
 Subdomain_Group.find = (id, next) => {
   return Models.Groups.findOne({
     where: { id },
-    include: {
-      model: Models.Establishment,
-      as: 'es',
-      include: {
-        model: Models.EstablishmentReference,
-        as: 'ref',
+    include: [{
+      model: Models.EstablishmentGroups,
+      include: [{
+        model: Models.Establishment,
+        as: 'es',
         on: {
-          'finess_et': {
-            [Op.col]: 'es.finess'
+          'id': {
+            [Op.col]: 'id_es'
           }
         },
-        attributes: ['lat', 'lon', 'finess_et']
-      }
-    }
+        /*include: {
+          model: Models.EstablishmentReference,
+          as: 'ref',
+          on: {
+            'finess_et': {
+              [Op.col]: 'es.finess'
+            }
+          },
+          attributes: ['lat', 'lon', 'finess_et']
+        }*/
+      }]
+    }]
   }).then( group => {
+    group.es = [];
+    group.EstablishmentGroups.forEach( item => {
+      group.es.push(item.es);
+    });
     if (_.isNil(group)) return new BackError('Groupe introuvable', 403);
     else next(group);
   }).catch(error => next(new Error(error)));
+};
+
+Subdomain_Group.ViewATS = (req, res, next) => {
+  let esList = [];
+  req.group.EstablishmentGroups.forEach( item => {
+    esList.push(item.es.finess);
+  });
+  return res.render('establishments/site/ats/index', { es: esList, layout: 'onepage' })
 };
 
 module.exports = Subdomain_Group;
