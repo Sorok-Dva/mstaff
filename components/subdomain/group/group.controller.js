@@ -35,10 +35,6 @@ Subdomain_Group.find = (id, next) => {
       }]
     }
   }).then( group => {
-    group.es = [];
-    group.EstablishmentGroups.forEach(item => {
-      group.es.push(item.es);
-    });
     if (_.isNil(group)) return new BackError('Groupe introuvable', 403);
     else next(group);
   }).catch(error => next(new Error(error)));
