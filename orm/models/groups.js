@@ -7,10 +7,11 @@ module.exports = (sequelize, DataTypes) => {
     url: DataTypes.STRING,
   }, {});
   Group.associate = function (models) {
-    Group.hasMany(models.Establishment, {
-      foreignKey: 'id',
-      as: 'es'
-    });
+    Group.hasMany(models.EstablishmentGroups, {
+      foreignKey: 'id_group',
+      sourceKey: 'id',
+      onDelete: 'CASCADE'
+    })
   };
   return Group;
 };

@@ -54,6 +54,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'es_id',
       sourceKey: 'id'
     });
+    Establishment.hasMany(models.EstablishmentGroups, {
+      foreignKey: 'id_es',
+      sourceKey: 'id',
+      onDelete: 'CASCADE'
+    })
   };
   return Establishment;
 };

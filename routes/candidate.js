@@ -91,6 +91,14 @@ router.get('/documents',
   User.Candidate.getDocuments);
 
 /**
+ * @Route('/document/view/:id') GET;
+ * Show documents user page
+ */
+router.get('/document/view/:id',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewDocument);
+
+/**
  * @Route('/applications') GET;
  * Show applications user page
  */
