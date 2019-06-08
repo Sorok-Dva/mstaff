@@ -53,21 +53,18 @@
         </div>
         <div class="card-body">
           {{#each group.es as |es|}}
-            <div class="card" {{!--onmouseover="addMarker({lat: {{es.ref.lat}}, lon: {{es.ref.lon}} })" onmouseleave="removeAllMarker()"--}}>
+            <div class="card" onmouseover="addMarker({lat: {{es.ref.lat}}, lon: {{es.ref.lon}} })" onmouseleave="removeAllMarker()">
               <div class="card-body">
                 {{es.name}}
               </div>
             </div>
-          {{!--
             <script>
               pos = {lat: {{es.ref.lat}}, lng: {{es.ref.lon}}, rayon: 5}
             </script>
-            --}}
           {{/each}}
         </div>
       </div>
     </div>
-    {{!--
     <div class="col-12 col-xl-4">
       <div class="card">
         <div class="card-header">
@@ -85,15 +82,13 @@
         </div> <!-- / .card-body -->
       </div> <!-- / .card -->
     </div>
-    --}}
   </div> <!-- / .row -->
 </div>
-{{!--
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
   if (document.getElementById('map')) {
-    {{!--let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};-- }}
+    {{!--let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};--}}
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10,
       center: pos
@@ -141,4 +136,3 @@
     markers = [];
   };
 </script>
---}}
