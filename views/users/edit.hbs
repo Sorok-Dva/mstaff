@@ -58,7 +58,7 @@
         </div>
         <form id="avatarForm" action="/api/candidate/add/photo?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
           <span id="editAvatar" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px; background-color: white;">
-              <i class="fal fa-pencil"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
+              <i class="fal fa-camera-alt"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
             </span>
           <button id="validateAvatarButton" type="submit" class="btn btn-primary" style="display:none"> Valider </button>
         </form>
