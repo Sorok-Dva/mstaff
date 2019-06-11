@@ -1,4 +1,5 @@
 let loadingCandidateHTML = $('#loadingCandidates').html();
+let showSelectAllSearchInfo = localStorage.getItem('showSelectAllSearchInfo') || 'true';
 need.notifyCandidates = false;
 
 let accentMap = {
@@ -168,7 +169,29 @@ let resetSearch = () => {
   $('#btnTimeType').parent().removeClass('btn-info').addClass('btn-outline-info');
 };
 
-let selectAllSearch = () => $('#searchResult .selectCandidate:visible').trigger('click');
+let selectAllSearch = () => {
+  if (showSelectAllSearchInfo === 'true') {
+    createModal({
+      id: 'infoSelectAllCandidatesModal',
+      modal: 'es/infoSelectAllCandidates',
+      title: 'Sélectionner tous les candidats'
+    }, () => {
+      $('button#SelectAllCandidate').click(function () {
+        showSelectAllSearchInfo = 'false';
+        localStorage.setItem('showSelectAllSearchInfo', 'false');
+        $('#infoSelectAllCandidatesModal').modal('hide');
+        let toSelect = $('#searchResult .selectCandidate:visible');
+        toSelect.each((i, element) => (i < 50) ? $(element).trigger('click') : false);
+      });
+      $('button#cancelSelectAllCandidate').click(function () {
+       $('#searchSelectAll').trigger('click');
+      });
+    });
+  } else {
+    let toSelect = $('#searchResult .selectCandidate:visible');
+    toSelect.each((i, element) => (i < 50) ? $(element).trigger('click') : false);
+  }
+};
 let unselectAllSearch = () => $('#searchResult .unselectCandidate:visible').trigger('click');
 
 let addCandidate = (id, type) => {
@@ -176,11 +199,20 @@ let addCandidate = (id, type) => {
   switch (type) {
     case 'select':
       if (need.selectedCandidates.indexOf(id) === -1) {
-        if (need.selectedCandidates.length === 0) $('#saveNeed').show();
-        $(`i.selectCandidate[data-id="${id}"]`).hide();
-        $(`i.unselectCandidate[data-id="${id}"]`).show();
-        need.selectedCandidates.push(id);
-        $('#saveNeed').attr('data-original-title', `Enregister ma recherche (${need.selectedCandidates.length} candidat sélectionnés)`)
+        if (need.selectedCandidates.length < 50) {
+          if (need.selectedCandidates.length === 0) $('#saveNeed').show();
+          $(`i.selectCandidate[data-id="${id}"]`).hide();
+          $(`i.unselectCandidate[data-id="${id}"]`).show();
+          need.selectedCandidates.push(id);
+          $('#saveNeed').attr('data-original-title', `Enregister ma recherche (${need.selectedCandidates.length} candidat sélectionnés)`);
+          $('#searchCount').prepend(``)
+        } else {
+          notification({
+            icon: 'exclamation-circle',
+            type: 'warning',
+            title: 'Vous ne pouvez pas séléctionner plus de 50 candidats sur un besoin.'
+          })
+        }
       }
       break;
     case 'favorite':
