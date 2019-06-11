@@ -1,13 +1,54 @@
 let loadingCandidateHTML = $('#loadingCandidates').html();
 need.notifyCandidates = false;
 
+let accentMap = {
+  'à': 'a',
+  'â': 'a',
+  'é': 'e',
+  'É': 'E',
+  'è': 'e',
+  'ê': 'e',
+  'ë': 'e',
+  'ï': 'i',
+  'î': 'i',
+  'ô': 'o',
+  'ö': 'o',
+  'û': 'u',
+  'ù': 'u'
+};
+
+let normalize = (term) => {
+  let ret = "";
+  for (let i = 0; i < term.length; i++) {
+    ret += accentMap[term.charAt(i)] || term.charAt(i);
+  }
+  return ret;
+};
+let split = (val) => val.split(/,\s*/);
+let extractLast = (term) => split(term).pop();
+
 $(`#post`).autocomplete({
-  source: list,
+  source: (request, response) => {
+    let matcher = new RegExp($.ui.autocomplete.escapeRegex(extractLast(request.term)), "i");
+    response($.grep(list, (value) => {
+      value = value.value || value;
+      return matcher.test(value) || matcher.test(normalize(value));
+    }));
+  },
   minLength: 2,
-  select: (event, ui) => {
+  select: (event, ui) =>  {
+    let terms = split(this.value);
+    // remove the current input
+    terms.pop();
+    // add the selected item
+    terms.push( ui.item.value );
+    // add placeholder to get the comma-and-space at the end
+    terms.push('');
+    this.value = terms.join(', ');
     need.post = ui.item.label;
     return searchCandidates();
   },
+  focus: () => false
 });
 
 $('#searchCandidates').on('click', function () {
