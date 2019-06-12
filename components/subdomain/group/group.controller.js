@@ -15,33 +15,26 @@ Subdomain_Group.ViewIndex = (req, res, next) => {
 Subdomain_Group.find = (id, next) => {
   return Models.Groups.findOne({
     where: { id },
-    include: [{
+    include: {
       model: Models.EstablishmentGroups,
       include: [{
         model: Models.Establishment,
         as: 'es',
-        on: {
-          'id': {
-            [Op.col]: 'id_es'
-          }
-        },
-        /*include: {
+        required: true,
+        include: {
           model: Models.EstablishmentReference,
           as: 'ref',
           on: {
-            'finess_et': {
-              [Op.col]: 'es.finess'
-            }
+            '$EstablishmentGroups->es.finess$': {
+              [Op.col]: 'EstablishmentGroups->es->ref.finess_et'
+            },
           },
-          attributes: ['lat', 'lon', 'finess_et']
-        }*/
+          attributes: ['lat', 'lon', 'finess_et'],
+          required: true
+        }
       }]
-    }]
+    }
   }).then( group => {
-    group.es = [];
-    group.EstablishmentGroups.forEach( item => {
-      group.es.push(item.es);
-    });
     if (_.isNil(group)) return new BackError('Groupe introuvable', 403);
     else next(group);
   }).catch(error => next(new Error(error)));
