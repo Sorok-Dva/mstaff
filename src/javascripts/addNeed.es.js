@@ -38,14 +38,6 @@ $(`#post`).autocomplete({
   },
   minLength: 2,
   select: (event, ui) =>  {
-    let terms = split(this.value);
-    // remove the current input
-    terms.pop();
-    // add the selected item
-    terms.push( ui.item.value );
-    // add placeholder to get the comma-and-space at the end
-    terms.push('');
-    this.value = terms.join(', ');
     need.post = ui.item.label;
     return searchCandidates();
   },
