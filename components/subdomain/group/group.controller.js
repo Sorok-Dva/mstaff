@@ -43,6 +43,7 @@ Subdomain_Group.find = (id, next) => {
 Subdomain_Group.ViewATS = (req, res, next) => {
   let esList = [];
   req.group.EstablishmentGroups.forEach( item => {
+    console.log('ITEMMMM', item.es);
     esList.push(item.es.finess);
   });
   return res.render('establishments/site/ats/index', { es: esList, layout: 'onepage' })
