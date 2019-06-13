@@ -5,6 +5,7 @@ const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 const moment = require('moment');
+const crypto = require('crypto');
 
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
@@ -26,13 +27,18 @@ Establishment_Pool.viewMyPools = (req, res, next) => {
 };
 
 Establishment_Pool.newPool = (req, res, next) => {
+  let token;
   if (req.body.allEs === 'false') {
     Models.Pool.create({
       name: req.body.pool,
       referent: req.body.referent,
       owner: req.user.id
     }).then(pool => {
-      Establishment_Pool.sendMail(JSON.parse(req.body.mails));
+      /*      Models.InvitationAts.create({
+        //rominou here
+      });    */
+      token = crypto.randomBytes(10).toString('hex');
+      Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
       res.status(200).send({ pool });
     }).catch(error => next(new Error(error)));
   }
@@ -42,7 +48,11 @@ Establishment_Pool.newPool = (req, res, next) => {
       referent: req.body.referent,
       owner: req.user.id
     }).then(pool => {
-      Establishment_Pool.sendMail(JSON.parse(req.body.mails));
+      /*      Models.InvitationAts.create({
+        //rominou here
+      });    */
+      token = crypto.randomBytes(10).toString('hex');
+      Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
       res.status(200).send({ pool });
     }).catch(error => next(new Error(error)));
   }
@@ -58,7 +68,9 @@ Establishment_Pool.editPool = (req, res, next) => {
 };
 
 Establishment_Pool.inviteInPool = (req, res, next) => {
-  Establishment_Pool.sendMail(JSON.parse(req.body.mails));
+  let token;
+  token = crypto.randomBytes(10).toString('hex');
+  Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
   res.status(200).json('Invitations sent');
 };
 
@@ -86,8 +98,16 @@ Establishment_Pool.disablePool = (req, res, next) => {
   })
 };
 
-Establishment_Pool.sendMail = (mails) => {
-  console.log('send mail to ' + mails + ' adresses');
+Establishment_Pool.sendMail = (mails, token) => {
+  mails = mails.join();
+  mailer.sendEmail({
+    to: mails,
+    subject: 'Vous avez été invité à rejoindre un pool.',
+    template: 'candidate/poolInvite',
+    context: {
+      token
+    }
+  });
 };
 
 module.exports = Establishment_Pool;
