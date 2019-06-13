@@ -1,13 +1,47 @@
 let loadingCandidateHTML = $('#loadingCandidates').html();
+let showSelectAllSearchInfo = localStorage.getItem('showSelectAllSearchInfo') || 'true';
 need.notifyCandidates = false;
 
+let accentMap = {
+  'à': 'a',
+  'â': 'a',
+  'é': 'e',
+  'É': 'E',
+  'è': 'e',
+  'ê': 'e',
+  'ë': 'e',
+  'ï': 'i',
+  'î': 'i',
+  'ô': 'o',
+  'ö': 'o',
+  'û': 'u',
+  'ù': 'u'
+};
+
+let normalize = (term) => {
+  let ret = "";
+  for (let i = 0; i < term.length; i++) {
+    ret += accentMap[term.charAt(i)] || term.charAt(i);
+  }
+  return ret;
+};
+let split = (val) => val.split(/,\s*/);
+let extractLast = (term) => split(term).pop();
+
 $(`#post`).autocomplete({
-  source: list,
+  source: (request, response) => {
+    let matcher = new RegExp($.ui.autocomplete.escapeRegex(extractLast(request.term)), "i");
+    response($.grep(list, (value) => {
+      value = value.value || value;
+      return matcher.test(value) || matcher.test(normalize(value));
+    }));
+  },
   minLength: 2,
-  select: (event, ui) => {
+  select: (event, ui) =>  {
     need.post = ui.item.label;
     return searchCandidates();
   },
+  focus: () => false
 });
 
 $('#searchCandidates').on('click', function () {
@@ -127,7 +161,29 @@ let resetSearch = () => {
   $('#btnTimeType').parent().removeClass('btn-info').addClass('btn-outline-info');
 };
 
-let selectAllSearch = () => $('#searchResult .selectCandidate:visible').trigger('click');
+let selectAllSearch = () => {
+  if (showSelectAllSearchInfo === 'true') {
+    createModal({
+      id: 'infoSelectAllCandidatesModal',
+      modal: 'es/infoSelectAllCandidates',
+      title: 'Sélectionner tous les candidats'
+    }, () => {
+      $('button#SelectAllCandidate').click(function () {
+        showSelectAllSearchInfo = 'false';
+        localStorage.setItem('showSelectAllSearchInfo', 'false');
+        $('#infoSelectAllCandidatesModal').modal('hide');
+        let toSelect = $('#searchResult .selectCandidate:visible');
+        toSelect.each((i, element) => (i < 50) ? $(element).trigger('click') : false);
+      });
+      $('button#cancelSelectAllCandidate').click(function () {
+       $('#searchSelectAll').trigger('click');
+      });
+    });
+  } else {
+    let toSelect = $('#searchResult .selectCandidate:visible');
+    toSelect.each((i, element) => (i < 50) ? $(element).trigger('click') : false);
+  }
+};
 let unselectAllSearch = () => $('#searchResult .unselectCandidate:visible').trigger('click');
 
 let addCandidate = (id, type) => {
@@ -135,11 +191,20 @@ let addCandidate = (id, type) => {
   switch (type) {
     case 'select':
       if (need.selectedCandidates.indexOf(id) === -1) {
-        if (need.selectedCandidates.length === 0) $('#saveNeed').show();
-        $(`i.selectCandidate[data-id="${id}"]`).hide();
-        $(`i.unselectCandidate[data-id="${id}"]`).show();
-        need.selectedCandidates.push(id);
-        $('#saveNeed').attr('data-original-title', `Enregister ma recherche (${need.selectedCandidates.length} candidat sélectionnés)`)
+        if (need.selectedCandidates.length < 50) {
+          if (need.selectedCandidates.length === 0) $('#saveNeed').show();
+          $(`i.selectCandidate[data-id="${id}"]`).hide();
+          $(`i.unselectCandidate[data-id="${id}"]`).show();
+          need.selectedCandidates.push(id);
+          $('#saveNeed').attr('data-original-title', `Enregister ma recherche (${need.selectedCandidates.length} candidat sélectionnés)`);
+          $('#searchCount').prepend(``)
+        } else {
+          notification({
+            icon: 'exclamation-circle',
+            type: 'warning',
+            title: 'Vous ne pouvez pas séléctionner plus de 50 candidats sur un besoin.'
+          })
+        }
       }
       break;
     case 'favorite':

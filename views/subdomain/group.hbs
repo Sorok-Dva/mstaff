@@ -27,11 +27,9 @@
         </div>
         <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
           <!-- Button -->
-          {{!--
           <a href="/join" class="btn btn-outline-primary d-block d-md-inline-block">
-            New ATS
+            Candidature spontanée
           </a>
-          --}}
         </div>
       </div> <!-- / .row -->
     </div> <!-- / .header-body -->
@@ -48,20 +46,20 @@
             <div class="col">
               <!-- Title -->
               <h4 class="card-header-title">
-                Il y a <b>{{group.es.length}}</b> établissements dans ce groupe
+                Il y a <b>{{group.EstablishmentGroups.length}}</b> établissements dans ce groupe
               </h4>
             </div>
           </div> <!-- / .row -->
         </div>
         <div class="card-body">
-          {{#each group.es as |es|}}
-            <div class="card" onmouseover="addMarker({lat: {{es.ref.lat}}, lon: {{es.ref.lon}} })" onmouseleave="removeAllMarker()">
+          {{#each group.EstablishmentGroups as |data|}}
+            <div class="card" onmouseover="addMarker({lat: {{data.es.ref.lat}}, lon: {{data.es.ref.lon}} })" onmouseleave="removeAllMarker()">
               <div class="card-body">
-                {{es.name}}
+                {{data.es.name}}
               </div>
             </div>
             <script>
-              pos = {lat: {{es.ref.lat}}, lng: {{es.ref.lon}}, rayon: 5}
+              pos = {lat: {{data.es.ref.lat}}, lng: {{data.es.ref.lon}}, rayon: 5}
             </script>
           {{/each}}
         </div>
@@ -137,7 +135,4 @@
     });
     markers = [];
   };
-
-
-
 </script>

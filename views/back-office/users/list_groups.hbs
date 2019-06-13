@@ -11,6 +11,7 @@
           <th data-field="state" data-checkbox="true"></th>
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
+          <th data-field="url">URL</th>
 
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions
@@ -22,6 +23,7 @@
               <td></td>
               <td>{{groups.id}}</td>
               <td>{{groups.name}}</td>
+              <td>{{#if groups.url}}<a href="https://{{groups.url}}.mstaff.co">https://{{groups.url}}.mstaff.co</a>{{/if}}</td>
               <td></td>
             </tr>
           {{/each}}
@@ -203,7 +205,8 @@
                 icon: 'check-circle',
                 type: 'success',
                 title: 'Groupe créé.',
-                message: ``
+                message: ``,
+                onClosed: location.reload()
               });
             }
           });

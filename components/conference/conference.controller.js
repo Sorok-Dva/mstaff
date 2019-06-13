@@ -128,42 +128,46 @@ Conference.create = (req, res, next) => {
 
 Conference.sendInvitationNotification = (conference, req) => {
   Models.Need.findOne({ where: { id: conference.need_id } }).then(need => {
-    Models.Notification.create({
-      fromUser: conference.user_id,
-      fromEs: conference.es_id,
-      to: conference.candidate_id,
-      subject: 'Un entretien vous a été proposé !',
-      title: `Bravo !\n L'établissement ${req.es.name} vous propose un entretien d'embauche.`,
-      image: '/static/assets/images/wink.jpg',
-      opts: {
-        type: 'ConferenceNotifyCandidate',
-        details: {
-          conference,
-          need,
-          es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
+    Models.Candidate.findOne({
+      where: { id: conference.candidate_id },
+      include: {
+        model: Models.User,
+        attributes: ['id', 'firstName', 'lastName', 'email'],
+        on: {
+          '$Candidate.user_id$': {
+            [Op.col]: 'User.id'
+          }
         },
-        message: req.body.message,
-        actions: [{
-          'type': 'success',
-          'text': 'Disponible',
-          'dataAttr': `data-confid="${conference.id}" data-action="conf/availability" data-availability="accepted"`
-        }, {
-          'type': 'danger',
-          'text': 'Indisponible',
-          'dataAttr': `data-confid="${conference.id}" data-action="conf/availability" data-availability="refused"`
-        }],
-        needCandidateId: conference.candidate_id
+        required: true
       }
-    }).then(notification => {
-      Models.Candidate.findOne({
-        attributes: ['user_id'],
-        where: { id: conference.candidate_id },
-        include: {
-          model: Models.User,
-          attributes: ['email', 'firstName'],
-          required: true
+    }).then(candidate => {
+      Models.Notification.create({
+        fromUser: conference.user_id,
+        fromEs: conference.es_id,
+        to: candidate.User.id,
+        subject: 'Un entretien vous a été proposé !',
+        title: `Bravo !\n L'établissement ${req.es.name} vous propose un entretien d'embauche.`,
+        image: '/static/assets/images/wink.jpg',
+        opts: {
+          type: 'ConferenceNotifyCandidate',
+          details: {
+            conference,
+            need,
+            es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
+          },
+          message: req.body.message,
+          actions: [{
+            'type': 'success',
+            'text': 'Disponible',
+            'dataAttr': `data-confid="${conference.id}" data-action="conf/availability" data-availability="accepted"`
+          }, {
+            'type': 'danger',
+            'text': 'Indisponible',
+            'dataAttr': `data-confid="${conference.id}" data-action="conf/availability" data-availability="refused"`
+          }],
+          needCandidateId: conference.candidate_id
         }
-      }).then(candidate => {
+      }).then(notification => {
         Mailer.Main.notifyCandidatesNeedConference(candidate.User.email, { user: candidate.User, conference })
       });
     });
@@ -172,34 +176,38 @@ Conference.sendInvitationNotification = (conference, req) => {
 
 Conference.sendDeleteNotification = (conference, req) => {
   Models.Need.findOne({ where: { id: conference.need_id } }).then(need => {
-    Models.Notification.create({
-      fromUser: conference.user_id,
-      fromEs: conference.es_id,
-      to: conference.candidate_id,
-      subject: 'Un entretien a été annulé.',
-      title: `L'établissement ${req.es.name} a annulé un entretien d'embauche.`,
-      image: '/static/assets/images/sad.jpg',
-      opts: {
-        type: 'ConferenceNotifyCandidate',
-        template: 'delete',
-        details: {
-          conference,
-          need,
-          es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
+    Models.Candidate.findOne({
+      where: { id: conference.candidate_id },
+      include: {
+        model: Models.User,
+        attributes: ['id', 'firstName', 'lastName', 'email'],
+        on: {
+          '$Candidate.user_id$': {
+            [Op.col]: 'User.id'
+          }
         },
-        message: req.body.message,
-        needCandidateId: conference.candidate_id
+        required: true
       }
-    }).then(notification => {
-      Models.Candidate.findOne({
-        attributes: ['user_id'],
-        where: { id: conference.candidate_id },
-        include: {
-          model: Models.User,
-          attributes: ['email', 'firstName'],
-          required: true
+    }).then(candidate => {
+      Models.Notification.create({
+        fromUser: conference.user_id,
+        fromEs: conference.es_id,
+        to: conference.candidate_id,
+        subject: 'Un entretien a été annulé.',
+        title: `L'établissement ${req.es.name} a annulé un entretien d'embauche.`,
+        image: '/static/assets/images/sad.jpg',
+        opts: {
+          type: 'ConferenceNotifyCandidate',
+          template: 'delete',
+          details: {
+            conference,
+            need,
+            es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
+          },
+          message: req.body.message,
+          needCandidateId: conference.candidate_id
         }
-      }).then(candidate => {
+      }).then(notification => {
         Mailer.Main.notifyCandidatesNeedConferenceDeleted(candidate.User.email, { user: candidate.User })
       });
     });

@@ -9,6 +9,7 @@ toAutocomplete.forEach((ac) => {
 
   $(`#${ac}`).autocomplete({
     source: list,
+    maxShowItems: 10,
     minLength: 3,
     select: (event, ui) => {
       autocompleteTrigger({

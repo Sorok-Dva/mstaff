@@ -11,7 +11,6 @@ function legalListener(){
     let button = $('.final-button');
     (first && second) ? button.css('visibility', '') : button.css('visibility', 'hidden');
   });
-
 };
 
 function notify(error){

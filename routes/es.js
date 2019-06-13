@@ -24,6 +24,14 @@ router.get('/candidates',
   Establishment.Application.getCVs);
 
 /**
+ * @Route('/document/view/:id') GET;
+ * Show documents user page
+ */
+router.get('/candidate/:candidateId/document/view/:id',
+  Authentication.ensureIsEs,
+  Establishment.Application.viewCandidateDocument);
+
+/**
  * @Route('/needs') GET;
  * Show Needs Index page
  */
