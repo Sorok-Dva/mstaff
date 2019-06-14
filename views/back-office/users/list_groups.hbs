@@ -109,7 +109,7 @@
               let domain_name = $('input#groupUrlEdit').val();
               let domain_enable = $('select#groupDomainEdit').val();
               $.put(`/api/back-office/groups/${row.id}`, {
-                name, logo, banner, domain_name, _csrf
+                name, logo, banner, domain_name, domain_enable, _csrf
               }, (data) => {
                 if (data.error) {
                   notification({
