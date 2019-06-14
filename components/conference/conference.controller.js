@@ -7,6 +7,7 @@ const moment = require('moment');
 const httpStatus = require('http-status');
 
 const Models = require(`${__}/orm/models/index`);
+const Notification = require(`${__}/components/notification`);
 const Mailer = require(`${__}/components/mailer`);
 
 const Conference = {};
@@ -221,11 +222,24 @@ Conference.candidateAnswer = (req, res, next) => {
       where: {
         id: parseInt(req.params.id),
         candidate_id: candidate.id
-      }
+      },
+      include: [{
+        model: Models.User,
+        attributes: { exclude: ['password'] },
+        on: {
+          '$Conference.user_id$': {
+            [Op.col]: 'User.id'
+          }
+        }
+      }, {
+        model: Models.Establishment
+      }]
     }).then(conference => {
       if (_.isNil(conference)) return next();
       conference.status = req.body.availability;
       conference.save();
+      Mailer.Main.notifyESCandidateAnswerConference(conference.User.email, { Conference: conference, es: conference.Establishment });
+      Notification.ES.candidateAnswerForConference(conference.User, req.user, conference.Establishment);
       return res.status(200).send('done');
     })
   })

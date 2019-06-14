@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
+const Notification = require(`${__}/components/notification`);
 const moment = require('moment');
 const httpStatus = require('http-status');
 
@@ -413,6 +414,10 @@ Establishment_Need.candidateAnswer = (req, res, next) => {
       if (_.isNil(needCandidate)) return next();
       needCandidate.availability = req.body.availability;
       needCandidate.save();
+      if (req.body.availability === 'available') {
+        Mailer.Main.notifyESCandidateAvailable(needCandidate.Need.User.email, { Need: needCandidate.Need });
+        Notification.ES.candidateIsAvailableForNeed(needCandidate.Need.User, req.user, needCandidate.Need);
+      }
       return res.status(200).send('done');
     })
   })
