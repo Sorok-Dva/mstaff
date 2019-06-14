@@ -1,7 +1,31 @@
 <div class="modal-body">
   <div class="form-group">
-    <label for="superGroupValueEdit"> Nom du groupe </label>
-    <input class="form-control" type="text" id="superGroupValueEdit">
+    <label for="superGroupValueEdit"> Nom du Super Groupe </label>
+    <input class="form-control" type="text" id="superGroupValueEdit" value="{{this.supergroup.name}}">
+  </div>
+  <div class="form-group">
+    <label for="superGroupLogoEdit">Logo</label>
+    <input class="form-control" type="text" id="superGroupLogoEdit" value="{{this.supergroup.logo}}">
+  </div>
+  <div class="form-group">
+    <label for="superGroupBannerEdit">Bannière</label>
+    <input class="form-control" type="text" id="superGroupBannerEdit" value="{{this.supergroup.banner}}">
+  </div>
+  <div class="form-group">
+    <label for="superGroupDomainEdit">Domaine</label>
+    <select class="form-control" id="superGroupDomainEdit" name="domaine_enable">
+      <option value="0" {{#ifCond this.supergroup.domain_enable '===' 'Inactif'}}selected="selected"{{/ifCond}}>Inactif</option>
+      <option value="1" {{#ifCond this.supergroup.domain_enable '===' 'Actif'}}selected="selected"{{/ifCond}}>Actif</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="superGroupDomainNameEdit">Nom de domaine</label>
+    <div class="row">
+      <div class="col-md-8">
+        <input class="form-control" placeholder="établissement" id="superGroupDomainNameEdit" name="domain_name" type="text" value="{{this.supergroup.domain_name}}">
+      </div>
+      <div class="col-md-4" style="margin-left: -26px;"><h4>.mstaff.co</h4></div>
+    </div>
   </div>
 </div>
 <div class="modal-footer">

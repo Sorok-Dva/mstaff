@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     banner: DataTypes.STRING,
     logo: DataTypes.STRING,
-    url: DataTypes.STRING,
+    domain_name: DataTypes.STRING,
+    domain_enable: DataTypes.BOOLEAN,
   }, {});
   Group.associate = function (models) {
     Group.hasMany(models.EstablishmentGroups, {

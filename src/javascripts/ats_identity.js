@@ -59,19 +59,20 @@ function togglePasswordVisibility() {
 };
 
 function regexVerif(type, entity){
-  let nameRegex = /^([a-zA-Z \-]){2,30}$/;
+  let nameRegex = /^([a-zA-Z áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\-]){2,30}$/;
+  let trimmedEntity = entity.trim();
 
   if (type === 'forename'){
-    if ($.isEmptyObject(entity))
+    if ($.isEmptyObject(trimmedEntity))
       return notify('noForename');
-    else if (!nameRegex.test(entity))
+    else if (!nameRegex.test(trimmedEntity))
       return notify('wrongForenameFormat');
     else
       return true;
   } else if (type === 'name'){
-    if ($.isEmptyObject(entity))
+    if ($.isEmptyObject(trimmedEntity))
       return  notify('noName');
-    else if (!nameRegex.test(entity))
+    else if (!nameRegex.test(trimmedEntity))
       return notify('wrongNameFormat');
     else
       return true;
