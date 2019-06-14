@@ -47,9 +47,10 @@ BackOffice_Group.EditLinkGroup = (req, res, next) => {
 };
 
 BackOffice_Group.ViewGroups = (req, res) => {
-  return Models.Groups.findAll().then( group => {
+  return Models.Groups.findAll().then(group => {
     res.render('back-office/users/list_groups', {
-      layout, group, a: { main: 'users', sub: 'Groups' } })
+      layout, group, a: { main: 'users', sub: 'Groups' }
+    })
   });
 };
 
@@ -85,19 +86,54 @@ BackOffice_Group.RemoveGroup = (req, res, next) => {
 };
 
 BackOffice_Group.ViewSuperGroups = (req, res) => {
-  return Models.SuperGroups.findAll().then( superGroup => {
+  return Models.SuperGroups.findAll().then(superGroup => {
     res.render('back-office/users/list_supergroups', {
-      layout, superGroup, a: { main: 'users', sub: 'superGroups' } })
+      layout, superGroup, a: { main: 'users', sub: 'superGroups' }
+    })
   });
 };
 
 BackOffice_Group.EditSuperGroup = (req, res, next) => {
   return Models.SuperGroups.findOne({ where: { id: req.params.id } }).then(superGroup => {
-    if (req.body.promptInput) {
-      superGroup.name = req.body.promptInput;
-    }
-    superGroup.save();
-    return res.status(200).json({ status: 'Modified' });
+    let error = null;
+    Models.Subdomain.findOne({ where: { super_group_id: superGroup.id } }).then(SGSubdomain => {
+      Models.Subdomain.findOne({ where: { name: req.body.domain_name } }).then(subCheck => {
+        let subSGExist = !_.isNil(SGSubdomain);
+        let subCheckOk = false;
+        if (!_.isNil(subCheck) && subSGExist) {
+          if (SGSubdomain.es_id !== subCheck.es_id) {
+            error = 'Ce sous domaine est déjà utilisé.';
+            req.body.domaine_name = SGSubdomain.domain_name;
+          } else subCheckOk = true
+        } else subCheckOk = true;
+
+        superGroup.update({
+          name: req.body.name,
+          domain_enable: parseInt(req.body.domain_enable),
+          domain_name: req.body.domain_name,
+          logo: req.body.logo,
+          banner: req.body.banner,
+        }).then(savedSG => {
+          if (subCheckOk) {
+            if (subSGExist) {
+              SGSubdomain.update({
+                name: savedSG.domain_name,
+                enable: savedSG.domain_enable
+              }).catch(error => next(new BackError(error)));
+            } else {
+              Models.Subdomain.create({
+                name: savedSG.domain_name,
+                enable: savedSG.domain_enable,
+                super_group_id: savedSG.id
+              })
+            }
+            return res.status(200).json({ status: 'Modified', error });
+          } else {
+            return res.status(200).json({ status: 'Modified', error });
+          }
+        });
+      })
+    })
   })
 };
 

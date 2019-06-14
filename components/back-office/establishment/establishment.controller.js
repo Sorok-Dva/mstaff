@@ -113,7 +113,6 @@ BackOffice_Establishment.Edit = (req, res, next) => {
               banner: req.body.banner,
             }).then(savedEs => {
               if (subCheckOk) {
-                console.log(savedEs.domain_enable);
                 if (subESExist) {
                   esSubdomain.update({
                     name: savedEs.domain_name,
