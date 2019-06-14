@@ -425,6 +425,13 @@ Establishment_Application.getCandidates = (req, res, next) => {
       ]
     };
   }
+  if (!_.isNil(filterQuery.lastName)) {
+    query.where[1] = {
+      [Op.and]: [
+        Sequelize.literal('`Wish->Candidate->User`.`lastName` =' + `"${filterQuery.lastName}"`)
+      ]
+    };
+  }
   if (!_.isNil(filterQuery.serviceId)) {
     /*query.include[0].where.services = {
       [Op.regexp]: Sequelize.literal(`"(${filterQuery.service})"`),

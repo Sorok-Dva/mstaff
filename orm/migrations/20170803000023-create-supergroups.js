@@ -12,6 +12,21 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      logo: {
+        type: Sequelize.STRING,
+        defaultValue: '/static/assets/images/default_hospital.jpg'
+      },
+      banner: {
+        type: Sequelize.STRING,
+        defaultValue: '/static/assets/images/cover-es.jpg'
+      },
+      domain_name: {
+        type: Sequelize.STRING
+      },
+      domain_enable: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

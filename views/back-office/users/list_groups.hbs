@@ -11,7 +11,10 @@
           <th data-field="state" data-checkbox="true"></th>
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
-          <th data-field="url">URL</th>
+          <th data-field="logo" data-sortable="true">Logo</th>
+          <th data-field="banner" data-sortable="true">Bannière</th>
+          <th data-field="domain_name">Sous domaine</th>
+          <th data-field="domain_enable">État sous domaine</th>
 
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions
@@ -23,7 +26,10 @@
               <td></td>
               <td>{{groups.id}}</td>
               <td>{{groups.name}}</td>
-              <td>{{#if groups.url}}<a href="https://{{groups.url}}.mstaff.co">https://{{groups.url}}.mstaff.co</a>{{/if}}</td>
+              <td>{{groups.logo}}</td>
+              <td>{{groups.banner}}</td>
+              <td>{{#if groups.domain_name}}<a href="https://{{groups.domain_name}}.mstaff.co">{{groups.domain_name}}</a>{{/if}}</td>
+              <td>{{#ifCond groups.domain_enable '==' '1'}}Actif{{else}}Inactif{{/ifCond}}</td>
               <td></td>
             </tr>
           {{/each}}
@@ -74,7 +80,6 @@
                   icon: 'check-circle',
                   type: 'success',
                   title: 'Etablissement(s) lié(s)',
-                  message: ``
                 });
               });
             }
@@ -82,27 +87,48 @@
         });
       },
       'click .edit': (e, value, row, index) => {
+        let id = $(e.currentTarget).closest('tr').attr('data-id');
         createModal({
           id: 'editGroupModal',
           title: 'Modifier un groupe',
-          modal: 'back-office/editGroup'
+          modal: 'back-office/editGroup',
+          group: {
+            name: $(`tr[data-id="${id}"] td`).first().next().next().text(),
+            logo: $(`tr[data-id="${id}"] td`).first().next().next().next().text(),
+            banner: $(`tr[data-id="${id}"] td`).last().prev().prev().prev().text(),
+            domain_name: $(`tr[data-id="${id}"] td`).last().prev().prev().text(),
+            domain_enable: $(`tr[data-id="${id}"] td`).last().prev().text(),
+          }
         }, () => {
           $('button#btnEditGroup').click(function () {
             if ($('input#groupValueEdit').val() !== '') {
               let _csrf = $('meta[name="csrf-token"]').attr('content');
-              let promptInput = $('input#groupValueEdit').val();
+              let name = $('input#groupValueEdit').val();
+              let logo = $('input#groupLogoEdit').val();
+              let banner = $('input#groupBannerEdit').val();
+              let domain_name = $('input#groupUrlEdit').val();
+              let domain_enable = $('select#groupDomainEdit').val();
               $.put(`/api/back-office/groups/${row.id}`, {
-                promptInput,
-                _csrf
-              }, () => {
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
+                name, logo, banner, domain_name, domain_enable, _csrf
+              }, (data) => {
+                if (data.error) {
+                  notification({
+                    icon: 'exclamation',
+                    type: 'danger',
+                    title: 'Un problème est survenue :',
+                    message: data.error
+                  });
+                }
                 $('#editGroupModal').modal('hide');
-                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                $(`tr[data-id="${id}"] td`).first().next().next().text(name);
+                $(`tr[data-id="${id}"] td`).first().next().next().next().text(logo);
+                $(`tr[data-id="${id}"] td`).last().prev().prev().prev().text(banner);
+                $(`tr[data-id="${id}"] td`).last().prev().prev().text(domain_name);
+                $(`tr[data-id="${id}"] td`).last().prev().text(domain_enable === '0' ? 'Inactif' : 'Actif');
                 notification({
                   icon: 'check-circle',
                   type: 'success',
                   title: 'Groupe modifié.',
-                  message: ``
                 });
               });
             } else {
