@@ -10,6 +10,7 @@
             <table class="table table-hover">
               <thead>
               <tr class="info">
+                <th>ID</th>
                 <th>Besoin</th>
                 <th>Détail du contrat</th>
                 <th>Candidats</th>
@@ -20,6 +21,7 @@
               {{#if needs}}
                 {{#each needs as |need|}}
                   <tr data-applicationId="{{need.id}}">
+                    <td><h2 class="text-muted">#{{need.id}}</h2></td>
                     <td>
                       <h2>{{need.name}}</h2>
                       <span class="text-muted">Créé le {{date need.createdAt 'DD/MM/YYYY'}} par {{need.User.firstName}} {{need.User.lastName}}</span>
