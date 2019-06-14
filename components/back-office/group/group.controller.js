@@ -56,11 +56,45 @@ BackOffice_Group.ViewGroups = (req, res) => {
 
 BackOffice_Group.EditGroup = (req, res, next) => {
   return Models.Groups.findOne({ where: { id: req.params.id } }).then(group => {
-    if (req.body.promptInput) {
-      group.name = req.body.promptInput;
-    }
-    group.save();
-    return res.status(200).json({ status: 'Modified' });
+    let error = null;
+    Models.Subdomain.findOne({ where: { group_id: group.id } }).then(groupSubdomain => {
+      Models.Subdomain.findOne({ where: { name: req.body.domain_name } }).then(subCheck => {
+        let subGroupExist = !_.isNil(groupSubdomain);
+        let subCheckOk = false;
+        if (!_.isNil(subCheck) && subGroupExist) {
+          if (groupSubdomain.es_id !== subCheck.es_id) {
+            error = 'Ce sous domaine est déjà utilisé.';
+            req.body.domaine_name = groupSubdomain.domain_name;
+          } else subCheckOk = true
+        } else subCheckOk = true;
+
+        group.update({
+          name: req.body.name,
+          logo: req.body.logo,
+          banner: req.body.banner,
+          domain_enable: parseInt(req.body.domain_enable),
+          domain_name: req.body.domain_name,
+        }).then(savedGroup => {
+          if (subCheckOk) {
+            if (subGroupExist) {
+              groupSubdomain.update({
+                name: savedGroup.domain_name,
+                enable: savedGroup.domain_enable,
+              }).catch(error => next(new BackError(error)));
+            } else {
+              Models.Subdomain.create({
+                name: savedGroup.domain_name,
+                enable: savedGroup.domain_enable,
+                group_id: savedGroup.id
+              })
+            }
+            return res.status(200).json({ status: 'Modified', error });
+          } else {
+            return res.status(200).json({ status: 'Modified', error });
+          }
+        });
+      })
+    })
   })
 };
 
