@@ -14,8 +14,8 @@
   <div class="form-group">
     <label for="groupDomainEdit">Domaine</label>
     <select class="form-control" id="groupDomainEdit" name="domaine_enable">
-      <option value="0" {{#ifCond this.supergroup.domain_enable '===' 'Inactif'}}selected="selected"{{/ifCond}}>Inactif</option>
-      <option value="1" {{#ifCond this.supergroup.domain_enable '===' 'Actif'}}selected="selected"{{/ifCond}}>Actif</option>
+      <option value="0" {{#ifCond this.group.domain_enable '===' 'Inactif'}}selected="selected"{{/ifCond}}>Inactif</option>
+      <option value="1" {{#ifCond this.group.domain_enable '===' 'Actif'}}selected="selected"{{/ifCond}}>Actif</option>
     </select>
   </div>
   <div class="form-group">
