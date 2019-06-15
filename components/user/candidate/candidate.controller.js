@@ -207,7 +207,12 @@ User_Candidate.viewProfile = (req, res, next) => {
     }, {
       model: Models.Wish,
       as: 'wishes'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'start', 'ASC' ],
+      [ 'formations', 'start', 'ASC' ],
+      [ 'qualifications', 'start', 'ASC' ],
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     if (_.isNil(candidate.percentage)) {
@@ -323,7 +328,12 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
     }, {
       model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
       as: 'formations'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'start', 'ASC' ],
+      [ 'formations', 'start', 'ASC' ],
+      [ 'qualifications', 'start', 'ASC' ],
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Post.findAll().then(posts => {
