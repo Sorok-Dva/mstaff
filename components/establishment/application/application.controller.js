@@ -96,25 +96,40 @@ Establishment_Application.getCVs = (req, res, next) => {
     return Models.Formation.findAll();
   }).then(formations => {
     render.formations = formations;
-    Models.Application.findAndCountAll(query).then(applications => {
-      render.candidatesCount = applications.count;
-      if (req.params.editNeedId) {
-        Models.Need.findOne({
-          where: { id: req.params.editNeedId, es_id: req.user.opts.currentEs, closed: false },
-          include: {
-            model: Models.NeedCandidate,
-            attributes: ['id', 'candidate_id'],
-            as: 'candidates',
-            required: true
-          }
-        }).then(need => {
-          render.need = need;
-          return res.render('establishments/addNeed', render);
-        });
-      } else {
-        return res.render('establishments/addNeed', render);
+    Models.User.findOne({
+      where: { id: req.user.id },
+      attributes: ['id'],
+      include: {
+        model: Models.ESAccount,
+        required: true,
+        include: {
+          model: Models.Establishment,
+          required: true,
+          attributes: ['id', 'name']
+        }
       }
-    }).catch(error => next(new BackError(error)));
+    }).then(rh => {
+      render.esList = rh.ESAccounts;
+      Models.Application.findAndCountAll(query).then(applications => {
+        render.candidatesCount = applications.count;
+        if (req.params.editNeedId) {
+          Models.Need.findOne({
+            where: { id: req.params.editNeedId, es_id: req.user.opts.currentEs, closed: false },
+            include: {
+              model: Models.NeedCandidate,
+              attributes: ['id', 'candidate_id'],
+              as: 'candidates',
+              required: true
+            }
+          }).then(need => {
+            render.need = need;
+            return res.render('establishments/addNeed', render);
+          });
+        } else {
+          return res.render('establishments/addNeed', render);
+        }
+      }).catch(error => next(new BackError(error)));
+    });
   }).catch(error => next(new BackError(error)));
 };
 

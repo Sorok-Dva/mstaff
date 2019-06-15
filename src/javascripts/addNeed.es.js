@@ -2,6 +2,33 @@ let loadingCandidateHTML = $('#loadingCandidates').html();
 let showSelectAllSearchInfo = localStorage.getItem('showSelectAllSearchInfo') || 'true';
 need.notifyCandidates = false;
 
+$(function() {
+  $('#esList').multiselect({
+    buttonText: (options, select) => 'Établissements',
+    selectAllText: 'Tous',
+    buttonClass: 'btn btn-outline-info',
+    includeSelectAllOption: true,
+    onChange: (element, checked) => {
+      let id = element[0].value;
+      if (checked === true) {
+        if (need.filterQuery.establishments.indexOf(id) === -1) {
+          need.filterQuery.establishments.push(id);
+        }
+      }
+      else if (checked === false) {
+        let index = need.filterQuery.establishments.indexOf(id);
+        if (index !== -1) need.filterQuery.establishments.splice(index, 1);
+      }
+    },
+    onDropdownHidden: () => searchCandidates(),
+    onDeselectAll: () => {
+      $(`input[type="checkbox"][value="${esId}"]`).prop('checked', true);
+      need.filterQuery.establishments = [esId];
+    },
+    onSelectAll: () => need.filterQuery.establishments = esList
+  });
+});
+
 let accentMap = {
   'à': 'a',
   'â': 'a',
