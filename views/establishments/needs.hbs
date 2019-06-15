@@ -42,6 +42,11 @@
                             {{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}
                           </div>
                         {{/if}}
+                        {{#if need.service}}
+                            <div class="label label-success">
+                                {{ need.service }}
+                            </div>
+                        {{/if}}
                       </div>
                     </td>
                     <td>
