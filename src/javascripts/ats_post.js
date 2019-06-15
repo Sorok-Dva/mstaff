@@ -69,9 +69,14 @@ function saveDatas(){
 
 function postListener(){
   $('#backToMain').click(function() {
-    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    if (arrays.group === null)
+      loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
+    else
+      loadTemplate('/static/views/ats/group.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        $('#atsPart').html(html);
+      })
   });
   $('#toContract').click(function() {
     if (verifyInputs()){
