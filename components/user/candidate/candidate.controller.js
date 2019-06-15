@@ -323,7 +323,10 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
     }, {
       model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
       as: 'formations'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'end', 'ASC' ]
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Post.findAll().then(posts => {
