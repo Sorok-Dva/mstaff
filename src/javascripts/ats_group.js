@@ -25,7 +25,7 @@ function saveDatas(){
 };
 
 function verifyInputs(){
-  return true;
+  return $('#finessList input:checked').length > 0;
 };
 
 $(document).ready(() => {
