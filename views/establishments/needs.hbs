@@ -29,21 +29,21 @@
                     <td>
                       <div class="label-container">
                         {{#if need.post}}
-                          <div class="label label-default">{{need.post}}</div>
+                          <div class="badge badge-secondary">{{need.post}}</div>
                         {{/if}}
                         {{#if need.contract_type}}
-                          <div class="label label-warning">
+                          <div class="badge badge-warning">
                             {{need.contract_type}}
                           </div>
                         {{/if}}
                         {{#if need.start}}
-                          <div class="label label-success">
+                          <div class="badge badge-success">
                             {{date need.start 'DD/MM/YYYY'}}
                             {{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}
                           </div>
                         {{/if}}
                         {{#if need.service}}
-                            <div class="label label-success">
+                            <div class="badge badge-primary">
                                 {{ need.service }}
                             </div>
                         {{/if}}
