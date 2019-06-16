@@ -3,13 +3,23 @@
     <div class="card card-user">
       <div class="image"></div>
       <div class="content">
-        <div class="author">
-          <!--<img class="avatar border-white" src="assets/img/faces/face-2.jpg" alt="..."/>-->
-          <h4 class="title">{{user.firstName}} {{user.lastName}}<br/>
-            <a href="#">
-              <small>@{{user.type}}</small>
-            </a>
-          </h4>
+        <div class="card-profile">
+          <div class="avatar avatar-xxl avatar-{{#if user.candidate.is_available}}on{{else}}off{{/if}}line">
+            <img id="candidateAvatar"{{#if user.photo}}
+                 src="/static/uploads/avatars/{{user.photo}}" {{else}}
+                 src="/static/assets/images/face-0.jpg" {{/if}}class="avatar-img rounded-circle border-black"
+                 alt="avatar">
+          </div>
+          {{#if user.candidate}}
+            <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="bottom"
+                 title="{{> candidatePercentageTooltip user.candidate.percentage}}">
+              <span class="label label-default rank-label">{{{candidateProfilePercentage
+                  user.candidate.percentage}}}</span>
+            </div>
+          {{/if}}
+          <h2 class="title">{{user.firstName}} {{user.lastName}}<br/>
+            <small>{{age user.birthday 'years'}} ans</small>
+          </h2>
         </div>
         <p class="description text-center">
           {{user.candidate.description}}
@@ -36,23 +46,44 @@
               <div class="col-md-12">
                 <hr>
                 <div class="row">
-                  <div class="col-md-5">
-                    <h5>État du compte :</h5>
+                  <div class="col-12">
+                    <div class="col-md-5">
+                      <h5>État du compte :</h5>
+                    </div>
+                    <div class="col-md-7">
+                      <h5 class="pull-left">
+                        {{#if user.validated}}Validé{{else}}
+                          En attente de validation
+                          <button class="btn btn-info btn-sm"
+                                  data-action="sendVerifEmail"
+                                  data-email="{{user.email}}"
+                                  title="Renvoyer l'email de vérification">
+                            <i class="fal fa-paper-plane"></i>
+                            <i class="fal fa-envelope"></i>
+                          </button>
+                        {{/if}}
+                      </h5>
+                    </div>
                   </div>
-                  <div class="col-md-7">
-                    <h5 class="pull-left">
-                      {{#if user.validated}}Validé{{else}}
-                        En attente de validation
-                        <button class="btn btn-info btn-sm"
-                                data-action="sendVerifEmail"
-                                data-email="{{user.email}}"
-                                title="Renvoyer l'email de vérification">
-                          <i class="fal fa-paper-plane"></i>
-                          <i class="fal fa-envelope"></i>
-                        </button>
-                      {{/if}}
-                    </h5>
-                  </div>
+                  {{#if user.candidate}}
+                    <div class="col-12">
+                      <div class="col-md-5">
+                        <h5>Taux de complétion :</h5>
+                      </div>
+                      <div class="col-md-7">
+                        <h5 class="pull-left">
+                          <span id="candidatePercentage">{{{candidateProfilePercentage
+                              user.candidate.percentage}}}</span>
+                          <button class="btn btn-info btn-sm"
+                                  data-action="resetCandidatePercentage"
+                                  data-id="{{user.id}}"
+                                  title="Recalculer le taux de complétion">
+                            Recalculer le taux de complétion
+                          </button>
+                        </h5>
+                      </div>
+                    </div>
+                  {{/if}}
                 </div>
               </div>
             </div>
@@ -160,11 +191,10 @@
 </div>
 <script>
   $('button[data-action="sendVerifEmail"]').click(function () {
-    console.log($(this));
     let _csrf = $('meta[name="csrf-token"]').attr('content');
     let email = $(this).attr('data-email');
 
-    $.post(`/api/back-office/candidates/sendVerifEmail`, {_csrf, email}, (data) => {
+    $.post(`/api/back-office/candidates/sendVerifEmail`, { _csrf, email }, (data) => {
       if (data === 'Send') {
         notification({
           icon: 'check-circle',
@@ -172,6 +202,27 @@
           title: `Email de vérification envoyé avec succès à ${email}`,
         });
       }
-    });
+    }).catch(errors => errorsHandler(errors));
   });
+
+    {{#if user.candidate}}
+    $('button[data-action="resetCandidatePercentage"]').click(function () {
+      let _csrf = $('meta[name="csrf-token"]').attr('content');
+      let id = $(this).attr('data-id');
+      $(this).html('Recalcul en cours <i class="fal fa-spinner"></i>');
+
+      $.post(`/api/back-office/candidates/resetProfilePercentage`, { _csrf, id }, (data) => {
+        if (data.status === 'ok') {
+          $('#candidatePercentage').html(data.percentage.total + '%');
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: `Taux de complétion recalculer à ${data.percentage.total}%.`,
+          });
+          $(this).remove();
+        }
+      }).catch(errors => errorsHandler(errors));
+    });
+    {{/if}}
+
 </script>

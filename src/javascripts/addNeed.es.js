@@ -2,6 +2,33 @@ let loadingCandidateHTML = $('#loadingCandidates').html();
 let showSelectAllSearchInfo = localStorage.getItem('showSelectAllSearchInfo') || 'true';
 need.notifyCandidates = false;
 
+$(function() {
+  $('#esList').multiselect({
+    buttonText: (options, select) => 'Établissements',
+    selectAllText: 'Tous',
+    buttonClass: 'btn btn-outline-info',
+    includeSelectAllOption: true,
+    onChange: (element, checked) => {
+      let id = element[0].value;
+      if (checked === true) {
+        if (need.filterQuery.establishments.indexOf(id) === -1) {
+          need.filterQuery.establishments.push(id);
+        }
+      }
+      else if (checked === false) {
+        let index = need.filterQuery.establishments.indexOf(id);
+        if (index !== -1) need.filterQuery.establishments.splice(index, 1);
+      }
+    },
+    onDropdownHidden: () => searchCandidates(),
+    onDeselectAll: () => {
+      $(`input[type="checkbox"][value="${esId}"]`).prop('checked', true);
+      need.filterQuery.establishments = [esId];
+    },
+    onSelectAll: () => need.filterQuery.establishments = esList
+  });
+});
+
 let accentMap = {
   'à': 'a',
   'â': 'a',
@@ -45,7 +72,13 @@ $(`#post`).autocomplete({
 });
 
 $('#searchCandidates').on('click', function () {
-  need.post = $('input#post').val();
+  if($('input#searchType').prop('checked'))
+    need.filterQuery.lastName = $('input#post').val();
+  else {
+    if (!_.isNil(need.filterQuery.lastName))
+      delete need.filterQuery.lastName;
+    need.post = $('input#post').val();
+  }
   searchCandidates();
 });
 
@@ -67,7 +100,10 @@ let searchCandidates = () => {
     });
   }
   // }
-  need.post = need.post || $('input#post').val();
+  if($('input#searchType').prop('checked'))
+    delete need.post;
+  else
+    need.post = need.post || $('input#post').val();
   $('#baseResult').hide();
   $('#paginationContainer').hide();
   $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
@@ -176,7 +212,7 @@ let selectAllSearch = () => {
         toSelect.each((i, element) => (i < 50) ? $(element).trigger('click') : false);
       });
       $('button#cancelSelectAllCandidate').click(function () {
-       $('#searchSelectAll').trigger('click');
+        $('#searchSelectAll').trigger('click');
       });
     });
   } else {
@@ -368,6 +404,31 @@ let showFavorites = () => {
     }
     $('#myCandidates').empty().hide();
   }
+};
+
+let changeSearchType = () => {
+  resetSearch();
+  if($('input#searchType').prop('checked')) {
+    $('button#btnFilters').attr("disabled", true);
+    $('#esList').multiselect('disable');
+    $('input#post').attr("placeholder", "Indiquez un nom de famille");
+  } else {
+    $('button#btnFilters').attr("disabled", false);
+    $('span select #esList').attr("disabled", "disabled");
+    $('#esList').multiselect('enable');
+    $('input#post').attr("placeholder", "Indiquez un type de poste");
+  }
+};
+
+let changeCheckboxState = () => {
+  if($('input#searchType').prop('checked')) {
+    $('input#searchType').attr("checked", false);
+    $('i#checkbox').addClass('fa-square').removeClass('fa-check-square');
+  } else {
+    $('input#searchType').attr("checked", true);
+    $('i#checkbox').addClass('fa-check-square').removeClass('fa-square');
+  }
+  changeSearchType();
 };
 
 $(document).ready(() => {

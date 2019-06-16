@@ -111,8 +111,11 @@
       {{#each this.opts.actions as |button| }}
         <button class="btn btn-{{button.type}} notificationCTA" {{{button.dataAttr}}}>{{button.text}}</button>
       {{/each}}
-      <script>
-      </script>
+    </div>
+  {{/if}}
+  {{#if this.opts.htmlActions}}
+    <div class="text-center" style="padding: 15px">
+      {{{this.opts.htmlActions}}}
     </div>
   {{/if}}
 </div>
