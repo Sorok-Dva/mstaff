@@ -424,8 +424,7 @@ let changeCheckboxState = () => {
   if($('input#searchType').prop('checked')) {
     $('input#searchType').attr("checked", false);
     $('i#checkbox').addClass('fa-square').removeClass('fa-check-square');
-  }
-  else {
+  } else {
     $('input#searchType').attr("checked", true);
     $('i#checkbox').addClass('fa-check-square').removeClass('fa-square');
   }
