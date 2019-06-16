@@ -1327,7 +1327,7 @@ User_Candidate.updatePercentage = (user, type) => {
   });
 };
 
-User_Candidate.updateWholePercentage = (user) => {
+User_Candidate.updateWholePercentage = (user, callback) => {
   Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
     if (_.isNil(candidate)) return false;
     let { percentage } = candidate;
@@ -1377,7 +1377,8 @@ User_Candidate.updateWholePercentage = (user) => {
             else percentage.documents.VIT = 0;
             candidate.percentage = percentage;
 
-            return User_Candidate.updateTotalPercentage(candidate, percentage);
+            User_Candidate.updateTotalPercentage(candidate, percentage);
+            if (callback) return callback(percentage);
           });
         });
       });
