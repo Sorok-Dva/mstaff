@@ -101,7 +101,7 @@ let searchCandidates = () => {
   }
   // }
   if($('input#searchType').prop('checked'))
-    need.post = "";
+    delete need.post;
   else
     need.post = need.post || $('input#post').val();
   $('#baseResult').hide();
