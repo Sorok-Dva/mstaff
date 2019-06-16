@@ -24,11 +24,34 @@
         }
       }).catch(errors => errorsHandler(errors));
       {{else}}
-        createModal({
-          id: 'notifyCandidatesModal',
-          modal: 'es/need/notifyCandidates',
-          title: 'Vous êtes sur le point de sauvegarder votre recherche'
-        });
+        if (need.selectedCandidates.length > 0) {
+          createModal({
+            id: 'notifyCandidatesModal',
+            modal: 'es/need/notifyCandidates',
+            title: 'Vous êtes sur le point de sauvegarder votre recherche'
+          });
+        } else {
+          if (need.name.length > 2) {
+            need._csrf = _csrf;
+            $.post(`/api/es/${esId}/addNeed`, need, (data) => {
+              if (data.id) {
+                createModal({
+                  id: 'needSavedModal',
+                  modal: 'es/need/saved',
+                  title: 'Besoin enregistré avec succès !',
+                  needId: data.id
+                })
+              }
+            });
+          } else {
+            notification({
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Impossible de créer cette recherche',
+              message: `Vous devez spécifier un nom de recherche.`
+            });
+          }
+        }
       {{/if}}
     } else {
       notification({
