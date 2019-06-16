@@ -212,7 +212,7 @@ let selectAllSearch = () => {
         toSelect.each((i, element) => (i < 50) ? $(element).trigger('click') : false);
       });
       $('button#cancelSelectAllCandidate').click(function () {
-       $('#searchSelectAll').trigger('click');
+        $('#searchSelectAll').trigger('click');
       });
     });
   } else {
@@ -407,18 +407,28 @@ let showFavorites = () => {
 };
 
 let changeSearchType = () => {
-  $('input#searchType').change(function() {
-    resetSearch();
-    if(this.checked) {
-      $('button#btnFilters').attr("disabled", true);
-      $('select#esList').attr("disabled", "disabled");
-      $('input#post').attr("placeholder", "Indiquez un nom de famille");
-    } else {
-      $('button#btnFilters').attr("disabled", false);
-      $('select#esList').attr("disabled", false);
-      $('input#post').attr("placeholder", "Indiquez un type de poste");
-    }
-  });
+  resetSearch();
+  if($('input#searchType').prop('checked')) {
+    $('button#btnFilters').attr("disabled", true);
+    $('select#esList').attr("disabled", "disabled");
+    $('input#post').attr("placeholder", "Indiquez un nom de famille");
+  } else {
+    $('button#btnFilters').attr("disabled", false);
+    $('select#esList').attr("disabled", false);
+    $('input#post').attr("placeholder", "Indiquez un type de poste");
+  }
+};
+
+let changeCheckboxState = () => {
+  if($('input#searchType').prop('checked')) {
+    $('input#searchType').attr("checked", false);
+    $('i#checkbox').addClass('fa-square').removeClass('fa-check-square');
+  }
+  else {
+    $('input#searchType').attr("checked", true);
+    $('i#checkbox').addClass('fa-check-square').removeClass('fa-square');
+  }
+  changeSearchType();
 };
 
 $(document).ready(() => {

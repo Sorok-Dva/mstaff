@@ -39,6 +39,9 @@
   .multiselect-container>li>a>label {
     padding: 4px 20px 3px 20px;
   }
+  .checkbox input[type="checkbox"] {
+    visibility: hidden;
+  }
 </style>
 <script>
   let esId = {{user.opts.currentEs}};
@@ -47,7 +50,7 @@
   let baseCVCount = {{candidatesCount.length}};
   let need = {
     selectedCandidates: [ {{#each need.candidates as |candidate|}}{{candidate.candidate_id}},{{/each}} ],
-    firstSearch: {{#if need}}false{{else}}true{{/if}},
+  firstSearch: {{#if need}}false{{else}}true{{/if}},
     filterQuery: {
       establishments: [esId]
     }
@@ -91,32 +94,32 @@
       </div>
     </div>
   </div>
-    <div class="col-md-2">
-        <label id="searchTypeLabel">Recherche par nom de famille</label>
-        <input id="searchType" type="checkbox" onclick="changeSearchType()">
-    </div>
+  <div class="col-md-2 checkbox">
+    <input id="searchType" type="checkbox">
+    <i id="checkbox" class="fal fa-square fa-1d3x" onclick="changeCheckboxState()" style="color: red; font-weight: 500; font-size: 1em; cursor: pointer"> Recherche par nom de famille</i>
+  </div>
 </div>
 <div class="row mt-2">
   <div class="col-md-12" id="criteria">
     <div class="col-md-12 text-center">
-        <button id="btnFilters" class="btn btn-{{#unless need.service}}outline-{{/unless}}info" onclick="return showServiceModal()">
-            Service <span id="btnServiceType">{{need.service}}</span>
-        </button>
-        <button id="btnFilters" class="btn btn-{{#unless need.contract_type}}outline-{{/unless}}info" onclick="return showContractModal()">
-            Contrat <span id="btnContractType" style="text-transform: uppercase">{{need.contract_type}}</span>
-        </button>
-        <button id="btnFilters" class="btn btn-{{#unless need.start}}outline-{{/unless}}info" onclick="return showTimeModal()">
-            Période <span id="btnTimeType">{{#if need.start}}{{date need.start 'DD/MM/YYYY'}}{{/if}}{{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}</span>
-        </button>
-        <button id="btnFilters" class="btn btn-{{#unless need.diploma}}outline-{{/unless}}info" onclick="return showDiplomaModal()">
-            Diplômes Complémentaires <span id="btnDiplomaType">{{need.diploma}}</span>
-        </button>
-        <button id="btnFilters" class="btn btn-{{#unless need.is_available}}outline-{{/unless}}info" onclick="return showAvailabilityModal()">
-            Disponibilité <span id="btnAvailability">{{#ifCond need.is_available '===' 'true'}}Disponible{{/ifCond}}{{#ifCond need.is_available '===' 'false'}}Indisponible{{/ifCond}}</span>
-        </button>
-        <button id="btnFilters" class="btn btn-{{#unless need.postal_code}}outline-{{/unless}}info" onclick="return showPostalCodeModal()">
-            Code Postal <span id="btnPostalCode">{{need.postal_code}}</span>
-        </button>
+      <button id="btnFilters" class="btn btn-{{#unless need.service}}outline-{{/unless}}info" onclick="return showServiceModal()">
+        Service <span id="btnServiceType">{{need.service}}</span>
+      </button>
+      <button id="btnFilters" class="btn btn-{{#unless need.contract_type}}outline-{{/unless}}info" onclick="return showContractModal()">
+        Contrat <span id="btnContractType" style="text-transform: uppercase">{{need.contract_type}}</span>
+      </button>
+      <button id="btnFilters" class="btn btn-{{#unless need.start}}outline-{{/unless}}info" onclick="return showTimeModal()">
+        Période <span id="btnTimeType">{{#if need.start}}{{date need.start 'DD/MM/YYYY'}}{{/if}}{{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}</span>
+      </button>
+      <button id="btnFilters" class="btn btn-{{#unless need.diploma}}outline-{{/unless}}info" onclick="return showDiplomaModal()">
+        Diplômes Complémentaires <span id="btnDiplomaType">{{need.diploma}}</span>
+      </button>
+      <button id="btnFilters" class="btn btn-{{#unless need.is_available}}outline-{{/unless}}info" onclick="return showAvailabilityModal()">
+        Disponibilité <span id="btnAvailability">{{#ifCond need.is_available '===' 'true'}}Disponible{{/ifCond}}{{#ifCond need.is_available '===' 'false'}}Indisponible{{/ifCond}}</span>
+      </button>
+      <button id="btnFilters" class="btn btn-{{#unless need.postal_code}}outline-{{/unless}}info" onclick="return showPostalCodeModal()">
+        Code Postal <span id="btnPostalCode">{{need.postal_code}}</span>
+      </button>
       <select id="esList" multiple="multiple">
         {{#each esList as |account|}}
           <option value="{{account.Establishment.id}}" {{#ifCond account.Establishment.id '==' @root.user.opts.currentEs}}selected="selected"{{/ifCond}}>
