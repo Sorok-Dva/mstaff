@@ -410,11 +410,12 @@ let changeSearchType = () => {
   resetSearch();
   if($('input#searchType').prop('checked')) {
     $('button#btnFilters').attr("disabled", true);
-    $('select#esList').attr("disabled", "disabled");
+    $('#esList').multiselect('disable');
     $('input#post').attr("placeholder", "Indiquez un nom de famille");
   } else {
     $('button#btnFilters').attr("disabled", false);
-    $('select#esList').attr("disabled", false);
+    $('span select #esList').attr("disabled", "disabled");
+    $('#esList').multiselect('enable');
     $('input#post').attr("placeholder", "Indiquez un type de poste");
   }
 };

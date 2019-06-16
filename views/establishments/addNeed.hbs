@@ -39,9 +39,6 @@
   .multiselect-container>li>a>label {
     padding: 4px 20px 3px 20px;
   }
-  .checkbox input[type="checkbox"] {
-    visibility: hidden;
-  }
 </style>
 <script>
   let esId = {{user.opts.currentEs}};
@@ -95,7 +92,7 @@
     </div>
   </div>
   <div class="col-md-2 checkbox">
-    <input id="searchType" type="checkbox">
+    <input id="searchType" type="checkbox" style="visibility: hidden">
     <i id="checkbox" class="fal fa-square fa-1d3x" onclick="changeCheckboxState()" style="color: red; font-weight: 500; font-size: 1em; cursor: pointer"> Recherche par nom de famille</i>
   </div>
 </div>
