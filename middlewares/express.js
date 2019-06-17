@@ -134,7 +134,8 @@ module.exports = {
         });
       } else if (subdomain.group_id) {
         Subdomain.Group.find(subdomain.group_id, (data) => {
-          res.locals.group = data;
+          res.locals.group = data.group;
+          res.locals.group.es = data.es;
           req.group = data;
           req.url = `/groupDomain${req.url}`;
           return next();
