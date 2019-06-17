@@ -45,7 +45,7 @@
   operateFormatter = (value, row, index) => {
     return [
       '<div class="table-icons">',
-      '<a title="Lier des utilisateurs" class="btn btn-simple btn-primary btn-icon table-action addUsers" href="javascript:void(0)">',
+      '<a title="Lier des utilisateurs" class="btn btn-simple btn-primary btn-icon table-action linkUsers" href="javascript:void(0)">',
       '<i class="ti-user"></i>',
       '</a>',
       '<a title="Lier des établissements" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
@@ -63,6 +63,14 @@
 
   $(document).ready(() => {
     window.operateEvents = {
+      'click .linkUsers': (e, value, row, index) => {
+        createModal({
+          id: 'linkGroupModal',
+          title: 'Ajouter / modifier utisateurs liés à ' + row.name,
+          modal: 'back-office/linkUsersGroup',
+          group: row
+        });
+      },
       'click .link': (e, value, row, index) => {
         createModal({
           id: 'linkGroupModal',
