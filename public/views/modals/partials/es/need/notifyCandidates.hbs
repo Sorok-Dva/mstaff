@@ -11,7 +11,7 @@
 </div>
 <script>
   $('#nop').click(function() {
-    if (need.selectedCandidates.length > 0 && need.name.length > 2) {
+    if (need.name.length > 2) {
       need._csrf = _csrf;
       $.post(`/api/es/${esId}/addNeed`, need, (data) => {
         if (data.id) {
@@ -28,13 +28,13 @@
         icon: 'exclamation',
         type: 'danger',
         title: 'Impossible de créer cette recherche',
-        message: `Vous devez spécifier un nom de recherche et sélectionner au moins un candidat.`
+        message: `Vous devez spécifier un nom de recherche.`
       });
     }
   });
 
   $('#yep').click(function() {
-    if (need.selectedCandidates.length > 0 && need.name.length > 2) {
+    if (need.name.length > 2) {
       need._csrf = _csrf;
       need.notifyCandidates = true;
       $.post(`/api/es/${esId}/addNeed`, need, (data) => {
@@ -47,7 +47,7 @@
         icon: 'exclamation',
         type: 'danger',
         title: 'Impossible de créer cette recherche',
-        message: `Vous devez spécifier un nom de recherche et sélectionner au moins un candidat.`
+        message: `Vous devez spécifier un nom de recherche.`
       });
     }
   });

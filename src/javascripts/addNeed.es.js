@@ -101,7 +101,7 @@ let searchCandidates = () => {
   }
   // }
   if($('input#searchType').prop('checked'))
-    delete need.post;
+    need.post = '';
   else
     need.post = need.post || $('input#post').val();
   $('#baseResult').hide();
@@ -228,7 +228,6 @@ let addCandidate = (id, type) => {
     case 'select':
       if (need.selectedCandidates.indexOf(id) === -1) {
         if (need.selectedCandidates.length < 50) {
-          if (need.selectedCandidates.length === 0) $('#saveNeed').show();
           $(`i.selectCandidate[data-id="${id}"]`).hide();
           $(`i.unselectCandidate[data-id="${id}"]`).show();
           need.selectedCandidates.push(id);
@@ -303,7 +302,6 @@ let removeCandidate = (id, type) => {
         $(`i.unselectCandidate[data-id="${id}"]`).hide();
         $(`i.selectCandidate[data-id="${id}"]`).show();
         need.selectedCandidates.splice(index, 1);
-        if (need.selectedCandidates.length === 0) $('#saveNeed').hide();
         /* $('#selectedEsCount').html(need.selectedCandidates.length);
          $(`#es_selected > #es${id}`).remove();*/
       }
