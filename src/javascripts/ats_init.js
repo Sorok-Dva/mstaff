@@ -5,7 +5,7 @@ let candidateDatas = {
   diplomas : [],
   qualifications : [],
   skills : [],
-  finess : es_finess
+  finess : es_finess,
 };
 let databaseDatas = {
   allPosts : [],
@@ -19,7 +19,8 @@ let arrays = {
   services: [],
   diplomas: [],
   qualifications: [],
-  skills: []
+  skills: [],
+  group: es_infos
 };
 
 let permissions = {
@@ -31,7 +32,7 @@ let permissions = {
   skillId: 1,
   checkingMail: null,
   verifiedEvent: new Event('verified'),
-  recap: false
+  recap: false,
 };
 
 
