@@ -52,7 +52,7 @@ Subdomain_Group.find = (id, next) => {
 Subdomain_Group.ViewATS = (req, res, next) => {
   let esList = [];
   let esInfos = [];
-  req.group.EstablishmentGroups.forEach( item => {
+  req.group.es.forEach( item => {
     esInfos.push({ name: item.es.name, finess: item.es.finess });
     esList.push(item.es.finess);
   });
