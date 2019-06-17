@@ -1,8 +1,14 @@
 <!-- HEADER -->
-<script>let map, marker, cityCircle, markers = [], pos = { lat: 0, lng: 0, rayon: 5 };</script>
+<style>
+  .locateES {
+    cursor: pointer;
+  }
+</style>
+<script>let map, mapAll, marker, cityCircle, markers = [], pos = { lat: 0, lng: 0, rayon: 5 };</script>
 <div class="header">
   <!-- Image -->
-  <img src="{{group.banner}}" class="header-img-top" alt="Bannière {{group.name}}" style="object-fit: cover; height: 344px">
+  <img src="{{group.banner}}" class="header-img-top" alt="Bannière {{group.name}}"
+       style="object-fit: cover; height: 344px">
   <div class="container-fluid">
     <!-- Body -->
     <div class="header-body mt-n5 mt-md-n6">
@@ -53,14 +59,22 @@
         </div>
         <div class="card-body">
           {{#each group.es as |data|}}
-            <div class="card" onmouseover="addMarker({lat: {{data.es.ref.lat}}, lon: {{data.es.ref.lon}} })" onmouseleave="removeAllMarker()">
+            <div class="card">
               <div class="card-body">
-                {{data.es.name}}
+                <div class="row">
+                  <div class="col-8">
+                    {{data.es.name}}
+                  </div>
+                  <div class="col-4">
+                    <span class="float-right locateES" data-toggle="tooltip" data-placement="top"
+                          data-original-title="Localiser l'établissement sur la carte"
+                          onclick="addMarker({lat: {{data.es.ref.lat}}, lon: {{data.es.ref.lon}} })">
+                      <i class="fal fa-map-pin fa-2x"></i>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-            <script>
-              pos = {lat: {{data.es.ref.lat}}, lng: {{data.es.ref.lon}}, rayon: 5}
-            </script>
           {{/each}}
         </div>
       </div>
@@ -78,7 +92,12 @@
           </div> <!-- / .row -->
         </div>
         <div class="card-body">
-          <div id="map" style="height: 450px;width: 100%;"></div>
+          <div id="map" style="height: 420px;width: 100%;">
+            <div class="col-12 text-center">
+              <i class="fal fa-map-marked fa-10x mt-4"></i>
+              <h2 class="mt-6">Cliquez sur l'icone <i class="fal fa-map-pin fa-2x"></i> pour localiser un établissement sur la carte</h2>
+            </div>
+          </div>
         </div> <!-- / .card-body -->
       </div> <!-- / .card -->
     </div>
@@ -87,46 +106,28 @@
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
-  if (document.getElementById('map')) {
-    {{!--let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};--}}
-    map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 10,
-      center: pos
-    });
-    marker = new google.maps.Marker({
-      position: pos,
-      map: map
-    });
-    cityCircle = new google.maps.Circle({
-      strokeColor: '#337AB7',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#5BBBE5',
-      fillOpacity: 0.35,
-      map: map,
-      center: pos,
-      radius: pos.rayon * 1000 || 10000
-    });
-  }
-
   let addMarker = (es) => {
-    let marker = new google.maps.Marker({
-      map: map,
-      position: { lat: es.lat, lng: es.lon },
-      icon: {
-        url: 'http://maps.gstatic.com/mapfiles/circle.png',
-        anchor: new google.maps.Point(10, 10),
-        scaledSize: new google.maps.Size(10, 17)
-      }
-    });
-
-    markers.push(marker);
-
-    google.maps.event.addListener(marker, 'click', function () {
-      var infoWindow = new google.maps.InfoWindow();
-      infoWindow.setContent(es.name);
-      infoWindow.open(map, marker);
-    });
+    if (document.getElementById('map')) {
+      {{!--let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};--}}
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: { lat: es.lat, lng: es.lon }
+      });
+      marker = new google.maps.Marker({
+        position: { lat: es.lat, lng: es.lon },
+        map: map
+      });
+      cityCircle = new google.maps.Circle({
+        strokeColor: '#337AB7',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#5BBBE5',
+        fillOpacity: 0.35,
+        map: map,
+        center: { lat: es.lat, lng: es.lon },
+        radius: 0.2 * 1000 || 10000
+      });
+    }
   };
 
   let removeAllMarker = () => {
