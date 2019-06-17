@@ -10,7 +10,7 @@
 <script>
   $('#submitName').click(function() {
     let name = $('#nameValue').val();
-    if (need.selectedCandidates.length > 0 && name.length > 2) {
+    if (name.length > 2) {
       need.name = name;
       {{#if this.context.need.name}}
       $.post(`/api/es/need/{{this.context.need.id}}/edit`, need, (data) => {
@@ -24,18 +24,41 @@
         }
       }).catch(errors => errorsHandler(errors));
       {{else}}
-        createModal({
-          id: 'notifyCandidatesModal',
-          modal: 'es/need/notifyCandidates',
-          title: 'Vous êtes sur le point de sauvegarder votre recherche'
-        });
+        if (need.selectedCandidates.length > 0) {
+          createModal({
+            id: 'notifyCandidatesModal',
+            modal: 'es/need/notifyCandidates',
+            title: 'Vous êtes sur le point de sauvegarder votre recherche'
+          });
+        } else {
+          if (need.name.length > 2) {
+            need._csrf = _csrf;
+            $.post(`/api/es/${esId}/addNeed`, need, (data) => {
+              if (data.id) {
+                createModal({
+                  id: 'needSavedModal',
+                  modal: 'es/need/saved',
+                  title: 'Besoin enregistré avec succès !',
+                  needId: data.id
+                })
+              }
+            });
+          } else {
+            notification({
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Impossible de créer cette recherche',
+              message: `Vous devez spécifier un nom de recherche.`
+            });
+          }
+        }
       {{/if}}
     } else {
       notification({
         icon: 'exclamation',
         type: 'danger',
         title: 'Impossible de créer cette recherche',
-        message: `Vous devez spécifier un nom de recherche d'au moins trois caractères et seléctionner au moins un candidat.`
+        message: `Vous devez spécifier un nom de recherche d'au moins trois caractères.`
       });
     }
   });

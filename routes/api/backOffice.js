@@ -40,6 +40,7 @@ router.post('/establishment/:id(\\d+)/edit/user/:userId',
 router.get('/establishment/:esId(\\d+)/needs', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeeds);
 router.get('/establishment/:esId(\\d+)/need/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeed);
 router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, BackOffice.User.sendVerificationEmail);
+router.post('/candidates/resetProfilePercentage/', Authentication.ensureIsAdmin, BackOffice.User.resetProfilePercentage);
 
 /**
  * @Route('/back-office/references/:type') POST;
