@@ -129,7 +129,7 @@ BackOffice_Group.ViewSuperGroups = (req, res) => {
   });
 };
 
-BackOffice_Group.addUserGroup = (req, res, next) => {
+BackOffice_Group.addUser = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
@@ -178,7 +178,7 @@ BackOffice_Group.addUserGroup = (req, res, next) => {
   }
 };
 
-BackOffice_Group.getUsersFromGroup = (req, res, next) => {
+BackOffice_Group.getUsers = (req, res, next) => {
   Models.UsersGroups.findAll({
     where: { id_group: req.params.id },
     attributes: ['role'],
@@ -193,14 +193,14 @@ BackOffice_Group.getUsersFromGroup = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-BackOffice_Group.removeUserGroup = (req, res, next) => {
+BackOffice_Group.removeUser = (req, res, next) => {
   return Models.UsersGroups.findOne({ where: { id_group: req.params.id, user_id: req.params.userId } }).then(groupUser => {
     if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this group.' });
     return groupUser.destroy().then(data => res.status(201).send({ deleted: true, data }));
   }).catch(error => next(new BackError(error)));
 };
 
-BackOffice_Group.editUserGroup = (req, res, next) => {
+BackOffice_Group.editUser = (req, res, next) => {
   return Models.UsersGroups.findOne({ where: { id_group: req.params.id, user_id: req.params.userId } }).then(groupUser => {
     groupUser.update({ role: req.body.role }).then(savedUserGroup => {
       return res.status(201).json({ status: 'Modified user group role' });
