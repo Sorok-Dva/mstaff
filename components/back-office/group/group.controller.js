@@ -5,6 +5,7 @@ const { Sequelize, Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 const crypto = require('crypto');
+const mailer = require(`${__}/bin/mailer`);
 
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
@@ -159,12 +160,12 @@ BackOffice_Group.addUserGroup = (req, res, next) => {
         }
       }).spread((group, groupCreated) => {
         if (created) {
-          /*mailer.sendEmail({
+          mailer.sendEmail({
             to: user.email,
             subject: 'Bienvenue sur Mstaff !',
             template: 'es/new_user',
             context: { user }
-          });*/
+          });
           return res.status(201).json({ status: 'Created and added to group', user, group });
         } else {
           if (groupCreated) return res.status(201).json({ status: 'Added to group', user, group });
