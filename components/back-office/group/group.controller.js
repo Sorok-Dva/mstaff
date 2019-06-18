@@ -177,6 +177,21 @@ BackOffice_Group.addUserGroup = (req, res, next) => {
   }
 };
 
+BackOffice_Group.getUsersFromGroup = (req, res, next) => {
+  Models.UsersGroups.findAll({
+    where: { id_group: req.params.id },
+    attributes: ['role'],
+    include: [{
+      model: Models.User,
+      attributes: ['id', 'firstName', 'lastName', 'email'],
+      required: true,
+    }]
+  }).then(usersGroup => {
+    if (_.isNil(usersGroup)) return next(new BackError(`Users in Group ${req.params.id} not found`, httpStatus.NOT_FOUND));
+    return res.status(200).send(usersGroup);
+  }).catch(error => next(new BackError(error)));
+};
+
 BackOffice_Group.EditSuperGroup = (req, res, next) => {
   return Models.SuperGroups.findOne({ where: { id: req.params.id } }).then(superGroup => {
     let error = null;

@@ -88,6 +88,8 @@ router.put('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.E
   .delete('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveGroup)
   .post('/groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddGroup);
 
+router.get('/groups/:id(\\d+)/users/all', Authentication.ensureIsAdmin, BackOffice.Group.getUsersFromGroup);
+
 router.put('/groups/:id(\\d+)/add/user', Authentication.ensureIsAdmin, BackOffice.Group.addUserGroup);
 /*
   .post('/groups/:id(\\d+)/edit/user/:userId', Authentication.ensureIsAdmin, BackOffice.Group.editUser)
