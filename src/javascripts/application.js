@@ -653,6 +653,13 @@ $(document).ready(function () {
   selectPostType.on('change', () => {
     let postType = selectPostType.select2('data');
     let selectedCategories = selectPostType.find(':selected').attr('data-categorie');
+    selectServiceType.val(null).trigger('change');
+
+    if (selectedCategories === 5){
+
+    }
+
+    console.log('selectedCategories', selectedCategories);
     let goodServices = $(`#selectServiceType [data-categorie="${selectedCategories}"]`);
     if (selectedCategories === '3')
       goodServices = $(`#selectServiceType [data-categorie="3"],[data-categorie="2"]`);
@@ -660,6 +667,7 @@ $(document).ready(function () {
 
     application.postType = [];
     postType.forEach((post) => {
+      console.log('post', post.text);
       application.postType.push(post.text);
     });
     if (postType.length > 0){
@@ -681,7 +689,6 @@ $(document).ready(function () {
   });
   selectServiceType.on('change', () => {
     let serviceType = selectServiceType.selectpicker('val');
-
     application.serviceType = [];
     serviceType.forEach((value) => {
       let data = $(`#selectServiceType [value="${value}"]`).text();
