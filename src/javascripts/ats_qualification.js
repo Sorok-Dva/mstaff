@@ -146,7 +146,7 @@ function notify(error){
       notification({
         icon: 'check-circle',
         type: 'success',
-        title: 'Dîplome complémentaire ajouté avec succés.'
+        title: 'Dîplome complémentaire ajouté avec succès.'
       });
 
       break
