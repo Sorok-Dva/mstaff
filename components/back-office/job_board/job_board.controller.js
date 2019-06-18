@@ -23,5 +23,20 @@ BackOffice_Job_Board.ViewJobSheets = (req, res, next) => {
   });
 };
 
+BackOffice_Job_Board.AddJobSheet = (req, res, next) => {
+  return Models.ConfigSkills.findOrCreate({
+    where: {
+      id_skill: req.body.skillID,
+      id_post: req.body.postID,
+      id_service: req.body.serviceID
+    }
+  }).spread((configskill, created) => {
+    if (created) {
+      return res.status(200).json({ status: 'Created', configskill });
+    } else {
+      return res.status(200).json({ status: 'Already exists', configskill });
+    }
+  })
+};
 
 module.exports = BackOffice_Job_Board;

@@ -122,10 +122,6 @@ router.get('/es/:id(\\d+)',
  * @Route('/back-office/references/:type') GET;
  * Show Reference Model data
  */
-router.get('/references/categories',
-  Authentication.ensureIsAdmin,
-  BackOffice.Reference.ViewCategories);
-
 router.get('/references/:type',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.View);
