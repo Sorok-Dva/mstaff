@@ -64,7 +64,10 @@ BackOffice_References.Delete = (req, res, next) => {
 
   return Models[model].findOne({ where: { id: req.params.id } }).then(reference => {
     if (!reference) return res.status(400).send({ body: req.body, error: 'This reference does not exist' });
-    return reference.destroy().then(data => res.status(201).send({ deleted: true, data }));
+    return reference.destroy().then(data => {
+      req.flash('success_msg', 'Référence supprimée aves succès.');
+      res.status(201).send({ deleted: true, data })
+    });
   }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
 };
 

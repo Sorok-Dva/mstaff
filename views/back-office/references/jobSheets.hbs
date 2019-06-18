@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-content">
         <div class="toolbar">
-          <a title="Ajouter une fiche métier" class="btn btn-primary" style="margin-right:10px"><i class="fal fa-plus"></i></a>
+          <button id="addJobSheet" title="Ajouter une fiche métier" class="btn btn-primary" style="margin-right:10px"><i class="fal fa-plus"></i></button>
         </div>
         <table id="jobSheets-table" class="table">
           <thead>
@@ -65,7 +65,6 @@
       }
     };
 
-
     table.bootstrapTable({
       toolbar: ".toolbar",
       search: true,
@@ -87,6 +86,23 @@
 
     $(window).resize(() => {
       table.bootstrapTable('resetView');
+    });
+
+    $('#addJobSheet').click(function() {
+      let promptInput = prompt('Nom de la nouvelle fiche métier');
+      if (!_.isNil(promptInput)) {
+        $.post('/api/back-office/references/jobSheets', { _csrf, promptInput }, (data) => {
+          if (data.status === 'Created') {
+            $(location).attr('href', '/back-office/jobBoard/sheet/' + data.reference.id);
+          } else {
+            notification({
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Une fiche métier portant déjà ce nom existe.',
+            });
+          }
+        }).catch(errors => errorsHandler(errors));
+      }
     });
   });
 </script>

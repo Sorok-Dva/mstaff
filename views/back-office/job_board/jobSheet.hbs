@@ -5,7 +5,7 @@
       <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
       <fieldset>
         <legend>
-          <h5 style="text-align: center">Modification de la fiche métier "{{jobSheet.name}}"</h5>
+          <h5 style="text-align: center">Modification de la fiche métier "{{jobSheet.name}}" - <button type="button" id="deleteSheet" class="btn btn-danger"><i class="fal fa-trash"></i></button></h5>
         </legend>
         <div class="form-row">
           <div class="form-group col-md-12">
@@ -69,4 +69,14 @@
       ['removeformat'],
     ]
   });
+
+  $('#deleteSheet').click(function() {
+    if (confirm('Voulez vous vraiment supprimer cette fiche métier ?')) {
+      $.delete(`/api/back-office/references/jobSheets/{{jobSheet.id}}`, { _csrf }, (data) => {
+        if (data.deleted) {
+          $(location).attr('href', '/back-office/jobBoard/sheets')
+        }
+      }).catch(errors => errorsHandler(errors));
+    }
+  })
 </script>
