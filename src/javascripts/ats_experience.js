@@ -6,6 +6,7 @@ function experienceListener(){
       generateDatasRecap();
       resetForm();
       $('#recap').addClass('d-lg-block');
+      notify('xpCreated');
     }
   });
 
@@ -310,6 +311,14 @@ function notify(error){
         type: 'danger',
         title: 'Informations manquantes :',
         message: `Merci d'indiquer une date de fin ou de cocher "Actuellement en poste" le cas échéant.`
+      });
+
+      break
+    case 'xpCreated':
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Expérience ajoutée avec succès.'
       });
 
       break
