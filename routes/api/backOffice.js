@@ -84,18 +84,18 @@ router.post('/configuration/equipments/',
     Authentication.ensureIsAdmin,
     BackOffice.Configuration.RemoveEquipment);
 
-router.put('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditGroup)
-  .delete('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveGroup)
-  .post('/groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddGroup);
+router.put('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.Edit)
+  .delete('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.Remove)
+  .post('/groups/', Authentication.ensureIsAdmin, BackOffice.Group.Add);
 
 router.get('/groups/:id(\\d+)/users/all', Authentication.ensureIsAdmin, BackOffice.Group.getUsers)
   .put('/groups/:id(\\d+)/add/user', Authentication.ensureIsAdmin, BackOffice.Group.addUser)
   .post('/groups/:id(\\d+)/edit/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.editUser)
   .delete('/groups/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUser);
 
-router.put('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditSuperGroup)
-  .delete('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveSuperGroup)
-  .post('/super-groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddSuperGroup);
+router.put('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.SuperGroup.Edit)
+  .delete('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.SuperGroup.Remove)
+  .post('/super-groups/', Authentication.ensureIsAdmin, BackOffice.SuperGroup.Add);
 
 router.put('/linkES/:id',
   Authentication.ensureIsAdmin,
@@ -103,7 +103,7 @@ router.put('/linkES/:id',
 
 router.put('/linkGroup/:id',
   Authentication.ensureIsAdmin,
-  BackOffice.Group.EditLinkGroup);
+  BackOffice.Group.EditLink);
 
 /**
  * @Route('/back-office/references/:type') POST;
@@ -111,7 +111,7 @@ router.put('/linkGroup/:id',
  */
 
 router.get('/eslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getEsLinksList);
-router.get('/groupslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.getGroupLinksList);
+router.get('/groupslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.getLinksList);
 router.get('/establishments/all', Authentication.ensureIsAdmin, BackOffice.Establishment.getEstablishmentList);
 
 module.exports = router;

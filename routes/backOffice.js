@@ -134,13 +134,13 @@ router.get('/references/:type',
  * @Route('/back-office/users/groups/') GET;
  * Show services data
  */
-router.get('/groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewGroups);
+router.get('/groups', Authentication.ensureIsAdmin, BackOffice.Group.View);
 
 /**
  * @Route('/back-office/users/super-groups/') GET;
  * Show services data
  */
-router.get('/super-groups', Authentication.ensureIsAdmin, BackOffice.Group.ViewSuperGroups);
+router.get('/super-groups', Authentication.ensureIsAdmin, BackOffice.SuperGroup.View);
 
 /**
  * @Route('/back-office/configuration/skills') GET;
