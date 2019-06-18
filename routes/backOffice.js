@@ -160,6 +160,13 @@ router.get('/configuration/categories', Authentication.ensureIsAdmin, BackOffice
  */
 router.get('/configuration/equipments', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewEquipments);
 
+/** @Route('/back-office/jobBoard/sheets') GET;
+ * Show job sheets
+ */
+router.get('/jobBoard/sheets',
+  Authentication.ensureIsAdmin,
+  BackOffice.JobBoard.ViewJobSheets);
+
 /** @Route('/back-office/settings/') GET;
  * Show app settings page
  */
