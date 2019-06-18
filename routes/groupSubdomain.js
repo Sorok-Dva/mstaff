@@ -4,7 +4,7 @@ const { HTTPValidation } = require('../middlewares/');
 const express = require('express');
 const router = express.Router();
 
-// router.get('/postuler', (req, res, next) => res.redirect('/join'));
+router.get('/postuler', (req, res, next) => res.redirect('/join'));
 
 router.get('/',
   Subdomain.Group.ViewIndex);
