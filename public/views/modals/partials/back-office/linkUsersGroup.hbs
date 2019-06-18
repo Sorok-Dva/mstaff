@@ -3,64 +3,191 @@
     <h6 class="text-center text-success">Un utilisateur avec cet email existe déjà. Spécifiez son rôle pour ce
       groupe.</h6>
   </div>
+
   <div class="row">
+    <div class="col-md-6 text-left">
+      <h6 id="textDisplayer">Liste des utilisateurs présents dans votre groupe</h6>
+    </div>
+    <div class="col-md-6 text-right">
+      <button id="btnDisplayAddUser" class="btn btn-sm btn-success" value="1">Ajouter utilisateur</button>
+    </div>
+  </div> <br />
+  <div id="displayAllUsers">
+    <table id="groups-table" class="table">
+      <thead>
+      <th data-field="id" class="text-center">ID</th>
+      <th data-field="email" data-sortable="true">Email</th>
+      <th data-field="lastname" data-sortable="true">Nom</th>
+      <th data-field="firstname" data-sortable="true">Prénom</th>
+      <th data-field="role">Role</th>
+      <th data-field="actions" class="td-actions text-right">Actions</th>
+      </thead>
+      <tbody id="usersGroupTable"></tbody>
+    </table>
+  </div>
+
+  <div id="displayAddUser" style="display:none;">
     <div class="form-group">
-      <label for="AUemail" class="col-md-4 control-label">Email</label>
-      <div class="col-md-8">
-        <input type="text" name="AUemail" class="form-control" id="AUemail">
+      <div class="row">
+        <label for="AUemail" class="col-md-4 control-label">Email</label>
+        <div class="col-md-8">
+          <input type="text" name="AUemail" class="form-control" id="AUemail">
+        </div>
       </div>
     </div>
     <div class="form-group toHide">
-      <label for="AUlastName" class="col-md-4 control-label">Nom</label>
-      <div class="col-md-8">
-        <input type="text" name="AUlastName" class="form-control" id="AUlastName">
+      <div class="row">
+        <label for="AUlastName" class="col-md-4 control-label">Nom</label>
+        <div class="col-md-8">
+          <input type="text" name="AUlastName" class="form-control" id="AUlastName">
+        </div>
       </div>
     </div>
     <div class="form-group toHide">
-      <label for="AUfirstName" class="col-md-4 control-label">Prénom</label>
-      <div class="col-md-8">
-        <input type="text" name="AUfirstName" class="form-control" id="AUfirstName">
+      <div class="row">
+        <label for="AUfirstName" class="col-md-4 control-label">Prénom</label>
+        <div class="col-md-8">
+          <input type="text" name="AUfirstName" class="form-control" id="AUfirstName">
+        </div>
       </div>
     </div>
     <div class="form-group toHide">
-      <label for="AUphone" class="col-md-4 control-label">Téléphone</label>
-      <div class="col-md-8">
-        <input type="tel" name="AUphone" class="form-control" id="AUphone">
+      <div class="row">
+        <label for="AUphone" class="col-md-4 control-label">Téléphone</label>
+        <div class="col-md-8">
+          <input type="tel" name="AUphone" class="form-control" id="AUphone">
+        </div>
       </div>
     </div>
     <div class="form-group">
-      <label for="role" class="col-md-4 control-label">Rôle</label>
-      <div class="col-md-8">
-        <select name="role" id="role" class="form-control">
-          <option value="Admin">Administrateur</option>
-          <option value="DRH">DRH</option>
-          <option value="User">Utilisateur</option>
-        </select>
+      <div class="row">
+        <label for="role" class="col-md-4 control-label">Rôle</label>
+        <div class="col-md-8">
+          <select name="role" id="role" class="form-control">
+            <option value="User">Utilisateur</option>
+            <option value="DRH">DRH</option>
+            <option value="Admin">Administrateur</option>
+          </select>
+        </div>
       </div>
     </div>
     <input type="hidden" name="group_id" value="{{ this.group.id }}">
+    <input type="hidden" id="user_id">
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" id="addUserInModal"> Ajouter l'utilisateur</button>
+  <button style="display:none" type="button" class="btn btn-default" id="addUserInModal"> Ajouter l'utilisateur</button>
+  <button style="display:none" type="button" class="btn btn-default" id="modifyUserInModal">Modifier le rôle</button>
 </div>
 <script>
-  $('#AUemail').blur(() => {
-    let email = $('#AUemail').val();
-    $.get(`/api/user/emailAvailable/${email}`, (result) => {
-      if (!result.available) {
-        $('.toHide').hide();
-        $('.alertUserExists').show();
-        userExists = true;
-      } else {
-        $('.toHide').show();
-        $('.alertUserExists').hide();
-        userExists = false;
+
+  $.get('/api/back-office/groups/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
+    if (data) {
+      for(let i = 0; i < data.length; i++)
+      {
+        let actions = `<button type="button" title="Modifier utilisateur"
+          class="btn btn-simple btn-warning btn-icon table-action"
+           onclick="modifyUser('${data[i].User.id}' , '${data[i].User.email}', '${data[i].role}')">
+           <i class="ti-pencil-alt"></i> </button><button title="Supprimer utilisateur" type="button"
+           class="btn btn-simple btn-danger btn-icon table-action" onclick="deleteUser(${data[i].User.id})"><i class="ti-close"></i></button>`;
+        let markup = `<tr><td><a>${data[i].User.id}</a></td><td>${data[i].User.email}</td><td>${data[i].User.firstName}</td>
+          <td>${data[i].User.lastName}</td><td data-id=${data[i].User.id}>${data[i].role}</td><td class='text-right'>${actions}</td></tr>`;
+
+        $("table tbody#usersGroupTable").append(markup);
       }
-    }).catch(error => {
+    }
+  });
+
+  function deleteUser(user_id)
+  {
+    let group_id = $('input[name="group_id"]').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    $("table tbody#usersGroupTable").find("tr a").each(function(data) {
+      if($(this).text() === user_id.toString()) {
+        $(this).parents("tr").remove();
+        $.delete(`/api/back-office/groups/${group_id}/remove/user/${user_id}`, { _csrf }, () => {
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'L\'utilisateur a été supprimé de votre groupe avec succès',
+          });
+        }).catch(errors => errorsHandler(errors));
+      }
+    });
+  }
+
+  function modifyUser(user_id, email, role) {
+    $('input#AUemail').val(email).attr('disabled', true);
+    $('h6#textDisplayer').text('Modifier le rôle d\'utilisateur de votre groupe');
+    $('div#displayAddUser').show();
+    $('button#modifyUserInModal').show();
+    $('div#displayAllUsers').hide();
+    $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
+    $('.toHide').hide();
+    $(`#role option[value=${role}]`).prop('selected', true);
+    $('input#user_id').val(user_id);
+  }
+
+  $('button#btnDisplayAddUser').click(function () {
+    if(this.value === "1") {
+      $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
+      $('h6#textDisplayer').text('Ajouter un nouvel utilisateur à votre groupe');
+      $('button#addUserInModal').show();
+      $('div#displayAddUser').show();
+      $('button#modifyUserInModal').hide();
+      $('div#displayAllUsers').hide();
+    } else {
+      $('button#btnDisplayAddUser').text('Ajouter utilisateur').prop('value', '1');
+      $('h6#textDisplayer').text('Liste des utilisateurs présents dans votre groupe');
+      $('div#displayAddUser').hide();
+      $('input#AUemail').val("").attr('disabled', false);
+      $('button#addUserInModal').hide();
+      $('div#displayAllUsers').show();
+      $('button#modifyUserInModal').hide();
       $('.toHide').show();
       $('.alertUserExists').hide();
-      userExists = false;
+    }
+  });
+
+  $('#AUemail').blur(() => {
+    if($('button#btnDisplayAddUser').val() === "0") {
+      let email = $('#AUemail').val();
+      $.get(`/api/user/emailAvailable/${email}`, (result) => {
+        if (!result.available) {
+          $('.toHide').hide();
+          $('.alertUserExists').show();
+          userExists = true;
+        } else {
+          $('.toHide').show();
+          $('.alertUserExists').hide();
+          userExists = false;
+        }
+      }).catch(errors => {
+        errorsHandler(errors);
+      });
+    }
+  });
+
+  $('button#modifyUserInModal').click(function() {
+    let group_id = $('input[name="group_id"]').val();
+    let user_id = $('input#user_id').val();
+    let role = $('#role option:selected').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    $.post(`/api/back-office/groups/${group_id}/edit/user/${user_id}`, {role, _csrf}, () => {
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'L\'utilisateur a changé de rôle :' + role
+      });
+      $(`td[data-id="${user_id}"]`).text(role);
+    }).catch(errors => {
+      errorsHandler(errors);
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Le rôle de l\'utilisateur n\'a pas été modifié',
+        message: `Nous n'avons pas pu modifier le rôle de cet utilisateur, veuillez réessayer.`
+      });
     });
   });
 
@@ -90,7 +217,8 @@
           icon: 'exclamation',
           type: 'danger',
           title: 'Utilisateur non ajouté à l\'établissement:',
-          message: `Cet utilisateur existe déjà avec un autre type de compte (${data.user.type}) et ne peut donc pas être ajouté à un établissement.`
+          message: `Cet utilisateur existe déjà avec un autre type de compte (${data.user.type}) et ne peut donc pas
+          être ajouté à un établissement.`
         });
       } else {
         $('#linkGroupModal').modal('hide');
