@@ -163,6 +163,16 @@ router.get('/jobBoard/sheets',
   Authentication.ensureIsAdmin,
   BackOffice.JobBoard.ViewJobSheets);
 
+/** @Route('/back-office/jobBoard/sheet/:id') GET;
+ * Show job sheet form
+ */
+router.get('/jobBoard/sheet/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.JobBoard.ViewJobSheet)
+  .post('/jobBoard/sheet/:id(\\d+)',
+    Authentication.ensureIsAdmin,
+    BackOffice.JobBoard.EditJobSheet);
+
 /** @Route('/back-office/settings/') GET;
  * Show app settings page
  */

@@ -23,6 +23,42 @@ BackOffice_Job_Board.ViewJobSheets = (req, res, next) => {
   });
 };
 
+BackOffice_Job_Board.ViewJobSheet = (req, res, next) => {
+  Models.JobSheet.findOne({
+    where: {
+      id: req.params.id
+    }
+  }).then(jobSheet => {
+    return res.render('back-office/job_board/jobSheet', {
+      layout,
+      title: 'Fiches métier : ' + jobSheet.name,
+      jobSheet,
+      a: { main: 'job_board', sub: 'jobSheet' },
+    })
+  });
+};
+
+BackOffice_Job_Board.EditJobSheet = (req, res, next) => {
+  Models.JobSheet.findOne({
+    where: {
+      id: req.params.id
+    }
+  }).then(jobSheet => {
+    if (_.isNil(jobSheet)) return next(new BackError('Fiche métier introuvable.', 404));
+    jobSheet.name = req.body.name;
+    jobSheet.description = req.body.description;
+    jobSheet.activities = req.body.activities;
+    jobSheet.knowHow = req.body.knowHow;
+    jobSheet.knowledge = req.body.knowledge;
+    jobSheet.infos = req.body.infos;
+
+    jobSheet.save().then(newJobSheet => {
+      req.flash('success_msg', 'Fiche métier sauvegardée avec succès.');
+      return res.redirect('/back-office/jobBoard/sheet/' + req.params.id);
+    });
+  });
+};
+
 BackOffice_Job_Board.AddJobSheet = (req, res, next) => {
   return Models.ConfigSkills.findOrCreate({
     where: {
