@@ -192,6 +192,21 @@ BackOffice_Group.getUsersFromGroup = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+BackOffice_Group.removeUser = (req, res, next) => {
+  return Models.UsersGroups.findOne({ where: { id_group: req.params.id, user_id: req.params.userId } }).then(groupUser => {
+    if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this group.' });
+    return groupUser.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Group.ViewSuperGroups = (req, res) => {
+  return Models.SuperGroups.findAll().then(superGroup => {
+    res.render('back-office/users/list_supergroups', {
+      layout, superGroup, a: { main: 'users', sub: 'superGroups' }
+    })
+  });
+};
+
 BackOffice_Group.EditSuperGroup = (req, res, next) => {
   return Models.SuperGroups.findOne({ where: { id: req.params.id } }).then(superGroup => {
     let error = null;
