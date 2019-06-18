@@ -4,6 +4,8 @@ const { validationResult } = require('express-validator/check');
 const { Sequelize, Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
+const crypto = require('crypto');
+const mailer = require(`${__}/bin/mailer`);
 
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
@@ -117,6 +119,93 @@ BackOffice_Group.RemoveGroup = (req, res, next) => {
     if (!group) return res.status(400).send({ body: req.body, error: 'This group does not exist' });
     return group.destroy().then(data => res.status(201).send({ deleted: true, data }));
   }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Group.ViewSuperGroups = (req, res) => {
+  return Models.SuperGroups.findAll().then(superGroup => {
+    res.render('back-office/users/list_supergroups', {
+      layout, superGroup, a: { main: 'users', sub: 'superGroups' }
+    })
+  });
+};
+
+BackOffice_Group.addUser = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+  try {
+    Models.User.findOrCreate({
+      where: { email: req.body.email },
+      attributes: ['firstName', 'lastName', 'type', 'id'],
+      defaults: {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phone: req.body.phone,
+        password: 'TODEFINE',
+        birthday: '1900-01-01 23:00:00',
+        postal_code: '-',
+        town: '-',
+        type: 'es',
+        key: crypto.randomBytes(20).toString('hex')
+      }
+    }).spread((user, created) => {
+      if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
+      Models.UsersGroups.findOrCreate({
+        where: {
+          user_id: user.id,
+          id_group: req.params.id
+        },
+        defaults: {
+          role: req.body.role,
+        }
+      }).spread((group, groupCreated) => {
+        if (created) {
+          mailer.sendEmail({
+            to: user.email,
+            subject: 'Bienvenue sur Mstaff !',
+            template: 'es/new_user',
+            context: { user }
+          });
+          return res.status(201).json({ status: 'Created and added to group', user, group });
+        } else {
+          if (groupCreated) return res.status(201).json({ status: 'Added to group', user, group });
+          return res.status(200).json({ status: 'Already exists', user, group });
+        }
+      });
+    });
+  } catch (errors) {
+    return next(new BackError(errors));
+  }
+};
+
+BackOffice_Group.getUsers = (req, res, next) => {
+  Models.UsersGroups.findAll({
+    where: { id_group: req.params.id },
+    attributes: ['role'],
+    include: [{
+      model: Models.User,
+      attributes: ['id', 'firstName', 'lastName', 'email'],
+      required: true,
+    }]
+  }).then(usersGroup => {
+    if (_.isNil(usersGroup)) return next(new BackError(`Users in Group ${req.params.id} not found`, httpStatus.NOT_FOUND));
+    return res.status(200).send(usersGroup);
+  }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Group.removeUser = (req, res, next) => {
+  return Models.UsersGroups.findOne({ where: { id_group: req.params.id, user_id: req.params.userId } }).then(groupUser => {
+    if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this group.' });
+    return groupUser.destroy().then(data => res.status(201).send({ deleted: true, data }));
+  }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Group.editUser = (req, res, next) => {
+  return Models.UsersGroups.findOne({ where: { id_group: req.params.id, user_id: req.params.userId } }).then(groupUser => {
+    groupUser.update({ role: req.body.role }).then(savedUserGroup => {
+      return res.status(201).json({ status: 'Modified user group role' });
+    }).catch(error => next(new BackError(error)));
+  })
 };
 
 BackOffice_Group.ViewSuperGroups = (req, res) => {
