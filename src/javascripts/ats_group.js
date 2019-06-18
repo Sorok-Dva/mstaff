@@ -1,9 +1,4 @@
 function groupListener(){
-  $('#backToMain').click(function() {
-    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
   $('#toPost').click(function() {
     if (verifyInputs()){
       saveDatas();
@@ -13,7 +8,7 @@ function groupListener(){
           $('#atsPart').html(html);
         })
       } else {
-        loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
           $('#atsPart').html(html);
         })
       }

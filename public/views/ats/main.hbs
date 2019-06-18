@@ -1,4 +1,9 @@
-<a href="/"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+{{#ifCond arrays.group '===' null}}
+  <a href="/"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+{{else}}
+  <i id="backToGroup" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+{{/ifCond}}
+
 <div class="height-80 d-flex flex-column justify-content-center">
   <div class="row justify-content-center mb-6">
     <h1 class="text-center col-12">
@@ -18,15 +23,15 @@
 </div>
 
 <script>
+  $('#backToGroup').click(function() {
+    loadTemplate('/static/views/ats/group.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
   $('#toPost').click(function() {
-    if (arrays.group === null){
       loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       })
-    } else {
-      loadTemplate('/static/views/ats/group.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-        $('#atsPart').html(html);
-      })
-    }
   });
 </script>

@@ -5,6 +5,7 @@ function qualificationListener(){
       generateDatasRecap();
       resetForm();
       $('#recap').addClass('d-lg-block');
+      notify('qualificationCreated');
     }
   });
 
@@ -141,6 +142,14 @@ function notify(error){
         message: `Merci d'indiquer une date de début.`
       });
       break;
+    case 'qualificationCreated':
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Dîplome complémentaire ajouté avec succès.'
+      });
+
+      break
   }
   return false;
 };

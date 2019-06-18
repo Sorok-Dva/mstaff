@@ -7,7 +7,8 @@
   }
 </style>
 
-<i id="backToMain" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+<a href="/"><i class="fal fa-arrow-circle-left fa-2x"></i></a>
+
 <!-- Heading -->
 <div class="height-80 d-flex flex-column justify-content-center">
   <div class="row justify-content-center mb-4 mb-md-6">
@@ -18,7 +19,7 @@
   {{#each arrays.group as |es|}}
     <div class="card text-center col-11">
       <div class="card-body d-flex flex-column justify-content-between">
-        <h2 id="esName" class="card-title">{{es.name}}</h2>
+        <h2 id="esName" class="card-title">{{es.town}} - {{es.name}}</h2>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="{{es.finess}}">
           <label class="custom-control-label" for="{{es.finess}}"></label>
