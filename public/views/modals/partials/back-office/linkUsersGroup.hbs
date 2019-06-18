@@ -83,18 +83,18 @@
 
   $.get('/api/back-office/groups/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
     if (data) {
-      for(let i = 0; i < data.length; i++)
+      data.forEach(function(element)
       {
         let actions = `<button type="button" title="Modifier utilisateur"
           class="btn btn-simple btn-warning btn-icon table-action"
-           onclick="modifyUser('${data[i].User.id}' , '${data[i].User.email}', '${data[i].role}')">
+           onclick="modifyUser('${element.User.id}' , '${element.User.email}', '${element.role}')">
            <i class="ti-pencil-alt"></i> </button><button title="Supprimer utilisateur" type="button"
-           class="btn btn-simple btn-danger btn-icon table-action" onclick="deleteUser(${data[i].User.id})"><i class="ti-close"></i></button>`;
-        let markup = `<tr><td><a>${data[i].User.id}</a></td><td>${data[i].User.email}</td><td>${data[i].User.firstName}</td>
-          <td>${data[i].User.lastName}</td><td data-id=${data[i].User.id}>${data[i].role}</td><td class='text-right'>${actions}</td></tr>`;
+           class="btn btn-simple btn-danger btn-icon table-action" onclick="deleteUser(${element.User.id})"><i class="ti-close"></i></button>`;
+        let markup = `<tr><td><a>${element.User.id}</a></td><td>${element.User.email}</td><td>${element.User.firstName}</td>
+          <td>${element.User.lastName}</td><td data-id=${element.User.id}>${element.role}</td><td class='text-right'>${actions}</td></tr>`;
 
         $("table tbody#usersGroupTable").append(markup);
-      }
+      });
     }
   });
 
