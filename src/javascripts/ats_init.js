@@ -59,7 +59,7 @@ let initApplication = () => {
 
 $(document).ready(() => {
   initApplication().then( () => {
-    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    loadTemplate('/static/views/ats/group.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
