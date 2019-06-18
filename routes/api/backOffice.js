@@ -88,14 +88,10 @@ router.put('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.E
   .delete('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveGroup)
   .post('/groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddGroup);
 
-router.get('/groups/:id(\\d+)/users/all', Authentication.ensureIsAdmin, BackOffice.Group.getUsersFromGroup);
-
-router.put('/groups/:id(\\d+)/add/user', Authentication.ensureIsAdmin, BackOffice.Group.addUserGroup)
-  .delete('/groups/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUser);
-
-/*
-  .post('/groups/:id(\\d+)/edit/user/:userId', Authentication.ensureIsAdmin, BackOffice.Group.editUser)
-*/
+router.get('/groups/:id(\\d+)/users/all', Authentication.ensureIsAdmin, BackOffice.Group.getUsersFromGroup)
+  .put('/groups/:id(\\d+)/add/user', Authentication.ensureIsAdmin, BackOffice.Group.addUserGroup)
+  .post('/groups/:id(\\d+)/edit/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.editUserGroup)
+  .delete('/groups/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUserGroup);
 
 router.put('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditSuperGroup)
   .delete('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveSuperGroup)
