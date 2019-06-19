@@ -81,7 +81,7 @@ router.get('/history',
 
 /**
  * @Route('/job_board/offer/:id(\\d+)') GET, POST & DELETE;
- * Show Specific Offer Page
+ * Show, Edit or Delete Specific Offer Page
  */
 router.get('/job_board/offer/:id(\\d+)',
   Authentication.ensureIsEs,

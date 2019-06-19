@@ -33,7 +33,7 @@ Establishment_Offer.View = (req, res, next) => {
   }).then(offer => {
     if (_.isNil(offer)) return next(new BackError(`Offre ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
     render.offer = offer;
-    return res.render('establishments/showOffer', render);
+    return res.render('establishments/job_board/showOffer', render);
   }).catch(error => next(new BackError(error)));
 };
 

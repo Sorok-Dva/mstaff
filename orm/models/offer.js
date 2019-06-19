@@ -70,7 +70,19 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   Offer.associate = (models) => {
-    // associations can be defined here
+    Offer.hasOne(models.Establishment, {
+      foreignKey: 'id',
+      sourceKey: 'es_id',
+      onDelete: 'CASCADE'
+    });
+    Offer.hasOne(models.User, {
+      foreignKey: 'id',
+      sourceKey: 'createdBy'
+    });
+    Offer.hasOne(models.Need, {
+      foreignKey: 'need_id',
+      as: 'need'
+    });
   };
   return Offer;
 };
