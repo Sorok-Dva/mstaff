@@ -86,15 +86,15 @@ Establishment_Offer.Create = (req, res, next) => {
       need_id: need.id,
       es_id: need.es_id,
       nature_section: {
-        contract_type: need.contract_type,
-        start: need.start,
-        end: need.end,
+        contract_type: _.isNil(need.contract_type) ? '' : need.contract_type,
+        start: _.isNil(need.start) ? '' : need.start,
+        end: _.isNil(need.end) ? '' : need.end,
       },
       context_section: {
-        place: need.Establishment.name,
-        address: need.Establishment.address + ' ' + need.Establishment.town,
-        website: need.Establishment.url,
-        logo: need.Establishment.logo
+        place: _.isNil(need.Establishment.name) ? '' : need.Establishment.name,
+        address: _.isNil(need.Establishment.town) ? '' : need.Establishment.address + ' ' + need.Establishment.town,
+        website: _.isNil(need.Establishment.url) ? '' : need.Establishment.url,
+        logo: _.isNil(need.Establishment.logo) ? '' : need.Establishment.logo,
       },
       status: 'draft',
       createdBy: req.user.id
