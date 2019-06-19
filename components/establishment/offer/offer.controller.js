@@ -37,7 +37,7 @@ Establishment_Offer.View = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-Establishment_Offer.edit = (req, res, next) => {
+Establishment_Offer.Edit = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -53,7 +53,7 @@ Establishment_Offer.edit = (req, res, next) => {
   });
 };
 
-Establishment_Offer.delete = (req, res, next) => {
+Establishment_Offer.Delete = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {

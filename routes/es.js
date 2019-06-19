@@ -79,4 +79,18 @@ router.get('/history',
   Authentication.ensureIsEs,
   Establishment.Need.ViewClosed);
 
+/**
+ * @Route('/job_board/offer/:id(\\d+)') GET;
+ * Show Specific Offer Page
+ */
+router.get('/job_board/offer/:id(\\d+)',
+  Authentication.ensureIsEs,
+  Establishment.Offer.View)
+  .post('/job_board/offer/:id(\\d+)',
+    Authentication.ensureIsEs,
+    Establishment.Offer.Edit)
+  .delete('/job_board/offer/:id(\\d+)',
+    Authentication.ensureIsEs,
+    Establishment.Offer.Delete);
+
 module.exports = router;
