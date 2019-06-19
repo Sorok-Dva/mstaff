@@ -81,6 +81,14 @@ router.delete('/need/:id(\\d+)',
   Establishment.Need.delete);
 
 /**
+ * @Route('/:esId(\d+)/create/offer/fromNeed/:needId(\\d+)/') POST;
+ * Create Offer from Need
+ */
+router.post('/:esId(\\d+)/create/offer/fromNeed/:needId(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Offer.Create);
+
+/**
  * @Route('/conference/:id(\\d+)') DELETE;
  * Delete conference
  */
