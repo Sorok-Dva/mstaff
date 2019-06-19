@@ -80,7 +80,7 @@ router.get('/history',
   Establishment.Need.ViewClosed);
 
 /**
- * @Route('/job_board/offer/:id(\\d+)') GET;
+ * @Route('/job_board/offer/:id(\\d+)') GET, POST & DELETE;
  * Show Specific Offer Page
  */
 router.get('/job_board/offer/:id(\\d+)',
