@@ -126,5 +126,20 @@
         }
       }).catch(error => errorsHandler(error));
     }
+  });
+
+  $('button.createOffer').click(function() {
+    let id = $(this).attr('data-id');
+    $.post(`/api/es/{{user.opts.currentEs}}/create/offer/fromNeed/${id}`, { _csrf }, (data) => {
+      if (data.status === 'created') {
+        $(location).attr('href', `/job_board/offer/${data.offer.id}`);
+      } else {
+        notification({
+          icon: 'exclamation-circle',
+          type: 'warning',
+          title: 'Une erreur est survenue lors de la création de cette offre.'
+        })
+      }
+    }).catch(error => errorsHandler(error));
   })
 </script>
