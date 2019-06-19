@@ -6,12 +6,60 @@ module.exports = (sequelize, DataTypes) => {
     es_id: DataTypes.INTEGER,
     need_id: DataTypes.INTEGER,
     status: DataTypes.STRING,
-    nature_section: DataTypes.JSON,
-    context_section: DataTypes.JSON,
-    details_section: DataTypes.JSON,
-    postDescription_section: DataTypes.JSON,
-    prerequisites_section: DataTypes.JSON,
-    terms_sections: DataTypes.JSON,
+    nature_section: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('nature_section'))
+      },
+      set(data) {
+        this.setDataValue('nature_section', JSON.stringify(data));
+      }
+    },
+    context_section: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('context_section'))
+      },
+      set(data) {
+        this.setDataValue('context_section', JSON.stringify(data));
+      }
+    },
+    details_section: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('details_section'))
+      },
+      set(data) {
+        this.setDataValue('details_section', JSON.stringify(data));
+      }
+    },
+    postDescription_section: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('postDescription_section'))
+      },
+      set(data) {
+        this.setDataValue('postDescription_section', JSON.stringify(data));
+      }
+    },
+    prerequisites_section: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('prerequisites_section'))
+      },
+      set(data) {
+        this.setDataValue('prerequisites_section', JSON.stringify(data));
+      }
+    },
+    terms_sections: {
+      type: DataTypes.JSON,
+      get() {
+        return JSON.parse(this.getDataValue('terms_sections'))
+      },
+      set(data) {
+        this.setDataValue('terms_sections', JSON.stringify(data));
+      }
+    },
   }, {});
   Offer.associate = (models) => {
     // associations can be defined here
