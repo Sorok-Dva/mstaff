@@ -1,12 +1,20 @@
 function createNewSection(opts){
-  let span = `<span>${opts.title}</span><span><i class="fal fa-edit custom-cursor"></i></span>`;
+  let delEvent  = `onclick="deleteSection('${opts.id}')"`;
+  let span = `<span>${opts.title}</span><span><i class="fal fa-edit custom-cursor mr-3"></i><i class="fal fa-trash-alt custom-cursor" ${delEvent}></i></span>`;
   let divInt = `<div class="d-flex justify-content-between">${span}</div>`;
   let liTitle = `<li class="list-group-item nature-section-title">${divInt}</li>`;
   let liItem = `<li class="list-group-item nature-section-item"><div class="text-left"><p class="margin-0">${opts.itemLine}</p><p class="margin-0">${opts.itemSubLine}</p></div></li>`;
   let ul = `<ul class="list-group shadow-grey">${liTitle}${liItem}</ul>`;
   let newSection = `<div id=${opts.id} class="mb-5">${ul}</div>`;
-
  $('#sectionsPart').append(newSection);
+}
+
+function editSection(sectionId){
+
+}
+
+function deleteSection(sectionId){
+  $(`#${sectionId}`).remove();
 }
 
 function isActiveSection(section){
