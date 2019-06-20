@@ -45,6 +45,12 @@ Establishment_Offer.Edit = (req, res, next) => {
   }
   Models.Offer.update({
     name: req.body.name || 'Offre sans nom',
+    nature_section: req.body.nature_section,
+    context_section: req.body.context_section,
+    details_section: req.body.details_section,
+    postDescription_section: req.body.postDescription_section,
+    prerequisites_section: req.body.prerequisites_section,
+    terms_sections: req.body.terms_sections,
   }, {
     where: { id: req.body.id }
   }).then(offer => {
