@@ -56,7 +56,7 @@ Subdomain_Group.ViewATS = (req, res, next) => {
   let esList = [];
   let esInfos = [];
   req.group.es.forEach( item => {
-    esInfos.push({ name: item.es.name, finess: item.es.finess, town: item.es.town});
+    esInfos.push({ name: item.es.name, finess: item.es.finess, town: item.es.town });
     esList.push(item.es.finess);
   });
   return res.render('establishments/site/ats/index', { es: esList, esInfos: JSON.stringify(esInfos), layout: 'onepage' })
