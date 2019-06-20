@@ -80,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: 'createdBy'
     });
     Offer.hasOne(models.Need, {
-      foreignKey: 'need_id',
+      foreignKey: 'id',
       as: 'need'
     });
   };
