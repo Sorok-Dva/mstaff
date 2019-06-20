@@ -18,8 +18,14 @@ function editSection(sectionId){
       });
       break;
     case 'contextSection':
+      loadTemplate('/static/views/job_board/contextSection.hbs', {test: 'coucou'}, (html) => {
+        $('#formsPart').html(html);
+      });
       break;
     case 'detailsSection':
+      loadTemplate('/static/views/job_board/detailsSection.hbs', {test: 'coucou'}, (html) => {
+        $('#formsPart').html(html);
+      });
       break;
     case 'postDescriptionSection':
       break;
@@ -32,6 +38,7 @@ function editSection(sectionId){
 
 function deleteSection(sectionId){
   $(`#${sectionId}`).remove();
+  $(`.${sectionId}`).remove();
 }
 
 function isActiveSection(section){
