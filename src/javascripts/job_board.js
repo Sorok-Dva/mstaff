@@ -1,6 +1,7 @@
 function createNewSection(opts){
   let delEvent  = `onclick="deleteSection('${opts.id}')"`;
-  let span = `<span>${opts.title}</span><span><i class="fal fa-edit custom-cursor mr-3"></i><i class="fal fa-trash-alt custom-cursor" ${delEvent}></i></span>`;
+  let editEvent = `onclick="editSection('${opts.id}')"`;
+  let span = `<span>${opts.title}</span><span><i class="fal fa-edit custom-cursor mr-3" ${editEvent}></i><i class="fal fa-trash-alt custom-cursor" ${delEvent}></i></span>`;
   let divInt = `<div class="d-flex justify-content-between">${span}</div>`;
   let liTitle = `<li class="list-group-item nature-section-title">${divInt}</li>`;
   let liItem = `<li class="list-group-item nature-section-item"><div class="text-left"><p class="margin-0">${opts.itemLine}</p><p class="margin-0">${opts.itemSubLine}</p></div></li>`;
@@ -10,7 +11,23 @@ function createNewSection(opts){
 }
 
 function editSection(sectionId){
-
+  switch (sectionId) {
+    case 'natureSection':
+      loadTemplate('/static/views/job_board/natureSection.hbs', {test: 'coucou'}, (html) => {
+        $('#formsPart').html(html);
+      });
+      break;
+    case 'contextSection':
+      break;
+    case 'detailsSection':
+      break;
+    case 'postDescriptionSection':
+      break;
+    case 'requirementSection':
+      break;
+    case 'termsSection':
+      break;
+  }
 }
 
 function deleteSection(sectionId){
