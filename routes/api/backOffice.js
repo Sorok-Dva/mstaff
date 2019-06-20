@@ -46,16 +46,6 @@ router.post('/candidates/resetProfilePercentage/', Authentication.ensureIsAdmin,
  * @Route('/back-office/references/:type') POST;
  * Create Reference Model data
  */
-router.post('/references/categories',
-  Authentication.ensureIsAdmin,
-  BackOffice.Reference.AddCategory
-).put('/references/categories/:id(\\d+)',
-  Authentication.ensureIsAdmin,
-  BackOffice.Reference.EditCategory
-).delete('/references/categories/:id(\\d+)',
-  Authentication.ensureIsAdmin,
-  BackOffice.Reference.DeleteCategory);
-
 router.post('/references/:type',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.Add
