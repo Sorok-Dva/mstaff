@@ -39,6 +39,12 @@
   .multiselect-container>li>a>label {
     padding: 4px 20px 3px 20px;
   }
+  #esList+div>ul{
+    max-height: 30vh;
+    overflow-y: scroll;
+    max-width: 30vh;
+    min-width: 30vh;
+  }
 </style>
 <script>
   let esId = {{user.opts.currentEs}};

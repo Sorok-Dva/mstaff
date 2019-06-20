@@ -12,6 +12,13 @@ function recapListener(){
     })
   });
 
+  $('#editGroup').click(function() {
+    permissions.recap = true;
+    loadTemplate('/static/views/ats/group.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      $('#atsPart').html(html);
+    })
+  });
+
   $('#editPost').click(function() {
     permissions.recap = true;
     loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
