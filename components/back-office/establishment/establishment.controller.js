@@ -79,63 +79,68 @@ BackOffice_Establishment.Edit = (req, res, next) => {
   try {
     Models.Establishment.findOne({ where: { id: req.params.id } }).then((es) => {
       if (_.isNil(es)) return next();
-
-      if (!_.isNil(es.domain_name)) {
-        Models.Subdomain.findOne({ where: { es_id: es.id } }).then(esSubdomain => {
-          Models.Subdomain.findOne({ where: { name: req.body.domain_name } }).then(subCheck => {
-            let subESExist = !_.isNil(esSubdomain);
-            let subCheckOk = false;
-            if (!_.isNil(subCheck) && subESExist) {
-              if (esSubdomain.es_id !== subCheck.es_id) {
-                req.flash('error_msg', `Ce sous domaine est déjà utilisé.`);
-                req.body.domaine_name = esSubdomain.domain_name;
-              }
-              else subCheckOk = true
-            } else subCheckOk = true;
-
-            es.update({
-              name: req.body.name,
-              category: req.body.category,
-              finess_ej: req.body.finess_ej,
-              siret: req.body.siret,
-              phone: req.body.phone,
-              address: req.body.address,
-              town: req.body.addr_town,
-              sector: req.body.sector,
-              salaries_count: req.body.salaries_count,
-              contact_identity: req.body.contactIdentity,
-              contact_post: req.body.contactPost,
-              contact_email: req.body.contactEmail,
-              contact_phone: req.body.contactPhone,
-              domain_enable: parseInt(req.body.domain_enable),
-              domain_name: req.body.domain_name,
-              logo: req.body.logo,
-              banner: req.body.banner,
-            }).then(savedEs => {
-              if (subCheckOk) {
-                if (subESExist) {
-                  esSubdomain.update({
-                    name: savedEs.domain_name,
-                    enable: savedEs.domain_enable
-                  }).catch(error => next(new BackError(error)));
-                } else {
-                  Models.Subdomain.create({
-                    name: savedEs.domain_name,
-                    enable: savedEs.domain_enable,
-                    es_id: savedEs.id
-                  })
+      Models.EstablishmentReference.findOne({ where: { finess_et: es.finess } }).then(esRef => {
+        console.log(req.body);
+        console.log(esRef);
+        if (!_.isNil(es.domain_name)) {
+          Models.Subdomain.findOne({ where: { es_id: es.id } }).then(esSubdomain => {
+            Models.Subdomain.findOne({ where: { name: req.body.domain_name } }).then(subCheck => {
+              let subESExist = !_.isNil(esSubdomain);
+              let subCheckOk = false;
+              if (!_.isNil(subCheck) && subESExist) {
+                if (esSubdomain.es_id !== subCheck.es_id) {
+                  req.flash('error_msg', `Ce sous domaine est déjà utilisé.`);
+                  req.body.domaine_name = esSubdomain.domain_name;
                 }
-                req.flash('success_msg', 'Établissement mis à jour.');
-                return res.redirect(`/back-office/es/${savedEs.id}`);
-              } else {
-                console.log('subnotexist');
-                req.flash('success_msg', 'Établissement mis à jour.');
-                return res.redirect(`/back-office/es/${savedEs.id}`);
-              }
-            });
+                else subCheckOk = true
+              } else subCheckOk = true;
+
+              es.update({
+                name: req.body.name,
+                category: req.body.category,
+                finess_ej: req.body.finess_ej,
+                siret: req.body.siret,
+                phone: req.body.phone,
+                address: req.body.address,
+                town: req.body.addr_town,
+                sector: req.body.sector,
+                salaries_count: req.body.salaries_count,
+                contact_identity: req.body.contactIdentity,
+                contact_post: req.body.contactPost,
+                contact_email: req.body.contactEmail,
+                contact_phone: req.body.contactPhone,
+                domain_enable: parseInt(req.body.domain_enable),
+                domain_name: req.body.domain_name,
+                logo: req.body.logo,
+                banner: req.body.banner,
+              }).then(savedEs => {
+                esRef.lat = req.body.lat;
+                esRef.lon = req.body.lon;
+                esRef.save();
+                if (subCheckOk) {
+                  if (subESExist) {
+                    esSubdomain.update({
+                      name: savedEs.domain_name,
+                      enable: savedEs.domain_enable
+                    }).catch(error => next(new BackError(error)));
+                  } else {
+                    Models.Subdomain.create({
+                      name: savedEs.domain_name,
+                      enable: savedEs.domain_enable,
+                      es_id: savedEs.id
+                    })
+                  }
+                  req.flash('success_msg', 'Établissement mis à jour.');
+                  return res.redirect(`/back-office/es/${savedEs.id}`);
+                } else {
+                  req.flash('success_msg', 'Établissement mis à jour.');
+                  return res.redirect(`/back-office/es/${savedEs.id}`);
+                }
+              });
+            })
           })
-        })
-      }
+        }
+      });
     })
   } catch (errors) {
     return next(new BackError(errors));
@@ -383,7 +388,7 @@ BackOffice_Establishment.getNeed = (req, res, next) => {
 BackOffice_Establishment.View = (req, res, next) => {
   Models.Establishment.findOne({
     where: { id: req.params.id },
-    include: {
+    include: [{
       model: Models.ESAccount,
       where: { es_id: req.params.id },
       required: false,
@@ -395,7 +400,16 @@ BackOffice_Establishment.View = (req, res, next) => {
           }
         },
       }
-    }
+    }, {
+      model: Models.EstablishmentReference,
+      on: {
+        '$Establishment.finess$': {
+          [Op.col]: 'ref.finess_et'
+        }
+      },
+      as: 'ref',
+      required: true,
+    }]
   }).then(data => {
     if (_.isNil(data)) {
       req.flash('error_msg', 'Cet établissement n\'existe pas.');
