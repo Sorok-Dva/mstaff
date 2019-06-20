@@ -6,35 +6,67 @@
   .inline-block{
     display: inline-block;
   }
-  .add-selection-item{
+  .add-section-item{
     display: none;
     color: #A5A5A5;
   }
-  .add-selection-title{
+  .add-section-title{
     color: #5AA3E8;
   }
   .custom-cursor{
     cursor: pointer;
   }
+  .margin-0{
+    margin: 0;
+  }
+  .add-section-item:hover{
+    color:black;
+  }
 </style>
 
 <div class="row text-center">
-  <div class="col-6">
-    <div>
+  <div id="sectionsPart" class="col-6">
+
+    <div id="addSection" class="mb-5">
       <ul class="list-group shadow-grey custom-cursor">
-        <li class="list-group-item add-selection-title"><div class="d-flex justify-content-between"><span>Ajouter la section</span><span><i class="fal fa-chevron-down chevron"></i></span></div></li>
-        <li class="list-group-item add-selection-item"><div class="text-left"><i class="fal fa-plus"> Ajouter détails de l'offre</i></div></li>
-        <li class="list-group-item add-selection-item"><div class="text-left"><i class="fal fa-plus"> Ajouter description du poste</i></div></li>
-        <li class="list-group-item add-selection-item"><div class="text-left"><i class="fal fa-plus"> Ajouter prérequis</i></div></li>
-        <li class="list-group-item add-selection-item"><div class="text-left"><i class="fal fa-plus"> Ajouter des modalités de candidature</i></div></li>
+        <li class="list-group-item add-section-title">
+          <div class="d-flex justify-content-between">
+            <span>Ajouter la section</span><span><i class="fal fa-chevron-down chevron"></i></span>
+          </div>
+        </li>
+        <li id="addDetails" class="list-group-item add-section-item"><div class="text-left"><i class="fal fa-plus"> Ajouter détails de l'offre</i></div></li>
+        <li id="addPostDescription" class="list-group-item add-section-item"><div class="text-left"><i class="fal fa-plus"> Ajouter description du poste</i></div></li>
+        <li id="addRequirement" class="list-group-item add-section-item"><div class="text-left"><i class="fal fa-plus"> Ajouter prérequis</i></div></li>
+        <li id="addTerms" class="list-group-item add-section-item"><div class="text-left"><i class="fal fa-plus"> Ajouter modalités de candidature</i></div></li>
       </ul>
     </div>
-    <div>
 
+    <div id="natureSection" class="mb-5">
+      <ul class="list-group shadow-grey">
+        <li class="list-group-item nature-section-title">
+          <div class="d-flex justify-content-between">
+            <span>Nature de l'offre</span><span><i class="fal fa-edit custom-cursor"></i></span>
+          </div>
+        </li>
+        <li class="list-group-item nature-section-item"><div class="text-left"><p class="margin-0">CDI - CDD - ETC</p><p class="margin-0">à partir du dd/mm/yyyy</p></div></li>
+      </ul>
+    </div>
+
+    <div id="contextSection" class="mb-5">
+      <ul class="list-group shadow-grey">
+        <li class="list-group-item nature-section-title">
+          <div class="d-flex justify-content-between">
+            <span>Contexte de travail</span><span><i class="fal fa-edit custom-cursor"></i></span>
+          </div>
+        </li>
+        <li class="list-group-item nature-section-item"><div class="text-left"><p class="margin-0">Localisation du poste</p><p class="margin-0">CH de Montargis etc etc</p></div></li>
+      </ul>
     </div>
 
   </div>
-  <div class="col-6">test2</div>
+  <div id="formsPart" class="col-6">
+    test2
+  </div>
 </div>
 
 
