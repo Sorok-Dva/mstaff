@@ -72,7 +72,13 @@ $(`#post`).autocomplete({
 });
 
 $('#searchCandidates').on('click', function () {
-  need.post = $('input#post').val();
+  if($('input#searchType').prop('checked'))
+    need.filterQuery.lastName = $('input#post').val();
+  else {
+    if (!_.isNil(need.filterQuery.lastName))
+      delete need.filterQuery.lastName;
+    need.post = $('input#post').val();
+  }
   searchCandidates();
 });
 
@@ -94,7 +100,10 @@ let searchCandidates = () => {
     });
   }
   // }
-  need.post = need.post || $('input#post').val();
+  if($('input#searchType').prop('checked'))
+    need.post = '';
+  else
+    need.post = need.post || $('input#post').val();
   $('#baseResult').hide();
   $('#paginationContainer').hide();
   $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
@@ -203,7 +212,7 @@ let selectAllSearch = () => {
         toSelect.each((i, element) => (i < 50) ? $(element).trigger('click') : false);
       });
       $('button#cancelSelectAllCandidate').click(function () {
-       $('#searchSelectAll').trigger('click');
+        $('#searchSelectAll').trigger('click');
       });
     });
   } else {
@@ -219,7 +228,6 @@ let addCandidate = (id, type) => {
     case 'select':
       if (need.selectedCandidates.indexOf(id) === -1) {
         if (need.selectedCandidates.length < 50) {
-          if (need.selectedCandidates.length === 0) $('#saveNeed').show();
           $(`i.selectCandidate[data-id="${id}"]`).hide();
           $(`i.unselectCandidate[data-id="${id}"]`).show();
           need.selectedCandidates.push(id);
@@ -294,7 +302,6 @@ let removeCandidate = (id, type) => {
         $(`i.unselectCandidate[data-id="${id}"]`).hide();
         $(`i.selectCandidate[data-id="${id}"]`).show();
         need.selectedCandidates.splice(index, 1);
-        if (need.selectedCandidates.length === 0) $('#saveNeed').hide();
         /* $('#selectedEsCount').html(need.selectedCandidates.length);
          $(`#es_selected > #es${id}`).remove();*/
       }
@@ -395,6 +402,31 @@ let showFavorites = () => {
     }
     $('#myCandidates').empty().hide();
   }
+};
+
+let changeSearchType = () => {
+  resetSearch();
+  if($('input#searchType').prop('checked')) {
+    $('button#btnFilters').attr("disabled", true);
+    $('#esList').multiselect('disable');
+    $('input#post').attr("placeholder", "Indiquez un nom de famille");
+  } else {
+    $('button#btnFilters').attr("disabled", false);
+    $('span select #esList').attr("disabled", "disabled");
+    $('#esList').multiselect('enable');
+    $('input#post').attr("placeholder", "Indiquez un type de poste");
+  }
+};
+
+let changeCheckboxState = () => {
+  if($('input#searchType').prop('checked')) {
+    $('input#searchType').attr("checked", false);
+    $('i#checkbox').addClass('fa-square').removeClass('fa-check-square');
+  } else {
+    $('input#searchType').attr("checked", true);
+    $('i#checkbox').addClass('fa-check-square').removeClass('fa-square');
+  }
+  changeSearchType();
 };
 
 $(document).ready(() => {

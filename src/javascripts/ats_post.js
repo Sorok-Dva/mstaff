@@ -69,9 +69,9 @@ function saveDatas(){
 
 function postListener(){
   $('#backToMain').click(function() {
-    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
+      loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        $('#atsPart').html(html);
+      })
   });
   $('#toContract').click(function() {
     if (verifyInputs()){

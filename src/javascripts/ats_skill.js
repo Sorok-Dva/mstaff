@@ -5,6 +5,7 @@ function skillListener() {
       generateDatasRecap();
       resetForm();
       $('#recap').addClass('d-lg-block');
+      notify('skillCreated');
     }
   });
 
@@ -158,6 +159,14 @@ function notify(error){
         message: `Merci de noter votre compétence.`
       });
       break;
+    case 'skillCreated':
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Compétence ajoutée avec succès.'
+      });
+
+      break
   }
   return false;
 };
