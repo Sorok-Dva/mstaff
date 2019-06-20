@@ -41,7 +41,10 @@ Subdomain_Group.find = (id, next) => {
           attributes: ['lat', 'lon', 'finess_et'],
           required: true
         }
-      }
+      },
+      order: [
+        [ 'es', 'town', 'ASC' ],
+      ]
     });
   }).then(links => {
     render.es = links;
@@ -51,10 +54,12 @@ Subdomain_Group.find = (id, next) => {
 
 Subdomain_Group.ViewATS = (req, res, next) => {
   let esList = [];
-  req.group.EstablishmentGroups.forEach( item => {
+  let esInfos = [];
+  req.group.es.forEach( item => {
+    esInfos.push({ name: item.es.name, finess: item.es.finess, town: item.es.town});
     esList.push(item.es.finess);
   });
-  return res.render('establishments/site/ats/index', { es: esList, layout: 'onepage' })
+  return res.render('establishments/site/ats/index', { es: esList, esInfos: JSON.stringify(esInfos), layout: 'onepage' })
 };
 
 module.exports = Subdomain_Group;
