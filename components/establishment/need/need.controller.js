@@ -51,7 +51,6 @@ Establishment_Need.View = (req, res, next) => {
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
-      required: true,
       include: {
         model: Models.Candidate,
         required: true,

@@ -13,39 +13,53 @@ Subdomain_Group.ViewIndex = (req, res, next) => {
 };
 
 Subdomain_Group.find = (id, next) => {
+  let render = {};
   return Models.Groups.findOne({
     where: { id },
-    include: {
-      model: Models.EstablishmentGroups,
-      include: [{
+  }).then(group => {
+    if (_.isNil(group)) return new BackError('Groupe introuvable', 403);
+    render.group = group;
+    return Models.EstablishmentGroups.findAll({
+      where: { id_group: group.id },
+      include: {
         model: Models.Establishment,
         as: 'es',
+        on: {
+          '$EstablishmentGroups.id_es$': {
+            [Op.col]: 'es.id'
+          },
+        },
         required: true,
         include: {
           model: Models.EstablishmentReference,
           as: 'ref',
           on: {
-            '$EstablishmentGroups->es.finess$': {
-              [Op.col]: 'EstablishmentGroups->es->ref.finess_et'
+            '$es.finess$': {
+              [Op.col]: 'es->ref.finess_et'
             },
           },
           attributes: ['lat', 'lon', 'finess_et'],
           required: true
         }
-      }]
-    }
-  }).then( group => {
-    if (_.isNil(group)) return new BackError('Groupe introuvable', 403);
-    else next(group);
-  }).catch(error => next(new Error(error)));
+      },
+      order: [
+        [ 'es', 'town', 'ASC' ],
+      ]
+    });
+  }).then(links => {
+    render.es = links;
+    next(render)
+  }).catch(error => next(new BackError(error)));
 };
 
 Subdomain_Group.ViewATS = (req, res, next) => {
   let esList = [];
-  req.group.EstablishmentGroups.forEach( item => {
+  let esInfos = [];
+  req.group.es.forEach( item => {
+    esInfos.push({ name: item.es.name, finess: item.es.finess, town: item.es.town});
     esList.push(item.es.finess);
   });
-  return res.render('establishments/site/ats/index', { es: esList, layout: 'onepage' })
+  return res.render('establishments/site/ats/index', { es: esList, esInfos: JSON.stringify(esInfos), layout: 'onepage' })
 };
 
 module.exports = Subdomain_Group;

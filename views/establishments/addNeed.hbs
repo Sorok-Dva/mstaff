@@ -39,6 +39,12 @@
   .multiselect-container>li>a>label {
     padding: 4px 20px 3px 20px;
   }
+  #esList+div>ul{
+    max-height: 30vh;
+    overflow-y: scroll;
+    max-width: 30vh;
+    min-width: 30vh;
+  }
 </style>
 <script>
   let esId = {{user.opts.currentEs}};
@@ -80,7 +86,7 @@
             </button>
             <button id="saveNeed" {{#if need.id}}data-need-id="{{need.id}}"{{/if}} class="btn btn-outline-success float-right"
                     data-toggle="tooltip" data-placement="top" data-original-title="Enregistrer ma recherche"
-                    style="{{#unless need}}display: none;{{/unless}}margin-left: 5px;">
+                    style="margin-left: 5px;">
               <i class="fal fa-save"></i>
             </button>
             <button id="searchCandidates" class="btn btn-large btn-outline-primary float-right">
@@ -91,26 +97,30 @@
       </div>
     </div>
   </div>
+  <div class="col-md-2" style="display:flex; align-items: center; ">
+    <input id="searchType" type="checkbox" style="display: none">
+    <i id="checkbox" class="fal fa-square fa-1d3x" onclick="changeCheckboxState()" style="color: #e91e63; font-weight: 500; font-size: 1em; cursor: pointer"> Recherche par nom de famille</i>
+  </div>
 </div>
 <div class="row mt-2">
   <div class="col-md-12" id="criteria">
     <div class="col-md-12 text-center">
-      <button class="btn btn-{{#unless need.service}}outline-{{/unless}}info" onclick="return showServiceModal()">
+      <button id="btnFilters" class="btn btn-{{#unless need.service}}outline-{{/unless}}info" onclick="return showServiceModal()">
         Service <span id="btnServiceType">{{need.service}}</span>
       </button>
-      <button class="btn btn-{{#unless need.contract_type}}outline-{{/unless}}info" onclick="return showContractModal()">
+      <button id="btnFilters" class="btn btn-{{#unless need.contract_type}}outline-{{/unless}}info" onclick="return showContractModal()">
         Contrat <span id="btnContractType" style="text-transform: uppercase">{{need.contract_type}}</span>
       </button>
-      <button class="btn btn-{{#unless need.start}}outline-{{/unless}}info" onclick="return showTimeModal()">
+      <button id="btnFilters" class="btn btn-{{#unless need.start}}outline-{{/unless}}info" onclick="return showTimeModal()">
         Période <span id="btnTimeType">{{#if need.start}}{{date need.start 'DD/MM/YYYY'}}{{/if}}{{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}</span>
       </button>
-      <button class="btn btn-{{#unless need.diploma}}outline-{{/unless}}info" onclick="return showDiplomaModal()">
+      <button id="btnFilters" class="btn btn-{{#unless need.diploma}}outline-{{/unless}}info" onclick="return showDiplomaModal()">
         Diplômes Complémentaires <span id="btnDiplomaType">{{need.diploma}}</span>
       </button>
-      <button class="btn btn-{{#unless need.is_available}}outline-{{/unless}}info" onclick="return showAvailabilityModal()">
+      <button id="btnFilters" class="btn btn-{{#unless need.is_available}}outline-{{/unless}}info" onclick="return showAvailabilityModal()">
         Disponibilité <span id="btnAvailability">{{#ifCond need.is_available '===' 'true'}}Disponible{{/ifCond}}{{#ifCond need.is_available '===' 'false'}}Indisponible{{/ifCond}}</span>
       </button>
-      <button class="btn btn-{{#unless need.postal_code}}outline-{{/unless}}info" onclick="return showPostalCodeModal()">
+      <button id="btnFilters" class="btn btn-{{#unless need.postal_code}}outline-{{/unless}}info" onclick="return showPostalCodeModal()">
         Code Postal <span id="btnPostalCode">{{need.postal_code}}</span>
       </button>
       <select id="esList" multiple="multiple">
@@ -119,7 +129,6 @@
             {{account.Establishment.name}}
           </option>
         {{/each}}
-
       </select>
     </div>
     <div class="text-center" style="padding: 10px">

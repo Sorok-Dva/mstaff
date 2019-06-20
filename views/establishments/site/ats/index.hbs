@@ -54,5 +54,9 @@
 <script>
   let es_finess = '{{es}}';
   es_finess = es_finess.split(',');
+  let es_infos = '{{{esInfos}}}';
+  if (es_infos)
+    es_infos = JSON.parse(es_infos);
+  else es_infos = null;
 </script>
 <script src="/static/assets/dist/js/ats_init.min.js"></script>

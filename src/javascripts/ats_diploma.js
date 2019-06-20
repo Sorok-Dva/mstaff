@@ -5,6 +5,7 @@ function diplomaListener(){
       generateDatasRecap();
       resetForm();
       $('#recap').addClass('d-lg-block');
+      notify('diplomaCreated');
     }
   });
 
@@ -141,6 +142,14 @@ function notify(error){
         message: `Merci d'indiquer une date de début.`
       });
       break;
+    case 'diplomaCreated':
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Formation ajoutée avec succès.'
+      });
+
+      break
   }
   return false;
 };

@@ -40,6 +40,7 @@ router.post('/establishment/:id(\\d+)/edit/user/:userId',
 router.get('/establishment/:esId(\\d+)/needs', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeeds);
 router.get('/establishment/:esId(\\d+)/need/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeed);
 router.post('/candidates/sendVerifEmail/', Authentication.ensureIsAdmin, BackOffice.User.sendVerificationEmail);
+router.post('/candidates/resetProfilePercentage/', Authentication.ensureIsAdmin, BackOffice.User.resetProfilePercentage);
 
 /**
  * @Route('/back-office/references/:type') POST;
@@ -76,6 +77,11 @@ router.post('/configuration/equipments/',
 router.put('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditGroup)
   .delete('/groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveGroup)
   .post('/groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddGroup);
+
+router.get('/groups/:id(\\d+)/users/all', Authentication.ensureIsAdmin, BackOffice.Group.getUsers)
+  .put('/groups/:id(\\d+)/add/user', Authentication.ensureIsAdmin, BackOffice.Group.addUser)
+  .post('/groups/:id(\\d+)/edit/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.editUser)
+  .delete('/groups/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUser);
 
 router.put('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditSuperGroup)
   .delete('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveSuperGroup)

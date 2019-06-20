@@ -19,6 +19,21 @@
   <div class="row col-12 justify-content-center">
     <h2 class="underline">Récapitulatif</h2>
 
+    {{#ifCond arrays.group '!==' null}}
+    <div class="w-100"></div>
+    <div class="row col-md-6 col-8">
+      <div class="col-md-8 col-6 text-left">
+        <span class="mr-4">Établissement</span>
+      </div>
+      <div class="col-md-4 col-6 text-right">
+     <span>
+        <i class="fas fa-check-circle final-green mr-1"></i>
+        <i id="editGroup" class="fal fa-edit custom-cursor"></i>
+      </span>
+      </div>
+    </div>
+    {{/ifCond}}
+
     <div class="w-100"></div>
     <div class="row col-md-6 col-8">
       <div class="col-md-8 col-6 text-left">
