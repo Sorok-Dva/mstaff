@@ -51,7 +51,12 @@
             <span>Nature de l'offre</span><span><i class="fal fa-edit custom-cursor" onclick="editSection('natureSection')"></i></span>
           </div>
         </li>
-        <li class="list-group-item nature-section-item"><div class="text-left"><p class="margin-0">CDI - CDD - ETC</p><p class="margin-0">à partir du dd/mm/yyyy</p></div></li>
+        <li class="list-group-item nature-section-item">
+          <div class="text-left">
+            <p class="margin-0 nature-p-1"></p>
+            <p class="margin-0 nature-p-2"></p>
+          </div>
+        </li>
       </ul>
     </div>
 
@@ -62,7 +67,12 @@
             <span>Contexte de travail</span><span><i class="fal fa-edit custom-cursor" onclick="editSection('contextSection')"></i></span>
           </div>
         </li>
-        <li class="list-group-item nature-section-item"><div class="text-left"><p class="margin-0">Localisation du poste</p><p class="margin-0">CH de Montargis etc etc</p></div></li>
+        <li class="list-group-item nature-section-item">
+          <div class="text-left">
+            <p class="margin-0">Localisation du poste</p>
+            <p class="margin-0 context-p-2"></p>
+          </div>
+        </li>
       </ul>
     </div>
 
@@ -76,24 +86,30 @@
 
   let needData = `{{{json offer}}}`;
   needData = JSON.parse(needData);
-  console.log(needData);
 
   let offerData = {
     nature_section: {
-      natureDate: needData.nature_section.start,
+      natureDate: needData.createdAt,
       natureTitle: needData.name,
-      natureJob: '',
-      natureContractType: '',
-      natureJobStartDate: '',
+      natureJobSheet: '',
+      natureContractType: needData.nature_section.contract_type,
+      natureJobStartDate: needData.nature_section.start,
       natureContractDuration: '',
       natureGrade: '',
       natureCategory: '',
     },
-    context_section: 'coucou',
-    details_section: 'coucou',
-    postDescription_section: 'coucou',
-    requirement_section: 'coucou',
-    terms_sections: 'coucou',
+    context_section: {
+      contextLocalisation: needData.context_section.place,
+      contextAddress: needData.context_section.address,
+      contextAttach: '',
+      contextSite: needData.context_section.website,
+      contextPole: '',
+      contextPresentation: '',
+    },
+    details_section: {},
+    postDescription_section: {},
+    requirement_section: {},
+    terms_sections: {},
   }
 </script>
 

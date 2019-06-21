@@ -99,6 +99,39 @@ function job_boardListener() {
 
 }
 
+function load_natureSection(){
+  let contractType = null;
+  let startDate = moment(offerData.nature_section.natureJobStartDate).format("D/MM/YYYY");
+
+  switch (offerData.nature_section.natureContractType) {
+    case 'cdi-cdd':
+      contractType = 'CDI';
+      break;
+    case 'vacation':
+      contractType = 'VACATION';
+      break;
+    case 'internship':
+      contractType = 'STAGE';
+      break;
+  }
+
+  $('.nature-p-1').text(contractType);
+  $('.nature-p-2').text('à partir du '.concat(startDate));
+}
+
+function load_contextSection(){
+  let localisation = offerData.context_section.contextLocalisation;
+  let address = offerData.context_section.contextAddress;
+
+  $('.context-p-2').text(localisation.concat(',', address));
+}
+
+function load_job_board(){
+  load_natureSection();
+  load_contextSection();
+}
+
 $(document).ready(() => {
+  load_job_board();
   job_boardListener();
 });
