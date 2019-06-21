@@ -11,35 +11,36 @@ function createNewSection(opts){
 }
 
 function editSection(sectionId){
+  let formsPart = $('#formsPart');
   switch (sectionId) {
     case 'natureSection':
-      loadTemplate('/static/views/job_board/natureSection.hbs', {test: 'coucou'}, (html) => {
-        $('#formsPart').html(html);
+      loadTemplate('/static/views/job_board/natureSection.hbs', {offerData}, (html) => {
+        formsPart.html(html);
       });
       break;
     case 'contextSection':
-      loadTemplate('/static/views/job_board/contextSection.hbs', {test: 'coucou'}, (html) => {
-        $('#formsPart').html(html);
+      loadTemplate('/static/views/job_board/contextSection.hbs', {offerData}, (html) => {
+        formsPart.html(html);
       });
       break;
     case 'detailsSection':
-      loadTemplate('/static/views/job_board/detailsSection.hbs', {test: 'coucou'}, (html) => {
-        $('#formsPart').html(html);
+      loadTemplate('/static/views/job_board/detailsSection.hbs', {offerData}, (html) => {
+        formsPart.html(html);
       });
       break;
     case 'postDescriptionSection':
-      loadTemplate('/static/views/job_board/postDescriptionSection.hbs', {test: 'coucou'}, (html) => {
-        $('#formsPart').html(html);
+      loadTemplate('/static/views/job_board/postDescriptionSection.hbs', {offerData}, (html) => {
+        formsPart.html(html);
       });
       break;
     case 'requirementSection':
-      loadTemplate('/static/views/job_board/requirementSection.hbs', {test: 'coucou'}, (html) => {
-        $('#formsPart').html(html);
+      loadTemplate('/static/views/job_board/requirementSection.hbs', {offerData}, (html) => {
+        formsPart.html(html);
       });
       break;
     case 'termsSection':
-      loadTemplate('/static/views/job_board/termsSection.hbs', {test: 'coucou'}, (html) => {
-        $('#formsPart').html(html);
+      loadTemplate('/static/views/job_board/termsSection.hbs', {offerData}, (html) => {
+        formsPart.html(html);
       });
       break;
   }
@@ -97,7 +98,6 @@ function job_boardListener() {
   })
 
 }
-
 
 $(document).ready(() => {
   job_boardListener();

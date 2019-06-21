@@ -72,5 +72,29 @@
   </div>
 </div>
 
+<script>
+
+  let needData = `{{{json offer}}}`;
+  needData = JSON.parse(needData);
+  console.log(needData);
+
+  let offerData = {
+    nature_section: {
+      natureDate: needData.nature_section.start,
+      natureTitle: needData.name,
+      natureJob: '',
+      natureContractType: '',
+      natureJobStartDate: '',
+      natureContractDuration: '',
+      natureGrade: '',
+      natureCategory: '',
+    },
+    context_section: 'coucou',
+    details_section: 'coucou',
+    postDescription_section: 'coucou',
+    requirement_section: 'coucou',
+    terms_sections: 'coucou',
+  }
+</script>
 
 <script src="/static/assets/dist/js/job_board.min.js"></script>
