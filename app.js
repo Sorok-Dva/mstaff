@@ -57,8 +57,10 @@ app.use(Express.readOnlySessionForImpersonation);
 
 process.on('unhandledRejection', reason => {
   //@TODO Fix Sentry.send for unhandled rejection in prod or pre-prod env
+  /* eslint-disable no-console */
   if (Env.isPreProd || Env.isProd) Express.sentryUnhandledRejection(reason);
   else console.log(reason);
+  /* eslint-enable no-console */
 });
 
 // ------ ROUTESm
