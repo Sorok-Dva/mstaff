@@ -28,10 +28,19 @@ function editSection(sectionId){
       });
       break;
     case 'postDescriptionSection':
+      loadTemplate('/static/views/job_board/postDescriptionSection.hbs', {test: 'coucou'}, (html) => {
+        $('#formsPart').html(html);
+      });
       break;
     case 'requirementSection':
+      loadTemplate('/static/views/job_board/requirementSection.hbs', {test: 'coucou'}, (html) => {
+        $('#formsPart').html(html);
+      });
       break;
     case 'termsSection':
+      loadTemplate('/static/views/job_board/termsSection.hbs', {test: 'coucou'}, (html) => {
+        $('#formsPart').html(html);
+      });
       break;
   }
 }
