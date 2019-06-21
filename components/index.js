@@ -1,3 +1,4 @@
+const API = require('./api');
 const BackOffice = require('./back-office');
 const Conference = require('./conference');
 const Establishment = require('./establishment');
@@ -9,6 +10,7 @@ const Subdomain = require('./subdomain');
 const User = require('./user');
 
 module.exports = {
+  API,
   BackOffice,
   Conference,
   Establishment,
