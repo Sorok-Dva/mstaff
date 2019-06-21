@@ -130,6 +130,14 @@
               <div class="col-md-4" style="margin-left: -26px;"><h4>.mstaff.co</h4></div>
             </div>
           </div>
+          <div class="form-group col-md-3">
+            <label for="ESLat">Latitude (pour la map)</label>
+            <input type="text" class="form-control" id="ESLat" name="lat" value="{{es.ref.lat}}">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="ESLon">Longitude (pour la map)</label>
+            <input type="text" class="form-control" id="ESLon" name="lon" value="{{es.ref.lon}}">
+          </div>
         </div>
         <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
         <button type="submit" class="btn btn-primary pull-right">Enregistrer</button>
