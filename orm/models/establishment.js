@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'es_id',
       sourceKey: 'id'
     });
+    Establishment.hasMany(models.Offer, {
+      foreignKey: 'es_id',
+      sourceKey: 'id',
+      as: 'offers'
+    });
     Establishment.hasMany(models.Application, {
       foreignKey: 'es_id',
       sourceKey: 'id'
