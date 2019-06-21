@@ -58,10 +58,13 @@ function deleteSection(sectionId){
       resetObject(offerData.details_section);
       break;
     case 'postDescriptionSection':
+      resetObject(offerData.postDescription_section);
       break;
     case 'requirementSection':
+      resetObject(offerData.requirement_section);
       break;
     case 'termsSection':
+      resetObject(offerData.terms_sections);
       break;
   }
 }
