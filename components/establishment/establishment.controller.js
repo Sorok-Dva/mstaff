@@ -47,7 +47,11 @@ Establishment.Select = (req, res, next) => {
 
 Establishment.find = (id, next) => {
   Models.Establishment.findOne({
-    where: { id }
+    where: { id },
+    include: {
+      model: Models.Offer,
+      as: 'offers'
+    }
   }).then(es => {
     if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
     else next(es);

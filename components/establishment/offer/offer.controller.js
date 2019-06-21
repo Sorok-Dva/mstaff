@@ -92,6 +92,7 @@ Establishment_Offer.Create = (req, res, next) => {
       need_id: need.id,
       es_id: need.es_id,
       nature_section: {
+        post: _.isNil(need.post) ? '' : need.post,
         contract_type: _.isNil(need.contract_type) ? '' : need.contract_type,
         start: _.isNil(need.start) ? '' : need.start,
         end: _.isNil(need.end) ? '' : need.end,
