@@ -80,7 +80,7 @@
       </div>
     </div>
     <div class="col-12 col-xl-4">
-      <div class="card">
+      <div class="card" id="mapHeader">
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col">
@@ -128,7 +128,7 @@
         radius: 0.2 * 1000 || 10000
       });
     }
-    $(location).attr('href', '#map');
+    $(location).attr('href', '#mapHeader');
   };
 
   let removeAllMarker = () => {
