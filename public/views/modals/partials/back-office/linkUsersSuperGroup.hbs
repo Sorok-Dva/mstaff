@@ -106,7 +106,7 @@
     $("table tbody#usersSuperGroupTable").find("tr a").each(function(data) {
       if($(this).text() === user_id.toString()) {
         $(this).parents("tr").remove();
-        $.delete(`/api/back-office/super-groups/${supergroup_id}/remove/user/${user_id}`, { _csrf }, () => {
+        $.delete(`/api/back-office/groups/UsersSuperGroups/${supergroup_id}/remove/user/${user_id}`, { _csrf }, () => {
           notification({
             icon: 'check-circle',
             type: 'success',
@@ -174,7 +174,7 @@
     let user_id = $('input#user_id').val();
     let role = $('#role option:selected').val();
     let _csrf = $('meta[name="csrf-token"]').attr('content');
-    $.post(`/api/back-office/super-groups/${supergroup_id}/edit/user/${user_id}`, {role, _csrf}, () => {
+    $.post(`/api/back-office/groups/UsersSuperGroups/${supergroup_id}/edit/user/${user_id}`, {role, _csrf}, () => {
       notification({
         icon: 'check-circle',
         type: 'success',
@@ -206,7 +206,7 @@
       user.phone = $('input[name="AUphone"]').val();
     }
 
-    $.put('/api/back-office/super-groups/' + supergroup_id + '/add/user', user, (data) => {
+    $.put('/api/back-office/groups/UsersSuperGroups/' + supergroup_id + '/add/user', user, (data) => {
       if (data.status === 'Already exists') {
         notification({
           icon: 'exclamation',

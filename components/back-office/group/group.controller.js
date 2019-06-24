@@ -131,8 +131,9 @@ BackOffice_Group.ViewSuperGroups = (req, res) => {
 
 BackOffice_Group.addUser = (req, res, next) => {
   const errors = validationResult(req);
+  let model = req.params.type;
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-
+  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   try {
     Models.User.findOrCreate({
       where: { email: req.body.email },
@@ -150,11 +151,15 @@ BackOffice_Group.addUser = (req, res, next) => {
       }
     }).spread((user, created) => {
       if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
-      Models.UsersGroups.findOrCreate({
-        where: {
-          user_id: user.id,
-          id_group: req.params.id
-        },
+      let query = {  user_id: user.id };
+      switch (model) {
+        case 'UsersGroups' : query.id_group = req.params.id; break;
+        case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+        default:
+          return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
+      }
+      Models[model].findOrCreate({
+        where: query,
         defaults: {
           role: req.body.role,
         }
@@ -166,9 +171,9 @@ BackOffice_Group.addUser = (req, res, next) => {
             template: 'es/new_user',
             context: { user }
           });
-          return res.status(201).json({ status: 'Created and added to group', user, group });
+          return res.status(201).json({ status: 'Created and added to group/supergroup', user, group });
         } else {
-          if (groupCreated) return res.status(201).json({ status: 'Added to group', user, group });
+          if (groupCreated) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
           return res.status(200).json({ status: 'Already exists', user, group });
         }
       });
@@ -179,7 +184,9 @@ BackOffice_Group.addUser = (req, res, next) => {
 };
 
 BackOffice_Group.getUsers = (req, res, next) => {
-  Models.UsersGroups.findAll({
+  let model = req.params.type;
+  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  Models[model].findAll({
     where: { id_group: req.params.id },
     attributes: ['role'],
     include: [{
@@ -194,93 +201,32 @@ BackOffice_Group.getUsers = (req, res, next) => {
 };
 
 BackOffice_Group.removeUser = (req, res, next) => {
-  return Models.UsersGroups.findOne({ where: { id_group: req.params.id, user_id: req.params.userId } }).then(groupUser => {
+  let query = { user_id: req.params.userId };
+  let model = req.params.type;
+  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  switch (model) {
+    case 'UsersGroups' : query.id_group = req.params.id; break;
+    case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+    default:
+      return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
+  }
+  return Models[model].findOne({ where: query }).then(groupUser => {
     if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this group.' });
     return groupUser.destroy().then(data => res.status(201).send({ deleted: true, data }));
   }).catch(error => next(new BackError(error)));
 };
 
 BackOffice_Group.editUser = (req, res, next) => {
-  return Models.UsersGroups.findOne({ where: { id_group: req.params.id, user_id: req.params.userId } }).then(groupUser => {
-    groupUser.update({ role: req.body.role }).then(savedUserGroup => {
-      return res.status(201).json({ status: 'Modified user group role' });
-    }).catch(error => next(new BackError(error)));
-  })
-};
-
-BackOffice_Group.addUserSuperGroup = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-
-  try {
-    Models.User.findOrCreate({
-      where: { email: req.body.email },
-      attributes: ['firstName', 'lastName', 'type', 'id'],
-      defaults: {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        phone: req.body.phone,
-        password: 'TODEFINE',
-        birthday: '1900-01-01 23:00:00',
-        postal_code: '-',
-        town: '-',
-        type: 'es',
-        key: crypto.randomBytes(20).toString('hex')
-      }
-    }).spread((user, created) => {
-      if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
-      Models.UsersSuperGroups.findOrCreate({
-        where: {
-          user_id: user.id,
-          id_supergroup: req.params.id
-        },
-        defaults: {
-          role: req.body.role,
-        }
-      }).spread((group, groupCreated) => {
-        if (created) {
-          mailer.sendEmail({
-            to: user.email,
-            subject: 'Bienvenue sur Mstaff !',
-            template: 'es/new_user',
-            context: { user }
-          });
-          return res.status(201).json({ status: 'Created and added to supergroup', user, group });
-        } else {
-          if (groupCreated) return res.status(201).json({ status: 'Added to supergroup', user, group });
-          return res.status(200).json({ status: 'Already exists', user, group });
-        }
-      });
-    });
-  } catch (errors) {
-    return next(new BackError(errors));
+  let query = { user_id: req.params.userId };
+  let model = req.params.type;
+  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  switch (model) {
+    case 'UsersGroups' : query.id_group = req.params.id; break;
+    case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+    default:
+      return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
   }
-};
-
-BackOffice_Group.getUsersSuperGroup = (req, res, next) => {
-  Models.UsersSuperGroups.findAll({
-    where: { id_supergroup: req.params.id },
-    attributes: ['role'],
-    include: [{
-      model: Models.User,
-      attributes: ['id', 'firstName', 'lastName', 'email'],
-      required: true,
-    }]
-  }).then(usersGroup => {
-    if (_.isNil(usersGroup)) return next(new BackError(`Users in Supergroup ${req.params.id} not found`, httpStatus.NOT_FOUND));
-    return res.status(200).send(usersGroup);
-  }).catch(error => next(new BackError(error)));
-};
-
-BackOffice_Group.removeUserSuperGroup = (req, res, next) => {
-  return Models.UsersSuperGroups.findOne({ where: { id_supergroup: req.params.id, user_id: req.params.userId } }).then(groupUser => {
-    if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this supergroup.' });
-    return groupUser.destroy().then(data => res.status(201).send({ deleted: true, data }));
-  }).catch(error => next(new BackError(error)));
-};
-
-BackOffice_Group.editUserSuperGroup = (req, res, next) => {
-  return Models.UsersSuperGroups.findOne({ where: { id_supergroup: req.params.id, user_id: req.params.userId } }).then(groupUser => {
+  return Models[model].findOne({ where: query }).then(groupUser => {
     groupUser.update({ role: req.body.role }).then(savedUserGroup => {
       return res.status(201).json({ status: 'Modified user group role' });
     }).catch(error => next(new BackError(error)));

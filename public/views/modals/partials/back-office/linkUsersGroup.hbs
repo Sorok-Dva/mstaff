@@ -81,7 +81,7 @@
 </div>
 <script>
 
-  $.get('/api/back-office/groups/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
+  $.get('/api/back-office/groups/UsersGroups/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
     if (data) {
       data.forEach(function(element)
       {
@@ -105,7 +105,7 @@
     $("table tbody#usersGroupTable").find("tr a").each(function(data) {
       if($(this).text() === user_id.toString()) {
         $(this).parents("tr").remove();
-        $.delete(`/api/back-office/groups/${group_id}/remove/user/${user_id}`, { _csrf }, () => {
+        $.delete(`/api/back-office/groups/UsersGroups/${group_id}/remove/user/${user_id}`, { _csrf }, () => {
           notification({
             icon: 'check-circle',
             type: 'success',
@@ -173,7 +173,7 @@
     let user_id = $('input#user_id').val();
     let role = $('#role option:selected').val();
     let _csrf = $('meta[name="csrf-token"]').attr('content');
-    $.post(`/api/back-office/groups/${group_id}/edit/user/${user_id}`, {role, _csrf}, () => {
+    $.post(`/api/back-office/groups/UsersGroups/${group_id}/edit/user/${user_id}`, {role, _csrf}, () => {
       notification({
         icon: 'check-circle',
         type: 'success',
@@ -205,7 +205,7 @@
       user.phone = $('input[name="AUphone"]').val();
     }
 
-    $.put('/api/back-office/groups/' + group_id + '/add/user', user, (data) => {
+    $.put('/api/back-office/groups/UsersGroups/' + group_id + '/add/user', user, (data) => {
       if (data.status === 'Already exists') {
         notification({
           icon: 'exclamation',
