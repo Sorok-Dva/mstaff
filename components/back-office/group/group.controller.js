@@ -116,6 +116,7 @@ BackOffice_Group.Edit = (req, res, next) => {
 BackOffice_Group.Add = (req, res, next) => {
   let model = req.params.type;
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  if (model !== 'Groups' && model !== 'SuperGroups') return next(new BackError(`Modèle "${model}" non autorisé.`, httpStatus.NOT_FOUND));
   return Models[model].findOrCreate({
     where: {
       name: req.body.promptInput
@@ -132,6 +133,7 @@ BackOffice_Group.Add = (req, res, next) => {
 BackOffice_Group.Remove = (req, res, next) => {
   let model = req.params.type;
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  if (model !== 'Groups' && model !== 'SuperGroups') return next(new BackError(`Modèle "${model}" non autorisé.`, httpStatus.NOT_FOUND));
   return Models[model].findOne({ where: { id: req.params.id } }).then(group => {
     if (!group) return res.status(400).send({ body: req.body, error: 'This group/supergroup does not exist' });
     return group.destroy().then(data => res.status(201).send({ deleted: true, data }));
