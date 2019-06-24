@@ -121,7 +121,7 @@
               let banner = $('input#superGroupBannerEdit').val();
               let domain_name = $('input#superGroupDomainNameEdit').val();
               let domain_enable = $('select#superGroupDomainEdit').val();
-              $.put(`/api/back-office/super-groups/${row.id}`, {
+              $.put(`/api/back-office/groups/SuperGroups/${row.id}`, {
                 name, logo, banner, domain_name, domain_enable, _csrf
               }, (data) => {
                 if (data.error) {
@@ -163,7 +163,7 @@
         }, () => {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveSuperGroup').click(function () {
-            $.delete(`/api/back-office/super-groups/${row.id}`, {
+            $.delete(`/api/back-office/groups/SuperGroups/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {
@@ -219,7 +219,7 @@
         if ($('input#superGroupValue').val() != '') {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#superGroupValue').val();
-          $.post(`/api/back-office/super-groups/`, {
+          $.post(`/api/back-office/groups/SuperGroups/`, {
             promptInput,
             _csrf
           }, (response) => {
