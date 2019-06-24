@@ -6,19 +6,17 @@ module.exports = (sequelize, DataTypes) => {
     role: DataTypes.TEXT
   }, {});
   UsersSuperGroups.associate = function (models) {
-    UsersSuperGroups.associate = function (models) {
-      UsersSuperGroups.belongsTo(models.User, {
-        foreignKey: 'user_id',
-        targetKey: 'id',
-        onDelete: 'CASCADE'
-      });
+    UsersSuperGroups.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      targetKey: 'id',
+      onDelete: 'CASCADE'
+    });
 
-      UsersSuperGroups.belongsTo(models.SuperGroups, {
-        foreignKey: 'id_supergroup',
-        targetKey: 'id',
-        onDelete: 'CASCADE'
-      });
-    };
+    UsersSuperGroups.belongsTo(models.SuperGroups, {
+      foreignKey: 'id_supergroup',
+      targetKey: 'id',
+      onDelete: 'CASCADE'
+    });
   };
   return UsersSuperGroups;
 };
