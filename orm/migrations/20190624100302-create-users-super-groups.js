@@ -27,7 +27,7 @@ module.exports = {
         allowNull: false
       },
       role: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
         defaultValue: 'User'
       },
       createdAt: {
