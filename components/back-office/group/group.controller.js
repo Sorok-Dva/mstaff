@@ -203,8 +203,15 @@ BackOffice_Group.addUser = (req, res, next) => {
 BackOffice_Group.getUsers = (req, res, next) => {
   let model = req.params.type;
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  let query = {};
+  switch (model) {
+    case 'UsersGroups' : query.id_group = req.params.id; break;
+    case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+    default:
+      return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
+  }
   Models[model].findAll({
-    where: { id_group: req.params.id },
+    where: query,
     attributes: ['role'],
     include: [{
       model: Models.User,
