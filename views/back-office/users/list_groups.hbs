@@ -66,7 +66,7 @@
       'click .linkUsers': (e, value, row, index) => {
         createModal({
           id: 'linkGroupModal',
-          title: 'Ajouter / modifier utisateurs liés à ' + row.name,
+          title: 'Ajouter / modifier utilisateurs liés à ' + row.name,
           modal: 'back-office/linkUsersGroup',
           size: 'modal-xl',
           style: 'width:60%',
@@ -121,7 +121,7 @@
               let banner = $('input#groupBannerEdit').val();
               let domain_name = $('input#groupUrlEdit').val();
               let domain_enable = $('select#groupDomainEdit').val();
-              $.put(`/api/back-office/groups/${row.id}`, {
+              $.put(`/api/back-office/groups/Groups/${row.id}`, {
                 name, logo, banner, domain_name, domain_enable, _csrf
               }, (data) => {
                 if (data.error) {
@@ -163,7 +163,7 @@
         }, () => {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveGroup').click(function () {
-            $.delete(`/api/back-office/groups/${row.id}`, {
+            $.delete(`/api/back-office/groups/Groups/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {
@@ -221,7 +221,7 @@
         if ($('input#groupValue').val() !== '') {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#groupValue').val();
-          $.post(`/api/back-office/groups/`, {
+          $.post(`/api/back-office/groups/Groups/`, {
             promptInput,
             _csrf
           }, (response) => {
