@@ -45,6 +45,12 @@ Establishment_Offer.Edit = (req, res, next) => {
   }
   Models.Offer.update({
     name: req.body.name || 'Offre sans nom',
+    nature_section: req.body.nature_section,
+    context_section: req.body.context_section,
+    details_section: req.body.details_section,
+    postDescription_section: req.body.postDescription_section,
+    prerequisites_section: req.body.prerequisites_section,
+    terms_sections: req.body.terms_sections,
   }, {
     where: { id: req.body.id }
   }).then(offer => {
@@ -86,6 +92,7 @@ Establishment_Offer.Create = (req, res, next) => {
       need_id: need.id,
       es_id: need.es_id,
       nature_section: {
+        post: _.isNil(need.post) ? '' : need.post,
         contract_type: _.isNil(need.contract_type) ? '' : need.contract_type,
         start: _.isNil(need.start) ? '' : need.start,
         end: _.isNil(need.end) ? '' : need.end,

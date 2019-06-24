@@ -40,8 +40,24 @@
   <div class="row">
     <div class="col-12 col-xl-8">
       <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Title -->
+              <h4 class="card-header-title">
+                Offres d'emploi proposées par l'établissement
+              </h4>
+            </div>
+          </div> <!-- / .row -->
+        </div>
         <div class="card-body">
-          <h1 class="text-center mt-4">Vous pourrez prochainement voir ici les offres d'emploi proposées par {{es.name}}</h1>
+          {{#each es.offers as |offer|}}
+            <h1 class="text-center mt-4">{{offer.name}}</h1>
+
+          {{/each}}
+          {{#unless es.offers}}
+            <h1 class="text-center mt-4">Vous pourrez prochainement voir ici les offres d'emploi proposées par {{es.name}}</h1>
+          {{/unless}}
         </div>
       </div>
     </div>
