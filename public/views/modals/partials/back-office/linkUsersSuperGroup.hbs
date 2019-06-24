@@ -1,0 +1,234 @@
+<div class="modal-body">
+  <div class="col-md-12 alertUserExists" style="display: none">
+    <h6 class="text-center text-success">Un utilisateur avec cet email existe déjà. Spécifiez son rôle pour ce
+      supergroupe.</h6>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 text-left">
+      <h6 id="textDisplayer">Liste des utilisateurs présents dans votre supergroupe</h6>
+    </div>
+    <div class="col-md-6 text-right">
+      <button id="btnDisplayAddUser" class="btn btn-sm btn-success" value="1">Ajouter utilisateur</button>
+    </div>
+  </div> <br />
+  <div id="displayAllUsers">
+    <table id="supergroups-table" class="table">
+      <thead>
+      <th data-field="id" class="text-center">ID</th>
+      <th data-field="email" data-sortable="true">Email</th>
+      <th data-field="lastname" data-sortable="true">Nom</th>
+      <th data-field="firstname" data-sortable="true">Prénom</th>
+      <th data-field="role">Role</th>
+      <th data-field="actions" class="td-actions text-right">Actions</th>
+      </thead>
+      <tbody id="usersSuperGroupTable"></tbody>
+    </table>
+  </div>
+
+  <div id="displayAddUser" style="display:none;">
+    <div class="form-group">
+      <div class="row">
+        <label for="AUemail" class="col-md-4 control-label">Email</label>
+        <div class="col-md-8">
+          <input type="text" name="AUemail" class="form-control" id="AUemail">
+        </div>
+      </div>
+    </div>
+    <div class="form-group toHide">
+      <div class="row">
+        <label for="AUlastName" class="col-md-4 control-label">Nom</label>
+        <div class="col-md-8">
+          <input type="text" name="AUlastName" class="form-control" id="AUlastName">
+        </div>
+      </div>
+    </div>
+    <div class="form-group toHide">
+      <div class="row">
+        <label for="AUfirstName" class="col-md-4 control-label">Prénom</label>
+        <div class="col-md-8">
+          <input type="text" name="AUfirstName" class="form-control" id="AUfirstName">
+        </div>
+      </div>
+    </div>
+    <div class="form-group toHide">
+      <div class="row">
+        <label for="AUphone" class="col-md-4 control-label">Téléphone</label>
+        <div class="col-md-8">
+          <input type="tel" name="AUphone" class="form-control" id="AUphone">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <label for="role" class="col-md-4 control-label">Rôle</label>
+        <div class="col-md-8">
+          <select name="role" id="role" class="form-control">
+            <option value="User">Utilisateur</option>
+            <option value="DRH">DRH</option>
+            <option value="Admin">Administrateur</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" name="supergroup_id" value="{{ this.group.id }}">
+    <input type="hidden" id="user_id">
+  </div>
+</div>
+<div class="modal-footer">
+  <button style="display:none" type="button" class="btn btn-default" id="addUserInModal"> Ajouter l'utilisateur</button>
+  <button style="display:none" type="button" class="btn btn-default" id="modifyUserInModal">Modifier le rôle</button>
+</div>
+<script>
+
+  $.get('/api/back-office/super-groups/' + $('input[name="supergroup_id"]').val() + '/users/all', (data) => {
+    if (data) {
+      data.forEach(function(element)
+      {
+        console.log(data);
+        let actions = `<button type="button" title="Modifier utilisateur"
+          class="btn btn-simple btn-warning btn-icon table-action"
+           onclick="modifyUser('${element.User.id}' , '${element.User.email}', '${element.role}')">
+           <i class="ti-pencil-alt"></i> </button><button title="Supprimer utilisateur" type="button"
+           class="btn btn-simple btn-danger btn-icon table-action" onclick="deleteUser(${element.User.id})"><i class="ti-close"></i></button>`;
+        let markup = `<tr><td><a>${element.User.id}</a></td><td>${element.User.email}</td><td>${element.User.firstName}</td>
+          <td>${element.User.lastName}</td><td data-id=${element.User.id}>${element.role}</td><td class='text-right'>${actions}</td></tr>`;
+
+        $("table tbody#usersSuperGroupTable").append(markup);
+      });
+    }
+  });
+
+  function deleteUser(user_id)
+  {
+    let supergroup_id = $('input[name="supergroup_id"]').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    $("table tbody#usersSuperGroupTable").find("tr a").each(function(data) {
+      if($(this).text() === user_id.toString()) {
+        $(this).parents("tr").remove();
+        $.delete(`/api/back-office/super-groups/${supergroup_id}/remove/user/${user_id}`, { _csrf }, () => {
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'L\'utilisateur a été supprimé de votre supergroupe avec succès',
+          });
+        }).catch(errors => errorsHandler(errors));
+      }
+    });
+  }
+
+  function modifyUser(user_id, email, role) {
+    $('input#AUemail').val(email).attr('disabled', true);
+    $('h6#textDisplayer').text('Modifier le rôle d\'utilisateur de votre supergroupe');
+    $('div#displayAddUser').show();
+    $('button#modifyUserInModal').show();
+    $('div#displayAllUsers').hide();
+    $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
+    $('.toHide').hide();
+    $(`#role option[value="${role}"]`).prop('selected', true);
+    $('input#user_id').val(user_id);
+  }
+
+  $('button#btnDisplayAddUser').click(function () {
+    if(this.value === "1") {
+      $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
+      $('h6#textDisplayer').text('Ajouter un nouvel utilisateur à votre supergroupe');
+      $('button#addUserInModal').show();
+      $('div#displayAddUser').show();
+      $('button#modifyUserInModal').hide();
+      $('div#displayAllUsers').hide();
+    } else {
+      $('button#btnDisplayAddUser').text('Ajouter utilisateur').prop('value', '1');
+      $('h6#textDisplayer').text('Liste des utilisateurs présents dans votre supergroupe');
+      $('div#displayAddUser').hide();
+      $('input#AUemail').val("").attr('disabled', false);
+      $('button#addUserInModal').hide();
+      $('div#displayAllUsers').show();
+      $('button#modifyUserInModal').hide();
+      $('.toHide').show();
+      $('.alertUserExists').hide();
+    }
+  });
+
+  $('#AUemail').blur(() => {
+    if($('button#btnDisplayAddUser').val() === "0") {
+      let email = $('#AUemail').val();
+      $.get(`/api/user/emailAvailable/${email}`, (result) => {
+        if (!result.available) {
+          $('.toHide').hide();
+          $('.alertUserExists').show();
+          userExists = true;
+        } else {
+          $('.toHide').show();
+          $('.alertUserExists').hide();
+          userExists = false;
+        }
+      }).catch(errors => {
+        errorsHandler(errors);
+      });
+    }
+  });
+
+  $('button#modifyUserInModal').click(function() {
+    let supergroup_id = $('input[name="supergroup_id"]').val();
+    let user_id = $('input#user_id').val();
+    let role = $('#role option:selected').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    $.post(`/api/back-office/super-groups/${supergroup_id}/edit/user/${user_id}`, {role, _csrf}, () => {
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'L\'utilisateur a changé de rôle :' + role
+      });
+      $(`td[data-id="${user_id}"]`).text(role);
+    }).catch(errors => {
+      errorsHandler(errors);
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Le rôle de l\'utilisateur n\'a pas été modifié',
+        message: `Nous n'avons pas pu modifier le rôle de cet utilisateur, veuillez réessayer.`
+      });
+    });
+  });
+
+  $('#addUserInModal').click(function () {
+    let supergroup_id = $('input[name="supergroup_id"]').val();
+    let user = {};
+
+    user.email = $('input[name="AUemail"]').val();
+    user.role = $('select[name="role"] option').filter(":selected").val();
+    user._csrf = $('meta[name="csrf-token"]').attr('content');
+
+    if (!userExists) {
+      user.firstName = $('input[name="AUfirstName"]').val();
+      user.lastName = $('input[name="AUlastName"]').val();
+      user.phone = $('input[name="AUphone"]').val();
+    }
+
+    $.put('/api/back-office/super-groups/' + supergroup_id + '/add/user', user, (data) => {
+      if (data.status === 'Already exists') {
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Utilisateur déjà présent dans ce supergroupe.',
+        });
+      } else if (data.status === 'Not an ES account') {
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Utilisateur non ajouté au supergroupe:',
+          message: `Cet utilisateur existe déjà avec un autre type de compte (${data.user.type}) et ne peut donc pas
+          être ajouté à supergroupe.`
+        });
+      } else {
+        $('#linkGroupModal').modal('hide');
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Utilisateur ajouté au supergroupe.'
+        });
+      }
+    });
+  });
+</script>
