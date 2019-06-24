@@ -145,7 +145,10 @@ function job_boardListener() {
 
 function load_natureSection(){
   let contractType = null;
-  let startDate = moment(offerData.nature_section.natureJobStartDate).format("D/MM/YYYY");
+  let startDate = '';
+
+  if (offerData.nature_section.natureJobStartDate)
+    startDate = moment(offerData.nature_section.natureJobStartDate).format("D/MM/YYYY");
 
   switch (offerData.nature_section.natureContractType) {
     case 'cdi-cdd':
@@ -173,6 +176,8 @@ function load_contextSection(){
 function load_detailsSection(){
   $('.details-p-2').text(offerData.details_section.detailsSchedule);
 }
+
+//TODO function load_postDescription_section load_requirement_section && load_terms_sections
 
 function load_job_board(){
   load_natureSection();
