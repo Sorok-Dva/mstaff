@@ -97,6 +97,11 @@ router.put('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.G
   .delete('/super-groups/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.RemoveSuperGroup)
   .post('/super-groups/', Authentication.ensureIsAdmin, BackOffice.Group.AddSuperGroup);
 
+router.get('/super-groups/:id(\\d+)/users/all', Authentication.ensureIsAdmin, BackOffice.Group.getUsersSuperGroup)
+  .put('/super-groups/:id(\\d+)/add/user', Authentication.ensureIsAdmin, BackOffice.Group.addUserSuperGroup)
+  .post('/super-groups/:id(\\d+)/edit/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.editUserSuperGroup)
+  .delete('/super-groups/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUserSuperGroup);
+
 router.put('/linkES/:id',
   Authentication.ensureIsAdmin,
   BackOffice.Group.EditLinkES);
