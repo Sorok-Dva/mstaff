@@ -159,9 +159,20 @@ function job_boardListener() {
 
     offer._csrf = _csrf;
     $.post(`/job_board/offer/${offer.id}`, offer, (data) => {
-      console.log(data);
+      if (data.status === 'updated'){
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Offre enregistrée avec succès'
+        });
+      } else {
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: "Une erreur est survenue durant l'enregistrement de l'offre"
+        });
+      }
     }).catch(error => errorsHandler(error));
-    console.log(offer);
   });
 }
 
@@ -217,8 +228,14 @@ function load_termsSection(){
   $('.terms-p-2').text(recruiter);
 }
 
+function parseJsonToBoolean(){
+  offer.details_section.housing = JSON.parse(offer.details_section.housing);
+  offer.terms_sections.contractual = JSON.parse(offer.terms_sections.contractual);
+  offer.terms_sections.military = JSON.parse(offer.terms_sections.military);
+}
 
 function load_job_board(){
+  parseJsonToBoolean();
   load_natureSection();
   load_contextSection();
 }
