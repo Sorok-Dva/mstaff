@@ -1,14 +1,3 @@
-function isEmpty(item){
-  let keys = Object.keys(item);
-  let isEmpty = true;
-
-  keys.forEach( key => {
-    if (item[key])
-      isEmpty = false;
-  });
-  return isEmpty;
-}
-
 function saveDetails(){
   offer.details_section.schedule = $('#detailsSchedule').val();
   offer.details_section.roll = $('#detailsRoll').val();
@@ -18,7 +7,6 @@ function saveDetails(){
   offer.details_section.housing = $('#detailsHousing').prop('checked');
   offer.details_section.remuneration = $('#detailsRemuneration').val();
   offer.details_section.risk = $('#detailsRisk').val();
-  offer.details_section.isEmpty = isEmpty(offer.details_section);
 
   $('.detailsSection').remove();
   load_detailsSection();

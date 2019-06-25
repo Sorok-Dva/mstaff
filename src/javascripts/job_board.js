@@ -176,6 +176,17 @@ function job_boardListener() {
   });
 }
 
+function isEmpty(item){
+  let keys = Object.keys(item);
+  let isEmpty = true;
+
+  keys.forEach( key => {
+    if (item[key])
+      isEmpty = false;
+  });
+  return isEmpty;
+}
+
 function load_natureSection(){
   let contractType = null;
   let startDate = '';
@@ -243,4 +254,14 @@ function load_job_board(){
 $(document).ready(() => {
   load_job_board();
   job_boardListener();
+
+  if (!isEmpty(offer.details_section))
+    $('#addDetails').trigger('click');
+  if (!isEmpty(offer.postDescription_section))
+    $('#addPostDescription').trigger('click');
+  if (!isEmpty(offer.prerequisites_section))
+    $('#addRequirement').trigger('click');
+  if (!isEmpty(offer.terms_sections))
+    $('#addTerms').trigger('click');
+
 });
