@@ -135,7 +135,7 @@ function job_boardListener() {
               secClass: 'terms-p-2',
               title: "Modalités de candidature",
               itemLine: "Responsable du recrutement",
-              itemSubLine: "Mlle XXX YYY"
+              itemSubLine: offerData.terms_sections.termsRecruit
             });
           break;
       }
@@ -188,6 +188,13 @@ function load_requirementSection(){
 
   $('.requirement-p-2').text(diploma);
 }
+
+function load_termsSection(){
+  let recruiter = offerData.terms_sections.termsRecruit;
+
+  $('.terms-p-2').text(recruiter);
+}
+
 
 //TODO function load_terms_sections
 
