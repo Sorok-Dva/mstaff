@@ -25,11 +25,29 @@
   .input-blue{
     background-color: #D6EAFA;
   }
+  .menu{
+    height: 5vh;
+    border-bottom: 1px solid #e3ebf6;
+  }
+  .sub-menu{
+    color: #03A9DE;
+  }
+  .sub-menu:hover{
+    border-bottom: 1px solid #03A9DE;
+  }
+  .no-margin{
+    margin: 0px;
+  }
 </style>
 
-<div class="row text-center justify-content-between">
+<div class="row text-center justify-content-between no-margin">
+  <div id="menuPart" class="row col-12 mb-5 justify-content-center menu no-margin">
+    <h3 id="offerMain" class="inline-block custom-cursor col-3 sub-menu ">Publicateur d'offres</h3>
+    <h3 id="saveOffer" class="inline-block custom-cursor col-3 sub-menu">Enregistrer le brouillon</h3>
+    <h3 id="previewOffer" class="inline-block custom-cursor col-3 sub-menu">Aperçu</h3>
+    <h3 id="publishOffer" class="inline-block custom-cursor col-3 sub-menu">Publier</h3>
+  </div>
   <div id="sectionsPart" class="col-4">
-
     <div id="addSection" class="mb-5">
       <ul class="list-group shadow-grey custom-cursor">
         <li class="list-group-item add-section-title">
@@ -75,11 +93,8 @@
         </li>
       </ul>
     </div>
-
   </div>
-  <div id="formsPart" class="col-7">
-
-  </div>
+  <div id="formsPart" class="col-7"></div>
 </div>
 
 <script>
