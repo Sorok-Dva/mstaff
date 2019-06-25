@@ -111,7 +111,7 @@ function job_boardListener() {
               firstClass: 'postDescription-p-1',
               secClass: 'postDescription-p-2',
               itemLine: "Présentation du poste",
-              itemSubLine: "Dispenser blablabla"
+              itemSubLine: offerData.postDescription_section.postPresentation
             });
           break;
         case 'addRequirement':
@@ -177,7 +177,13 @@ function load_detailsSection(){
   $('.details-p-2').text(offerData.details_section.detailsSchedule);
 }
 
-//TODO function load_postDescription_section load_requirement_section && load_terms_sections
+function load_postDescriptionSection(){
+  let presentation = offerData.postDescription_section.postPresentation;
+
+  $('.postDescription-p-2').text(presentation);
+}
+
+//TODO function load_requirement_section && load_terms_sections
 
 function load_job_board(){
   load_natureSection();

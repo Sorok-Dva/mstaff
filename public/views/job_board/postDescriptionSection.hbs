@@ -20,12 +20,12 @@
 
     <div class="form-group">
       <label for="postExtern">Relations fonctionnelles externes à l'établissement</label>
-      <input type="text" class="form-control input-blue" id="postExtern">
+      <input type="text" class="form-control input-blue" id="postExternal">
     </div>
 
     <div class="form-group">
       <label for="postIntern">Relations fonctionnelles internes à l'établissement</label>
-      <textarea type="text" class="form-control input-blue" id="postIntern"></textarea>
+      <textarea type="text" class="form-control input-blue" id="postInternal"></textarea>
     </div>
 
     <div class="form-group">
@@ -34,8 +34,10 @@
   </form>
 
   <div class="text-center">
-    <button class="btn btn-info">Sauvegarder</button>
-    <button class="btn btn-outline-info">Annuler</button>
-    <button class="btn btn-outline-info">Effacer</button>
+    <button class="btn btn-info" onclick="savePostDescription()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelPostDescription()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearPostDescription()">Effacer</button>
   </div>
 </div>
+
+<script src="/static/assets/dist/js/job_board_postDescription.min.js"></script>
