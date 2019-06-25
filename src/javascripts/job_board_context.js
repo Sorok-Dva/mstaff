@@ -17,6 +17,10 @@ function clearContext(){
   document.getElementById("contextForm").reset();
 }
 
+function addLogoContext(){
+  console.log('Ajout du logo');
+}
+
 function loadContext(){
   $('#contextLocalisation').val(offerData.context_section.contextLocalisation);
   $('#contextAddress').val(offerData.context_section.contextAddress);

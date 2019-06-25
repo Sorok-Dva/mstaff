@@ -196,8 +196,6 @@ function load_termsSection(){
 }
 
 
-//TODO function load_terms_sections
-
 function load_job_board(){
   load_natureSection();
   load_contextSection();
