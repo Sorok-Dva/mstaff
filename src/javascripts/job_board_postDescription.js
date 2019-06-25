@@ -16,7 +16,7 @@ function cancelPostDescription(){
 }
 
 function clearPostDescription(){
-  document.getElementById("PostDescriptionForm").reset();
+  document.getElementById("postDescriptionForm").reset();
 }
 
 function loadPostDescription(){

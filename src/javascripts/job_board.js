@@ -123,7 +123,7 @@ function job_boardListener() {
               firstClass: 'requirement-p-1',
               secClass: 'requirement-p-2',
               itemLine: "Diplôme",
-              itemSubLine: "Infirmiere diplom d'etat"
+              itemSubLine: offerData.requirement_section.requirementDiploma
             });
           break;
         case 'addTerms':
@@ -183,7 +183,13 @@ function load_postDescriptionSection(){
   $('.postDescription-p-2').text(presentation);
 }
 
-//TODO function load_requirement_section && load_terms_sections
+function load_requirementSection(){
+  let diploma = offerData.requirement_section.requirementDiploma;
+
+  $('.requirement-p-2').text(diploma);
+}
+
+//TODO function load_terms_sections
 
 function load_job_board(){
   load_natureSection();
