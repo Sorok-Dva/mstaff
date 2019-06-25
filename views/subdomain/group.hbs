@@ -80,7 +80,7 @@
       </div>
     </div>
     <div class="col-12 col-xl-4">
-      <div class="card">
+      <div class="card" id="mapHeader">
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col">
@@ -106,35 +106,66 @@
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
-  let addMarker = (es) => {
-    if (document.getElementById('map')) {
-      {{!--let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};--}}
-      map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 12,
-        center: { lat: es.lat, lng: es.lon }
+  $(document).ready(() => {
+    let locations = [
+      {{#each group.es as |data|}}
+        {
+          position: { lat: {{data.es.ref.lat}}, lng: {{data.es.ref.lon}} },
+          info: {
+            name: "{{data.es.name}}",
+            address: "{{data.es.address}} {{data.es.town}}"
+          }
+        },
+      {{/each}}
+    ];
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 5,
+      center: { lat: locations[0].position.lat, lng: locations[0].position.lng }
+    });
+    markers = locations.map((location, i) => {
+      let marker = new google.maps.Marker({
+        position: location.position,
+        map: map,
+        title: location.info.name
       });
-      marker = new google.maps.Marker({
-        position: { lat: es.lat, lng: es.lon },
-        map: map
-      });
-      cityCircle = new google.maps.Circle({
+      new google.maps.Circle({
         strokeColor: '#337AB7',
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: '#5BBBE5',
         fillOpacity: 0.35,
         map: map,
-        center: { lat: es.lat, lng: es.lon },
+        center: location.position,
         radius: 0.2 * 1000 || 10000
       });
+      let contentString = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          `<h1 id="firstHeading" class="firstHeading">${location.info.name}</h1>`+
+          '<div id="bodyContent">'+
+          `<p>${location.info.address}</p>`+
+          '<p></p>'+
+          '</div>'+
+          '</div>';
+      let infowindow = new google.maps.InfoWindow({
+        content: contentString
+      });
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+    });
+  });
+
+  let addMarker = (es) => {
+    if (document.getElementById('map')) {
+      map.setZoom(12);
+      map.setCenter({ lat: es.lat, lng: es.lon });
     }
-    $(location).attr('href', '#map');
+    $(location).attr('href', '#mapHeader');
   };
 
   let removeAllMarker = () => {
-    markers.forEach((marker, index) => {
-      marker.setMap(null);
-    });
+    markers.forEach((marker) => marker.setMap(null));
     markers = [];
   };
 </script>

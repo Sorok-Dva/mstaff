@@ -1,0 +1,22 @@
+<style>
+  .light-grey{
+    color: #9E9E9E;
+  }
+</style>
+
+<div class="modal-body">
+  <h5 id="offerDate" class="light-grey text-right"></h5>
+  <div id="offerMainInfos" class="d-flex flex-column align-items-center">
+    {{#if data.context_section.logo}}
+      <img class="mb-3" src="{{data.context_section.logo}}" alt="{{data.context_section.place}}" width="15%">
+    {{/if}}
+    <h2 class="mb-3">{{data.name}}</h2>
+    <span id="offerContract" class="badge badge-pill badge-success mb-3"></span>
+  </div>
+</div>
+
+<script>
+  datas = JSON.parse(`{{{json data}}}`);
+</script>
+
+<script src="/static/assets/dist/js/job_board_previewOffer.min.js"></script>
