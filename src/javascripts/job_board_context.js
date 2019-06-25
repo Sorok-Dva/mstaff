@@ -1,10 +1,10 @@
 function saveContext(){
-  offerData.context_section.contextLocalisation = $('#contextLocalisation').val();
-  offerData.context_section.contextAddress = $('#contextAddress').val();
-  offerData.context_section.contextAttach = $('#contextAttach').val();
-  offerData.context_section.contextSite = $('#contextSite').val();
-  offerData.context_section.contextPole = $('#contextPole').val();
-  offerData.context_section.contextPresentation = $('#contextPresentation').val();
+  offer.context_section.place = $('#place').val();
+  offer.context_section.address = $('#address').val();
+  offer.context_section.attach = $('#contextAttach').val();
+  offer.context_section.website = $('#website').val();
+  offer.context_section.pole = $('#contextPole').val();
+  offer.context_section.presentation = $('#contextPresentation').val();
   $('.contextSection').remove();
   load_contextSection();
 }
@@ -22,12 +22,12 @@ function addLogoContext(){
 }
 
 function loadContext(){
-  $('#contextLocalisation').val(offerData.context_section.contextLocalisation);
-  $('#contextAddress').val(offerData.context_section.contextAddress);
-  $('#contextAttach').val(offerData.context_section.contextAttach);
-  $('#contextSite').val(offerData.context_section.contextSite);
-  $('#contextPole').val(offerData.context_section.contextPole);
-  $('#contextPresentation').val(offerData.context_section.contextPresentation);
+  $('#place').val(offer.context_section.place);
+  $('#address').val(offer.context_section.address);
+  $('#contextAttach').val(offer.context_section.attach);
+  $('#website').val(offer.context_section.website);
+  $('#contextPole').val(offer.context_section.pole);
+  $('#contextPresentation').val(offer.context_section.presentation);
 }
 
 $(document).ready(() => {

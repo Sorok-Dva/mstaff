@@ -1,11 +1,11 @@
 function savePostDescription(){
-  offerData.postDescription_section.postPresentation = $('#postPresentation').val();
-  offerData.postDescription_section.postTeam = $('#postTeam').val();
-  offerData.postDescription_section.postUphill = $('#postUphill').val();
-  offerData.postDescription_section.postBacking = $('#postBacking').val();
-  offerData.postDescription_section.postExternal = $('#postExternal').val();
-  offerData.postDescription_section.postInternal = $('#postInternal').val();
-  offerData.postDescription_section.postInternService = $('#postInternService').val();
+  offer.postDescription_section.presentation = $('#postPresentation').val();
+  offer.postDescription_section.team = $('#postTeam').val();
+  offer.postDescription_section.uphill = $('#postUphill').val();
+  offer.postDescription_section.backing = $('#postBacking').val();
+  offer.postDescription_section.external = $('#postExternal').val();
+  offer.postDescription_section.internal = $('#postInternal').val();
+  offer.postDescription_section.internService = $('#postInternService').val();
 
   $('.postDescriptionSection').remove();
   load_postDescriptionSection();
@@ -20,13 +20,13 @@ function clearPostDescription(){
 }
 
 function loadPostDescription(){
-  $('#postPresentation').val(offerData.postDescription_section.postPresentation);
-  $('#postTeam').val(offerData.postDescription_section.postTeam);
-  $('#postUphill').val(offerData.postDescription_section.postUphill);
-  $('#postBacking').val(offerData.postDescription_section.postBacking);
-  $('#postExternal').val(offerData.postDescription_section.postExternal);
-  $('#postInternal').val(offerData.postDescription_section.postInternal);
-  $('#postInternService').val(offerData.postDescription_section.postInternService);
+  $('#postPresentation').val(offer.postDescription_section.presentation);
+  $('#postTeam').val(offer.postDescription_section.team);
+  $('#postUphill').val(offer.postDescription_section.uphill);
+  $('#postBacking').val(offer.postDescription_section.backing);
+  $('#postExternal').val(offer.postDescription_section.external);
+  $('#postInternal').val(offer.postDescription_section.internal);
+  $('#postInternService').val(offer.postDescription_section.internService);
 }
 
 $(document).ready(() => {

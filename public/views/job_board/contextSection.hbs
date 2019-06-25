@@ -2,13 +2,13 @@
   <h1 class="text-center">Contexte de travail</h1>
   <form id="contextForm">
     <div class="form-group">
-      <label for="contextLocalisation">Localisation du poste</label>
-      <input type="text" class="form-control input-blue" id="contextLocalisation">
+      <label for="place">Localisation du poste</label>
+      <input type="text" class="form-control input-blue" id="place">
     </div>
 
     <div class="form-group">
-      <label for="contextAddress">Adresse de l'établissement</label>
-      <input type="text" class="form-control input-blue" id="contextAddress">
+      <label for="address">Adresse de l'établissement</label>
+      <input type="text" class="form-control input-blue" id="address">
     </div>
 
     <div class="form-group">
@@ -17,7 +17,7 @@
     </div>
 
     <div class="form-group">
-      <input type="text" class="form-control input-blue" id="contextSite" placeholder="Site">
+      <input type="text" class="form-control input-blue" id="website" placeholder="Site">
     </div>
 
     <div class="form-group">
@@ -30,7 +30,7 @@
     </div>
 
     <div class="form-group d-flex flex-column justify-content-center align-items-center">
-      {{#if offerData.context_section.contextLogo}}
+      {{#if offer.context_section.logo}}
         <img class="custom-cursor" src="/static/assets/images/default_hospital.jpg" alt="Logo Etablissement" width="25%" id="contextLogo">
       {{else}}
         <i class="fal fa-image fa-3x custom-cursor"></i>

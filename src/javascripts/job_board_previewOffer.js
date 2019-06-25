@@ -6,8 +6,8 @@ function loadPreviewOfferDate(){
 }
 
 function loadPreviewOfferContract(){
-  let contract = datas.nature_section.natureContractType;
-  let oJobDate = datas.nature_section.natureJobStartDate;
+  let contract = datas.nature_section.contract_type;
+  let oJobDate = datas.nature_section.start;
 
   oJobDate = moment(oJobDate).format('D MMMM YYYY');
   switch (contract) {

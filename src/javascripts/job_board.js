@@ -14,32 +14,32 @@ function editSection(sectionId){
   let formsPart = $('#formsPart');
   switch (sectionId) {
     case 'natureSection':
-      loadTemplate('/static/views/job_board/natureSection.hbs', {offerData}, (html) => {
+      loadTemplate('/static/views/job_board/natureSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'contextSection':
-      loadTemplate('/static/views/job_board/contextSection.hbs', {offerData}, (html) => {
+      loadTemplate('/static/views/job_board/contextSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'detailsSection':
-      loadTemplate('/static/views/job_board/detailsSection.hbs', {offerData}, (html) => {
+      loadTemplate('/static/views/job_board/detailsSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'postDescriptionSection':
-      loadTemplate('/static/views/job_board/postDescriptionSection.hbs', {offerData}, (html) => {
+      loadTemplate('/static/views/job_board/postDescriptionSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'requirementSection':
-      loadTemplate('/static/views/job_board/requirementSection.hbs', {offerData}, (html) => {
+      loadTemplate('/static/views/job_board/requirementSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'termsSection':
-      loadTemplate('/static/views/job_board/termsSection.hbs', {offerData}, (html) => {
+      loadTemplate('/static/views/job_board/termsSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
@@ -55,16 +55,16 @@ function deleteSection(sectionId){
   $(`.${sectionId}`).remove();
   switch (sectionId) {
     case 'detailsSection':
-      resetObject(offerData.details_section);
+      resetObject(offer.details_section);
       break;
     case 'postDescriptionSection':
-      resetObject(offerData.postDescription_section);
+      resetObject(offer.postDescription_section);
       break;
     case 'requirementSection':
-      resetObject(offerData.requirement_section);
+      resetObject(offer.prerequisites_section);
       break;
     case 'termsSection':
-      resetObject(offerData.terms_sections);
+      resetObject(offer.terms_sections);
       break;
   }
 }
@@ -99,7 +99,7 @@ function job_boardListener() {
               firstClass: 'details-p-1',
               secClass: 'details-p-2',
               itemLine: "Horaires",
-              itemSubLine: offerData.details_section.detailsSchedule
+              itemSubLine: offer.details_section.schedule
             });
           break;
         case 'addPostDescription':
@@ -111,7 +111,7 @@ function job_boardListener() {
               firstClass: 'postDescription-p-1',
               secClass: 'postDescription-p-2',
               itemLine: "Présentation du poste",
-              itemSubLine: offerData.postDescription_section.postPresentation
+              itemSubLine: offer.postDescription_section.presentation
             });
           break;
         case 'addRequirement':
@@ -123,7 +123,7 @@ function job_boardListener() {
               firstClass: 'requirement-p-1',
               secClass: 'requirement-p-2',
               itemLine: "Diplôme",
-              itemSubLine: offerData.requirement_section.requirementDiploma
+              itemSubLine: offer.prerequisites_section.diploma
             });
           break;
         case 'addTerms':
@@ -135,7 +135,7 @@ function job_boardListener() {
               secClass: 'terms-p-2',
               title: "Modalités de candidature",
               itemLine: "Responsable du recrutement",
-              itemSubLine: offerData.terms_sections.termsRecruit
+              itemSubLine: offer.terms_sections.recruit
             });
           break;
       }
@@ -148,7 +148,7 @@ function job_boardListener() {
       modal: 'job_board/previewOffer',
       title: "Aperçu de l'offre",
       size: 'modal-lg',
-      data: offerData
+      data: offer
     }, () => {
       //TODO
     });
@@ -159,10 +159,10 @@ function load_natureSection(){
   let contractType = null;
   let startDate = '';
 
-  if (offerData.nature_section.natureJobStartDate)
-    startDate = moment(offerData.nature_section.natureJobStartDate).format("D/MM/YYYY");
+  if (offer.nature_section.start)
+    startDate = moment(offer.nature_section.start).format("D/MM/YYYY");
 
-  switch (offerData.nature_section.natureContractType) {
+  switch (offer.nature_section.contract_type) {
     case 'cdi-cdd':
       contractType = 'CDI';
       break;
@@ -179,30 +179,30 @@ function load_natureSection(){
 }
 
 function load_contextSection(){
-  let localisation = offerData.context_section.contextLocalisation;
-  let address = offerData.context_section.contextAddress;
+  let localisation = offer.context_section.place;
+  let address = offer.context_section.address;
 
   $('.context-p-2').text(localisation.concat(',', address));
 }
 
 function load_detailsSection(){
-  $('.details-p-2').text(offerData.details_section.detailsSchedule);
+  $('.details-p-2').text(offer.details_section.schedule);
 }
 
 function load_postDescriptionSection(){
-  let presentation = offerData.postDescription_section.postPresentation;
+  let presentation = offer.postDescription_section.presentation;
 
   $('.postDescription-p-2').text(presentation);
 }
 
 function load_requirementSection(){
-  let diploma = offerData.requirement_section.requirementDiploma;
+  let diploma = offer.prerequisites_section.diploma;
 
   $('.requirement-p-2').text(diploma);
 }
 
 function load_termsSection(){
-  let recruiter = offerData.terms_sections.termsRecruit;
+  let recruiter = offer.terms_sections.recruit;
 
   $('.terms-p-2').text(recruiter);
 }

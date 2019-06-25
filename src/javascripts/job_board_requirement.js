@@ -1,7 +1,7 @@
 function saveRequirement(){
-  offerData.requirement_section.requirementDiploma = $('#requirementDiploma').val();
-  offerData.requirement_section.requirementSkill = $('#requirementSkill').val();
-  offerData.requirement_section.requirementKnowledge = $('#requirementKnowledge').val();
+  offer.prerequisites_section.diploma = $('#requirementDiploma').val();
+  offer.prerequisites_section.skill = $('#requirementSkill').val();
+  offer.prerequisites_section.knowledge = $('#requirementKnowledge').val();
 
   $('.requirementSection').remove();
   load_requirementSection();
@@ -16,9 +16,9 @@ function clearRequirement(){
 }
 
 function loadRequirement(){
-  $('#requirementDiploma').val(offerData.requirement_section.requirementDiploma);
-  $('#requirementSkill').val(offerData.requirement_section.requirementSkill);
-  $('#requirementKnowledge').val(offerData.requirement_section.requirementKnowledge);
+  $('#requirementDiploma').val(offer.prerequisites_section.diploma);
+  $('#requirementSkill').val(offer.prerequisites_section.skill);
+  $('#requirementKnowledge').val(offer.prerequisites_section.knowledge);
 }
 
 $(document).ready(() => {

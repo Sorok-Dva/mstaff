@@ -99,60 +99,9 @@
 
 <script>
 
-  let needData = `{{{json offer}}}`;
-  needData = JSON.parse(needData);
-
-  let offerData = {
-    nature_section: {
-      natureDate: needData.createdAt,
-      natureTitle: needData.name,
-      natureJobSheet: '',
-      natureContractType: needData.nature_section.contract_type,
-      natureJobStartDate: needData.nature_section.start,
-      natureContractDuration: '',
-      natureGrade: '',
-      natureCategory: '',
-    },
-    context_section: {
-      contextLocalisation: needData.context_section.place,
-      contextAddress: needData.context_section.address,
-      contextAttach: '',
-      contextSite: needData.context_section.website,
-      contextPole: '',
-      contextPresentation: '',
-      contextLogo: needData.context_section.logo
-    },
-    details_section: {
-      detailsSchedule: '',
-      detailsRoll: '',
-      detailsQuota: '',
-      detailsStrain: '',
-      detailsAccess: '',
-      detailsHousing: '',
-      detailsRemuneration: '',
-      detailsRisk: '',
-    },
-    postDescription_section: {
-      postPresentation: '',
-      postTeam: '',
-      postUphill: '',
-      postBacking: '',
-      postExternal: '',
-      postInternal: '',
-      postInternService: '',
-    },
-    requirement_section: {
-      requirementDiploma: '',
-      requirementSkill: '',
-      requirementKnowledge: '',
-    },
-    terms_sections: {
-      termsRecruit: '',
-      termsMail: '',
-      termsContractual: '',
-      termsMilitary: '',
-    },
-  }
+  let offer = `{{{json offer}}}`;
+  offer = JSON.parse(offer);
+  console.log(offer);
 
 </script>
 

@@ -1,8 +1,8 @@
 function saveTerms(){
-  offerData.terms_sections.termsRecruit = $('#termsRecruit').val();
-  offerData.terms_sections.termsMail = $('#termsMail').val();
-  offerData.terms_sections.termsContractual = $('#termsContractual').prop('checked');
-  offerData.terms_sections.termsMilitary = $('#termsMilitary').prop('checked');
+  offer.terms_sections.recruit = $('#termsRecruit').val();
+  offer.terms_sections.mail = $('#termsMail').val();
+  offer.terms_sections.contractual = $('#termsContractual').prop('checked');
+  offer.terms_sections.military = $('#termsMilitary').prop('checked');
 
   $('.termsSection').remove();
   load_termsSection();
@@ -17,10 +17,10 @@ function clearTerms(){
 }
 
 function loadTerms(){
-  $('#termsRecruit').val(offerData.terms_sections.termsRecruit);
-  $('#termsMail').val(offerData.terms_sections.termsMail);
-  $('#termsContractual').prop('checked', offerData.terms_sections.termsContractual);
-  $('#termsMilitary').prop('checked', offerData.terms_sections.termsMilitary);
+  $('#termsRecruit').val(offer.terms_sections.recruit);
+  $('#termsMail').val(offer.terms_sections.mail);
+  $('#termsContractual').prop('checked', offer.terms_sections.contractual);
+  $('#termsMilitary').prop('checked', offer.terms_sections.military);
 }
 
 $(document).ready(() => {
