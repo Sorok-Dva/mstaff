@@ -140,7 +140,19 @@ function job_boardListener() {
           break;
       }
     }
-  })
+  });
+
+  $('#previewOffer').click( () => {
+    createModal({
+      id: 'previewOfferModal',
+      modal: 'job_board/previewOffer',
+      title: "Aperçu de l'offre",
+      size: 'modal-lg',
+      data: offerData
+    }, () => {
+      //TODO
+    });
+  });
 }
 
 function load_natureSection(){

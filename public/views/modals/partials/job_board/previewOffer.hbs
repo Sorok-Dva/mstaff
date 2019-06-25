@@ -1,0 +1,24 @@
+<style>
+  .light-grey{
+    color: #9E9E9E;
+  }
+</style>
+
+<div class="modal-body">
+  <h5 id="offerDate" class="light-grey text-right"></h5>
+  <div id="offerMainInfos" class="d-flex flex-column align-items-center">
+    {{#if data.context_section.contextLogo}}
+      <img class="mb-3" src="{{data.context_section.contextLogo}}" alt="{{data.context_section.contextLocalisation}}" width="15%">
+    {{/if}}
+    <h2 class="mb-3">{{data.nature_section.natureTitle}}</h2>
+    <span id="offerContract" class="badge badge-pill badge-success mb-3"></span>
+  </div>
+</div>
+
+<script>
+  offerDate = '{{data.nature_section.natureDate}}';
+  offerContract = '{{data.nature_section.natureContractType}}';
+  offerJobDate = '{{data.nature_section.natureJobStartDate}}';
+</script>
+
+<script src="/static/assets/dist/js/job_board_previewOffer.min.js"></script>
