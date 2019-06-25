@@ -1,9 +1,14 @@
-$(document).ready(() => {
-  let contract = offerContract;
-  let oDate = offerDate;
-  let oJobDate = offerJobDate;
-
+function loadPreviewOfferDate(){
+  let oDate = datas.nature_section.natureDate;
   oDate = moment(oDate).format('D MMMM YYYY');
+  $('#offerDate').text('Offre publiée le '.concat(oDate));
+
+}
+
+function loadPreviewOfferContract(){
+  let contract = datas.nature_section.natureContractType;
+  let oJobDate = datas.nature_section.natureJobStartDate;
+
   oJobDate = moment(oJobDate).format('D MMMM YYYY');
   switch (contract) {
     case 'cdi-cdd':
@@ -19,7 +24,15 @@ $(document).ready(() => {
     default:
       contract = 'Contrat à définir';
   }
-
-  $('#offerDate').text('Offre publiée le '.concat(oDate));
   $('#offerContract').text(contract.concat(' à partir du ').concat(oJobDate));
+}
+
+function loadPreviewContent(){
+
+}
+
+$(document).ready(() => {
+  loadPreviewOfferDate();
+  loadPreviewOfferContract();
+  loadPreviewContent();
 });
