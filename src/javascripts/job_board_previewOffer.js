@@ -1,5 +1,5 @@
 function loadPreviewOfferDate(){
-  let oDate = datas.nature_section.natureDate;
+  let oDate = datas.createdAt;
   oDate = moment(oDate).format('D MMMM YYYY');
   $('#offerDate').text('Offre publiée le '.concat(oDate));
 
