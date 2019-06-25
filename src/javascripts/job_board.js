@@ -153,6 +153,16 @@ function job_boardListener() {
       //TODO
     });
   });
+
+  $('#saveOffer').click( () => {
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+
+    offer._csrf = _csrf;
+    $.post(`/job_board/offer/${offer.id}`, offer, (data) => {
+      console.log(data);
+    }).catch(error => errorsHandler(error));
+    console.log(offer);
+  });
 }
 
 function load_natureSection(){
