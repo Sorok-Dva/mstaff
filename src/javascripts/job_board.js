@@ -3,8 +3,8 @@ function createNewSection(opts){
   let editEvent = `onclick="editSection('${opts.id}')"`;
   let span = `<span>${opts.title}</span><span><i class="fal fa-edit custom-cursor mr-3" ${editEvent}></i><i class="fal fa-trash-alt custom-cursor" ${delEvent}></i></span>`;
   let divInt = `<div class="d-flex justify-content-between">${span}</div>`;
-  let liTitle = `<li class="list-group-item nature-section-title">${divInt}</li>`;
-  let liItem = `<li class="list-group-item nature-section-item"><div class="text-left"><p class="margin-0 ${opts.firstClass}">${opts.itemLine}</p><p class="margin-0 ${opts.secClass}">${opts.itemSubLine}</p></div></li>`;
+  let liTitle = `<li class="list-group-item section-title">${divInt}</li>`;
+  let liItem = `<li class="list-group-item section-item"><div class="text-left"><p class="margin-0 ${opts.firstClass}">${opts.itemLine}</p><p class="margin-0 ${opts.secClass}">${opts.itemSubLine}</p></div></li>`;
   let ul = `<ul class="list-group shadow-grey">${liTitle}${liItem}</ul>`;
   let newSection = `<div id=${opts.id} class="mb-5">${ul}</div>`;
  $('#sectionsPart').append(newSection);
@@ -224,7 +224,7 @@ function load_detailsSection(){
 function load_postDescriptionSection(){
   let presentation = offer.postDescription_section.presentation;
 
-  $('.postDescription-p-2').text(presentation);
+  $('.postDescription-p-2').html(presentation);
 }
 
 function load_requirementSection(){
@@ -243,13 +243,31 @@ function parseJsonToBoolean(){
   offer.details_section.housing = $.isEmptyObject(offer.details_section.housing) ? '' : JSON.parse(offer.details_section.housing);
   offer.terms_sections.contractual = $.isEmptyObject(offer.terms_sections.contractual) ? '' : JSON.parse(offer.terms_sections.contractual);
   offer.terms_sections.military = $.isEmptyObject(offer.terms_sections.military) ? '' : JSON.parse(offer.terms_sections.military);
-  offer.context_section.presentation = $.isEmptyObject(offer.context_section.presentation) ? '' : JSON.parse(offer.context_section.presentation);
 }
 
 function load_job_board(){
   parseJsonToBoolean();
   load_natureSection();
   load_contextSection();
+}
+
+function inittrumbowyg(){
+  $('textarea').trumbowyg({
+    lang: 'fr',
+    btns: [
+      ['undo', 'redo'], // Only supported in Blink browsers
+      ['formatting'],
+      ['strong', 'em', 'del'],
+      ['superscript', 'subscript'],
+      ['link'],
+      ['insertImage'],
+      ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+      ['unorderedList', 'orderedList'],
+      ['horizontalRule'],
+      ['removeformat'],
+    ],
+    tagsToRemove: ['script', 'link'],
+  });
 }
 
 $(document).ready(() => {
