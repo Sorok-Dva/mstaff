@@ -12,6 +12,7 @@ const candidateRouter = require('./routes/candidate');
 const boRouter = require('./routes/backOffice');
 const apiRouter = require('./routes/api/api');
 const apiUserRouter = require('./routes/api/user');
+const apiOfferRouter = require('./routes/api/offer');
 const apiCandidateRouter = require('./routes/api/candidate');
 const apiBackOfficeRouter = require('./routes/api/backOffice');
 const apiEsRouter = require('./routes/api/establishment');
@@ -75,6 +76,7 @@ app.use('/api/user', apiUserRouter);
 app.use('/api/candidate', apiCandidateRouter);
 app.use('/api/back-office', apiBackOfficeRouter);
 app.use('/api/es', apiEsRouter);
+app.use('/api/offer', apiOfferRouter);
 
 if (Env.isProd || Env.isPreProd) app.use(Express.sentryErrorHandler);
 app.use(ErrorHandler.notFoundError);
