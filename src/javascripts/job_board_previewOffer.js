@@ -1,9 +1,6 @@
-console.log('OFFFER PREVIEW');
-console.log(offer);
-
 function loadPreviewOfferDate(){
   let oDate = offer.createdAt;
-  oDate = moment(oDate).format('D MMMM YYYY');
+  oDate = moment(new Date(oDate)).format('D MMMM YYYY');
   $('#offerDate').text('Offre publiée le '.concat(oDate));
 
 }
@@ -12,14 +9,13 @@ function loadPreviewOfferContract(){
   let contract = offer.nature_section.contract_type;
   let oJobDate = offer.nature_section.start;
 
-  oJobDate = isEmpty(offer.nature_section.start) ? '' : moment(oJobDate).format('D MMMM YYYY');
+  oJobDate = isEmpty(offer.nature_section.start) ? '' : moment(new Date(oJobDate)).format('D MMMM YYYY');
   switch (contract) {
     case 'cdi-cdd':
       contract = 'CDI';
       break;
     case 'vacation':
       contract = 'VACATION';
-
       break;
     case 'internship':
       contract = 'STAGE';
@@ -32,7 +28,7 @@ function loadPreviewOfferContract(){
 
 function loadPrerequisites(){
   let diploma = offer.prerequisites_section.diploma;
-  let knowledge = offer.prerequisites_section.knowledge
+  let knowledge = offer.prerequisites_section.knowledge;
   let skill = offer.prerequisites_section.skill;
 
   if (!isEmpty(diploma) || !isEmpty(knowledge) || !isEmpty(skill)){

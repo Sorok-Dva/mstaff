@@ -183,10 +183,6 @@ function isEmpty(item){
 
 function load_natureSection(){
   let contractType = null;
-  let startDate = '';
-
-  if (offer.nature_section.start)
-    startDate = moment(offer.nature_section.start).format("D/MM/YYYY");
 
   switch (offer.nature_section.contract_type) {
     case 'cdi-cdd':
@@ -201,7 +197,7 @@ function load_natureSection(){
   }
 
   $('.nature-p-1').text(contractType);
-  $('.nature-p-2').text('à partir du '.concat(startDate));
+  $('.nature-p-2').text('à partir du '.concat(offer.nature_section.start));
 }
 
 function load_contextSection(){
@@ -280,7 +276,6 @@ $(document).ready(() => {
   offer.context_section.website = $('#website').val();
   offer.context_section.pole = $('#contextPole').val();
   offer.context_section.presentation = $('#contextPresentation').trumbowyg('html');
-  offer.createdAt = $('#natureDate').val();
   offer.name = $('#natureTitle').val();
   offer.nature_section = {};
   offer.nature_section.jobSheet = $('#natureJobSheet').trumbowyg('html');

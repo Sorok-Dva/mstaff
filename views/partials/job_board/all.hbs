@@ -9,7 +9,7 @@
   <form id="natureForm">
     <div class="form-group">
       <label for="natureDate">Date de création de l'offre</label>
-      <input type="date" class="form-control input-blue" id="natureDate" value="{{offer.createdAt}}">
+      <input type="text" class="form-control input-blue datepicker" id="natureDate" value="{{date offer.createdAt 'DD/MM/YYYY'}}">
     </div>
 
     <div class="form-group">
@@ -36,7 +36,7 @@
 
     <div class="form-group">
       <label for="start">Poste à pourvoir à partir du ...</label>
-      <input type="date" class="form-control input-blue" id="start" value="{{offer.nature_section.start}}">
+      <input type="text" class="form-control input-blue datepicker" id="start" value="{{offer.nature_section.start}}">
     </div>
 
     <div class="form-group">
