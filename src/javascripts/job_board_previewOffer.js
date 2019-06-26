@@ -9,7 +9,7 @@ function loadPreviewOfferContract(){
   let contract = datas.nature_section.contract_type;
   let oJobDate = datas.nature_section.start;
 
-  oJobDate = moment(oJobDate).format('D MMMM YYYY');
+  oJobDate = isEmpty(datas.nature_section.start) ? '' : moment(oJobDate).format('D MMMM YYYY');
   switch (contract) {
     case 'cdi-cdd':
       contract = 'CDI';

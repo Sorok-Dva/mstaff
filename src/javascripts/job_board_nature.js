@@ -17,6 +17,7 @@ function cancelNature(){
 
 function clearNature(){
   document.getElementById("natureForm").reset();
+  $('#contract_type').val(null).trigger('change');
 }
 
 function loadNature(){
@@ -32,4 +33,5 @@ function loadNature(){
 
 $(document).ready(() => {
   loadNature();
+  $('#contract_type').select2();
 });
