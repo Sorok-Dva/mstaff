@@ -18,6 +18,8 @@
     <span id="offerContract" class="badge badge-pill badge-success mb-3"></span>
   </div>
 
+  {{log data}}
+
   {{#if data.context_section.presentation}}
     <div class="mb-5">
       <h4 class="light-grey mb-3">ETABLISSEMENT</h4>
@@ -34,9 +36,6 @@
 </div>
 
 <script>
-  datas = `{{{json data}}}`;
-  datas = JSON.parse(datas);
-  console.log(datas);
 </script>
 
 <script src="/static/assets/dist/js/job_board_previewOffer.min.js"></script>

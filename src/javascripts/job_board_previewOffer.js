@@ -1,15 +1,18 @@
+console.log('OFFFER PREVIEW');
+console.log(offer);
+
 function loadPreviewOfferDate(){
-  let oDate = datas.createdAt;
+  let oDate = offer.createdAt;
   oDate = moment(oDate).format('D MMMM YYYY');
   $('#offerDate').text('Offre publiée le '.concat(oDate));
 
 }
 
 function loadPreviewOfferContract(){
-  let contract = datas.nature_section.contract_type;
-  let oJobDate = datas.nature_section.start;
+  let contract = offer.nature_section.contract_type;
+  let oJobDate = offer.nature_section.start;
 
-  oJobDate = isEmpty(datas.nature_section.start) ? '' : moment(oJobDate).format('D MMMM YYYY');
+  oJobDate = isEmpty(offer.nature_section.start) ? '' : moment(oJobDate).format('D MMMM YYYY');
   switch (contract) {
     case 'cdi-cdd':
       contract = 'CDI';
@@ -28,9 +31,9 @@ function loadPreviewOfferContract(){
 }
 
 function loadPrerequisites(){
-  let diploma = datas.prerequisites_section.diploma;
-  let knowledge = datas.prerequisites_section.knowledge
-  let skill = datas.prerequisites_section.skill;
+  let diploma = offer.prerequisites_section.diploma;
+  let knowledge = offer.prerequisites_section.knowledge
+  let skill = offer.prerequisites_section.skill;
 
   if (!isEmpty(diploma) || !isEmpty(knowledge) || !isEmpty(skill)){
     let contentDiploma = `<p class="font-source">${diploma}</p>`;
@@ -45,10 +48,10 @@ function loadPrerequisites(){
 }
 
 function loadTerms(){
-  let recruit = datas.terms_sections.recruit;
-  let mail = datas.terms_sections.mail;
-  let contractual = datas.terms_sections.contractual;
-  let military = datas.terms_sections.military;
+  let recruit = offer.terms_sections.recruit;
+  let mail = offer.terms_sections.mail;
+  let contractual = offer.terms_sections.contractual;
+  let military = offer.terms_sections.military;
 
   if (!isEmpty(recruit) || !isEmpty(mail) || contractual || military){
     let contentRecruit = `<p class="font-source">${recruit}</p>`;

@@ -14,34 +14,28 @@ function editSection(sectionId){
   let formsPart = $('#formsPart');
   switch (sectionId) {
     case 'natureSection':
-      loadTemplate('/static/views/job_board/natureSection.hbs', {offer}, (html) => {
-        formsPart.html(html);
-      });
+      formsPart.children().hide();
+      $('.natureSection').show();
       break;
     case 'contextSection':
-      loadTemplate('/static/views/job_board/contextSection.hbs', {offer}, (html) => {
-        formsPart.html(html);
-      });
+      formsPart.children().hide();
+      $('.contextSection').show();
       break;
     case 'detailsSection':
-      loadTemplate('/static/views/job_board/detailsSection.hbs', {offer}, (html) => {
-        formsPart.html(html);
-      });
+      formsPart.children().hide();
+      $('.detailsSection').show();
       break;
     case 'postDescriptionSection':
-      loadTemplate('/static/views/job_board/postDescriptionSection.hbs', {offer}, (html) => {
-        formsPart.html(html);
-      });
+      formsPart.children().hide();
+      $('.postDescriptionSection').show();
       break;
     case 'requirementSection':
-      loadTemplate('/static/views/job_board/requirementSection.hbs', {offer}, (html) => {
-        formsPart.html(html);
-      });
+      formsPart.children().hide();
+      $('.requirementSection').show();
       break;
     case 'termsSection':
-      loadTemplate('/static/views/job_board/termsSection.hbs', {offer}, (html) => {
-        formsPart.html(html);
-      });
+      formsPart.children().hide();
+      $('.termsSection').show();
       break;
   }
 }
@@ -51,8 +45,8 @@ function resetObject(object){
 }
 
 function deleteSection(sectionId){
-  $(`#${sectionId}`).remove();
-  $(`.${sectionId}`).remove();
+  $(`#${sectionId}`).hide();
+  $(`.${sectionId}`).hide();
   switch (sectionId) {
     case 'detailsSection':
       resetObject(offer.details_section);
@@ -73,7 +67,7 @@ function isActiveSection(section){
   return $(`#${section}`).length;
 }
 
-function job_boardListener() {
+function job_boardListener(offer) {
 
   $('.add-section-title').click( () => {
     let items = $('.add-section-item');
@@ -247,11 +241,9 @@ function parseJsonToBoolean(){
 
 function load_job_board(){
   parseJsonToBoolean();
-  load_natureSection();
-  load_contextSection();
 }
 
-function inittrumbowyg(){
+function inittrumbowyg() {
   $('textarea').trumbowyg({
     lang: 'fr',
     btns: [
@@ -272,8 +264,53 @@ function inittrumbowyg(){
 }
 
 $(document).ready(() => {
-  load_job_board();
-  job_boardListener();
+  offer.details_section = {};
+  offer.details_section.schedule = $('#detailsSchedule').val();
+  offer.details_section.roll = $('#detailsRoll').val();
+  offer.details_section.quota = $('#detailsQuota').val();
+  offer.details_section.strain = $('#detailsStrain').val();
+  offer.details_section.access = $('#detailsAccess').val();
+  offer.details_section.housing = $('#detailsHousing').prop('checked');
+  offer.details_section.remuneration = $('#detailsRemuneration').val();
+  offer.details_section.risk = $('#detailsRisk').val();
+  offer.context_section = {};
+  offer.context_section.place = $('#place').val();
+  offer.context_section.address = $('#address').val();
+  offer.context_section.attach = $('#contextAttach').val();
+  offer.context_section.website = $('#website').val();
+  offer.context_section.pole = $('#contextPole').val();
+  offer.context_section.presentation = $('#contextPresentation').trumbowyg('html');
+  offer.createdAt = $('#natureDate').val();
+  offer.name = $('#natureTitle').val();
+  offer.nature_section = {};
+  offer.nature_section.jobSheet = $('#natureJobSheet').trumbowyg('html');
+  offer.nature_section.contract_type = $('#contract_type').val();
+  offer.nature_section.start = $('#start').val();
+  offer.nature_section.contractDuration = $('#natureContractDuration').val();
+  offer.nature_section.grade = $('#natureGrade').val();
+  offer.nature_section.category = $('#natureCategory').val();
+  offer.postDescription_section = {};
+  offer.postDescription_section.presentation = $('#postPresentation').trumbowyg('html');
+  offer.postDescription_section.team = $('#postTeam').val();
+  offer.postDescription_section.uphill = $('#postUphill').val();
+  offer.postDescription_section.backing = $('#postBacking').val();
+  offer.postDescription_section.external = $('#postExternal').val();
+  offer.postDescription_section.internal = $('#postInternal').trumbowyg('html');
+  offer.postDescription_section.internService = $('#postInternService').val();
+  offer.prerequisites_section = {};
+  offer.prerequisites_section.diploma = $('#requirementDiploma').val();
+  offer.prerequisites_section.skill = $('#requirementSkill').trumbowyg('html');
+  offer.prerequisites_section.knowledge = $('#requirementKnowledge').trumbowyg('html');
+  offer.terms_sections = {};
+  offer.terms_sections.recruit = $('#termsRecruit').val();
+  offer.terms_sections.mail = $('#termsMail').val();
+  offer.terms_sections.contractual = $('#termsContractual').prop('checked');
+  offer.terms_sections.military = $('#termsMilitary').prop('checked');
+
+  inittrumbowyg();
+  job_boardListener(offer);
+  load_natureSection();
+  load_contextSection();
 
   if (!isEmpty(offer.details_section))
     $('#addDetails').trigger('click');

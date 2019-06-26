@@ -8,29 +8,14 @@ function saveDetails(){
   offer.details_section.remuneration = $('#detailsRemuneration').val();
   offer.details_section.risk = $('#detailsRisk').val();
 
-  $('.detailsSection').remove();
+  $('.detailsSection').hide();
   load_detailsSection();
 }
 
 function cancelDetails(){
-  $('.detailsSection').remove();
+  $('.detailsSection').hide();
 }
 
 function clearDetails(){
   document.getElementById("detailsForm").reset();
 }
-
-function loadDetails(){
-  $('#detailsSchedule').val(offer.details_section.schedule);
-  $('#detailsRoll').val(offer.details_section.roll);
-  $('#detailsQuota').val(offer.details_section.quota);
-  $('#detailsStrain').val(offer.details_section.strain);
-  $('#detailsAccess').val(offer.details_section.access);
-  $('#detailsHousing').prop('checked', offer.details_section.housing);
-  $('#detailsRemuneration').val(offer.details_section.remuneration);
-  $('#detailsRisk').val(offer.details_section.risk);
-}
-
-$(document).ready(() => {
-  loadDetails();
-});

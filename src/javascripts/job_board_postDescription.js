@@ -7,12 +7,12 @@ function savePostDescription(){
   offer.postDescription_section.internal = $('#postInternal').trumbowyg('html');
   offer.postDescription_section.internService = $('#postInternService').val();
 
-  $('.postDescriptionSection').remove();
+  $('.postDescriptionSection').hide();
   load_postDescriptionSection();
 }
 
 function cancelPostDescription(){
-  $('.postDescriptionSection').remove();
+  $('.postDescriptionSection').hide();
 }
 
 function clearPostDescription(){
@@ -20,18 +20,3 @@ function clearPostDescription(){
   $('#postPresentation').trumbowyg('empty');
   $('#postInternal').trumbowyg('empty');
 }
-
-function loadPostDescription(){
-  $('#postPresentation').trumbowyg('html', offer.postDescription_section.presentation);
-  $('#postTeam').val(offer.postDescription_section.team);
-  $('#postUphill').val(offer.postDescription_section.uphill);
-  $('#postBacking').val(offer.postDescription_section.backing);
-  $('#postExternal').val(offer.postDescription_section.external);
-  $('#postInternal').trumbowyg('html', offer.postDescription_section.internal);
-  $('#postInternService').val(offer.postDescription_section.internService);
-}
-
-$(document).ready(() => {
-  inittrumbowyg();
-  loadPostDescription();
-});

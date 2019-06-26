@@ -3,12 +3,12 @@ function saveRequirement(){
   offer.prerequisites_section.skill = $('#requirementSkill').trumbowyg('html');
   offer.prerequisites_section.knowledge = $('#requirementKnowledge').trumbowyg('html');
 
-  $('.requirementSection').remove();
+  $('.requirementSection').hide();
   load_requirementSection();
 }
 
 function cancelRequirement(){
-  $('.requirementSection').remove();
+  $('.requirementSection').hide();
 }
 
 function clearRequirement(){
@@ -16,14 +16,3 @@ function clearRequirement(){
   $('#requirementSkill').trumbowyg('empty');
   $('#requirementKnowledge').trumbowyg('empty');
 }
-
-function loadRequirement(){
-  $('#requirementDiploma').val(offer.prerequisites_section.diploma);
-  $('#requirementSkill').trumbowyg('html', offer.prerequisites_section.skill);
-  $('#requirementKnowledge').trumbowyg('html', offer.prerequisites_section.knowledge);
-}
-
-$(document).ready(() => {
-  inittrumbowyg();
-  loadRequirement();
-});
