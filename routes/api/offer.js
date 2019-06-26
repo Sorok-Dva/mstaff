@@ -3,9 +3,9 @@ const { HTTPValidation, Authentication } = require(`${__}/middlewares`);
 const express = require('express');
 const router = express.Router();
 
-const { Offer } = require(`${__}/components`);
+const { Establishment } = require(`${__}/components/`);
 
 router.get('/offer/:id(\\d+)',
-  Offer.View);
+  Establishment.Offer.View);
 
 module.exports = router;
