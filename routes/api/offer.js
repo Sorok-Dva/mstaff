@@ -5,7 +5,7 @@ const router = express.Router();
 
 const { Establishment } = require(`${__}/components/`);
 
-router.get('/offer/:id(\\d+)',
+router.get('/:id(\\d+)',
   Establishment.Offer.View);
 
 module.exports = router;
