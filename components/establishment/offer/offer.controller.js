@@ -108,7 +108,7 @@ Establishment_Offer.Create = (req, res, next) => {
         logo: _.isNil(need.Establishment.logo) ? '' : need.Establishment.logo,
         attach: '',
         pole: '',
-        presentation: '',
+        presentation: ''
       },
       context_section: {
         place: _.isNil(need.Establishment.name) ? '' : need.Establishment.name,
@@ -117,7 +117,7 @@ Establishment_Offer.Create = (req, res, next) => {
         logo: _.isNil(need.Establishment.logo) ? '' : need.Establishment.logo,
         attach: '',
         pole: '',
-        presentation: '',
+        presentation: ''
       },
       details_section: {
         schedule: '',
@@ -127,7 +127,7 @@ Establishment_Offer.Create = (req, res, next) => {
         access: '',
         housing: '',
         remuneration: '',
-        risk: '',
+        risk: ''
       },
       postDescription_section: {
         presentation: '',
@@ -136,18 +136,18 @@ Establishment_Offer.Create = (req, res, next) => {
         backing: '',
         external: '',
         internal: '',
-        internService: '',
+        internService: ''
       },
       prerequisites_section: {
         diploma: '',
         skill: '',
-        knowledge: '',
+        knowledge: ''
       },
       terms_sections: {
         recruit: '',
         mail: '',
         contractual: '',
-        military: '',
+        military: ''
       },
       status: 'draft',
       createdBy: req.user.id

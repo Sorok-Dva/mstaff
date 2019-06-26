@@ -27,12 +27,24 @@ function loadPreviewOfferContract(){
   $('#offerContract').text(contract.concat(' à partir du ').concat(oJobDate));
 }
 
-function loadPreviewContent(){
+function loadPrerequisites(){
+  let diploma = datas.prerequisites_section.diploma;
+  let skill = datas.prerequisites_section.skill;
 
+  if (!isEmpty(diploma) || !isEmpty(skill)){
+    let contentDiploma = `<p class="font-source">${diploma}</p>`;
+    let contentSkill = `<p class="font-source">${skill}</p>`;
+
+    let title = `<h4 class="light-grey mb-3">PREREQUIS</h4>`;
+    let div = `<div class="mb-5">${title}${contentDiploma}${contentSkill}</div>`;
+
+    $('#previewMain').append(div);
+
+  }
 }
 
 $(document).ready(() => {
   loadPreviewOfferDate();
   loadPreviewOfferContract();
-  loadPreviewContent();
+  loadPrerequisites();
 });

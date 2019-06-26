@@ -243,6 +243,7 @@ function parseJsonToBoolean(){
   offer.details_section.housing = $.isEmptyObject(offer.details_section.housing) ? '' : JSON.parse(offer.details_section.housing);
   offer.terms_sections.contractual = $.isEmptyObject(offer.terms_sections.contractual) ? '' : JSON.parse(offer.terms_sections.contractual);
   offer.terms_sections.military = $.isEmptyObject(offer.terms_sections.military) ? '' : JSON.parse(offer.terms_sections.military);
+  offer.context_section.presentation = $.isEmptyObject(offer.context_section.presentation) ? '' : JSON.parse(offer.context_section.presentation);
 }
 
 function load_job_board(){
