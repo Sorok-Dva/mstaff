@@ -264,7 +264,7 @@ function inittrumbowyg(){
       ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
       ['unorderedList', 'orderedList'],
       ['horizontalRule'],
-      ['removeformat'],
+      ['removeformat']
     ],
     tagsToRemove: ['script', 'link'],
   });

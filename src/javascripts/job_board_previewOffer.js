@@ -29,17 +29,18 @@ function loadPreviewOfferContract(){
 
 function loadPrerequisites(){
   let diploma = datas.prerequisites_section.diploma;
+  let knowledge = datas.prerequisites_section.knowledge
   let skill = datas.prerequisites_section.skill;
 
-  if (!isEmpty(diploma) || !isEmpty(skill)){
+  if (!isEmpty(diploma) || !isEmpty(knowledge) || !isEmpty(skill)){
     let contentDiploma = `<p class="font-source">${diploma}</p>`;
+    let contentKnowledge = `<p class="font-source">${knowledge}</p>`;
     let contentSkill = `<p class="font-source">${skill}</p>`;
 
     let title = `<h4 class="light-grey mb-3">PREREQUIS</h4>`;
-    let div = `<div class="mb-5">${title}${contentDiploma}${contentSkill}</div>`;
+    let div = `<div class="mb-5">${title}${contentDiploma}${contentKnowledge}${contentSkill}</div>`;
 
     $('#previewMain').append(div);
-
   }
 }
 
