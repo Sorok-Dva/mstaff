@@ -1,0 +1,67 @@
+<style>
+  .light-grey{
+    color: #9E9E9E;
+  }
+  .font-source{
+    font-family: 'Source Sans Pro';
+    font-size: 16px;
+  }
+</style>
+
+<div id="previewMain" class="modal-body">
+  <h5 id="offerDate" class="light-grey text-right">Offre publiée le {{data.createdAt}}</h5>
+  <div id="offerMainInfos" class="d-flex flex-column align-items-center mb-5">
+    {{#if data.context_section.logo}}
+      <img class="mb-3" src="{{data.context_section.logo}}" alt="{{data.context_section.place}}" width="15%">
+    {{/if}}
+    <h2 class="mb-3">{{data.name}}</h2>
+    <span id="offerContract" class="badge badge-pill badge-success mb-3">
+      {{#if data.nature_section.contract_type}}
+      <span style="text-transform: uppercase">{{data.nature_section.contract_type}}</span>{{else}}Contrat à définir{{/if}}
+      {{#if data.nature_section.start}} à partir du {{data.nature_section.start}}{{/if}}
+    </span>
+  </div>
+
+  {{#if data.context_section.presentation}}
+    <div class="mb-5">
+      <h4 class="light-grey mb-3">ETABLISSEMENT</h4>
+        {{{data.context_section.presentation}}}
+    </div>
+  {{/if}}
+
+  {{#if data.postDescription_section.presentation}}
+    <div class="mb-5">
+      <h4 class="light-grey mb-3">MISSION</h4>
+      {{{data.postDescription_section.presentation}}}
+    </div>
+  {{/if}}
+
+  {{#if data.prerequisites_section.knowledge}}
+    <div class="mb-5">
+      <h4 class="light-grey mb-3">PREREQUIS</h4>
+      {{#if data.prerequisites_section.diploma}}
+        <p class="font-source">{{data.prerequisites_section.diploma}}</p>
+      {{/if}}
+      {{#if data.prerequisites_section.knowledge}}
+        <p class="font-source">{{{data.prerequisites_section.knowledge}}}</p>
+      {{/if}}
+      {{#if data.prerequisites_section.skills}}
+        <p class="font-source">{{{data.prerequisites_section.skills}}}</p>
+      {{/if}}
+    </div>
+  {{/if}}
+
+  {{#ifCond data.terms_sections '>' 0}}
+    <div class="mb-5">
+      <h4 class="light-grey mb-3">MODALITES DE CANDIDATURE</h4>
+      <p class="font-source">{{data.terms_sections.recruit}}</p>
+      <p class="font-source">{{data.terms_sections.mail}}</p>
+      {{#if data.terms_sections.contractual}}
+        <p class="font-source">Ouvert aux contractuels</p>
+      {{/if}}
+      {{#if data.terms_sections.military}}
+        <p class="font-source">Ouvert aux militaires</p>
+      {{/if}}
+    </div>
+  {{/ifCond}}
+</div>

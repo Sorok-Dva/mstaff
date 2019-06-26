@@ -81,28 +81,44 @@ Establishment_Offer.Create = (req, res, next) => {
   }
   Models.Need.findOne({
     where: { id: req.params.needId, es_id: req.user.opts.currentEs },
-    include: {
+    include: [{
       model: Models.Establishment,
       required: true
-    }
+    }, {
+      model: Models.JobSheet,
+      on: {
+        '$Need.post$': {
+          [Op.col]: 'JobSheet.name'
+        }
+      }
+    }]
   }).then(need => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.needId} introuvable.`, httpStatus.NOT_FOUND));
+    let nature_section = {};
+    let context_section = {};
+    let postDescription_section = {};
+    let prerequisites_section = {};
+    if (!_.isNil(need.post)) nature_section.post = need.post;
+    if (!_.isNil(need.contract_type)) nature_section.contract_type = need.contract_type;
+    if (!_.isNil(need.start)) nature_section.start = moment(need.start).format('DD/MM/YYYY');
+    if (!_.isNil(need.end)) nature_section.end = moment(need.end).format('DD/MM/YYYY');
+    if (!_.isNil(need.JobSheet.description)) nature_section.jobSheet = need.JobSheet.description;
+    if (!_.isNil(need.Establishment.name)) context_section.place = need.Establishment.name;
+    if (!_.isNil(need.Establishment.town)) context_section.address = need.Establishment.address + ' ' + need.Establishment.town;
+    if (!_.isNil(need.Establishment.url)) context_section.website = need.Establishment.url;
+    if (!_.isNil(need.Establishment.logo)) context_section.logo = need.Establishment.logo;
+    if (!_.isNil(need.JobSheet.activities)) postDescription_section.presentation = need.JobSheet.activities;
+    if (!_.isNil(need.JobSheet.infos)) postDescription_section.internal = need.JobSheet.infos;
+    if (!_.isNil(need.JobSheet.knowHow)) prerequisites_section.skills = need.JobSheet.knowHow;
+    if (!_.isNil(need.JobSheet.knowledge)) prerequisites_section.knowledge = need.JobSheet.knowledge;
     Models.Offer.create({
       name: need.name,
       need_id: need.id,
       es_id: need.es_id,
-      nature_section: {
-        post: _.isNil(need.post) ? '' : need.post,
-        contract_type: _.isNil(need.contract_type) ? '' : need.contract_type,
-        start: _.isNil(need.start) ? '' : need.start,
-        end: _.isNil(need.end) ? '' : need.end,
-      },
-      context_section: {
-        place: _.isNil(need.Establishment.name) ? '' : need.Establishment.name,
-        address: _.isNil(need.Establishment.town) ? '' : need.Establishment.address + ' ' + need.Establishment.town,
-        website: _.isNil(need.Establishment.url) ? '' : need.Establishment.url,
-        logo: _.isNil(need.Establishment.logo) ? '' : need.Establishment.logo,
-      },
+      nature_section,
+      context_section,
+      postDescription_section,
+      prerequisites_section,
       status: 'draft',
       createdBy: req.user.id
     }).then(offer => {
@@ -110,7 +126,6 @@ Establishment_Offer.Create = (req, res, next) => {
       res.status(201).send({ status: 'created', offer });
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
-
 };
 
 
