@@ -208,17 +208,21 @@
   <form id="requirementForm">
     <div class="form-group">
       <label for="requirementDiploma">Diplôme</label>
-      <input type="text" class="form-control input-blue" id="requirementDiploma" value="{{offer.requirement_section.diploma}}">
+      <input type="text" class="form-control input-blue" id="requirementDiploma" value="{{offer.prerequisites_section.diploma}}">
     </div>
 
     <div class="form-group">
       <label for="requirementSkill">Compétences</label>
-      <textarea type="text" class="form-control input-blue" id="requirementSkill"></textarea>
+      <textarea type="text" class="form-control input-blue" id="requirementSkill">
+        {{{offer.prerequisites_section.skills}}}
+      </textarea>
     </div>
 
     <div class="form-group">
       <label for="requirementKnowledge">Connaissances</label>
-      <textarea type="text" class="form-control input-blue" id="requirementKnowledge"></textarea>
+      <textarea type="text" class="form-control input-blue" id="requirementKnowledge">
+        {{offer.prerequisites_section.knowledge}}
+      </textarea>
     </div>
   </form>
 

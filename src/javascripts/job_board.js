@@ -197,7 +197,7 @@ function load_natureSection(){
   }
 
   $('.nature-p-1').text(contractType);
-  $('.nature-p-2').text('à partir du '.concat(offer.nature_section.start));
+  if (offer.nature_section.start !== "") $('.nature-p-2').text('à partir du '.concat(offer.nature_section.start));
 }
 
 function load_contextSection(){
@@ -261,46 +261,47 @@ function inittrumbowyg() {
 
 $(document).ready(() => {
   offer.details_section = {};
-  offer.details_section.schedule = $('#detailsSchedule').val();
-  offer.details_section.roll = $('#detailsRoll').val();
-  offer.details_section.quota = $('#detailsQuota').val();
-  offer.details_section.strain = $('#detailsStrain').val();
-  offer.details_section.access = $('#detailsAccess').val();
+  if (!_.isNil($('#detailsSchedule').val())) offer.details_section.schedule = $('#detailsSchedule').val();
+  if (!_.isNil($('#detailsRoll').val())) offer.details_section.roll = $('#detailsRoll').val();
+  if (!_.isNil($('#detailsQuota').val())) offer.details_section.quota = $('#detailsQuota').val();
+  if (!_.isNil($('#detailsStrain').val())) offer.details_section.strain = $('#detailsStrain').val();
+  if (!_.isNil($('#detailsAccess').val())) offer.details_section.access = $('#detailsAccess').val();
+  if (!_.isNil($('#detailsRemuneration').val())) offer.details_section.remuneration = $('#detailsRemuneration').val();
+  if (!_.isNil($('#detailsRisk').val())) offer.details_section.risk = $('#detailsRisk').val();
   offer.details_section.housing = $('#detailsHousing').prop('checked');
-  offer.details_section.remuneration = $('#detailsRemuneration').val();
-  offer.details_section.risk = $('#detailsRisk').val();
   offer.context_section = {};
-  offer.context_section.place = $('#place').val();
-  offer.context_section.address = $('#address').val();
-  offer.context_section.attach = $('#contextAttach').val();
-  offer.context_section.website = $('#website').val();
-  offer.context_section.pole = $('#contextPole').val();
-  offer.context_section.presentation = $('#contextPresentation').trumbowyg('html');
-  offer.name = $('#natureTitle').val();
+  if (!_.isNil($('#place').val())) offer.context_section.place = $('#place').val();
+  if (!_.isNil($('#address').val())) offer.context_section.address = $('#address').val();
+  if (!_.isNil($('#contextAttach').val())) offer.context_section.attach = $('#contextAttach').val();
+  if (!_.isNil($('#website').val()))offer.context_section.website = $('#website').val();
+  if (!_.isNil($('#contextPole').val()))offer.context_section.pole = $('#contextPole').val();
+  if (!_.isNil($('#contextPresentation').trumbowyg('html')))offer.context_section.presentation = $('#contextPresentation').trumbowyg('html');
+  if (!_.isNil($('#natureTitle').val()))offer.name = $('#natureTitle').val();
   offer.nature_section = {};
-  offer.nature_section.jobSheet = $('#natureJobSheet').trumbowyg('html');
-  offer.nature_section.contract_type = $('#contract_type').val();
-  offer.nature_section.start = $('#start').val();
-  offer.nature_section.contractDuration = $('#natureContractDuration').val();
-  offer.nature_section.grade = $('#natureGrade').val();
-  offer.nature_section.category = $('#natureCategory').val();
+  if (!_.isNil($('#natureJobSheet').trumbowyg('html')))offer.nature_section.jobSheet = $('#natureJobSheet').trumbowyg('html');
+  if (!_.isNil($('#contract_type').val()))offer.nature_section.contract_type = $('#contract_type').val();
+  if (!_.isNil($('#start').val()))offer.nature_section.start = $('#start').val();
+  if (!_.isNil($('#natureContractDuration').val()))offer.nature_section.contractDuration = $('#natureContractDuration').val();
+  if (!_.isNil($('#natureGrade').val()))offer.nature_section.grade = $('#natureGrade').val();
+  if (!_.isNil($('#natureCategory').val()))offer.nature_section.category = $('#natureCategory').val();
   offer.postDescription_section = {};
-  offer.postDescription_section.presentation = $('#postPresentation').trumbowyg('html');
-  offer.postDescription_section.team = $('#postTeam').val();
-  offer.postDescription_section.uphill = $('#postUphill').val();
-  offer.postDescription_section.backing = $('#postBacking').val();
-  offer.postDescription_section.external = $('#postExternal').val();
-  offer.postDescription_section.internal = $('#postInternal').trumbowyg('html');
-  offer.postDescription_section.internService = $('#postInternService').val();
+  if (!_.isNil($('#postPresentation').trumbowyg('html')))offer.postDescription_section.presentation = $('#postPresentation').trumbowyg('html');
+  if (!_.isNil($('#postTeam').val()))offer.postDescription_section.team = $('#postTeam').val();
+  if (!_.isNil($('#postUphill').val()))offer.postDescription_section.uphill = $('#postUphill').val();
+  if (!_.isNil($('#postBacking').val()))offer.postDescription_section.backing = $('#postBacking').val();
+  if (!_.isNil($('#postExternal').val()))offer.postDescription_section.external = $('#postExternal').val();
+  if (!_.isNil($('#postInternal').trumbowyg('html')))offer.postDescription_section.internal = $('#postInternal').trumbowyg('html');
+  if (!_.isNil($('#postInternService').val()))offer.postDescription_section.internService = $('#postInternService').val();
   offer.prerequisites_section = {};
-  offer.prerequisites_section.diploma = $('#requirementDiploma').val();
-  offer.prerequisites_section.skill = $('#requirementSkill').trumbowyg('html');
-  offer.prerequisites_section.knowledge = $('#requirementKnowledge').trumbowyg('html');
+  if (!_.isNil($('#requirementDiploma').val()))offer.prerequisites_section.diploma = $('#requirementDiploma').val();
+  if (!_.isNil($('#requirementSkill').trumbowyg('html')))offer.prerequisites_section.skills = $('#requirementSkill').trumbowyg('html');
+  if (!_.isNil($('#requirementKnowledge').trumbowyg('html')))offer.prerequisites_section.knowledge = $('#requirementKnowledge').trumbowyg('html');
   offer.terms_sections = {};
-  offer.terms_sections.recruit = $('#termsRecruit').val();
-  offer.terms_sections.mail = $('#termsMail').val();
+  if (!_.isNil($('#termsRecruit').val()))offer.terms_sections.recruit = $('#termsRecruit').val();
+  if (!_.isNil($('#termsMail').val()))offer.terms_sections.mail = $('#termsMail').val();
   offer.terms_sections.contractual = $('#termsContractual').prop('checked');
   offer.terms_sections.military = $('#termsMilitary').prop('checked');
+  offer.context_section.logo = '/static/assets/images/default_hospital.jpg';
 
   inittrumbowyg();
   job_boardListener(offer);

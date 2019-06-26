@@ -9,7 +9,7 @@
 </style>
 
 <div id="previewMain" class="modal-body">
-  <h5 id="offerDate" class="light-grey text-right">Offre publiée le {{date data.createdAt 'DD/MM/YYYY'}}</h5>
+  <h5 id="offerDate" class="light-grey text-right">Offre publiée le {{data.createdAt}}</h5>
   <div id="offerMainInfos" class="d-flex flex-column align-items-center mb-5">
     {{#if data.context_section.logo}}
       <img class="mb-3" src="{{data.context_section.logo}}" alt="{{data.context_section.place}}" width="15%">
@@ -21,8 +21,6 @@
       {{#if data.nature_section.start}} à partir du {{data.nature_section.start}}{{/if}}
     </span>
   </div>
-
-  {{log data}}
 
   {{#if data.context_section.presentation}}
     <div class="mb-5">
@@ -38,22 +36,20 @@
     </div>
   {{/if}}
 
-  {{#if data.prerequisites_section}}
-    <div class="mb-5">
-      <h4 class="light-grey mb-3">PREREQUIS</h4>
-      {{#if data.prerequisites_section.diploma}}
-        <p class="font-source">{{data.prerequisites_section.diploma}}</p>
-      {{/if}}
-      {{#if data.prerequisites_section.knowledge}}
-        <p class="font-source">{{{data.prerequisites_section.knowledge}}}</p>
-      {{/if}}
-      {{#if data.prerequisites_section.skill}}
-        <p class="font-source">{{{data.prerequisites_section.skill}}}</p>
-      {{/if}}
-    </div>
-  {{/if}}
+  <div class="mb-5">
+    <h4 class="light-grey mb-3">PREREQUIS</h4>
+    {{#if data.prerequisites_section.diploma}}
+      <p class="font-source">{{data.prerequisites_section.diploma}}</p>
+    {{/if}}
+    {{#if data.prerequisites_section.knowledge}}
+      <p class="font-source">{{{data.prerequisites_section.knowledge}}}</p>
+    {{/if}}
+    {{#if data.prerequisites_section.skills}}
+      <p class="font-source">{{{data.prerequisites_section.skills}}}</p>
+    {{/if}}
+  </div>
 
-  {{#if data.terms_sections}}
+  {{#ifCond data.terms_sections '>' 0}}
     <div class="mb-5">
       <h4 class="light-grey mb-3">MODALITES DE CANDIDATURE</h4>
       <p class="font-source">{{data.terms_sections.recruit}}</p>
@@ -65,5 +61,5 @@
         <p class="font-source">Ouvert aux militaires</p>
       {{/if}}
     </div>
-  {{/if}}
+  {{/ifCond}}
 </div>
