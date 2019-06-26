@@ -267,6 +267,7 @@ function inittrumbowyg(){
       ['removeformat']
     ],
     tagsToRemove: ['script', 'link'],
+    resetCss: true
   });
 }
 

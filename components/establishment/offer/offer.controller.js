@@ -81,10 +81,18 @@ Establishment_Offer.Create = (req, res, next) => {
   }
   Models.Need.findOne({
     where: { id: req.params.needId, es_id: req.user.opts.currentEs },
-    include: {
+    include: [{
       model: Models.Establishment,
       required: true
+    }, {
+      model: Models.JobSheet,
+      on: {
+        '$Need.post$': {
+          [Op.col]: 'JobSheet.name'
+        }
+      }
     }
+    ]
   }).then(need => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.needId} introuvable.`, httpStatus.NOT_FOUND));
     Models.Offer.create({
@@ -96,7 +104,7 @@ Establishment_Offer.Create = (req, res, next) => {
         contract_type: _.isNil(need.contract_type) ? '' : need.contract_type,
         start: _.isNil(need.start) ? '' : need.start,
         end: _.isNil(need.end) ? '' : need.end,
-        jobSheet: '',
+        jobSheet: _.isNil(need.JobSheet.description) ? '' : need.JobSheet.description,
         contractDuration: '',
         grade: '',
         category: ''

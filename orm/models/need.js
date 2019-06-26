@@ -32,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'need_id',
       sourceKey: 'id'
     });
+    Need.hasOne(models.JobSheet, {
+      foreignKey: 'name',
+      sourceKey: 'post'
+    })
   };
   return Need;
 };

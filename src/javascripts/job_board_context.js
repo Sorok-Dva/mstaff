@@ -4,7 +4,7 @@ function saveContext(){
   offer.context_section.attach = $('#contextAttach').val();
   offer.context_section.website = $('#website').val();
   offer.context_section.pole = $('#contextPole').val();
-  offer.context_section.presentation = $('#contextPresentation').trumbowyg('html');
+  offer.context_section.presentation = decodeURI($('#contextPresentation').trumbowyg('html'));
   $('.contextSection').remove();
   load_contextSection();
 }

@@ -44,8 +44,29 @@ function loadPrerequisites(){
   }
 }
 
+function loadTerms(){
+  let recruit = datas.terms_sections.recruit;
+  let mail = datas.terms_sections.mail;
+  let contractual = datas.terms_sections.contractual;
+  let military = datas.terms_sections.military;
+
+  if (!isEmpty(recruit) || !isEmpty(mail) || contractual || military){
+    let contentRecruit = `<p class="font-source">${recruit}</p>`;
+    let contentMail = `<p class="font-source">${mail}</p>`;
+    let contentContractual = contractual ? `<p class="font-source">Ouvert aux contractuels</p>` : '';
+    let contentMilitary = military ? `<p class="font-source">Ouvert aux militaires</p>` : '';
+
+    let title = `<h4 class="light-grey mb-3">MODALITES DE CANDIDATURE</h4>`;
+    let div = `<div class="mb-5">${title}${contentRecruit}${contentMail}${contentContractual}${contentMilitary}</div>`;
+
+    $('#previewMain').append(div);
+
+  }
+}
+
 $(document).ready(() => {
   loadPreviewOfferDate();
   loadPreviewOfferContract();
   loadPrerequisites();
+  loadTerms();
 });
