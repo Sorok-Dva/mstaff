@@ -137,6 +137,14 @@
   }
 
   let previewOffer = (id) => {
-    $.get(`/api/offer/${id}`)
+    $.get(`/offer/${id}`, (offer) => {
+      createModal({
+        id: 'previewOfferModal',
+        modal: 'job_board/previewOffer',
+        title: "Aperçu de l'offre",
+        size: 'modal-lg',
+        data: offer
+      });
+    });
   }
 </script>

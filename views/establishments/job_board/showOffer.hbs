@@ -110,8 +110,7 @@
 <script>
   let offer = {};
   offer.id = {{offer.id}};
-  offer.createdAt = '{{date offer.createdAt 'DD/MM/YYYY'}}';
-
+  offer.createdAt = new Date('{{date offer.createdAt 'YYYY-MM-DD'}}');
 </script>
 
 <script src="/static/assets/dist/js/job_board.min.js"></script>

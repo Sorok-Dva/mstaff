@@ -1,5 +1,5 @@
 const { Authentication } = require('../middlewares/index');
-const { Subdomain, User } = require('../components');
+const { Subdomain, User, Establishment } = require('../components');
 const { HTTPValidation } = require('../middlewares/');
 const express = require('express');
 const router = express.Router();
@@ -45,5 +45,8 @@ router.get('/services/all',
 
 router.get('/atsDatas/all',
   Subdomain.Establishment.GetAtsDatas);
+
+router.get('/offer/:id(\\d+)',
+  Establishment.Offer.View);
 
 module.exports = router;

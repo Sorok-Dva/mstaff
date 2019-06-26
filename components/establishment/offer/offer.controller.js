@@ -39,7 +39,7 @@ Establishment_Offer.Render = (req, res, next) => {
 
 Establishment_Offer.View = (req, res, next) => {
   Models.Offer.findOne({
-    where: { id: req.params.id, es_id: req.user.opts.currentEs },
+    where: { id: req.params.id, es_id: req.es.id || req.user.opts.currentEs },
     include: {
       model: Models.Establishment,
       required: true
