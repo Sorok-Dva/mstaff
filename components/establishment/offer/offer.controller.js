@@ -156,7 +156,6 @@ Establishment_Offer.Create = (req, res, next) => {
       res.status(201).send({ status: 'created', offer });
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
-
 };
 
 
