@@ -1,6 +1,6 @@
 function saveTerms(){
-  offer.terms_sections.recruit = $('#termsRecruit').val();
-  offer.terms_sections.mail = $('#termsMail').val();
+  if (!_.isNil($('#termsRecruit').val()))offer.terms_sections.recruit = $('#termsRecruit').val();
+  if (!_.isNil($('#termsMail').val()))offer.terms_sections.mail = $('#termsMail').val();
   offer.terms_sections.contractual = $('#termsContractual').prop('checked');
   offer.terms_sections.military = $('#termsMilitary').prop('checked');
 

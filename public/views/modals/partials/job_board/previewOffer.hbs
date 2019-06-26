@@ -36,18 +36,20 @@
     </div>
   {{/if}}
 
-  <div class="mb-5">
-    <h4 class="light-grey mb-3">PREREQUIS</h4>
-    {{#if data.prerequisites_section.diploma}}
-      <p class="font-source">{{data.prerequisites_section.diploma}}</p>
-    {{/if}}
-    {{#if data.prerequisites_section.knowledge}}
-      <p class="font-source">{{{data.prerequisites_section.knowledge}}}</p>
-    {{/if}}
-    {{#if data.prerequisites_section.skills}}
-      <p class="font-source">{{{data.prerequisites_section.skills}}}</p>
-    {{/if}}
-  </div>
+  {{#if data.prerequisites_section.knowledge}}
+    <div class="mb-5">
+      <h4 class="light-grey mb-3">PREREQUIS</h4>
+      {{#if data.prerequisites_section.diploma}}
+        <p class="font-source">{{data.prerequisites_section.diploma}}</p>
+      {{/if}}
+      {{#if data.prerequisites_section.knowledge}}
+        <p class="font-source">{{{data.prerequisites_section.knowledge}}}</p>
+      {{/if}}
+      {{#if data.prerequisites_section.skills}}
+        <p class="font-source">{{{data.prerequisites_section.skills}}}</p>
+      {{/if}}
+    </div>
+  {{/if}}
 
   {{#ifCond data.terms_sections '>' 0}}
     <div class="mb-5">
