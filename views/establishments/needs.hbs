@@ -133,6 +133,12 @@
     $.post(`/api/es/{{user.opts.currentEs}}/create/offer/fromNeed/${id}`, { _csrf }, (data) => {
       if (data.status === 'created') {
         $(location).attr('href', `/job_board/offer/${data.offer.id}`);
+      } else if (data.status === 'exists') {
+        notification({
+          icon: 'exclamation-circle',
+          type: 'warning',
+          title: 'Une offre a déjà été créée à partir de ce besoin.'
+        })
       } else {
         notification({
           icon: 'exclamation-circle',
