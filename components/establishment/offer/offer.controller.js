@@ -91,8 +91,7 @@ Establishment_Offer.Create = (req, res, next) => {
           [Op.col]: 'JobSheet.name'
         }
       }
-    }
-    ]
+    }]
   }).then(need => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.needId} introuvable.`, httpStatus.NOT_FOUND));
     Models.Offer.create({
@@ -108,15 +107,6 @@ Establishment_Offer.Create = (req, res, next) => {
         contractDuration: '',
         grade: '',
         category: ''
-      },
-      context_section: {
-        place: _.isNil(need.Establishment.name) ? '' : need.Establishment.name,
-        address: _.isNil(need.Establishment.town) ? '' : need.Establishment.address + ' ' + need.Establishment.town,
-        website: _.isNil(need.Establishment.url) ? '' : need.Establishment.url,
-        logo: _.isNil(need.Establishment.logo) ? '' : need.Establishment.logo,
-        attach: '',
-        pole: '',
-        presentation: ''
       },
       context_section: {
         place: _.isNil(need.Establishment.name) ? '' : need.Establishment.name,
