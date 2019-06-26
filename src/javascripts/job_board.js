@@ -260,6 +260,7 @@ function inittrumbowyg() {
 }
 
 $(document).ready(() => {
+  inittrumbowyg();
   offer.details_section = {};
   if (!_.isNil($('#detailsSchedule').val())) offer.details_section.schedule = $('#detailsSchedule').val();
   if (!_.isNil($('#detailsRoll').val())) offer.details_section.roll = $('#detailsRoll').val();
@@ -268,53 +269,55 @@ $(document).ready(() => {
   if (!_.isNil($('#detailsAccess').val())) offer.details_section.access = $('#detailsAccess').val();
   if (!_.isNil($('#detailsRemuneration').val())) offer.details_section.remuneration = $('#detailsRemuneration').val();
   if (!_.isNil($('#detailsRisk').val())) offer.details_section.risk = $('#detailsRisk').val();
-  offer.details_section.housing = $('#detailsHousing').prop('checked');
   offer.context_section = {};
   if (!_.isNil($('#place').val())) offer.context_section.place = $('#place').val();
   if (!_.isNil($('#address').val())) offer.context_section.address = $('#address').val();
   if (!_.isNil($('#contextAttach').val())) offer.context_section.attach = $('#contextAttach').val();
   if (!_.isNil($('#website').val()))offer.context_section.website = $('#website').val();
   if (!_.isNil($('#contextPole').val()))offer.context_section.pole = $('#contextPole').val();
-  if (!_.isNil($('#contextPresentation').trumbowyg('html')))offer.context_section.presentation = $('#contextPresentation').trumbowyg('html');
+  offer.context_section.presentation = $('#contextPresentation').trumbowyg('html');
   if (!_.isNil($('#natureTitle').val()))offer.name = $('#natureTitle').val();
   offer.nature_section = {};
-  if (!_.isNil($('#natureJobSheet').trumbowyg('html')))offer.nature_section.jobSheet = $('#natureJobSheet').trumbowyg('html');
+  offer.nature_section.jobSheet = $('#natureJobSheet').trumbowyg('html');
   if (!_.isNil($('#contract_type').val()))offer.nature_section.contract_type = $('#contract_type').val();
   if (!_.isNil($('#start').val()))offer.nature_section.start = $('#start').val();
   if (!_.isNil($('#natureContractDuration').val()))offer.nature_section.contractDuration = $('#natureContractDuration').val();
   if (!_.isNil($('#natureGrade').val()))offer.nature_section.grade = $('#natureGrade').val();
   if (!_.isNil($('#natureCategory').val()))offer.nature_section.category = $('#natureCategory').val();
   offer.postDescription_section = {};
-  if (!_.isNil($('#postPresentation').trumbowyg('html')))offer.postDescription_section.presentation = $('#postPresentation').trumbowyg('html');
+  offer.postDescription_section.presentation = $('#postPresentation').trumbowyg('html');
   if (!_.isNil($('#postTeam').val()))offer.postDescription_section.team = $('#postTeam').val();
   if (!_.isNil($('#postUphill').val()))offer.postDescription_section.uphill = $('#postUphill').val();
   if (!_.isNil($('#postBacking').val()))offer.postDescription_section.backing = $('#postBacking').val();
   if (!_.isNil($('#postExternal').val()))offer.postDescription_section.external = $('#postExternal').val();
-  if (!_.isNil($('#postInternal').trumbowyg('html')))offer.postDescription_section.internal = $('#postInternal').trumbowyg('html');
+  offer.postDescription_section.internal = $('#postInternal').trumbowyg('html');
   if (!_.isNil($('#postInternService').val()))offer.postDescription_section.internService = $('#postInternService').val();
   offer.prerequisites_section = {};
   if (!_.isNil($('#requirementDiploma').val()))offer.prerequisites_section.diploma = $('#requirementDiploma').val();
-  if (!_.isNil($('#requirementSkill').trumbowyg('html')))offer.prerequisites_section.skills = $('#requirementSkill').trumbowyg('html');
-  if (!_.isNil($('#requirementKnowledge').trumbowyg('html')))offer.prerequisites_section.knowledge = $('#requirementKnowledge').trumbowyg('html');
+  offer.prerequisites_section.skills = $('#requirementSkill').trumbowyg('html');
+  offer.prerequisites_section.knowledge = $('#requirementKnowledge').trumbowyg('html');
   offer.terms_sections = {};
   if (!_.isNil($('#termsRecruit').val()))offer.terms_sections.recruit = $('#termsRecruit').val();
   if (!_.isNil($('#termsMail').val()))offer.terms_sections.mail = $('#termsMail').val();
-  offer.terms_sections.contractual = $('#termsContractual').prop('checked');
-  offer.terms_sections.military = $('#termsMilitary').prop('checked');
+
   offer.context_section.logo = '/static/assets/images/default_hospital.jpg';
 
-  inittrumbowyg();
   job_boardListener(offer);
   load_natureSection();
   load_contextSection();
 
-  if (!isEmpty(offer.details_section))
+  if (!isEmpty(offer.details_section)){
     $('#addDetails').trigger('click');
+    offer.details_section.housing = $('#detailsHousing').prop('checked');
+  }
   if (!isEmpty(offer.postDescription_section))
     $('#addPostDescription').trigger('click');
   if (!isEmpty(offer.prerequisites_section))
     $('#addRequirement').trigger('click');
-  if (!isEmpty(offer.terms_sections))
+  if (!isEmpty(offer.terms_sections)){
     $('#addTerms').trigger('click');
+    offer.terms_sections.contractual = $('#termsContractual').prop('checked');
+    offer.terms_sections.military = $('#termsMilitary').prop('checked');
+  }
 
 });

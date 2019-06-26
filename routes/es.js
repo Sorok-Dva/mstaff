@@ -85,7 +85,7 @@ router.get('/history',
  */
 router.get('/job_board/offer/:id(\\d+)',
   Authentication.ensureIsEs,
-  Establishment.Offer.View)
+  Establishment.Offer.Render)
   .post('/job_board/offer/:id(\\d+)',
     Authentication.ensureIsEs,
     Establishment.Offer.Edit)

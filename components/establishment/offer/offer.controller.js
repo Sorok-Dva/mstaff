@@ -22,7 +22,7 @@ Establishment_Offer.ViewAll = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-Establishment_Offer.View = (req, res, next) => {
+Establishment_Offer.Render = (req, res, next) => {
   let render = { a: { main: 'offers' } };
   Models.Offer.findOne({
     where: { id: req.params.id, es_id: req.user.opts.currentEs },
@@ -34,6 +34,19 @@ Establishment_Offer.View = (req, res, next) => {
     if (_.isNil(offer)) return next(new BackError(`Offre ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
     render.offer = offer;
     return res.render('establishments/job_board/showOffer', render);
+  }).catch(error => next(new BackError(error)));
+};
+
+Establishment_Offer.View = (req, res, next) => {
+  Models.Offer.findOne({
+    where: { id: req.params.id, es_id: req.user.opts.currentEs },
+    include: {
+      model: Models.Establishment,
+      required: true
+    }
+  }).then(offer => {
+    if (_.isNil(offer)) return next(new BackError(`Offre ${req.params.id} introuvable.`, httpStatus.NOT_FOUND));
+    return res.status(200).send(offer);
   }).catch(error => next(new BackError(error)));
 };
 

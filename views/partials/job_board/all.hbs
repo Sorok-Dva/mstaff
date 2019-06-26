@@ -20,6 +20,7 @@
     <div class="form-group">
       <label for="natureJobSheet">Métier</label>
       <textarea type="text" class="form-control input-blue" id="natureJobSheet">
+        {{log offer.nature_section.jobSheet}}
         {{{offer.nature_section.jobSheet}}}
       </textarea>
     </div>
@@ -249,7 +250,7 @@
       <div class="form-group d-flex">
         <div class="mr-4">Ouvert aux contractuels</div>
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="termsContractual" {{#if offer.terms_sections.contractual}}checked="checked"{{/if}}>
+          <input type="checkbox" class="custom-control-input" id="termsContractual" {{#ifCond offer.terms_sections.contractual '===' 'true'}}checked="checked"{{/ifCond}}>
           <label class="custom-control-label" for="termsContractual"></label>
         </div>
       </div>
@@ -257,7 +258,7 @@
       <div class="form-group d-flex">
         <div class="mr-4">Ouvert aux militaires</div>
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="termsMilitary" {{#if offer.terms_sections.military}}checked="checked"{{/if}}>
+          <input type="checkbox" class="custom-control-input" id="termsMilitary" {{#ifCond offer.terms_sections.military '===' 'true'}}checked="checked"{{/ifCond}}>
           <label class="custom-control-label" for="termsMilitary"></label>
         </div>
       </div>

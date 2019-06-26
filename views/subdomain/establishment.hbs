@@ -52,7 +52,7 @@
         </div>
         <div class="card-body">
           {{#each es.offers as |offer|}}
-            <h1 class="text-center mt-4">{{offer.name}}</h1>
+            <h1 class="text-center mt-4" onclick="previewOffer({{offer.id}})" style="cursor: pointer">{{offer.name}}</h1>
 
           {{/each}}
           {{#unless es.offers}}
@@ -134,5 +134,9 @@
       center: pos,
       radius: pos.rayon * 1000 || 10000
     });
+  }
+
+  let previewOffer = (id) => {
+    $.get(`/api/offer/${id}`)
   }
 </script>
