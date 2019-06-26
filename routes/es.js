@@ -85,7 +85,7 @@ router.get('/history',
  */
 router.get('/pool',
   Authentication.ensureIsEs,
-  Establishment.Pool.viewPools);
+  Establishment.Pool.View);
 
 /**
  * @Route('/my-pool') GET;
@@ -93,31 +93,31 @@ router.get('/pool',
  */
 router.get('/my-pool',
   Authentication.ensureIsEs,
-  Establishment.Pool.viewMyPools
+  Establishment.Pool.ViewAll
 ).post('/my-pool',
   Authentication.ensureIsEs,
-  Establishment.Pool.newPool
+  Establishment.Pool.Add
 ).put('/my-pool',
   Authentication.ensureIsEs,
-  Establishment.Pool.editPool
+  Establishment.Pool.Edit
 ).delete('/my-pool',
   Authentication.ensureIsEs,
-  Establishment.Pool.deletePool
+  Establishment.Pool.Delete
 );
 
 router.post('/pool-invite',
   Authentication.ensureIsEs,
-  Establishment.Pool.inviteInPool
+  Establishment.Pool.Invite
 );
 
 router.post('/pool-enable',
   Authentication.ensureIsEs,
-  Establishment.Pool.enablePool
+  Establishment.Pool.Enable
 );
 
 router.post('/pool-disable',
   Authentication.ensureIsEs,
-  Establishment.Pool.disablePool
+  Establishment.Pool.Disable
 );
 
 router.get('/establishement-list',

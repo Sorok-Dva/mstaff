@@ -12,12 +12,12 @@ const Models = require(`${__}/orm/models/index`);
 
 const Establishment_Pool = {};
 
-Establishment_Pool.viewPools = (req, res, next) => {
+Establishment_Pool.View = (req, res, next) => {
   let a = { main: 'pools' };
   return res.render('establishments/pool', { a } );
 };
 
-Establishment_Pool.viewMyPools = (req, res, next) => {
+Establishment_Pool.ViewAll = (req, res, next) => {
   let a = { main: 'pools' };
   Models.Pool.findAll({ where: { owner: req.user.id } }).then(pools => {
     Models.ESAccount.findAll({ where: { user_id: req.user.id } } ).then(group => {
@@ -26,7 +26,7 @@ Establishment_Pool.viewMyPools = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
-Establishment_Pool.newPool = (req, res, next) => {
+Establishment_Pool.Add = (req, res, next) => {
   let token;
   if (req.body.allEs === 'false') {
     Models.Pool.create({
@@ -58,7 +58,7 @@ Establishment_Pool.newPool = (req, res, next) => {
   }
 };
 
-Establishment_Pool.editPool = (req, res, next) => {
+Establishment_Pool.Edit = (req, res, next) => {
   Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
     pool.name = req.body.name;
     pool.references = req.body.references;
@@ -67,14 +67,14 @@ Establishment_Pool.editPool = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
-Establishment_Pool.inviteInPool = (req, res, next) => {
+Establishment_Pool.Invite = (req, res, next) => {
   let token;
   token = crypto.randomBytes(10).toString('hex');
   Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
   res.status(200).json('Invitations sent');
 };
 
-Establishment_Pool.deletePool = (req, res, next) => {
+Establishment_Pool.Delete = (req, res, next) => {
   Models.UserPool.destroy({ where: { pool_id: req.body.pool } }).then( () => {
     Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
       pool.destroy().then(res.status(200).json('Pool removed')).catch(error => next(new Error(error)));
@@ -82,7 +82,7 @@ Establishment_Pool.deletePool = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
-Establishment_Pool.enablePool = (req, res, next) => {
+Establishment_Pool.Enable = (req, res, next) => {
   Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
     pool.active = true;
     pool.save();
@@ -90,7 +90,7 @@ Establishment_Pool.enablePool = (req, res, next) => {
   })
 };
 
-Establishment_Pool.disablePool = (req, res, next) => {
+Establishment_Pool.Disable = (req, res, next) => {
   Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
     pool.active = false;
     pool.save();
