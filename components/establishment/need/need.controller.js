@@ -469,4 +469,171 @@ Establishment_Need.getNewCandidates = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+Establishment_Need.CandidateAction = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+
+  Models.NeedCandidate.findOne({
+    where: { need_id: req.params.id, candidate_id: req.params.candidateId },
+    include: [{
+      model: Models.Need,
+      required: true,
+      on: {
+        'id': {
+          [Op.col]: 'NeedCandidate.need_id'
+        }
+      },
+      include: {
+        model: Models.Establishment,
+        required: true
+      }
+    }, {
+      model: Models.Candidate,
+      required: true,
+      include: {
+        model: Models.User,
+        required: true,
+        on: {
+          '$Candidate.user_id$': {
+            [Op.col]: 'Candidate->User.id'
+          }
+        },
+        attributes: ['id', 'email']
+      }
+    }]
+  }).then(needCandidate => {
+    if (_.isNil(needCandidate))
+      return next(new BackError(`Candidate ${req.params.candidateId} or Need ${req.params.id} not found`, httpStatus.NOT_FOUND));
+    else {
+      switch (req.params.action) {
+        case 'notify':
+          Models.Notification.create({
+            fromUser: req.user.id,
+            fromEs: needCandidate.Need.Establishment.id,
+            to: needCandidate.Candidate.User.id,
+            subject: 'Un établissement est intéressé par votre profil !',
+            title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
+            image: '/static/assets/images/happy.jpg',
+            opts: {
+              type: 'NeedNotifyCandidate',
+              details: {
+                post: needCandidate.Need.post,
+                contract: needCandidate.Need.contract_type,
+                start: needCandidate.Need.start,
+                end: needCandidate.Need.end,
+              },
+              message: req.body.message,
+              actions: [{
+                'type': 'success',
+                'text': 'Disponible',
+                'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="available"`
+              }, {
+                'type': 'danger',
+                'text': 'Indisponible',
+                'dataAttr': `data-ncid="${needCandidate.id}" data-action="nc/availability" data-availability="unavailable"`
+              }],
+              needCandidateId: needCandidate.id
+            }
+          }).then(notification => {
+            needCandidate.status = 'notified';
+            needCandidate.availability = 'pending';
+            needCandidate.notified = true;
+            needCandidate.save().then(result => {
+              moment.locale('fr');
+              let need = {
+                start: _.isNil(needCandidate.Need.start) ? null : moment(needCandidate.Need.start).format('dddd Do MMMM YYYY'),
+                end: _.isNil(needCandidate.Need.end) ? null : moment(needCandidate.Need.end).format('dddd Do MMMM YYYY'),
+              };
+              mailer.sendEmail({
+                to: needCandidate.Candidate.User.email,
+                subject: 'Un établissement a consulté votre profil.',
+                template: 'candidate/needNotification',
+                context: {
+                  needCandidate,
+                  need
+                }
+              });
+              res.status(201).send(result);
+            })
+          });
+          break;
+        case 'select':
+          needCandidate.status = 'selected';
+          needCandidate.notified = true;
+          needCandidate.save().then(result => {
+            res.status(201).send(result);
+          });
+          break;
+        case 'cancel':
+          needCandidate.status = 'canceled';
+          needCandidate.save().then(result => {
+            res.status(201).send(result);
+          });
+          break;
+        case 'delete':
+          needCandidate.status = 'deleted';
+          needCandidate.notified = false;
+          needCandidate.save().then(result => {
+            res.status(201).send(result);
+          });
+          break;
+        default:
+          return res.status(400).send('no action provided');
+      }
+    }
+  })
+};
+
+Establishment_Need.favCandidate = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).send({ body: req.body, errors: errors.array() });
+  }
+
+  let where = {
+    es_id: req.params.esId,
+    candidate_id: req.params.candidateId,
+    added_by: req.user.id
+  };
+
+  switch (req.params.action) {
+    case 'fav':
+      Models.FavoriteCandidate.findOrCreate({ where }).spread((fav, created) => {
+        if (created) {
+          res.status(201).send({ status: 'Created', fav });
+        } else {
+          res.status(200).send({ status: 'Already exists', fav });
+        }
+      });
+      break;
+    case 'unfav':
+      Models.FavoriteCandidate.findOne({ where }).then(fav => {
+        fav.destroy().then(result => {
+          res.status(200).send({ status: 'deleted', result })
+        })
+      });
+      break;
+    case 'archive':
+      Models.ArchivedCandidate.findOrCreate({ where }).spread((archive, created) => {
+        if (created) {
+          res.status(201).send({ status: 'Created', archive });
+        } else {
+          res.status(200).send({ status: 'Already exists', archive });
+        }
+      });
+      break;
+    case 'unarchive':
+      Models.ArchivedCandidate.findOne({ where }).then(archive => {
+        archive.destroy().then(result => {
+          res.status(200).send({ status: 'deleted', result })
+        })
+      });
+      break;
+  }
+};
+
 module.exports = Establishment_Need;
