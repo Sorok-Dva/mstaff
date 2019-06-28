@@ -80,8 +80,6 @@ BackOffice_Establishment.Edit = (req, res, next) => {
     Models.Establishment.findOne({ where: { id: req.params.id } }).then((es) => {
       if (_.isNil(es)) return next();
       Models.EstablishmentReference.findOne({ where: { finess_et: es.finess } }).then(esRef => {
-        console.log(req.body);
-        console.log(esRef);
         if (!_.isNil(es.domain_name)) {
           Models.Subdomain.findOne({ where: { es_id: es.id } }).then(esSubdomain => {
             Models.Subdomain.findOne({ where: { name: req.body.domain_name } }).then(subCheck => {
