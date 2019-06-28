@@ -51,7 +51,7 @@
           row: row.id
         }, () => {
           $('button#validateCategory').click(function () {
-            let _csrf = $('#csrfToken').val();
+            let _csrf = $('meta[name="csrf-token"]').attr('content');
             let medical = $("#medicalToggle").prop("checked") ? 1 : 0;
             let paramedical = $("#paramedicalToggle").prop("checked") ? 1 : 0;
             let administrative = $("#administrativeToggle").prop("checked") ? 1 : 0;
