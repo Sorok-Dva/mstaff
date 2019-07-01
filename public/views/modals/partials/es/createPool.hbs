@@ -28,9 +28,7 @@
   </button>
 </div>
 <script>
-  console.log("request linked establishements");
   $.get('/establishement-list', function (data) {
-    console.log(data);
     data.forEach((establishment) => {
       $('#esNameSelect').append($('<option>', {value:establishment.Establishment.id, text: establishment.Establishment.name}));
     });

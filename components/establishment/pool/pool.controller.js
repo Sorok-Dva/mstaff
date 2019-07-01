@@ -27,41 +27,33 @@ Establishment_Pool.ViewAll = (req, res, next) => {
 };
 
 Establishment_Pool.Add = (req, res, next) => {
+  let { selectedEs } = req.body;
   let token;
-  if (req.body.allEs === 'false') {
-    Models.Pool.create({
-      name: req.body.pool,
-      referent: req.body.referent,
-      owner: req.user.id
-    }).then(pool => {
-      /*      Models.InvitationAts.create({
-        //rominou here
-      });    */
-      token = crypto.randomBytes(10).toString('hex');
-      Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
-      res.status(200).send({ pool });
-    }).catch(error => next(new Error(error)));
-  }
-  else if (req.body.allEs === 'true') {
-    Models.Pool.create({
-      name: req.body.pool,
-      referent: req.body.referent,
-      owner: req.user.id
-    }).then(pool => {
-      /*      Models.InvitationAts.create({
-        //rominou here
-      });    */
-      token = crypto.randomBytes(10).toString('hex');
-      Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
-      res.status(200).send({ pool });
-    }).catch(error => next(new Error(error)));
-  }
+
+  Models.Pool.create({
+    name: req.body.pool,
+    referent: req.body.referent,
+    owner: req.user.id
+  }).then(pool => {
+    let pool_id = pool.id;
+    if (typeof selectedEs === 'object')
+    {
+      selectedEs.forEach(function (es_id) {
+        Models.EsPool.create({ pool_id: pool.id, es_id: es_id }).catch(error => next(new Error(error)));
+      });
+    } else {
+      Models.EsPool.create({ pool_id: pool.id, es_id: selectedEs }).catch(error => next(new Error(error)));
+    }
+    token = crypto.randomBytes(10).toString('hex');
+    //Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
+    res.status(200).send({ pool });
+  }).catch(error => next(new Error(error)));
 };
 
 Establishment_Pool.Edit = (req, res, next) => {
   Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
     pool.name = req.body.name;
-    pool.references = req.body.references;
+    pool.referent = req.body.referent;
     pool.save();
     res.status(200).json('Modifications done')
   }).catch(error => next(new Error(error)));

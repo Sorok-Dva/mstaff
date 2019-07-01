@@ -15,17 +15,20 @@
   }
 </style>
 
+<div class="col-md-12 text-center">
 {{#ifCond pools.length '<=' 0}}
-  <div class="col-md-12 text-center">
     <h2 style="font-weight: 400"> Vous n'avez pas encore crée de pool de remplaçants. </h2>
-  </div>
+{{else}}
+  <h2 style="font-weight: 400">  Il y a actuellement {{ @root.pools.length }} pools. </h2>
 {{/ifCond}}
+</div>
 
 <div class="row">
   <div class="col-12 col-md-12 col-lg-12" style="margin-bottom: 25px; display:flex">
     <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" onclick="createPool()"> + </button>
     <span style="margin-top: 15px; margin-left: 10px"><h2> Créer un nouveau pool</h2></span>
   </div>
+
   {{#each pools as |pool|}}
     <div class="col-12 col-md-12 col-lg-4 card-competence">
       <div class="card">
@@ -36,7 +39,8 @@
             </div>
             <div class="col-md-2">
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" name="poolActive" data-pool="{{pool.id}}" id="{{pool.id}}" {{#ifCond pool.active '===' true}} checked {{/ifCond}} onclick="changeState(this)">
+                <input type="checkbox" class="custom-control-input" name="poolActive" data-pool="{{pool.id}}"
+                       id="{{pool.id}}" {{#ifCond pool.active '===' true}} checked {{/ifCond}} onclick="changeState(this)">
                 <label class="custom-control-label" for="{{pool.id}}"></label>
               </div>
             </div>
@@ -46,7 +50,7 @@
           <div class="row">
             <div class="col-lg-5" >
               <a href="#">
-                <button class="btn btn-outline-primary" style="width:100%"> Volontaires </button>
+                <button class="btn btn-outline-primary" style="width:100%" onclick="poolUsersList(this)"> Volontaires </button>
               </a>
             </div>
             <div class="col-lg-5">
@@ -56,7 +60,8 @@
             </div>
             <div class="col-lg-2">
               <a href="#">
-                <button class="btn btn-outline-secondary" style="width:100%" data-pool="{{pool.id}}" onclick="editPool(this)"> <i class="fal fa-cog"></i> </button>
+                <button class="btn btn-outline-secondary" style="width:100%" data-pool="{{pool.id}}" data-name="{{pool.name}}"
+                        data-referent="{{pool.referent}}" onclick="editPool(this)"> <i class="fal fa-cog"></i> </button>
               </a>
             </div>
           </div>
@@ -66,11 +71,6 @@
   {{/each}}
 </div>
 <script>
-  let es_id = [];
-  {{#each group as |es|}}
-    console.log('{{es.es_id}}');
-  {{/each}}
-  console.log(es_id);
   let createPool = () => {
     createModal({
       id: 'createPoolModal',
@@ -82,29 +82,36 @@
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           let pool = $('#poolName').val();
           let allEs = $('#groupToggle').prop('checked');
-          console.log(allEs);
           let selectedEs = $('#esNameSelect').val();
+          if(allEs) {
+            selectedEs = [];
+            $("#esNameSelect option").each(function () { selectedEs.push(Number(this.value)); });
+          }
           let referent = $('#referentName').val();
           let mails = $('#personnelMails').val();
-          $.post(`/my-pool`, {
+         $.post(`/my-pool`, {
             _csrf,
             selectedEs,
-            allEs,
             pool,
             referent,
             mails
           }, () => {
-            window.location.href = "/my-pool";
+           location.reload();
           })
         }
       });
     });
   };
+  let poolUsersList = (poolToEdit) => {
+
+  };
   let editPool = (poolToEdit) => {
     createModal({
       id: 'editPoolModal',
       modal: 'es/editPool',
-      title: 'Modifier un pool de remplaçant'
+      title: 'Modifier un pool de remplaçant',
+      name: poolToEdit.dataset.name,
+      referent: poolToEdit.dataset.referent
     }, () => {
       $('button#editPoolButton').click(function () {
         let _csrf = $('meta[name="csrf-token"]').attr('content');
@@ -118,13 +125,7 @@
           name
         }, (response) => {
           if (response === 'Modifications done') {
-            $('#editPoolModal').modal('hide');
-            notification({
-              icon: 'check-circle',
-              type: 'success',
-              title: 'Modifications effectuées',
-              message: ``
-            });
+            location.reload();
           }
         })
       });
