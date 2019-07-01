@@ -57,7 +57,7 @@
           $('button#btnEditCategory').click(function () {
             if ($('input#categoryValueEdit').val() != '') {
 
-let _csrf = $('meta[name="csrf-token"]').attr('content');
+              let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#categoryValueEdit').val();
               $.put(`/api/back-office/references/categories/${row.id}`, {
                 promptInput,
@@ -90,8 +90,7 @@ let _csrf = $('meta[name="csrf-token"]').attr('content');
           title: 'Supprimer une compétence',
           modal: 'back-office/removeCategory'
         }, () => {
-
-let _csrf = $('meta[name="csrf-token"]').attr('content');
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveCategory').click(function () {
             $.delete(`/api/back-office/references/categories/${row.id}`, {
               _csrf
