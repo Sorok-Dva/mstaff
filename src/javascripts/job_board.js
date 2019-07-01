@@ -259,8 +259,7 @@ function inittrumbowyg() {
   });
 }
 
-$(document).ready(() => {
-  inittrumbowyg();
+function initOfferObject(){
   offer.details_section = {};
   if (!_.isNil($('#detailsSchedule').val())) offer.details_section.schedule = $('#detailsSchedule').val();
   if (!_.isNil($('#detailsRoll').val())) offer.details_section.roll = $('#detailsRoll').val();
@@ -301,6 +300,11 @@ $(document).ready(() => {
   if (!_.isNil($('#termsMail').val()))offer.terms_sections.mail = $('#termsMail').val();
 
   offer.context_section.logo = '/static/assets/images/default_hospital.jpg';
+}
+
+$(document).ready(() => {
+  inittrumbowyg();
+  initOfferObject();
 
   job_boardListener(offer);
   load_natureSection();
