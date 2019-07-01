@@ -15,6 +15,12 @@
   }
 </style>
 
+{{#ifCond pools.length '<=' 0}}
+  <div class="col-md-12 text-center">
+    <h2 style="font-weight: 400"> Vous n'avez pas encore crée de pool de remplaçants. </h2>
+  </div>
+{{/ifCond}}
+
 <div class="row">
   <div class="col-12 col-md-12 col-lg-12" style="margin-bottom: 25px; display:flex">
     <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" onclick="createPool()"> + </button>
