@@ -12,15 +12,21 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Pools',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        allowNull: false
       },
       es_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Establishments',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
