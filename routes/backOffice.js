@@ -201,13 +201,6 @@ router.get('/pools/pool-links',
   BackOffice.Pool.forceLink
 );
 
-/** @Route('/back-office/rh/all') GET;
- * Get the list of es accounts
- */
-router.get('/rh/all',
-  Authentication.ensureIsAdmin,
-  BackOffice.User.listRH);
-
 /** @Route('/back-office/pool-dependencies/all') GET;
  * Get all dependencies to make new links
  */

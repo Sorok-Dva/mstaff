@@ -21,29 +21,27 @@ Establishment_Pool.ViewAll = (req, res, next) => {
   let a = { main: 'pools' };
   Models.Pool.findAll({ where: { owner: req.user.id } }).then(pools => {
     Models.ESAccount.findAll({ where: { user_id: req.user.id } } ).then(group => {
-      return res.render('establishments/my-pool', { a, pools, group } );
+      Models.UsersGroups.findOne({ where: { user_id: req.user.id } } ).then(inGroup => {
+        inGroup = !_.isNil(inGroup);
+        return res.render('establishments/my-pool', { a, pools, group, inGroup } );
+      }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
   }).catch(error => next(new Error(error)));
 };
 
 Establishment_Pool.Add = (req, res, next) => {
   let { selectedEs } = req.body;
+  let groupMode = req.body.groupMode.toLowerCase() === 'true' ? true : false;
   let token;
 
   Models.Pool.create({
     name: req.body.pool,
     referent: req.body.referent,
-    owner: req.user.id
+    owner: req.user.id,
+    group_mode: groupMode,
   }).then(pool => {
-    let pool_id = pool.id;
-    if (typeof selectedEs === 'object')
-    {
-      selectedEs.forEach(function (es_id) {
-        Models.EsPool.create({ pool_id: pool.id, es_id: es_id }).catch(error => next(new Error(error)));
-      });
-    } else {
+    if (!groupMode && selectedEs)
       Models.EsPool.create({ pool_id: pool.id, es_id: selectedEs }).catch(error => next(new Error(error)));
-    }
     token = crypto.randomBytes(10).toString('hex');
     //Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
     res.status(200).send({ pool });
