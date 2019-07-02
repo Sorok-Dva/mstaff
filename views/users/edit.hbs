@@ -97,7 +97,7 @@
         <h4 class="title">Modifier le profil</h4>
       </div>
       <div class="card-content" style="padding: 20px;">
-        <form method="post" action="/profile/edit">
+        <form id="profileForm" method="post" action="/profile/edit">
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
@@ -123,7 +123,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Date de naissance</label>
-                <input type="date" name="birthday" class="form-control border-input" placeholder="dd/mm/aaaa"
+                <input id="birthdayEdit" type="text" name="birthday" class="form-control border-input" placeholder="dd/mm/aaaa"
                        value="{{date usr.birthday 'YYYY-MM-DD'}}" required>
               </div>
             </div>
@@ -187,6 +187,10 @@
   $(document).ready(function () {
     let input = document.querySelector("#phone");
     window.intlTelInput(input);
+
+    $('#birthdayEdit').datetimepicker({
+      format: 'YYYY-MM-DD'
+    });
   });
   let deleteAccount = () => {
     createModal({
