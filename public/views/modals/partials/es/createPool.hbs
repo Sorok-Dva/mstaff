@@ -2,21 +2,37 @@
 <script src="/static/assets/js/multiple-emails.js"></script>
 <div class="modal-body">
   <div class="form-group">
-    <div id="toggleDiv" class="custom-control custom-switch" style="margin-bottom: 30px">
-      <input type="checkbox" class="custom-control-input" name="poolActive" id="groupToggle" onchange="hideEsList()">
-      <label class="custom-control-label" for="groupToggle"> Inclure tous vos établissements à ce pool </label>
+
+    {{#ifCond group '===' 'true'}}
+      <div class="col-md-12 offset-3">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" name="activateGroup" id="activateGroup">
+          <label class="custom-control-label" for="activateGroup">Activer le mode Groupe</label>
+        </div>
+      </div>
+      <br />
+    {{else}}
+      <div class="col-md-12">
+        <div id="esNameDiv" style="margin-bottom: 30px">
+          <label for="esNameSelect" id="label"> Sélectionnez votre établissement </label>
+          <select id="esNameSelect" class="form-control">
+          </select>
+        </div>
+      </div>
+    {{/ifCond}}
+
+    <div class="col-md-12">
+      <label for="poolName" id="label1"> Nom de votre pool </label>
+      <input id="poolName" type="text" class="form-control">
     </div>
-    <div id="esNameDiv" style="margin-bottom: 30px">
-      <label for="esNameSelect" id="label"> Sélectionnez votre établissement </label>
-      <select id="esNameSelect" class="form-control">
-      </select>
+    <div class="col-md-12">
+      <label for="referentName" id="label2"> Nom du référent du pool </label>
+      <input id="referentName" type="text" class="form-control">
     </div>
-    <label for="poolName" id="label1"> Nom de votre pool </label>
-    <input id="poolName" type="text" class="form-control">
-    <label for="referentName" id="label2"> Nom du référent du pool </label>
-    <input id="referentName" type="text" class="form-control">
-    <label for="personnelMails" id="label3" style="display:none"> Ajoutez des soignants à votre pool </label>
-    <input id="personnelMails" type="text" class="form-control" style="display:none;">
+    <div class="col-md-12">
+      <label for="personnelMails" id="label3" style="display:none"> Ajoutez des soignants à votre pool </label>
+      <input id="personnelMails" type="text" class="form-control" style="display:none;">
+    </div>
   </div>
 </div>
 <div class="modal-footer">

@@ -25,25 +25,26 @@
 
 <div class="row">
   <div class="col-12 col-md-12 col-lg-12" style="margin-bottom: 25px; display:flex">
-    <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" onclick="createPool()"> + </button>
+    <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" data-group="{{inGroup}}" onclick="createPool(this)"> + </button>
     <span style="margin-top: 15px; margin-left: 10px"><h2> Créer un nouveau pool</h2></span>
   </div>
-
   {{#each pools as |pool|}}
     <div class="col-12 col-md-12 col-lg-4 card-competence">
       <div class="card">
         <div class="card-header header-spacing">
           <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-6">
               <h3 class="card-title"><i class="fal fa-school"></i> {{pool.name}}</h3>
             </div>
-            <div class="col-md-2">
+            {{#ifCond @root.inGroup '===' true }}
+            <div class="col-md-6">
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" name="poolActive" data-pool="{{pool.id}}"
                        id="{{pool.id}}" {{#ifCond pool.active '===' true}} checked {{/ifCond}} onclick="changeState(this)">
-                <label class="custom-control-label" for="{{pool.id}}"></label>
+                <label class="custom-control-label" for="{{pool.id}}">Mode Groupe</label>
               </div>
             </div>
+            {{/ifCond}}
           </div>
         </div>
         <div class="card-body">
@@ -71,26 +72,25 @@
   {{/each}}
 </div>
 <script>
-  let createPool = () => {
+  let createPool = (data) => {
     createModal({
       id: 'createPoolModal',
       modal: 'es/createPool',
-      title: 'Créer un pool de remplaçants'
+      title: 'Créer un pool de remplaçants',
+      group: data.dataset.group,
     }, () => {
       $('button#createPoolButton').click(function () {
-        if ($('#personnelMails').val() !== '') { // && $('#personnelMails').val() !== [] TODO: Comprendre pourquoi cette comparaison ne fonctionne pas
+        if ($('#personnelMails').val() !== '') {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           let pool = $('#poolName').val();
-          let allEs = $('#groupToggle').prop('checked');
           let selectedEs = $('#esNameSelect').val();
-          if(allEs) {
-            selectedEs = [];
-            $("#esNameSelect option").each(function () { selectedEs.push(Number(this.value)); });
-          }
+          let groupMode = $('#activateGroup').prop('checked');
           let referent = $('#referentName').val();
           let mails = $('#personnelMails').val();
+
          $.post(`/my-pool`, {
             _csrf,
+            groupMode,
             selectedEs,
             pool,
             referent,
@@ -190,7 +190,7 @@
     })
   };
   let personnelStep = () => {
-    if ($('#p5oolName').val() !== '' && $('#referentName').val() !== '')
+    if ($('#poolName').val() !== '' && $('#referentName').val() !== '')
     {
       $('#addPersonnelButton').toggle();
       $('#label1').toggle();
@@ -244,8 +244,5 @@
         }
       })
     }
-  };
-  const hideEsList = () => {
-    $('#esNameDiv').toggle();
   };
 </script>
