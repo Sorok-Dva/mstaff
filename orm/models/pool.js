@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     referent: DataTypes.STRING,
     owner: DataTypes.STRING,
-    active: DataTypes.BOOLEAN
+    group_mode: DataTypes.BOOLEAN
   }, {});
   Pool.associate = function (models) {
     Pool.belongsTo(models.User, {
