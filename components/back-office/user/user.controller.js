@@ -3,6 +3,7 @@ const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
 const { validationResult } = require('express-validator/check');
 const { BackError } = require(`${__}/helpers/back.error`);
+let User = require(`${__}/components/user`);
 const Models = require(`${__}/orm/models/index`);
 const Mailer = require(`${__}/components/mailer`);
 
@@ -15,7 +16,26 @@ BackOffice_Users.findOne = (req, res, next) => {
     where: {
       id: req.params.id
     },
-    include: _getInclude(),
+    include: {
+      model: Models.Candidate,
+      as: 'candidate',
+      include: [{
+        model: Models.CandidateFormation,
+        attributes: ['name'],
+        as: 'formations',
+      }, {
+        model: Models.Experience,
+        attributes: ['poste_id', 'service_id'],
+        as: 'experiences',
+        include: [{
+          model: Models.Service,
+          as: 'service'
+        }, {
+          model: Models.Post,
+          as: 'poste'
+        }]
+      }]
+    },
     attributes: {
       exclude: ['password']
     }
@@ -94,13 +114,21 @@ BackOffice_Users.sendVerificationEmail = (req, res, next) => {
   });
 };
 
-BackOffice_Users.listRH = (req, res, next) => {
+
+BackOffice_Users.resetProfilePercentage = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
   }
-  Models.User.findAll({ where: { type: 'es' }, attributes: { exclude: ['password'] } }).then( rh => {
-    return res.status(200).send(rh)
+  Models.User.findOne({
+    where: { id: req.body.id },
+    attributes: [ 'id', 'type' ]
+  }).then(user => {
+    if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
+    if (user.type !== 'candidate') return res.status(400).send('Cet utilisateur n\'est pas un candidat.');
+    User.Candidate.updateWholePercentage(user, (percentage) => {
+      return res.status(200).send({ status: 'ok', percentage });
+    });
   });
 };
 
@@ -140,7 +168,7 @@ BackOffice_Users.getList = (req, res, next) => {
 let _getInclude = (type) => {
   let include;
   switch (type) {
-    case 'candidates':
+    case 'candidate':
       include = {
         model: Models.Candidate,
         as: 'candidate',

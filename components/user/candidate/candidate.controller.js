@@ -207,7 +207,12 @@ User_Candidate.viewProfile = (req, res, next) => {
     }, {
       model: Models.Wish,
       as: 'wishes'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'start', 'ASC' ],
+      [ 'formations', 'start', 'ASC' ],
+      [ 'qualifications', 'start', 'ASC' ],
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     if (_.isNil(candidate.percentage)) {
@@ -323,7 +328,12 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
     }, {
       model: Models.CandidateFormation, // CandidateFormations Associations (user.candidate.formations)
       as: 'formations'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'start', 'ASC' ],
+      [ 'formations', 'start', 'ASC' ],
+      [ 'qualifications', 'start', 'ASC' ],
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     Models.Post.findAll().then(posts => {
@@ -1317,7 +1327,7 @@ User_Candidate.updatePercentage = (user, type) => {
   });
 };
 
-User_Candidate.updateWholePercentage = (user) => {
+User_Candidate.updateWholePercentage = (user, callback) => {
   Models.Candidate.findOne({ where: { user_id: user.id } }).then(candidate => {
     if (_.isNil(candidate)) return false;
     let { percentage } = candidate;
@@ -1367,7 +1377,8 @@ User_Candidate.updateWholePercentage = (user) => {
             else percentage.documents.VIT = 0;
             candidate.percentage = percentage;
 
-            return User_Candidate.updateTotalPercentage(candidate, percentage);
+            User_Candidate.updateTotalPercentage(candidate, percentage);
+            if (callback) return callback(percentage);
           });
         });
       });

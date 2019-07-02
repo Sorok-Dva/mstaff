@@ -3,7 +3,8 @@
     <div class="card">
       <div class="card-content">
         <div class="toolbar">
-          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showSuperGroupModal()"> <i class="fal fa-plus"></i></a>
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showSuperGroupModal()"> <i
+              class="fal fa-plus"></i></a>
         </div>
 
         <table id="superGroups-table" class="table">
@@ -11,7 +12,10 @@
           <th data-field="state" data-checkbox="true"></th>
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
-
+          <th data-field="logo" data-sortable="true">Logo</th>
+          <th data-field="banner" data-sortable="true">Bannière</th>
+          <th data-field="domain_name" data-sortable="true">Sous domaine</th>
+          <th data-field="domain_enable" data-sortable="true">État sous domaine</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions
           </th>
@@ -22,6 +26,10 @@
               <td></td>
               <td>{{superGroups.id}}</td>
               <td>{{superGroups.name}}</td>
+              <td>{{superGroups.logo}}</td>
+              <td>{{superGroups.banner}}</td>
+              <td>{{superGroups.domain_name}}</td>
+              <td>{{#ifCond superGroups.domain_enable '==' '1'}}Actif{{else}}Inactif{{/ifCond}}</td>
               <td></td>
             </tr>
           {{/each}}
@@ -37,13 +45,16 @@
   operateFormatter = (value, row, index) => {
     return [
       '<div class="table-icons">',
-      '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
+      '<a title="Lier des utilisateurs" class="btn btn-simple btn-primary btn-icon table-action linkUsers" href="javascript:void(0)">',
+      '<i class="ti-user"></i>',
+      '</a>',
+      '<a title="Lier des groupes" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
       '<i class="ti-sharethis"></i>',
       '</a>',
-      '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+      '<a title="Modifier le supergroupe" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
       '<i class="ti-pencil-alt"></i>',
       '</a>',
-      '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<a title="Supprimer le supergroupe" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
       '<i class="ti-close"></i>',
       '</a>',
       '</div>',
@@ -52,6 +63,16 @@
 
   $(document).ready(() => {
     window.operateEvents = {
+      'click .linkUsers': (e, value, row, index) => {
+        createModal({
+          id: 'linkGroupModal',
+          title: 'Ajouter / modifier utilisateurs liés à ' + row.name,
+          modal: 'back-office/linkUsersSuperGroup',
+          size: 'modal-xl',
+          style: 'width:60%',
+          group: row
+        });
+      },
       'click .link': (e, value, row, index) => {
         createModal({
           id: 'linkSuperGroupModal',
@@ -72,7 +93,6 @@
                   icon: 'check-circle',
                   type: 'success',
                   title: 'Groupe(s) lié(s)',
-                  message: ``,
                 });
               });
             }
@@ -80,27 +100,48 @@
         });
       },
       'click .edit': (e, value, row, index) => {
+        let id = $(e.currentTarget).closest('tr').attr('data-id');
         createModal({
           id: 'editSuperGroupModal',
-          title: 'Modifier un super Groupe',
-          modal: 'back-office/editSuperGroups'
+          title: 'Modifier un Super Groupe',
+          modal: 'back-office/editSuperGroups',
+          supergroup: {
+            name: $(`tr[data-id="${id}"] td`).first().next().next().text(),
+            logo: $(`tr[data-id="${id}"] td`).first().next().next().next().text(),
+            banner: $(`tr[data-id="${id}"] td`).last().prev().prev().prev().text(),
+            domain_name: $(`tr[data-id="${id}"] td`).last().prev().prev().text(),
+            domain_enable: $(`tr[data-id="${id}"] td`).last().prev().text()
+          }
         }, () => {
           $('button#btnEditSuperGroup').click(function () {
             if ($('input#superGroupValueEdit').val() !== '') {
               let _csrf = $('meta[name="csrf-token"]').attr('content');
-              let promptInput = $('input#superGroupValueEdit').val();
-              $.put(`/api/back-office/super-groups/${row.id}`, {
-                promptInput,
-                _csrf
-              }, () => {
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
+              let name = $('input#superGroupValueEdit').val();
+              let logo = $('input#superGroupLogoEdit').val();
+              let banner = $('input#superGroupBannerEdit').val();
+              let domain_name = $('input#superGroupDomainNameEdit').val();
+              let domain_enable = $('select#superGroupDomainEdit').val();
+              $.put(`/api/back-office/groups/SuperGroups/${row.id}`, {
+                name, logo, banner, domain_name, domain_enable, _csrf
+              }, (data) => {
+                if (data.error) {
+                  notification({
+                    icon: 'exclamation',
+                    type: 'danger',
+                    title: 'Un problème est survenue :',
+                    message: data.error
+                  });
+                }
                 $('#editSuperGroupModal').modal('hide');
-                $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+                $(`tr[data-id="${id}"] td`).first().next().text(name);
+                $(`tr[data-id="${id}"] td`).first().next().next().text(logo);
+                $(`tr[data-id="${id}"] td`).first().next().next().next().text(banner);
+                $(`tr[data-id="${id}"] td`).last().prev().prev().text(domain_name);
+                $(`tr[data-id="${id}"] td`).last().prev().text(domain_enable === '0' ? 'Inactif' : 'Actif');
                 notification({
                   icon: 'check-circle',
                   type: 'success',
                   title: 'SuperGroup modifié.',
-                  message: ``
                 });
               });
             } else {
@@ -122,7 +163,7 @@
         }, () => {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveSuperGroup').click(function () {
-            $.delete(`/api/back-office/super-groups/${row.id}`, {
+            $.delete(`/api/back-office/groups/SuperGroups/${row.id}`, {
               _csrf
             }, () => {
               table.bootstrapTable('remove', {
@@ -142,7 +183,7 @@
     };
 
     table.bootstrapTable({
-      toolbar: ".toolbar",
+      toolbar: '.toolbar',
       search: true,
 
       showColumns: true,
@@ -152,7 +193,7 @@
       clickToSelect: true,
       pageList: [10, 25, 50, 100, 200, 500],
       formatRecordsPerPage: (pageNumber) => {
-        return pageNumber + " rows visible";
+        return pageNumber + ' rows visible';
       },
       icons: {
         columns: 'fa fa-columns',
@@ -178,7 +219,7 @@
         if ($('input#superGroupValue').val() != '') {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#superGroupValue').val();
-          $.post(`/api/back-office/super-groups/`, {
+          $.post(`/api/back-office/groups/SuperGroups/`, {
             promptInput,
             _csrf
           }, (response) => {

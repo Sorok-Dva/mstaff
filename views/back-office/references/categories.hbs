@@ -17,7 +17,7 @@
           </th>
           </thead>
           <tbody>
-          {{#each categories as |category|}}
+          {{#each references as |category|}}
             <tr data-id="{{category.id}}">
               <td></td>
               <td>{{category.id}}</td>
@@ -56,7 +56,8 @@
         }, () => {
           $('button#btnEditCategory').click(function () {
             if ($('input#categoryValueEdit').val() != '') {
-              let _csrf = $('#csrfToken').val();
+
+let _csrf = $('meta[name="csrf-token"]').attr('content');
               let promptInput = $('input#categoryValueEdit').val();
               $.put(`/api/back-office/references/categories/${row.id}`, {
                 promptInput,
@@ -89,7 +90,8 @@
           title: 'Supprimer une compétence',
           modal: 'back-office/removeCategory'
         }, () => {
-          let _csrf = $('#csrfToken').val();
+
+let _csrf = $('meta[name="csrf-token"]').attr('content');
           $('button#btnRemoveCategory').click(function () {
             $.delete(`/api/back-office/references/categories/${row.id}`, {
               _csrf
@@ -146,7 +148,7 @@
     }, () => {
       $('button#validateCategory').click(function () {
         if ($('input#categoryValue').val() != '') {
-          let _csrf = $('#csrfToken').val();
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
           let promptInput = $('input#categoryValue').val();
           $.post(`/api/back-office/references/categories/`, {
             promptInput,
@@ -156,22 +158,20 @@
               notification({
                 icon: 'exclamation',
                 type: 'danger',
-                title: 'Cette compétence existe déjà.',
-                message: ``
+                title: 'Cette catégorie existe déjà.',
               });
             } else {
               table.bootstrapTable('insertRow', {
                 index: 0,
                 row: {
-                  id: response.category.id,
-                  name: response.category.name
+                  id: response.reference.id,
+                  name: response.reference.name
                 }
               });
               notification({
                 icon: 'check-circle',
                 type: 'success',
-                title: 'Compétence créée.',
-                message: ``
+                title: 'Catégorie créée.',
               });
             }
           });

@@ -9,7 +9,7 @@ const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
   max: 10, // start blocking after 3 requests
   handler: (req, res, next) => {
-    req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réesayer dans 15 minutes.');
+    req.flash('error_msg', 'Trop de tentatives de connexion sur ce compte. Veuillez réessayer dans 15 minutes.');
     return res.redirect('/login');
   },
   keyGenerator: function (req /*, res*/) {
@@ -31,9 +31,9 @@ router.get('/login',
   Authentication.ensureIsNotAuthenticated,
   Render.View.Login)
   .post('/login',
-    loginLimiter,
     Authentication.ensureIsNotAuthenticated,
     HTTPValidation.IndexController.login,
+    loginLimiter,
     Express.passportAuthentication,
     Render.View.Redirect);
 

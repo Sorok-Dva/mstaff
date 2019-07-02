@@ -1,5 +1,4 @@
 const { Authentication } = require('../../middlewares/index');
-const Controller = require('../../controllers/establishment');
 const { Conference, Establishment, User } = require('../../components');
 const express = require('express');
 const router = express.Router();
@@ -35,7 +34,7 @@ router.get('/:esId(\\d+)/need/:id(\\d+)/newCandidates',
 
 router.post('/:esId(\\d+)/need/:id(\\d+)/:action/candidate/:candidateId(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
-  Controller.apiNeedCandidate
+  Establishment.Need.CandidateAction
 );
 
 router.post('/:esId(\\d+)/need/:id(\\d+)/candidate/:candidateId(\\d+)/conference',
@@ -45,7 +44,7 @@ router.post('/:esId(\\d+)/need/:id(\\d+)/candidate/:candidateId(\\d+)/conference
 
 router.post('/:esId(\\d+)/candidate/:candidateId(\\d+)/:action',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
-  Controller.apiFavCandidate
+  Establishment.Need.favCandidate
 );
 
 router.post('/:esId(\\d+)/feedback',
@@ -79,6 +78,14 @@ router.post('/need/:editNeedId(\\d+)/edit',
 router.delete('/need/:id(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Establishment.Need.delete);
+
+/**
+ * @Route('/:esId(\d+)/create/offer/fromNeed/:needId(\\d+)/') POST;
+ * Create Offer from Need
+ */
+router.post('/:esId(\\d+)/create/offer/fromNeed/:needId(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Offer.Create);
 
 /**
  * @Route('/conference/:id(\\d+)') DELETE;

@@ -10,6 +10,7 @@
             <table class="table table-hover">
               <thead>
               <tr class="info">
+                <th>no</th>
                 <th>Besoin</th>
                 <th>Détail du contrat</th>
                 <th>Candidats</th>
@@ -20,6 +21,7 @@
               {{#if needs}}
                 {{#each needs as |need|}}
                   <tr data-applicationId="{{need.id}}">
+                    <td><h2 class="text-muted">#{{need.id}}</h2></td>
                     <td>
                       <h2>{{need.name}}</h2>
                       <span class="text-muted">Créé le {{date need.createdAt 'DD/MM/YYYY'}} par {{need.User.firstName}} {{need.User.lastName}}</span>
@@ -27,18 +29,23 @@
                     <td>
                       <div class="label-container">
                         {{#if need.post}}
-                          <div class="label label-default">{{need.post}}</div>
+                          <div class="badge badge-secondary">{{need.post}}</div>
                         {{/if}}
                         {{#if need.contract_type}}
-                          <div class="label label-warning">
+                          <div class="badge badge-warning">
                             {{need.contract_type}}
                           </div>
                         {{/if}}
                         {{#if need.start}}
-                          <div class="label label-success">
+                          <div class="badge badge-success">
                             {{date need.start 'DD/MM/YYYY'}}
                             {{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}
                           </div>
+                        {{/if}}
+                        {{#if need.service}}
+                            <div class="badge badge-primary">
+                                {{ need.service }}
+                            </div>
                         {{/if}}
                       </div>
                     </td>
@@ -70,6 +77,10 @@
                       {{#ifCond need.createdBy '===' @root.user.id}}
                         <button class="btn btn-simple btn-outline-danger btn-icon removeApplication" data-id="{{need.id}}">
                           <i class="ti-close"></i>
+                        </button>
+                        <button class="btn btn-simple btn-outline-info btn-icon createOffer" data-id="{{need.id}}"
+                                data-toggle="tooltip" data-placement="top" data-original-title="Créer une offre à partir de ce besoin">
+                          <i class="ti-plus"></i>
                         </button>
                       {{/ifCond}}
                     </td>
@@ -115,5 +126,20 @@
         }
       }).catch(error => errorsHandler(error));
     }
+  });
+
+  $('button.createOffer').click(function() {
+    let id = $(this).attr('data-id');
+    $.post(`/api/es/{{user.opts.currentEs}}/create/offer/fromNeed/${id}`, { _csrf }, (data) => {
+      if (data.status === 'created') {
+        $(location).attr('href', `/job_board/offer/${data.offer.id}`);
+      } else {
+        notification({
+          icon: 'exclamation-circle',
+          type: 'warning',
+          title: 'Une erreur est survenue lors de la création de cette offre.'
+        })
+      }
+    }).catch(error => errorsHandler(error));
   })
 </script>

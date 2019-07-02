@@ -7,6 +7,7 @@ const moment = require('moment');
 const httpStatus = require('http-status');
 
 const Models = require(`${__}/orm/models/index`);
+const Notification = require(`${__}/components/notification`);
 const Mailer = require(`${__}/components/mailer`);
 
 const Conference = {};
@@ -46,33 +47,37 @@ Conference.viewConference_ES = (req, res, next) => {
 };
 
 Conference.viewConference_Candidate = (req, res, next) => {
-  Models.Conference.findOne({
-    where: {
-      candidate_id: req.user.id,
-      id: req.params.id,
-    },
-    include: [{
-      model: Models.User,
-      attributes: ['id', 'firstName', 'lastName'],
-      required: true,
-      on: {
-        '$Conference.user_id$': {
-          [Op.col]: 'User.id'
+  Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
+    if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
+    Models.Conference.findOne({
+      where: {
+        candidate_id: candidate.id,
+        id: req.params.id,
+      },
+      include: [{
+        model: Models.User,
+        attributes: ['id', 'firstName', 'lastName'],
+        required: true,
+        on: {
+          '$Conference.user_id$': {
+            [Op.col]: 'User.id'
+          }
         }
-      }
-    }, {
-      model: Models.Establishment,
-      attributes: ['id', 'name', 'address', 'town'],
-      required: true,
-      on: {
-        '$Conference.es_id$': {
-          [Op.col]: 'Establishment.id'
+      }, {
+        model: Models.Establishment,
+        attributes: ['id', 'name', 'address', 'town'],
+        required: true,
+        on: {
+          '$Conference.es_id$': {
+            [Op.col]: 'Establishment.id'
+          }
         }
-      }
-    }]
-  }).then(conference => {
-    return res.status(httpStatus.OK).send(conference);
-  })
+      }]
+    }).then(conference => {
+      if (_.isNil(conference)) return next(new BackError('Conference introuvable', 404));
+      return res.status(httpStatus.OK).send(conference);
+    })
+  });
 };
 
 Conference.changeDate = (req, res, next) => {
@@ -221,11 +226,24 @@ Conference.candidateAnswer = (req, res, next) => {
       where: {
         id: parseInt(req.params.id),
         candidate_id: candidate.id
-      }
+      },
+      include: [{
+        model: Models.User,
+        attributes: { exclude: ['password'] },
+        on: {
+          '$Conference.user_id$': {
+            [Op.col]: 'User.id'
+          }
+        }
+      }, {
+        model: Models.Establishment
+      }]
     }).then(conference => {
       if (_.isNil(conference)) return next();
       conference.status = req.body.availability;
       conference.save();
+      Mailer.Main.notifyESCandidateAnswerConference(conference.User.email, { Conference: conference, es: conference.Establishment });
+      Notification.ES.candidateAnswerForConference(conference.User, req.user, conference.Establishment);
       return res.status(200).send('done');
     })
   })

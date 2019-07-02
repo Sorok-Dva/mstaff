@@ -102,6 +102,32 @@ Mailer.newWishCreated = (email, context) => {
   });
 };
 
+Mailer.notifyESCandidateAvailable = (email, context) => {
+  let mailObject = {
+    subject: 'Nouveaux candidats disponibles.',
+    template: 'es/need/available_candidate'
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
+Mailer.notifyESCandidateAnswerConference = (email, context) => {
+  let mailObject = {
+    subject: 'Réponse pour votre demande d\'entretien.',
+    template: 'es/need/conf_answer_candidate'
+  };
+  mailer.sendEmail({
+    to: email,
+    subject: mailObject.subject,
+    template: mailObject.template,
+    context
+  });
+};
+
 
 
 module.exports = Mailer;

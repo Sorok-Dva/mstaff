@@ -124,5 +124,18 @@ router.get('/establishement-list',
   Authentication.ensureIsEs,
   Establishment.Application.getEstablishments
 );
+/**
+ * @Route('/job_board/offer/:id(\\d+)') GET, POST & DELETE;
+ * Show, Edit or Delete Specific Offer Page
+ */
+router.get('/job_board/offer/:id(\\d+)',
+  Authentication.ensureIsEs,
+  Establishment.Offer.View)
+  .post('/job_board/offer/:id(\\d+)',
+    Authentication.ensureIsEs,
+    Establishment.Offer.Edit)
+  .delete('/job_board/offer/:id(\\d+)',
+    Authentication.ensureIsEs,
+    Establishment.Offer.Delete);
 
 module.exports = router;
