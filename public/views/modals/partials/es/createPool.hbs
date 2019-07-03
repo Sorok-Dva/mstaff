@@ -3,34 +3,16 @@
 <div class="modal-body">
   <div class="form-group">
 
-    {{#ifCond group '===' 'true'}}
-      <div class="col-md-12 offset-3">
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" name="activateGroup" id="activateGroup">
-          <label class="custom-control-label" for="activateGroup">Activer le mode Groupe</label>
-        </div>
-      </div>
-      <br />
-    {{else}}
-      <div class="col-md-12">
-        <div id="esNameDiv" style="margin-bottom: 30px">
-          <label for="esNameSelect" id="label"> Sélectionnez votre établissement </label>
-          <select id="esNameSelect" class="form-control">
-          </select>
-        </div>
-      </div>
-    {{/ifCond}}
-
     <div class="col-md-12">
-      <label for="poolName" id="label1"> Nom de votre pool </label>
+      <label for="poolName" id="poolNameLabel"> Nom de votre pool </label>
       <input id="poolName" type="text" class="form-control">
     </div>
     <div class="col-md-12">
-      <label for="referentName" id="label2"> Nom du référent du pool </label>
+      <label for="referentName" id="referentNameLabel"> Nom du référent du pool </label>
       <input id="referentName" type="text" class="form-control">
     </div>
     <div class="col-md-12">
-      <label for="personnelMails" id="label3" style="display:none"> Ajoutez des soignants à votre pool </label>
+      <label for="personnelMails" id="personnelMailsLabel" style="display:none"> Ajoutez des soignants à votre pool </label>
       <input id="personnelMails" type="text" class="form-control" style="display:none;">
     </div>
   </div>
@@ -43,10 +25,3 @@
     Valider
   </button>
 </div>
-<script>
-  $.get('/establishement-list', function (data) {
-    data.forEach((establishment) => {
-      $('#esNameSelect').append($('<option>', {value:establishment.Establishment.id, text: establishment.Establishment.name}));
-    });
-  });
-</script>

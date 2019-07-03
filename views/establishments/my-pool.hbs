@@ -15,6 +15,8 @@
   }
 </style>
 
+{{ user.options}}
+
 <div class="col-md-12 text-center">
 {{#ifCond pools.length '<=' 0}}
     <h2 style="font-weight: 400"> Vous n'avez pas encore crée de pool de remplaçants. </h2>
@@ -25,7 +27,7 @@
 
 <div class="row">
   <div class="col-12 col-md-12 col-lg-12" style="margin-bottom: 25px; display:flex">
-    <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" data-group="{{inGroup}}" onclick="createPool(this)"> + </button>
+    <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" data-group="{{group}}" onclick="createPool(this)"> + </button>
     <span style="margin-top: 15px; margin-left: 10px"><h2> Créer un nouveau pool</h2></span>
   </div>
   {{#each pools as |pool|}}
@@ -36,15 +38,6 @@
             <div class="col-md-6">
               <h3 class="card-title"><i class="fal fa-school"></i> {{pool.name}}</h3>
             </div>
-            {{#ifCond @root.inGroup '===' true }}
-            <div class="col-md-6">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" name="poolActive" data-pool="{{pool.id}}"
-                       id="{{pool.id}}" {{#ifCond pool.active '===' true}} checked {{/ifCond}} onclick="changeState(this)">
-                <label class="custom-control-label" for="{{pool.id}}">Mode Groupe</label>
-              </div>
-            </div>
-            {{/ifCond}}
           </div>
         </div>
         <div class="card-body">
@@ -77,27 +70,29 @@
       id: 'createPoolModal',
       modal: 'es/createPool',
       title: 'Créer un pool de remplaçants',
-      group: data.dataset.group,
     }, () => {
       $('button#createPoolButton').click(function () {
         if ($('#personnelMails').val() !== '') {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           let pool = $('#poolName').val();
-          let selectedEs = $('#esNameSelect').val();
-          let groupMode = $('#activateGroup').prop('checked');
           let referent = $('#referentName').val();
           let mails = $('#personnelMails').val();
 
          $.post(`/my-pool`, {
             _csrf,
-            groupMode,
-            selectedEs,
             pool,
             referent,
             mails
           }, () => {
            location.reload();
           })
+        } else {
+          notification({
+            icon: 'flag',
+            type: 'warning',
+            title: 'Vous devez entrer au moins une addresse e-mail.',
+            message: ``
+          });
         }
       });
     });
@@ -163,17 +158,17 @@
     createModal({
       id: 'invitePoolModal',
       modal: 'es/poolInvitation',
-      title: 'Inviter des soignants'
+      title: 'Inviter des soignants',
+      pool_id: selectedPool.dataset.pool,
     }, () => {
       $('button#createPoolButton').click(function () {
         if ($('#newPersonnelMails').val() !== '') { // && $('#personnelMails').val() !== [] TODO: Comprendre pourquoi cette comparaison ne fonctionne pas
           let mails = $('#newPersonnelMails').val();
           let _csrf = $('meta[name="csrf-token"]').attr('content');
           let pool_id = selectedPool.dataset.pool;
-          $.post(`/pool-invite`, {
+          $.post(`/pool/${pool_id}/invites`, {
             _csrf,
             mails,
-            pool_id
           }, (response) => {
             if (response === 'Invitations sent') {
               $('#invitePoolModal').modal('hide');
@@ -193,9 +188,9 @@
     if ($('#poolName').val() !== '' && $('#referentName').val() !== '')
     {
       $('#addPersonnelButton').toggle();
-      $('#label1').toggle();
-      $('#label2').toggle();
-      $('#label3').toggle();
+      $('#poolNameLabel').toggle();
+      $('#referentNameLabel').toggle();
+      $('#personnelMailsLabel').toggle();
       $('#esNameDiv').hide();
       $('#toggleDiv').hide();
       $('#referentName').toggle();
@@ -206,43 +201,13 @@
         theme: 'bootstrap',
         checkDupEmail: true
       });
-    }
-  };
-  let changeState = (selectedToggle) => {
-    let _csrf = $('meta[name="csrf-token"]').attr('content');
-    let checked = selectedToggle.checked;
-    let pool = selectedToggle.dataset.pool;
-    if (checked === true) {
-      $.post(`/pool-enable`, {
-        _csrf,
-        checked,
-        pool
-      }, (response) => {
-        if (response === 'pool unabled') {
-          notification({
-            icon: 'check-circle',
-            type: 'success',
-            title: 'Pool activé',
-            message: ``
-          })
-        }
-      })
-    }
-    if (checked === false) {
-      $.post(`/pool-disable`, {
-        _csrf,
-        checked,
-        pool
-      }, (response) => {
-        if (response === 'pool disabled') {
-          notification({
-            icon: 'check-circle',
-            type: 'success',
-            title: 'Pool désactivé',
-            message: ``
-          })
-        }
-      })
+    } else {
+      notification({
+        icon: 'flag',
+        type: 'warning',
+        title: 'Vous devez entrer le nom de votre pool ainsi que le nom du référent.',
+        message: ``
+      });
     }
   };
 </script>
