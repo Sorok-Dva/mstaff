@@ -9,12 +9,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       referent: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      owner: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -24,9 +26,15 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false
       },
-      group_mode: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+      es_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Establishments',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
