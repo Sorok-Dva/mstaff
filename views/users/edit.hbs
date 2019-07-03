@@ -123,8 +123,9 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label>Date de naissance</label>
-                <input id="birthdayEdit" type="text" name="birthday" class="form-control border-input" placeholder="dd/mm/aaaa"
-                       value="{{date usr.birthday 'YYYY-MM-DD'}}" required>
+                <input id="birthdayEdit" type="text" class="form-control border-input" placeholder="dd/mm/aaaa"
+                       value="{{date usr.birthday 'DD MM YYYY'}}" required>
+                <input id="birthdayHidden" type="hidden" name="birthday" value="{{date usr.birthday 'YYYY-MM-DD'}}" required>
               </div>
             </div>
           </div>
@@ -188,9 +189,17 @@
     let input = document.querySelector("#phone");
     window.intlTelInput(input);
 
+    $('#profileForm').submit( e => $('#birthdayEdit').val());
+
     $('#birthdayEdit').datetimepicker({
-      format: 'YYYY-MM-DD'
+      format: 'DD MM YYYY'
     });
+
+    $('#birthdayEdit').on('dp.change',  function (){
+      let value = moment($('#birthdayEdit').data("DateTimePicker").date()).format('YYYY-MM-DD');
+      $('#birthdayHidden').val(value);
+    });
+
   });
   let deleteAccount = () => {
     createModal({
