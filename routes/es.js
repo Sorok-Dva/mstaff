@@ -105,19 +105,15 @@ router.get('/my-pool',
   Establishment.Pool.Delete
 );
 
-router.post('/pool-invite',
+router.get('/pool/:id/invites',
+  Authentication.ensureIsEs,
+  Establishment.Pool.ViewInvitations
+).delete('/pool/:id/invites',
+  Authentication.ensureIsEs,
+  Establishment.Pool.DeleteInvite
+).post('/pool/:id/invites',
   Authentication.ensureIsEs,
   Establishment.Pool.Invite
-);
-
-router.post('/pool-enable',
-  Authentication.ensureIsEs,
-  Establishment.Pool.Enable
-);
-
-router.post('/pool-disable',
-  Authentication.ensureIsEs,
-  Establishment.Pool.Disable
 );
 
 router.get('/establishement-list',

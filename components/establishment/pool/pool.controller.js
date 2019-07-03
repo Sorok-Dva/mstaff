@@ -14,36 +14,44 @@ const Establishment_Pool = {};
 
 Establishment_Pool.View = (req, res, next) => {
   let a = { main: 'pools' };
-  return res.render('establishments/pool', { a } );
+  Models.Pool.count({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs } }).then(poolsCount => {
+    if (poolsCount > 0) {
+      Models.Pool.findAll({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs } }).then(pools => {
+        return res.render('establishments/my-pool', { a, pools } );
+      }).catch(error => next(new Error(error)));
+    } else {
+      return res.render('establishments/pool', { a });
+    }
+  });
 };
 
 Establishment_Pool.ViewAll = (req, res, next) => {
   let a = { main: 'pools' };
-  Models.Pool.findAll({ where: { owner: req.user.id } }).then(pools => {
-    Models.ESAccount.findAll({ where: { user_id: req.user.id } } ).then(group => {
-      Models.UsersGroups.findOne({ where: { user_id: req.user.id } } ).then(inGroup => {
-        inGroup = !_.isNil(inGroup);
-        return res.render('establishments/my-pool', { a, pools, group, inGroup } );
-      }).catch(error => next(new Error(error)));
-    }).catch(error => next(new Error(error)));
+  Models.Pool.findAll({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs } }).then(pools => {
+    return res.render('establishments/my-pool', { a, pools } );
   }).catch(error => next(new Error(error)));
 };
 
 Establishment_Pool.Add = (req, res, next) => {
-  let { selectedEs } = req.body;
-  let groupMode = req.body.groupMode.toLowerCase() === 'true' ? true : false;
-  let token;
-
+  let mails = JSON.parse(req.body.mails);
   Models.Pool.create({
     name: req.body.pool,
     referent: req.body.referent,
-    owner: req.user.id,
-    group_mode: groupMode,
+    user_id: req.user.id,
+    es_id: req.user.opts.currentEs
   }).then(pool => {
-    if (!groupMode && selectedEs)
-      Models.EsPool.create({ pool_id: pool.id, es_id: selectedEs }).catch(error => next(new Error(error)));
-    token = crypto.randomBytes(10).toString('hex');
-    //Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
+    mails.forEach(mail => {
+      let token = crypto.randomBytes(10).toString('hex');
+
+      Models.InvitationPools.create({
+        email: mail,
+        token: token,
+        pool_id: pool.id
+      }).then(() => {
+        //Establishment_Pool.sendMail(mail, token);
+      }).catch(error => next(new Error(error)));
+    });
+
     res.status(200).send({ pool });
   }).catch(error => next(new Error(error)));
 };
@@ -57,10 +65,34 @@ Establishment_Pool.Edit = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
+Establishment_Pool.ViewInvitations = (req, res, next) => {
+  Models.InvitationPools.findAll({
+    attributes: ['email'],
+    where: { pool_id: req.params.id },
+  }).then(emails => {
+    return res.status(200).send({ emails });
+  }).catch(error => next(new Error(error)));
+};
+
+Establishment_Pool.DeleteInvite = (req, res, next) => {
+  Models.InvitationPools.destroy({ where: { pool_id: req.params.id, email: req.body.email } }).then( () => {
+    res.status(200).json('Invitation removed from pool');
+  }).catch(error => next(new Error(error)));
+};
+
 Establishment_Pool.Invite = (req, res, next) => {
-  let token;
-  token = crypto.randomBytes(10).toString('hex');
-  Establishment_Pool.sendMail(JSON.parse(req.body.mails), token);
+  let mails = JSON.parse(req.body.mails);
+  mails.forEach(mail => {
+    let token = crypto.randomBytes(10).toString('hex');
+
+    Models.InvitationPools.create({
+      email: mail,
+      token: token,
+      pool_id: req.params.id,
+    }).then(() => {
+      //Establishment_Pool.sendMail(mail, token);
+    }).catch(error => next(new Error(error)));
+  });
   res.status(200).json('Invitations sent');
 };
 
@@ -70,22 +102,6 @@ Establishment_Pool.Delete = (req, res, next) => {
       pool.destroy().then(res.status(200).json('Pool removed')).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
   }).catch(error => next(new Error(error)));
-};
-
-Establishment_Pool.Enable = (req, res, next) => {
-  Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
-    pool.active = true;
-    pool.save();
-    res.status(200).json('pool unabled');
-  })
-};
-
-Establishment_Pool.Disable = (req, res, next) => {
-  Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
-    pool.active = false;
-    pool.save();
-    res.status(200).json('pool disabled');
-  })
 };
 
 Establishment_Pool.sendMail = (mails, token) => {
