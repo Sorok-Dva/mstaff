@@ -120,3 +120,6 @@
 
 # .DS_Stores
 - .[Dd][Ss]_[Ss]tore$
+
+# SQL Files
+- orm/sql
