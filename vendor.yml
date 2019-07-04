@@ -5,7 +5,7 @@
 # pathname.
 
 # SQL Files
-*.sql linguist-vendored
+- orm/sql/*
 
 ## Vendor Conventions ##
 
