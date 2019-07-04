@@ -1,2 +1,1 @@
-# try fix for code qualification in github repository
-*.sql linguist-language=SQL
+*.sql linguist-vendored
