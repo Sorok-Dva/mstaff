@@ -80,7 +80,7 @@
     "statuses": "^1.5.0",
     "streamifier": "^0.1.1",
     "wildcard-subdomains": "^1.1.0",
-    "snyk": "^1.189.0"
+    "snyk": "^1.190.0"
   },
   "devDependencies": {
     "browser-sync": "^2.26.3",
