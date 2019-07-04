@@ -122,4 +122,4 @@
 - .[Dd][Ss]_[Ss]tore$
 
 # SQL Files
-- orm/sql
+- orm/sql/* linguist-vendored
