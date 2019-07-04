@@ -10,7 +10,9 @@
     "db:migrate:undo": "sequelize db:migrate:undo",
     "db:seed": "sequelize db:seed:all",
     "dev": "nodemon --exec npm start",
-    "test": "ENV=test mocha tests/*/*.js --exit"
+    "test": "ENV=test mocha tests/*/*.js --exit",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -77,7 +79,8 @@
     "socket.io": "^2.2.0",
     "statuses": "^1.5.0",
     "streamifier": "^0.1.1",
-    "wildcard-subdomains": "^1.1.0"
+    "wildcard-subdomains": "^1.1.0",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "browser-sync": "^2.26.3",
@@ -99,5 +102,6 @@
     "nyc": "^13.3.0",
     "supertest": "^4.0.2"
   },
-  "main": "bin/www"
+  "main": "bin/www",
+  "snyk": true
 }
