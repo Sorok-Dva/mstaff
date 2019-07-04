@@ -655,19 +655,18 @@ $(document).ready(function () {
     let selectedCategories = selectPostType.find(':selected').attr('data-categorie');
     selectServiceType.val(null).trigger('change');
 
-    if (selectedCategories === 5){
 
-    }
 
-    console.log('selectedCategories', selectedCategories);
     let goodServices = $(`#selectServiceType [data-categorie="${selectedCategories}"]`);
-    if (selectedCategories === '3')
+    if (selectedCategories === '3'){
       goodServices = $(`#selectServiceType [data-categorie="3"],[data-categorie="2"]`);
+    }
     let wrongServices = $('#selectServiceType option:disabled');
+    wrongServices.prop('disabled', false);
+    allServiceType.hide();
 
     application.postType = [];
     postType.forEach((post) => {
-      console.log('post', post.text);
       application.postType.push(post.text);
     });
     if (postType.length > 0){
@@ -678,14 +677,17 @@ $(document).ready(function () {
       if (ApplicationIsAddMode)
         application.serviceType = [];
     }
-    else {
-      wrongServices.prop('disabled', false);
-      allServiceType.hide();
-      selectServiceType.val(null).trigger('change');
+
+    if (selectedCategories === '5'){
+      selectServiceType.val("56").trigger('change');
       selectServiceType.prop('disabled', true);
       selectServiceType.selectpicker('refresh');
     }
-
+    if (selectedCategories === '4'){
+      selectServiceType.val("55").trigger('change');
+      selectServiceType.prop('disabled', true);
+      selectServiceType.selectpicker('refresh');
+    }
   });
   selectServiceType.on('change', () => {
     let serviceType = selectServiceType.selectpicker('val');
