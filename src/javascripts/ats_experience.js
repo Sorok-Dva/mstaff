@@ -318,7 +318,7 @@ function notify(error){
       notification({
         icon: 'check-circle',
         type: 'success',
-        title: 'Expérience ajoutée avec succés.'
+        title: 'Expérience ajoutée avec succès.'
       });
 
       break

@@ -1,9 +1,4 @@
 function groupListener(){
-  $('#backToMain').click(function() {
-    loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
-  });
   $('#toPost').click(function() {
     if (verifyInputs()){
       saveDatas();
@@ -13,10 +8,20 @@ function groupListener(){
           $('#atsPart').html(html);
         })
       } else {
-        loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
           $('#atsPart').html(html);
         })
       }
+    }
+  });
+
+  $('#selectAllToggle').change( (e) => {
+    if (e.currentTarget.checked){
+      $('.finessToggle').prop('checked', true);
+      $('#selectAllTitle').text('Désélectionner tout');
+    } else {
+      $('.finessToggle').prop('checked', false);
+      $('#selectAllTitle').text('Sélectionner tout');
     }
   });
 }

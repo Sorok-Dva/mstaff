@@ -122,10 +122,6 @@ router.get('/es/:id(\\d+)',
  * @Route('/back-office/references/:type') GET;
  * Show Reference Model data
  */
-router.get('/references/categories',
-  Authentication.ensureIsAdmin,
-  BackOffice.Reference.ViewCategories);
-
 router.get('/references/:type',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.View);
@@ -159,6 +155,23 @@ router.get('/configuration/categories', Authentication.ensureIsAdmin, BackOffice
  * Show configuration of equipments
  */
 router.get('/configuration/equipments', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewEquipments);
+
+/** @Route('/back-office/jobBoard/sheets') GET;
+ * Show job sheets
+ */
+router.get('/jobBoard/sheets',
+  Authentication.ensureIsAdmin,
+  BackOffice.JobBoard.ViewJobSheets);
+
+/** @Route('/back-office/jobBoard/sheet/:id') GET;
+ * Show job sheet form
+ */
+router.get('/jobBoard/sheet/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.JobBoard.ViewJobSheet)
+  .post('/jobBoard/sheet/:id(\\d+)',
+    Authentication.ensureIsAdmin,
+    BackOffice.JobBoard.EditJobSheet);
 
 /** @Route('/back-office/settings/') GET;
  * Show app settings page

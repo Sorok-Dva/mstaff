@@ -146,7 +146,7 @@ function notify(error){
       notification({
         icon: 'check-circle',
         type: 'success',
-        title: 'Formation ajoutée avec succés.'
+        title: 'Formation ajoutée avec succès.'
       });
 
       break

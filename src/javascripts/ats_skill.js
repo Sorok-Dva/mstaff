@@ -163,7 +163,7 @@ function notify(error){
       notification({
         icon: 'check-circle',
         type: 'success',
-        title: 'Compétence ajoutée avec succés.'
+        title: 'Compétence ajoutée avec succès.'
       });
 
       break
