@@ -381,6 +381,22 @@ let editDiploma = (id) => {
   }).catch(errors => errorsHandler(errors));
 };
 
+let lockService = (category) => {
+  let inputServices = $('#service_id');
+  ;
+  if (category === "5")
+    inputServices.val("56").trigger('change');
+  if (category === "4")
+    inputServices.val("55").trigger('change');
+  if (category === "5" || category === "4"){
+    inputServices.prop('disabled', true);
+  }
+  else {
+    inputServices.prop('disabled', false);
+    inputServices.val(null).trigger('change');
+  }
+};
+
 $(document).ready(() => {
   let dtargv = {
     format: 'MM/YYYY',
@@ -440,6 +456,11 @@ $(document).ready(() => {
   });
   $('#dName').autocomplete({
     source: qualificationAutocomplete
+  });
+
+  $('#post_id').on('change', () => {
+    let category = $('#post_id option:selected').attr('data-category');
+    lockService(category);
   });
 });
 

@@ -20,7 +20,7 @@
                     <label for="post_id">Poste *</label>
                     <select id="post_id" class="form-control" name="post_id" required="" data-toggle="select">
                       {{#each posts as |post|}}
-                        <option value="{{post.id}}">{{post.name}}</option>
+                        <option data-category="{{post.categoriesPS_id}}" value="{{post.id}}">{{post.name}}</option>
                       {{/each}}
                     </select>
                   </div>
