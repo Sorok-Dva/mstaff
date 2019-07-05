@@ -653,10 +653,17 @@ $(document).ready(function () {
   selectPostType.on('change', () => {
     let postType = selectPostType.select2('data');
     let selectedCategories = selectPostType.find(':selected').attr('data-categorie');
+    selectServiceType.val(null).trigger('change');
+
+
+
     let goodServices = $(`#selectServiceType [data-categorie="${selectedCategories}"]`);
-    if (selectedCategories === '3')
+    if (selectedCategories === '3'){
       goodServices = $(`#selectServiceType [data-categorie="3"],[data-categorie="2"]`);
+    }
     let wrongServices = $('#selectServiceType option:disabled');
+    wrongServices.prop('disabled', false);
+    allServiceType.hide();
 
     application.postType = [];
     postType.forEach((post) => {
@@ -670,18 +677,20 @@ $(document).ready(function () {
       if (ApplicationIsAddMode)
         application.serviceType = [];
     }
-    else {
-      wrongServices.prop('disabled', false);
-      allServiceType.hide();
-      selectServiceType.val(null).trigger('change');
+
+    if (selectedCategories === '5'){
+      selectServiceType.val("56").trigger('change');
       selectServiceType.prop('disabled', true);
       selectServiceType.selectpicker('refresh');
     }
-
+    if (selectedCategories === '4'){
+      selectServiceType.val("55").trigger('change');
+      selectServiceType.prop('disabled', true);
+      selectServiceType.selectpicker('refresh');
+    }
   });
   selectServiceType.on('change', () => {
     let serviceType = selectServiceType.selectpicker('val');
-
     application.serviceType = [];
     serviceType.forEach((value) => {
       let data = $(`#selectServiceType [value="${value}"]`).text();

@@ -67,6 +67,16 @@ function saveDatas(){
   });
 };
 
+function lockService(category){
+  let inputServices = $('#InputServices');;
+  if (category === 5)
+    inputServices.val("Services Libéraux").trigger('change');
+  if (category === 4)
+    inputServices.val("Services généraux").trigger('change');
+  if (category === 5 || category === 4)
+    inputServices.prop('disabled', true);
+}
+
 function postListener(){
   $('#backToMain').click(function() {
       loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
@@ -94,6 +104,7 @@ function postListener(){
       let post = $('#InputPosts').val();
       let category = databaseDatas.allPosts.find(item => item.name === post).categoriesPS_id;
       generateServiceListByCategory(category, $('#InputServices'));
+      lockService(category);
     } else {
       $('#InputServices').val(null).trigger('change');
       $('#InputServices').prop('disabled', true);
