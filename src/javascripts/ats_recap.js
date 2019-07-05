@@ -1,6 +1,5 @@
 function recapListener(){
   $('#backToIdentity').click(function() {
-    permissions.recap = true;
     loadTemplate('/static/views/ats/identity.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
