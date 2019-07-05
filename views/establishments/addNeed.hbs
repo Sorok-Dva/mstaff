@@ -75,21 +75,21 @@
   <div class="col-12 col-md-8 col-lg-8">
     <div class="form-group">
       <div class="searchbar-wrapper">
-        <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
+        <div style="border: 1px solid #DDD" class="searchbar-wrapper-input row">
           <input placeholder="Indiquez un type de poste" style="border: 0px" id="post" type="text"
-                 class="form-control float-left" autocomplete="off" value="{{need.post}}">
-          <div>
+                 class="form-control float-left col-8 col-md-6 col-lg-8" autocomplete="off" value="{{need.post}}">
+          <div class="col-4 col-md-6 col-lg-4">
             <button onclick="resetSearch()" id="resetSearch" data-toggle="tooltip" data-placement="top"
-                    data-original-title="Réinitialiser ma recherche" class="btn btn-outline-warning float-right"
+                    data-original-title="Réinitialiser ma recherche" class="btn btn-outline-warning float-right col-2 col-lg-2"
                     style="{{#unless need}}display: none;{{/unless}}margin-left: 5px;">
               <i class="fal fa-undo-alt"></i>
             </button>
-            <button id="saveNeed" {{#if need.id}}data-need-id="{{need.id}}"{{/if}} class="btn btn-outline-success float-right"
+            <button id="saveNeed" {{#if need.id}}data-need-id="{{need.id}}"{{/if}} class="btn btn-outline-success float-right col-2 col-lg-3 col-xl-2"
                     data-toggle="tooltip" data-placement="top" data-original-title="Enregistrer ma recherche"
                     style="margin-left: 5px;">
               <i class="fal fa-save"></i>
             </button>
-            <button id="searchCandidates" class="btn btn-large btn-outline-primary float-right">
+            <button id="searchCandidates" class="btn btn-large btn-outline-primary float-right col-6 col-lg-8 col-xl-6">
               Rechercher
             </button>
           </div>
