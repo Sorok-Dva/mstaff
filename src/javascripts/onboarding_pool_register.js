@@ -1,7 +1,7 @@
 function identityListener() {
   document.getElementById('toRecap').addEventListener('verified', () => {
     saveDatas();
-    loadTemplate('/static/views/onboarding/pool/add_post.hbs', { data }, (html) => {
+    loadTemplate('/static/views/onboarding/pool/add_post.hbs', { data, databaseInfo }, (html) => {
       $('#poolPart').html(html);
     });
   }, false);

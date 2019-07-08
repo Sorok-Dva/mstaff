@@ -1,19 +1,27 @@
+let databaseInfo = {
+  posts: {},
+  services: {},
+};
+
 $(document).ready(function () {
   emailIsAvailable(data.email).then(available => {
     data.permissions = {
       checkingMail: null,
       verifiedEvent: new Event('verified')
     };
+
     data.identity = { email: data.email };
-    if (available) {
-      loadTemplate('/static/views/onboarding/pool/register.hbs', { data }, (html) => {
-        $('#poolPart').html(html);
-      });
-    } else {
-      loadTemplate('/static/views/onboarding/pool/add_post.hbs', { data }, (html) => {
-        $('#poolPart').html(html);
-      });
-    }
+    initVariables().then(() => {
+      if (available) {
+        loadTemplate('/static/views/onboarding/pool/register.hbs', { data, databaseInfo }, (html) => {
+          $('#poolPart').html(html);
+        });
+      } else {
+        loadTemplate('/static/views/onboarding/pool/add_post.hbs', { data, databaseInfo }, (html) => {
+          $('#poolPart').html(html);
+        });
+      }
+    });
   });
 });
 
@@ -24,4 +32,15 @@ function  emailIsAvailable(email)
       resolve(res.available);
     }).catch(error => errorsHandler(error));
   })
+}
+
+function initVariables()
+{
+  return new Promise( resolve => {
+    $.get(`/api/pool/data/all`, (datas) => {
+      databaseInfo.posts = datas.posts;
+      databaseInfo.services = datas.services;
+      resolve(databaseInfo);
+    }).catch(error => errorsHandler(error));
+  });
 }
