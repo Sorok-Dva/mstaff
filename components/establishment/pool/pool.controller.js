@@ -34,6 +34,7 @@ Establishment_Pool.ViewAll = (req, res, next) => {
 
 Establishment_Pool.Add = (req, res, next) => {
   let mails = JSON.parse(req.body.mails);
+  let full_name = req.user.fullName;
   Models.Pool.create({
     name: req.body.pool,
     referent: req.body.referent,
@@ -48,7 +49,9 @@ Establishment_Pool.Add = (req, res, next) => {
         token: token,
         pool_id: pool.id
       }).then(() => {
-        //Establishment_Pool.sendMail(mail, token);
+        Models.Establishment.findOne({ where: { id: req.user.opts.currentEs }, attributes: ['name'] }).then((es) => {
+          Establishment_Pool.sendMail([ mail ], token, full_name, es.name);
+        }).catch(error => next(new Error(error)));
       }).catch(error => next(new Error(error)));
     });
 
@@ -82,15 +85,17 @@ Establishment_Pool.DeleteInvite = (req, res, next) => {
 
 Establishment_Pool.Invite = (req, res, next) => {
   let mails = JSON.parse(req.body.mails);
+  let full_name = req.user.fullName;
   mails.forEach(mail => {
     let token = crypto.randomBytes(10).toString('hex');
-
     Models.InvitationPools.create({
       email: mail,
       token: token,
       pool_id: req.params.id,
     }).then(() => {
-      //Establishment_Pool.sendMail(mail, token);
+      Models.Establishment.findOne({ where: { id: req.user.opts.currentEs }, attributes: ['name'] }).then((es) => {
+        Establishment_Pool.sendMail([ mail ], token, full_name, es.name);
+      }).catch(error => next(new Error(error)));
     }).catch(error => next(new Error(error)));
   });
   res.status(200).json('Invitations sent');
@@ -104,14 +109,16 @@ Establishment_Pool.Delete = (req, res, next) => {
   }).catch(error => next(new Error(error)));
 };
 
-Establishment_Pool.sendMail = (mails, token) => {
+Establishment_Pool.sendMail = (mails, token, name, es_name) => {
   mails = mails.join();
   mailer.sendEmail({
     to: mails,
     subject: 'Vous avez été invité à rejoindre un pool.',
     template: 'candidate/poolInvite',
     context: {
-      token
+      token,
+      name,
+      es_name,
     }
   });
 };
