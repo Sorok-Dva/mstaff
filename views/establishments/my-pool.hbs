@@ -21,7 +21,7 @@
 {{#ifCond pools.length '<=' 0}}
     <h2 style="font-weight: 400"> Vous n'avez pas encore crée de pool de remplaçants. </h2>
 {{else}}
-  <h2 style="font-weight: 400">  Il y a actuellement {{ @root.pools.length }} pools. </h2>
+  <h2 style="font-weight: 400">Il y a actuellement {{ @root.pools.length }} pool{{#ifCond @root.pools.length '>' 1}}s{{/ifCond}}.</h2>
 {{/ifCond}}
 </div>
 
