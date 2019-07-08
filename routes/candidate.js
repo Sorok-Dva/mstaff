@@ -135,6 +135,14 @@ router.post('/add/formation',
 );
 
 /**
+ * @Route('/invitation/pool') GET;
+ * add Candidate in Pool.
+ */
+router.get('/invitation/pool/:token',
+  User.Candidate.poolInvite
+);
+
+/**
  * @Route('/add/Diploma') POST;
  * add Candidate Diploma.
  */

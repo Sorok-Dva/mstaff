@@ -1441,6 +1441,19 @@ User_Candidate.viewMyPools = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+User_Candidate.poolInvite = (req, res, next) => {
+  Models.InvitationPools.findOne({
+    attributes: ['token', 'pool_id', 'email'],
+    where: { token: req.params.token }
+  }).then(inviteInfos => {
+    if (!_.isNil(inviteInfos))
+      return res.render('onboarding/pool', { inviteInfos, layout: 'onepage' } );
+    else
+      return next(new BackError('Token introuvable', 404));
+  }).catch(error => next(new BackError(error)));
+};
+
+/* TODO ELLE FAIT RIEN - A CORRIGER */
 User_Candidate.addPoolServices = (req, res, next) => {
 
 };
