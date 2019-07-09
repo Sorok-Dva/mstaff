@@ -80,14 +80,14 @@ function saveDatas(){
 function postListener(){
   $('#backToMain').click(function() {
     loadTemplate('/static/views/ats/main.hbs', {data, databaseInfo}, (html) => {
-      $('#atsPart').html(html);
+      $('#poolPart').html(html);
     })
   });
-  $('#toContract').click(function() {
+  $('#toAvailability').click(function() {
     if (verifyInputs()){
       saveDatas();
-      loadTemplate('/static/views/ats/recap.hbs', {data, databaseInfo}, (html) => {
-        $('#atsPart').html(html);
+      loadTemplate('/static/views/onboarding/pool/availability.hbs', {data, databaseInfo}, (html) => {
+        $('#poolPart').html(html);
       });
     }
   });
