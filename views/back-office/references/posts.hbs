@@ -14,7 +14,7 @@
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
           <th data-field="category" data-sortable="true">Catégorie</th>
-
+          <th data-field="modifcategory" data-sortable="true">Modifier la catégorie</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions
           </th>
@@ -26,7 +26,14 @@
               <td>{{posts.id}}</td>
               <td>{{posts.name}}</td>
               <td>
-                <select name="categories" onchange="changeCategory({{posts.id}}, {{posts.categoriesPS_id}})">
+                {{#each @root.datas.categories as |category|}}
+                  {{#ifCond posts.categoriesPS_id '===' category.id}}
+                    {{category.name}}
+                  {{/ifCond}}
+                {{/each}}
+              </td>
+              <td>
+                <select name="categories">
                   {{#each @root.datas.categories as |category|}}
                     <option value="{{category.id}}" {{#ifCond posts.categoriesPS_id '===' category.id}}selected{{/ifCond}}>{{category.name}}</option>
                   {{/each}}
@@ -49,7 +56,7 @@
     return [
       '<div class="table-icons">',
       '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
-      '<i style="display: none" class="ti-link"></i>',
+      '<i class="ti-link"></i>',
       '</a>',
       '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
       '<i class="ti-pencil-alt"></i>',
@@ -97,12 +104,6 @@
         });
         break;
     }
-  };
-
-  let changeCategory = (id, categoriesPS_id) =>{
-    let selected = parseInt($(`tr[data-id="${id}"] select option:selected`).val());
-    let linkIcon = $(`tr[data-id="${id}"] .ti-link`);
-    selected !== categoriesPS_id ? linkIcon.show() : linkIcon.hide();
   };
 
   let showPostModal = () => {
@@ -159,8 +160,8 @@
         let promptInput = $('input#postValueEdit').val();
         if (!$.isEmptyObject(promptInput)) {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
-          $.put(`/api/back-office/references/posts/${row.id}`, { promptInput, _csrf }, (response) => {
-            let id = $(e.currentTarget).closest('tr').attr('data-id');
+          $.put(`/api/back-office/references/posts/${row.id}`, { promptInput, _csrf }, () => {
+            let id = row.id;
             $('#editPostModal').modal('hide');
             $(`tr[data-id="${id}"] td:nth-child(3)`).text(promptInput);
             notify('modified-post');
@@ -196,8 +197,16 @@
     });
   };
 
-  let link = () => {
-    console.log('ouh yeah !');
+  let link = (e, value, row, index) => {
+    let id = parseInt(row.id);
+    let select = $(`tr[data-id="${id}"] select option:selected`);
+    let category = parseInt(select.val());
+    let category_name = select.text();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    $.put(`/api/back-office/references/posts/${row.id}`, { category, _csrf }, () => {
+      $(`tr[data-id="${id}"] td:nth-child(4)`).text(category_name);
+      notify('modified-post');
+    });
   };
 
   $(document).ready(() => {

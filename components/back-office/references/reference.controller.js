@@ -61,9 +61,10 @@ BackOffice_References.Edit = (req, res, next) => {
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
   return Models[model].findOne({ where: { id: req.params.id } }).then(reference => {
-    if (req.body.promptInput) {
+    if (req.body.promptInput)
       reference.name = req.body.promptInput;
-    }
+    if (req.body.category)
+      reference.categoriesPS_id = req.body.category;
     reference.save();
     return res.status(200).json({ status: 'Modified' });
   })
