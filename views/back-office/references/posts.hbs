@@ -26,7 +26,7 @@
               <td>{{posts.id}}</td>
               <td>{{posts.name}}</td>
               <td>
-                <select name="categories">
+                <select name="categories" onchange="changeCategory({{posts.id}}, {{posts.categoriesPS_id}})">
                   {{#each @root.datas.categories as |category|}}
                     <option value="{{category.id}}" {{#ifCond posts.categoriesPS_id '===' category.id}}selected{{/ifCond}}>{{category.name}}</option>
                   {{/each}}
@@ -48,87 +48,163 @@
   operateFormatter = (value, row, index) => {
     return [
       '<div class="table-icons">',
+      '<a title="Link" class="btn btn-simple btn-success btn-icon table-action link" href="javascript:void(0)">',
+      '<i style="display: none" class="ti-link"></i>',
+      '</a>',
       '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
       '<i class="ti-pencil-alt"></i>',
       '</a>',
       '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
       '<i class="ti-close"></i>',
       '</a>',
+
       '</div>',
     ].join('');
   };
 
-  $(document).ready(() => {
-    window.operateEvents = {
-      'click .edit': (e, value, row, index) => {
-        createModal({
-          id: 'editPostModal',
-          title: 'Modifier un poste',
-          modal: 'back-office/editPost'
-        }, () => {
-          $('button#btnEditPost').click(function () {
-            if (($('input#postValueEdit').val() != '') && ($('select#postCategoryEdit').val() != '')) {
-              let _csrf = $('meta[name="csrf-token"]').attr('content');
-              let promptInput = $('input#postValueEdit').val();
-              let categoryInput = $('select#postCategoryEdit').val();
-              $.put(`/api/back-office/references/posts/${row.id}`, {
-                promptInput,
-                categoryInput,
-                _csrf
-              }, (response) => {
-                let id = $(e.currentTarget).closest('tr').attr('data-id');
-                $('#editPostModal').modal('hide');
-                $(`tr[data-id="${id}"] td`).last().prev().prev().text(promptInput);
-                $(`tr[data-id="${id}"] td`).last().prev().text(categoryInput);
-                notification({
-                  icon: 'check-circle',
-                  type: 'success',
-                  title: 'Poste modifié.',
-                  message: ``
-                });
-              });
+  function notify(error){
+    switch(error){
+      case 'modified-post':
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Poste modifié.',
+          message: ``
+        });
+        break;
+      case 'deleted-post':
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Poste supprimé.',
+          message: ``
+        });
+        break;
+      case 'already-exist-post':
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Ce poste existe déjà.',
+          message: ``
+        });
+        break;
+      case 'created-post':
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Poste créé.',
+          message: ``
+        });
+        break;
+    }
+  };
+
+  let changeCategory = (id, categoriesPS_id) =>{
+    let selected = parseInt($(`tr[data-id="${id}"] select option:selected`).val());
+    let linkIcon = $(`tr[data-id="${id}"] .ti-link`);
+    selected !== categoriesPS_id ? linkIcon.show() : linkIcon.hide();
+  };
+
+  let showPostModal = () => {
+    createModal({
+      id: 'addPostModal',
+      title: 'Ajouter un poste',
+      modal: 'back-office/addPost',
+      categories: '{{render.categories}}'
+    }, () => {
+      $('button#validatePost').click(function () {
+        let promptInput = $('input#postValue').val();
+        if (!$.isEmptyObject(promptInput)) {
+          let _csrf = $('meta[name="csrf-token"]').attr('content');
+          $.post(`/api/back-office/references/posts/`, { promptInput, _csrf }, (response) => {
+            if (response.status === 'Already exists') {
+              notify('already-exist-post');
             } else {
-              if ($('input#postValueEdit').val() == '') {
-                $('input#postValueEdit').addClass('error');
-                setTimeout(function () {
-                  $('input#postValueEdit').removeClass('error');
-                }, 750)
-              }
-              if ($('select#postCategoryEdit').val() == '') {
-                $('select#postCategoryEdit').addClass('error');
-                setTimeout(function () {
-                  $('select#postCategoryEdit').removeClass('error');
-                }, 750)
-              }
+              let select = `<select name="categories">
+                  {{#each @root.datas.categories as |category|}}
+                    <option value="{{category.id}}">{{category.name}}</option>
+                  {{/each}}
+                </select>`
+              table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                  id: response.reference.id,
+                  name: response.reference.name,
+                  category: select,
+                  actions: ''
+                }
+              });
+              $(`tr[data-index="0"]`).attr("data-id", `${response.reference.id}`);
+              notify('created-post');
             }
           });
-        });
-      },
-      'click .remove': (e, value, row, index) => {
-        createModal({
-          id: 'removePostModal',
-          title: 'Supprimer un poste',
-          modal: 'back-office/removePost'
-        }, () => {
+          $('#addPostModal').modal('hide');
+        } else {
+          promptInput.addClass('error');
+          setTimeout(function () {
+            promptInput.removeClass('error');
+          }, 750)
+        }
+      })
+    })
+  };
+
+  let edit = (e, value, row, index) => {
+    createModal({
+      id: 'editPostModal',
+      title: 'Modifier un poste',
+      modal: 'back-office/editPost'
+    }, () => {
+      $('button#btnEditPost').click(function () {
+        let promptInput = $('input#postValueEdit').val();
+        if (!$.isEmptyObject(promptInput)) {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
-          $('button#btnRemovePost').click(function () {
-            $.delete(`/api/back-office/references/posts/${row.id}`, {
-              _csrf
-            }, () => {
-              table.bootstrapTable('remove', {
-                field: 'id',
-                values: [row.id]
-              });
-              notification({
-                icon: 'check-circle',
-                type: 'success',
-                title: 'Poste supprimé.',
-                message: ``
-              });
-            });
+          $.put(`/api/back-office/references/posts/${row.id}`, { promptInput, _csrf }, (response) => {
+            let id = $(e.currentTarget).closest('tr').attr('data-id');
+            $('#editPostModal').modal('hide');
+            $(`tr[data-id="${id}"] td:nth-child(3)`).text(promptInput);
+            notify('modified-post');
           });
+        } else {
+          promptInput.addClass('error');
+          setTimeout(function () {
+            promptInput.removeClass('error');
+          }, 750)
+        }
+      });
+    });
+  };
+
+  let remove = (e, value, row, index) => {
+    createModal({
+      id: 'removePostModal',
+      title: 'Supprimer un poste',
+      modal: 'back-office/removePost'
+    }, () => {
+      let _csrf = $('meta[name="csrf-token"]').attr('content');
+      $('button#btnRemovePost').click(function () {
+        $.delete(`/api/back-office/references/posts/${row.id}`, {
+          _csrf
+        }, () => {
+          table.bootstrapTable('remove', {
+            field: 'id',
+            values: [row.id]
+          });
+          notify('deleted-post');
         });
-      }
+      });
+    });
+  };
+
+  let link = () => {
+    console.log('ouh yeah !');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .edit': edit,
+      'click .remove': remove,
+      'click .link': link
     };
 
     table.bootstrapTable({
@@ -158,64 +234,5 @@
       table.bootstrapTable('resetView');
     });
   });
-  let showPostModal = () => {
 
-    createModal({
-      id: 'addPostModal',
-      title: 'Ajouter un poste',
-      modal: 'back-office/addPost',
-      categories: '{{render.categories}}'
-    }, () => {
-      $('button#validatePost').click(function () {
-        if (($('input#postValue').val() != '') && ($('select#postCategory').val() != '')) {
-          let _csrf = $('meta[name="csrf-token"]').attr('content');
-          let promptInput = $('input#postValue').val();
-          let categoryInput = $('select#postCategory').val();
-          $.post(`/api/back-office/references/posts/`, {
-            promptInput,
-            categoryInput,
-            _csrf
-          }, (response) => {
-            if (response.status === 'Already exists') {
-              notification({
-                icon: 'exclamation',
-                type: 'danger',
-                title: 'Ce poste existe déjà.',
-                message: ``
-              });
-            } else {
-              table.bootstrapTable('insertRow', {
-                index: 0,
-                row: {
-                  id: response.reference.id,
-                  name: response.reference.name,
-                  category: response.reference.categoriesPS_id
-                }
-              });
-              notification({
-                icon: 'check-circle',
-                type: 'success',
-                title: 'Poste créé.',
-                message: ``
-              });
-            }
-          });
-          $('#addPostModal').modal('hide');
-        } else {
-          if ($('input#postValue').val() == '') {
-            $('input#postValue').addClass('error');
-            setTimeout(function () {
-              $('input#postValue').removeClass('error');
-            }, 750)
-          }
-          if ($('select#postCategory').val() == '') {
-            $('select#postCategory').addClass('error');
-            setTimeout(function () {
-              $('select#postCategory').removeClass('error');
-            }, 750)
-          }
-        }
-      })
-    })
-  }
 </script>
