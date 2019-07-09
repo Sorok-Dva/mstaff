@@ -11,11 +11,25 @@ const BackOffice_References = {};
 
 BackOffice_References.View = (req, res, next) => {
   let model = req.params.type === 'categories' ? 'MstaffCategories' : req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
+  let datas = {};
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
-  return Models[model].findAll().then(references => {
-    res.render(`back-office/references/${req.params.type}`, {
-      layout, references, a: { main: 'references', sub: req.params.type } })
-  });
+  switch (model) {
+    case 'Post':
+      Models[model].findAll().then(references => {
+        datas.references = references;
+        return Models.CategoriesPostsServices.findAll().then( categories => {
+          datas.categories = categories;
+          res.render(`back-office/references/${req.params.type}`, {
+            layout, datas, a: { main: 'references', sub: req.params.type } })
+        })
+      });
+      break;
+    default:
+      return Models[model].findAll().then(references => {
+        res.render(`back-office/references/${req.params.type}`, {
+          layout, references, a: { main: 'references', sub: req.params.type } })
+      });
+  }
 };
 
 BackOffice_References.Add = (req, res, next) => {

@@ -20,12 +20,18 @@
           </th>
           </thead>
           <tbody>
-          {{#each references as |posts|}}
+          {{#each datas.references as |posts|}}
             <tr data-id="{{posts.id}}">
               <td></td>
               <td>{{posts.id}}</td>
               <td>{{posts.name}}</td>
-              <td>{{showCategory posts.categoriesPS_id}}</td>
+              <td>
+                <select name="categories">
+                  {{#each @root.datas.categories as |category|}}
+                    <option value="{{category.id}}" {{#ifCond posts.categoriesPS_id '===' category.id}}selected{{/ifCond}}>{{category.name}}</option>
+                  {{/each}}
+                </select>
+              </td>
               <td></td>
             </tr>
           {{/each}}

@@ -216,7 +216,7 @@ module.exports.register = async (Handlebars) => {
     return accum;
   });
 
-  Handlebars.registerHelper('showCategory', function (categoryPS_id) {
+  Handlebars.registerHelper('showCategory', function (categoryPS_id, dataset) {
     switch (categoryPS_id) {
       case 1:
         return 'None';
