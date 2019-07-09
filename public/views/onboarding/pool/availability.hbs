@@ -1,0 +1,28 @@
+<i id="backToPost" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+
+<div class="text-center mb-5">
+  <h1>Veuillez choisir vos disponibilités </h1>
+  <h4 class="text-muted">Vous pourrez le changer par la suite</h4>
+</div>
+<div id="vacationDate" style="" class="container-fluid"></div>
+
+<div class="row justify-content-end">
+  <div class="custom-cursor" id="toSuccess"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
+</div>
+
+<script src="/static/assets/dist/js/pool_calendar.min.js"></script>
+<script>
+  $('#backToPost').click(function() {
+    loadTemplate('/static/views/onboarding/pool/add_post.hbs', {data, databaseInfo}, (html) => {
+      $('#poolPart').html(html);
+    })
+  });
+
+  $('#toSuccess').click(function() {
+    if(verifyAvailabilityInputs()) {
+      loadTemplate('/static/views/onboarding/pool/success.hbs', { data, databaseInfo }, (html) => {
+        $('#poolPart').html(html);
+      });
+    }
+  });
+</script>
