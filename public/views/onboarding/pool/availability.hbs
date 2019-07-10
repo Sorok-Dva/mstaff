@@ -11,6 +11,7 @@
 </div>
 
 <script src="/static/assets/dist/js/pool_calendar.min.js"></script>
+<script src="/static/assets/dist/js/onboarding_pool_success.min.js"></script>
 <script>
   $('#backToPost').click(function() {
     loadTemplate('/static/views/onboarding/pool/add_post.hbs', {data, databaseInfo}, (html) => {
@@ -19,10 +20,7 @@
   });
 
   $('#toSuccess').click(function() {
-    if(verifyAvailabilityInputs()) {
-      loadTemplate('/static/views/onboarding/pool/success.hbs', { data, databaseInfo }, (html) => {
-        $('#poolPart').html(html);
-      });
-    }
+    if(verifyAvailabilityInputs())
+      createUser();
   });
 </script>
