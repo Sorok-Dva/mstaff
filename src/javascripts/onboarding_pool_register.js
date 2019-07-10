@@ -90,7 +90,7 @@ function verifyInputs(){
 
           let forename = $('#identityForename').val();
           let name = $('#identityName').val();
-          let birthDate = $('#identityBirth').val();
+          let birthDate = $('#identityBirth').data("DateTimePicker").date();
           let postal = $('#identityPostal').val();
           let city = $('#identityCity').val();
           let password = $('#identityPassword').val();
@@ -221,7 +221,7 @@ function saveDatas(){
   data.identity.country = $('#identityCountry').val();
   data.identity.email = $('#identityMail').val();
   data.identity.password = $('#identityPassword').val();
-  data.identity.birthday = $('#identityBirth').val();
+  data.identity.birthday = new Date($('#identityBirth').data("DateTimePicker").date());
   data.identity.postal_code = $('#identityPostal').val();
   data.identity.town = $('#identityCity').val();
 }
@@ -233,8 +233,19 @@ function init_identity(){
     preferredCountries: ["fr", "gb", "us"],
     initialCountry: "fr",
   });
+  $('#identityBirth').datetimepicker({
+    format: 'D MMMM YYYY',
+    useCurrent: false,
+    ignoreReadonly: true,
+  });
 }
+
+function reload_identity(){
+  $('#identityBirth').data("DateTimePicker").date(data.identity.birthday);
+};
 
 $(document).ready(() => {
   init_identity();
+  if(data.identity.birthday)
+    reload_identity();
 });
