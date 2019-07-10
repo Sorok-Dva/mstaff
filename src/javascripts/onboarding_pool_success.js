@@ -37,14 +37,10 @@ function  createUser() {
   if (!data.emailExist) {
     data.identity._csrf = _csrf;
     $.post(`/register`, data.identity, (userCreated) => {
-      if (userCreated.result === "created") {
-        $.post(`/invitation/pool/${data.token}`, infoToSend, (affiliated) => {
-          if(affiliated.result === "user affiliated to pool")
-            return assignUserToPool(infoToSend);
-        }).catch(() => notify('creationError'));
-      } else {
+      if (userCreated.result === "created")
+        assignUserToPool(infoToSend);
+      else
         notify('creationError');
-      }
     }).catch(() => notify('creationError'));
   } else {
     return assignUserToPool(infoToSend);
