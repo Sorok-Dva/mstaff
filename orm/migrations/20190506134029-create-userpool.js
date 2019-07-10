@@ -14,7 +14,9 @@ module.exports = {
           model: 'Pools',
           key: 'id'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       user_id: {
         type: Sequelize.INTEGER,
@@ -22,35 +24,45 @@ module.exports = {
           model: 'Users',
           key: 'id'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       availability: {
         type: Sequelize.JSON,
-      },
-      establishment: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Establishments',
-          key: 'id'
+        get() {
+          let availability = this.getDataValue('availability') === undefined ? '{}' : this.getDataValue('availability');
+          return JSON.parse(availability);
         },
-        allowNull: false
+        set(data) {
+          this.setDataValue('availability', JSON.stringify(data));
+        },
+      },
+      post: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       service: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Services',
-          key: 'id'
-        }
+        type: Sequelize.JSON,
+        get() {
+          let service = this.getDataValue('service') === undefined ? '{}' : this.getDataValue('service');
+          return JSON.parse(service);
+        },
+        set(data) {
+          this.setDataValue('service', JSON.stringify(data));
+        },
       },
       available: {
         type: Sequelize.BOOLEAN,
         defaultValue: true
       },
       month_experience: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
       planning: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,

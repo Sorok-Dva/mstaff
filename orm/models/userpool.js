@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     pool_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER,
     availability: DataTypes.JSON,
-    establishment: DataTypes.INTEGER,
-    service: DataTypes.INTEGER,
+    service: DataTypes.JSON,
+    post: DataTypes.STRING,
     available: DataTypes.BOOLEAN,
     month_experience: DataTypes.INTEGER,
   }, {});
@@ -13,19 +13,9 @@ module.exports = (sequelize, DataTypes) => {
     UserPool.belongsTo(models.Pool, {
       foreignKey: 'id',
       as: 'pool',
-      onDelete: 'CASCADE'
     });
     UserPool.belongsTo(models.User, {
       foreignKey: 'id',
-      onDelete: 'CASCADE'
-    });
-    UserPool.belongsTo(models.Establishment, {
-      foreignKey: 'id',
-      onDelete: 'CASCADE'
-    });
-    UserPool.belongsTo(models.Service, {
-      foreignKey: 'id',
-      onDelete: 'CASCADE'
     });
   };
   return UserPool;
