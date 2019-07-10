@@ -1453,6 +1453,12 @@ User_Candidate.poolInvite = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+User_Candidate.assignPool = (req, res, next) => {
+  console.log(req.body);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+};
+
 /* TODO ELLE FAIT RIEN - A CORRIGER */
 User_Candidate.addPoolServices = (req, res, next) => {
 
