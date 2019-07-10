@@ -1449,14 +1449,31 @@ User_Candidate.poolInvite = (req, res, next) => {
     if (!_.isNil(inviteInfos))
       return res.render('onboarding/pool', { inviteInfos, layout: 'onepage' } );
     else
-      return next(new BackError('Token introuvable', 404));
+      return next(new BackError('Token introuvable et/ou déjà utilisé', 404));
   }).catch(error => next(new BackError(error)));
 };
 
 User_Candidate.assignPool = (req, res, next) => {
-  console.log(req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+  Models.User.findOne({
+    where: { email: req.body.email },
+    attributes: ['id'],
+  }).then(user => {
+    let user_id = user.id;
+    Models.UserPool.create({
+      pool_id: req.body.pool_id,
+      user_id: user_id,
+      availability: req.body.data.availability,
+      post: req.body.data.post,
+      service: req.body.data.services
+    }).then(() => {
+      Models.InvitationPools.destroy({ where: { email: req.body.email, token: req.params.token }
+      }).then(() => {
+        res.status(200).send('user affiliated to pool');
+      }).catch(error => next(new BackError(error)));
+    }).catch(error => next(new BackError(error)));
+  }).catch(error => next(new BackError(error)));
 };
 
 /* TODO ELLE FAIT RIEN - A CORRIGER */
