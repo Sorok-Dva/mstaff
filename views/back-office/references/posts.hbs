@@ -1,3 +1,16 @@
+<style>
+  .display-none{
+    display: none;
+  }
+  .display-inline{
+    display: inline;
+  }
+  .custom-icon{
+    color:mediumseagreen;
+    cursor: pointer;
+  }
+</style>
+
 <div class="row">
 
   <div class="col-md-12">
@@ -6,6 +19,14 @@
         <div class="toolbar">
           <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showPostModal()">
             <i class="fal fa-plus"></i></a>
+        </div>
+        <div class="text-center multipost display-none">
+          <h5 class="nbSelected display-inline"></h5>
+          <select class="select-multiLink" name="categories">
+            {{#each @root.datas.categories as |category|}}
+              <option value="{{category.id}}">{{category.name}}</option>
+            {{/each}}
+          </select> <i id="multiLink" class="fal fa-link custom-icon"></i>
         </div>
 
         <table id="posts-table" class="table">
@@ -32,8 +53,8 @@
                   {{/ifCond}}
                 {{/each}}
               </td>
-              <td>
-                <select name="categories">
+              <td class="form-group">
+                <select class="form-control" name="categories">
                   {{#each @root.datas.categories as |category|}}
                     <option value="{{category.id}}" {{#ifCond posts.categoriesPS_id '===' category.id}}selected{{/ifCond}}>{{category.name}}</option>
                   {{/each}}
@@ -242,6 +263,33 @@
     $(window).resize(() => {
       table.bootstrapTable('resetView');
     });
+
+    $('input[name="btSelectItem"], input[name="btSelectAll"]').on('change', () => {
+      let nbSelected = $('.selected').length;
+      if (nbSelected > 1){
+        $('.nbSelected').text(`Vous avez sélectionné ${nbSelected} postes`);
+        $('.multipost').show();
+      } else {
+        $('.nbSelected').text('');
+        $('.multipost').hide();
+      }
+    });
+
+    $('#multiLink').on('click', () => {
+      let category = parseInt($('.select-multiLink option:selected').val());
+      let selected = $('.selected');
+      let keys = Object.keys(selected);
+      let ids = [];
+      keys.forEach( key => {
+        console.log(selected[key].dataset.id);
+        //TODO
+      });
+      console.log(category);
+
+
+    });
+
+
   });
 
 </script>
