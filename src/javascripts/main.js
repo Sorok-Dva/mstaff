@@ -102,7 +102,11 @@ let loadTemplate = (url, data, callback) => {
 };
 
 let createModal = (opts, callback) => {
-  $(`#${opts.id}`).remove();
+  $('#loadingModal').modal();
+  if ($(`#${opts.id}`).length > 0) {
+    $(`#${opts.id}`).modal('hide');
+    $(`#${opts.id}`).remove();
+  }
   loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
     $('body').append(html);
     if ('cantBeClose' in opts) {
@@ -113,6 +117,7 @@ let createModal = (opts, callback) => {
         });
       } else $(`#${opts.id}`).modal();
     } else $(`#${opts.id}`).modal();
+    $('#loadingModal').modal('hide');
     if (callback) return callback();
   });
 };

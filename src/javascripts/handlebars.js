@@ -232,7 +232,7 @@ Handlebars.registerHelper('firstPost', posts => {
   if (_.isNil(posts)) return 'Aucun poste';
   let other = '';
   if (posts.length > 1) other = `... (${posts.length - 1} de plus)`;
-  return `${posts[0]}${other}`
+  return `${posts[0]}${other}`c
 });
 
 Handlebars.registerHelper('otherPostsPopover', posts => {

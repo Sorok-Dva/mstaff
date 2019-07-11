@@ -145,26 +145,35 @@ $('.add').click(function () {
 $('body').on('click', 'button.removeXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   createModal({
-    modal: 'candidate/removeExperience',
     id: 'removeExperienceModal',
     title: 'Supprimer cette experience ?',
-    xpId: id
-  })
+    text: ' Êtes-vous sûr de vouloir supprimer cette experience ?',
+    actions: [
+      '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+      `<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="removeCandidateExperience(${id})">Oui</button>`
+    ]
+  });
 }).on('click', 'button.removeFormation', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   createModal({
-    modal: 'candidate/removeFormation',
     id: 'removeFormationModal',
     title: 'Supprimer cette formation ?',
-    formationId: id
+    text: ' Êtes-vous sûr de vouloir supprimer cette formation ?',
+    actions: [
+      '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+      `<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="removeCandidateFormation(${id})">Oui</button>`
+    ]
   });
 }).on('click', 'button.removeDiploma', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   createModal({
-    modal: 'candidate/removeDiploma',
     id: 'removeDiplomaModal',
     title: 'Supprimer ce diplôme ?',
-    diplomaId: id
+    text: ' Êtes-vous sûr de vouloir supprimer ce diplôme ?',
+    actions: [
+      '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+      `<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="removeCandidateDiploma(${id})">Oui</button>`
+    ]
   });
 }).on('click', 'button.editXP', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');

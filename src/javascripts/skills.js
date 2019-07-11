@@ -98,9 +98,17 @@ toAutocomplete.forEach((ac) => {
 $('body').on('click', '.remove', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   let type = $(event.target).attr('data-type') || $(event.target).parent().attr('data-type');
-  createModal({ id: 'removeSkillModal', modal: 'candidate/removeSkill', title: 'Confirmation' }, () => {
+  createModal({
+    id: 'removeSkillModal',
+    title: 'Confirmation',
+    text: 'Êtes-vous sûr de vouloir supprimer cette compétence ?',
+    actions: [
+      '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+      '<button type="button" id="btnRemoveSkill" class="btn btn-danger" data-dismiss="modal">Oui</button>'
+    ]
+  }, () => {
     $('#btnRemoveSkill').attr('onclick', `removeSkill('${type}', ${id})`);
-  })
+  });
 });
 
 let autocompleteTrigger = (elements, contain) => {
