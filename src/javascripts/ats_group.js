@@ -18,7 +18,7 @@ function groupListener(){
   $('#selectAllToggle').change( (e) => {
     if (e.currentTarget.checked){
       $('.finessToggle').prop('checked', true);
-      $('#selectAllTitle').text('Déselectionner tout');
+      $('#selectAllTitle').text('Désélectionner tout');
     } else {
       $('.finessToggle').prop('checked', false);
       $('#selectAllTitle').text('Sélectionner tout');

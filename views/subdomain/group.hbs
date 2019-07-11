@@ -80,7 +80,7 @@
       </div>
     </div>
     <div class="col-12 col-xl-4">
-      <div class="card">
+      <div class="card" id="mapHeader">
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col">
@@ -161,7 +161,7 @@
       map.setZoom(12);
       map.setCenter({ lat: es.lat, lng: es.lon });
     }
-    $(location).attr('href', '#map');
+    $(location).attr('href', '#mapHeader');
   };
 
   let removeAllMarker = () => {

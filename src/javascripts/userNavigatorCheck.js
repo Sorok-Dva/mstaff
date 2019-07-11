@@ -12,13 +12,6 @@ $(document).ready(() => {
   } else if (navigator.userAgent.indexOf('Firefox') !== -1) {
   } else if (isChromeForIos(navigator.userAgent)) {
   } else if (isSafari(navigator.userAgent)) {
-    createModal({
-      id: 'alertBadNavigatorModal',
-      title: 'Attention : navigateur obsolète détecté !',
-      modal: 'badNavigator',
-      cantBeClose: true,
-      navigator: 'Safari'
-    });
   } else if ((navigator.userAgent.indexOf('MSIE') !== -1) || (!!document.documentMode === true)) {
     createModal({
       id: 'alertBadNavigatorModal',
