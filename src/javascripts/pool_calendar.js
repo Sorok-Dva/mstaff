@@ -1,22 +1,20 @@
-let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-
-let generateCalendarMonths = (moment) => {
+function  generateCalendarMonths (moment) {
   let result = {};
   let date = moment.format('MMMM YYYY').toUpperCase();
   result[date] = [];
   for (let i = 1; i <= moment.daysInMonth(); i++)
     result[date].push(moment.date(i).format('e'));
   return result;
-};
+}
 
-let generateDatasCalendar = (duration) => {
+function  generateDatasCalendar (duration) {
   let result = [];
   for (let i = 0; i < duration; i++)
     result.push(generateCalendarMonths(moment().add(i, 'months')));
   return result;
-};
+}
 
-let generateHTMLCalendar = (datas) => {
+function  generateHTMLCalendar (datas) {
   let column = 0;
   let row = 0;
   let leftArrow = '<i id="toleft" class="fal fa-arrow-circle-left"></i>';
@@ -32,6 +30,7 @@ let generateHTMLCalendar = (datas) => {
       $("#vacationDate").append(`<table data-key="${key}" style="display:none" class="text-center table col-12"></table>`);
       $(`table[data-key="${key}"]`).append(`<thead><tr><th>${leftArrow}</th><th class="text-center" colspan="5">${key}</th><th>${rightArrow}</th></tr><tr data-tr="${key}"></tr></thead>`);
 
+      let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
       days.forEach(day => {
         $(`tr[data-tr="${key}"]`).append('<td>' + day + '</td>');
       });
@@ -59,9 +58,9 @@ let generateHTMLCalendar = (datas) => {
 
     });
   });
-};
+}
 
-let loadPreviousDatas = (id) => {
+function  loadPreviousDatas (id) {
   $.get(`/pools/availability/${id}`, (result) => {
     let db = result.availability;
     let keys = Object.keys(db);
@@ -71,19 +70,24 @@ let loadPreviousDatas = (id) => {
 
       let daytime = db[key].daytime;
       let nighttime = db[key].nighttime;
-      daytime.forEach(day => {
-        $(`tbody[data-tbody="${key}"]`).find(`[data-day="${day}"]`).siblings('span').children('.fa-sun').css('color', 'rgb(255, 153,0)');
-        data.availability[key].daytime.push(day);
-      });
-      nighttime.forEach(day => {
-        $(`tbody[data-tbody="${key}"]`).find(`[data-day="${day}"]`).siblings('span').children('.fa-moon').css('color', 'rgb(0, 102,255)');
-        data.availability[key].nighttime.push(day);
-      });
+      if(daytime) {
+        daytime.forEach(day => {
+          $(`tbody[data-tbody="${key}"]`).find(`[data-day="${day}"]`).siblings('span').children('.fa-sun').css('color', 'rgb(255, 153,0)');
+          data.availability[key].daytime.push(day);
+        });
+      }
+
+      if(nighttime) {
+        nighttime.forEach(day => {
+          $(`tbody[data-tbody="${key}"]`).find(`[data-day="${day}"]`).siblings('span').children('.fa-moon').css('color', 'rgb(0, 102,255)');
+          data.availability[key].nighttime.push(day);
+        });
+      }
     });
   });
-};
+}
 
-let choosedVacations = (calendar) => {
+function  choosedVacations (calendar) {
   $('#vacationDate table .fa-sun, .fa-moon').click(function(){
     let day = $(this).parent().siblings("div").attr('data-day');
     let month = $(this).parents("table").attr('data-key');
@@ -140,7 +144,7 @@ function notify(error){
   return false;
 }
 
-let switchCalendar = () => {
+function  switchCalendar() {
   $('#vacationDate table').first().show();
 
   $('#vacationDate table #toright').click(function(){
@@ -159,7 +163,6 @@ let switchCalendar = () => {
   });
 };
 
-let datas = generateDatasCalendar(24);
-generateHTMLCalendar(datas);
+generateHTMLCalendar(generateDatasCalendar(24));
 switchCalendar();
 choosedVacations(data.availability);
