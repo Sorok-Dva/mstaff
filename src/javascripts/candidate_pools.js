@@ -24,7 +24,7 @@ let servicesEdit = (selectedPool) => {
     })
   })
 };
-let editDisponibility = (selectedPool) => {
+let editAvailibility = (selectedPool) => {
   createModal({
     id: 'serviceEditModal',
     title: `Choisir mes disponibilités`,
