@@ -180,4 +180,9 @@ router.get('/my-pools',
   User.Candidate.addPoolServices
 );
 
+router.get('/pools/availability/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewPoolAvailability
+);
+
 module.exports = router;

@@ -43,7 +43,7 @@
           <div class="row">
             <div class="col-md-3 class-icon">
               <a href="#">
-                <i title="Mes disponibilités" class="fal fa-calendar-alt fa-2x" href="#"></i>
+                <i title="Mes disponibilités" class="fal fa-calendar-alt fa-2x" data-pool="{{pool.id}}" onclick="editDisponibility(this)"></i>
               </a>
             </div>
             <div class="col-md-3 class-icon">
@@ -94,6 +94,18 @@
       })
     })
   };
+  let editDisponibility = (selectedPool) => {
+    createModal({
+      id: 'serviceEditModal',
+      title: `Choisir mes disponibilités`,
+      modal: 'candidate/poolAvailability',
+      size: 'modal-xl',
+      pool: selectedPool.dataset.pool,
+    }, () => {
+
+    });
+  };
+
   let seeMyServices = () => {
     $('#serviceEditModal').modal('hide');
     createModal({
