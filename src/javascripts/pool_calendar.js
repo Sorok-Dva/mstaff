@@ -122,7 +122,6 @@ let choosedVacations = (calendar) => {
           delete(calendar[month]);
       }
     }
-    console.log(calendar);
   });
 };
 

@@ -1476,6 +1476,18 @@ User_Candidate.assignPool = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+User_Candidate.viewPoolAvailability = (req, res, next) => {
+  Models.UserPool.findOne({
+    where: {
+      user_id: req.user.id,
+      id: req.params.id
+    },
+    attributes: ['availability'],
+  }).then(availability => {
+    return res.status(200).send(availability);
+  }).catch(error => next(new BackError(error)));
+};
+
 /* TODO ELLE FAIT RIEN - A CORRIGER */
 User_Candidate.addPoolServices = (req, res, next) => {
 
