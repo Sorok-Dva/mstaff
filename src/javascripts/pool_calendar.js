@@ -1,5 +1,4 @@
 let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-let data = { availability: [] };
 
 let generateCalendarMonths = (moment) => {
   let result = {};
