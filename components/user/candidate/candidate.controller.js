@@ -1456,24 +1456,26 @@ User_Candidate.poolInvite = (req, res, next) => {
 User_Candidate.assignPool = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-  Models.User.findOne({
-    where: { email: req.body.email },
-    attributes: ['id'],
-  }).then(user => {
-    let user_id = user.id;
-    Models.UserPool.create({
-      pool_id: req.body.pool_id,
-      user_id: user_id,
-      availability: req.body.data.availability,
-      post: req.body.data.post,
-      service: req.body.data.services
-    }).then(() => {
-      Models.InvitationPools.destroy({ where: { email: req.body.email, token: req.params.token }
-      }).then(() => {
-        res.status(200).send('user affiliated to pool');
+  return Sequelize.transaction(t => {
+    return Models.User.findOne({
+      where: { email: req.body.email },
+      attributes: ['id'],
+    }, { transaction: t }).then(user => {
+      let user_id = user.id;
+      return Models.UserPool.create({
+        pool_id: req.body.pool_id,
+        user_id: user_id,
+        availability: req.body.data.availability,
+        post: req.body.data.post,
+        service: req.body.data.services
+      }, { transaction: t }).then(() => {
+        return Models.InvitationPools.destroy({ where: { email: req.body.email, token: req.params.token }
+        }, { transaction: t }).then(() => {
+          res.status(200).send('user affiliated to pool');
+        }).catch(error => next(new BackError(error)));
       }).catch(error => next(new BackError(error)));
     }).catch(error => next(new BackError(error)));
-  }).catch(error => next(new BackError(error)));
+  });
 };
 
 User_Candidate.viewPoolAvailability = (req, res, next) => {
