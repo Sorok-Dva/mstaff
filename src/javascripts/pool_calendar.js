@@ -1,4 +1,5 @@
 let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+let data = { availability: [] };
 
 let generateCalendarMonths = (moment) => {
   let result = {};
@@ -61,6 +62,28 @@ let generateHTMLCalendar = (datas) => {
   });
 };
 
+let loadPreviousDatas = (id) => {
+  $.get(`/pools/availability/${id}`, (result) => {
+    let db = result.availability;
+    let keys = Object.keys(db);
+    keys.forEach((key) => {
+      if ($.isEmptyObject(data.availability[key]))
+        data.availability[key] = {daytime : [], nighttime : []};
+
+      let daytime = db[key].daytime;
+      let nighttime = db[key].nighttime;
+      daytime.forEach(day => {
+        $(`tbody[data-tbody="${key}"]`).find(`[data-day="${day}"]`).siblings('span').children('.fa-sun').css('color', 'rgb(255, 153,0)');
+        data.availability[key].daytime.push(day);
+      });
+      nighttime.forEach(day => {
+        $(`tbody[data-tbody="${key}"]`).find(`[data-day="${day}"]`).siblings('span').children('.fa-moon').css('color', 'rgb(0, 102,255)');
+        data.availability[key].nighttime.push(day);
+      });
+    });
+  });
+};
+
 let choosedVacations = (calendar) => {
   $('#vacationDate table .fa-sun, .fa-moon').click(function(){
     let day = $(this).parent().siblings("div").attr('data-day');
@@ -99,6 +122,7 @@ let choosedVacations = (calendar) => {
           delete(calendar[month]);
       }
     }
+    console.log(calendar);
   });
 };
 
