@@ -124,6 +124,13 @@
           message: ``
         });
         break;
+      case 'error-update-category':
+        notification({
+          icon: 'exclamation',
+          type: 'danger',
+          title: 'Une erreur est survenue lors de la modification de la catégorie.',
+          message: ``
+        });
     }
   };
 
@@ -224,9 +231,11 @@
     let category = parseInt(select.val());
     let category_name = select.text();
     let _csrf = $('meta[name="csrf-token"]').attr('content');
-    $.put(`/api/back-office/references/posts/${row.id}`, { category, _csrf }, () => {
-      $(`tr[data-id="${id}"] td:nth-child(4)`).text(category_name);
-      notify('modified-post');
+    $.put(`/api/back-office/references/posts/${row.id}`, { category, _csrf }, (res) => {
+      if (res.status === 'Modified'){
+        $(`tr[data-id="${id}"] td:nth-child(4)`).text(category_name);
+        notify('modified-post');
+      } else notify('error-update-category');
     });
   };
 
@@ -277,18 +286,27 @@
 
     $('#multiLink').on('click', () => {
       let category = parseInt($('.select-multiLink option:selected').val());
+      let category_name = $('.select-multiLink option:selected').text();
       let selected = $('.selected');
       let keys = Object.keys(selected);
       let ids = [];
-      keys.forEach( key => {
-        console.log(selected[key].dataset.id);
-        //TODO
-      });
-      console.log(category);
+      let _csrf = $('meta[name="csrf-token"]').attr('content');
 
+      keys.forEach( key => {
+        if(!_.isNil(selected[key].dataset)){
+          ids.push(selected[key].dataset.id);
+        }
+      });
+      $.put(`/api/back-office/references/posts/multiple/category`, { ids, category, _csrf }, (res) => {
+        if (res.status === 'Modified'){
+          ids.forEach(id => {
+            $(`tr[data-id=${id}] td:nth-child(4)`).text(category_name);
+          });
+          notify('modified-post');
+        } else notify('error-update-category');
+      });
 
     });
-
 
   });
 

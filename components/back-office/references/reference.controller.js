@@ -3,6 +3,7 @@ const _ = require('lodash');
 const { validationResult } = require('express-validator/check');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
+const { Op } = require('sequelize');
 
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
@@ -84,6 +85,11 @@ BackOffice_References.Delete = (req, res, next) => {
       res.status(201).send({ deleted: true, data })
     });
   }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+};
+
+BackOffice_References.EditMulTipleCategory = (req, res, next) => {
+  let category = parseInt(req.body.category);
+  return Models.Post.update({ categoriesPS_id: category }, { where: { id: req.body.ids } }).then( res.status(200).json({ status: 'Modified' }) );
 };
 
 module.exports = BackOffice_References;
