@@ -32,7 +32,9 @@ let editAvailibility = (selectedPool) => {
     size: 'modal-xl',
     pool: selectedPool.dataset.pool,
   }, () => {
-
+    $('#validateDisponibility').click(function(){
+      console.log("coucou");
+    });
   });
 };
 
