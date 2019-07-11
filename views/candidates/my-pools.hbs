@@ -30,7 +30,8 @@
             </div>
             <div class="col-md-2">
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="toggle{{pool.id}}" name="PoolState" {{#if pool.available}} checked="" {{else}}{{/if}}>
+                <input type="checkbox" class="custom-control-input" data-id="{{pool.id}}" id="toggle{{pool.id}}" onClick="changeStatus(this)"
+                       name="PoolState"{{#if pool.available}} checked="checked"{{/if}}>
                 <label class="custom-control-label" for="toggle{{pool.id}}"></label>
               </div>
             </div>
@@ -41,22 +42,17 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-3 class-icon">
+            <div class="col-md-4 class-icon">
               <a href="#">
                 <i title="Mes disponibilités" class="fal fa-calendar-alt fa-2x" data-pool="{{pool.id}}" onclick="editAvailibility(this)"></i>
               </a>
             </div>
-            <div class="col-md-3 class-icon">
+            <div class="col-md-4 class-icon">
               <a href="#">
                 <i title="Télécharger mon planning de service" class="fal fa-paperclip fa-2x"></i>
               </a>
             </div>
-            <div class="col-md-3 class-icon">
-              <a href="#">
-                <i title="Choisir mes établissements" class="fal fa-hospital-user fa-2x"></i>
-              </a>
-            </div>
-            <div class="col-md-3 class-icon">
+            <div class="col-md-4 class-icon">
               <a href="#">
                 <i title="Choisir mes services" class="fal fa-stethoscope fa-2x" data-pool="{{pool.id}}" onclick="servicesEdit(this)"></i>
               </a>

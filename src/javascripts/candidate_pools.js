@@ -46,3 +46,26 @@ let seeMyServices = () => {
 
   })
 };
+
+let changeStatus = (toggle) => {
+  let state = $(`#${toggle.id}`).prop("checked");
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
+  let id = toggle.dataset.id;
+
+  $.put(`/pools/status/${id}`, { _csrf, state }, res => {
+    if(res == "Availability status updated")
+    {
+      let message;
+      if(state)
+        message = "Votre profil est désormais visible pour l'établissement selectionné.";
+        else
+        message = "Votre profil désormais invisible pour l'établissement selectionné.";
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Disponibilité',
+        message: `${message}`
+      });
+    }
+  });
+};
