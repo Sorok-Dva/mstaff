@@ -147,7 +147,7 @@ $('body').on('click', 'button.removeXP', (event) => {
   createModal({
     id: 'removeExperienceModal',
     title: 'Supprimer cette experience ?',
-    text: ' Êtes-vous sûr de vouloir supprimer cette experience ?',
+    text: '<div class="modal-body showFileListModalBody"></div>',
     actions: [
       '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
       `<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="removeCandidateExperience(${id})">Oui</button>`
