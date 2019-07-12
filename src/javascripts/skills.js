@@ -58,9 +58,9 @@ toAutocomplete.forEach((ac) => {
               'data-type': e,
               'data-id': data.id
             })
-              .append($('<li>').attr({ class: 'star', title: 'Fair', 'data-value': 1 }).html('<i class="fa fa-star"></i>'))
-              .append($('<li>').attr({ class: 'star', title: 'Good', 'data-value': 2 }).html('<i class="fa fa-star"></i>'))
-              .append($('<li>').attr({ class: 'star', title: 'Excellent', 'data-value': 3 }).html('<i class="fa fa-star"></i>')))
+              .append($('<li>').attr({ class: 'star', title: 'Je sais faire avec tutorat', 'data-value': 1 }).html('<i class="fa fa-star"></i>'))
+              .append($('<li>').attr({ class: 'star', title: 'Je sais faire en autonomie', 'data-value': 2 }).html('<i class="fa fa-star"></i>'))
+              .append($('<li>').attr({ class: 'star', title: 'Je sais former', 'data-value': 3 }).html('<i class="fa fa-star"></i>')))
           ))
           .append($('<td>').append($('<button>').attr({
             class: 'btn btn-simple btn-outline-danger btn-icon remove',
