@@ -1,13 +1,12 @@
 let activeBtnLoader;
 
-jQuery.each([ 'put', 'patch', 'delete' ], function ( i, method ) {
-  jQuery[ method ] = function ( url, data, callback, type ) {
-    if ( jQuery.isFunction( data ) ) {
+jQuery.each([ 'put', 'patch', 'delete' ], (i, method) => {
+  jQuery[ method ] = (url, data, callback, type) => {
+    if (jQuery.isFunction(data)) {
       type = type || callback;
       callback = data;
       data = undefined;
     }
-
     return jQuery.ajax({
       url: url,
       type: method,
@@ -84,7 +83,7 @@ let loadTemplate = (url, data, callback) => {
     for (let i = 0; i < data.partials.length; i++) {
       $.ajax({ url: `/static/views/partials/${data.partials[i]}.hbs`, cache: true, success: function (source) {
         Handlebars.registerPartial(`${data.partials[i]}`, source);
-      } });
+      }, fail: (errors) => errorsHandler(errors)});
     }
   }
   $.ajax({ url, cache: true, success: function (source) {
