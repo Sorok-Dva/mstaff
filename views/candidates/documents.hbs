@@ -366,7 +366,7 @@
               title: 'Document supprimé.'
             });
           }
-        }).catch(error => errorsHandler(error));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
       });
     });
   };

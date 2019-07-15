@@ -83,7 +83,7 @@ $(document).ready(() => {
             title: 'Votre souhait a bien été actualisé.',
           });
         }
-      }).catch(errors => errorsHandler(errors));
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
     }
   });
 });

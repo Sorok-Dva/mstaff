@@ -115,7 +115,7 @@ let searchCandidates = () => {
       $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
       $('#selectAllSearch').show();
     });
-  }).catch(error => errorsHandler(error));
+  }).catch((xhr, status, error) => catchError(xhr, status, error));
 };
 
 let showServiceModal = () => {
@@ -352,7 +352,7 @@ let showArchived = () =>{
         $('#searchCount').html(`${data.length} candidats archivés.`).show();
         $('#selectAllSearch').show();
       });
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   } else {
     $('#myCandidates').empty().hide();
     $('#showArchived').removeClass('Hide').addClass('Show').css('color', '#9e9e9e');
@@ -386,7 +386,7 @@ let showFavorites = () => {
         $('#searchCount').html(`${data.length} candidats favoris.`).show();
         $('#selectAllSearch').show();
       });
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   } else {
     $('#showFavorites').removeClass('Hide').addClass('Show').css('color', '#9e9e9e');
     if ($('#searchResult').text().length === 0) {
@@ -454,7 +454,7 @@ $(document).ready(() => {
           loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
             $('#baseResult').empty().html(html);
           });
-        }).catch(errors => errorsHandler(errors));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
       }
     });
   } else {
@@ -463,7 +463,7 @@ $(document).ready(() => {
       loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
         $('#baseResult').empty().html(html);
       });
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   }
 
   $('button#saveNeed').click(function () {

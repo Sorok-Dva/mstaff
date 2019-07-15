@@ -202,7 +202,7 @@
           title: `Email de vérification envoyé avec succès à ${email}`,
         });
       }
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 
     {{#if user.candidate}}
@@ -221,7 +221,7 @@
           });
           $(this).remove();
         }
-      }).catch(errors => errorsHandler(errors));
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
     });
     {{/if}}
 

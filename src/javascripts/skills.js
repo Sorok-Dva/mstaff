@@ -69,9 +69,8 @@ toAutocomplete.forEach((ac) => {
           }).html('<i class="fa fa-trash"></i>')))
         );
       }
-    }).catch(error => {
-      console.log(error);
-      let errors = error.responseJSON;
+    }).catch((xhr, status, error) => {
+      let errors = xhr.responseJSON;
       switch (ac) {
         case 'skills':
           messageError = `Cette compétence est déjà ajoutée à votre profil.`;
@@ -90,7 +89,7 @@ toAutocomplete.forEach((ac) => {
           title: 'Ajout impossible',
           message: messageError
         });
-      } else return errorsHandler(errors || error);
+      } else return catchError(xhr, status, error);
     });
   });
 });
@@ -133,8 +132,8 @@ let removeSkill = (type, id) => {
       });
       $(`tr[data-type="${type}"][data-id="${id}"]`).remove();
     }
-  }).catch(error => {
-    error = error.responseJSON;
+  }).catch((xhr, status, error) => {
+    error = xhr.responseJSON;
     if (error !== undefined && error.error === 'Not exists') {
       notification({
         icon: 'exclamation',
@@ -142,6 +141,6 @@ let removeSkill = (type, id) => {
         title: 'Suppression impossible',
         message: `Cette compétence n'est pas liée à votre profil.`
       });
-    } else return errorsHandler(error);
+    } else return catchError(xhr, status, error);
   });
 };

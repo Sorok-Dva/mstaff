@@ -139,7 +139,7 @@ $('.add').click(function () {
         }
 
       }
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   }
 });
 $('body').on('click', 'button.removeXP', (event) => {
@@ -358,7 +358,7 @@ let editFormation = (id) => {
         errorsHandler(data.errors);
       }
     }
-  }).catch(errors => errorsHandler(errors));
+  }).catch((xhr, status, error) => catchError(xhr, status, error));
 };
 
 let editDiploma = (id) => {
@@ -387,7 +387,7 @@ let editDiploma = (id) => {
         errorsHandler(data.errors);
       }
     }
-  }).catch(errors => errorsHandler(errors));
+  }).catch((xhr, status, error) => catchError(xhr, status, error));
 };
 
 let lockService = (category) => {

@@ -31,7 +31,7 @@ function isAvailableMail(mail){
   return new Promise( resolve => {
     $.get(`/emailAvailable/${mail}`, (data) => {
       resolve(data);
-    }).catch(error => errorsHandler(error));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 };
 

@@ -101,7 +101,7 @@
               title: 'Une fiche métier portant déjà ce nom existe.',
             });
           }
-        }).catch(errors => errorsHandler(errors));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
       }
     });
   });
