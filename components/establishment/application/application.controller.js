@@ -24,11 +24,11 @@ Establishment_Application.getCVs = (req, res, next) => {
           [Op.col]: 'Wish.id'
         }
       },
-      where: {
+      /* --Horodatage system-- where: {
         renewed_date: {
           [Op.gte]: moment().subtract(1, 'months').toDate()
         }
-      },
+      },*/
       include: {
         model: Models.Candidate,
         attributes: { exclude: ['updatedAt', 'createdAt'] },
@@ -184,11 +184,11 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
           [Op.col]: 'Wish.id'
         }
       },
-      where: {
+      /* --Horodatage System-- where: {
         renewed_date: {
           [Op.gte]: moment().subtract(1, 'months').toDate()
         }
-      },
+      },*/
       include: {
         model: Models.Candidate,
         attributes: { exclude: ['updatedAt', 'createdAt'] },
