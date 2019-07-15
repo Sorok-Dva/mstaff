@@ -11,12 +11,17 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   UserPool.associate = function (models) {
     UserPool.belongsTo(models.Pool, {
-      foreignKey: 'id',
-      as: 'pool',
+      foreignKey: 'pool_id',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
     });
     UserPool.belongsTo(models.User, {
-      foreignKey: 'id',
+      foreignKey: 'user_id',
+      targetKey: 'id',
+      onDelete: 'CASCADE'
     });
   };
+
+
   return UserPool;
 };
