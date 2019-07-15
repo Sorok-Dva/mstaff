@@ -3,9 +3,10 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-primary" id="validateDisponibility"> Valider mes disponibilités </button>
+  <button type="button" class="btn btn-outline-primary" onClick="updateAvailability({{pool}})"
+          id="validateDisponibility"> Valider mes disponibilités </button>
 </div>
 
-<script> data = { availability: [] } </script>
+<script> data = { availability: {} } </script>
 <script src="/static/assets/dist/js/pool_calendar.min.js"></script>
 <script>loadPreviousDatas({{pool}});</script>

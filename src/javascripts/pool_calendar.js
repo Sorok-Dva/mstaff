@@ -87,6 +87,32 @@ function  loadPreviousDatas (id) {
   });
 }
 
+function  updateAvailability(id)
+{
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
+  let availability = data.availability;
+  if (Object.keys(availability).length) {
+    $.put(`pools/availability/${id}`, { _csrf, availability }, (res) => {
+      if(res === 'Availability planning updated')
+      {
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: 'Succès :',
+          message: `Vous venez de mettre à jour votre calendrier de disponibilité.`
+        });
+      }
+    });
+  } else {
+    notification({
+      icon: 'exclamation',
+      type: 'danger',
+      title: 'Erreur :',
+      message: `Le calendrier de disponibilités ne peut être vide.`
+    });
+  }
+}
+
 function  choosedVacations (calendar) {
   $('#vacationDate table .fa-sun, .fa-moon').click(function(){
     let day = $(this).parent().siblings("div").attr('data-day');

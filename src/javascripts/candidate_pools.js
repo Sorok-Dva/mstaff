@@ -31,10 +31,6 @@ let editAvailibility = (selectedPool) => {
     modal: 'candidate/poolAvailability',
     size: 'modal-xl',
     pool: selectedPool.dataset.pool,
-  }, () => {
-    $('#validateDisponibility').click(function(){
-      console.log("coucou");
-    });
   });
 };
 
