@@ -1508,9 +1508,22 @@ User_Candidate.updatePoolAvailability = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-/* TODO ELLE FAIT RIEN - A CORRIGER */
-User_Candidate.addPoolServices = (req, res, next) => {
+User_Candidate.getPoolServices = (req, res, next) => {
+  Models.UserPool.findOne({
+    where: { id: req.params.id, user_id: req.user.id },
+    attributes: ['service']
+  }).then((services) => {
+    return res.status(200).send(services);
+  }).catch(error => next(new BackError(error)));
+};
 
+User_Candidate.updatePoolServices = (req, res, next) => {
+  Models.UserPool.update(
+    { service: req.body.services },
+    { where: { user_id: req.user.id, id: req.params.id } }
+  ).then(() => {
+    return res.status(200).send('Services updated');
+  }).catch(error => next(new BackError(error)));
 };
 
 User_Candidate.viewUpload = (req, res, next) => {

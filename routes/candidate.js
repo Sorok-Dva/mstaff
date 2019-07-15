@@ -174,11 +174,7 @@ router.get('/pools',
 
 router.get('/my-pools',
   Authentication.ensureIsCandidate,
-  User.Candidate.viewMyPools
-).post('/my-pools',
-  Authentication.ensureAuthenticated,
-  User.Candidate.addPoolServices
-);
+  User.Candidate.viewMyPools);
 
 router.get('/pools/availability/:id(\\d+)',
   Authentication.ensureIsCandidate,
@@ -191,5 +187,12 @@ router.put('/pools/status/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.updatePoolStatus
 );
+
+router.get('/pools/services/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getPoolServices
+).put('/pools/services/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.updatePoolServices);
 
 module.exports = router;
