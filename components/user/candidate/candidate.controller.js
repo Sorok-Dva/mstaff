@@ -1447,7 +1447,7 @@ User_Candidate.poolInvite = (req, res, next) => {
     where: { token: req.params.token }
   }).then(inviteInfos => {
     if (!_.isNil(inviteInfos))
-      return res.render('onboarding/pool', { inviteInfos, layout: 'onepage' } );
+      return req.logout() + req.session.destroy() + res.render('onboarding/pool', { inviteInfos, layout: 'onepage' } );
     else
       return next(new BackError('Token introuvable et/ou déjà utilisé', 404));
   }).catch(error => next(new BackError(error)));

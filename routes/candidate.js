@@ -138,8 +138,11 @@ router.post('/add/formation',
  * @Route('/invitation/pool') GET;
  * add Candidate in Pool.
  */
-router.get('/invitation/pool/:token', User.Candidate.poolInvite)
-  .post('/invitation/pool/:token', User.Candidate.assignPool);
+router.get('/invitation/pool/:token',
+  User.Candidate.poolInvite)
+  .post('/invitation/pool/:token',
+    Authentication.ensureIsNotAuthenticated,
+    User.Candidate.assignPool);
 
 /**
  * @Route('/add/Diploma') POST;
