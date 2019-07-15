@@ -183,7 +183,9 @@ router.get('/my-pools',
 router.get('/pools/availability/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.viewPoolAvailability
-);
+).put('/pools/availability/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.updatePoolAvailability);
 
 router.put('/pools/status/:id(\\d+)',
   Authentication.ensureIsCandidate,
