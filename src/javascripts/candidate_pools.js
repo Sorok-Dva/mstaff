@@ -7,23 +7,16 @@ let helpMe = () => {
 
   })
 };
-let serviceArray = [];
+
 let servicesEdit = (selectedPool) => {
   createModal({
     id: 'serviceEditModal',
     title: `Ajouter un service`,
-    modal: 'candidate/serviceAdd'
-  }, () => {
-    $('#addServiceButton').click(function () {
-      if ($('#servicesSelect').val() !== '' && $('#experienceInput').val()) {
-        let _csrf = $('meta[name="csrf-token"]').attr('content');
-        let pool = selectedPool.dataset.pool;
-        let service =
-          $.post(``)
-      }
-    })
-  })
+    modal: 'candidate/poolAddService',
+    pool: selectedPool.dataset.pool,
+  });
 };
+
 let editAvailibility = (selectedPool) => {
   createModal({
     id: 'serviceEditModal',
@@ -32,17 +25,6 @@ let editAvailibility = (selectedPool) => {
     size: 'modal-xl',
     pool: selectedPool.dataset.pool,
   });
-};
-
-let seeMyServices = () => {
-  $('#serviceEditModal').modal('hide');
-  createModal({
-    id: 'seeServicesModal',
-    title: `Modifier les services désirés`,
-    modal: 'candidate/serviceEdit'
-  }, () => {
-
-  })
 };
 
 let changeStatus = (toggle) => {
