@@ -109,13 +109,16 @@ let catchError = (xhr, status, error) => {
       title = 'Accès non autorisé :';
       message = 'Vous n\'avez pas accès à cette page.';
       break;
+    case 'Not Found':
+      title = xhr.responseJSON ? xhr.responseJSON.message : 'Page introuvable';
+      break;
     case '':
       title = 'Impossible de charger le contenu :';
       message = 'Veuillez vérifier votre connexion internet.';
       break;
     default:
-      title = xhr.responseText;
-      console.log(xhr.responseJSON);
+      title = xhr.responseJSON ? xhr.responseJSON.name : 'Erreur inconnue';
+      message = xhr.responseJSON ? xhr.responseJSON.message : null;
   }
   if (!_.isNil(title)) {
     notification({
