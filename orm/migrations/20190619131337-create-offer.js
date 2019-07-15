@@ -36,6 +36,8 @@ module.exports = {
           model: 'Needs',
           key: 'id'
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       nature_section: {
         type: Sequelize.JSON
