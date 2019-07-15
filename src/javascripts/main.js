@@ -22,7 +22,7 @@ let debug = (data) => {
   let debugEnable = $('meta[name="debug"]').attr('content');
   if (debugEnable === 'false') return false;
   console.time('debug finished in');
-  console.log('[DEBUG] :', data);
+  console.log('%c [DEBUG] :', 'color: orange; font-weight: bold', data);
   console.trace('StackTrace');
   if (typeof data === 'object') console.table(data);
   console.timeEnd('debug finished in');
