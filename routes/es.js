@@ -105,16 +105,20 @@ router.get('/my-pool',
   Establishment.Pool.Delete
 );
 
-router.get('/pool/:id/invites',
+router.get('/pool/:id(\\d+)/invites',
   Authentication.ensureIsEs,
   Establishment.Pool.ViewInvitations
-).delete('/pool/:id/invites',
+).delete('/pool/:id(\\d+)/invites',
   Authentication.ensureIsEs,
   Establishment.Pool.DeleteInvite
-).post('/pool/:id/invites',
+).post('/pool/:id(\\d+)/invites',
   Authentication.ensureIsEs,
   Establishment.Pool.Invite
 );
+
+router.get('/pool/:id(\\d+)/volunteers',
+  Authentication.ensureIsEs,
+  Establishment.Pool.ViewVolunteers);
 
 router.get('/establishement-list',
   Authentication.ensureIsEs,

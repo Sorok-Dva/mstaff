@@ -123,4 +123,19 @@ Establishment_Pool.sendMail = (mails, token, name, es_name) => {
   });
 };
 
+Establishment_Pool.ViewVolunteers = (req, res, next) => {
+  Models.UserPool.findAll({
+    where: { pool_id: req.params.id, available: 1 },
+    attributes: ['availability', 'post', 'service'],
+    include: [{
+      model: Models.User,
+      attributes: ['id', 'firstName', 'lastName', 'email', 'photo', 'town', 'phone', 'country', 'postal_code'],
+      required: true,
+    }]
+
+  }).then( (users) => {
+    return res.status(200).send({ users });
+  }).catch(error => next(new Error(error)));
+};
+
 module.exports = Establishment_Pool;

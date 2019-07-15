@@ -31,8 +31,15 @@ let createPool = (data) => {
   });
 };
 let poolUsersList = (poolToEdit) => {
-
+  createModal({
+    id:'displayPoolCandidates',
+    modal: 'es/poolCandidates',
+    title: 'Liste des volontaires du pool',
+    pool: poolToEdit.dataset.pool,
+    size: 'modal-xl',
+  });
 };
+
 let editPool = (poolToEdit) => {
   createModal({
     id: 'editPoolModal',
