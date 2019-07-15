@@ -45,6 +45,7 @@ let notification = (opts) => {
 };
 
 let errorsHandler = data => {
+  console.log(data, typeof data);
   if (_.isNil(data.responseJSON)) {
     notification({
       icon: 'exclamation',
@@ -78,14 +79,39 @@ let errorsHandler = data => {
   }
 };
 
+let catchError = (xhr, status, error) => {
+  let title, message;
+  switch (error) {
+    case 'Forbidden':
+      title = 'Accès non autorisé :';
+      message = 'Vous n\'avez pas accès à cette page.';
+      break;
+    case '':
+      title = 'Impossible de charger le contenu :';
+      message = 'Veuillez vérifier votre connexion internet.';
+      break;
+    default:
+      title = xhr.responseText;
+      console.log(xhr.responseJSON);
+  }
+  console.log(xhr, status, error);
+
+  notification({
+    icon: 'exclamation',
+    type: 'danger',
+    title,
+    message
+  });
+};
+
 let loadTemplate = (url, data, callback) => {
   if (data.partials) {
     for (let i = 0; i < data.partials.length; i++) {
       $.ajax({ url: `/static/views/partials/${data.partials[i]}.hbs`, cache: true, success: (source) => {
         Handlebars.registerPartial(`${data.partials[i]}`, source);
-      }}).catch((errors) => {
+      }}).catch((xhr, status, error) => {
         $('#loadingModal').modal('hide');
-        errorsHandler(errors);
+        catchError(xhr, status, error)
       });
     }
   }
@@ -95,22 +121,25 @@ let loadTemplate = (url, data, callback) => {
         Handlebars.registerPartial(`${data.modal}`, modal);
         let template = Handlebars.compile(source);
           return callback(template(data));
-      }}).catch((errors) => {
+      }}).catch((xhr, status, error) => {
         $('#loadingModal').modal('hide');
-        errorsHandler(errors);
+        catchError(xhr, status, error);
       });
     } else {
       let template = Handlebars.compile(source);
       return callback(template(data));
     }
-  }}).catch((errors) => {
+  }}).catch((xhr, status, error) => {
     $('#loadingModal').modal('hide');
-    errorsHandler(errors);
+    catchError(xhr, status, error);
   });
 };
 
 let createModal = (opts, callback) => {
-  $('#loadingModal').modal();
+  $('#loadingModal').modal({
+    backdrop: 'static',
+    keyboard: false
+  });
   if ($(`#${opts.id}`).length > 0) {
     $(`#${opts.id}`).modal('hide');
     $(`#${opts.id}`).remove();
