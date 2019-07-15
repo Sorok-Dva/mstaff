@@ -93,6 +93,18 @@ let catchError = (xhr, status, error) => {
   debug({xhr, status, error});
   let title, message;
   switch (error) {
+    case 'Internal Server Error':
+      title = 'Une erreur interne est survenue';
+      if (xhr.responseJSON) {
+        switch (xhr.responseJSON.message.name) {
+          case 'SequelizeForeignKeyConstraintError':
+            message = `ForeignKeyConstraintError: ${xhr.responseJSON.message.original.sqlMessage}`;
+            break;
+          default:
+            message = xhr.responseJSON.message.name;
+        }
+      }
+      break;
     case 'Forbidden':
       title = 'Accès non autorisé :';
       message = 'Vous n\'avez pas accès à cette page.';
