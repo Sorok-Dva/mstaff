@@ -1499,6 +1499,15 @@ User_Candidate.updatePoolStatus = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+User_Candidate.updatePoolAvailability = (req, res, next) => {
+  Models.UserPool.update(
+    { availability: req.body.availability },
+    { returning: true, where: { user_id: req.user.id, id: req.params.id } }
+  ).then(() => {
+    return res.status(200).send('Availability planning updated');
+  }).catch(error => next(new BackError(error)));
+};
+
 /* TODO ELLE FAIT RIEN - A CORRIGER */
 User_Candidate.addPoolServices = (req, res, next) => {
 
