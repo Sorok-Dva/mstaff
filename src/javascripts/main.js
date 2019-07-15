@@ -18,6 +18,16 @@ jQuery.each([ 'put', 'patch', 'delete' ], (i, method) => {
   };
 });
 
+let debug = (data) => {
+  let debugEnable = $('meta[name="debug"]').attr('content');
+  if (debugEnable === 'false') return false;
+  console.time('debug finished in');
+  console.log('[DEBUG] :', data);
+  console.trace('StackTrace');
+  if (typeof data === 'object') console.table(data);
+  console.timeEnd('debug finished in');
+};
+
 let notification = (opts) => {
   $.notify({
     icon: `fal fa-${opts.icon}`,
@@ -45,7 +55,7 @@ let notification = (opts) => {
 };
 
 let errorsHandler = data => {
-  console.log(data, typeof data);
+  debug(data);
   if (_.isNil(data.responseJSON)) {
     notification({
       icon: 'exclamation',
@@ -80,6 +90,7 @@ let errorsHandler = data => {
 };
 
 let catchError = (xhr, status, error) => {
+  debug({xhr, status, error});
   let title, message;
   switch (error) {
     case 'Forbidden':
@@ -94,14 +105,14 @@ let catchError = (xhr, status, error) => {
       title = xhr.responseText;
       console.log(xhr.responseJSON);
   }
-  console.log(xhr, status, error);
-
-  notification({
-    icon: 'exclamation',
-    type: 'danger',
-    title,
-    message
-  });
+  if (!_.isNil(title)) {
+    notification({
+      icon: 'exclamation',
+      type: 'danger',
+      title,
+      message
+    });
+  }
 };
 
 let loadTemplate = (url, data, callback) => {
