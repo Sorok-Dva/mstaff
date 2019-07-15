@@ -10,6 +10,7 @@ $(document).ready(function () {
       verifiedEvent: new Event('verified')
     };
 
+    localStorage.clear();
     data.identity = { email: data.email };
     data.availability = {};
     data.emailExist = !available;
