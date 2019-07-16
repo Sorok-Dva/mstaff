@@ -96,12 +96,16 @@ let catchError = (xhr, status, error) => {
     case 'Internal Server Error':
       title = 'Une erreur interne est survenue';
       if (xhr.responseJSON) {
-        switch (xhr.responseJSON.message.name) {
-          case 'SequelizeForeignKeyConstraintError':
-            message = `ForeignKeyConstraintError: ${xhr.responseJSON.message.original.sqlMessage}`;
-            break;
-          default:
-            message = xhr.responseJSON.message.name;
+        if (typeof xhr.responseJSON.message === 'object') {
+          switch (xhr.responseJSON.message.name) {
+            case 'SequelizeForeignKeyConstraintError':
+              message = `ForeignKeyConstraintError: ${xhr.responseJSON.message.original.sqlMessage}`;
+              break;
+            default:
+              message = xhr.responseJSON.message.sqlMessage;
+          }
+        } else if (typeof xhr.responseJSON.message === 'string') {
+          message = xhr.responseJSON.message;
         }
       }
       break;
