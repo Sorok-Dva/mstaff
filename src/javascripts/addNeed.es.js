@@ -3,29 +3,55 @@ let showSelectAllSearchInfo = localStorage.getItem('showSelectAllSearchInfo') ||
 need.notifyCandidates = false;
 
 $(function() {
+  let list = esList;
   $('#esList').multiselect({
     buttonText: (options, select) => 'Établissements',
     selectAllText: 'Tous',
     buttonClass: 'btn btn-outline-info',
     includeSelectAllOption: true,
     onChange: (element, checked) => {
-      let id = element[0].value;
+      let id = parseInt(element[0].value);
+      debug(`${id} changed`);
       if (checked === true) {
+        debug(`${id} checked`);
         if (need.filterQuery.establishments.indexOf(id) === -1) {
+          debug(`${id} not exists in array`);
           need.filterQuery.establishments.push(id);
+          debug(`${id} pushed in array`);
         }
       }
       else if (checked === false) {
+        debug(`${id} unchecked`);
         let index = need.filterQuery.establishments.indexOf(id);
-        if (index !== -1) need.filterQuery.establishments.splice(index, 1);
+        if (index !== -1) {
+          debug(`${id} exists in array`);
+          need.filterQuery.establishments.splice(index, 1);
+          debug(`${id} removed from array`);
+        }
+        if (need.filterQuery.establishments.length === 0) {
+          debug(`es array is empty. set default es`);
+          need.filterQuery.establishments = [esId];
+          $(`input[type="checkbox"][value="${esId}"]`).prop('checked', true);
+        }
       }
     },
     onDropdownHidden: () => searchCandidates(),
     onDeselectAll: () => {
+      debug(`Deselect All`);
       $(`input[type="checkbox"][value="${esId}"]`).prop('checked', true);
       need.filterQuery.establishments = [esId];
+      debug(`Reset default es`);
     },
-    onSelectAll: () => need.filterQuery.establishments = esList
+    onSelectAll: () => {
+      // Weird bug here, select all, then unselect one es, then unselect the default es then reselect all and a bug appear. need.fullEs or esList
+      // become empty so need.filterQuery.establishments become empty two that catch an error in back-error (logic)
+      debug(`Select All`);
+      debug(need.fullEs);
+      need.filterQuery.establishments = list;
+      debug(need.filterQuery.establishments);
+      debug(list);
+      debug(`Reset default list values`);
+    }
   });
 });
 
