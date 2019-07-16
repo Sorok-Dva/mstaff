@@ -62,8 +62,8 @@ Api.getCategoriesList = (req, res, next) => {
 };
 
 Api.getUserAvatar = (req, res, next) => {
-  if (fs.existsSync(`./public/uploads/candidates/documents/${req.params.name}`)) {
-    return res.sendFile(`${__}/public/uploads/candidates/documents/${req.params.name}`);
+  if (fs.existsSync(`./public/uploads/avatars/${req.params.name}`)) {
+    return res.sendFile(`${__}/public/uploads/avatars/${req.params.name}`);
   } else {
     return res.sendFile(`${__}/public/assets/images/face-0.jpg`);
   }
