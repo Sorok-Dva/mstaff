@@ -176,6 +176,7 @@ let createModal = (opts, callback) => {
   }
   loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
     $('body').append(html);
+    $('#loadingModal').modal('hide');
     if ('cantBeClose' in opts) {
       if (opts.cantBeClose) {
         $(`#${opts.id}`).modal({
@@ -184,7 +185,6 @@ let createModal = (opts, callback) => {
         });
       } else $(`#${opts.id}`).modal();
     } else $(`#${opts.id}`).modal();
-    $('#loadingModal').modal('hide');
     if (callback) return callback();
   });
 };
