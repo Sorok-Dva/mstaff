@@ -363,9 +363,9 @@ Establishment_Application.getCandidates = (req, res, next) => {
         [Op.col]: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
           [Op.like]: `%${req.body.post.toLowerCase()}%`
         }),
-        renewed_date: {
+        /* -- Horodatage system -- renewed_date: {
           [Op.gte]: moment().subtract(1, 'months').toDate()
-        }
+        }*/
       },
       include: {
         model: Models.Candidate,
