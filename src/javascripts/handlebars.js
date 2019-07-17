@@ -182,7 +182,7 @@ Handlebars.registerHelper('partial', function (name) {
 Handlebars.registerHelper('candidateProfilePercentage', (percentage) => {
   if (_.isNil(percentage)) return '0%';
   else if (_.isNil(percentage.total)) return '0%';
-  else return percentage.total === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage.total}%`;
+  else return percentage.total === 100 ? '<i class="fal fa-badge-check"></i>' : `${percentage.total}%`;
 });
 
 Handlebars.registerHelper('countInObject', (object, property, search) => {
@@ -194,9 +194,7 @@ Handlebars.registerHelper('countInObject', (object, property, search) => {
 /* eslint-disable no-console */
 Handlebars.registerHelper('debug', function () {
   console.log('Context:', this);
-  console.log(['Values:'].concat(
-    Array.prototype.slice.call(arguments, 0, -1)
-  ));
+  debug(Array.prototype.slice.call(arguments, 0, -1));
 });
 
 Handlebars.registerHelper('log', function () {
