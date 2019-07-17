@@ -64,22 +64,17 @@
               <i class="fal fa-moon fa-2x"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
             </h4>
             {{#if data.Wish.posts}}
-              <h4>
-                <label class="col-8 wrapword badge badge-soft-success">{{this.Wish.posts}}</label>
+              <h4 {{{otherPostsPopover this.Wish.posts}}}>
+                <label class="col-8 wrapword badge badge-soft-success">{{firstPost this.Wish.posts}}</label>
               </h4>
-            {{!--<h4 {{{otherPostsPopover this.Wish.posts}}}>
-              <label class="col-8 wrapword badge badge-soft-success">{{firstPost this.Wish.posts}}</label>
-            </h4>--}}
             {{/if}}
             {{#if data.Wish.services}}
               <hr style="width: 45%; margin: auto">
               <h4 class="text-muted mt-2">
                 Expérience dans les services
               </h4>
-              <h5>
-                {{#each data.Wish.services as |service|}}
-                  <div class="badge badge-soft-secondary">{{service}}</div>
-                {{/each}}
+              <h5 {{{otherServicesPopover this.Wish.services}}}>
+                <div class="badge badge-soft-secondary">{{firstService this.Wish.services}}</div>
               </h5>
               <hr style="width: 45%; margin: auto;">
             {{/if}}
