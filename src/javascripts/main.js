@@ -93,6 +93,9 @@ let catchError = (xhr, status, error) => {
   debug({xhr, status, error});
   let title, message;
   switch (error) {
+    case 'Bad Request':
+      title = 'Mauvaise requête.';
+      break;
     case 'Internal Server Error':
       title = 'Une erreur interne est survenue';
       if (xhr.responseJSON) {
@@ -116,12 +119,22 @@ let catchError = (xhr, status, error) => {
     case 'Not Found':
       title = xhr.responseJSON ? xhr.responseJSON.message : 'Page introuvable';
       break;
+    case 'Request Time-out':
+      title = 'Requête expirée.';
+      break;
+    case 'Unauthorized':
+      title = 'Accès non autorisé.';
+      break;
+    // First mstaff easter-egg, thanks RFC 2324 :D
+    case 'I’m a teapot':
+      title = 'Je suis une théière :D';
+      break;
     case '':
-      title = 'Impossible de charger le contenu :';
-      message = 'Veuillez vérifier votre connexion internet.';
+      title = 'Connexion perdue :';
+      message = 'La connexion entre votre ordinateur et Mstaff est actuallement impossible. Veuillez vérifier votre connexion ou réessayer dans quelques minutes.';
       break;
     default:
-      title = xhr.responseJSON ? xhr.responseJSON.name : 'Erreur inconnue';
+      title = xhr.responseJSON ? xhr.responseJSON.name : `Erreur inconnue (erreur HTTP ${error})`;
       message = xhr.responseJSON ? xhr.responseJSON.message : null;
   }
   if (!_.isNil(title)) {
