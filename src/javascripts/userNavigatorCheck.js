@@ -10,7 +10,7 @@ function noIE(){
   if ( confirm( "Votre navigateur est obsolète, merci d'utiliser un navigateur récent (Google Chrome, Mozilla Firefox, Opera, ..." ) ) {
     $(location).attr('href', 'https://www.google.com/intl/fr_fr/chrome/');
   } else {
-    noIE();
+    $(location).attr('href', 'https://www.google.com/intl/fr_fr/chrome/');
   }
 }
 
