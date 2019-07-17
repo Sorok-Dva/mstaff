@@ -269,11 +269,11 @@ Establishment_Application.CVsMyCandidatesQuery = (req, res, next) => {
             [Op.col]: 'Wish.id'
           }
         },
-        where: {
+        /*where: {
           renewed_date: {
             [Op.gte]: moment().subtract(1, 'months').toDate()
           }
-        },
+        },*/
         include: {
           model: Models.Candidate,
           attributes: { exclude: ['updatedAt', 'createdAt'] },
@@ -347,7 +347,7 @@ Establishment_Application.CVsMyCandidatesQuery = (req, res, next) => {
 Establishment_Application.getCandidates = (req, res, next) => {
   let { filterQuery } = req.body;
   let query = {
-    where: { es_id: filterQuery.establishments },
+    where: { es_id: filterQuery.establishments || req.user.opts.currentEs },
     attributes: { exclude: ['lat', 'lon'] },
     order: Sequelize.literal('`Wish->Candidate->User`.`createdAt` DESC'),
     group: ['Wish->Candidate.id'],
