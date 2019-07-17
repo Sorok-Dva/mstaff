@@ -3,6 +3,7 @@ const _ = require('lodash');
 const { validationResult } = require('express-validator/check');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
+const { Op } = require('sequelize');
 
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
@@ -11,11 +12,25 @@ const BackOffice_References = {};
 
 BackOffice_References.View = (req, res, next) => {
   let model = req.params.type === 'categories' ? 'MstaffCategories' : req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
+  let datas = {};
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
-  return Models[model].findAll().then(references => {
-    res.render(`back-office/references/${req.params.type}`, {
-      layout, references, a: { main: 'references', sub: req.params.type } })
-  });
+  switch (model) {
+    case 'Post':
+      Models[model].findAll().then(references => {
+        datas.references = references;
+        return Models.CategoriesPostsServices.findAll().then( categories => {
+          datas.categories = categories;
+          res.render(`back-office/references/${req.params.type}`, {
+            layout, datas, a: { main: 'references', sub: req.params.type } })
+        })
+      });
+      break;
+    default:
+      return Models[model].findAll().then(references => {
+        res.render(`back-office/references/${req.params.type}`, {
+          layout, references, a: { main: 'references', sub: req.params.type } })
+      });
+  }
 };
 
 BackOffice_References.Add = (req, res, next) => {
@@ -47,9 +62,10 @@ BackOffice_References.Edit = (req, res, next) => {
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
 
   return Models[model].findOne({ where: { id: req.params.id } }).then(reference => {
-    if (req.body.promptInput) {
+    if (req.body.promptInput)
       reference.name = req.body.promptInput;
-    }
+    if (req.body.category)
+      reference.categoriesPS_id = req.body.category;
     reference.save();
     return res.status(200).json({ status: 'Modified' });
   })
@@ -69,6 +85,11 @@ BackOffice_References.Delete = (req, res, next) => {
       res.status(201).send({ deleted: true, data })
     });
   }).catch(error => res.status(400).send({ body: req.body, sequelizeError: error }));
+};
+
+BackOffice_References.EditMulTipleCategory = (req, res, next) => {
+  let category = parseInt(req.body.category);
+  return Models.Post.update({ categoriesPS_id: category }, { where: { id: req.body.ids } }).then( res.status(200).json({ status: 'Modified' }) );
 };
 
 module.exports = BackOffice_References;
