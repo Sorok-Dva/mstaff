@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'pool_id',
       targetKey: 'id',
       onDelete: 'CASCADE',
+      as: 'pool',
     });
     UserPool.belongsTo(models.User, {
       foreignKey: 'user_id',
