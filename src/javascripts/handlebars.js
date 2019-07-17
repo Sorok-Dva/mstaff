@@ -242,3 +242,19 @@ Handlebars.registerHelper('otherPostsPopover', posts => {
   let string = posts.toString();
   return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
 });
+
+Handlebars.registerHelper('firstService', services => {
+  if (_.isNil(services)) return 'Aucun service';
+  let other = '';
+  if (services.length > 1) other = `... (et ${services.length - 1} de plus)`;
+  return `${services[0]}${other}`
+});
+
+Handlebars.registerHelper('otherServicesPopover', services => {
+  if (_.isNil(services)) return '';
+  if (services.length > 1) {
+    services.shift();
+    let string = services.toString();
+    return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
+  } else return '';
+});
