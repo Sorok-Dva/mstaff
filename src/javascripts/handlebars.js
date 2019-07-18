@@ -227,14 +227,14 @@ Handlebars.registerHelper('showVisioLink', conference => {
 });
 
 Handlebars.registerHelper('firstPost', posts => {
-  if (_.isNil(posts)) return 'Aucun poste';
+  if (_.isNil(posts) || posts.length === 0) return 'Aucun poste';
   let other = '';
   if (posts.length > 1) other = `... (${posts.length - 1} de plus)`;
   return `${posts[0]}${other}`
 });
 
 Handlebars.registerHelper('otherPostsPopover', posts => {
-  if (_.isNil(posts)) return '';
+  if (_.isNil(posts) || posts.length === 0) return '';
   if (posts.length < 2) return '';
   posts.shift();
   let string = posts.toString();
@@ -242,14 +242,14 @@ Handlebars.registerHelper('otherPostsPopover', posts => {
 });
 
 Handlebars.registerHelper('firstService', services => {
-  if (_.isNil(services)) return 'Aucun service';
+  if (_.isNil(services) || services.length === 0) return 'Aucun service';
   let other = '';
   if (services.length > 1) other = `... (et ${services.length - 1} de plus)`;
   return `${services[0]}${other}`
 });
 
 Handlebars.registerHelper('otherServicesPopover', services => {
-  if (_.isNil(services)) return '';
+  if (_.isNil(services) || services.length === 0) return '';
   if (services.length > 1) {
     services.shift();
     let string = services.toString();
