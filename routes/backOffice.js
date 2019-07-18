@@ -60,6 +60,7 @@ router.get(
  */
 router.get('/impersonate/user/:id(\\d+)',
   Authentication.ensureIsAdmin,
+  BackOffice.Impersonation.removeImpersonationBeforeNewIfExists,
   BackOffice.Impersonation.User);
 
 /**
