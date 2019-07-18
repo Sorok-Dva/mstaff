@@ -20,6 +20,15 @@
     <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" onclick="helpMe()"> <i class="fal fa-question"></i> </button>
     <span style="margin-top: 15px; margin-left: 10px"><h2> Besoin d'aide ?</h2></span>
   </div>
+
+  <div class="col-md-12 text-center">
+    {{#ifCond pools.length '<=' 0}}
+      <h2 style="font-weight: 400"> Vous n'êtes dans aucun pool de remplaçants. </h2>
+    {{else}}
+      <h2 style="font-weight: 400">Il y a actuellement {{ @root.pools.length }} pool{{#ifCond @root.pools.length '>' 1}}s{{/ifCond}}.</h2>
+    {{/ifCond}}
+  </div>
+
   {{#each pools as |pool| }}
     <div class="col-12 col-md-12 col-lg-4 card-competence">
       <div class="card">
