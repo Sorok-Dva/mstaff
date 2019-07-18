@@ -27,6 +27,15 @@ let editAvailibility = (selectedPool) => {
   });
 };
 
+let uploadFile = (selectedPool) => {
+  createModal({
+    id: 'poolUploadFile',
+    title: `Ajouter mon planning de service`,
+    modal: 'candidate/uploadServicePlanning',
+    pool: selectedPool.dataset.pool,
+  });
+};
+
 let changeStatus = (toggle) => {
   let state = $(`#${toggle.id}`).prop("checked");
   let _csrf = $('meta[name="csrf-token"]').attr('content');

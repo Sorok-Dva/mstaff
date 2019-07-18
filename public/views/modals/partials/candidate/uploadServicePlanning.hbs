@@ -1,0 +1,21 @@
+<div class="modal-body">
+  <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/document">
+    <input id="file-upload" type="file" accept="application/pdf, image/png, image/jpeg, image/jpg"/>
+    <label for="file-upload" id="file-drag">
+      <div id="start">
+        <i class="fal fa-cloud-upload fa-3x" aria-hidden="true"></i>
+        <div id="notgoodfile" style="color:red;display:none">Format non autorisé (seuls les formats suivants sont acceptés : pdf, png & jpeg)</div>
+        <div>Cliquez ou déposez un fichier <br /><small>Formats acceptés : pdf, png, jpeg</small></div>
+        <span id="file-upload-btn" class="btn btn-primary">Choisir un fichier</span>
+      </div>
+      <div id="response"></div>
+    </label>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button id="upload-btn" class="btn btn-outline-primary" style="display: none">Uploader</button>
+</div>
+
+
+<script src="/static/assets/dist/js/candidate_pools_uploadPlanning.min.js"></script>
