@@ -31,12 +31,16 @@ let createPool = (data) => {
   });
 };
 let poolUsersList = (poolToEdit) => {
-  createModal({
-    id:'displayPoolCandidates',
-    modal: 'es/poolCandidates',
-    title: 'Liste des volontaires du pool',
-    pool: poolToEdit.dataset.pool,
-    size: 'modal-xl',
+  $.get(`pool/${poolToEdit.dataset.pool}/volunteers`, function (res) {
+    let candidates = res.users;
+    createModal({
+      id:'displayPoolCandidates',
+      modal: 'es/poolCandidates',
+      title: 'Liste des volontaires du pool',
+      pool: poolToEdit.dataset.pool,
+      candidates: candidates,
+      size: 'modal-xl',
+    });
   });
 };
 
