@@ -1420,7 +1420,13 @@ User_Candidate.viewConferences = (req, res, next) => {
 
 User_Candidate.viewPools = (req, res, next) => {
   let a = { main: 'pools' };
-  return res.render('candidates/pools', { a } );
+  Models.UserPool.count({ where: { user_id: req.user.id } }).then(poolsCount => {
+    if (poolsCount > 0) {
+      return User_Candidate.viewMyPools(req, res, next);
+    } else {
+      return res.render('establishments/pool', { a });
+    }
+  }).catch(error => next(new BackError(error)));
 };
 
 User_Candidate.viewMyPools = (req, res, next) => {
@@ -1433,6 +1439,10 @@ User_Candidate.viewMyPools = (req, res, next) => {
         '$UserPool.pool_id$': {
           [Op.col]: 'pool.id'
         }
+      },
+      include: {
+        model: Models.Establishment,
+        attributes: ['name'],
       }
     }
   }).then(pools => {
@@ -1480,10 +1490,7 @@ User_Candidate.assignPool = (req, res, next) => {
 
 User_Candidate.viewPoolAvailability = (req, res, next) => {
   Models.UserPool.findOne({
-    where: {
-      user_id: req.user.id,
-      id: req.params.id
-    },
+    where: { id: req.params.id },
     attributes: ['availability'],
   }).then(availability => {
     return res.status(200).send(availability);
