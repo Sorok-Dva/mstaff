@@ -1,4 +1,4 @@
-let createPool = (data) => {
+function  createPool(data) {
   createModal({
     id: 'createPoolModal',
     modal: 'es/createPool',
@@ -30,7 +30,8 @@ let createPool = (data) => {
     });
   });
 };
-let poolUsersList = (poolToEdit) => {
+
+function  poolUsersList(poolToEdit) {
   $.get(`pool/${poolToEdit.dataset.pool}/volunteers`, function (res) {
     let candidates = res.users;
     createModal({
@@ -44,7 +45,7 @@ let poolUsersList = (poolToEdit) => {
   });
 };
 
-let editPool = (poolToEdit) => {
+function  editPool(poolToEdit) {
   createModal({
     id: 'editPoolModal',
     modal: 'es/editPool',
@@ -98,7 +99,7 @@ let editPool = (poolToEdit) => {
     });
   });
 };
-let poolInvitation = (selectedPool) => {
+function  poolInvitation(selectedPool) {
   createModal({
     id: 'invitePoolModal',
     modal: 'es/poolInvitation',
@@ -128,7 +129,8 @@ let poolInvitation = (selectedPool) => {
     });
   })
 };
-let personnelStep = () => {
+
+function  personnelStep() {
   if ($('#poolName').val() !== '' && $('#referentName').val() !== '')
   {
     $('#addPersonnelButton').toggle();
@@ -154,3 +156,21 @@ let personnelStep = () => {
     });
   }
 };
+
+function  displayCalendar(id)
+{
+  let userpool_id = Number(id.dataset.user);
+  let username = id.dataset.name;
+  $('#vacationDateDiv').show();
+  $('#candidateName').text(username);
+  $('#main').hide();
+  data = { availability: {} };
+  resetCalendar();
+  loadPreviousDatas(userpool_id);
+}
+
+function  backToMain()
+{
+  $('#vacationDateDiv').hide();
+  $('#main').show();
+}
