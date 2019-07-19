@@ -1,7 +1,11 @@
 <div class="modal-body">
-  <div class="row">
+  <div id="vacationDateDiv" style="display:none">
+    <a onclick="backToMain()" class="fal fa-arrow-circle-left fa-2x" style="cursor: pointer"></a>
+    <h3 class="text-center">Disponibilités de <span id="candidateName"></span></h3>
+    <div id="vacationDate"></div>
+  </div>
+  <div class="row" id="main" style="margin-top:5vh;">
     {{#each candidates as |data| }}
-      {{log data}}
       <div class="col-12 col-md-6 col-lg-3">
         <div class="card card-user">
           <div class="content">
@@ -17,6 +21,7 @@
               </h4>
             </div>
             <div class="text-center">
+              <h5>Téléphone: {{data.User.phone}}</h5>
               <h4>
                 <div class="{{#unless data.available}}un{{/unless}}available"></div>
                 <span class="text-{{#unless data.available}}un{{/unless}}available"
@@ -40,7 +45,7 @@
             </div>
             <div class="col-md-12 text-center profile-cta">
               <div class="col-md-12 mb-2">
-                <button class="btn btn-small btn-outline-info">
+                <button class="btn btn-small btn-outline-info" data-name="{{data.User.firstName}} {{data.User.lastName}}" data-user="{{data.id}}" onclick="displayCalendar(this)">
                   Afficher disponibilités
                 </button>
               </div>
@@ -66,4 +71,6 @@
   {{/unless}}
 </div>
 
-<script></script>
+<script> data = { availability: {} } </script>
+<script src="/static/assets/dist/js/pool_calendar.min.js"></script>
+<script src="/static/assets/dist/js/es_pools.min.js"> </script>

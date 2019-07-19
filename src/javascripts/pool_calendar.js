@@ -189,6 +189,14 @@ function  switchCalendar() {
   });
 };
 
+function  resetCalendar()
+{
+  $('#vacationDate table').remove();
+  generateHTMLCalendar(generateDatasCalendar(24));
+  switchCalendar();
+  choosedVacations(data.availability);
+}
+
 generateHTMLCalendar(generateDatasCalendar(24));
 switchCalendar();
 choosedVacations(data.availability);
