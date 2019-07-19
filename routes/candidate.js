@@ -180,7 +180,7 @@ router.get('/my-pools',
   User.Candidate.viewMyPools);
 
 router.get('/pools/availability/:id(\\d+)',
-  Authentication.ensureIsCandidate,
+  Authentication.ensureAuthenticated,
   User.Candidate.viewPoolAvailability
 ).put('/pools/availability/:id(\\d+)',
   Authentication.ensureIsCandidate,
