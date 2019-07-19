@@ -1,5 +1,6 @@
 const { src, dest, watch, series, parallel } = require('gulp');
 const { Env } = require('./helpers/helpers');
+const config = require('dotenv').config().parsed;
 const del = require('del');
 const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
@@ -22,7 +23,7 @@ let clean = (done) => {
 };
 
 let browserSync = (done) => {
-  if (Env.current === 'development') {
+  if (Env.current === 'development' && config.BROWSERSYNC !== 'false') {
     browsersync.init({
       proxy: {
         target: 'localhost:3001',
