@@ -1,3 +1,9 @@
+<style type="text/css">
+  .show-read-more .more-text{
+    display: none;
+  }
+</style>
+
 <div class="container-fluid">
   <div class="row mt-2">
     <div class="col-12 col-lg-4">
@@ -19,7 +25,7 @@
               <small>{{age this.candidate.User.birthday 'years'}} ans</small>
             </h2>
           </div>
-          <p class="description text-center p-4">
+          <p class="description show-read-more text-center p-4">
             {{this.candidate.description}}
           </p>
         </div>
@@ -305,5 +311,22 @@
 <script>
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
+  });
+
+  $(document).ready(function(){
+    let maxLength = 200;
+    $(".show-read-more").each(function(){
+      let myStr = $(this).text();
+      if($.trim(myStr).length > maxLength){
+        let newStr = myStr.substring(0, maxLength);
+        $(this).empty().html(newStr);
+        $(this).append('<br /><button href="javascript:void(0);" class="btn btn-outline-primary read-more">Voir description complète</button>');
+        $(this).append('<span class="more-text">' + myStr + '</span>');
+      }
+    });
+    $(".read-more").click(function(){
+      $(this).siblings(".more-text").contents().unwrap();
+      $(this).remove();
+    });
   });
 </script>
