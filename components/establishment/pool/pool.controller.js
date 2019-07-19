@@ -16,13 +16,11 @@ Establishment_Pool.View = (req, res, next) => {
   let a = { main: 'pools' };
   Models.Pool.count({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs } }).then(poolsCount => {
     if (poolsCount > 0) {
-      Models.Pool.findAll({ where: { user_id: req.user.id, es_id: req.user.opts.currentEs } }).then(pools => {
-        return res.render('establishments/my-pool', { a, pools } );
-      }).catch(error => next(new Error(error)));
+      return Establishment_Pool.ViewAll(req, res, next);
     } else {
       return res.render('establishments/pool', { a });
     }
-  });
+  }).catch(error => next(new BackError(error)));
 };
 
 Establishment_Pool.ViewAll = (req, res, next) => {
@@ -126,13 +124,12 @@ Establishment_Pool.sendMail = (mails, token, name, es_name) => {
 Establishment_Pool.ViewVolunteers = (req, res, next) => {
   Models.UserPool.findAll({
     where: { pool_id: req.params.id },
-    attributes: ['availability', 'available', 'post', 'service'],
+    attributes: ['availability', 'available', 'post', 'service', 'id'],
     include: [{
       model: Models.User,
       attributes: ['id', 'firstName', 'lastName', 'email', 'photo', 'town', 'phone', 'country', 'postal_code', 'birthday', 'createdAt'],
       required: true,
     }]
-
   }).then( (users) => {
     return res.status(200).send({ users });
   }).catch(error => next(new Error(error)));
