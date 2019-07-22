@@ -9,9 +9,10 @@ const sequelize = require('./sequelize');
 const debug = require('debug')('mstaff:server');
 const http = require('http');
 const { spawn } = require('child_process');
-
+const memwatch = require('node-memwatch');
 const chalk = require('chalk');
 const conf = require('dotenv').config().parsed;
+const discord = require('./discord-bot');
 
 /**
  * Get port from environment and store in Express.
@@ -110,3 +111,10 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+// Memory Leak Detection
+memwatch.on('leak', (info) => {
+  discord('**Memory Leak Detected**', 'infos');
+  discord(JSON.stringify(info), 'infos');	
+  console.error('Memory leak detected:\n', info);
+});
