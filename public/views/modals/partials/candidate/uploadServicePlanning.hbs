@@ -1,5 +1,17 @@
 <div class="modal-body">
-  <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/add/document">
+  <div style="display:none" id="planningAvailable">
+    <p>Vous avez déjà ajouté votre planning de service. Si celui-ci n'est plus à jour, vous pouvez supprimer le document
+      et ajouter par la suite votre document.</p>
+
+    <div class="col-md-8">
+      <h4 id="planningText"></h4>
+      <a href="/pools/document/{{pool}}" style="cursor: pointer" target="_blank">Visualiser</a>
+      <a class="float-right" style="cursor: pointer; color: red" onclick="removeDocument({{pool}})">Supprimer</a>
+    </div>
+  </div>
+
+  <div style="display:none" id="planningNotAvailable">
+  <form id="file-upload-form" class="uploader" method="post" action="/api/candidate/pool/add/document/{{pool}}">
     <input id="file-upload" type="file" accept="application/pdf, image/png, image/jpeg, image/jpg"/>
     <label for="file-upload" id="file-drag">
       <div id="start">
@@ -11,11 +23,12 @@
       <div id="response"></div>
     </label>
   </form>
+  </div>
 </div>
 
 <div class="modal-footer">
-  <button id="upload-btn" class="btn btn-outline-primary" style="display: none">Uploader</button>
+  <button id="upload-btn" class="btn btn-outline-primary" onclick="uploadButtonClick({{pool}})" style="display: none">Uploader</button>
+  <button class="btn btn-outline-primary" data-dismiss="modal">Fermer</button>
 </div>
-
 
 <script src="/static/assets/dist/js/candidate_pools_uploadPlanning.min.js"></script>

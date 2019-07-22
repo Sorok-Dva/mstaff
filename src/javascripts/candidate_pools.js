@@ -33,6 +33,13 @@ let uploadFile = (selectedPool) => {
     title: `Ajouter mon planning de service`,
     modal: 'candidate/uploadServicePlanning',
     pool: selectedPool.dataset.pool,
+  }, function() {
+    $('h4#planningText').text(selectedPool.dataset.planning);
+    if(selectedPool.dataset.planning) {
+      $(`#planningAvailable`).show();
+    } else {
+      $(`#planningNotAvailable`).show();
+    }
   });
 };
 

@@ -58,7 +58,8 @@
             </div>
             <div class="col-md-4 class-icon">
               <a href="#">
-                <i title="Télécharger mon planning de service" class="fal fa-paperclip fa-2x" data-pool="{{pool.id}}" onclick="uploadFile(this)"></i>
+                <i id="servicePlanning" title="Télécharger mon planning de service" class="fal fa-paperclip fa-2x" data-planning="{{pool.planning.name}}"
+                   data-pool="{{pool.id}}" onclick="uploadFile(this)"></i>
               </a>
             </div>
             <div class="col-md-4 class-icon">
@@ -72,5 +73,9 @@
     </div>
   {{/each}}
 </div>
+
+<script>
+  let planning;
+</script>
 
 <script src="/static/assets/dist/js/candidate_pools.min.js"></script>

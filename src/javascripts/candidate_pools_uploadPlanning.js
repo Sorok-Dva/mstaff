@@ -11,50 +11,48 @@ $('#file-upload').on('change',function(){
   }
 });
 
-$('button#upload-btn').click(function(){
+function  uploadButtonClick(id)
+{
   let file = $('#file-upload').prop('files')[0];
   if(file)
-    uploadPlanning(file);
-});
+    uploadPlanning(file, id);
+}
 
-function  uploadPlanning(file)
+function  removeDocument(id)
+{
+  let _csrf = $('meta[name="csrf-token"]').attr('content');
+  $.delete(`/api/candidate/pool/document/${id}`, {_csrf}).then(res => {
+    if(res === 'Document Supprimé.')
+    {
+      $(`i#servicePlanning[data-pool=${id}]`).attr("data-planning", "");
+      $(`#planningAvailable`).hide();
+      $(`#planningNotAvailable`).show();
+    }
+  });
+}
+
+function  uploadPlanning(file, id)
 {
   let xhr = new XMLHttpRequest(),
-    pBar = document.getElementById(`file-progress`),
-    fileSizeLimit = 10240,
-    type = "POOL"; // In MB
+    fileSizeLimit = 10240; // In MB
 
   if (xhr.upload) {
     if (file.size <= fileSizeLimit * 10240 * 1024) {
-      //pBar.style.display = 'inline';
-      xhr.upload.addEventListener('progress', updateFileProgress, false);
 
       xhr.onreadystatechange = function (e) {
-        $(`#file-progress`).attr('class', `progress ${(xhr.status === 200 ? 'success' : 'failure')}`);
-        $('#start').show();
         if (xhr.readyState === 4 && xhr.status === 200) {
-          let response = JSON.parse(xhr.response);
-          if (response.id) {
-            let url = `/document/view/${response.id}`;
-            let rmBtn = ` - <button class="btn btn-simple btn-danger btn-icon remove" data-type="document" data-id="${response.id}"><i class="fa fa-trash"></i></button>`;
-            notification({
-              icon: 'check-circle',
-              type: 'success',
-              title: 'Document sauvegardé :',
-              message: `Votre document a correctement été sauvegardé sur nos serveurs.`
-            });
-            $(`#${type}List ul`).append(`<li data-document-id="${response.id}" data-type="${type}"><a href="${url}" target="_blank">${response.name}</a>${rmBtn}</li>`);
-            $(`#${type}Count`).html(parseInt($(`#${type}Count`).html()) + 1);
-            $(`i[data-type="${type}"]`).attr('class', 'fal fa-check-circle fa-2x');
-            setTimeout(() => {
-              $(`#file-progress`).fadeOut().remove();
-              $(`#title`).fadeOut().remove();
-            }, 5000);
-          }
+          $(`i#servicePlanning[data-pool=${id}]`).attr("data-planning", file.name);
+          $('h4#planningText').text(file.name);
+          $(`#planningNotAvailable`).hide();
+          $(`#planningAvailable`).show();
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Document sauvegardé :',
+            message: `Votre document a correctement été sauvegardé sur nos serveurs.`
+          });
         } else if (xhr.readyState === 4 && xhr.status === 400) {
           if (xhr.response === 'Document of same type with same name already exist.') {
-            $(`#file-progress`).remove();
-            $(`#title`).fadeOut().remove();
             notification({
               icon: 'exclamation',
               type: 'danger',
@@ -71,16 +69,10 @@ function  uploadPlanning(file)
       xhr.setRequestHeader('X-File-Name', file.name);
       xhr.setRequestHeader('X-File-Size', file.size);
       let formdata = new FormData();
-      formdata.append(type, file);
+      formdata.append("POOL", file);
       xhr.send(formdata);
     } else {
       output('Please upload a smaller file (< ' + fileSizeLimit + ' MB).');
     }
-  }
-}
-
-function updateFileProgress (e) {
-  if (e.lengthComputable)  {
-    e.lengthComputable ? $(`#file-progress${e.target.i}`).attr('value', e.loaded) : null;
   }
 }
