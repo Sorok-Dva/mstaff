@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     availability: DataTypes.JSON,
     service: DataTypes.JSON,
     post: DataTypes.STRING,
+    planning: DataTypes.JSON,
     available: DataTypes.BOOLEAN,
     month_experience: DataTypes.INTEGER,
   }, {});

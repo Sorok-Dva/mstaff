@@ -61,8 +61,15 @@ module.exports = {
         allowNull: true
       },
       planning: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSON,
         allowNull: true,
+        get() {
+          let planning = this.getDataValue('planning') === undefined ? '{}' : this.getDataValue('planning');
+          return JSON.parse(planning);
+        },
+        set(data) {
+          this.setDataValue('planning', JSON.stringify(data));
+        },
       },
       createdAt: {
         allowNull: false,
