@@ -6,6 +6,7 @@ const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 const moment = require('moment');
 const crypto = require('crypto');
+const fs = require('fs');
 
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
@@ -124,7 +125,7 @@ Establishment_Pool.sendMail = (mails, token, name, es_name) => {
 Establishment_Pool.ViewVolunteers = (req, res, next) => {
   Models.UserPool.findAll({
     where: { pool_id: req.params.id },
-    attributes: ['availability', 'available', 'post', 'service', 'id'],
+    attributes: ['availability', 'available', 'post', 'service', 'id', 'planning'],
     include: [{
       model: Models.User,
       attributes: ['id', 'firstName', 'lastName', 'email', 'photo', 'town', 'phone', 'country', 'postal_code', 'birthday', 'createdAt'],
@@ -133,6 +134,20 @@ Establishment_Pool.ViewVolunteers = (req, res, next) => {
   }).then( (users) => {
     return res.status(200).send({ users });
   }).catch(error => next(new Error(error)));
+};
+
+Establishment_Pool.viewCandidateDocument = (req, res, next) => {
+  Models.UserPool.findOne({ where: { id: req.params.id }, attributes: ['planning'] }).then(result => {
+    if (!Object.keys(result.planning).length) {
+      return next(new BackError('Document introuvable', 404));
+    } else {
+      if (fs.existsSync(`./public/uploads/candidates/pools/${result.planning.filename}`)) {
+        return res.sendFile(`${__}/public/uploads/candidates/pools/${result.planning.filename}`);
+      } else {
+        return next(new BackError('Document introuvable sur ce serveur', 404));
+      }
+    }
+  });
 };
 
 module.exports = Establishment_Pool;

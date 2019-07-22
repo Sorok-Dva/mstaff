@@ -1533,54 +1533,64 @@ User_Candidate.updatePoolServices = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+User_Candidate.viewPoolDocument = (req, res, next) => {
+  Models.UserPool.findOne({ where: { id: req.params.id }, attributes: ['planning'] }).then(result => {
+    if (!Object.keys(result.planning).length) {
+      return next(new BackError('Document introuvable', 404));
+    } else {
+      if (fs.existsSync(`./public/uploads/candidates/pools/${result.planning.filename}`)) {
+        return res.sendFile(`${__}/public/uploads/candidates/pools/${result.planning.filename}`);
+      } else {
+        return next(new BackError('Document introuvable sur ce serveur', 404));
+      }
+    }
+  });
+};
+
+User_Candidate.deletePoolDocument = (req, res, next) => {
+  Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
+    if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
+    return Models.UserPool.findOne({ where: { id: req.params.id, user_id: req.user.id }, attributes: ['planning'] });
+  }).then(result => {
+    if (!Object.keys(result.planning).length) {
+      return res.status(404).send('Document introuvable.')
+    } else {
+      if (fs.existsSync(`./public/uploads/candidates/pools/${result.planning.filename}`)) {
+        fs.unlinkSync(`./public/uploads/candidates/pools/${result.planning.filename}`)
+      }
+      Models.UserPool.update(
+        { planning: {} },
+        { where: { user_id: req.user.id, id: req.params.id } }).then(() => {
+        return res.status(200).send('Document Supprimé.');
+      }).catch(error => next(new BackError(error)));
+    }
+  }).catch(error => next(new BackError(error)));
+};
+
 User_Candidate.uploadPoolDocument = (req, res, next) => {
   if (Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
 
   let file = Object.values(req.files)[0][0];
-  let candidate;
   if (!['jpeg', 'jpg', 'png', 'pdf'].includes(file.mimetype.split('/')[1])) {
     return res.status(400).send('Mauvais format, seul les formats jpeg, jpg et png sont autorisés.');
   }
 
-
   Models.UserPool.findOne({ where: { user_id: req.user.id, id: req.params.id } }).then(result => {
     if (_.isNil(result)) return next(new BackError('Affiliation du candidat au pool introuvable', 404));
-    if (null == result.planning)
+    if (null == result.planning || !result.planning.length)
     {
       Models.UserPool.update(
-        { planning: file.path },
+        { planning: { 'path': file.path, 'name': file.originalname, 'filename': file.filename } },
         { where: { user_id: req.user.id, id: req.params.id }
-        });
-      console.log('Null :) ');
+        }).then(document => {
+        return res.status(200).send(document);
+      }).catch(error => next(new BackError(error)));
+    } else {
+      return res.status(400).send('Document already exist for this user');
     }
   }).catch(error => next(new BackError(error)));
-  /*
-     Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
-       if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
-       candidate = result;
-       return Models.CandidateDocument.findOne({ where: { name: file.originalname, type: file.fieldname } });
-     }).then(document => {
-       if (_.isNil(document)) {
-         Models.CandidateDocument.create({
-           candidate_id: candidate.id,
-           filename: file.filename,
-           name: file.originalname,
-           type: file.fieldname,
-           path: file.path,
-         }).then(document => {
-           User_Candidate.updatePercentage(req.user, 'documents');
-           return res.status(200).send(document);
-         });
-       } else {
-         if (fs.existsSync(`./public/uploads/documents/${document.filename}`)) {
-           fs.unlinkSync(`./public/uploads/documents/${document.filename}`)
-         }
-         return res.status(400).send('Document of same type with same name already exist.')
-       }
-     });
-     */
 };
 
 User_Candidate.viewUpload = (req, res, next) => {

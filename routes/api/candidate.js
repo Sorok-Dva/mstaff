@@ -28,6 +28,7 @@ const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).
     { name: 'ADELI', maxCount: 1 }, // Justifiation de référencement ADELI
   ]
 );
+const poolDocsUpload = multer({ storage: storage('candidates/pools/', 'doc') }).fields([{ name: 'POOL', maxCount: 1 }]);
 
 router.post('/availability',
   Authentication.ensureIsCandidate,
@@ -59,6 +60,15 @@ router.post('/add/document',
 router.delete('/document/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.deleteDocument);
+
+router.post('/pool/add/document/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  poolDocsUpload,
+  User.Candidate.uploadPoolDocument
+).delete('/pool/document/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.deletePoolDocument
+);
 
 router.get('/xp/:id(\\d+)',
   Authentication.ensureIsCandidate,

@@ -120,6 +120,11 @@ router.get('/pool/:id(\\d+)/volunteers',
   Authentication.ensureIsEs,
   Establishment.Pool.ViewVolunteers);
 
+router.get('/pool/document/:id(\\d+)',
+  Authentication.ensureIsEs,
+  Establishment.Pool.viewCandidateDocument
+);
+
 router.get('/establishement-list',
   Authentication.ensureIsEs,
   Establishment.Application.getEstablishments

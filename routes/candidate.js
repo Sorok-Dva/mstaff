@@ -191,6 +191,11 @@ router.put('/pools/status/:id(\\d+)',
   User.Candidate.updatePoolStatus
 );
 
+router.get('/pools/document/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewPoolDocument
+);
+
 router.get('/pools/services/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.getPoolServices
