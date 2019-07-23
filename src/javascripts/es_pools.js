@@ -73,8 +73,11 @@ function editPool(poolToEdit) {
       $('#editPoolModal').modal('hide');
       createModal({
         id: 'removePoolModal',
-        modal: 'es/removePool',
-        title: 'Supprimer un pool de remplaçants'
+        title: 'Supprimer un pool de remplaçants',
+        text: 'Êtes-vous certain de supprimer ce pool de remplaçants ?',
+        actions: [
+          '<button type="button" id="confirmRemoveButton" class="btn btn-outline-danger float-right">Confirmer la suppression</button>',
+        ]
       }, () => {
         $('#confirmRemoveButton').click(function () {
           let _csrf = $('meta[name="csrf-token"]').attr('content');
