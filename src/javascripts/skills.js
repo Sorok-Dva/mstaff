@@ -58,9 +58,9 @@ toAutocomplete.forEach((ac) => {
               'data-type': e,
               'data-id': data.id
             })
-              .append($('<li>').attr({ class: 'star', title: 'Fair', 'data-value': 1 }).html('<i class="fa fa-star"></i>'))
-              .append($('<li>').attr({ class: 'star', title: 'Good', 'data-value': 2 }).html('<i class="fa fa-star"></i>'))
-              .append($('<li>').attr({ class: 'star', title: 'Excellent', 'data-value': 3 }).html('<i class="fa fa-star"></i>')))
+              .append($('<li>').attr({ class: 'star', title: 'Je sais faire avec tutorat', 'data-value': 1 }).html('<i class="fa fa-star"></i>'))
+              .append($('<li>').attr({ class: 'star', title: 'Je sais faire en autonomie', 'data-value': 2 }).html('<i class="fa fa-star"></i>'))
+              .append($('<li>').attr({ class: 'star', title: 'Je sais former', 'data-value': 3 }).html('<i class="fa fa-star"></i>')))
           ))
           .append($('<td>').append($('<button>').attr({
             class: 'btn btn-simple btn-outline-danger btn-icon remove',
@@ -69,9 +69,8 @@ toAutocomplete.forEach((ac) => {
           }).html('<i class="fa fa-trash"></i>')))
         );
       }
-    }).catch(error => {
-      console.log(error);
-      let errors = error.responseJSON;
+    }).catch((xhr, status, error) => {
+      let errors = xhr.responseJSON;
       switch (ac) {
         case 'skills':
           messageError = `Cette compétence est déjà ajoutée à votre profil.`;
@@ -90,7 +89,7 @@ toAutocomplete.forEach((ac) => {
           title: 'Ajout impossible',
           message: messageError
         });
-      } else return errorsHandler(errors || error);
+      } else return catchError(xhr, status, error);
     });
   });
 });
@@ -98,9 +97,17 @@ toAutocomplete.forEach((ac) => {
 $('body').on('click', '.remove', (event) => {
   let id = $(event.target).attr('data-id') || $(event.target).parent().attr('data-id');
   let type = $(event.target).attr('data-type') || $(event.target).parent().attr('data-type');
-  createModal({ id: 'removeSkillModal', modal: 'candidate/removeSkill', title: 'Confirmation' }, () => {
+  createModal({
+    id: 'removeSkillModal',
+    title: 'Confirmation',
+    text: 'Êtes-vous sûr de vouloir supprimer cette compétence ?',
+    actions: [
+      '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+      '<button type="button" id="btnRemoveSkill" class="btn btn-danger" data-dismiss="modal">Oui</button>'
+    ]
+  }, () => {
     $('#btnRemoveSkill').attr('onclick', `removeSkill('${type}', ${id})`);
-  })
+  });
 });
 
 let autocompleteTrigger = (elements, contain) => {
@@ -125,8 +132,8 @@ let removeSkill = (type, id) => {
       });
       $(`tr[data-type="${type}"][data-id="${id}"]`).remove();
     }
-  }).catch(error => {
-    error = error.responseJSON;
+  }).catch((xhr, status, error) => {
+    error = xhr.responseJSON;
     if (error !== undefined && error.error === 'Not exists') {
       notification({
         icon: 'exclamation',
@@ -134,6 +141,6 @@ let removeSkill = (type, id) => {
         title: 'Suppression impossible',
         message: `Cette compétence n'est pas liée à votre profil.`
       });
-    } else return errorsHandler(error);
+    } else return catchError(xhr, status, error);
   });
 };

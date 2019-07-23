@@ -38,7 +38,12 @@ Conference.viewConference_ES = (req, res, next) => {
       include: {
         model: Models.User,
         required: true,
-        attributes: ['id', 'firstName', 'lastName']
+        attributes: ['id', 'firstName', 'lastName'],
+        on: {
+          '$Candidate.user_id$': {
+            [Op.col]: 'Candidate->User.id'
+          }
+        },
       }
     }
   }).then(conference => {

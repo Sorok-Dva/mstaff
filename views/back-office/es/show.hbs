@@ -164,6 +164,9 @@
                     </span>
                     <i style="color: red; cursor: pointer" class="fal fa-times removeUserFromES"
                        data-uid="{{esAccount.User.id}}"></i>
+                      <a rel="tooltip" title="Se connecter sur ce compte" class="btn btn-simple btn-info btn-icon table-action view" href="/back-office/impersonate/user/{{esAccount.User.id}}">
+                      <i class="ti-image"></i>
+                      </a>
                   </h5>
                 </li>
               {{/each}}
@@ -246,7 +249,7 @@
       }, () => {
 
       })
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
 
   });
 
