@@ -135,6 +135,16 @@ router.post('/add/formation',
 );
 
 /**
+ * @Route('/invitation/pool') GET;
+ * add Candidate in Pool.
+ */
+router.get('/invitation/pool/:token',
+  User.Candidate.poolInvite)
+  .post('/invitation/pool/:token',
+    Authentication.ensureIsNotAuthenticated,
+    User.Candidate.assignPool);
+
+/**
  * @Route('/add/Diploma') POST;
  * add Candidate Diploma.
  */
@@ -160,5 +170,37 @@ router.post('/profile/passwordReset',
 router.get('/conferences',
   Authentication.ensureIsCandidate,
   User.Candidate.viewConferences);
+
+router.get('/pools',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewPools);
+
+router.get('/my-pools',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewMyPools);
+
+router.get('/pools/availability/:id(\\d+)',
+  Authentication.ensureAuthenticated,
+  User.Candidate.viewPoolAvailability
+).put('/pools/availability/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.updatePoolAvailability);
+
+router.put('/pools/status/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.updatePoolStatus
+);
+
+router.get('/pools/document/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.viewPoolDocument
+);
+
+router.get('/pools/services/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.getPoolServices
+).put('/pools/services/:id(\\d+)',
+  Authentication.ensureIsCandidate,
+  User.Candidate.updatePoolServices);
 
 module.exports = router;

@@ -168,6 +168,6 @@
           title: 'Cet établissement est déjà branché à Mstaff.'
         })
       }
-    }).catch(error => errorsHandler(error));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 </script>

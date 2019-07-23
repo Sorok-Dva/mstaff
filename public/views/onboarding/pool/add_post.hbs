@@ -1,0 +1,37 @@
+<style>
+  .select2-container--default .select2-selection--multiple{
+    background-color: #1e3a5c;
+  }
+  .select2-container--default.select2-container--disabled .select2-selection--multiple{
+    background-color: #1e3a5c;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice{
+    background-color: #12263f;
+  }
+  .ui-menu{
+    max-height: 30vh;
+    overflow: hidden scroll;
+  }
+</style>
+<i id="backToMain" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+
+<div class="height-80 d-flex flex-column justify-content-center">
+  <h1 class="text-center mb-5">Poste et Services</h1>
+  <div class="w-100 mb-5"></div>
+  <form>
+    <div class="form-group">
+      <label for="InputPosts">Merci d'indiquer votre poste actuel* </label>
+      <input type="text" class="form-control white" id="InputPosts" value="{{data.post}}">
+    </div>
+    <div class="form-group">
+      <label for="InputServices">Merci d'indiquer le service auquel vous êtes affecté*</label>
+      <select class="form-control" data-toggle="select" multiple id="InputServices"></select>
+    </div>
+  </form>
+</div>
+
+<div class="row justify-content-end">
+  <div class="custom-cursor" id="toAvailability"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
+</div>
+
+<script src="/static/assets/dist/js/onboarding_pool_post.min.js"></script>

@@ -39,7 +39,7 @@
              conference
            }
          })
-       }).catch(error => errorsHandler(error));
+       }).catch((xhr, status, error) => catchError(xhr, status, error));
      },
      locale: 'fr',
      buttonIcons: true,
@@ -95,6 +95,6 @@
           message: `Nous venons d'informer l'établissement de votre disponibilité pour cet entretien.`
         });
       }
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   }
 </script>

@@ -50,7 +50,7 @@ $(document).ready(function () {
             });
             $('#notif-back').trigger('click');
           }
-        }).catch(errors => errorsHandler(errors));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
         break;
       case 'conf/availability':
         let confid = target.attr('data-confid');
@@ -64,7 +64,7 @@ $(document).ready(function () {
             });
             $('#notif-back').trigger('click');
           }
-        }).catch(errors => errorsHandler(errors));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
         break;
     }
   })

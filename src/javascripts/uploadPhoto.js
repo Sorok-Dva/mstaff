@@ -1,9 +1,9 @@
 let avatarSelected = () => {
   $('#validateAvatarButton').click()
 };
-$(document).ready(function () {
 
-  $('#avatarForm').on('submit', function(e) {
+$(document).ready(() => {
+  $('#avatarForm').on('submit', (e) => {
     e.preventDefault();
     let files = document.querySelector('[type=file]').files;
     let formData = new FormData();
@@ -37,16 +37,16 @@ $(document).ready(function () {
           }
         }
       },
-    }).catch(error => errorsHandler(error));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 
-  $(document).on('change', '.btn-file :file', function () {
+  $(document).on('change', '.btn-file :file', () => {
     let input = $(this),
       label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
     input.trigger('fileselect', [label]);
   });
 
-  $('.btn-file :file').on('fileselect', function (event, label) {
+  $('.btn-file :file').on('fileselect', (event, label) => {
     let input = $(this).parents('.input-group').find(':text'),
       log = label;
   });
@@ -59,7 +59,7 @@ $(document).ready(function () {
       }
       let reader = new FileReader();
 
-      reader.onload = function (e) {
+      reader.onload = (e) => {
         $('#candidateAvatar').attr('src', e.target.result);
         $('.avatar-img').attr('src', e.target.result);
       };

@@ -1,0 +1,16 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label for="newPoolName"> Nom de votre pool </label>
+    <input id="newPoolName" value="{{name}}" type="text" class="form-control">
+    <label for="newReferentName"> Email du référent du pool </label>
+    <input id="newReferentName" value="{{referent}}" type="text" class="form-control">
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="deletePoolButton" class="btn btn-outline-danger float-left"> <!-- TODO: Check why float-left isn't working-->
+    Supprimer le pool
+  </button>
+  <button type="button" id="editPoolButton" class="btn btn-outline-info float-right">
+    Valider
+  </button>
+</div>

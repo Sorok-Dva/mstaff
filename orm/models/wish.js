@@ -7,16 +7,31 @@ module.exports = (sequelize, DataTypes) => {
     posts: {
       type: DataTypes.JSON,
       get() {
-        return JSON.parse(this.getDataValue('posts'))
+        if (this.getDataValue('posts') === null)
+          return [];
+        else {
+          let data = JSON.parse(this.getDataValue('posts'));
+          if (typeof data === 'string') return [data];
+          else return data;
+        }
       },
       set(data) {
-        this.setDataValue('posts', JSON.stringify(data));
+        if (data === null)
+          this.setDataValue('posts', data);
+        else
+          this.setDataValue('posts', JSON.stringify(data));
       }
     },
     services: {
       type: DataTypes.JSON,
       get() {
-        return JSON.parse(this.getDataValue('services'))
+        if (this.getDataValue('services') === null)
+          return [];
+        else {
+          let data = JSON.parse(this.getDataValue('services'));
+          if (typeof data === 'string') return [data];
+          else return data;
+        }
       },
       set(data) {
         if (data === null)

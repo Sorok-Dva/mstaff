@@ -1,5 +1,13 @@
 $('.removeWish').click(function() {
-  createModal({ id: 'removeWishModal', modal: 'candidate/removeWish', title: 'Confirmation' }, () => {
+  createModal({
+    id: 'removeWishModal',
+    title: 'Confirmation',
+    text: 'Êtes-vous sûr de vouloir supprimer ce souhait ?',
+    actions: [
+      '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+      '<button type="button" id="btnRemoveWish" class="btn btn-danger" data-dismiss="modal">Oui</button>'
+    ]
+  }, () => {
     let id = $(this).attr('data-id') || $(this).parent().attr('data-id');
     $('#btnRemoveWish').attr('onclick', `removeWish(${id})`);
   });
@@ -75,7 +83,7 @@ $(document).ready(() => {
             title: 'Votre souhait a bien été actualisé.',
           });
         }
-      }).catch(errors => errorsHandler(errors));
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
     }
   });
 });

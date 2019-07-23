@@ -118,6 +118,7 @@ Authentication.verifyEsAccess = (req, res, next) => {
     req.session.destroy();
     return next(new BackError('Vous devez être connecté.', httpsStatus.FORBIDDEN));
   }
+  if (_.isNil(req.params.esId) && _.isNil(req.user.opts)) return res.status(403).send(`Accès non autorisé.`);
   Models.Establishment.findOne({
     where: { id: req.params.esId || req.user.opts.currentEs },
     include: {

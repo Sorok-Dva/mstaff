@@ -30,6 +30,6 @@ let addWish = () => {
       } else {
         notify('errorAddWish');
       }
-    }).catch(error => errorsHandler(error));;
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   }
 };

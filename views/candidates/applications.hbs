@@ -13,7 +13,7 @@
                 <th>Souhait</th>
                 <th>Type de contrat</th>
                 <th>Établissement(s)</th>
-                <th>Validité</th>
+                {{!-- <th>Validité</th>--}}
                 <th>Action</th>
               </tr>
               </thead>
@@ -28,9 +28,9 @@
                         {{wish.es_count}}
                       </span>
                     </td>
-                    <td>
+                    {{!--<td>
                       {{{wishValidity wish}}}
-                    </td>
+                    </td>--}}
                     <td>
                       <a href="/wish/edit/{{wish.id}}">
                         <button class="btn btn-simple btn-outline-warning btn-icon editWish" data-id="{{wish.id}}">

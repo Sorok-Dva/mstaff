@@ -12,7 +12,7 @@
         <div class="content">
           <div class="card-profile">
             <div class="avatar avatar-xxl {{#if this.candidate.is_available}}on{{else}}off{{/if}}line">
-            <img {{#if this.candidate.User.photo}}src="/static/uploads/avatars/{{this.candidate.User.photo}}"
+            <img {{#if this.candidate.User.photo}}src="/api/avatar/view/{{this.candidate.User.photo}}"
             {{else}}src="/static/assets/images/face-0.jpg"{{/if}} class="avatar-img rounded-circle border-blue"
               alt="avatar">
             </div>
@@ -320,7 +320,7 @@
       if($.trim(myStr).length > maxLength){
         let newStr = myStr.substring(0, maxLength);
         $(this).empty().html(newStr);
-        $(this).append('<br /><button href="javascript:void(0);" class="btn btn-outline-primary read-more">Voir description complète</button>');
+        $(this).append('<br /><button href="javascript:void(0);" class="btn btn-outline-primary read-more">Afficher la motivation du candidat</button>');
         $(this).append('<span class="more-text">' + myStr + '</span>');
       }
     });

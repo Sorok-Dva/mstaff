@@ -1,0 +1,79 @@
+<div class="modal-body">
+  <div id="vacationDateDiv" style="display:none">
+    <a onclick="backToMain()" class="fal fa-arrow-circle-left fa-2x" style="cursor: pointer"></a>
+    <h3 class="text-center">Disponibilités de <span id="candidateName"></span></h3>
+    <div id="vacationDate"></div>
+  </div>
+  {{#if candidates}}
+  <div class="row" id="main" style="margin-top:5vh;">
+    {{#each candidates as |data| }}
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card card-user">
+          <div class="content">
+            <div class="card-profile">
+              <div class="avatar avatar-xxl avatar-{{#if data.available}}on{{else}}off{{/if}}line">
+                <img {{#if data.User.photo}}src="/static/uploads/avatars/{{data.User.photo}}" {{else}} src="/static/assets/images/face-0.jpg"{{/if}}
+                                                                                                       id="candidateAvatar" class="avatar-img rounded-circle red border-blue" alt="avatar">
+              </div>
+              <h4 class="title">{{data.User.firstName}} {{data.User.lastName}},
+                <small>{{age data.User.birthday 'years'}} ans</small>
+                ,
+                <small><b><i class="fal fa-map-marker-alt"></i> {{data.User.town}}</b></small>
+              </h4>
+            </div>
+            <div class="text-center">
+              <h5>Téléphone: {{data.User.phone}}</h5>
+              <h4>
+                <div class="{{#unless data.available}}un{{/unless}}available"></div>
+                <span class="text-{{#unless data.available}}un{{/unless}}available"
+                      style="line-height: 1.8">
+                  {{#if data.available}}Disponible{{else}} Indisponible{{/if}}
+                </span>
+              </h4>
+              <h4>
+                <label class="col-8 wrapword badge badge-soft-success">{{data.post}}</label>
+              </h4>
+              <hr style="width: 45%; margin: auto">
+              <h4 class="text-muted mt-2">
+                Expérience dans les services
+              </h4>
+              <h5>
+                {{#each data.service as |service|}}
+                  <div class="badge badge-soft-secondary">{{ service }}</div>
+                {{/each}}
+              </h5>
+              <hr style="width: 45%; margin: auto;">
+            </div>
+            <div class="col-md-12 text-center profile-cta">
+              <div class="col-md-12 mb-2">
+                <button class="btn btn-small btn-outline-info" data-name="{{data.User.firstName}} {{data.User.lastName}}" data-user="{{data.id}}" onclick="displayCalendar(this)">
+                  Afficher disponibilités
+                </button>
+              </div>
+              {{#if data.planning.length}}
+              <div class="col-md-12">
+                <a href="/pool/document/{{data.id}}" style="cursor: pointer" target="_blank" class="btn btn-small btn-outline-info">
+                  Planning de services
+                </a>
+              </div>
+              {{/if}}
+              <div class="col-md-12">
+                <p class="text-muted">
+                  <small>Inscrit le {{date data.User.createdAt 'DD/MM/YYYY'}}</small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+
+  {{else}}
+    <h3 class="text-center">Il n'y a présentement aucun volontaires dans votre pool.</h3>
+  {{/if}}
+</div>
+
+<script> data = { availability: {} } </script>
+<script src="/static/assets/dist/js/pool_calendar.min.js"></script>
+<script src="/static/assets/dist/js/es_pools.min.js"> </script>
