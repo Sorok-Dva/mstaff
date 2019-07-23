@@ -45,6 +45,7 @@ function  uploadPlanning(file, id)
           $('h4#planningText').text(file.name);
           $(`#planningNotAvailable`).hide();
           $(`#planningAvailable`).show();
+          $(`button#upload-btn`).hide();
           notification({
             icon: 'check-circle',
             type: 'success',
