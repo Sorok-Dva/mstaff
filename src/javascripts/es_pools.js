@@ -1,4 +1,4 @@
-function  createPool(data) {
+function createPool(data) {
   createModal({
     id: 'createPoolModal',
     modal: 'es/createPool',
@@ -23,15 +23,15 @@ function  createPool(data) {
         notification({
           icon: 'flag',
           type: 'warning',
-          title: 'Vous devez entrer au moins une addresse e-mail.',
-          message: ``
+          title: 'Informations manquantes :',
+          message: `Vous devez entrer au moins une addresse e-mail.`
         });
       }
     });
   });
 };
 
-function  poolUsersList(poolToEdit) {
+function poolUsersList(poolToEdit) {
   $.get(`pool/${poolToEdit.dataset.pool}/volunteers`, function (res) {
     let candidates = res.users;
     createModal({
@@ -45,7 +45,7 @@ function  poolUsersList(poolToEdit) {
   });
 };
 
-function  editPool(poolToEdit) {
+function editPool(poolToEdit) {
   createModal({
     id: 'editPoolModal',
     modal: 'es/editPool',
@@ -89,8 +89,8 @@ function  editPool(poolToEdit) {
               notification({
                 icon: 'check-circle',
                 type: 'success',
-                title: 'Pool supprimé avec succès',
-                message: ``
+                title: 'Pool supprimé :',
+                message: `Pool supprimé avec succès`
               });
             }
           })
@@ -99,7 +99,7 @@ function  editPool(poolToEdit) {
     });
   });
 };
-function  poolInvitation(selectedPool) {
+function poolInvitation(selectedPool) {
   createModal({
     id: 'invitePoolModal',
     modal: 'es/poolInvitation',
@@ -120,8 +120,8 @@ function  poolInvitation(selectedPool) {
             notification({
               icon: 'check-circle',
               type: 'success',
-              title: 'Invitation(s) envoyée(s)',
-              message: ``
+              title: 'Invitations pool :',
+              message: `Invitation(s) au pool envoyée(s)`
             });
           }
         });
@@ -130,7 +130,7 @@ function  poolInvitation(selectedPool) {
   })
 };
 
-function  personnelStep() {
+function personnelStep() {
   if ($('#poolName').val() !== '' && $('#referentName').val() !== '')
   {
     $('#addPersonnelButton').toggle();
@@ -151,13 +151,13 @@ function  personnelStep() {
     notification({
       icon: 'flag',
       type: 'warning',
-      title: 'Vous devez entrer le nom de votre pool ainsi que le nom du référent.',
-      message: ``
+      title: 'Informations manquantes :',
+      message: `Vous devez entrer le nom de votre pool ainsi que le nom du référent.`
     });
   }
 };
 
-function  displayCalendar(id)
+function displayCalendar(id)
 {
   let userpool_id = Number(id.dataset.user);
   let username = id.dataset.name;
@@ -169,7 +169,7 @@ function  displayCalendar(id)
   loadPreviousDatas(userpool_id);
 }
 
-function  backToMain()
+function backToMain()
 {
   $('#vacationDateDiv').hide();
   $('#main').show();
