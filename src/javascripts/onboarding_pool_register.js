@@ -84,10 +84,6 @@ function verifyInputs(){
       isAvailableMail(mail).then(res => {
         if (res.available){
           data.permissions.checkingMail = null;
-
-          // if (!nameRegex.test(value))
-
-
           let forename = $('#identityForename').val();
           let name = $('#identityName').val();
           let birthDate = $('#identityBirth').data("DateTimePicker").date();
