@@ -1446,8 +1446,7 @@ User_Candidate.viewMyPools = (req, res, next) => {
       }
     }
   }).then(pools => {
-    let a = { main: 'pools' };
-    return res.render('candidates/my-pools', { a, pools } );
+    return res.render('candidates/my-pools', { main: 'pools', pools } );
   }).catch(error => next(new BackError(error)));
 };
 
@@ -1498,10 +1497,9 @@ User_Candidate.viewPoolAvailability = (req, res, next) => {
 };
 
 User_Candidate.updatePoolStatus = (req, res, next) => {
-  Models.UserPool.update(
-    { available: req.body.state },
-    { returning: true, where: { user_id: req.user.id, id: req.params.id } }
-  ).then(() => {
+  Models.UserPool.update({
+    available: req.body.state }, { returning: true, where: { user_id: req.user.id, id: req.params.id }
+  }).then(() => {
     return res.status(200).send('Availability status updated');
   }).catch(error => next(new BackError(error)));
 };
