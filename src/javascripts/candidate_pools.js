@@ -2,10 +2,10 @@ let helpMe = () => {
   createModal({
     id: 'helpModal',
     title: `Notices d'utilisation des pools`,
-    modal: 'candidate/helpPool'
-  }, () => {
-
-  })
+    text: `<p><i class="fal fa-calendar-alt fa-2x" href="#"></i> Indiquez vos disponibilités !</p><br>
+           <p><i class="fal fa-paperclip fa-2x"></i> Ajoutez votre planning de service transmis par votre cadre (facultatif).</p>
+           <p> <i class="fal fa-stethoscope fa-2x"></i> Choisissez les services dans lesquels vous souhaitez travailler.</p>`,
+  });
 };
 
 let servicesEdit = (selectedPool) => {
