@@ -2,13 +2,8 @@
   <h1>Merci d'avoir complété votre profil !</h1>
 </div>
 
-{{#ifCond data.emailExist '===' true }}
   <p>Vous pouvez dès à présent vous connecter à votre espace personnel et accéder au pool de remplacement auquel vous
   avez été affilié.</p>
-{{else}}
-  <p>Nous venons de vous envoyer un e-mail à l'addresse {{ @root.data.identity.email }}, ce qui vous permettra de pouvoir
-    valider votre compte et ainsi accéder à votre espace personnel. </p>
-{{/ifCond}}
 
 <div class="text-center mt-4">
   <a class="btn btn-primary" href="/login">Me connecter à mon espace</a>
