@@ -1498,7 +1498,13 @@ User_Candidate.viewPoolAvailability = (req, res, next) => {
 
 User_Candidate.updatePoolStatus = (req, res, next) => {
   Models.UserPool.update({
-    available: req.body.state }, { returning: true, where: { user_id: req.user.id, id: req.params.id }
+    available: req.body.state
+  }, {
+    returning: true,
+    where: {
+      user_id: req.user.id,
+      id: req.params.id
+    }
   }).then(() => {
     return res.status(200).send('Availability status updated');
   }).catch(error => next(new BackError(error)));
