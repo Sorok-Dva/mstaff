@@ -114,7 +114,6 @@ BackOffice_Users.sendVerificationEmail = (req, res, next) => {
   });
 };
 
-
 BackOffice_Users.resetProfilePercentage = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

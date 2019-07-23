@@ -54,7 +54,6 @@ BackOffice_Pool.linkDependencies = (req, res, next) => {
 
 BackOffice_Pool.viewLinks = (req, res, next) => {
   Models.UserPool.findAll().then(poollinks => {
-    console.log(poollinks);
     res.render('back-office/pool/pool-links', {
       layout,
       poollinks,
