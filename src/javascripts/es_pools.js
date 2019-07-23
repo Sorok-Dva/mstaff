@@ -29,7 +29,7 @@ function createPool(data) {
       }
     });
   });
-};
+}
 
 function poolUsersList(poolToEdit) {
   $.get(`pool/${poolToEdit.dataset.pool}/volunteers`, function (res) {
@@ -43,7 +43,7 @@ function poolUsersList(poolToEdit) {
       size: 'modal-xl',
     });
   });
-};
+}
 
 function editPool(poolToEdit) {
   createModal({
@@ -101,7 +101,8 @@ function editPool(poolToEdit) {
       });
     });
   });
-};
+}
+
 function poolInvitation(selectedPool) {
   createModal({
     id: 'invitePoolModal',
@@ -131,7 +132,7 @@ function poolInvitation(selectedPool) {
       }
     });
   })
-};
+}
 
 function personnelStep() {
   if ($('#poolName').val() !== '' && $('#referentName').val() !== '')
@@ -158,7 +159,7 @@ function personnelStep() {
       message: `Vous devez entrer le nom de votre pool ainsi que le nom du référent.`
     });
   }
-};
+}
 
 function displayCalendar(id)
 {
