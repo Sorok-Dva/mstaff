@@ -1,18 +1,18 @@
-function  getAllServices()
+function getAllServices()
 {
   let availableServices = [];
 
-    $.get(`/api/services/all`, function (data) {
-      data.services.forEach(service => {
-          availableServices.push(service.name);
-      });
-      $('#servicesSelect').empty().select2({
-        data: availableServices.sort(),
-        placeholder: "Service ?",
-        minimumResultsForSearch: Infinity,
-        multiple: "multiple",
-      });
+  $.get(`/api/services/all`, function (data) {
+    data.services.forEach(service => {
+      availableServices.push(service.name);
     });
+    $('#servicesSelect').empty().select2({
+      data: availableServices.sort(),
+      placeholder: "Service ?",
+      minimumResultsForSearch: Infinity,
+      multiple: "multiple",
+    });
+  });
   $.get(`pools/services/${pool}`, (res) => {
     res.service.forEach(service => {
       $(`#servicesSelect option[value="${service}"]`).prop('selected', true).trigger('change');

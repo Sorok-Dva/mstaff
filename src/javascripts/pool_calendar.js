@@ -1,4 +1,4 @@
-function  generateCalendarMonths (moment) {
+function generateCalendarMonths (moment) {
   let result = {};
   let date = moment.format('MMMM YYYY').toUpperCase();
   result[date] = [];
@@ -7,14 +7,14 @@ function  generateCalendarMonths (moment) {
   return result;
 }
 
-function  generateDatasCalendar (duration) {
+function generateDatasCalendar (duration) {
   let result = [];
   for (let i = 0; i < duration; i++)
     result.push(generateCalendarMonths(moment().add(i, 'months')));
   return result;
 }
 
-function  generateHTMLCalendar (datas) {
+function generateHTMLCalendar (datas) {
   let column = 0;
   let row = 0;
   let leftArrow = '<i id="toleft" class="fal fa-arrow-circle-left"></i>';
@@ -26,7 +26,6 @@ function  generateHTMLCalendar (datas) {
     Object.keys(obj).forEach(key => {
       let value = obj[key];
 
-      // Generate calendar skeleton
       $("#vacationDate").append(`<table data-key="${key}" style="display:none" class="text-center table col-12"></table>`);
       $(`table[data-key="${key}"]`).append(`<thead><tr><th>${leftArrow}</th><th class="text-center" colspan="5">${key}</th><th>${rightArrow}</th></tr><tr data-tr="${key}"></tr></thead>`);
 
@@ -42,14 +41,12 @@ function  generateHTMLCalendar (datas) {
           row++;
           $(`tbody[data-tbody="${key}"]`).append(`<tr data-week="${row}"></tr>`);
         }
-        // If first row generate empty cells;
         if (i === 0) {
           for (let j = 0; j < count; j++) {
             $(`tr[data-week="${row}"]`).append('<td></td>');
             column++;
           }
         }
-        // And then generate calendar
         $(`tr[data-week="${row}"]`).append(`<td><div data-day="${i + 1}" class="col-md-12">${i + 1}</div><span>${sun}${moon}</span></td>`);
         column++;
         if (i === value.length - 1)
@@ -60,7 +57,7 @@ function  generateHTMLCalendar (datas) {
   });
 }
 
-function  loadPreviousDatas (id) {
+function loadPreviousDatas (id) {
   $.get(`/pools/availability/${id}`, (result) => {
     let db = result.availability;
     let keys = Object.keys(db);
@@ -76,7 +73,6 @@ function  loadPreviousDatas (id) {
           data.availability[key].daytime.push(day);
         });
       }
-
       if(nighttime) {
         nighttime.forEach(day => {
           $(`tbody[data-tbody="${key}"]`).find(`[data-day="${day}"]`).siblings('span').children('.fa-moon').css('color', 'rgb(0, 102,255)');
@@ -87,7 +83,7 @@ function  loadPreviousDatas (id) {
   });
 }
 
-function  updateAvailability(id)
+function updateAvailability(id)
 {
   let _csrf = $('meta[name="csrf-token"]').attr('content');
   let availability = data.availability;
@@ -113,7 +109,7 @@ function  updateAvailability(id)
   }
 }
 
-function  choosedVacations (calendar) {
+function choosedVacations (calendar) {
   $('#vacationDate table .fa-sun, .fa-moon').click(function(){
     let day = $(this).parent().siblings("div").attr('data-day');
     let month = $(this).parents("table").attr('data-key');
@@ -170,7 +166,7 @@ function notify(error){
   return false;
 }
 
-function  switchCalendar() {
+function switchCalendar() {
   $('#vacationDate table').first().show();
 
   $('#vacationDate table #toright').click(function(){
@@ -189,7 +185,7 @@ function  switchCalendar() {
   });
 };
 
-function  resetCalendar()
+function resetCalendar()
 {
   $('#vacationDate table').remove();
   generateHTMLCalendar(generateDatasCalendar(24));

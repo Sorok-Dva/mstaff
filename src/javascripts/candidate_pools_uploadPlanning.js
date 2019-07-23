@@ -1,4 +1,4 @@
-$('#file-upload').on('change',function(){
+$('#file-upload').on('change', function() {
   $('#response').html($(this).val().replace(/.*(\/|\\)/, ''));
   let file = $(this).prop('files')[0];
   const validType = ['application/pdf', 'image/jpeg', 'image/png'];
@@ -11,14 +11,14 @@ $('#file-upload').on('change',function(){
   }
 });
 
-function  uploadButtonClick(id)
+function uploadButtonClick(id)
 {
   let file = $('#file-upload').prop('files')[0];
   if(file)
     uploadPlanning(file, id);
 }
 
-function  removeDocument(id)
+function removeDocument(id)
 {
   let _csrf = $('meta[name="csrf-token"]').attr('content');
   $.delete(`/api/candidate/pool/document/${id}`, {_csrf}).then(res => {
@@ -31,7 +31,7 @@ function  removeDocument(id)
   });
 }
 
-function  uploadPlanning(file, id)
+function uploadPlanning(file, id)
 {
   let xhr = new XMLHttpRequest(),
     fileSizeLimit = 10240; // In MB
