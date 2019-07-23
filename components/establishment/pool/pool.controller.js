@@ -125,10 +125,10 @@ Establishment_Pool.sendMail = (mails, token, name, es_name) => {
 Establishment_Pool.ViewVolunteers = (req, res, next) => {
   Models.UserPool.findAll({
     where: { pool_id: req.params.id },
-    attributes: ['availability', 'available', 'post', 'service', 'id', 'planning'],
+    attributes: { exclude: ['pool_id', 'user_id', 'month_experience', 'createdAt', 'updatedAt'] },
     include: [{
       model: Models.User,
-      attributes: ['id', 'firstName', 'lastName', 'email', 'photo', 'town', 'phone', 'country', 'postal_code', 'birthday', 'createdAt'],
+      attributes: { exclude: ['oldId', 'role', 'type', 'key', 'validated', 'opts', 'updatedAt'] },
       required: true,
     }]
   }).then( (users) => {
