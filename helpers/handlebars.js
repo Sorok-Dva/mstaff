@@ -191,7 +191,7 @@ module.exports.register = async (Handlebars) => {
   Handlebars.registerHelper('candidateProfilePercentage', (percentage) => {
     if (_.isNil(percentage)) return '0%';
     else if (_.isNil(percentage.total)) return '0%';
-    else return percentage.total === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage.total}%`;
+    else return percentage.total === 100 ? '<i class="fal fa-badge-check"></i>' : `${percentage.total}%`;
   });
 
   /* eslint-disable no-console */

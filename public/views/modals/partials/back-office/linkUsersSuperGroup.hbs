@@ -112,7 +112,7 @@
             type: 'success',
             title: 'L\'utilisateur a été supprimé de votre supergroupe avec succès',
           });
-        }).catch(errors => errorsHandler(errors));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
       }
     });
   }

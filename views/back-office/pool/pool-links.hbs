@@ -1,0 +1,184 @@
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+          <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="createPoolLink()"> <i class="fal fa-plus"></i></a>
+        </div>
+
+        <table id="formations-table" class="table">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="pool_id" data-sortable="true">Nom du Pool</th>
+          <th data-field="user_id" data-sortable="true">Utilisateur</th>
+          <th data-field="availability" data-sortable="true"> Disponibilités </th>
+          <th data-field="establishment" data-sortable="true"> Établissements </th>
+          <th data-field="service" data-sortable="true"> Services </th>
+          <th data-field="planning" data-sortable="true"> Planning </th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions
+          </th>
+          </thead>
+          <tbody>
+          {{#each poollinks as |link|}}
+            <tr data-id="{{link.id}}">
+              <td></td>
+              <td>{{link.id}}</td>
+              <td>{{link.pool_id}}</td>
+              <td>{{link.user_id}}</td>
+              <td>{{link.availability}}</td>
+              <td>{{link.establishment}}</td>
+              <td>{{link.service}}</td>
+              <td>{{link.planning}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"> // TODO : Modifier le javascript pour pouvoir modifier ou supprimer des POOLS
+let table = $('#formations-table');
+
+operateFormatter = (value, row, index) => {
+  return [
+    '<div class="table-icons">',
+    '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+    '<i class="ti-pencil-alt"></i>',
+    '</a>',
+    '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+    '<i class="ti-close"></i>',
+    '</a>',
+    '</div>',
+  ].join('');
+};
+
+$(document).ready(() => {
+  window.operateEvents = {
+    'click .edit': (e, value, row, index) => {
+      createModal({
+        id: 'editFormationModal',
+        title: 'Modifier une formation',
+        modal: 'back-office/editFormation'
+      }, () => {
+        $('button#btnEditFormation').click(function () {
+          if ($('input#formationValueEdit').val() != '') {
+            let _csrf = $('meta[name="csrf-token"]').attr('content');
+            let promptInput = $('input#formationValueEdit').val();
+            $.put(`/api/back-office/references/formations/${row.id}`, {
+              promptInput,
+              _csrf
+            }, () => {
+              let id = $(e.currentTarget).closest('tr').attr('data-id');
+              $('#editFormationModal').modal('hide');
+              $(`tr[data-id="${id}"] td`).last().prev().text(promptInput);
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Formation modifiée.',
+                message: ``
+              });
+            });
+          } else {
+            if ($('input#formationValueEdit').val() == '') {
+              $('input#formationValueEdit').addClass('error');
+              setTimeout(function () {
+                $('input#formationValueEdit').removeClass('error');
+              }, 750)
+            }
+          }
+        });
+      });
+    },
+    'click .remove': (e, value, row, index) => {
+      createModal({
+        id: 'removeFormationModal',
+        title: 'Supprimer une formation',
+        modal: 'back-office/removeFormation'
+      }, () => {
+        let _csrf = $('meta[name="csrf-token"]').attr('content');
+        $('button#btnRemoveFormation').click(function () {
+          $.delete(`/api/back-office/references/formations/${row.id}`, {
+            _csrf
+          }, () => {
+            table.bootstrapTable('remove', {
+              field: 'id',
+              values: [row.id]
+            });
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Formation supprimée.',
+              message: ``
+            });
+          });
+        });
+      });
+    }
+  };
+
+  table.bootstrapTable({
+    toolbar: ".toolbar",
+    search: true,
+
+    showColumns: true,
+    pagination: true,
+    searchAlign: 'left',
+    pageSize: 25,
+    clickToSelect: true,
+    pageList: [10, 25, 50, 100, 200, 500],
+    formatRecordsPerPage: (pageNumber) => {
+      return pageNumber + " rows visible";
+    },
+    icons: {
+      columns: 'fa fa-columns',
+      detailOpen: 'fa fa-plus-circle',
+      detailClose: 'ti-close'
+    }
+  });
+
+  //activate the tooltips after the data table is initialized
+  $('[rel="tooltip"]').tooltip();
+
+  $(window).resize(() => {
+    table.bootstrapTable('resetView');
+  });
+});
+
+let createPoolLink = () => {
+  createModal({
+    id: 'createPoolLinkModal',
+    title: 'Générer une liaison à un pool',
+    modal: 'back-office/createPoolLink'
+  }, () => {
+    $('button#createPoolButton').click(function() {
+      if ($('#poolName').val() !== '' && $('#poolUser').val() !== '') {
+        let _csrf = $('meta[name="csrf-token"]').attr('content');
+        let pool_id = $('#poolName').val();
+        let user_id = $('#poolUser').val();
+        let establishment = $('#poolEstablishment').val();
+        $.post(`/back-office/pools/pool-links`, {
+          _csrf,
+          pool_id,
+          user_id,
+          establishment
+        }, (response) => {
+          if (response.message === 'link created') {
+            $('#createPoolLinkModal').modal('hide');
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Lien généré',
+              message: ``
+            });
+          }
+        })
+      }
+    })
+  });
+};
+</script>

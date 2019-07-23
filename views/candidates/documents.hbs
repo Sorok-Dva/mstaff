@@ -346,7 +346,11 @@
 <script src="/static/assets/dist/js/uploadDocuments.min.js"></script>
 <script>
   let showFiles = (type) => {
-    createModal({ id: 'showFileListModal', modal: 'candidate/showFiles', title: '<span class="fal fa-copy"></span> Vos fichiers' }, () => {
+    createModal({
+      id: 'showFileListModal',
+      title: '<span class="fal fa-copy"></span> Vos fichiers',
+      text: '<div class="modal-body showFileListModalBody"></div>',
+    }, () => {
       let content = ($(`#${type}List ul>li`).length < 1) ? 'Aucun documents' : $(`#${type}List`).clone().show();
       $('.showFileListModalBody').html(content);
       $('.remove[data-type="document"]').click(function() {
@@ -362,7 +366,7 @@
               title: 'Document supprimé.'
             });
           }
-        }).catch(error => errorsHandler(error));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
       });
     });
   };

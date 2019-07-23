@@ -81,4 +81,22 @@ BackOffice_Users_Impersonation.RemoveReadOnlyValidation = (req, res) => {
   return res.status(200).json({ authorized });
 };
 
+BackOffice_Users_Impersonation.removeImpersonationBeforeNewIfExists = (req, res, next) => {
+  if (req.session.originalUser) {
+    Models.User.findOne({
+      where: { id: req.session.originalUser },
+      attributes: { exclude: ['password'] }
+    }).then(user => {
+      if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
+      delete req.session.originalUser;
+      delete req.session.role;
+      delete req.session.readOnly;
+      let oldUser = req.user;
+      req.logIn(user, (err) => !_.isNil(err) ? next(new BackError(err)) : null);
+      discord(`**${user.firstName} ${user.lastName}** vient de se déconnecter du compte de **${oldUser.fullName}** (automatique).`, 'infos');
+      return next();
+    });
+  } else return next();
+};
+
 module.exports = BackOffice_Users_Impersonation;

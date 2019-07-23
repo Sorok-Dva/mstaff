@@ -3,29 +3,55 @@ let showSelectAllSearchInfo = localStorage.getItem('showSelectAllSearchInfo') ||
 need.notifyCandidates = false;
 
 $(function() {
+  let list = esList;
   $('#esList').multiselect({
     buttonText: (options, select) => 'Établissements',
     selectAllText: 'Tous',
     buttonClass: 'btn btn-outline-info',
     includeSelectAllOption: true,
     onChange: (element, checked) => {
-      let id = element[0].value;
+      let id = parseInt(element[0].value);
+      debug(`${id} changed`);
       if (checked === true) {
+        debug(`${id} checked`);
         if (need.filterQuery.establishments.indexOf(id) === -1) {
+          debug(`${id} not exists in array`);
           need.filterQuery.establishments.push(id);
+          debug(`${id} pushed in array`);
         }
       }
       else if (checked === false) {
+        debug(`${id} unchecked`);
         let index = need.filterQuery.establishments.indexOf(id);
-        if (index !== -1) need.filterQuery.establishments.splice(index, 1);
+        if (index !== -1) {
+          debug(`${id} exists in array`);
+          need.filterQuery.establishments.splice(index, 1);
+          debug(`${id} removed from array`);
+        }
+        if (need.filterQuery.establishments.length === 0) {
+          debug(`es array is empty. set default es`);
+          need.filterQuery.establishments = [esId];
+          $(`input[type="checkbox"][value="${esId}"]`).prop('checked', true);
+        }
       }
     },
     onDropdownHidden: () => searchCandidates(),
     onDeselectAll: () => {
+      debug(`Deselect All`);
       $(`input[type="checkbox"][value="${esId}"]`).prop('checked', true);
       need.filterQuery.establishments = [esId];
+      debug(`Reset default es`);
     },
-    onSelectAll: () => need.filterQuery.establishments = esList
+    onSelectAll: () => {
+      // Weird bug here, select all, then unselect one es, then unselect the default es then reselect all and a bug appear. need.fullEs or esList
+      // become empty so need.filterQuery.establishments become empty two that catch an error in back-error (logic)
+      debug(`Select All`);
+      debug(need.fullEs);
+      need.filterQuery.establishments = list;
+      debug(need.filterQuery.establishments);
+      debug(list);
+      debug(`Reset default list values`);
+    }
   });
 });
 
@@ -115,7 +141,7 @@ let searchCandidates = () => {
       $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
       $('#selectAllSearch').show();
     });
-  }).catch(error => errorsHandler(error));
+  }).catch((xhr, status, error) => catchError(xhr, status, error));
 };
 
 let showServiceModal = () => {
@@ -352,7 +378,7 @@ let showArchived = () =>{
         $('#searchCount').html(`${data.length} candidats archivés.`).show();
         $('#selectAllSearch').show();
       });
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   } else {
     $('#myCandidates').empty().hide();
     $('#showArchived').removeClass('Hide').addClass('Show').css('color', '#9e9e9e');
@@ -386,7 +412,7 @@ let showFavorites = () => {
         $('#searchCount').html(`${data.length} candidats favoris.`).show();
         $('#selectAllSearch').show();
       });
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   } else {
     $('#showFavorites').removeClass('Hide').addClass('Show').css('color', '#9e9e9e');
     if ($('#searchResult').text().length === 0) {
@@ -454,7 +480,7 @@ $(document).ready(() => {
           loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
             $('#baseResult').empty().html(html);
           });
-        }).catch(errors => errorsHandler(errors));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
       }
     });
   } else {
@@ -463,7 +489,7 @@ $(document).ready(() => {
       loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
         $('#baseResult').empty().html(html);
       });
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   }
 
   $('button#saveNeed').click(function () {

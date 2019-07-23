@@ -94,6 +94,7 @@ module.exports = {
     res.locals.v = packageJson.version;
     res.locals.domain = conf.DOMAIN;
     res.locals.csrfToken = req.csrfToken();
+    res.locals.frontDebug = Env.isProd ? 'false' : 'true';
     if ((Env.isProd || Env.isPreProd) && !_.isNil(req.user)) {
       Sentry.configureScope((scope) => {
         scope.setUser(req.user);

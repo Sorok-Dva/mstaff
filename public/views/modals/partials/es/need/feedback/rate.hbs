@@ -57,7 +57,7 @@
           cantBeClose: true
         })
       }
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 
   $('body').on('mouseover', '.rate li', function(){

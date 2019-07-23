@@ -167,7 +167,7 @@ BackOffice_Users.getList = (req, res, next) => {
 let _getInclude = (type) => {
   let include;
   switch (type) {
-    case 'candidate':
+    case 'candidates':
       include = {
         model: Models.Candidate,
         as: 'candidate',

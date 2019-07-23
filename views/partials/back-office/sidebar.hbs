@@ -199,6 +199,33 @@
           </ul>
         </div>
       </li>
+      <li{{#ifCond a.main '===' 'pools'}} class="active"{{/ifCond}}>
+        <a data-toggle="collapse" href="#poolsOverview"
+           aria-expanded="{{#ifCond a.main '===' 'pools'}}true{{else}}false{{/ifCond}}">
+          <i class="fal fa-users-class"></i>
+          <p>Gestion des pools
+            <b class="caret"></b>
+          </p>
+        </a>
+        <div class="collapse{{#ifCond a.main '===' 'pools'}} in{{/ifCond}}" id="poolsOverview">
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'pool-list'}} class="active"{{/ifCond}}>
+              <a href="/back-office/pools/pool-list">
+                <i class="fal fa-users"></i>
+                <span class="sidebar-normal"> Liste des pools </span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'pool-links'}} class="active"{{/ifCond}}>
+              <a href="/back-office/pools/pool-links">
+                <i class="fal fa-bezier-curve"></i>
+                <span class="sidebar-normal"> Liaison des pools </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
       <li{{#ifCond a.main '===' 'configuration'}} class="active"{{/ifCond}}>
         <a data-toggle="collapse" href="#configOverview"
            aria-expanded="{{#ifCond a.main '===' 'configuration'}}true{{else}}false{{/ifCond}}">
