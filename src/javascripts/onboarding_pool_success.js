@@ -13,11 +13,7 @@ function notify(error){
 function assignUserToPool(infoToSend) {
   $.post(`/invitation/pool/${data.token}`, infoToSend, (affiliated) => {
     if(affiliated === "user affiliated to pool")
-    {
-      loadTemplate('/static/views/onboarding/pool/success.hbs', { data }, (html) => {
-        $('#poolPart').html(html);
-      });
-    }
+      return location.href = '/login';
   }).catch(() => { notify('creationError');});
 }
 
