@@ -77,7 +77,7 @@
         if (data.deleted) {
           $(location).attr('href', '/back-office/jobBoard/sheets')
         }
-      }).catch(errors => errorsHandler(errors));
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
     }
   })
 </script>

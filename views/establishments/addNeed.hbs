@@ -48,10 +48,11 @@
 </style>
 <script>
   let esId = {{user.opts.currentEs}};
-  let esList = [{{#each esList as |account|}}{{account.Establishment.id}},{{/each}}];
+  let esList = [ {{#each esList as |account|}}{{account.Establishment.id}},{{/each}} ];
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
   let baseCVCount = {{candidatesCount.length}};
   let need = {
+    fullEs: esList,
     selectedCandidates: [ {{#each need.candidates as |candidate|}}{{candidate.candidate_id}},{{/each}} ],
     firstSearch: {{#if need}}false{{else}}true{{/if}},
     filterQuery: {
@@ -170,8 +171,7 @@
   </div>
 </div>
 <select class="form-control" id="selectServiceType" data-toggle="" data-live-search="true"
-        title="Séléctionner un type de service" style="display: none">
-  <option>Séléctionner un type de service</option>
+        title="Séléctionner un type de service" multiple="multiple" style="display: none">
   {{#each services as |service|}}
     <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
   {{/each}}

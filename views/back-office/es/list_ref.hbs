@@ -39,7 +39,7 @@
         title: `Établissement ${data.name}`,
         es: data
       });
-    }).catch(error => errorsHandler(error));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   };
 
   let addES = id => {
@@ -54,7 +54,7 @@
         es: data
       }, () => {
       });
-    }).catch(error => errorsHandler(error));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   };
 
   function refreshTable() {

@@ -14,6 +14,9 @@ let showCandidateProfile = userId => {
       }, () => {
         showCandidateProfileAvailable = true;
       });
+    }).catch((xhr, status, error) => {
+      showCandidateProfileAvailable = true;
+      catchError(xhr, status, error);
     });
   } else {
     notification({

@@ -78,6 +78,6 @@
       }, () => {
 
       })
-    }).catch(errors => errorsHandler(errors));
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 </script>

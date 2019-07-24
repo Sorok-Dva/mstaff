@@ -204,8 +204,8 @@ Establishment_Need.delete = (req, res, next) => {
     where: { id: req.params.id, createdBy: req.user.id }
   }).then(need => {
     if (_.isNil(need)) return next(new BackError('Besoin introuvable.', 404));
-    return need.destroy().then(data => res.status(201).send({ deleted: true, data }));
-  }).catch(error => new BackError(error));
+    need.destroy().then(data => res.status(201).send({ deleted: true, data })).catch(error => next(new BackError(error)));
+  }).catch(error => next(new BackError(error)));
 };
 
 Establishment_Need.Create = (req, res, next) => {

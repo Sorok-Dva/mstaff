@@ -182,7 +182,7 @@ Handlebars.registerHelper('partial', function (name) {
 Handlebars.registerHelper('candidateProfilePercentage', (percentage) => {
   if (_.isNil(percentage)) return '0%';
   else if (_.isNil(percentage.total)) return '0%';
-  else return percentage.total === 100 ? '<i class="fal fa-badge-check fa-2x"></i>' : `${percentage.total}%`;
+  else return percentage.total === 100 ? '<i class="fal fa-badge-check"></i>' : `${percentage.total}%`;
 });
 
 Handlebars.registerHelper('countInObject', (object, property, search) => {
@@ -194,9 +194,7 @@ Handlebars.registerHelper('countInObject', (object, property, search) => {
 /* eslint-disable no-console */
 Handlebars.registerHelper('debug', function () {
   console.log('Context:', this);
-  console.log(['Values:'].concat(
-    Array.prototype.slice.call(arguments, 0, -1)
-  ));
+  debug(Array.prototype.slice.call(arguments, 0, -1));
 });
 
 Handlebars.registerHelper('log', function () {
@@ -229,16 +227,32 @@ Handlebars.registerHelper('showVisioLink', conference => {
 });
 
 Handlebars.registerHelper('firstPost', posts => {
-  if (_.isNil(posts)) return 'Aucun poste';
+  if (_.isNil(posts) || posts.length === 0) return 'Aucun poste';
   let other = '';
   if (posts.length > 1) other = `... (${posts.length - 1} de plus)`;
   return `${posts[0]}${other}`
 });
 
 Handlebars.registerHelper('otherPostsPopover', posts => {
-  if (_.isNil(posts)) return '';
+  if (_.isNil(posts) || posts.length === 0) return '';
   if (posts.length < 2) return '';
   posts.shift();
   let string = posts.toString();
   return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
+});
+
+Handlebars.registerHelper('firstService', services => {
+  if (_.isNil(services) || services.length === 0) return 'Aucun service';
+  let other = '';
+  if (services.length > 1) other = `... (et ${services.length - 1} de plus)`;
+  return `${services[0]}${other}`
+});
+
+Handlebars.registerHelper('otherServicesPopover', services => {
+  if (_.isNil(services) || services.length === 0) return '';
+  if (services.length > 1) {
+    services.shift();
+    let string = services.toString();
+    return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
+  } else return '';
 });

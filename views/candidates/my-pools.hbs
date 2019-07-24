@@ -1,0 +1,81 @@
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<style>
+  .class-icon {
+    text-align: center;
+    margin-top: 15px;
+  }
+  .header-spacing {
+    margin-top: 15px;
+  }
+  .toggle.ios, .toggle-on.ios, .toggle-off.ios {
+    border-radius: 20px;
+    background-color: #D8D8D8;
+  }
+</style>
+
+<div class="row">
+  <div class="col-12 col-md-12 col-lg-12" style="margin-bottom: 25px; display:flex">
+    <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" onclick="helpMe()"> <i class="fal fa-question"></i> </button>
+    <span style="margin-top: 15px; margin-left: 10px"><h2> Besoin d'aide ?</h2></span>
+  </div>
+
+  <div class="col-md-12 text-center">
+    {{#ifCond pools.length '<=' 0}}
+      <h2 style="font-weight: 400"> Vous n'êtes dans aucun pool de remplaçants. </h2>
+    {{else}}
+      <h2 style="font-weight: 400">Il y a actuellement {{ @root.pools.length }} pool{{#ifCond @root.pools.length '>' 1}}s{{/ifCond}}.</h2>
+    {{/ifCond}}
+  </div>
+
+  {{#each pools as |pool| }}
+    <div class="col-12 col-md-12 col-lg-4 card-competence">
+      <div class="card">
+        <div class="card-header header-spacing">
+          <div class="row">
+            <div class="col-md-10" id="{{pool.pool.id}}">
+              <h3 class="card-title"><i class="fal fa-school"></i> {{pool.pool.Establishment.name}}</h3>
+            </div>
+            <div class="col-md-2">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" data-id="{{pool.id}}" id="toggle{{pool.id}}" onClick="changeStatus(this)"
+                       name="PoolState"{{#if pool.available}} checked="checked"{{/if}}>
+                <label class="custom-control-label" for="toggle{{pool.id}}"></label>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <h5><i> Référent: {{pool.pool.referent}} </i></h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 class-icon">
+              <a href="#">
+                <i title="Mes disponibilités" class="fal fa-calendar-alt fa-2x" data-pool="{{pool.id}}" onclick="editAvailibility(this)"></i>
+              </a>
+            </div>
+            <div class="col-md-4 class-icon">
+              <a href="#">
+                <i id="servicePlanning" title="Télécharger mon planning de service" class="fal fa-paperclip fa-2x" data-planning="{{pool.planning.name}}"
+                   data-pool="{{pool.id}}" onclick="uploadFile(this)"></i>
+              </a>
+            </div>
+            <div class="col-md-4 class-icon">
+              <a href="#">
+                <i title="Choisir mes services" class="fal fa-stethoscope fa-2x" data-pool="{{pool.id}}" onclick="servicesEdit(this)"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+<script>
+  let planning;
+</script>
+
+<script src="/static/assets/dist/js/candidate_pools.min.js"></script>

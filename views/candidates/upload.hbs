@@ -18,7 +18,7 @@
               <div style="padding-top: 10px;">
                 <div class="avatar avatar-xxl">
                   <img id="candidateAvatar" {{#if candidate.User.photo}}
-                       src="/static/uploads/avatars/{{candidate.User.photo}}" {{else}}
+                       src="/api/avatar/view/{{candidate.User.photo}}" {{else}}
                        src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black"
                        alt="avatar">
                 </div>
