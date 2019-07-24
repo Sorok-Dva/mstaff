@@ -17,7 +17,6 @@ const apiBackOfficeRouter = require('./routes/api/backOffice');
 const apiEsRouter = require('./routes/api/establishment');
 
 const app = express();
-let staticMaxAge = null;
 
 if (Env.isProd || Env.isPreProd) app.use(Express.sentryRequestHandler);
 if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
@@ -30,7 +29,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 if (Env.isProd) {
   app.set('view cache', true);
-  staticMaxAge = { maxAge: '30 days' };
 }
 
 // ------ Express
@@ -41,7 +39,7 @@ app.use(Express.compress);
 app.use(Express.methodOverride);
 app.use(Express.helmet);
 app.use('/static', Express.unauthorizedStatics);
-app.use('/static', express.static(path.join(__dirname, 'public'), staticMaxAge));
+if (Env.isDev || Env.isLocal) app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use(Express.cookieParser);
 app.use(Express.csurf);
 app.use(Express.session);
@@ -54,15 +52,7 @@ app.use(Express.setLocals);
 app.use(Express.wildcardSubdomains);
 app.use(Express.readOnlySessionForImpersonation);
 
-process.on('unhandledRejection', reason => {
-  //@TODO Fix Sentry.send for unhandled rejection in prod or pre-prod env
-  /* eslint-disable no-console */
-  if (Env.isPreProd || Env.isProd) Express.sentryUnhandledRejection(reason);
-  else console.log(reason);
-  /* eslint-enable no-console */
-});
-
-// ------ ROUTESm
+// ------ ROUTES
 app.use('/', indexRouter);
 app.use('/', candidateRouter); //candidate
 app.use('/', esRouter); //recruiter
