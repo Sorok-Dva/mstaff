@@ -1,13 +1,13 @@
 function identityListener() {
   document.getElementById('toRecap').addEventListener('verified', () => {
     saveDatas();
-    loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    loadTemplate('/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     });
   }, false);
 
   $('#backToSkill').click(function() {
-    loadTemplate('/static/views/ats/skill.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    loadTemplate('/views/ats/skill.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
@@ -47,7 +47,7 @@ function displayIndicator(){
   rules.forEach( rule => {
     $('#' + rule.Target).removeClass('bad-rule good-rule').addClass(new RegExp(rule.Pattern).test(password) ? 'good-rule' : 'bad-rule');
   });
-};
+}
 
 function togglePasswordVisibility() {
   let x = document.getElementById("identityPassword");
@@ -56,7 +56,7 @@ function togglePasswordVisibility() {
   } else {
     x.type = "password";
   }
-};
+}
 
 function regexVerif(type, entity){
   let nameRegex = /^([a-zA-Z áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\-]){2,30}$/;
@@ -121,7 +121,7 @@ function verifyInputs(){
       notify('mailAlreadyUse');
     }
   }
-};
+}
 
 function notify(error){
   switch (error) {
@@ -218,7 +218,7 @@ function notify(error){
 
   }
   return false;
-};
+}
 
 function saveDatas(){
   candidateDatas.identity.firstName = $('#identityForename').val();
@@ -230,7 +230,7 @@ function saveDatas(){
   candidateDatas.identity.birthday = new Date($('#identityBirth').data("DateTimePicker").date());
   candidateDatas.identity.postal_code = $('#identityPostal').val();
   candidateDatas.identity.town = $('#identityCity').val();
-};
+}
 
 function init_identity(){
   identityListener();
@@ -240,7 +240,7 @@ function init_identity(){
     ignoreReadonly: true,
   });
   iti = intlTelInput(document.querySelector("#identityPhone"), {
-    utilsScript: '/static/assets/js/utils.js',
+    utilsScript: '/assets/js/utils.js',
     preferredCountries: ["fr", "gb", "us"],
     initialCountry: "auto",
     geoIpLookup: function(success, failure) {
@@ -250,11 +250,11 @@ function init_identity(){
       });
     },
   });
-};
+}
 
 function reload_identity(){
   $('#identityBirth').data("DateTimePicker").date(candidateDatas.identity.birthday);
-};
+}
 
 $(document).ready(() => {
   init_identity();
