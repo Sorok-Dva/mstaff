@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="/static/assets/css/telinput/intlTelInput.css">
+<link rel="stylesheet" href="{{static}}/assets/css/telinput/intlTelInput.css">
 <style>
   .iti-flag {
-    background-image: url("/static/assets/images/telinput/flags.png");
+    background-image: url("{{static}}/assets/images/telinput/flags.png");
   }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .iti-flag {
-      background-image: url("/static/assets/images/telinput/flags@2x.png");
+      background-image: url("{{static}}/assets/images/telinput/flags@2x.png");
     }
   }
   /* Container */
@@ -53,7 +53,7 @@
         <div class="author">
           <div style="padding-top: 10px;">
             <div class="avatar avatar-xxl">
-              <img id="candidateAvatar" {{#if usr.photo}} src="/api/avatar/view/{{usr.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
+              <img id="candidateAvatar" {{#if usr.photo}} src="/api/avatar/view/{{usr.photo}}" {{else}} src="{{static}}/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
         </div>
         <form id="avatarForm" action="/api/candidate/add/photo?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
@@ -182,8 +182,8 @@
     </div>
   </div>
 </div>
-<script src="/static/assets/js/telinput/intlTelInput.js"></script>
-<script src="/static/assets/dist/js/uploadPhoto.min.js"></script>
+<script src="{{static}}/assets/js/telinput/intlTelInput.js"></script>
+<script src="{{static}}/assets/dist/js/uploadPhoto.min.js"></script>
 <script>
   $(document).ready(function () {
     let input = document.querySelector("#phone");

@@ -19,7 +19,7 @@
                 <div class="avatar avatar-xxl">
                   <img id="candidateAvatar" {{#if candidate.User.photo}}
                        src="/api/avatar/view/{{candidate.User.photo}}" {{else}}
-                       src="/static/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black"
+                       src="{{static}}/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black"
                        alt="avatar">
                 </div>
               </div>
@@ -57,11 +57,11 @@
     <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
       <!-- Image -->
       <div class="bg-cover vh-100 mt-n1 mr-n3"
-           style="background-image: url(/static/assets/images/email-sent.jpg);"></div>
+           style="background-image: url({{static}}/assets/images/email-sent.jpg);"></div>
     </div>
   </div>
 </div>
 <script>
   let isWelcomePage = true;
 </script>
-<script src="/static/assets/dist/js/uploadPhoto.min.js"></script>
+<script src="{{static}}/assets/dist/js/uploadPhoto.min.js"></script>

@@ -7,7 +7,7 @@
           <div class="card-profile">
             <div class="avatar avatar-xxl {{#if this.candidate.is_available}}on{{else}}off{{/if}}line">
             <img {{#if this.candidate.User.photo}}src="/api/avatar/view/{{this.candidate.User.photo}}"
-            {{else}}src="/static/assets/images/face-0.jpg"{{/if}} class="avatar-img rounded-circle border-blue"
+            {{else}}src="{{static}}/assets/images/face-0.jpg"{{/if}} class="avatar-img rounded-circle border-blue"
               alt="avatar">
             </div>
             <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top"

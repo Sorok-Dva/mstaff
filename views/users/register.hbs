@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="/static/assets/css/telinput/intlTelInput.css">
+<link rel="stylesheet" href="{{static}}/assets/css/telinput/intlTelInput.css">
 <style>
   .iti-flag {
-    background-image: url("/static/assets/images/telinput/flags.png");
+    background-image: url("{{static}}/assets/images/telinput/flags.png");
   }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .iti-flag {
-      background-image: url("/static/assets/images/telinput/flags@2x.png");
+      background-image: url("{{static}}/assets/images/telinput/flags@2x.png");
     }
   }
 </style>
@@ -148,11 +148,11 @@
     <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
       <!-- Image -->
       <div class="bg-cover vh-100 mt-n1 mr-n3"
-           style="background-image: url(/static/assets/images/login-cover-hd.jpg);"></div>
+           style="background-image: url({{static}}/assets/images/login-cover-hd.jpg);"></div>
     </div>
   </div>
 </div>
-  <script src="/static/assets/js/telinput/intlTelInput.js"></script>
+  <script src="{{static}}/assets/js/telinput/intlTelInput.js"></script>
   <script>
     $('#email').blur(() => {
       let email = $('#email').val();
@@ -191,4 +191,4 @@
 
 
   </script>
-  <script src="/static/assets/dist/js/passwordStrengthChecker.min.js"></script>
+  <script src="{{static}}/assets/dist/js/passwordStrengthChecker.min.js"></script>
