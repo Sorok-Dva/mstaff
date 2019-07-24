@@ -118,3 +118,9 @@ memwatch.on('leak', (info) => {
   discord(JSON.stringify(info), 'infos');
   console.error('Memory leak detected:\n', info);
 });
+
+memwatch.on('stats', (stats) => {
+  discord('**DEV SERVER - Garbage Collector**', 'infos');
+  discord(JSON.stringify(stats), 'infos');
+  console.error('Garbage Colletor detected:\n', stats);
+});
