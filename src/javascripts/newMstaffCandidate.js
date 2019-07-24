@@ -4,7 +4,7 @@ $(document).ready(() => {
     createModal({
       id: 'newMstaffModal',
       modal: 'candidate/special/newMstaff',
-      title: '<img src="/static/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff" class="logo-default">',
+      title: '<img src="/assets/images/LOGO_WEB_118_PX.png" alt="Mstaff" class="logo-default">',
       cantBeClose: true
     }, () => {
       $('#ignoreNewMstaffModal').click(function () {
