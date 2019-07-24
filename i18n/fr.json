@@ -58,7 +58,7 @@
       "form_submit_btn": "S'inscrire",
       "respond_here": "Répondez ici",
       "es_type": "Type d'établissement",
-      "terms": "En cliquant sur S'inscrire, vous acceptez les <a href='/static/assets/pdf/CGU_03.06.2019.pdf' target='_blank'>Conditions d'utilisation et la Politique de confidentialité</a> de Mstaff.",
+      "terms": "En cliquant sur S'inscrire, vous acceptez les <a href='/assets/pdf/CGU_03.06.2019.pdf' target='_blank'>Conditions d'utilisation et la Politique de confidentialité</a> de Mstaff.",
       "errors": {
         "email_taken": "Cette adresse e-mail est déjà utilisée."
       }
