@@ -95,6 +95,7 @@ module.exports = {
     res.locals.domain = conf.DOMAIN;
     res.locals.csrfToken = req.csrfToken();
     res.locals.frontDebug = Env.isProd ? 'false' : 'true';
+    res.locals.cdn = Env.isProd || Env.isPreProd ? 'https://cdn.mstaff.co' : null;
     if ((Env.isProd || Env.isPreProd) && !_.isNil(req.user)) {
       Sentry.configureScope((scope) => {
         scope.setUser(req.user);
@@ -123,7 +124,8 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'dev' || req.subdomains[0] === 'pre-prod')
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0
+      || req.subdomains[0] === 'dev' || req.subdomains[0] === 'pre-prod' || req.subdomains[0] === 'cdn')
       return next();
     Subdomain.Main.find(req, res, (subdomain) => {
       if (subdomain.es_id) {
