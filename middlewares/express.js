@@ -95,7 +95,7 @@ module.exports = {
     res.locals.domain = conf.DOMAIN;
     res.locals.csrfToken = req.csrfToken();
     res.locals.frontDebug = Env.isProd ? 'false' : 'true';
-    res.locals.cdn = Env.isProd || Env.isPreProd ? 'https://cdn.mstaff.co' : null;
+    res.locals.static = Env.isDev || Env.isLocal ? '/static' : null;
     if ((Env.isProd || Env.isPreProd) && !_.isNil(req.user)) {
       Sentry.configureScope((scope) => {
         scope.setUser(req.user);
