@@ -42,7 +42,7 @@ function experienceListener(){
 
   $('#backToContract').click(function() {
     let template = selectTemplate(candidateDatas.wish.contractType);
-    loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    loadTemplate(`/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
@@ -51,11 +51,11 @@ function experienceListener(){
     if (permissions.recap){
       console.log('hop');
       permissions.recap = false;
-      loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      loadTemplate('/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       })
     } else {
-      loadTemplate('/static/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      loadTemplate('/views/ats/diploma.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       })
     }

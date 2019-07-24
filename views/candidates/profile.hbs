@@ -17,7 +17,7 @@
       <div class="content">
         <div class="card-profile">
           <div class="avatar avatar-xxl avatar-{{#if candidate.is_available}}on{{else}}off{{/if}}line">
-            <img id="candidateAvatar"{{#if user.photo}} src="/api/avatar/view/{{user.photo}}" {{else}} src="{{static}}/assets/images/face-0.jpg" {{/if}}class="avatar-img rounded-circle border-black" alt="avatar">
+            <img id="candidateAvatar"{{#if user.photo}} src="/api/avatar/view/{{user.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}}class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
           <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> candidatePercentageTooltip candidate.percentage}}">
             <span class="label label-default rank-label">{{{candidateProfilePercentage candidate.percentage}}}</span>
@@ -89,7 +89,7 @@
           <label for="file-upload" id="file-drag">
             {{#if candidate.video}}
               <video id="video-preview" style="width:inherit" controls>
-                <source src="/static/uploads/candidates/videos/{{candidate.video}}" id="videoSrc">
+                <source src="/uploads/candidates/videos/{{candidate.video}}" id="videoSrc">
               </video>
             {{else}}
               <video id="video-preview" style="display:none;width:inherit" controls>
@@ -388,9 +388,9 @@
     </div>
   </div>
 </div>
-<script src="{{static}}/assets/dist/js/uploadVideo.min.js"></script>
+<script src="/assets/dist/js/uploadVideo.min.js"></script>
 {{#unless candidate.percentage}}
-  <script src="{{static}}/assets/dist/js/newMstaffCandidate.min.js"></script>
+  <script src="/assets/dist/js/newMstaffCandidate.min.js"></script>
 {{/unless}}
 <script>
   $('input[name="is_available"]').change(function() {

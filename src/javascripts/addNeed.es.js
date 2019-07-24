@@ -135,7 +135,7 @@ let searchCandidates = () => {
   $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
   $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
     data.partials = ['candidatePercentageTooltip'];
-    loadTemplate('/static/views/api/searchCandidates.hbs', data, html => {
+    loadTemplate('/views/api/searchCandidates.hbs', data, html => {
       $('#resetSearch').show();
       $('#searchResult').html(html).show();
       $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
@@ -370,7 +370,7 @@ let showArchived = () =>{
     $.post(`/api/es/${esId}/candidates/archived/`, { _csrf }, (data) => {
       $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
       data.partials = ['candidatePercentageTooltip'];
-      loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
+      loadTemplate('/views/api/showMyCandidates.hbs', data, html => {
         $('#baseResult').hide();
         $('#searchResult').hide();
         $('#paginationContainer').hide();
@@ -404,7 +404,7 @@ let showFavorites = () => {
     $.post(`/api/es/${esId}/candidates/favorites/`, { _csrf }, (data) => {
       $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
       data.partials = ['candidatePercentageTooltip'];
-      loadTemplate('/static/views/api/showMyCandidates.hbs', data, html => {
+      loadTemplate('/views/api/showMyCandidates.hbs', data, html => {
         $('#baseResult').hide();
         $('#searchResult').hide();
         $('#paginationContainer').hide();
@@ -477,7 +477,7 @@ $(document).ready(() => {
         $('#baseResult').empty().html(loadingCandidateHTML);
         $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
           data.partials = ['candidatePercentageTooltip'];
-          loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+          loadTemplate('/views/api/showCandidatesPagination.hbs', data, html => {
             $('#baseResult').empty().html(html);
           });
         }).catch((xhr, status, error) => catchError(xhr, status, error));
@@ -486,7 +486,7 @@ $(document).ready(() => {
   } else {
     $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
       data.partials = ['candidatePercentageTooltip'];
-      loadTemplate('/static/views/api/showCandidatesPagination.hbs', data, html => {
+      loadTemplate('/views/api/showCandidatesPagination.hbs', data, html => {
         $('#baseResult').empty().html(html);
       });
     }).catch((xhr, status, error) => catchError(xhr, status, error));

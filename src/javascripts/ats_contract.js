@@ -28,7 +28,7 @@ function selectTemplate(checkedSwitch){
 
 function contractListener(){
   $('#backToPost').click(function () {
-    loadTemplate('/static/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    loadTemplate('/views/ats/post.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
@@ -39,11 +39,11 @@ function contractListener(){
       let template = selectTemplate(selected);
       if (selected === 'vacation' && permissions.recap){
         permissions.recap = false;
-        loadTemplate(`/static/views/ats/recap.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        loadTemplate(`/views/ats/recap.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
           $('#atsPart').html(html);
         });
       } else {
-        loadTemplate(`/static/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        loadTemplate(`/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
           $('#atsPart').html(html);
         });
       }

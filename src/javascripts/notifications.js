@@ -8,7 +8,7 @@ $(document).ready(function () {
     $('#notificationsContainer').hide();
 
     $.get(`/api/user/notification/${notifId}`, (data) => {
-      loadTemplate('/static/views/notification/main.hbs', data, (html) => {
+      loadTemplate('/views/notification/main.hbs', data, (html) => {
         $('#notificationData').html(html).show();
         $('#notif-see-all').hide();
         $('#notif-back').attr('data-id', notifId);

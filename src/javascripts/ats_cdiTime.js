@@ -1,6 +1,6 @@
 function cdiTimeListener(){
   $('#backToContract').click(function() {
-    loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    loadTemplate('/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
@@ -9,11 +9,11 @@ function cdiTimeListener(){
       saveDatas();
       if (permissions.recap){
         permissions.recap = false;
-        loadTemplate('/static/views/ats/recap.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
+        loadTemplate('/views/ats/recap.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
           $('#atsPart').html(html);
         })
       } else {
-        loadTemplate('/static/views/ats/experience.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
+        loadTemplate('/views/ats/experience.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
           $('#atsPart').html(html);
         })
       }

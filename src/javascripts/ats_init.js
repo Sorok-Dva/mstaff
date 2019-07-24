@@ -60,12 +60,12 @@ let initApplication = () => {
 $(document).ready(() => {
   initApplication().then( () => {
     if (arrays.group === null){
-      loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      loadTemplate('/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       });
     }
     else {
-      loadTemplate('/static/views/ats/group.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      loadTemplate('/views/ats/group.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       })
     }

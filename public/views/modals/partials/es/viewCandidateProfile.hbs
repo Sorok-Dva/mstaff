@@ -7,7 +7,7 @@
           <div class="card-profile">
             <div class="avatar avatar-xxl {{#if this.candidate.is_available}}on{{else}}off{{/if}}line">
             <img {{#if this.candidate.User.photo}}src="/api/avatar/view/{{this.candidate.User.photo}}"
-            {{else}}src="{{static}}/assets/images/face-0.jpg"{{/if}} class="avatar-img rounded-circle border-blue"
+            {{else}}src="/assets/images/face-0.jpg"{{/if}} class="avatar-img rounded-circle border-blue"
               alt="avatar">
             </div>
             <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top"
@@ -60,7 +60,7 @@
           </div>
           <div class="card-content text-center">
             <video id="video-preview" style="width:100%" controls>
-              <source src="/static/uploads/candidates/{{this.candidates}}/videos/{{this.candidate.video}}"
+              <source src="/uploads/candidates/{{this.candidates}}/videos/{{this.candidate.video}}"
                       id="videoSrc">
             </video>
           </div>

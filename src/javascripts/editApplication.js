@@ -88,7 +88,7 @@ let rewriteSelectedES = () => {
   let list = application.selectedESInfo;
 
   selectedEsCount.html(application.selectedES.length);
-  loadTemplate('/static/views/api/findByGeo.hbs', list, (html) => {
+  loadTemplate('/views/api/findByGeo.hbs', list, (html) => {
     $('#es_selected').html(html);
     if (!$.isEmptyObject(application.selectedESId)){
       application.selectedESId.forEach(id => {

@@ -18,7 +18,7 @@ function diplomaListener(){
   });
 
   $('#backToExperience').click(function() {
-    loadTemplate('/static/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+    loadTemplate('/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
   });
@@ -26,11 +26,11 @@ function diplomaListener(){
   $('#toQualification').click(function() {
     if (permissions.recap){
       permissions.recap = false;
-      loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      loadTemplate('/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       })
     } else {
-      loadTemplate('/static/views/ats/qualification.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      loadTemplate('/views/ats/qualification.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       })
     }

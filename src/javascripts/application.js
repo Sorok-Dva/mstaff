@@ -349,7 +349,7 @@ let geocodeAddress = (geoCoder, currentMap) => {
 // --------------------------------------- ES LIST --------------------------------------- //
 
 let loadResult = (list) => {
-  loadTemplate('/static/views/api/findByGeo.hbs', list, (html) => {
+  loadTemplate('/views/api/findByGeo.hbs', list, (html) => {
     $('#esList').html(html);
     $('.esCount').html(list.length);
     $('#loader').hide();

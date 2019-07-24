@@ -79,7 +79,7 @@ function lockService(category){
 
 function postListener(){
   $('#backToMain').click(function() {
-      loadTemplate('/static/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+      loadTemplate('/views/ats/main.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
         $('#atsPart').html(html);
       })
   });
@@ -88,11 +88,11 @@ function postListener(){
       saveDatas();
       if (permissions.recap){
         permissions.recap = false;
-        loadTemplate('/static/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        loadTemplate('/views/ats/recap.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
           $('#atsPart').html(html);
         })
       } else {
-        loadTemplate('/static/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+        loadTemplate('/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
           $('#atsPart').html(html);
         })
       }

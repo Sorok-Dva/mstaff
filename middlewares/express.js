@@ -95,7 +95,6 @@ module.exports = {
     res.locals.domain = conf.DOMAIN;
     res.locals.csrfToken = req.csrfToken();
     res.locals.frontDebug = Env.isProd ? 'false' : 'true';
-    res.locals.static = Env.isDev || Env.isLocal ? '/static' : null;
     if ((Env.isProd || Env.isPreProd) && !_.isNil(req.user)) {
       Sentry.configureScope((scope) => {
         scope.setUser(req.user);
@@ -109,11 +108,6 @@ module.exports = {
     store: sessionStore,
     resave: true
   }),
-  unauthorizedStatics: (req, res, next) => {
-    let unauthorized = req.url.includes('candidates/documents');
-    if (unauthorized) return res.redirect('/');
-    next()
-  },
   verifyMaintenance: (req, res, next) => {
     if (req.url.search('static') !== -1 || req.url.search('back-office') !== -1) return next();
     Server.Main.verifyMaintenance(status => {
