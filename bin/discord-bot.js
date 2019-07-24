@@ -14,6 +14,9 @@ module.exports = (text, bot) => {
       discord.hookId = '584036778562813952';
       discord.hookToken = 'DKNYQ24tcEd8enhLKVrSG1mJ1xc7FpRm6YOQ5glFCFjyoD3ouQ_QKV757jqGS84SdLQO';
       break;
+    case 'debug':
+      discord.hookId = '602842336183058448';
+      discord.hookToken = 'zwUAZp7QwCtt7J7TDz6lrGkks1YiuDnEu0l4TsRLOKlTjB5tajFseSgnT6qKAtqrLXpW';
   }
   discord.sendMessage(text);
 };
