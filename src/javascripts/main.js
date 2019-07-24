@@ -160,7 +160,7 @@ let loadTemplate = (url, data, callback) => {
   }
   $.ajax({ url, cache: true, success: (source) => {
     if (data.modal) {
-      $.ajax({ url: `/modals/partials/${data.modal}.hbs`, cache: true, success: (modal) => {
+      $.ajax({ url: `/views/modals/partials/${data.modal}.hbs`, cache: true, success: (modal) => {
         Handlebars.registerPartial(`${data.modal}`, modal);
         let template = Handlebars.compile(source);
           return callback(template(data));
@@ -187,7 +187,7 @@ let createModal = (opts, callback) => {
     $(`#${opts.id}`).modal('hide');
     $(`#${opts.id}`).remove();
   }
-  loadTemplate('/modals/main.hbs', opts, (html) => {
+  loadTemplate('/views/modals/main.hbs', opts, (html) => {
     $('body').append(html);
     $('#loadingModal').modal('hide');
     if ('cantBeClose' in opts) {
