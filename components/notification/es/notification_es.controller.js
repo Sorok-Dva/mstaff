@@ -15,7 +15,7 @@ Notification_ES.candidateIsAvailableForNeed = (rh, candidate, need) => {
     to: rh.id,
     subject: 'Un candidat est disponible !',
     title: `Bonne nouvelle !\n ${candidate.fullName} est disponible pour votre besoin intitulé "${need.name}".`,
-    image: '/static/assets/images/wink.jpg',
+    image: '/assets/images/wink.jpg',
     opts: {
       htmlActions: `<a href="/need/${need.id}" class="btn btn-outline-success">Accéder à mon besoin</a>`
     }
@@ -28,7 +28,7 @@ Notification_ES.candidateAnswerForConference = (rh, candidate, es) => {
     to: rh.id,
     subject: 'Réponse à votre demande d\'entretien.',
     title: `Bonne nouvelle !\n ${candidate.fullName} a répondu à votre demande d'entretien.`,
-    image: '/static/assets/images/wink.jpg',
+    image: '/assets/images/wink.jpg',
     opts: {
       htmlActions: `<a href="/conferences/calendar" class="btn btn-outline-success">Accéder à mes entretiens</a>`
     }
