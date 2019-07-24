@@ -114,11 +114,11 @@ function onListening() {
 }
 
 memwatch.on('leak', (info) => {
-  discord(`**DEV SERVER - Memory Leak Detected** ${JSON.stringify(info)}`, 'debug');
+  discord(`**DEV SERVER - Memory Leak Detected** \`\`\`${JSON.stringify(info)}\`\`\``, 'debug');
   console.error('Memory leak detected:\n', info);
 });
 
 memwatch.on('stats', (stats) => {
-  discord(`**DEV SERVER - Garbage Collector** ${JSON.stringify(stats)}`, 'debug');
+  discord(`**DEV SERVER - Garbage Collector** \`\`\`\n${JSON.stringify(stats)}\n\`\`\``, 'debug');
   console.error('Garbage Colletor detected:\n', stats);
 });
