@@ -1424,7 +1424,7 @@ User_Candidate.viewPools = (req, res, next) => {
     if (poolsCount > 0) {
       return User_Candidate.viewMyPools(req, res, next);
     } else {
-      return res.render('establishments/pool', { a });
+      return res.render('candidates/pools', { a });
     }
   }).catch(error => next(new BackError(error)));
 };
