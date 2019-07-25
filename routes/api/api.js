@@ -17,10 +17,4 @@ router.get('/categoriesPostsServices/all', Api.Main.getCategoriesList);
 router.post('/establishments/findByGeo', Establishment.Reference.findByGeo);
 router.get('/establishments/findByCity/:city', Establishment.Reference.findByCity);
 
-/**
- * @Route('/api/avatar/view/:name') GET;
- * Show user avatar (or default avatar if the photo isn't found in the fs)
- */
-router.get('/avatar/view/:name', Authentication.ensureAuthenticated, Api.Main.getUserAvatar);
-
 module.exports = router;

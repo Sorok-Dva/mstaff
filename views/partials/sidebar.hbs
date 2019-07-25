@@ -81,7 +81,7 @@
           <!-- Toggle -->
           <a href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="avatar avatar-sm">
-              <img {{#if user.photo}} src="/api/avatar/view/{{user.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle" alt="...">
+              <img {{#if user.photo}} src="/uploads/avatars/{{user.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle" alt="...">
             </div>
           </a>
           <!-- Menu -->
@@ -117,7 +117,7 @@
             <!-- Toggle -->
             <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <div class="avatar avatar-sm">
-                <img {{#if user.photo}} src="/api/avatar/view/{{user.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle" alt="avatar">
+                <img {{#if user.photo}} src="/uploads/avatars/{{user.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle" alt="avatar">
               </div>
             </a>
             <!-- Menu -->
