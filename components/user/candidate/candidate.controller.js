@@ -10,11 +10,6 @@ const Models = require(`${__}/orm/models/index`);
 const Sequelize = require(`${__}/bin/sequelize`);
 const Mailer = require(`${__}/components/mailer`);
 
-/*const AvatarStorage = require('../../../helpers/avatar.storage');*/
-const path = require('path');
-const multer = require('multer');
-
-
 const User_Candidate = {};
 
 User_Candidate.getProfile = (req, res, next) => {
