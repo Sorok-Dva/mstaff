@@ -26,6 +26,16 @@ let output = (msg) => $('#messages').html(msg);
 let parseFile = (f, i) => {
   file = f;
   let imageName = decodeURI(file.name);
+  let fileNameRegex = /^[a-z0-9_-]+$/i;
+  if (!fileNameRegex.test(imageName.split('.')[0])) {
+    notification({
+      icon: 'exclamation',
+      type: 'danger',
+      title: 'Nom de fichier invalide :',
+      message: `Votre document présente des caractères invalides. Veuillez le renommer. Seuls les carctères alphanumériques ainsi que les caractères _ et - sont autorisés.`
+    });
+    return false;
+  }
   let isGood = (/\.(?=pdf|png|jpeg|jpg)/gi).test(imageName);
 
   if (isGood) {
