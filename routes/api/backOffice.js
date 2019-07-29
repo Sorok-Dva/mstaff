@@ -56,6 +56,10 @@ router.post('/references/:type',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.Delete);
 
+router.put('/references/posts/multiple/category',
+  Authentication.ensureIsAdmin,
+  BackOffice.Reference.EditMulTipleCategory);
+
 router.post('/configuration/skills/',
   Authentication.ensureIsAdmin,
   BackOffice.Configuration.AddSkill)
