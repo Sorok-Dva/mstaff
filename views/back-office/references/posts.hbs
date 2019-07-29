@@ -1,4 +1,18 @@
+<style>
+  .display-none{
+    display: none;
+  }
+  .display-inline{
+    display: inline;
+  }
+  .custom-icon{
+    color:mediumseagreen;
+    cursor: pointer;
+  }
+</style>
+
 <div class="row">
+
   <div class="col-md-12">
     <div class="card">
       <div class="card-content">
@@ -6,23 +20,46 @@
           <a title="Add" class="btn btn-default" style="margin-right:10px" onclick="showPostModal()">
             <i class="fal fa-plus"></i></a>
         </div>
+        <div class="text-center multipost display-none">
+          <h5 class="nbSelected display-inline"></h5>
+          <select class="select-multiLink" name="categories">
+            {{#each @root.datas.categories as |category|}}
+              <option value="{{category.id}}">{{category.name}}</option>
+            {{/each}}
+          </select> <i id="multiLink" class="fal fa-link custom-icon"></i>
+        </div>
+
         <table id="posts-table" class="table">
           <thead>
           <th data-field="state" data-checkbox="true"></th>
           <th data-field="id" class="text-center">ID</th>
           <th data-field="name" data-sortable="true">Nom</th>
           <th data-field="category" data-sortable="true">Catégorie</th>
+          <th data-field="modifcategory" data-sortable="true">Modifier la catégorie</th>
           <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
               data-formatter="operateFormatter">Actions
           </th>
           </thead>
           <tbody>
-          {{#each references as |posts|}}
+          {{#each datas.references as |posts|}}
             <tr data-id="{{posts.id}}">
               <td></td>
               <td>{{posts.id}}</td>
               <td>{{posts.name}}</td>
-              <td>{{showCategory posts.categoriesPS_id}}</td>
+              <td>
+                {{#each @root.datas.categories as |category|}}
+                  {{#ifCond posts.categoriesPS_id '===' category.id}}
+                    {{category.name}}
+                  {{/ifCond}}
+                {{/each}}
+              </td>
+              <td class="form-group">
+                <select class="form-control" name="categories">
+                  {{#each @root.datas.categories as |category|}}
+                    <option value="{{category.id}}" {{#ifCond posts.categoriesPS_id '===' category.id}}selected{{/ifCond}}>{{category.name}}</option>
+                  {{/each}}
+                </select>
+              </td>
               <td></td>
             </tr>
           {{/each}}
