@@ -1,6 +1,6 @@
 let table = $('#services-table');
 
-function operateFormatter(value, row, index) {
+function operateFormatter() {
   return [
     '<div class="table-icons">',
     '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
@@ -15,7 +15,7 @@ function operateFormatter(value, row, index) {
 
 $(document).ready(() => {
   window.operateEvents = {
-    'click .edit': (e, value, row, index) => {
+    'click .edit': (e, value, row) => {
       createModal({
         id: 'editServiceModal',
         title: 'Modifier un service',
@@ -51,7 +51,7 @@ $(document).ready(() => {
         });
       });
     },
-    'click .remove': (e, value, row, index) => {
+    'click .remove': (e, value, row) => {
       createModal({
         id: 'removeServiceModal',
         title: 'Supprimer un service',
