@@ -2,14 +2,13 @@
     data-candidateId="{{this.Candidate.id}}" {{#ifCond this.availability '===' 'unavailable'}}style="background-color: #bdbdbd"{{/ifCond}}>
   <div class="card-content">
     <i class="fal fa-times float-right p-2" data-action="remove" style="cursor: pointer"></i>
-    <div class="row p-4" style="cursor:pointer;"
-         onclick="showCandidateProfile({{this.Candidate.User.id}})">
-      <div class="col-12 col-md-4 col-lg-3">
-        <div class="icon-big text-center" style="margin-top: 5px;width: 65px;">
-          <img {{#if this.Candidate.User.photo}}src="/uploads/avatars/{{this.Candidate.User.photo}}"{{else}}src="/assets/images/face-0.jpg"{{/if}}  style="border-radius: 50%;border:3px solid #019ED1; width: 75px;">
+    <div class="row no-gutters p-4" style="cursor:pointer" onclick="showCandidateProfile({{this.Candidate.User.id}})">
+      <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <div class="icon-big text-center" style="margin-top: 5px;">
+          <img {{#if this.Candidate.User.photo}}src="/uploads/avatars/{{this.Candidate.User.photo}}"{{else}}src="/assets/images/face-0.jpg"{{/if}}  style="border-radius: 50%;border:3px solid #019ED1; width: 4vw; height:auto">
         </div>
       </div>
-      <div class="col-12 col-md-8 col-lg-9 mt-3">
+      <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12 text-center mt-3">
         <h2 class="text-capitalize">{{this.Candidate.User.firstName}} {{this.Candidate.User.lastName}}</h2>
         <h4 style="word-break: break-all;">{{this.Candidate.applications.0.Wish.posts}}</h4>
       </div>
