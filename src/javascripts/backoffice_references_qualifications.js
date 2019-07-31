@@ -1,7 +1,6 @@
 let table = $('#qualifications-table');
 
 function operateFormatter() {
-  console.log("hello")
   return [
     '<div class="table-icons">',
     '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
