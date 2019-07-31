@@ -111,7 +111,10 @@ $('#searchCandidates').on('click', function () {
 $('input#post').on('keydown', function (e) {
   if (e.which === 13) {
     e.preventDefault();
-    need.post = $('input#post').val();
+    if($('input#searchType').prop('checked'))
+      need.filterQuery.lastName = $('input#post').val();
+    else
+      need.post = $('input#post').val();
     searchCandidates();
   }
 });
