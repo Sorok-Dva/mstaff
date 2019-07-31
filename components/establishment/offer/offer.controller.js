@@ -81,10 +81,17 @@ Establishment_Offer.Create = (req, res, next) => {
   }
   Models.Need.findOne({
     where: { id: req.params.needId, es_id: req.user.opts.currentEs },
-    include: {
+    include: [{
       model: Models.Establishment,
       required: true
-    }
+    }, {
+      model: Models.JobSheet,
+      on: {
+        '$Need.post$': {
+          [Op.col]: 'JobSheet.name'
+        }
+      }
+    }]
   }).then(need => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.needId} introuvable.`, httpStatus.NOT_FOUND));
     Models.Offer.create({
@@ -96,12 +103,49 @@ Establishment_Offer.Create = (req, res, next) => {
         contract_type: _.isNil(need.contract_type) ? '' : need.contract_type,
         start: _.isNil(need.start) ? '' : need.start,
         end: _.isNil(need.end) ? '' : need.end,
+        jobSheet: _.isNil(need.JobSheet.description) ? '' : need.JobSheet.description,
+        contractDuration: '',
+        grade: '',
+        category: ''
       },
       context_section: {
         place: _.isNil(need.Establishment.name) ? '' : need.Establishment.name,
         address: _.isNil(need.Establishment.town) ? '' : need.Establishment.address + ' ' + need.Establishment.town,
         website: _.isNil(need.Establishment.url) ? '' : need.Establishment.url,
         logo: _.isNil(need.Establishment.logo) ? '' : need.Establishment.logo,
+        attach: '',
+        pole: '',
+        presentation: ''
+      },
+      details_section: {
+        schedule: '',
+        roll: '',
+        quota: '',
+        strain: '',
+        access: '',
+        housing: '',
+        remuneration: '',
+        risk: ''
+      },
+      postDescription_section: {
+        presentation: '',
+        team: '',
+        uphill: '',
+        backing: '',
+        external: '',
+        internal: '',
+        internService: ''
+      },
+      prerequisites_section: {
+        diploma: '',
+        skill: '',
+        knowledge: ''
+      },
+      terms_sections: {
+        recruit: '',
+        mail: '',
+        contractual: '',
+        military: ''
       },
       status: 'draft',
       createdBy: req.user.id
@@ -110,7 +154,6 @@ Establishment_Offer.Create = (req, res, next) => {
       res.status(201).send({ status: 'created', offer });
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
-
 };
 
 

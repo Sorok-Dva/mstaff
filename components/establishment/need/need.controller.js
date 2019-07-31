@@ -23,6 +23,9 @@ Establishment_Need.ViewAll = (req, res, next) => {
       required: true
     }, {
       model: Models.User,
+    }, {
+      model: Models.Offer,
+      attributes: ['id', 'need_id']
     }]
   }).then(needs => {
     res.render('establishments/needs', { needs, a: { main: 'needs' } });

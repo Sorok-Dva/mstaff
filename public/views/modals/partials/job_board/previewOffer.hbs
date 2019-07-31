@@ -1,0 +1,42 @@
+<style>
+  .light-grey{
+    color: #9E9E9E;
+  }
+  .font-source{
+    font-family: 'Source Sans Pro';
+    font-size: 16px;
+  }
+</style>
+
+<div id="previewMain" class="modal-body">
+  <h5 id="offerDate" class="light-grey text-right"></h5>
+  <div id="offerMainInfos" class="d-flex flex-column align-items-center mb-5">
+    {{#if data.context_section.logo}}
+      <img class="mb-3" src="{{data.context_section.logo}}" alt="{{data.context_section.place}}" width="15%">
+    {{/if}}
+    <h2 class="mb-3">{{data.name}}</h2>
+    <span id="offerContract" class="badge badge-pill badge-success mb-3"></span>
+  </div>
+
+  {{#if data.context_section.presentation}}
+    <div class="mb-5">
+      <h4 class="light-grey mb-3">ETABLISSEMENT</h4>
+        {{{data.context_section.presentation}}}
+    </div>
+  {{/if}}
+
+  {{#if data.postDescription_section.presentation}}
+    <div class="mb-5">
+      <h4 class="light-grey mb-3">MISSION</h4>
+      {{{data.postDescription_section.presentation}}}
+    </div>
+  {{/if}}
+</div>
+
+<script>
+  datas = `{{{json data}}}`;
+  datas = JSON.parse(datas);
+  console.log(datas);
+</script>
+
+<script src="/static/assets/dist/js/job_board_previewOffer.min.js"></script>

@@ -28,6 +28,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'need_id',
       as: 'candidates'
     });
+    Need.hasOne(models.Offer, {
+      foreignKey: 'need_id',
+      sourceKey: 'id'
+    });
+    Need.hasOne(models.JobSheet, {
+      foreignKey: 'name',
+      sourceKey: 'post'
+    })
   };
   return Need;
 };
