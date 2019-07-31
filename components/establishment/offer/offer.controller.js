@@ -1,15 +1,11 @@
 const __ = process.cwd();
 const { validationResult } = require('express-validator/check');
-const { Op, Sequelize } = require('sequelize');
+const { Op } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
-const Notification = require(`${__}/components/notification`);
-const moment = require('moment');
 const httpStatus = require('http-status');
 
-const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
-const Mailer = require(`${__}/components/mailer`);
 
 const Establishment_Offer = {};
 
@@ -94,6 +90,7 @@ Establishment_Offer.Create = (req, res, next) => {
     }]
   }).then(need => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.needId} introuvable.`, httpStatus.NOT_FOUND));
+    if (_.isNil(need.JobSheet)) need.JobSheet = {};
     Models.Offer.create({
       name: need.name,
       need_id: need.id,
