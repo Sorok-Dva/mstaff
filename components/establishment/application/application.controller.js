@@ -1,11 +1,9 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator/check');
 const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
 const fs = require('fs');
 const httpStatus = require('http-status');
-const moment = require('moment');
 
 const Models = require(`${__}/orm/models/index`);
 
@@ -204,7 +202,13 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
           required: true
         }, {
           model: Models.Experience,
-          as: 'experiences'
+          as: 'experiences',
+          group: ['service_id'],
+          include: {
+            model: Models.Service,
+            as: 'service',
+            attributes: ['id', 'name']
+          }
         }]
       }
     }, {
@@ -289,7 +293,13 @@ Establishment_Application.CVsMyCandidatesQuery = (req, res, next) => {
             required: true
           }, {
             model: Models.Experience,
-            as: 'experiences'
+            as: 'experiences',
+            group: ['service_id'],
+            include: {
+              model: Models.Service,
+              as: 'service',
+              attributes: ['id', 'name']
+            }
           }]
         }
       },
@@ -385,7 +395,13 @@ Establishment_Application.getCandidates = (req, res, next) => {
           as: 'formations',
         }, {
           model: Models.Experience,
-          as: 'experiences'
+          as: 'experiences',
+          group: ['service_id'],
+          include: {
+            model: Models.Service,
+            as: 'service',
+            attributes: ['id', 'name']
+          }
         }]
       }
     }, {

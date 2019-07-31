@@ -14,12 +14,12 @@ const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
 const cookieParser = require('cookie-parser');
-const handlebars = require('../helpers/handlebars').register(require('handlebars'));
 const flash = require('connect-flash');
 const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
+require('../helpers/handlebars').register(require('handlebars'));
 
 let sessionStore = new MySQLStore({
   host: config.host,
