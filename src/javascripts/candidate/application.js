@@ -449,7 +449,7 @@ let resetEsList = () => {
 };
 
 let loading = () => {
-  $('#esList').html('<div id="loader" class="col-md-12"></div>');
+  $('#esList').html('<div id="loader"></div>');
   $('#loader').show();
 };
 
