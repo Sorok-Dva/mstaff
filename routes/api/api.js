@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Authentication } = require('../../middlewares/index');
+const { HTTPValidation } = require('../../middlewares');
 const Api = require(`../../components/api`);
 const Establishment = require(`../../components/establishment`);
 
@@ -15,6 +15,10 @@ router.get('/equipments/all', Api.Main.getEquipmentsList);
 router.get('/softwares/all', Api.Main.getSoftwaresList);
 router.get('/categoriesPostsServices/all', Api.Main.getCategoriesList);
 router.post('/establishments/findByGeo', Establishment.Reference.findByGeo);
-router.get('/establishments/findByCity/:city', Establishment.Reference.findByCity);
+router.get(
+  '/establishments/findByCity/:city',
+  HTTPValidation.ApiController.findByCity,
+  Establishment.Reference.findByCity
+);
 
 module.exports = router;
