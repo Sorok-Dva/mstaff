@@ -1,5 +1,5 @@
 const __ = process.cwd();
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const { mkdirIfNotExists } = require(`${__}/helpers/helpers`);
 const { Op } = require('sequelize');
