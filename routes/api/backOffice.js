@@ -28,12 +28,12 @@ router.post('/establishment/:id(\\d+)/add/user',
   HTTPValidation.BackOfficeController.addUserInEstablishment,
   BackOffice.Establishment.addUser);
 
-router.post('/establishment/:id(\\d+)/remove/user/:userId',
+router.post('/establishment/:id(\\d+)/remove/user/:userId(\\d+)',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.addUserInEstablishment,
   BackOffice.Establishment.removeUser);
 
-router.post('/establishment/:id(\\d+)/edit/user/:userId',
+router.post('/establishment/:id(\\d+)/edit/user/:userId(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Establishment.editUserRole);
 
@@ -87,11 +87,11 @@ router.get('/groups/:type/:id(\\d+)/users/all', Authentication.ensureIsAdmin, Ba
   .post('/groups/:type/:id(\\d+)/edit/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.editUser)
   .delete('/groups/:type/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUser);
 
-router.put('/linkES/:id',
+router.put('/linkES/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Group.EditLinkES);
 
-router.put('/linkGroup/:id',
+router.put('/linkGroup/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Group.EditLinkGroup);
 
