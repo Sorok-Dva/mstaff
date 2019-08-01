@@ -2,8 +2,8 @@ const { Authentication, Express, HTTPValidation } = require('../middlewares');
 const { Render, User } = require('../components');
 const express = require('express');
 const router = express.Router();
-const passport = require('../bin/passport');
 const rateLimit = require('express-rate-limit');
+require('../bin/passport');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window

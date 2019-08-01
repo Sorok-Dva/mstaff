@@ -4,7 +4,6 @@ const path = require('path');
 const express = require('express');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const esRouter = require('./routes/es');
 const esSubDomainRouter = require('./routes/esSubdomain');
 const groupSubDomainRouter = require('./routes/groupSubdomain');
@@ -57,7 +56,6 @@ app.use('/', candidateRouter); //candidate
 app.use('/', esRouter); //recruiter
 app.use('/esDomain', esSubDomainRouter);
 app.use('/groupDomain', groupSubDomainRouter);
-app.use('/user', usersRouter);
 app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
 app.use('/api/user', apiUserRouter);
