@@ -9,7 +9,7 @@ const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
 
 const DST_PATH = './public/assets/dist';
-const CSS_SRC = './src/stylesheets/*/*.css';
+const CSS_SRC = './src/stylesheets/*.css';
 const CSS_DST = './public/assets/dist/css';
 const JS_SRC = './src/javascripts/*/*.js';
 const JS_DST = './public/assets/dist/js';
