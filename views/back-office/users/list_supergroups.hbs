@@ -24,12 +24,12 @@
           {{#each superGroup as |superGroups|}}
             <tr data-id="{{superGroups.id}}">
               <td></td>
-              <td>{{superGroups.id}}</td>
-              <td>{{superGroups.name}}</td>
-              <td>{{superGroups.logo}}</td>
-              <td>{{superGroups.banner}}</td>
-              <td>{{superGroups.domain_name}}</td>
-              <td>{{#ifCond superGroups.domain_enable '==' '1'}}Actif{{else}}Inactif{{/ifCond}}</td>
+              <td id="sg-id">{{superGroups.id}}</td>
+              <td id="sg-name">{{superGroups.name}}</td>
+              <td id="sg-logo">{{superGroups.logo}}</td>
+              <td id="sg-banner">{{superGroups.banner}}</td>
+              <td id="sg-domain">{{superGroups.domain_name}}</td>
+              <td id="sg-state">{{#ifCond superGroups.domain_enable '==' '1'}}Actif{{else}}Inactif{{/ifCond}}</td>
               <td></td>
             </tr>
           {{/each}}
