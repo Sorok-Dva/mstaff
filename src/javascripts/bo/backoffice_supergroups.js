@@ -50,7 +50,8 @@ $(document).ready(() => {
               notification({
                 icon: 'check-circle',
                 type: 'success',
-                title: 'Groupe(s) lié(s)',
+                title: 'Groupe(s) lié(s) :',
+                message: 'des groupes ont été liés au super groupe.'
               });
             });
           }
@@ -99,7 +100,8 @@ $(document).ready(() => {
               notification({
                 icon: 'check-circle',
                 type: 'success',
-                title: 'SuperGroup modifié.',
+                title: 'Super groupe modifié :',
+                message: 'Le super groupe a bien été modifié.'
               });
             });
           } else {
@@ -131,8 +133,8 @@ $(document).ready(() => {
             notification({
               icon: 'check-circle',
               type: 'success',
-              title: 'Super groupe supprimé.',
-              message: ``
+              title: 'Super groupe supprimé :',
+              message: `Le super groupe a bien été supprimé.`
             });
           });
         });
@@ -185,22 +187,22 @@ let showSuperGroupModal = () => {
             notification({
               icon: 'exclamation',
               type: 'danger',
-              title: 'Ce super groupe existe déjà.',
-              message: ``
+              title: 'Super groupe existant :',
+              message: `Ce super groupe existe déjà.`
             });
           } else {
             table.bootstrapTable('insertRow', {
               index: 0,
               row: {
-                id: response.superGroup.id,
-                name: response.superGroup.name
+                id: response.group.id,
+                name: response.group.name
               }
             });
             notification({
               icon: 'check-circle',
               type: 'success',
-              title: 'Super Groupe créé.',
-              message: ``,
+              title: 'Super Groupe créé :',
+              message: `Le super groupe a bien été crée.`,
               onClosed: location.reload()
             });
           }
