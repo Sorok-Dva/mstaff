@@ -12,10 +12,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
-          key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
+          key: 'id'
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
         allowNull: false
       },
       id_supergroup: {
@@ -24,6 +24,8 @@ module.exports = {
           model: 'SuperGroups',
           key: 'id'
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
         allowNull: false
       },
       role: {
