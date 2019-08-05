@@ -65,11 +65,11 @@ $(document).ready(() => {
         title: 'Modifier un Super Groupe',
         modal: 'back-office/editSuperGroups',
         supergroup: {
-          name: $(`tr[data-id="${id}"] td`).first().next().next().text(),
-          logo: $(`tr[data-id="${id}"] td`).first().next().next().next().text(),
-          banner: $(`tr[data-id="${id}"] td`).last().prev().prev().prev().text(),
-          domain_name: $(`tr[data-id="${id}"] td`).last().prev().prev().text(),
-          domain_enable: $(`tr[data-id="${id}"] td`).last().prev().text()
+          name: $(`tr[data-id="${id}"] td#sg-name`).text(),
+          logo: $(`tr[data-id="${id}"] td#sg-logo`).text(),
+          banner: $(`tr[data-id="${id}"] td#sg-banner`).text(),
+          domain_name: $(`tr[data-id="${id}"] td#sg-domain`).text(),
+          domain_enable: $(`tr[data-id="${id}"] td#sg-state`).text()
         }
       }, () => {
         $('button#btnEditSuperGroup').click(function () {
@@ -92,11 +92,11 @@ $(document).ready(() => {
                 });
               }
               $('#editSuperGroupModal').modal('hide');
-              $(`tr[data-id="${id}"] td`).first().next().text(name);
-              $(`tr[data-id="${id}"] td`).first().next().next().text(logo);
-              $(`tr[data-id="${id}"] td`).first().next().next().next().text(banner);
-              $(`tr[data-id="${id}"] td`).last().prev().prev().text(domain_name);
-              $(`tr[data-id="${id}"] td`).last().prev().text(domain_enable === '0' ? 'Inactif' : 'Actif');
+              $(`tr[data-id="${id}"] td#sg-name`).text(name);
+              $(`tr[data-id="${id}"] td#sg-logo`).text(logo);
+              $(`tr[data-id="${id}"] td#sg-banner`).text(banner);
+              $(`tr[data-id="${id}"] td#sg-domain`).text(domain_name);
+              $(`tr[data-id="${id}"] td#sg-state`).text(domain_enable === '0' ? 'Inactif' : 'Actif');
               notification({
                 icon: 'check-circle',
                 type: 'success',
@@ -119,7 +119,11 @@ $(document).ready(() => {
       createModal({
         id: 'removeSuperGroupModal',
         title: 'Supprimer un super groupe',
-        modal: 'back-office/removeSuperGroups'
+        text: 'Êtes-vous sûr de vouloir supprimer ce super groupe ?',
+        actions: [
+          '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+          '<button type="button" id="btnRemoveSuperGroup" class="btn btn-danger" data-dismiss="modal">Oui</button>'
+        ]
       }, () => {
         let _csrf = $('meta[name="csrf-token"]').attr('content');
         $('button#btnRemoveSuperGroup').click(function () {
@@ -173,7 +177,8 @@ let showSuperGroupModal = () => {
   createModal({
     id: 'addSuperGroupModal',
     title: 'Ajouter un super groupe',
-    modal: 'back-office/addSuperGroups'
+    text: '<label for="superGroupValue"> Nom du Super Groupe </label><input class="form-control" type="text" id="superGroupValue">',
+    actions: ['<button type="button" class="btn btn-default" id="validateSuperGroup"> Ajouter un super groupe</button>']
   }, () => {
     $('button#validateSuperGroup').click(function () {
       if ($('input#superGroupValue').val() != '') {
@@ -191,13 +196,6 @@ let showSuperGroupModal = () => {
               message: `Ce super groupe existe déjà.`
             });
           } else {
-            table.bootstrapTable('insertRow', {
-              index: 0,
-              row: {
-                id: response.group.id,
-                name: response.group.name
-              }
-            });
             notification({
               icon: 'check-circle',
               type: 'success',
