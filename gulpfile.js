@@ -11,7 +11,8 @@ const sourcemaps = require('gulp-sourcemaps');
 const DST_PATH = './public/assets/dist';
 const CSS_SRC = './src/stylesheets/*.css';
 const CSS_DST = './public/assets/dist/css';
-const JS_SRC = './src/javascripts/*/*.js';
+const JS_SRC_BASE = './src/javascripts/*.js';
+const JS_SRC_SUBFOLDERS = './src/javascripts/*/*.js';
 const JS_DST = './public/assets/dist/js';
 
 /**
@@ -45,7 +46,7 @@ let watchCss = () => {
 
 let watchJs = () => {
   watch(
-    [JS_SRC],
+    [JS_SRC_BASE],
     { events: 'all', ignoreInitial: false },
     series(buildScripts)
   );
@@ -68,7 +69,7 @@ let buildStyles = () => {
 
 let buildScripts = () => {
   if (Env.current === 'development') {
-    return src(JS_SRC)
+    return src([JS_SRC_BASE, JS_SRC_SUBFOLDERS])
       .pipe(sourcemaps.init())
       .pipe(terser())
       .pipe(rename({ suffix: '.min' }))
@@ -76,7 +77,7 @@ let buildScripts = () => {
       .pipe(dest(JS_DST))
       .pipe(browsersync.reload({ stream: true }));
   } else {
-    return src(JS_SRC)
+    return src([JS_SRC_BASE, JS_SRC_SUBFOLDERS])
       .pipe(terser())
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(JS_DST));
