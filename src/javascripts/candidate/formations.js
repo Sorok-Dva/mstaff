@@ -82,6 +82,8 @@ $('.add').click(function () {
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
+          $('#xpStart').data('DateTimePicker').minDate(false).maxDate(false);
+          $('#xpEnd').data('DateTimePicker').maxDate(false);
         }
       } else if (type === 'formation') {
         if (data.formation) {
@@ -109,6 +111,8 @@ $('.add').click(function () {
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
+          $('#fStart').data('DateTimePicker').minDate(false).maxDate(false);
+          $('#fEnd').data('DateTimePicker').maxDate(false);
         }
       } else if (type === 'diploma') {
         if (data.diploma) {
@@ -136,8 +140,9 @@ $('.add').click(function () {
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
+          $('#dStart').data('DateTimePicker').minDate(false).maxDate(false);
+          $('#dEnd').data('DateTimePicker').maxDate(false);
         }
-
       }
     }).catch((xhr, status, error) => catchError(xhr, status, error));
   }
@@ -412,6 +417,7 @@ $(document).ready(() => {
     useCurrent: false
   };
   //XP Datepicker
+
   $('#xpStart').datetimepicker(dtargv).on('dp.change', (e) => {
     let incrementDay = moment(new Date(e.date));
     incrementDay.add(1, 'days');
