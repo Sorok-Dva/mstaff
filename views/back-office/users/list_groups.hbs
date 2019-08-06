@@ -24,12 +24,12 @@
           {{#each group as |groups|}}
             <tr data-id="{{groups.id}}">
               <td></td>
-              <td>{{groups.id}}</td>
-              <td>{{groups.name}}</td>
-              <td>{{groups.logo}}</td>
-              <td>{{groups.banner}}</td>
-              <td>{{#if groups.domain_name}}<a href="https://{{groups.domain_name}}.mstaff.co">{{groups.domain_name}}</a>{{/if}}</td>
-              <td>{{#ifCond groups.domain_enable '==' '1'}}Actif{{else}}Inactif{{/ifCond}}</td>
+              <td id="g-id">{{groups.id}}</td>
+              <td id="g-name">{{groups.name}}</td>
+              <td id="g-logo">{{groups.logo}}</td>
+              <td id="g-banner">{{groups.banner}}</td>
+              <td id="g-domain">{{#if groups.domain_name}}<a href="https://{{groups.domain_name}}.mstaff.co">{{groups.domain_name}}</a>{{/if}}</td>
+              <td id="g-state">{{#ifCond groups.domain_enable '==' '1'}}Actif{{else}}Inactif{{/ifCond}}</td>
               <td></td>
             </tr>
           {{/each}}

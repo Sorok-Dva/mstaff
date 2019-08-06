@@ -65,11 +65,11 @@ $(document).ready(() => {
         title: 'Modifier un groupe',
         modal: 'back-office/editGroup',
         group: {
-          name: $(`tr[data-id="${id}"] td`).first().next().next().text(),
-          logo: $(`tr[data-id="${id}"] td`).first().next().next().next().text(),
-          banner: $(`tr[data-id="${id}"] td`).last().prev().prev().prev().text(),
-          domain_name: $(`tr[data-id="${id}"] td`).last().prev().prev().text(),
-          domain_enable: $(`tr[data-id="${id}"] td`).last().prev().text(),
+          name: $(`tr[data-id="${id}"] td#g-name`).text(),
+          logo: $(`tr[data-id="${id}"] td#g-logo`).text(),
+          banner: $(`tr[data-id="${id}"] td#g-banner`).text(),
+          domain_name: $(`tr[data-id="${id}"] td#g-domain`).text(),
+          domain_enable: $(`tr[data-id="${id}"] td#g-state`).text(),
         }
       }, () => {
         $('button#btnEditGroup').click(function () {
@@ -92,11 +92,11 @@ $(document).ready(() => {
                 });
               }
               $('#editGroupModal').modal('hide');
-              $(`tr[data-id="${id}"] td`).first().next().next().text(name);
-              $(`tr[data-id="${id}"] td`).first().next().next().next().text(logo);
-              $(`tr[data-id="${id}"] td`).last().prev().prev().prev().text(banner);
-              $(`tr[data-id="${id}"] td`).last().prev().prev().text(domain_name);
-              $(`tr[data-id="${id}"] td`).last().prev().text(domain_enable === '0' ? 'Inactif' : 'Actif');
+              $(`tr[data-id="${id}"] td#g-name`).text(name);
+              $(`tr[data-id="${id}"] td#g-logo`).text(logo);
+              $(`tr[data-id="${id}"] td#g-banner`).text(banner);
+              $(`tr[data-id="${id}"] td#g-domain`).text(domain_name);
+              $(`tr[data-id="${id}"] td#g-state`).text(domain_enable === '0' ? 'Inactif' : 'Actif');
               notification({
                 icon: 'check-circle',
                 type: 'success',
