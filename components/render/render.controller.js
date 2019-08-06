@@ -19,6 +19,7 @@ Render.Index = (req, res, next) => {
   if (req.user && req.user.type === 'admin') {
     return res.redirect('/back-office')
   }
+  // return res.redirect('https://welcome.mstaff.co
   return res.render('index', { layout: 'landing' })
 };
 
