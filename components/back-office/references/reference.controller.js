@@ -3,8 +3,6 @@ const _ = require('lodash');
 const { validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
-const { Op } = require('sequelize');
-
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
 
@@ -13,7 +11,7 @@ const BackOffice_References = {};
 let allowedModels = ['categories', 'equipments', 'formations', 'posts', 'services', 'skills', 'softwares', 'qualifications'];
 
 BackOffice_References.View = (req, res, next) => {
-  if (! allowedModels.includes(req.params.type)) return next(new BackError(`Modèle non autorisé pour cette route.`, httpStatus.FORBIDDEN));
+  if (!allowedModels.includes(req.params.type)) return next(new BackError(`Modèle non autorisé pour cette route.`, httpStatus.FORBIDDEN));
   let model = req.params.type === 'categories' ? 'MstaffCategories' : req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
   let datas = {};
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
