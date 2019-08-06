@@ -117,7 +117,11 @@ $(document).ready(() => {
       createModal({
         id: 'removeGroupModal',
         title: 'Supprimer un groupe',
-        modal: 'back-office/removeGroup'
+        text: 'Êtes-vous sûr de vouloir supprimer ce groupe ?',
+        actions: [
+          '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+          '<button type="button" id="btnRemoveGroup" class="btn btn-danger" data-dismiss="modal">Oui</button>'
+        ]
       }, () => {
         let _csrf = $('meta[name="csrf-token"]').attr('content');
         $('button#btnRemoveGroup').click(function () {
