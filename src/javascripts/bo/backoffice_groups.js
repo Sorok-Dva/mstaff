@@ -50,7 +50,8 @@ $(document).ready(() => {
               notification({
                 icon: 'check-circle',
                 type: 'success',
-                title: 'Etablissement(s) lié(s)',
+                title: 'Etablissement(s) lié(s) :',
+                message: 'Les établissements sélectionnés ont été ajoutés.'
               });
             });
           }
@@ -99,7 +100,8 @@ $(document).ready(() => {
               notification({
                 icon: 'check-circle',
                 type: 'success',
-                title: 'Groupe modifié.',
+                title: 'Groupe modifié :',
+                message: 'Le groupe a bien été modifié.'
               });
             });
           } else {
@@ -135,8 +137,8 @@ $(document).ready(() => {
             notification({
               icon: 'check-circle',
               type: 'success',
-              title: 'Groupe supprimé.',
-              message: ``
+              title: 'Groupe supprimé :',
+              message: `Le groupe a bien été supprimé.`
             });
           });
         });
@@ -192,8 +194,8 @@ let showGroupModal = () => {
             notification({
               icon: 'exclamation',
               type: 'danger',
-              title: 'Ce groupe existe déjà.',
-              message: ``
+              title: 'Groupe existant :',
+              message: `Ce groupe existe déjà.`
             });
           } else {
             table.bootstrapTable('insertRow', {
@@ -206,8 +208,8 @@ let showGroupModal = () => {
             notification({
               icon: 'check-circle',
               type: 'success',
-              title: 'Groupe créé.',
-              message: ``,
+              title: 'Groupe créé :',
+              message: `Le groupe a bien été crée.`,
               onClosed: location.reload()
             });
           }
