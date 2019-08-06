@@ -118,9 +118,8 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (req.url.search('static') !== -1 || req.subdomains.length === 0
-      || req.subdomains[0] === 'dev' || req.subdomains[0] === 'pre-prod' || req.subdomains[0] === 'cdn')
-      return next();
+    let excludedSubdomains = ['dev', 'pre-prod', 'monitoring', 'welcome', 'admin'];
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || excludedSubdomains.includes(req.subdomains[0])) return next();
     Subdomain.Main.find(req, res, (subdomain) => {
       if (subdomain.es_id) {
         Establishment.Main.find(subdomain.es_id, (data) => {

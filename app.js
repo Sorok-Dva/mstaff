@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.compress);
 app.use(Express.methodOverride);
 app.use(Express.helmet);
-if (Env.isDev || Env.isLocal) app.use('/', express.static(path.join(__dirname, 'public')));
+if (Env.isDev || Env.isLocal || Env.isPreProd) app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(Express.cookieParser);
 app.use(Express.csurf);
 app.use(Express.session);
