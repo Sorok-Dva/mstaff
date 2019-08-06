@@ -198,13 +198,6 @@ let showGroupModal = () => {
               message: `Ce groupe existe déjà.`
             });
           } else {
-            table.bootstrapTable('insertRow', {
-              index: 0,
-              row: {
-                id: response.group.id,
-                name: response.group.name
-              }
-            });
             notification({
               icon: 'check-circle',
               type: 'success',
@@ -225,4 +218,4 @@ let showGroupModal = () => {
       }
     })
   })
-}
+};
