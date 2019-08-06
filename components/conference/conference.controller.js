@@ -1,9 +1,7 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
-const moment = require('moment');
 const httpStatus = require('http-status');
 
 const Models = require(`${__}/orm/models/index`);
