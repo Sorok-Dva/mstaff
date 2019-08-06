@@ -177,7 +177,8 @@ let showGroupModal = () => {
   createModal({
     id: 'addGroupModal',
     title: 'Ajouter un groupe',
-    modal: 'back-office/addGroup'
+    text: '<label for="groupValue"> Nom du Groupe </label><input class="form-control" type="text" id="groupValue">',
+    actions: ['<button type="button" class="btn btn-default" id="validateGroup"> Ajouter un groupe</button>']
   }, () => {
     $('button#validateGroup').click(function () {
       if ($('input#groupValue').val() !== '') {
