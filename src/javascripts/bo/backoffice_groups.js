@@ -50,7 +50,8 @@ $(document).ready(() => {
               notification({
                 icon: 'check-circle',
                 type: 'success',
-                title: 'Etablissement(s) lié(s)',
+                title: 'Etablissement(s) lié(s) :',
+                message: 'Les établissements sélectionnés ont été ajoutés.'
               });
             });
           }
@@ -64,11 +65,11 @@ $(document).ready(() => {
         title: 'Modifier un groupe',
         modal: 'back-office/editGroup',
         group: {
-          name: $(`tr[data-id="${id}"] td`).first().next().next().text(),
-          logo: $(`tr[data-id="${id}"] td`).first().next().next().next().text(),
-          banner: $(`tr[data-id="${id}"] td`).last().prev().prev().prev().text(),
-          domain_name: $(`tr[data-id="${id}"] td`).last().prev().prev().text(),
-          domain_enable: $(`tr[data-id="${id}"] td`).last().prev().text(),
+          name: $(`tr[data-id="${id}"] td#g-name`).text(),
+          logo: $(`tr[data-id="${id}"] td#g-logo`).text(),
+          banner: $(`tr[data-id="${id}"] td#g-banner`).text(),
+          domain_name: $(`tr[data-id="${id}"] td#g-domain`).text(),
+          domain_enable: $(`tr[data-id="${id}"] td#g-state`).text(),
         }
       }, () => {
         $('button#btnEditGroup').click(function () {
@@ -91,15 +92,16 @@ $(document).ready(() => {
                 });
               }
               $('#editGroupModal').modal('hide');
-              $(`tr[data-id="${id}"] td`).first().next().next().text(name);
-              $(`tr[data-id="${id}"] td`).first().next().next().next().text(logo);
-              $(`tr[data-id="${id}"] td`).last().prev().prev().prev().text(banner);
-              $(`tr[data-id="${id}"] td`).last().prev().prev().text(domain_name);
-              $(`tr[data-id="${id}"] td`).last().prev().text(domain_enable === '0' ? 'Inactif' : 'Actif');
+              $(`tr[data-id="${id}"] td#g-name`).text(name);
+              $(`tr[data-id="${id}"] td#g-logo`).text(logo);
+              $(`tr[data-id="${id}"] td#g-banner`).text(banner);
+              $(`tr[data-id="${id}"] td#g-domain`).text(domain_name);
+              $(`tr[data-id="${id}"] td#g-state`).text(domain_enable === '0' ? 'Inactif' : 'Actif');
               notification({
                 icon: 'check-circle',
                 type: 'success',
-                title: 'Groupe modifié.',
+                title: 'Groupe modifié :',
+                message: 'Le groupe a bien été modifié.'
               });
             });
           } else {
@@ -117,7 +119,11 @@ $(document).ready(() => {
       createModal({
         id: 'removeGroupModal',
         title: 'Supprimer un groupe',
-        modal: 'back-office/removeGroup'
+        text: 'Êtes-vous sûr de vouloir supprimer ce groupe ?',
+        actions: [
+          '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+          '<button type="button" id="btnRemoveGroup" class="btn btn-danger" data-dismiss="modal">Oui</button>'
+        ]
       }, () => {
         let _csrf = $('meta[name="csrf-token"]').attr('content');
         $('button#btnRemoveGroup').click(function () {
@@ -131,8 +137,8 @@ $(document).ready(() => {
             notification({
               icon: 'check-circle',
               type: 'success',
-              title: 'Groupe supprimé.',
-              message: ``
+              title: 'Groupe supprimé :',
+              message: `Le groupe a bien été supprimé.`
             });
           });
         });
@@ -173,7 +179,8 @@ let showGroupModal = () => {
   createModal({
     id: 'addGroupModal',
     title: 'Ajouter un groupe',
-    modal: 'back-office/addGroup'
+    text: '<label for="groupValue"> Nom du Groupe </label><input class="form-control" type="text" id="groupValue">',
+    actions: ['<button type="button" class="btn btn-default" id="validateGroup"> Ajouter un groupe</button>']
   }, () => {
     $('button#validateGroup').click(function () {
       if ($('input#groupValue').val() !== '') {
@@ -187,22 +194,15 @@ let showGroupModal = () => {
             notification({
               icon: 'exclamation',
               type: 'danger',
-              title: 'Ce groupe existe déjà.',
-              message: ``
+              title: 'Groupe existant :',
+              message: `Ce groupe existe déjà.`
             });
           } else {
-            table.bootstrapTable('insertRow', {
-              index: 0,
-              row: {
-                id: response.group.id,
-                name: response.group.name
-              }
-            });
             notification({
               icon: 'check-circle',
               type: 'success',
-              title: 'Groupe créé.',
-              message: ``,
+              title: 'Groupe créé :',
+              message: `Le groupe a bien été crée.`,
               onClosed: location.reload()
             });
           }
@@ -218,4 +218,4 @@ let showGroupModal = () => {
       }
     })
   })
-}
+};
