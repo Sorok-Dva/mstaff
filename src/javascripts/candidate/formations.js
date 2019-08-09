@@ -82,6 +82,8 @@ $('.add').click(function () {
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
+          $('#xpStart').data('DateTimePicker').minDate(false).maxDate(false).viewMode('months');
+          $('#xpEnd').data('DateTimePicker').maxDate(false).viewMode('months');
         }
       } else if (type === 'formation') {
         if (data.formation) {
@@ -109,6 +111,8 @@ $('.add').click(function () {
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
+          $('#fStart').data('DateTimePicker').minDate(false).maxDate(false).viewMode('months');
+          $('#fEnd').data('DateTimePicker').maxDate(false).viewMode('months');
         }
       } else if (type === 'diploma') {
         if (data.diploma) {
@@ -136,8 +140,9 @@ $('.add').click(function () {
                 type: 'button'
               }).html('<i class="ti-close"></i>')))
           );
+          $('#dStart').data('DateTimePicker').minDate(false).maxDate(false).viewMode('months');
+          $('#dEnd').data('DateTimePicker').maxDate(false).viewMode('months');
         }
-
       }
     }).catch((xhr, status, error) => catchError(xhr, status, error));
   }
@@ -412,37 +417,38 @@ $(document).ready(() => {
     useCurrent: false
   };
   //XP Datepicker
+
   $('#xpStart').datetimepicker(dtargv).on('dp.change', (e) => {
     let incrementDay = moment(new Date(e.date));
-    incrementDay.add(1, 'days');
-    $('#xpEnd').data('DateTimePicker').minDate(incrementDay);
+    incrementDay.add(1, 'months');
+    $('#xpEnd').data('DateTimePicker').minDate(incrementDay).viewMode('months');
   });
   $('#xpEnd').datetimepicker(dtargv).on('dp.change', (e) => {
     let decrementDay = moment(new Date(e.date));
-    decrementDay.subtract(1, 'days');
-    $('#xpStart').data('DateTimePicker').maxDate(decrementDay);
+    decrementDay.subtract(1, 'months');
+    $('#xpStart').data('DateTimePicker').maxDate(decrementDay).viewMode('months');
   });
   // Formations datepicker
   $('#fStart').datetimepicker(dtargv).on('dp.change', (e) => {
     let incrementDay = moment(new Date(e.date));
-    incrementDay.add(1, 'days');
-    $('#fEnd').data('DateTimePicker').minDate(incrementDay);
+    incrementDay.add(1, 'months');
+    $('#fEnd').data('DateTimePicker').minDate(incrementDay).viewMode('months');
   });
   $('#fEnd').datetimepicker(dtargv).on('dp.change', (e) => {
     let decrementDay = moment(new Date(e.date));
-    decrementDay.subtract(1, 'days');
-    $('#fStart').data('DateTimePicker').maxDate(decrementDay);
+    decrementDay.subtract(1, 'months');
+    $('#fStart').data('DateTimePicker').maxDate(decrementDay).viewMode('months');
   });
   // Diplomas datepicker
   $('#dStart').datetimepicker(dtargv).on('dp.change', (e) => {
     let incrementDay = moment(new Date(e.date));
-    incrementDay.add(1, 'days');
-    $('#dEnd').data('DateTimePicker').minDate(incrementDay);
+    incrementDay.add(1, 'months');
+    $('#dEnd').data('DateTimePicker').minDate(incrementDay).viewMode('months');
   });
   $('#dEnd').datetimepicker(dtargv).on('dp.change', (e) => {
     let decrementDay = moment(new Date(e.date));
-    decrementDay.subtract(1, 'days');
-    $('#dStart').data('DateTimePicker').maxDate(decrementDay);
+    decrementDay.subtract(1, 'months');
+    $('#dStart').data('DateTimePicker').maxDate(decrementDay).viewMode('months');
   });
 
   let formationAutocomplete = [];
