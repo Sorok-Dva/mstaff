@@ -137,7 +137,7 @@ let searchCandidates = () => {
   $('#paginationContainer').hide();
   $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
   $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
-    data.partials = ['candidatePercentageTooltip'];
+    data.partials = ['tooltips/candidatePercentage'];
     loadTemplate('/views/api/searchCandidates.hbs', data, html => {
       $('#resetSearch').show();
       $('#searchResult').html(html).show();
@@ -372,7 +372,7 @@ let showArchived = () =>{
     }
     $.post(`/api/es/${esId}/candidates/archived/`, { _csrf }, (data) => {
       $('#showArchived').removeClass('Show').addClass('Hide').css('color', '#0ecea4');
-      data.partials = ['candidatePercentageTooltip'];
+      data.partials = ['tooltips/candidatePercentage'];
       loadTemplate('/views/api/showMyCandidates.hbs', data, html => {
         $('#baseResult').hide();
         $('#searchResult').hide();
@@ -406,7 +406,7 @@ let showFavorites = () => {
     }
     $.post(`/api/es/${esId}/candidates/favorites/`, { _csrf }, (data) => {
       $('#showFavorites').removeClass('Show').addClass('Hide').css('color', 'gold');
-      data.partials = ['candidatePercentageTooltip'];
+      data.partials = ['tooltips/candidatePercentage'];
       loadTemplate('/views/api/showMyCandidates.hbs', data, html => {
         $('#baseResult').hide();
         $('#searchResult').hide();
@@ -479,7 +479,7 @@ $(document).ready(() => {
       onPageClick: function (event, page) {
         $('#baseResult').empty().html(loadingCandidateHTML);
         $.post(`/api/es/${esId}/paginate/candidates/${page}/${size}`, {_csrf}, (data) => {
-          data.partials = ['candidatePercentageTooltip'];
+          data.partials = ['tooltips/candidatePercentage'];
           loadTemplate('/views/api/showCandidatesPagination.hbs', data, html => {
             $('#baseResult').empty().html(html);
           });
@@ -488,7 +488,7 @@ $(document).ready(() => {
     });
   } else {
     $.post(`/api/es/${esId}/paginate/candidates/1/${size}`, {_csrf}, (data) => {
-      data.partials = ['candidatePercentageTooltip'];
+      data.partials = ['tooltips/candidatePercentage'];
       loadTemplate('/views/api/showCandidatesPagination.hbs', data, html => {
         $('#baseResult').empty().html(html);
       });

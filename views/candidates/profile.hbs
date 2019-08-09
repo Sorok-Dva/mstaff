@@ -19,7 +19,7 @@
           <div id="availability-state" class="avatar avatar-xxl avatar-{{#if candidate.is_available}}on{{else}}off{{/if}}line">
             <img id="candidateAvatar"{{#if user.photo}} src="/uploads/avatars/{{user.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}}class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
-          <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> candidatePercentageTooltip candidate.percentage}}">
+          <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> tooltips/candidatePercentage candidate.percentage}}">
             <span class="label label-default rank-label">{{{candidateProfilePercentage candidate.percentage}}}</span>
           </div>
           <h2 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
@@ -68,7 +68,7 @@
           </div>
           <div class="col-12 col-lg-12">
             <h4><i class="fal fa-envelope"></i> {{candidate.User.email}}
-              <i class="fal fa-question-circle"  data-toggle="tooltip" data-html="true" data-placement="top" title="{{> emailHint }}"></i>
+              <i class="fal fa-question-circle"  data-toggle="tooltip" data-html="true" data-placement="right" title="{{> tooltips/emailHint }}"></i>
             </h4>
           </div>
           <div class="col-12 col-lg-12">

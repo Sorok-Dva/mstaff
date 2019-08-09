@@ -12,7 +12,7 @@
           </div>
           {{#if user.candidate}}
             <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="bottom"
-                 title="{{> candidatePercentageTooltip user.candidate.percentage}}">
+                 title="{{> tooltips/candidatePercentage user.candidate.percentage}}">
               <span class="label label-default rank-label">{{{candidateProfilePercentage
                   user.candidate.percentage}}}</span>
             </div>
@@ -116,7 +116,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="exampleInputEmail1">Adresse email</label>
+                <label>Adresse email</label>
                 <input type="email" name="email" class="form-control border-input" placeholder="Email"
                        value="{{user.email}}" required>
               </div>

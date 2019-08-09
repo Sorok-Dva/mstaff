@@ -10,7 +10,7 @@ let showCandidateProfile = userId => {
         style: 'width:80%',
         title: `Profil de ${data.User.firstName} ${data.User.lastName}`,
         candidate: data,
-        partials: ['candidatePercentageTooltip']
+        partials: ['tooltips/candidatePercentage']
       }, () => {
         showCandidateProfileAvailable = true;
       });
