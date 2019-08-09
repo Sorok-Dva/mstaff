@@ -65,7 +65,9 @@
             <h4><i class="fal fa-phone"></i> {{candidate.User.phone}}</h4>
           </div>
           <div class="col-12 col-lg-12">
-            <h4><i class="fal fa-envelope"></i> {{candidate.User.email}}</h4>
+            <h4><i class="fal fa-envelope"></i> {{candidate.User.email}}
+              <i class="fal fa-question-circle"  data-toggle="tooltip" data-html="true" data-placement="top" title="{{> emailHint }}"></i>
+            </h4>
           </div>
           <div class="col-12 col-lg-12">
             <h4><i class="fal fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h4>
