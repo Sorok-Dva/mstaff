@@ -12,7 +12,7 @@
           </div>
           {{#if user.candidate}}
             <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="bottom"
-                 title="{{> candidatePercentageTooltip user.candidate.percentage}}">
+                 title="{{> tooltips/candidatePercentage user.candidate.percentage}}">
               <span class="label label-default rank-label">{{{candidateProfilePercentage
                   user.candidate.percentage}}}</span>
             </div>
