@@ -72,7 +72,10 @@
         <input id="identityPhone" type="tel" class="form-control" value="{{candidateDatas.identity.phone}}">
       </div>
       <div class="col-6">
-        <label for="identityMail">Adresse e-mail*</label>
+        <label for="identityMail">
+          Adresse e-mail*
+          <i class="fal fa-question-circle"  data-toggle="tooltip" data-html="true" data-placement="right" title="{{> tooltips/emailHint }}"></i>
+        </label>
         <input id="identityMail" type="text" class="form-control" value="{{candidateDatas.identity.email}}">
       </div>
     </div>
