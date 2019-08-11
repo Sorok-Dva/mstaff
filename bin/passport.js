@@ -22,6 +22,8 @@ passport.use(new LocalStrategy({ passReqToCallback: true }, (req, email, passwor
           opts: user.opts,
           photo: user.photo
         };
+        user.last_login = new Date();
+        user.save();
         return done(null, session);
       } else {
         return done(null, false, req.flash('error_msg', 'Mot de passe invalide.'));
