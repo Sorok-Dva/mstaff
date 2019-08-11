@@ -181,4 +181,11 @@ router.get('/settings',
   Authentication.ensureIsAdmin,
   BackOffice.Main.ViewSettings);
 
+/** @Route('/back-office/server/db_dumps') GET;
+ * Show database dumps list
+ */
+router.get('/server/db_dumps',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.ViewDatabaseDumps);
+
 module.exports = router;

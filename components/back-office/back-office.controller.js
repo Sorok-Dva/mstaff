@@ -1,8 +1,6 @@
 const __ = process.cwd();
-const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
 const moment = require('moment');
-const { BackError } = require(`${__}/helpers/back.error`);
 
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';

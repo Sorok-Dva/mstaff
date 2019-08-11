@@ -5,6 +5,7 @@ const Impersonation = require('./user/impersonation.controller');
 const JobBoard = require('./job_board/job_board.controller');
 const Main = require('./back-office.controller');
 const Reference = require('./references/reference.controller');
+const Server = require('./server/server.controller');
 const User = require('./user/user.controller');
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   JobBoard,
   Main,
   Reference,
+  Server,
   User
 };

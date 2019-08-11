@@ -252,6 +252,16 @@
             </li>
           </ul>
         </div>
+        <div class="collapse{{#ifCond a.main '===' 'serverSettings'}} in{{/ifCond}}" id="serverSettingsOverview">
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'db_dumps'}} class="active"{{/ifCond}}>
+              <a href="/back-office/server/db_dumps">
+                <i class="fal fa-database"></i>
+                <span class="sidebar-normal">Sauvegardes DB</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
       <li{{#ifCond a.main '===' 'job_board'}} class="active"{{/ifCond}}>
         <a data-toggle="collapse" href="#jobBoardOverview"
