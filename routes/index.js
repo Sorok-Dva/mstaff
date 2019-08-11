@@ -62,14 +62,6 @@ router.get('/new/password/:key',
     User.Main.resetPassword);
 
 /**
- * @Route('/register/demo') GET + POST;
- * Show Register Page + Send Register Form (for new establishments)
- */
-router.get('/demo/register',
-  Authentication.ensureIsNotAuthenticated,
-  Render.View.RegisterDemo);
-
-/**
  * @Route('/logout') GET;
  * Logout user
  */
