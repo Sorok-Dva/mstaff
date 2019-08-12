@@ -237,9 +237,8 @@
   </div>
 </div>
 <script src="/assets/js/chartist.min.js"></script>
+<script src="https://codeyellowbv.github.io/chartist-plugin-legend/chartist-plugin-legend.js"></script>
 <script>
-  {{log usersLoginsWeekRegistration}}
-  {{log usersWeekRegistration}}
   let lastWeek = [
     moment().subtract(6, 'days').format('ddd'),
     moment().subtract(5, 'days').format('ddd'),
@@ -257,7 +256,14 @@
 
   let dataUsersLoginWeek = {
     labels: lastWeek,
-    series: [[{{weekStats usersLoginsWeekRegistration}}]]
+    series: [
+      {
+        name: 'Connexions utilisateurs',
+        data: [{{weekStats usersLoginsWeekRegistration}}]
+      }, {
+        name: 'Dernière activité utilisateurs',
+        data: [{{weekStats usersLastActivityWeekRegistration}}]
+      }]
   };
   let dataWishesWeek = {
     labels: lastWeek,
@@ -281,7 +287,7 @@
     low: 0,
     high: 'auto',
     classNames: {
-      line: 'ct-line ct-red'
+      line: 'ct-line ct-azure'
     }
   };
 
@@ -301,9 +307,11 @@
     },
     low: 0,
     high: 'auto',
-    classNames: {
-      line: 'ct-line ct-blue'
-    }
+    plugins: [
+      Chartist.plugins.legend({
+        legendNames: ['Dernières connexions', 'Dernières activités'],
+      })
+    ]
   };
 
   Chartist.Line('#chartUsersWeek', dataCandidateWeek, optionsUsersWeek);
