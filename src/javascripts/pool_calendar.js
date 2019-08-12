@@ -191,8 +191,10 @@ function resetCalendar()
   generateHTMLCalendar(generateDatasCalendar(24));
   switchCalendar();
   choosedVacations(data.availability);
+  $('table').css('table-layout', 'fixed');
 }
 
 generateHTMLCalendar(generateDatasCalendar(24));
 switchCalendar();
 choosedVacations(data.availability);
+$('table').css('table-layout', 'fixed');
