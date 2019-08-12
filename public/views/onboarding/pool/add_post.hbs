@@ -13,7 +13,10 @@
     overflow: hidden scroll;
   }
 </style>
+
+{{#ifCond data.emailExist '===' false}}
 <i id="backToMain" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+{{/ifCond}}
 
 <div class="height-80 d-flex flex-column justify-content-center">
   <h1 class="text-center mb-5">Poste et Services</h1>

@@ -1,4 +1,4 @@
-let arrays = {};
+arrays = {};
 
 function generateServiceListByCategory(category, input){
   if (category !== undefined) {
@@ -79,7 +79,7 @@ function saveDatas(){
 
 function postListener(){
   $('#backToMain').click(function() {
-    loadTemplate('/static/views/ats/main.hbs', {data, databaseInfo}, (html) => {
+    loadTemplate('/static/views/onboarding/pool/register.hbs', {data, databaseInfo}, (html) => {
       $('#poolPart').html(html);
     })
   });
