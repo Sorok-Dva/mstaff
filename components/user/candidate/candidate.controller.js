@@ -211,7 +211,7 @@ User_Candidate.viewProfile = (req, res, next) => {
       as: 'wishes'
     }],
     order: [
-      [ 'experiences', 'start', 'ASC' ],
+      [ 'experiences', 'start', 'DESC' ],
       [ 'formations', 'start', 'ASC' ],
       [ 'qualifications', 'start', 'ASC' ],
     ]
@@ -332,7 +332,7 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
       as: 'formations'
     }],
     order: [
-      [ 'experiences', 'start', 'ASC' ],
+      [ 'experiences', 'start', 'DESC' ],
       [ 'formations', 'start', 'ASC' ],
       [ 'qualifications', 'start', 'ASC' ],
     ]
