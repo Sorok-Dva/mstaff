@@ -52,7 +52,15 @@ User_Candidate.getProfile = (req, res, next) => {
     }, {
       model: Models.CandidateDocument,
       as: 'documents'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'start', 'DESC' ],
+      [ 'formations', 'start', 'DESC' ],
+      [ 'qualifications', 'start', 'DESC' ],
+      [ 'skills', 'stars', 'DESC' ],
+      [ 'equipments', 'stars', 'DESC' ],
+      [ 'softwares', 'stars', 'DESC' ]
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     candidate.views += 1;
