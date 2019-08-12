@@ -20,17 +20,17 @@ BackOffice.viewIndex = (req, res, next) => {
     return Models.Establishment.count();
   }).then(count => {
     render.esCount = count;
-    return Models.Establishment.findAll({
-      attributes: ['id', 'createdAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
+    return Models.User.findAll({
+      attributes: ['id', 'last_login',  [Sequelize.fn('COUNT', 'id'), 'count']],
       where: {
-        createdAt: {
+        last_login: {
           [Op.between]: [ moment().subtract(6, 'days')._d, new Date()]
         }
       },
-      group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))]
+      group: [Sequelize.fn('DAY', Sequelize.col('last_login'))]
     });
   }).then(data => {
-    render.esWeekRegistration = data;
+    render.usersLoginsWeekRegistration = data;
     return Models.User.findAll({
       attributes: ['id', 'createdAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
       where: {
@@ -53,13 +53,13 @@ BackOffice.viewIndex = (req, res, next) => {
     });
   }).then(data => {
     render.wishesWeek = data;
-    render.usersWeekCount = 0; render.ESWeekCount = 0; render.wishesWeekCount = 0;
+    render.usersWeekCount = 0; render.usersLoginWeekCount = 0; render.wishesWeekCount = 0;
     /* eslint-disable no-return-assign */
-    render.esWeekRegistration.map((data) => render.ESWeekCount += parseInt(data.dataValues.count));
+    render.usersLoginsWeekRegistration.map((data) => render.usersLoginWeekCount += parseInt(data.dataValues.count));
     render.usersWeekRegistration.map((data) => render.usersWeekCount += parseInt(data.dataValues.count));
     render.wishesWeek.map((data) => render.wishesWeekCount += parseInt(data.dataValues.count));
     /* eslint-enable no-return-assign */
-    res.render('back-office/index', render);
+    return res.render('back-office/index', render);
   });
 };
 

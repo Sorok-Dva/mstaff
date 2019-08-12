@@ -173,13 +173,14 @@ module.exports.register = async (Handlebars) => {
   });
 
   Handlebars.registerHelper('weekStats', (object) => {
+    if (_.isNil(object)) return [];
     let res = [];
     for (let day = 6; day >= 0; day--) {
       let date = day === 0 ? moment().format('MMM Do YY') : moment().subtract(day, 'days').format('MMM Do YY');
       let isNull = true;
-      object.map((user) => {
-        if (date === moment(user.createdAt).format('MMM Do YY')){
-          res.push(user.dataValues.count);
+      object.map((entity) => {
+        if (date === moment(entity.createdAt || entity.last_login).format('MMM Do YY')){
+          res.push(entity.dataValues.count);
           isNull = false;
         }
       });
