@@ -1,17 +1,18 @@
 <div class="row">
+  {{!-- USERS COUNT CARD --}}
   <div class="col-lg-3 col-sm-6">
     <div class="card">
       <div class="card-content">
         <div class="row">
           <div class="col-xs-5">
-            <div class="icon-big icon-warning text-center">
+            <div class="icon-big text-center" style="color: #459bf3">
               <i class="fal fa-users"></i>
             </div>
           </div>
           <div class="col-xs-7">
             <div class="numbers">
               <p>Utilisateurs</p>
-              {{usersCount}}
+              {{number usersCount}}
             </div>
           </div>
         </div>
@@ -24,19 +25,20 @@
       </div>
     </div>
   </div>
+  {{!-- CANDIDATES COUNT CARD --}}
   <div class="col-lg-3 col-sm-6">
     <div class="card">
       <div class="card-content">
         <div class="row">
           <div class="col-xs-5">
-            <div class="icon-big icon-success text-center">
+            <div class="icon-big text-center" style="color: #a6eac4">
               <i class="fal fa-hospital-user"></i>
             </div>
           </div>
           <div class="col-xs-7">
             <div class="numbers">
               <p>Candidats</p>
-              {{candidatesCount}}
+              {{number candidatesCount}}
             </div>
           </div>
         </div>
@@ -49,19 +51,20 @@
       </div>
     </div>
   </div>
+  {{!-- ES COUNT CARD --}}
   <div class="col-lg-3 col-sm-6">
     <div class="card">
       <div class="card-content">
         <div class="row">
           <div class="col-xs-5">
-            <div class="icon-big icon-info text-center">
-              <i class="fal fa-hospitals"></i>
+            <div class="icon-big text-center" style="color: #ea819a">
+              <i class="fal fa-clinic-medical"></i>
             </div>
           </div>
           <div class="col-xs-7">
             <div class="numbers">
               <p>Établissements</p>
-              {{esCount}}
+              {{number esCount}}
             </div>
           </div>
         </div>
@@ -74,19 +77,48 @@
       </div>
     </div>
   </div>
+  {{!-- APPLICATIONS COUNT CARD --}}
   <div class="col-lg-3 col-sm-6">
     <div class="card">
       <div class="card-content">
         <div class="row">
           <div class="col-xs-5">
-            <div class="icon-big icon-danger text-center">
+            <div class="icon-big text-center" style="color: #56709e">
+              <i class="fal fa-briefcase-medical"></i>
+            </div>
+          </div>
+          <div class="col-xs-7">
+            <div class="numbers">
+              <p>Candidatures</p>
+              {{number applicationsCount}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <hr>
+        <div class="stats">
+          <p>Voir toutes les candidatures</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  {{!-- WISHES COUNT CARD --}}
+  <div class="col-lg-3 col-sm-6">
+    <div class="card">
+      <div class="card-content">
+        <div class="row">
+          <div class="col-xs-5">
+            <div class="icon-big text-center" style="color: #56709e">
               <i class="fal fa-clipboard-user"></i>
             </div>
           </div>
           <div class="col-xs-7">
             <div class="numbers">
               <p>Souhaits</p>
-              {{wishesCount}}
+              {{number wishesCount}}
             </div>
           </div>
         </div>
@@ -95,6 +127,58 @@
         <hr>
         <div class="stats">
           <p>Voir tous les souhaits</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{!-- DB DUMPS COUNT CARD --}}
+  <div class="col-lg-3 col-sm-6">
+    <div class="card">
+      <div class="card-content">
+        <div class="row">
+          <div class="col-xs-5">
+            <div class="icon-big text-center" style="color: darkcyan">
+              <i class="fal fa-database"></i>
+            </div>
+          </div>
+          <div class="col-xs-7">
+            <div class="numbers">
+              <p>Sauvegardes DB</p>
+              {{number db_dumps}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <hr>
+        <div class="stats">
+          <p><a href="/back-office/server/db_dumps">Voir toutes les sauvegardes</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{!-- DOCUMENTS COUNT CARD --}}
+  <div class="col-lg-3 col-sm-6">
+    <div class="card">
+      <div class="card-content">
+        <div class="row">
+          <div class="col-xs-5">
+            <div class="icon-big text-center" style="color: #020201">
+              <i class="fal fa-file"></i>
+            </div>
+          </div>
+          <div class="col-xs-7">
+            <div class="numbers">
+              <p>Documents utilisateurs</p>
+              {{number documents}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <hr>
+        <div class="stats">
+          <p><a href="/back-office/server/uploads_dumps">Voir toutes les sauvegardes</a></p>
         </div>
       </div>
     </div>
