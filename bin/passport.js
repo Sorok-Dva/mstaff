@@ -48,7 +48,9 @@ passport.deserializeUser((id, done) => {
       opts: user.opts,
       photo: user.photo
     };
-    done(null, session)
+    user.updatedAt = new Date();
+    user.save();
+    done(null, session);
   });
 });
 
