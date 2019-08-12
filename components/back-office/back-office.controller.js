@@ -36,6 +36,17 @@ BackOffice.viewIndex = (req, res, next) => {
   }).then(data => {
     render.usersLoginsWeekRegistration = data;
     return Models.User.findAll({
+      attributes: ['id', 'updatedAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
+      where: {
+        updatedAt: {
+          [Op.between]: [ moment().subtract(6, 'days')._d, new Date()]
+        }
+      },
+      group: [Sequelize.fn('DAY', Sequelize.col('updatedAt'))]
+    });
+  }).then(data => {
+    render.usersLastActivityWeekRegistration = data;
+    return Models.User.findAll({
       attributes: ['id', 'createdAt',  [Sequelize.fn('COUNT', 'id'), 'count']],
       where: {
         createdAt: {
@@ -62,8 +73,9 @@ BackOffice.viewIndex = (req, res, next) => {
         render.documents = uploads.length;
         render.db_dumps = db_dumps.length;
         render.wishesWeek = data;
-        render.usersWeekCount = 0; render.usersLoginWeekCount = 0; render.wishesWeekCount = 0;
+        render.usersWeekCount = 0; render.usersLoginWeekCount = 0; render.usersLAWeekCount = 0; render.wishesWeekCount = 0;
         /* eslint-disable no-return-assign */
+        render.usersLastActivityWeekRegistration.map((data) => render.usersLAWeekCount += parseInt(data.dataValues.count));
         render.usersLoginsWeekRegistration.map((data) => render.usersLoginWeekCount += parseInt(data.dataValues.count));
         render.usersWeekRegistration.map((data) => render.usersWeekCount += parseInt(data.dataValues.count));
         render.wishesWeek.map((data) => render.wishesWeekCount += parseInt(data.dataValues.count));
