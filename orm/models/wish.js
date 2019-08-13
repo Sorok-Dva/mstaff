@@ -3,7 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const Wish = sequelize.define('Wish', {
     candidate_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
-    contract_type: DataTypes.STRING,
+    contract_type: {
+      type: DataTypes.ENUM,
+      values: ['internship', 'CDI', 'CDD', 'CP', 'CL', 'AL', 'RCL', 'RL']
+    },
     posts: {
       type: DataTypes.JSON,
       get() {

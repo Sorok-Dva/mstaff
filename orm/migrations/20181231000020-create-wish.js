@@ -23,7 +23,8 @@ module.exports = {
         allowNull: false
       },
       contract_type: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM,
+        values: ['internship', 'CDI', 'CDD', 'CP', 'CL', 'AL', 'RCL', 'RL'],
         allowNull: false
       },
       posts: {
