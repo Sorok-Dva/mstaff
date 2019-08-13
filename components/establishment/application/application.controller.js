@@ -123,190 +123,152 @@ Establishment_Application.CVsPaginationQuery = (req, res, next) => {
   let offset = parseInt(req.params.page - 1) * parseInt(req.params.size);
   let limit = parseInt(req.params.size);
   let query = {
-    where: { es_id: req.user.opts.currentEs },
     offset,
     limit,
-    subQuery: false,
-    attributes: { exclude: ['lat', 'lon'] },
-    group: ['Wish.candidate_id'],
-    order: Sequelize.literal('`Wish->Candidate->User`.`createdAt` DESC'),
+    attributes: { exclude: ['updatedAt', 'createdAt'] },
+    order: Sequelize.literal('`User.createdAt` DESC'),
     include: [{
-      model: Models.Wish,
-      required: true,
+      model: Models.Experience,
+      as: 'experiences',
+      include: [{
+        model: Models.Service,
+        as: 'service',
+        attributes: ['id', 'name']
+      }, {
+        model: Models.Post,
+        as: 'poste',
+        attributes: ['id', 'name']
+      }]
+    }, {
+      model: Models.User,
+      attributes: { exclude: ['password', 'type', 'role', 'email'] },
       on: {
-        '$Application.wish_id$': {
-          [Op.col]: 'Wish.id'
+        '$Candidate.user_id$': {
+          [Op.col]: 'User.id'
         }
       },
-      /* --Horodatage System-- where: {
-        renewed_date: {
-          [Op.gte]: moment().subtract(1, 'months').toDate()
-        }
-      },*/
-      include: {
-        model: Models.Candidate,
-        attributes: { exclude: ['updatedAt', 'createdAt'] },
-        required: true,
-        include: [{
-          model: Models.User,
-          attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt'] },
-          on: {
-            '$Wish->Candidate.user_id$': {
-              [Op.col]: 'Wish->Candidate->User.id'
-            }
-          },
-          required: true
-        }, {
-          model: Models.Experience,
-          as: 'experiences',
-          group: ['service_id'],
-          include: {
-            model: Models.Service,
-            as: 'service',
-            attributes: ['id', 'name']
-          }
-        }]
-      }
+      required: true
     }, {
-      model: Models.Establishment,
-      attributes: ['id'],
+      model: Models.Application,
+      as: 'applications',
+      attributes: { exclude: ['lat', 'lon'] },
+      where: { es_id: req.user.opts.currentEs },
+      required: true,
       on: {
-        '$Application.es_id$': {
-          [Op.col]: 'Establishment.id'
+        '$Candidate.id$': {
+          [Op.col]: 'applications.candidate_id'
         }
       },
       include: [{
-        model: Models.FavoriteCandidate,
-        attributes: ['added_by', 'candidate_id'],
+        model: Models.Establishment,
+        attributes: ['id'],
         on: {
-          '$Establishment.id$': {
-            [Op.col]: 'Establishment->FavoriteCandidates.es_id'
-          },
-          '$Wish->Candidate.id$': {
-            [Op.col]: 'Establishment->FavoriteCandidates.candidate_id'
+          '$applications.es_id$': {
+            [Op.col]: 'applications->Establishment.id'
           }
         },
-        include: {
-          model: Models.User,
-          attributes: ['firstName', 'lastName'],
+        include: [{
+          model: Models.FavoriteCandidate,
+          attributes: ['added_by', 'candidate_id'],
           on: {
-            '$Establishment->FavoriteCandidates.added_by$': {
-              [Op.col]: 'Establishment->FavoriteCandidates->User.id'
+            '$applications->Establishment.id$': {
+              [Op.col]: 'applications->Establishment->FavoriteCandidates.es_id'
+            },
+            '$Candidate.id$': {
+              [Op.col]: 'applications->Establishment->FavoriteCandidates.candidate_id'
+            }
+          },
+          include: {
+            model: Models.User,
+            attributes: ['firstName', 'lastName'],
+            on: {
+              '$applications->Establishment->FavoriteCandidates.added_by$': {
+                [Op.col]: 'applications->Establishment->FavoriteCandidates->User.id'
+              }
             }
           }
-        }
-      }, {
-        model: Models.ArchivedCandidate,
-        attributes: ['added_by', 'candidate_id'],
-        on: {
-          '$Establishment.id$': {
-            [Op.col]: 'Establishment->ArchivedCandidates.es_id'
+        }, {
+          model: Models.ArchivedCandidate,
+          attributes: ['added_by', 'candidate_id'],
+          on: {
+            '$applications->Establishment.id$': {
+              [Op.col]: 'applications->Establishment->ArchivedCandidates.es_id'
+            },
+            '$Candidate.id$': {
+              [Op.col]: 'applications->Establishment->ArchivedCandidates.candidate_id'
+            },
+            '$applications->Establishment->ArchivedCandidates.added_by$': req.user.id
           },
-          '$Wish->Candidate.id$': {
-            [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
-          },
-          '$Establishment->ArchivedCandidates.added_by$': req.user.id
-        },
+        }]
       }]
     }]
   };
-  Models.Application.findAll(query).then(candidates => {
+
+  Models.Candidate.findAll(query).then(candidates => {
     return res.status(httpStatus.OK).send(candidates);
   }).catch(error => next(new BackError(error)));
 };
 
 Establishment_Application.CVsMyCandidatesQuery = (req, res, next) => {
+  let model;
   let query = {
-    where: { es_id: req.user.opts.currentEs },
-    attributes: { exclude: ['lat', 'lon'] },
-    group: ['Wish.candidate_id'],
-    include: [
-      {
-        model: Models.Wish,
-        required: true,
+    where: { added_by: req.user.id, es_id: req.user.opts.currentEs },
+    include: {
+      model: Models.Candidate,
+      include: [{
+        model: Models.Experience,
+        as: 'experiences',
+        include: [{
+          model: Models.Service,
+          as: 'service',
+          attributes: ['id', 'name']
+        }, {
+          model: Models.Post,
+          as: 'poste',
+          attributes: ['id', 'name']
+        }]
+      }, {
+        model: Models.User,
+        attributes: { exclude: ['password', 'type', 'role', 'email'] },
         on: {
-          '$Application.wish_id$': {
-            [Op.col]: 'Wish.id'
+          '$Candidate.user_id$': {
+            [Op.col]: 'Candidate->User.id'
           }
         },
-        /*where: {
-          renewed_date: {
-            [Op.gte]: moment().subtract(1, 'months').toDate()
+        required: true
+      }, {
+        model: Models.Application,
+        as: 'applications',
+        attributes: { exclude: ['lat', 'lon'] },
+        where: { es_id: req.user.opts.currentEs },
+        required: true,
+        on: {
+          '$Candidate.id$': {
+            [Op.col]: 'Candidate->applications.candidate_id'
           }
-        },*/
+        },
         include: {
-          model: Models.Candidate,
-          attributes: { exclude: ['updatedAt', 'createdAt'] },
-          required: true,
-          include: [{
-            model: Models.User,
-            attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt'] },
-            on: {
-              '$Wish->Candidate.user_id$': {
-                [Op.col]: 'Wish->Candidate->User.id'
-              }
-            },
-            required: true
-          }, {
-            model: Models.Experience,
-            as: 'experiences',
-            group: ['service_id'],
-            include: {
-              model: Models.Service,
-              as: 'service',
-              attributes: ['id', 'name']
+          model: Models.Establishment,
+          attributes: ['id'],
+          on: {
+            '$Candidate->applications.es_id$': {
+              [Op.col]: 'Candidate->applications->Establishment.id'
             }
-          }]
-        }
-      },
-      {
-        model: Models.Establishment,
-        required: true,
-        attributes: ['id'],
-        on: {
-          '$Application.es_id$': {
-            [Op.col]: 'Establishment.id'
           }
-        },
+        }
       }]
+    }
   };
 
   if (req.params.type === 'favorites') {
-    query.include[1].include = {
-      required: true,
-      model: Models.FavoriteCandidate,
-      attributes: ['added_by', 'candidate_id'],
-      where: { added_by: req.user.id },
-      on: {
-        '$Establishment.id$': {
-          [Op.col]: 'Establishment->FavoriteCandidates.es_id'
-        },
-        '$Wish->Candidate.id$': {
-          [Op.col]: 'Establishment->FavoriteCandidates.candidate_id'
-        }
-      },
-    }
+    model = Models.FavoriteCandidate;
   } else if (req.params.type === 'archived') {
-    query.include[1].include = {
-      required: true,
-      model: Models.ArchivedCandidate,
-      attributes: ['added_by', 'candidate_id'],
-      where: { added_by: req.user.id },
-      on: {
-        '$Establishment.id$': {
-          [Op.col]: 'Establishment->ArchivedCandidates.es_id'
-        },
-        '$Wish->Candidate.id$': {
-          [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
-        },
-        '$Establishment->ArchivedCandidates.added_by$': req.user.id
-      },
-    }
+    model = Models.ArchivedCandidate;
   } else {
     return next(new BackError('Wrong url parameter', 403));
   }
-  Models.Application.findAll(query).then(candidates => {
-    return res.status(httpStatus.OK).send(candidates);
+  model.findAll(query).then(candidates => {
+    return res.status(httpStatus.OK).send({ candidates, type: req.params.type });
   }).catch(error => next(new BackError(error)));
 };
 
