@@ -85,11 +85,13 @@
     if (data) {
       data.forEach(function(element)
       {
-        let actions = `<button type="button" title="Modifier utilisateur"
-          class="btn btn-simple btn-warning btn-icon table-action"
-           onclick="modifyUser('${element.User.id}' , '${element.User.email}', '${element.role}')">
-           <i class="ti-pencil-alt"></i> </button><button title="Supprimer utilisateur" type="button"
-           class="btn btn-simple btn-danger btn-icon table-action" onclick="deleteUser(${element.User.id})"><i class="ti-close"></i></button>`;
+        let actions = `<button type="button" title="Etablissements" class="btn btn-simple btn-primary btn-icon table-action"
+                      onClick="viewAllowedEs(${element.User.id})"> <i class="fas fa-sliders-h"></i></button>
+                      <button type="button" title="Modifier utilisateur" class="btn btn-simple btn-warning btn-icon table-action"
+                      onclick="modifyUser('${element.User.id}' , '${element.User.email}', '${element.role}')"><i class="ti-pencil-alt"></i> </button>
+                      <button title="Supprimer utilisateur" type="button" class="btn btn-simple btn-danger btn-icon table-action"
+                      onclick="deleteUser(${element.User.id})"><i class="ti-close"></i></button>`;
+
         let markup = `<tr><td><a>${element.User.id}</a></td><td>${element.User.email}</td><td>${element.User.firstName}</td>
           <td>${element.User.lastName}</td><td data-id=${element.User.id}>${element.role}</td><td class='text-right'>${actions}</td></tr>`;
 
