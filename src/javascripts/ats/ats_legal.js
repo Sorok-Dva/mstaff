@@ -45,6 +45,10 @@ function finalize(){
         _csrf
       }, (data) => {
         if (data.result === 'created'){
+          candidateDatas = null;
+          databaseDatas = null;
+          arrays = null;
+          permissions = null;
           createModal({ id: 'showEndingAtsInfos', modal: 'ats/showEndingAtsInfos', title: 'Confirmation', cantBeClose: true }, () => {
             $('#btnGoToLog').attr('onclick', `$(location).attr('href', \`https://mstaff.co/login\`)`);
           });
