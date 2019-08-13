@@ -1,10 +1,4 @@
 const __ = process.cwd();
-const _ = require('lodash');
-const { validationResult } = require('express-validator/check');
-const { Sequelize, Op } = require('sequelize');
-const { BackError } = require(`${__}/helpers/back.error`);
-const httpStatus = require('http-status');
-
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
 
@@ -36,15 +30,9 @@ BackOffice_Pool.linkDependencies = (req, res, next) => {
   Models.Pool.findAll().then( pools =>
   {
     dependencies.push(pools);
-    Models.User.findAll({ limit: 250, where: { type: 'candidate' }, attributes: {
-      exclude: ['password', 'photo', 'birthday', 'postal_code', 'town', 'country', 'key',
-        'validated', 'opts', 'createdAt', 'updatedAt']
-    } }).then( users => {
+    Models.User.findAll({ limit: 250, where: { type: 'candidate' } }).then( users => {
       dependencies.push(users);
-      Models.Establishment.findAll({ attributes: { exclude: ['oldId', 'category', 'finess', 'finess_ej', 'siret', 'phone', 'sector',
-        'address', 'town', 'status', 'url', 'description', 'logo', 'banner', 'domain_name', 'domain_enable',
-        'salaries_count', 'contact_identity', 'contact_post', 'contact_email', 'contact_phone',
-        'createdAt', 'updatedAt'] } }).then(es => {
+      Models.Establishment.findAll().then(es => {
         dependencies.push(es);
         res.status(200).send(dependencies);
       });

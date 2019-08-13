@@ -1,4 +1,4 @@
-(function($){
+(function($) {
 	$.fn.multiple_emails = function(options) {
 		let defaults = {
 			checkDupEmail: true,

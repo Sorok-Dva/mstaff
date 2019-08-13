@@ -1421,12 +1421,11 @@ User_Candidate.viewConferences = (req, res, next) => {
 };
 
 User_Candidate.viewPools = (req, res, next) => {
-  let a = { main: 'pools' };
   Models.UserPool.count({ where: { user_id: req.user.id } }).then(poolsCount => {
     if (poolsCount > 0) {
       return User_Candidate.viewMyPools(req, res, next);
     } else {
-      return res.render('candidates/pools', { a });
+      return res.render('candidates/pools', { main: 'pools' });
     }
   }).catch(error => next(new BackError(error)));
 };
