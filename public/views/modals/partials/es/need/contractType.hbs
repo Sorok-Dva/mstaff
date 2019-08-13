@@ -12,19 +12,19 @@
           <hr>
           <select class="form-control" name="contractTypeFinalLong">
             <option value="">Séléctionner un type de contrat</option>
-            <option value="cdi">CDI</option>
-            <option value="2">Apprentissage / Contrat Pro</option>
-            <option value="3">Collaboration Libérale</option>
-            <option value="4">Installation / Association Libérale</option>
-            <option value="5">Reprise Cabinet Libéral</option>
+            <option value="CDI">CDI</option>
+            <option value="CP">Apprentissage / Contrat Pro</option>
+            <option value="CL">Collaboration Libérale</option>
+            <option value="AL">Installation / Association Libérale</option>
+            <option value="RCL">Reprise Cabinet Libéral</option>
           </select>
         </div>
         <div id="contractTypeFinalShort" style="display: none">
           <hr>
           <select class="form-control" name="contractTypeFinalShort">
             <option value="">Séléctionner un type de contrat</option>
-            <option value="cdd">Missions / Vacations / CDD</option>
-            <option value="6">Remplacement Libéral</option>
+            <option value="CDD">Missions / Vacations / CDD</option>
+            <option value="RL">Remplacement Libéral</option>
           </select>
         </div>
       </div>
@@ -67,8 +67,33 @@
     }
   });
 
+  $('select[name="contractTypeFinalLong"]').on('change', function () {
+    if (this.value === '') {
+      $('select[name="contractTypeFinalLong"]').addClass('error');
+      return false;
+    }
+    $('select[name="contractTypeFinalLong"]').removeClass('error').addClass('success');
+    need.filterQuery.contractType = this.value;
+    $('.modal#contractType').modal('hide');
+    $('#btnContractType').html($(`option[value="${this.value}"]`).text());
+    $('#btnContractType').parent().removeClass('btn-outline-info').addClass('btn-info');
+    return searchCandidates();
+  });
+
+  $('select[name="contractTypeFinalShort"]').on('change', function () {
+    if (this.value === '') {
+      $('select[name="contractTypeFinalShort"]').addClass('error');
+      return false;
+    }
+    $('select[name="contractTypeFinalShort"]').removeClass('error').addClass('success');
+    need.filterQuery.contractType = this.value;
+    $('.modal#contractType').modal('hide');
+    $('#btnContractType').html($(`option[value="${this.value}"]`).text());
+    $('#btnContractType').parent().removeClass('btn-outline-info').addClass('btn-info');
+    return searchCandidates();
+  });
+
   $('#ignoreContract').click(function() {
-    // need.firstSearch = false;
     if (!_.isNil(need.filterQuery.contractType)) {
       delete need.filterQuery.contractType;
       $('#btnContractType').empty();
