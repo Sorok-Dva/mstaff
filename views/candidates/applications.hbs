@@ -22,7 +22,7 @@
                 {{#each wishes as |wish|}}
                   <tr data-applicationId="{{wish.id}}">
                     <td>{{wish.name}}</td>
-                    <td>{{wish.contract_type}}</td>
+                    <td>{{contractType wish.contract_type}}</td>
                     <td>
                       <span class="showEsList" style="cursor: pointer" data-applicationId="{{wish.id}}">
                         {{wish.es_count}}

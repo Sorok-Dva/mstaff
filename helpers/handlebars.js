@@ -288,4 +288,22 @@ module.exports.register = async (Handlebars) => {
       return `<h4 data-h4-wishId="${wish.id}"><i class="fal fa-clock" data-wish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours</h4>`;
     }
   });
+
+  /**
+   * Returns french text of contract type
+   *
+   * ```handlebars
+   * {{contractType wish.contract_type}}
+   * <!-- results in: 'Stage' for example -->
+   * ```
+   * @param {string} `type` Contract Type
+   * @return {String} Transformed text
+   */
+  Handlebars.registerHelper('contractType', (type) => {
+    switch (type) {
+      case 'internship': return 'Stage';
+      case 'vacation': return 'Vacation';
+      case 'cdi-cdd': return 'CDI/CDD';
+    }
+  });
 };
