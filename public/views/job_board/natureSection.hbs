@@ -1,0 +1,54 @@
+<div class=" text-left shadow-grey col-12 p-3 mb-4 natureSection">
+  <h1 class="text-center">Nature de l'offre</h1>
+  <form id="natureForm">
+    <div class="form-group">
+      <label for="natureDate">Date de création de l'offre</label>
+      <input type="date" class="form-control input-blue" id="natureDate">
+    </div>
+
+    <div class="form-group">
+      <label for="natureTitle">Titre de l'offre</label>
+      <input type="text" class="form-control input-blue" id="natureTitle">
+    </div>
+
+    <div class="form-group">
+      <label for="natureJobSheet">Métier</label>
+      <textarea type="text" class="form-control input-blue" id="natureJobSheet"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="contract_type">Type de contrat</label>
+      <select name="contract_type" id="contract_type">
+        <option value=""></option>
+        <option value="cdi-cdd">CDI</option>
+        <option value="vacation">VACATION</option>
+        <option value="internship">STAGE</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="start">Poste à pourvoir à partir du ...</label>
+      <input type="date" class="form-control input-blue" id="start">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="natureContractDuration" placeholder="Durée du contrat">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="natureGrade" placeholder="Grade">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="natureCategory" placeholder="Catégorie">
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="saveNature()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelNature()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearNature()">Effacer</button>
+  </div>
+</div>
+
+<script src="/assets/dist/js/job_board/job_board_nature.min.js"></script>

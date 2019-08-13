@@ -1,7 +1,7 @@
 const __ = process.cwd();
 const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
-const { validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 let User = require(`${__}/components/user`);
 const Models = require(`${__}/orm/models/index`);
@@ -192,10 +192,8 @@ let _getInclude = (type) => {
     case 'es':
       include = {
         model: Models.ESAccount,
-        required: true,
         include: {
           model: Models.Establishment,
-          required: true
         }
       };
       break;

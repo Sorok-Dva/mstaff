@@ -1,4 +1,4 @@
-const { Authentication } = require('../middlewares/index');
+const { Authentication } = require('../middlewares');
 const { BackOffice } = require('../components');
 const express = require('express');
 const router = express.Router();

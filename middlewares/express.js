@@ -14,12 +14,12 @@ const compress = require('compression');
 const cors = require('cors');
 const csurf = require('csurf');
 const cookieParser = require('cookie-parser');
-const handlebars = require('../helpers/handlebars').register(require('handlebars'));
 const flash = require('connect-flash');
 const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
+require('../helpers/handlebars').register(require('handlebars'));
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -108,11 +108,6 @@ module.exports = {
     store: sessionStore,
     resave: true
   }),
-  unauthorizedStatics: (req, res, next) => {
-    let unauthorized = req.url.includes('candidates/documents');
-    if (unauthorized) return res.redirect('/');
-    next()
-  },
   verifyMaintenance: (req, res, next) => {
     if (req.url.search('static') !== -1 || req.url.search('back-office') !== -1) return next();
     Server.Main.verifyMaintenance(status => {
@@ -123,8 +118,8 @@ module.exports = {
     });
   },
   wildcardSubdomains: (req, res, next) => {
-    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || req.subdomains[0] === 'dev' || req.subdomains[0] === 'pre-prod')
-      return next();
+    let excludedSubdomains = ['dev', 'pre-prod', 'monitoring', 'welcome', 'admin'];
+    if (req.url.search('static') !== -1 || req.subdomains.length === 0 || excludedSubdomains.includes(req.subdomains[0])) return next();
     Subdomain.Main.find(req, res, (subdomain) => {
       if (subdomain.es_id) {
         Establishment.Main.find(subdomain.es_id, (data) => {

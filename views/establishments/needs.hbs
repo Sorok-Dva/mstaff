@@ -78,10 +78,18 @@
                         <button class="btn btn-simple btn-outline-danger btn-icon removeApplication" data-id="{{need.id}}">
                           <i class="ti-close"></i>
                         </button>
-                        <button class="btn btn-simple btn-outline-info btn-icon createOffer" data-id="{{need.id}}"
-                                data-toggle="tooltip" data-placement="top" data-original-title="Créer une offre à partir de ce besoin">
-                          <i class="ti-plus"></i>
-                        </button>
+                        {{#unless need.Offer}}
+                          <button class="btn btn-simple btn-outline-info btn-icon createOffer" data-id="{{need.id}}"
+                                  data-toggle="tooltip" data-placement="top" data-original-title="Créer une offre à partir de ce besoin">
+                            <i class="ti-plus"></i>
+                          </button>
+                        {{else}}
+                          <button class="btn btn-simple btn-outline-info btn-icon"
+                                  data-toggle="tooltip" data-placement="top" data-original-title="Voir l'offre liée à ce besoin"
+                                  onclick="$(location).attr('href', '/job_board/offer/{{need.Offer.id}}');">
+                            <i class="fal fa-browser"></i>
+                          </button>
+                        {{/unless}}
                       {{/ifCond}}
                     </td>
                   </tr>
@@ -133,6 +141,12 @@
     $.post(`/api/es/{{user.opts.currentEs}}/create/offer/fromNeed/${id}`, { _csrf }, (data) => {
       if (data.status === 'created') {
         $(location).attr('href', `/job_board/offer/${data.offer.id}`);
+      } else if (data.status === 'exists') {
+        notification({
+          icon: 'exclamation-circle',
+          type: 'warning',
+          title: 'Une offre a déjà été créée à partir de ce besoin.'
+        })
       } else {
         notification({
           icon: 'exclamation-circle',

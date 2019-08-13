@@ -1,11 +1,11 @@
 <style>
   .iti-flag {
-    background-image: url("/static/assets/images/telinput/flags.png") !important;
+    background-image: url("/assets/images/telinput/flags.png") !important;
   }
 
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .iti-flag {
-      background-image: url("/static/assets/images/telinput/flags@2x.png") !important;
+      background-image: url("/assets/images/telinput/flags@2x.png") !important;
     }
   }
   .intl-tel-input .country-list{
@@ -72,7 +72,10 @@
         <input id="identityPhone" type="tel" class="form-control" value="{{candidateDatas.identity.phone}}">
       </div>
       <div class="col-6">
-        <label for="identityMail">Adresse e-mail*</label>
+        <label for="identityMail">
+          Adresse e-mail*
+          <i class="fal fa-question-circle"  data-toggle="tooltip" data-html="true" data-placement="right" title="{{> tooltips/emailHint }}"></i>
+        </label>
         <input id="identityMail" type="text" class="form-control" value="{{candidateDatas.identity.email}}">
       </div>
     </div>
@@ -101,4 +104,4 @@
   <div class="custom-cursor" id="toRecap"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
-<script src="/static/assets/dist/js/ats_identity.min.js"></script>
+<script src="/assets/dist/js/ats/ats_identity.min.js"></script>

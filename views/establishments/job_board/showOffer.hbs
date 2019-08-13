@@ -1,0 +1,114 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/ui/trumbowyg.min.css" />
+<style>
+  .shadow-grey{
+    box-shadow: 0px 3px 5px grey;
+  }
+  .inline-block{
+    display: inline-block;
+  }
+  .add-section-item{
+    display: none;
+    color: #A5A5A5;
+  }
+  .add-section-title{
+    color: #5AA3E8;
+  }
+  .section-item{
+    word-wrap: break-word;
+  }
+  .custom-cursor{
+    cursor: pointer;
+  }
+  .margin-0{
+    margin: 0;
+  }
+  .add-section-item:hover{
+    color:black;
+  }
+  .input-blue{
+    background-color: #D6EAFA;
+  }
+  .menu{
+    height: 5vh;
+    border-bottom: 1px solid #e3ebf6;
+  }
+  .sub-menu{
+    color: #03A9DE;
+  }
+  .sub-menu:hover{
+    border-bottom: 1px solid #03A9DE;
+  }
+  .no-margin{
+    margin: 0px;
+  }
+  .select2-container--default.select2-container--focus .select2-selection--multiple, .select2-container--default .select2-search--dropdown .select2-search__field, .select2-container--default .select2-selection--multiple, .select2-container .select2-selection--single{
+    background-color: #D6EAFA;
+  }
+</style>
+
+<div class="row text-center justify-content-between no-margin">
+  <div id="menuPart" class="row col-12 mb-5 justify-content-center menu no-margin">
+    <h3 id="offerMain" class="inline-block custom-cursor col-3 sub-menu ">Publicateur d'offres</h3>
+    <h3 id="saveOffer" class="inline-block custom-cursor col-3 sub-menu">Enregistrer le brouillon</h3>
+    <h3 id="previewOffer" class="inline-block custom-cursor col-3 sub-menu">Aperçu</h3>
+    <h3 id="publishOffer" class="inline-block custom-cursor col-3 sub-menu">Publier</h3>
+  </div>
+  <div id="sectionsPart" class="col-4">
+    <div id="addSection" class="mb-5">
+      <ul class="list-group shadow-grey custom-cursor">
+        <li class="list-group-item add-section-title">
+          <div class="d-flex justify-content-between">
+            <span>Ajouter la section</span><span><i class="fal fa-chevron-down chevron"></i></span>
+          </div>
+        </li>
+        <li id="addDetails" class="list-group-item add-section-item"><div class="text-left"><i class="fal fa-plus"> Ajouter détails de l'offre</i></div></li>
+        <li id="addPostDescription" class="list-group-item add-section-item"><div class="text-left"><i class="fal fa-plus"> Ajouter description du poste</i></div></li>
+        <li id="addRequirement" class="list-group-item add-section-item"><div class="text-left"><i class="fal fa-plus"> Ajouter prérequis</i></div></li>
+        <li id="addTerms" class="list-group-item add-section-item"><div class="text-left"><i class="fal fa-plus"> Ajouter modalités de candidature</i></div></li>
+      </ul>
+    </div>
+
+    <div id="natureSection" class="mb-5">
+      <ul class="list-group shadow-grey">
+        <li class="list-group-item section-title">
+          <div class="d-flex justify-content-between">
+            <span>Nature de l'offre</span><span><i class="fal fa-edit custom-cursor" onclick="editSection('natureSection')"></i></span>
+          </div>
+        </li>
+        <li class="list-group-item section-item">
+          <div class="text-left">
+            <p class="margin-0 nature-p-1"></p>
+            <p class="margin-0 nature-p-2"></p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div id="contextSection" class="mb-5">
+      <ul class="list-group shadow-grey">
+        <li class="list-group-item section-title">
+          <div class="d-flex justify-content-between">
+            <span>Contexte de travail</span><span><i class="fal fa-edit custom-cursor" onclick="editSection('contextSection')"></i></span>
+          </div>
+        </li>
+        <li class="list-group-item section-item">
+          <div class="text-left">
+            <p class="margin-0">Localisation du poste</p>
+            <p class="margin-0 context-p-2"></p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div id="formsPart" class="col-7"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/trumbowyg.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/langs/fr.min.js"></script>
+<script>
+  let offer = `{{{json offer}}}`;
+  offer = JSON.parse(offer);
+  console.log(offer);
+</script>
+
+<script src="/assets/dist/js/job_board/job_board.min.js"></script>

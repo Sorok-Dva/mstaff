@@ -1,5 +1,5 @@
 const __ = process.cwd();
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const { mkdirIfNotExists } = require(`${__}/helpers/helpers`);
 const { Op } = require('sequelize');
@@ -9,11 +9,6 @@ const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
 const Sequelize = require(`${__}/bin/sequelize`);
 const Mailer = require(`${__}/components/mailer`);
-
-/*const AvatarStorage = require('../../../helpers/avatar.storage');*/
-const path = require('path');
-const multer = require('multer');
-
 
 const User_Candidate = {};
 
@@ -104,7 +99,13 @@ User_Candidate.uploadDocument = (req, res, next) => {
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
     if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
     candidate = result;
-    return Models.CandidateDocument.findOne({ where: { name: file.originalname, type: file.fieldname } });
+    return Models.CandidateDocument.findOne({
+      where: {
+        candidate_id: candidate.id,
+        name: file.originalname,
+        type: file.fieldname
+      }
+    });
   }).then(document => {
     if (_.isNil(document)) {
       Models.CandidateDocument.create({
@@ -118,6 +119,7 @@ User_Candidate.uploadDocument = (req, res, next) => {
         return res.status(200).send(document);
       });
     } else {
+      // the document were upload previously so if there is an error we delete the new document of our server as it's not saved in DB
       if (fs.existsSync(`./public/uploads/documents/${document.filename}`)) {
         fs.unlinkSync(`./public/uploads/documents/${document.filename}`)
       }
