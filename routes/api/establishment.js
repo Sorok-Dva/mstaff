@@ -23,6 +23,11 @@ router.post('/:esId(\\d+)/get/candidate/:userId(\\d+)',
   User.Candidate.getProfile
 );
 
+router.post('/:esId(\\d+)/get/candidate/:userId(\\d+)/applications',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  User.Candidate.getApplicationsInEs
+);
+
 router.post('/:esId(\\d+)/addNeed',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Establishment.Need.Create);
