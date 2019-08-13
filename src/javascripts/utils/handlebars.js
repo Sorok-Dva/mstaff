@@ -264,3 +264,86 @@ Handlebars.registerHelper('otherServicesPopover', experiences => {
     return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
   } else return '';
 });
+
+Handlebars.registerHelper('firstPost_Search', applications => {
+  if (_.isNil(applications) || applications.length === 0) return 'Aucun poste';
+  let posts = [];
+  if (applications.Wish) applications.Wish.posts.map(post => posts.includes(post) ? null : posts.push(post));
+  else {
+    applications.map(application => {
+      application.Wish.posts.map(post => posts.includes(post) ? null : posts.push(post))
+    });
+  }
+  let other = '';
+  if (posts.length > 1) other = `... (${posts.length - 1} de plus)`;
+  return `${posts[0]}${other}`
+});
+
+Handlebars.registerHelper('otherPostsPopover_Search', applications => {
+  if (_.isNil(applications) || applications.length === 0) return '';
+  let posts = [];
+  if (applications.Wish) applications.Wish.posts.map(post => posts.includes(post) ? null : posts.push(post));
+  else {
+    applications.map(application => {
+      application.Wish.posts.map(post => posts.includes(post) ? null : posts.push(post))
+    });
+  }
+  if (posts.length < 2) return '';
+  posts.shift();
+  let string = posts.toString();
+  return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
+});
+
+Handlebars.registerHelper('firstService_Search', applications => {
+  if (_.isNil(applications) || applications.length === 0) return 'Aucun service';
+  let services = [];
+  if (applications.Wish) {
+    if (applications.Wish.services.length === 0) return 'Aucun service';
+    applications.Wish.services.map(service => services.includes(service) ? null : services.push(service));
+  }
+  else {
+    applications.map(application => {
+      application.Wish.services.map(service => services.includes(service) ? null : services.push(service))
+    });
+  }
+  let other = '';
+  if (services.length > 1) other = `... (et ${services.length - 1} de plus)`;
+  return `${services[0]}${other}`
+});
+
+Handlebars.registerHelper('otherServicesPopover_Search', applications => {
+  if (_.isNil(applications) || applications.length === 0) return '';
+  let services = [];
+  if (applications.Wish) {
+    if (applications.Wish.services.length === 0) return '';
+    applications.Wish.services.map(service => services.includes(service) ? null : services.push(service));
+  }
+  else {
+    applications.map(application => {
+      application.Wish.services.map(service => services.includes(service) ? null : services.push(service))
+    });
+  }
+  if (services.length > 1) {
+    services.shift();
+    let string = services.toString();
+    return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
+  } else return '';
+});
+
+/**
+ * Returns french text of contract type
+ *
+ * ```handlebars
+ * {{contractType wish.contract_type}}
+ * <!-- results in: 'Stage' for example -->
+ * ```
+ * @param {string} `type` Contract Type
+ * @return {String} Transformed text
+ */
+Handlebars.registerHelper('contractType', (type) => {
+  switch (type) {
+    case 'internship': return 'Stage';
+    case 'vacation': return 'Vacation';
+    case 'cdi-cdd': return 'CDI/CDD';
+  }
+});
