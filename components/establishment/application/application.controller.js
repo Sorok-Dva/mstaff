@@ -29,78 +29,17 @@ Establishment_Application.getEstablishments = (req, res, next) => {
 Establishment_Application.getCVs = (req, res, next) => {
   let query = {
     where: { es_id: req.user.opts.currentEs },
-    attributes: { exclude: ['lat', 'lon'] },
+    attributes: ['id'],
     group: ['Wish.candidate_id'],
-    include: [{
+    include: {
       model: Models.Wish,
       required: true,
       on: {
         '$Application.wish_id$': {
           [Op.col]: 'Wish.id'
         }
-      },
-      /* --Horodatage system-- where: {
-        renewed_date: {
-          [Op.gte]: moment().subtract(1, 'months').toDate()
-        }
-      },*/
-      include: {
-        model: Models.Candidate,
-        attributes: { exclude: ['updatedAt', 'createdAt'] },
-        required: true,
-        include: [{
-          model: Models.User,
-          attributes: { exclude: ['password', 'type', 'role', 'email', 'updatedAt', 'createdAt'] },
-          on: {
-            '$Wish->Candidate.user_id$': {
-              [Op.col]: 'Wish->Candidate->User.id'
-            }
-          },
-          required: true
-        }]
       }
-    }, {
-      model: Models.Establishment,
-      attributes: ['id'],
-      on: {
-        '$Application.es_id$': {
-          [Op.col]: 'Establishment.id'
-        }
-      },
-      include: [{
-        model: Models.FavoriteCandidate,
-        attributes: ['added_by', 'candidate_id'],
-        on: {
-          '$Establishment.id$': {
-            [Op.col]: 'Establishment->FavoriteCandidates.es_id'
-          },
-          '$Wish->Candidate.id$': {
-            [Op.col]: 'Establishment->FavoriteCandidates.candidate_id'
-          }
-        },
-        include: {
-          model: Models.User,
-          attributes: ['firstName', 'lastName'],
-          on: {
-            '$Establishment->FavoriteCandidates.added_by$': {
-              [Op.col]: 'Establishment->FavoriteCandidates->User.id'
-            }
-          }
-        }
-      }, {
-        model: Models.ArchivedCandidate,
-        attributes: ['added_by', 'candidate_id'],
-        on: {
-          '$Establishment.id$': {
-            [Op.col]: 'Establishment->ArchivedCandidates.es_id'
-          },
-          '$Wish->Candidate.id$': {
-            [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
-          },
-          '$Establishment->ArchivedCandidates.added_by$': req.user.id
-        },
-      }]
-    }]
+    }
   };
   let render = { a: { main: 'candidates' } };
   Models.Post.findAll().then(posts => {
