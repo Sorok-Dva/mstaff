@@ -171,8 +171,7 @@
   </div>
 </div>
 <select class="form-control" id="selectServiceType" data-toggle="" data-live-search="true"
-        title="Séléctionner un type de service" style="display: none">
-  <option>Séléctionner un type de service</option>
+        title="Séléctionner un type de service" multiple="multiple" style="display: none">
   {{#each services as |service|}}
     <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
   {{/each}}
