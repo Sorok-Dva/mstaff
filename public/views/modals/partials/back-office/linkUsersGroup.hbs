@@ -100,6 +100,13 @@
     }
   });
 
+  function viewAllowedEs(user_id)
+  {
+    $('h6#textDisplayer').text('Modifier les établissements qui seront visibles par cet utilisateur');
+    $('div#displayAllUsers').hide();
+    $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
+  }
+
   function deleteUser(user_id)
   {
     let group_id = $('input[name="group_id"]').val();
