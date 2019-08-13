@@ -179,7 +179,7 @@ module.exports.register = async (Handlebars) => {
       let date = day === 0 ? moment().format('MMM Do YY') : moment().subtract(day, 'days').format('MMM Do YY');
       let isNull = true;
       object.map((entity) => {
-        if (date === moment(entity.createdAt || entity.last_login).format('MMM Do YY')){
+        if (date === moment(entity.createdAt || entity.last_login || entity.updatedAt).format('MMM Do YY')){
           res.push(entity.dataValues.count);
           isNull = false;
         }
