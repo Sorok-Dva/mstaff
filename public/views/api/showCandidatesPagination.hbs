@@ -1,5 +1,4 @@
 <div class="row">
-  {{log this}}
   {{#each this as |data|}}
     <div class="col-12 col-md-6 col-lg-3" data-card-user="{{data.id}}"
       {{#if data.applications.0.Establishment.ArchivedCandidates.0.candidate_id}}
@@ -46,8 +45,7 @@
               <span class="label label-default rank-label">{{{candidateProfilePercentage this.percentage}}}</span>
             </div>
             <h4 class="title">{{data.User.firstName}} {{data.User.lastName}},
-              <small>{{age data.User.birthday 'years'}} ans</small>
-              ,
+              <small>{{age data.User.birthday 'years'}} ans</small>,
               <small><b><i class="fal fa-map-marker-alt"></i> {{data.User.town}}</b></small>
             </h4>
           </div>
@@ -59,7 +57,7 @@
                 {{#if data.is_available}}Disponible{{else}} Indisponible{{/if}}
               </span>
             </h4>
-            {{#if data.experiences}}
+            {{#if this.applications}}
               <hr style="width: 45%; margin: auto">
               <h4 class="text-muted mt-2">
                 Expérience dans les postes
@@ -71,9 +69,9 @@
               <h4 class="text-muted mt-2">
                 Expérience dans les services
               </h4>
-              <h5 {{{otherServicesPopover this.experiences}}}>
+              <h4 {{{otherServicesPopover this.experiences}}}>
                 <div class="badge badge-soft-secondary">{{firstService this.experiences}}</div>
-              </h5>
+              </h4>
               <hr style="width: 45%; margin: auto;">
             {{else}}
               <hr style="width: 45%; margin: auto">
@@ -85,13 +83,11 @@
           </div>
           <div class="col-md-12 text-center profile-cta">
             <div class="col-md-12">
-              <button class="btn btn-outline-info" onclick="showCandidateProfile({{data.User.id}})"
-                      data-toggle="tooltip"  data-placement="top" title="Accéder au profil complet">
-                <i class="fal fa-id-card"></i>
+              <button class="btn btn-outline-info" onclick="showCandidateProfile({{data.User.id}})">
+                Profil
               </button>
-              <button class="btn btn-outline-success" onclick="showCandidateApplications({{data.id}})"
-                      data-toggle="tooltip"  data-placement="top" title="Afficher les candidatures ({{data.applications.length}})">
-                <i class="fal fa-file-signature"></i>
+              <button class="btn btn-outline-success" onclick="showCandidateApplications({{data.User.id}})">
+                Candidatures ({{this.applications.length}})
               </button>
             </div>
             <div class="col-md-12">

@@ -64,9 +64,9 @@
               <h4 class="text-muted mt-2">
                 Expérience dans les services
               </h4>
-              <h5 {{{otherServicesPopover this.Candidate.experiences}}}>
+              <h4 {{{otherServicesPopover this.Candidate.experiences}}}>
                 <div class="badge badge-soft-secondary">{{firstService this.Candidate.experiences}}</div>
-              </h5>
+              </h4>
               <hr style="width: 45%; margin: auto;">
             {{else}}
               <hr style="width: 45%; margin: auto">
@@ -78,13 +78,11 @@
           </div>
           <div class="col-md-12 text-center profile-cta">
             <div class="col-md-12">
-              <button class="btn btn-outline-info" onclick="showCandidateProfile({{data.Candidate.User.id}})"
-                      data-toggle="tooltip"  data-placement="top" title="Accéder au profil complet">
-                <i class="fal fa-id-card"></i>
+              <button class="btn btn-outline-info" onclick="showCandidateProfile({{data.Candidate.User.id}})">
+                Profil
               </button>
-              <button class="btn btn-outline-success" onclick="showCandidateApplications({{data.Candidate.id}})"
-                      data-toggle="tooltip"  data-placement="top" title="Afficher les candidatures ({{data.Candidate.applications.length}})">
-                <i class="fal fa-file-signature"></i>
+              <button class="btn btn-outline-success" onclick="showCandidateApplications({{data.Candidate.User.id}})">
+                Candidatures ({{data.Candidate.applications.length}})
               </button>
             </div>
             <div class="col-md-12">
