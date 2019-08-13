@@ -1,0 +1,27 @@
+<div class=" text-left shadow-grey col-12 p-3 mb-4 requirementSection">
+  <h1 class="text-center">Prérequis</h1>
+  <form id="requirementForm">
+    <div class="form-group">
+      <label for="requirementDiploma">Diplôme</label>
+      <input type="text" class="form-control input-blue" id="requirementDiploma">
+    </div>
+
+    <div class="form-group">
+      <label for="requirementSkill">Compétences</label>
+      <textarea type="text" class="form-control input-blue" id="requirementSkill"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="requirementKnowledge">Connaissances</label>
+      <textarea type="text" class="form-control input-blue" id="requirementKnowledge"></textarea>
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="saveRequirement()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelRequirement()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearRequirement()">Effacer</button>
+  </div>
+</div>
+
+<script src="/assets/dist/js/job_board/job_board_requirement.min.js"></script>

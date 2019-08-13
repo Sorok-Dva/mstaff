@@ -1,0 +1,40 @@
+<div class=" text-left shadow-grey col-12 p-3 mb-4 termsSection">
+  <h1 class="text-center">Modalités de candidature</h1>
+  <form id="termsForm">
+    <div class="form-group">
+      <label for="termsRecruit">Responsable du recrutement</label>
+      <input type="text" class="form-control input-blue" id="termsRecruit">
+    </div>
+
+    <div class="form-group">
+      <label for="termsMail">Mail de contact</label>
+      <input type="text" class="form-control input-blue" id="termsMail">
+    </div>
+
+    <div class="form-group row justify-content-around">
+      <div class="form-group d-flex">
+        <div class="mr-4">Ouvert aux contractuels</div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="termsContractual">
+          <label class="custom-control-label" for="termsContractual"></label>
+        </div>
+      </div>
+
+      <div class="form-group d-flex">
+        <div class="mr-4">Ouvert aux militaires</div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="termsMilitary">
+          <label class="custom-control-label" for="termsMilitary"></label>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="saveTerms()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelTerms()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearTerms()">Effacer</button>
+  </div>
+</div>
+
+<script src="/assets/dist/js/job_board/job_board_terms.min.js"></script>

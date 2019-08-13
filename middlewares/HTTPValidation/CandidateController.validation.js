@@ -1,4 +1,4 @@
-const { check } = require('express-validator/check');
+const { check } = require('express-validator');
 const _ = require('lodash');
 const HTTPValidation = {};
 
@@ -47,7 +47,6 @@ HTTPValidation.getEditWish = [
 ];
 
 HTTPValidation.checkPassEdit = [
-  check('oldPassword').isLength({ min: 8 }),
   check('newPassword').isLength({ min: 8 }),
   check('newPasswordVerification').isLength({ min: 8 }),
 ];

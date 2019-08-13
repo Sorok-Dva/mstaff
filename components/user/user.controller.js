@@ -1,5 +1,5 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const Candidate = require(`./candidate/candidate.controller`);
 const _ = require('lodash');

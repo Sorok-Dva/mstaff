@@ -49,22 +49,6 @@ module.exports = {
     next(err);
   },
   notFoundError: (req, res, next) => next(new BackError('Page Introuvable', httpStatus.NOT_FOUND)),
-  /*  sentrySenderErrorHandler: (err, req, res, next) => {
-    let status = err.status || err.statusCode || 500;
-    if (status < 400) status = 500;
-
-    const context = {
-      user: {
-        method: req.method,
-        id: req.user && req.user.id,
-        url: req.originalUrl,
-      },
-      extra: err.extraContextForSentry,
-    };
-    Sentry.send(err, context);
-
-    next(err);
-  },*/
   api: (err, req, res, next) => { // eslint-disable-line no-unused-vars
     let status = err.status || err.statusCode || 500;
     if (status < 400) status = 500;

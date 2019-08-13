@@ -148,19 +148,18 @@ let catchError = (xhr, status, error) => {
 };
 
 let loadTemplate = (url, data, callback) => {
-  if (data.partials) {
-    for (let i = 0; i < data.partials.length; i++) {
-      $.ajax({ url: `/static/views/partials/${data.partials[i]}.hbs`, cache: true, success: (source) => {
-        Handlebars.registerPartial(`${data.partials[i]}`, source);
+  data.partials.map(e => {
+    $.ajax({ url: `/views/partials/${e}.hbs`, cache: true, success: (source) => {
+        Handlebars.registerPartial(`${e}`, source);
       }}).catch((xhr, status, error) => {
-        $('#loadingModal').modal('hide');
-        catchError(xhr, status, error)
-      });
-    }
-  }
+      $('#loadingModal').modal('hide');
+      catchError(xhr, status, error)
+    });
+  });
   $.ajax({ url, cache: true, success: (source) => {
+
     if (data.modal) {
-      $.ajax({ url: `/static/views/modals/partials/${data.modal}.hbs`, cache: true, success: (modal) => {
+      $.ajax({ url: `/views/modals/partials/${data.modal}.hbs`, cache: true, success: (modal) => {
         Handlebars.registerPartial(`${data.modal}`, modal);
         let template = Handlebars.compile(source);
           return callback(template(data));
@@ -187,7 +186,7 @@ let createModal = (opts, callback) => {
     $(`#${opts.id}`).modal('hide');
     $(`#${opts.id}`).remove();
   }
-  loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
+  loadTemplate('/views/modals/main.hbs', opts, (html) => {
     $('body').append(html);
     $('#loadingModal').modal('hide');
     if ('cantBeClose' in opts) {

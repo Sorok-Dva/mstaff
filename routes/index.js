@@ -2,8 +2,8 @@ const { Authentication, Express, HTTPValidation } = require('../middlewares');
 const { Render, User } = require('../components');
 const express = require('express');
 const router = express.Router();
-const passport = require('../bin/passport');
 const rateLimit = require('express-rate-limit');
+require('../bin/passport');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min window
@@ -60,14 +60,6 @@ router.get('/new/password/:key',
     Authentication.ensureIsNotAuthenticated,
     HTTPValidation.UserController.resetPassword,
     User.Main.resetPassword);
-
-/**
- * @Route('/register/demo') GET + POST;
- * Show Register Page + Send Register Form (for new establishments)
- */
-router.get('/demo/register',
-  Authentication.ensureIsNotAuthenticated,
-  Render.View.RegisterDemo);
 
 /**
  * @Route('/logout') GET;

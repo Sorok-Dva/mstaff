@@ -17,7 +17,6 @@
 </div>
 <script>
   $.get('/back-office/rh/all', function (data) {
-    console.log(data);
     $.each(data, function (i, rh) {
       $('#poolOwner').append($('<option>', {
         value: rh.id,

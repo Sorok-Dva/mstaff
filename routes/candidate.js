@@ -94,7 +94,7 @@ router.get('/documents',
  * @Route('/document/view/:id') GET;
  * Show documents user page
  */
-router.get('/document/view/:id',
+router.get('/document/view/:id(\\d+)',
   Authentication.ensureIsCandidate,
   User.Candidate.viewDocument);
 
@@ -161,7 +161,7 @@ router.get('/wish/edit/:id(\\d+)',
 
 router.post('/profile/passwordReset',
   Authentication.ensureAuthenticated,
-  //HTTPValidation.CandidateController.checkPassEdit,
+  HTTPValidation.CandidateController.checkPassEdit,
   User.Main.changePassword);
 /**
  * @Route('/conferences') GET;

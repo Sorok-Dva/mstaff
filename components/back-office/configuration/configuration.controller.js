@@ -1,12 +1,9 @@
 const __ = process.cwd();
 const _ = require('lodash');
-const { validationResult } = require('express-validator/check');
-const { Sequelize, Op } = require('sequelize');
+const { validationResult } = require('express-validator');
+const { Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
-const httpStatus = require('http-status');
-const crypto = require('crypto');
 
-const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
 

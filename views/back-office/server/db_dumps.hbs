@@ -1,0 +1,119 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div id="toolbar">
+          <!--Here you can write extra buttons/actions for the toolbar-->
+        </div>
+        <table id="users-table" class="table table-borderless table-condensed table-hover">
+          <thead>
+          <th data-field="state" data-checkbox="true"></th>
+          <th data-field="name" class="text-center" data-sortable="true">Nom</th>
+          <th data-field="date" class="text-center" data-sortable="true">Date</th>
+          <th data-field="size" class="text-center" data-sortable="true">Taille</th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions
+          </th>
+          </thead>
+          <tbody>
+          {{#each databaseDumps as |dump|}}
+            <tr>
+              <td></td>
+              <td>{{dump.name}}</td>
+              <td>{{date dump.stats.birthtime 'DD/MM/YYYY H:mm:s'}}</td>
+              <td>{{math dump.stats.size '/' 1000000}}mb</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  let table = $('#users-table');
+
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a rel="tooltip" title="Télécharger" class="btn btn-simple btn-info btn-icon table-action download" href="javascript:void(0)">',
+      '<i class="fal fa-download"></i>',
+      '</a>',
+      '<a rel="tooltip" title="Supprimer" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<i class="fal fa-trash"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .download': (e, value, row, index) => {
+        $.get(`/api/back-office/server/db_dumps/${row.name}`, (data) => {
+          window.location = `/api/back-office/server/db_dumps/${row.name}`;
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
+      },
+      'click .remove': (e, value, row, index) => {
+        createModal({
+          id: 'removeDBDumpsModal',
+          title: 'Supprimer cette sauvegarde ?',
+          text: ' Êtes-vous sûr de vouloir supprimer cette sauvegarde de base de donnée ?',
+          actions: [
+            '<button type="button" class="btn btn-default" data-dismiss="modal">Non</button>',
+            `<button type="button" id="removeDBDump" class="btn btn-danger" data-dismiss="modal">Oui</button>`
+          ]
+        }, () => {
+          $('button#removeDBDump').click(function() {
+            $.delete(`/api/back-office/server/db_dumps/${row.name}`, { _csrf } ,(data) => {
+              if (data.deleted) {
+                table.bootstrapTable('remove', {
+                  field: 'name',
+                  values: [row.name]
+                });
+                notification({
+                  icon: 'check-circle',
+                  type: 'success',
+                  title: 'Sauvegarde de base de donnée supprimée avec succès.'
+                })
+              } else {
+                notification({
+                  icon: 'exclamation-circle',
+                  type: 'warning',
+                  title: 'Impossible de supprimer cette sauvegarde',
+                })
+              }
+            }).catch((xhr, status, error) => catchError(xhr, status, error));
+          })
+        });
+      }
+    };
+
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10, 25, 50, 100, 200, 500],
+      formatRecordsPerPage: (pageNumber) => {
+        return pageNumber + " résultats visible";
+      },
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
+    });
+
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+  });
+</script>

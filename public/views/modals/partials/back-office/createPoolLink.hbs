@@ -22,7 +22,6 @@
 
 <script>
   $.get('/back-office/pool-dependencies/all', function (data) {
-    console.log(data);
     $.each(data[0], function (i, pool) {
       $('#poolName').append($('<option>', {
         value: pool.id,
