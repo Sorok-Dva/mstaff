@@ -275,133 +275,134 @@ Establishment_Application.CVsMyCandidatesQuery = (req, res, next) => {
 Establishment_Application.getCandidates = (req, res, next) => {
   let { filterQuery } = req.body;
   let query = {
-    where: { es_id: filterQuery.establishments || req.user.opts.currentEs },
-    attributes: { exclude: ['lat', 'lon'] },
-    order: Sequelize.literal('`Wish->Candidate->User`.`createdAt` DESC'),
-    group: ['Wish->Candidate.id'],
+    attributes: { exclude: ['updatedAt', 'createdAt'] },
+    order: Sequelize.literal('`User.createdAt` DESC'),
     include: [{
-      model: Models.Wish,
-      required: true,
+      model: Models.Experience,
+      as: 'experiences',
+      include: [{
+        model: Models.Service,
+        as: 'service',
+        attributes: ['id', 'name']
+      }, {
+        model: Models.Post,
+        as: 'poste',
+        attributes: ['id', 'name']
+      }]
+    }, {
+      model: Models.CandidateFormation,
+      as: 'formations',
+    }, {
+      model: Models.User,
+      attributes: { exclude: ['password', 'type', 'role', 'email'] },
       on: {
-        '$Application.wish_id$': {
-          [Op.col]: 'Wish.id'
+        '$Candidate.user_id$': {
+          [Op.col]: 'User.id'
         }
       },
-      where: {
-        [Op.col]: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
-          [Op.like]: `%${req.body.post.toLowerCase()}%`
-        }),
-        /* -- Horodatage system -- renewed_date: {
-          [Op.gte]: moment().subtract(1, 'months').toDate()
-        }*/
-      },
-      include: {
-        model: Models.Candidate,
-        attributes: { exclude: ['updatedAt', 'createdAt'] },
-        required: true,
-        include: [{
-          model: Models.User,
-          attributes: { exclude: ['password', 'type', 'role', 'email', 'phone', 'updatedAt'] },
-          on: {
-            '$Wish->Candidate.user_id$': {
-              [Op.col]: 'Wish->Candidate->User.id'
-            }
-          },
-          required: true
-        }, {
-          model: Models.CandidateFormation,
-          as: 'formations',
-        }, {
-          model: Models.Experience,
-          as: 'experiences',
-          group: ['service_id'],
-          include: {
-            model: Models.Service,
-            as: 'service',
-            attributes: ['id', 'name']
-          }
-        }]
-      }
+      required: true
     }, {
-      model: Models.Establishment,
-      attributes: ['id'],
+      model: Models.Application,
+      as: 'applications',
+      attributes: { exclude: ['lat', 'lon'] },
+      where: { es_id: req.user.opts.currentEs },
+      required: true,
       on: {
-        '$Application.es_id$': {
-          [Op.col]: 'Establishment.id'
+        '$Candidate.id$': {
+          [Op.col]: 'applications.candidate_id'
         }
       },
       include: [{
-        model: Models.FavoriteCandidate,
-        attributes: ['added_by', 'candidate_id'],
+        model: Models.Wish,
+        required: true,
         on: {
-          '$Establishment.id$': {
-            [Op.col]: 'Establishment->FavoriteCandidates.es_id'
-          },
-          '$Wish->Candidate.id$': {
-            [Op.col]: 'Establishment->FavoriteCandidates.candidate_id'
+          '$applications.wish_id$': {
+            [Op.col]: 'applications->Wish.id'
           }
         },
-        include: {
-          model: Models.User,
-          attributes: ['firstName', 'lastName'],
-          on: {
-            '$Establishment->FavoriteCandidates.added_by$': {
-              [Op.col]: 'Establishment->FavoriteCandidates->User.id'
-            }
-          }
+        where: {
+          [Op.col]: Sequelize.where(Sequelize.fn('lower', Sequelize.col('posts')), {
+            [Op.like]: `%${req.body.post.toLowerCase()}%`
+          }),
         }
       }, {
-        model: Models.ArchivedCandidate,
-        attributes: ['added_by', 'candidate_id'],
+        model: Models.Establishment,
+        attributes: ['id'],
         on: {
-          '$Establishment.id$': {
-            [Op.col]: 'Establishment->ArchivedCandidates.es_id'
+          '$applications.es_id$': {
+            [Op.col]: 'applications->Establishment.id'
+          }
+        },
+        include: [{
+          model: Models.FavoriteCandidate,
+          attributes: ['added_by', 'candidate_id'],
+          on: {
+            '$applications->Establishment.id$': {
+              [Op.col]: 'applications->Establishment->FavoriteCandidates.es_id'
+            },
+            '$Candidate.id$': {
+              [Op.col]: 'applications->Establishment->FavoriteCandidates.candidate_id'
+            }
           },
-          '$Wish->Candidate.id$': {
-            [Op.col]: 'Establishment->ArchivedCandidates.candidate_id'
+          include: {
+            model: Models.User,
+            attributes: ['firstName', 'lastName'],
+            on: {
+              '$applications->Establishment->FavoriteCandidates.added_by$': {
+                [Op.col]: 'applications->Establishment->FavoriteCandidates->User.id'
+              }
+            }
+          }
+        }, {
+          model: Models.ArchivedCandidate,
+          attributes: ['added_by', 'candidate_id'],
+          on: {
+            '$applications->Establishment.id$': {
+              [Op.col]: 'applications->Establishment->ArchivedCandidates.es_id'
+            },
+            '$Candidate.id$': {
+              [Op.col]: 'applications->Establishment->ArchivedCandidates.candidate_id'
+            },
+            '$applications->Establishment->ArchivedCandidates.added_by$': req.user.id
           },
-          '$Establishment->ArchivedCandidates.added_by$': req.user.id
-        }
+        }]
       }]
     }]
   };
 
-  if (!_.isNil(filterQuery.contractType)) query.include[0].where.contract_type = filterQuery.contractType;
+  if (!_.isNil(filterQuery.contractType)) query.include[2].include[0].where.contract_type = filterQuery.contractType;
   if (!_.isNil(filterQuery.is_available)) {
-    query.where[1] = {
+    query.where = {
       [Op.and]: [
-        Sequelize.literal('`Wish->Candidate`.`is_available` = ' + `${filterQuery.is_available === 'true' ? '1' : '0'}`)
+        Sequelize.literal('`Candidate`.`is_available` = ' + `${filterQuery.is_available === 'true' ? '1' : '0'}`)
       ]
     };
   }
   if (!_.isNil(filterQuery.lastName)) {
     query.where[1] = {
       [Op.and]: [
-        Sequelize.literal('`Wish->Candidate->User`.`lastName` REGEXP\'(' + filterQuery.lastName + ')\'')
+        Sequelize.literal('`Candidate->User`.`lastName` REGEXP\'(' + filterQuery.lastName + ')\'')
       ]
     };
   }
   if (!_.isNil(filterQuery.serviceId)) {
-    /*query.include[0].where.services = {
-      [Op.regexp]: Sequelize.literal(`"(${filterQuery.service})"`),
-    };*/
-    query.include[0].include.include[2].required = true;
-    query.include[0].include.include[2].where = { service_id: filterQuery.serviceId };
+    query.include[0].required = true;
+    query.include[0].where = { service_id: filterQuery.serviceId };
   }
   if (!_.isNil(filterQuery.diploma)) {
-    query.include[0].include.include[1].required = true;
-    query.include[0].include.include[1].where = {
+    query.include[1].required = true;
+    query.include[1].where = {
       name: { [Op.regexp]: filterQuery.diploma }
     };
   }
   if (!_.isNil(filterQuery.postal_code)) {
-    query.include[0].include.include[0].where = {
+    query.include[1].where = {
       postal_code: { [Op.startsWith]: filterQuery.postal_code }
     };
   }
 
-  Models.Application.findAll(query).then(applications => {
-    return res.status(200).send(applications);
+  Models.Candidate.findAll(query).then(candidates => {
+    return res.status(200).send(candidates);
   }).catch(error => next(new BackError(error)));
 };
 
