@@ -1,0 +1,63 @@
+<div class="container-fluid">
+  <div class="row mt-2">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title pull-left"><i class="fa fa-briefcase"></i> Candidatures</h4>
+        </div>
+        <div class="card-content table-responsive table-full-width">
+          <table class="table table-hover">
+            <thead>
+            <tr class="info">
+              <th>Date</th>
+              <th>Type de contrat</th>
+              <th>Postes</th>
+              <th>Services</th>
+              <th>Détails</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#if data.applications}}
+              {{#each data.applications as |application|}}
+                <tr>
+                  <td>
+                    {{date application.Wish.createdAt 'DD/MM/YYYY' }}
+                  </td>
+                  <td>{{contractType application.Wish.contract_type}}</td>
+                  <td>
+                    {{#if application.Wish.posts}}
+                    <h4 {{{otherPostsPopover_Search application}}}>
+                      <label class="col-8 wrapword badge badge-soft-success">{{firstPost_Search application}}</label>
+                    </h4>{{else}}Aucun{{/if}}
+                  </td>
+                  <td>
+                    {{#if application.Wish.posts}}
+                      <h4 {{{otherServicesPopover_Search application}}}>
+                        <label class="col-8 wrapword badge badge-soft-secondary">{{firstService_Search application}}</label>
+                      </h4>{{else}}Aucun{{/if}}
+                  </td>
+                  <td>
+                    <h4 class="text-muted">
+                      <i class="fal fa-sun fa-2x"{{#if application.Wish.day_time}} style="color: #04e900"{{/if}}></i>
+                      <i class="fal fa-moon fa-2x"{{#if application.Wish.night_time}} style="color: #04e900"{{/if}}></i>
+                    </h4>
+                  </td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr class="text-center">
+                <td colspan="5">Aucune donnée disponible</td>
+              </tr>
+            {{/if}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+</script>
