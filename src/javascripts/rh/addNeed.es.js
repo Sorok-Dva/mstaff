@@ -137,12 +137,17 @@ let searchCandidates = () => {
   $('#paginationContainer').hide();
   $('#searchResult').html(loadingCandidateHTML.replace('vos candidats', 'votre recherche')).show();
   $.post(`/api/es/${esId}/search/candidates`, need, (data) => {
-    data.partials = ['tooltips/candidatePercentage'];
-    loadTemplate('/views/api/searchCandidates.hbs', data, html => {
-      $('#resetSearch').show();
-      $('#searchResult').html(html).show();
-      $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
-      $('#selectAllSearch').show();
+    $.ajax({ url: `/views/partials/tooltips/candidatePercentage.hbs`, cache: true, success: (source) => {
+        Handlebars.registerPartial(`tooltips/candidatePercentage`, source);
+        loadTemplate('/views/api/searchCandidates.hbs', data, html => {
+          $('#resetSearch').show();
+          $('#searchResult').html(html).show();
+          $('#searchCount').html(`${data.length} résultats pour votre recherche.`).show();
+          $('#selectAllSearch').show();
+        });
+      }}).catch((xhr, status, error) => {
+      $('#loadingModal').modal('hide');
+      catchError(xhr, status, error)
     });
   }).catch((xhr, status, error) => catchError(xhr, status, error));
 };
@@ -378,7 +383,7 @@ let showArchived = () =>{
         $('#searchResult').hide();
         $('#paginationContainer').hide();
         $('#myCandidates').html(html).show();
-        $('#searchCount').html(`${data.length} candidats archivés.`).show();
+        $('#searchCount').html(`${data.candidates.length} candidats archivés.`).show();
         $('#selectAllSearch').show();
       });
     }).catch((xhr, status, error) => catchError(xhr, status, error));
@@ -412,7 +417,7 @@ let showFavorites = () => {
         $('#searchResult').hide();
         $('#paginationContainer').hide();
         $('#myCandidates').html(html).show();
-        $('#searchCount').html(`${data.length} candidats favoris.`).show();
+        $('#searchCount').html(`${data.candidates.length} candidats favoris.`).show();
         $('#selectAllSearch').show();
       });
     }).catch((xhr, status, error) => catchError(xhr, status, error));
