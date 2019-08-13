@@ -69,6 +69,9 @@ module.exports = {
       opts: {
         type: Sequelize.JSON
       },
+      last_login: {
+        type: Sequelize.DATE
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

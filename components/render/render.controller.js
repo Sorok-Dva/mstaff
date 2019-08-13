@@ -46,8 +46,6 @@ Render.Register = (req, res) => res.render('users/register', { layout: 'onepage'
 
 Render._404 = (req, res) => res.render('error', { error: 'Lien invalide' });
 
-Render.RegisterDemo = (req, res) => res.render('demo/register');
-
 Render.ResetPassword = (req, res) => res.render('users/reset-passwd', { layout: 'onepage' });
 
 module.exports = Render;
