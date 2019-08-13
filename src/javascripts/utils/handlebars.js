@@ -226,30 +226,38 @@ Handlebars.registerHelper('showVisioLink', conference => {
   }
 });
 
-Handlebars.registerHelper('firstPost', posts => {
-  if (_.isNil(posts) || posts.length === 0) return 'Aucun poste';
+Handlebars.registerHelper('firstPost', experiences => {
+  if (_.isNil(experiences) || experiences.length === 0) return 'Aucun poste';
+  let posts = [];
+  experiences.map(xp => posts.includes(xp.poste.name) ? null : posts.push(xp.poste.name));
   let other = '';
   if (posts.length > 1) other = `... (${posts.length - 1} de plus)`;
   return `${posts[0]}${other}`
 });
 
-Handlebars.registerHelper('otherPostsPopover', posts => {
-  if (_.isNil(posts) || posts.length === 0) return '';
+Handlebars.registerHelper('otherPostsPopover', experiences => {
+  if (_.isNil(experiences) || experiences.length === 0) return '';
+  let posts = [];
+  experiences.map(xp => posts.includes(xp.poste.name) ? null : posts.push(xp.poste.name));
   if (posts.length < 2) return '';
   posts.shift();
   let string = posts.toString();
   return `data-toggle="tooltip"  data-placement="top" title="${string.replace(/,/g, ', ')}"`
 });
 
-Handlebars.registerHelper('firstService', services => {
-  if (_.isNil(services) || services.length === 0) return 'Aucun service';
+Handlebars.registerHelper('firstService', experiences => {
+  if (_.isNil(experiences) || experiences.length === 0) return 'Aucun service';
+  let services = [];
+  experiences.map(xp => services.includes(xp.service.name) ? null : services.push(xp.service.name));
   let other = '';
   if (services.length > 1) other = `... (et ${services.length - 1} de plus)`;
   return `${services[0]}${other}`
 });
 
-Handlebars.registerHelper('otherServicesPopover', services => {
-  if (_.isNil(services) || services.length === 0) return '';
+Handlebars.registerHelper('otherServicesPopover', experiences => {
+  if (_.isNil(experiences) || experiences.length === 0) return '';
+  let services = [];
+  experiences.map(xp => services.includes(xp.service.name) ? null : services.push(xp.service.name));
   if (services.length > 1) {
     services.shift();
     let string = services.toString();
