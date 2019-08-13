@@ -52,7 +52,15 @@ User_Candidate.getProfile = (req, res, next) => {
     }, {
       model: Models.CandidateDocument,
       as: 'documents'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'start', 'DESC' ],
+      [ 'formations', 'start', 'DESC' ],
+      [ 'qualifications', 'start', 'DESC' ],
+      [ 'skills', 'stars', 'DESC' ],
+      [ 'equipments', 'stars', 'DESC' ],
+      [ 'softwares', 'stars', 'DESC' ]
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     candidate.views += 1;
@@ -211,7 +219,7 @@ User_Candidate.viewProfile = (req, res, next) => {
       as: 'wishes'
     }],
     order: [
-      [ 'experiences', 'start', 'ASC' ],
+      [ 'experiences', 'start', 'DESC' ],
       [ 'formations', 'start', 'ASC' ],
       [ 'qualifications', 'start', 'ASC' ],
     ]
@@ -332,9 +340,9 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
       as: 'formations'
     }],
     order: [
-      [ 'experiences', 'start', 'ASC' ],
-      [ 'formations', 'start', 'ASC' ],
-      [ 'qualifications', 'start', 'ASC' ],
+      [ 'experiences', 'start', 'DESC' ],
+      [ 'formations', 'start', 'DESC' ],
+      [ 'qualifications', 'start', 'DESC' ],
     ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
