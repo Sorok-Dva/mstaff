@@ -9,6 +9,23 @@ const Models = require(`${__}/orm/models/index`);
 
 const Establishment_Application = {};
 
+Establishment_Application.getEstablishments = (req, res, next) => {
+  let query = {
+    where: { user_id: req.user.id },
+    include: [{
+      model: Models.Establishment,
+      on: {
+        '$ESAccount.es_id$': {
+          [Op.col]: 'Establishment.id'
+        }
+      }
+    }]
+  };
+  Models.ESAccount.findAll(query).then(eslist => {
+    return res.status(200).send(eslist);
+  })
+};
+
 Establishment_Application.getCVs = (req, res, next) => {
   let query = {
     where: { es_id: req.user.opts.currentEs },

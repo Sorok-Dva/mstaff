@@ -58,4 +58,15 @@ Api.getCategoriesList = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+Api.getPoolDatas = (req, res, next) => {
+  let datas = {};
+  Models.Post.findAll().then(posts => {
+    datas.posts = posts;
+    return Models.Service.findAll();
+  }).then(services => {
+    datas.services = services;
+    res.status(200).send(datas);
+  }).catch(error => next(new BackError(error)));
+};
+
 module.exports = Api;

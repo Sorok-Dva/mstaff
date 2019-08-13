@@ -157,14 +157,16 @@ router.get('/configuration/categories', Authentication.ensureIsAdmin, BackOffice
  */
 router.get('/configuration/equipments', Authentication.ensureIsAdmin, BackOffice.Configuration.ViewEquipments);
 
-/** @Route('/back-office/jobBoard/sheets') GET;
+/**
+ * @Route('/back-office/jobBoard/sheets') GET;
  * Show job sheets
  */
 router.get('/jobBoard/sheets',
   Authentication.ensureIsAdmin,
   BackOffice.JobBoard.ViewJobSheets);
 
-/** @Route('/back-office/jobBoard/sheet/:id') GET;
+/**
+ * @Route('/back-office/jobBoard/sheet/:id') GET;
  * Show job sheet form
  */
 router.get('/jobBoard/sheet/:id(\\d+)',
@@ -174,12 +176,44 @@ router.get('/jobBoard/sheet/:id(\\d+)',
     Authentication.ensureIsAdmin,
     BackOffice.JobBoard.EditJobSheet);
 
-/** @Route('/back-office/settings/') GET;
+/**
+ * @Route('/back-office/settings/') GET;
  * Show app settings page
  */
 router.get('/settings',
   Authentication.ensureIsAdmin,
   BackOffice.Main.ViewSettings);
+
+/**
+ * @Route('/back-office/pool-list') GET, POST;
+ * Show and configure pools
+ */
+router.get('/pools/pool-list',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.viewList
+).post('/pools/pool-list',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.createPool);
+
+/**
+ * @Route('/back-office/pool-links/') GET;
+ * Show and configure links between pools and user
+ */
+router.get('/pools/pool-links',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.viewLinks
+).post('/pools/pool-links',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.forceLink
+);
+
+/**
+ * @Route('/back-office/pool-dependencies/all') GET;
+ * Get all dependencies to make new links
+ */
+router.get('/pool-dependencies/all',
+  Authentication.ensureIsAdmin,
+  BackOffice.Pool.linkDependencies);
 
 /** @Route('/back-office/server/db_dumps') GET;
  * Show database dumps list

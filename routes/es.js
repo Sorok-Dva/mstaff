@@ -80,6 +80,56 @@ router.get('/history',
   Establishment.Need.ViewClosed);
 
 /**
+ * @Route('/pool') GET;
+ * Show Pools page
+ */
+router.get('/pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.View);
+
+/**
+ * @Route('/my-pool') GET;
+ * Show his pools page
+ */
+router.get('/my-pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.ViewAll
+).post('/my-pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.Add
+).put('/my-pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.Edit
+).delete('/my-pool',
+  Authentication.ensureIsEs,
+  Establishment.Pool.Delete
+);
+
+router.get('/pool/:id(\\d+)/invites',
+  Authentication.ensureIsEs,
+  Establishment.Pool.ViewInvitations
+).delete('/pool/:id(\\d+)/invites',
+  Authentication.ensureIsEs,
+  Establishment.Pool.DeleteInvite
+).post('/pool/:id(\\d+)/invites',
+  Authentication.ensureIsEs,
+  Establishment.Pool.Invite
+);
+
+router.get('/pool/:id(\\d+)/volunteers',
+  Authentication.ensureIsEs,
+  Establishment.Pool.ViewVolunteers);
+
+router.get('/pool/document/:id(\\d+)',
+  Authentication.ensureIsEs,
+  Establishment.Pool.viewCandidateDocument
+);
+
+router.get('/establishement-list',
+  Authentication.ensureIsEs,
+  Establishment.Application.getEstablishments
+);
+/**
  * @Route('/job_board/offer/:id(\\d+)') GET, POST & DELETE;
  * Show, Edit or Delete Specific Offer Page
  */
