@@ -26,6 +26,12 @@
     </table>
   </div>
 
+  <div id="linkEsUserGroup" style="display: none">
+    <select id="EsUserGroupSelect" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
+            data-live-search="true">
+    </select>
+  </div>
+
   <div id="displayAddUser" style="display:none;">
     <div class="form-group">
       <div class="row">
@@ -78,6 +84,7 @@
 <div class="modal-footer">
   <button style="display:none" type="button" class="btn btn-default" id="addUserInModal"> Ajouter l'utilisateur</button>
   <button style="display:none" type="button" class="btn btn-default" id="modifyUserInModal">Modifier le rôle</button>
+  <button style="display:none" type="button" class="btn btn-default" id="modifyESLinkInModal">Modifier établissements liés</button>
 </div>
 <script>
 
@@ -85,6 +92,7 @@
     if (data) {
       data.forEach(function(element)
       {
+        console.log(data)
         let actions = `<button type="button" title="Etablissements" class="btn btn-simple btn-primary btn-icon table-action"
                       onClick="viewAllowedEs(${element.User.id})"> <i class="fas fa-sliders-h"></i></button>
                       <button type="button" title="Modifier utilisateur" class="btn btn-simple btn-warning btn-icon table-action"
@@ -105,6 +113,9 @@
     $('h6#textDisplayer').text('Modifier les établissements qui seront visibles par cet utilisateur');
     $('div#displayAllUsers').hide();
     $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
+    $('div#linkEsUserGroup').show();
+    $('button#modifyESLinkInModal').show();
+    $('#EsUserGroupSelect').selectpicker();
   }
 
   function deleteUser(user_id)
@@ -146,6 +157,8 @@
       $('button#modifyUserInModal').hide();
       $('div#displayAllUsers').hide();
     } else {
+      $('button#modifyESLinkInModal').hide();
+      $('div#linkEsUserGroup').hide();
       $('button#btnDisplayAddUser').text('Ajouter utilisateur').prop('value', '1');
       $('h6#textDisplayer').text('Liste des utilisateurs présents dans votre groupe');
       $('div#displayAddUser').hide();
