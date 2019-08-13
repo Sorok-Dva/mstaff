@@ -341,8 +341,8 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
     }],
     order: [
       [ 'experiences', 'start', 'DESC' ],
-      [ 'formations', 'start', 'ASC' ],
-      [ 'qualifications', 'start', 'ASC' ],
+      [ 'formations', 'start', 'DESC' ],
+      [ 'qualifications', 'start', 'DESC' ],
     ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
