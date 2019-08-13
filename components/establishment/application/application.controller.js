@@ -370,7 +370,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
     }]
   };
 
-  if (!_.isNil(filterQuery.contractType)) query.include[2].include[0].where.contract_type = filterQuery.contractType;
+  if (!_.isNil(filterQuery.contractType)) query.include[3].include[0].where.contract_type = filterQuery.contractType;
   if (!_.isNil(filterQuery.is_available)) {
     query.where = {
       [Op.and]: [
