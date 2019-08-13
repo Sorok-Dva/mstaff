@@ -69,6 +69,45 @@ User_Candidate.getProfile = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+User_Candidate.getApplicationsInEs = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: { user_id: req.params.userId },
+    include: [{
+      model: Models.User,
+      attributes: { exclude: ['password'] },
+      on: {
+        '$Candidate.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      },
+      required: true
+    }, {
+      model: Models.Application,
+      as: 'applications',
+      on: {
+        '$Candidate.id$': {
+          [Op.col]: 'applications.candidate_id'
+        }
+      },
+      where: { es_id: req.params.esId },
+      include: {
+        model: Models.Wish,
+        on: {
+          '$applications.wish_id$': {
+            [Op.col]: 'applications->Wish.id'
+          }
+        },
+      }
+    }],
+    order: [
+      [ 'applications', 'createdAt', 'DESC' ]
+    ]
+  }).then(data => {
+    if (_.isNil(data)) return next(new BackError('Candidat introuvable', 404));
+    return res.status(200).send(data);
+  }).catch(error => next(new BackError(error)));
+};
+
 User_Candidate.addVideo = (req, res, next) => {
   if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
   let video = { filename: null };
