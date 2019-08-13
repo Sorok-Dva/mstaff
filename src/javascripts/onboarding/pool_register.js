@@ -1,7 +1,7 @@
 function identityListener() {
   document.getElementById('toRecap').addEventListener('verified', () => {
     saveDatas();
-    loadTemplate('/static/views/onboarding/pool/add_post.hbs', { data, databaseInfo }, (html) => {
+    loadTemplate('/views/onboarding/pool/add_post.hbs', { data, databaseInfo }, (html) => {
       $('#poolPart').html(html);
     });
   }, false);
@@ -225,7 +225,7 @@ function saveDatas(){
 function init_identity(){
   identityListener();
   iti = intlTelInput(document.querySelector("#identityPhone"), {
-    utilsScript: '/static/assets/js/utils.js',
+    utilsScript: '/assets/js/utils.js',
     preferredCountries: ["fr", "gb", "us"],
     initialCountry: "fr",
   });

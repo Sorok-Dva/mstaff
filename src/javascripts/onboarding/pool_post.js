@@ -79,14 +79,14 @@ function saveDatas(){
 
 function postListener(){
   $('#backToMain').click(function() {
-    loadTemplate('/static/views/onboarding/pool/register.hbs', {data, databaseInfo}, (html) => {
+    loadTemplate('/views/onboarding/pool/register.hbs', {data, databaseInfo}, (html) => {
       $('#poolPart').html(html);
     })
   });
   $('#toAvailability').click(function() {
     if (verifyInputs()){
       saveDatas();
-      loadTemplate('/static/views/onboarding/pool/availability.hbs', {data, databaseInfo}, (html) => {
+      loadTemplate('/views/onboarding/pool/availability.hbs', {data, databaseInfo}, (html) => {
         $('#poolPart').html(html);
       });
     }

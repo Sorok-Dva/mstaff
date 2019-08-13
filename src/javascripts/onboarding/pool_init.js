@@ -15,12 +15,12 @@ $(document).ready(function () {
     data.emailExist = !available;
     initVariables().then(() => {
       if (available) {
-        loadTemplate('/static/views/onboarding/pool/register.hbs', { data, databaseInfo }, (html) => {
+        loadTemplate('/views/onboarding/pool/register.hbs', { data, databaseInfo }, (html) => {
           $('#poolPart').html(html);
         });
       } else {
         // add_post.hbs
-        loadTemplate('/static/views/onboarding/pool/add_post.hbs', { data, databaseInfo }, (html) => {
+        loadTemplate('/views/onboarding/pool/add_post.hbs', { data, databaseInfo }, (html) => {
           $('#poolPart').html(html);
         });
       }
