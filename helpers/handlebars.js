@@ -173,13 +173,14 @@ module.exports.register = async (Handlebars) => {
   });
 
   Handlebars.registerHelper('weekStats', (object) => {
+    if (_.isNil(object)) return [];
     let res = [];
     for (let day = 6; day >= 0; day--) {
       let date = day === 0 ? moment().format('MMM Do YY') : moment().subtract(day, 'days').format('MMM Do YY');
       let isNull = true;
-      object.map((user) => {
-        if (date === moment(user.createdAt).format('MMM Do YY')){
-          res.push(user.dataValues.count);
+      object.map((entity) => {
+        if (date === moment(entity.createdAt || entity.last_login || entity.updatedAt).format('MMM Do YY')){
+          res.push(entity.dataValues.count);
           isNull = false;
         }
       });
@@ -285,6 +286,24 @@ module.exports.register = async (Handlebars) => {
       return `<h4 data-h4-wishId="${wish.id}"><i class="fal fa-sync" data-refreshWish-id="${wish.id}" style="color: red"></i> Expiré</h4>`;
     } else {
       return `<h4 data-h4-wishId="${wish.id}"><i class="fal fa-clock" data-wish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours</h4>`;
+    }
+  });
+
+  /**
+   * Returns french text of contract type
+   *
+   * ```handlebars
+   * {{contractType wish.contract_type}}
+   * <!-- results in: 'Stage' for example -->
+   * ```
+   * @param {string} `type` Contract Type
+   * @return {String} Transformed text
+   */
+  Handlebars.registerHelper('contractType', (type) => {
+    switch (type) {
+      case 'internship': return 'Stage';
+      case 'vacation': return 'Vacation';
+      case 'cdi-cdd': return 'CDI/CDD';
     }
   });
 };

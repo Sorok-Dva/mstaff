@@ -62,7 +62,10 @@ module.exports = (sequelize, DataTypes) => {
       set(data) {
         this.setDataValue('opts', JSON.stringify(data));
       }
-    }
+    },
+    last_login: {
+      type: DataTypes.DATE,
+    },
   });
   User.associate = function (models) {
     User.hasOne(models.Candidate, {

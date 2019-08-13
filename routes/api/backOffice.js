@@ -99,9 +99,18 @@ router.put('/linkGroup/:id(\\d+)',
  * @Route('/back-office/references/:type') POST;
  * Create Reference Model data
  */
-
 router.get('/eslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getEsLinksList);
 router.get('/groupslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.getGroupLinksList);
 router.get('/establishments/all', Authentication.ensureIsAdmin, BackOffice.Establishment.getEstablishmentList);
+
+router.get(
+  '/server/db_dumps/:name',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.DownloadDatabaseDumps)
+  .delete(
+    '/server/db_dumps/:name',
+    Authentication.ensureIsAdmin,
+    BackOffice.Server.RemoveDatabaseDumps
+  );
 
 module.exports = router;
