@@ -2,6 +2,7 @@ const __ = process.cwd();
 const { Sequelize, Op } = require('sequelize');
 const moment = require('moment');
 const fs = require('fs');
+const _ = require('lodash');
 
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
