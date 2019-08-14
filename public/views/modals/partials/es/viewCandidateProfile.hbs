@@ -320,7 +320,7 @@
       if($.trim(myStr).length > maxLength){
         let newStr = myStr.substring(0, maxLength);
         $(this).empty().html(newStr +" ...");
-        $(this).append('<button href="javascript:void(0);" class="btn btn-outline-primary read-more mt-3">Afficher la suite</button>');
+        $(this).append('<br /><button href="javascript:void(0);" class="btn btn-outline-primary read-more mt-3">Afficher la suite</button>');
         $(this).append('<span class="more-text">' + myStr + '</span>');
       }
     });
