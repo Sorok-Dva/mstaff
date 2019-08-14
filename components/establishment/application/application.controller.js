@@ -379,9 +379,9 @@ Establishment_Application.getCandidates = (req, res, next) => {
     };
   }
   if (!_.isNil(filterQuery.lastName)) {
-    query.where[1] = {
+    query.where = {
       [Op.and]: [
-        Sequelize.literal('`Candidate->User`.`lastName` REGEXP\'(' + filterQuery.lastName + ')\'')
+        Sequelize.literal('`User`.`lastName` REGEXP\'(' + filterQuery.lastName + ')\'')
       ]
     };
   }
