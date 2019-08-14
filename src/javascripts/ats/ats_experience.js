@@ -41,7 +41,7 @@ function experienceListener(){
   });
 
   $('#backToContract').click(function() {
-    let template = selectTemplate(candidateDatas.wish.contractType);
+    let template = selectTemplate(candidateDatas.wish.contractCategory);
     loadTemplate(`/views/ats/${template}.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
     })
@@ -92,10 +92,10 @@ function foundIdByLabel(label){
 
 function selectTemplate(savedValue){
   switch (savedValue) {
-    case 'cdi-cdd':
-      return 'cdiTime';
+    case 'durable':
+      return 'durableContract';
       break;
-    case 'vacation':
+    case 'punctual':
       return 'contract';
       break;
     case 'internship':
