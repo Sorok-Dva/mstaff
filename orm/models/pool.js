@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     });
     Pool.belongsTo(models.Establishment, {
       foreignKey: 'id',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'es'
     });
   };
   return Pool;
