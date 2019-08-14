@@ -90,7 +90,7 @@
         <h5>Pour quel poste ?</h5>
         <span class="text-muted">
           {{@root.opts.details.need.post}}<br>
-          {{@root.opts.details.need.contract_type}}
+          {{contractType @root.opts.details.need.contract_type}}
           {{#if @root.opts.details.need.start}}à partir du {{date @root.opts.details.need.start 'DD/MM/YYYY'}}{{/if}}
           {{#if @root.opts.details.need.end}} jusqu'au {{date @root.opts.details.need.end 'DD/MM/YYYY'}}{{/if}}
           </span>
