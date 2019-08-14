@@ -110,7 +110,7 @@
         Service <span id="btnServiceType">{{need.service}}</span>
       </button>
       <button id="btnFilters" class="btn btn-{{#unless need.contract_type}}outline-{{/unless}}info" onclick="return showContractModal()">
-        Contrat <span id="btnContractType" style="text-transform: uppercase">{{need.contract_type}}</span>
+        Contrat <span id="btnContractType" style="text-transform: uppercase">{{contractType need.contract_type}}</span>
       </button>
       <button id="btnFilters" class="btn btn-{{#unless need.start}}outline-{{/unless}}info" onclick="return showTimeModal()">
         Période <span id="btnTimeType">{{#if need.start}}{{date need.start 'DD/MM/YYYY'}}{{/if}}{{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}</span>
