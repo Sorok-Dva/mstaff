@@ -120,7 +120,6 @@ $('input#post').on('keydown', function (e) {
 });
 
 let searchCandidates = () => {
-  // if ($('input#post').val().length < 2) {
   if (need.filterQuery.length > 1) {
     notification({
       icon: 'exclamation',
@@ -129,7 +128,7 @@ let searchCandidates = () => {
     });
   }
   // }
-  if($('input#searchType').prop('checked'))
+  if ($('input#searchType').prop('checked'))
     need.post = '';
   else
     need.post = need.post || $('input#post').val();
@@ -443,12 +442,12 @@ let changeSearchType = () => {
   if($('input#searchType').prop('checked')) {
     $('button#btnFilters').attr("disabled", true);
     $('#esList').multiselect('disable');
-    $('input#post').attr("placeholder", "Indiquez un nom de famille");
+    $('input#post').attr("placeholder", "Indiquez un nom de famille").autocomplete('disable');
   } else {
     $('button#btnFilters').attr("disabled", false);
     $('span select #esList').attr("disabled", "disabled");
     $('#esList').multiselect('enable');
-    $('input#post').attr("placeholder", "Indiquez un type de poste");
+    $('input#post').attr("placeholder", "Indiquez un type de poste").autocomplete('enable');
   }
 };
 
