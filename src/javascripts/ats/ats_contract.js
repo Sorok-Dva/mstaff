@@ -12,10 +12,10 @@ function resetInternshipDate(){
 
 function selectTemplate(checkedSwitch){
   switch (checkedSwitch) {
-    case 'cdi-cdd':
-      return 'cdiTime';
+    case 'durable':
+      return 'durableContract';
       break;
-    case 'vacation':
+    case 'punctual':
       return 'experience';
       break;
     case 'internship':
@@ -37,7 +37,7 @@ function contractListener(){
       saveDatas();
       let selected = $('#contractChoices input:checked').attr('name');
       let template = selectTemplate(selected);
-      if (selected === 'vacation' && permissions.recap){
+      if (selected === 'punctual' && permissions.recap){
         permissions.recap = false;
         loadTemplate(`/views/ats/recap.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
           $('#atsPart').html(html);
@@ -89,7 +89,7 @@ function notify(error){
 };
 
 function saveDatas(){
-  candidateDatas.wish.contractType = $('#contractChoices input:checked').prop('name');
+  candidateDatas.wish.contractCategory = $('#contractChoices input:checked').prop('name');
 };
 
 function init_contract(){

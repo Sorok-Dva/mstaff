@@ -11,8 +11,8 @@
       <i class="fal fa-infinity fa-3x"></i>
       <h1 class="card-title">Un travail durable</h1>
       <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="cdiToggle" name="cdi-cdd"
-              {{#ifCond candidateDatas.wish.contractType '===' 'cdi-cdd'}} checked{{/ifCond}}>
+        <input type="checkbox" class="custom-control-input" id="cdiToggle" name="durable"
+              {{#ifCond candidateDatas.wish.contractCategory '===' 'durable'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="cdiToggle"></label>
       </div>
 
@@ -25,8 +25,8 @@
       <i class="fal fa-calendar-alt fa-3x"></i>
       <h1 class="card-title">Des missions ponctuelles</h1>
       <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="vacationToggle" name="vacation"
-          {{#ifCond candidateDatas.wish.contractType '===' 'vacation'}} checked{{/ifCond}}>
+        <input type="checkbox" class="custom-control-input" id="vacationToggle" name="punctual"
+          {{#ifCond candidateDatas.wish.contractCategory '===' 'punctual'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="vacationToggle"></label>
       </div>
     </div>
@@ -39,7 +39,7 @@
       <h1 class="card-title">Un stage</h1>
       <div class="custom-control custom-switch">
         <input type="checkbox" class="custom-control-input" id="internshipToggle" name="internship"
-          {{#ifCond candidateDatas.wish.contractType '===' 'internship'}} checked{{/ifCond}}>
+          {{#ifCond candidateDatas.wish.contractCategory '===' 'internship'}} checked{{/ifCond}}>
         <label class="custom-control-label" for="internshipToggle"></label>
       </div>
     </div>

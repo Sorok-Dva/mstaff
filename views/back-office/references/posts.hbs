@@ -71,3 +71,11 @@
 </div>
 
 <script src="/assets/dist/js/bo/backoffice_references_posts.min.js"></script>
+
+<script type="text/javascript">
+  let select = `<select class="form-control" name="categories">
+                  {{#each @root.datas.categories as |category|}}
+                    <option value="{{category.id}}" {{#ifCond posts.categoriesPS_id '===' category.id}}selected{{/ifCond}}>{{category.name}}</option>
+                  {{/each}}
+                </select>`
+</script>

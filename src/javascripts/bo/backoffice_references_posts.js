@@ -76,18 +76,14 @@ let showPostModal = () => {
           if (response.status === 'Already exists') {
             notify('already-exist-post');
           } else {
-            let select = `<select name="categories">
-                  {{#each @root.datas.categories as |category|}}
-                    <option value="{{category.id}}">{{category.name}}</option>
-                  {{/each}}
-                </select>`
             table.bootstrapTable('insertRow', {
               index: 0,
               row: {
                 id: response.reference.id,
                 name: response.reference.name,
-                category: select,
-                actions: ''
+                category: 'none',
+                modifcategory: select,
+                actions: '<td></td>'
               }
             });
             $(`tr[data-index="0"]`).attr("data-id", `${response.reference.id}`);
