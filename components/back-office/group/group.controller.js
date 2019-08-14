@@ -11,6 +11,32 @@ const layout = 'admin';
 
 const BackOffice_Group = {};
 
+BackOffice_Group.GetLinkES = (req, res, next) => {
+  /*
+  let model = req.params.type;
+  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  let query = { };
+  switch (model) {
+    case 'UsersGroups' : query.id_group = req.params.id; break;
+    case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+    default:
+      return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
+  }
+   */
+  Models.EstablishmentGroups.findAll({
+    where: { id_group: req.params.id },
+    attributes: ['id'],
+    include: [{
+      model: Models.Establishment, as: 'es',
+      attributes: ['id', 'name', 'finess'],
+      required: true,
+    }]
+  }).then(usersGroup => {
+    //if (_.isNil(usersGroup)) return next(new BackError(`Users in Group ${req.params.id} not found`, httpStatus.NOT_FOUND));
+    return res.status(200).send(usersGroup);
+  }).catch(error => next(new BackError(error)));
+};
+
 BackOffice_Group.EditLinkES = (req, res, next) => {
   if (!req.body.selectInput || !req.params.id) {
     return res.status(400).json({ status: 'invalid input' })
@@ -131,6 +157,7 @@ BackOffice_Group.Add = (req, res, next) => {
 
 BackOffice_Group.Remove = (req, res, next) => {
   let model = req.params.type;
+  let arrays;
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   if (model !== 'Groups' && model !== 'SuperGroups') return next(new BackError(`Modèle "${model}" non autorisé.`, httpStatus.NOT_FOUND));
   return Models[model].findOne({ where: { id: req.params.id } }).then(group => {
@@ -138,6 +165,8 @@ BackOffice_Group.Remove = (req, res, next) => {
     return group.destroy().then(data => res.status(201).send({ deleted: true, data }));
   }).catch(error => next(new BackError(error)));
 };
+
+
 
 BackOffice_Group.ViewSuperGroups = (req, res) => {
   return Models.SuperGroups.findAll().then(superGroup => {
@@ -148,10 +177,12 @@ BackOffice_Group.ViewSuperGroups = (req, res) => {
 };
 
 BackOffice_Group.addUser = (req, res, next) => {
+
   const errors = validationResult(req);
   let model = req.params.type;
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+
   try {
     Models.User.findOrCreate({
       where: { email: req.body.email },
@@ -169,6 +200,8 @@ BackOffice_Group.addUser = (req, res, next) => {
       }
     }).spread((user, created) => {
       if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
+
+
       let query = {  user_id: user.id };
       switch (model) {
         case 'UsersGroups' : query.id_group = req.params.id; break;
@@ -176,24 +209,32 @@ BackOffice_Group.addUser = (req, res, next) => {
         default:
           return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
       }
-      Models[model].findOrCreate({
-        where: query,
-        defaults: {
-          role: req.body.role,
-        }
-      }).spread((group, groupCreated) => {
-        if (created) {
-          mailer.sendEmail({
-            to: user.email,
-            subject: 'Bienvenue sur Mstaff !',
-            template: 'es/new_user',
-            context: { user }
-          });
-          return res.status(201).json({ status: 'Created and added to group/supergroup', user, group });
-        } else {
-          if (groupCreated) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
-          return res.status(200).json({ status: 'Already exists', user, group });
-        }
+
+      let arrayBulk = [];
+
+      req.body.es.forEach(element => {
+        arrayBulk.push({ user_id: user.id, group_id: req.params.id, es_id: element });
+      });
+      Models.UsersGroupsEs.bulkCreate(arrayBulk).then(() => {
+        Models[model].findOrCreate({
+          where: query,
+          defaults: {
+            role: req.body.role,
+          }
+        }).spread((group, groupCreated) => {
+          if (created) {
+            mailer.sendEmail({
+              to: user.email,
+              subject: 'Bienvenue sur Mstaff !',
+              template: 'es/new_user',
+              context: { user }
+            });
+            return res.status(201).json({ status: 'Created and added to group/supergroup', user, group });
+          } else {
+            if (groupCreated) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
+            return res.status(200).json({ status: 'Already exists', user, group });
+          }
+        });
       });
     });
   } catch (errors) {
