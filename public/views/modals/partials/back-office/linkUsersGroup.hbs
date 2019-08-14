@@ -77,6 +77,18 @@
         </div>
       </div>
     </div>
+
+    <div id="esid-form" class="form-group">
+      <div class="row">
+        <label for="includeEs" class="col-md-4 control-label">Inclure dans</label>
+        <div class="col-md-8">
+      <select id="esid" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
+              data-live-search="true">
+      </select>
+        </div>
+      </div>
+    </div>
+
     <input type="hidden" name="group_id" value="{{ this.group.id }}">
     <input type="hidden" id="user_id">
   </div>
@@ -88,34 +100,25 @@
 </div>
 <script>
 
-  $.get('/api/back-office/groups/UsersGroups/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
+  $.get('/api/back-office/linkES/' + $('input[name="group_id"]').val(), (data) => {
     if (data) {
-      data.forEach(function(element)
-      {
-        console.log(data)
-        let actions = `<button type="button" title="Etablissements" class="btn btn-simple btn-primary btn-icon table-action"
-                      onClick="viewAllowedEs(${element.User.id})"> <i class="fas fa-sliders-h"></i></button>
-                      <button type="button" title="Modifier utilisateur" class="btn btn-simple btn-warning btn-icon table-action"
-                      onclick="modifyUser('${element.User.id}' , '${element.User.email}', '${element.role}')"><i class="ti-pencil-alt"></i> </button>
-                      <button title="Supprimer utilisateur" type="button" class="btn btn-simple btn-danger btn-icon table-action"
-                      onclick="deleteUser(${element.User.id})"><i class="ti-close"></i></button>`;
-
-        let markup = `<tr><td><a>${element.User.id}</a></td><td>${element.User.email}</td><td>${element.User.firstName}</td>
-          <td>${element.User.lastName}</td><td data-id=${element.User.id}>${element.role}</td><td class='text-right'>${actions}</td></tr>`;
-
-        $("table tbody#usersGroupTable").append(markup);
+      data.forEach(element => {
+        $('#esid').append($('<option>', {
+          value: element.es.id,
+          text: element.es.name
+        }));
       });
     }
+    $('#esid').selectpicker();
   });
 
-  function viewAllowedEs(user_id)
+    function viewAllowedEs(user_id)
   {
     $('h6#textDisplayer').text('Modifier les établissements qui seront visibles par cet utilisateur');
     $('div#displayAllUsers').hide();
     $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
     $('div#linkEsUserGroup').show();
     $('button#modifyESLinkInModal').show();
-    $('#EsUserGroupSelect').selectpicker();
   }
 
   function deleteUser(user_id)
@@ -220,6 +223,7 @@
     user.email = $('input[name="AUemail"]').val();
     user.role = $('select[name="role"] option').filter(":selected").val();
     user._csrf = $('meta[name="csrf-token"]').attr('content');
+    user.es = $('select#esid').val();
 
     if (!userExists) {
       user.firstName = $('input[name="AUfirstName"]').val();
