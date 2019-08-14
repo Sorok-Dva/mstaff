@@ -305,7 +305,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
       model: Models.Application,
       as: 'applications',
       attributes: { exclude: ['lat', 'lon'] },
-      where: { es_id: req.user.opts.currentEs },
+      where: { es_id: filterQuery.establishments || req.user.opts.currentEs },
       required: true,
       on: {
         '$Candidate.id$': {
