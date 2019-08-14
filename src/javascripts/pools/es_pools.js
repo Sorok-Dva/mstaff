@@ -8,13 +8,11 @@ function createPool(data) {
       if ($('#personnelMails').val() !== '') {
         let _csrf = $('meta[name="csrf-token"]').attr('content');
         let pool = $('#poolName').val();
-        let referent = $('#referentName').val();
         let mails = $('#personnelMails').val();
 
         $.post(`/my-pool`, {
           _csrf,
           pool,
-          referent,
           mails
         }, () => {
           location.reload();
@@ -51,17 +49,14 @@ function editPool(poolToEdit) {
     modal: 'es/editPool',
     title: 'Modifier un pool de remplaçant',
     name: poolToEdit.dataset.name,
-    referent: poolToEdit.dataset.referent
   }, () => {
     $('button#editPoolButton').click(function () {
       let _csrf = $('meta[name="csrf-token"]').attr('content');
       let name = $('#newPoolName').val();
-      let referent = $('#newReferentName').val();
       let pool = poolToEdit.dataset.pool;
       $.put(`/my-pool`, {
         _csrf,
         pool,
-        referent,
         name
       }, (response) => {
         if (response === 'Modifications done') {
@@ -135,15 +130,13 @@ function poolInvitation(selectedPool) {
 }
 
 function personnelStep() {
-  if ($('#poolName').val() !== '' && $('#referentName').val() !== '')
+  if ($('#poolName').val() !== '')
   {
     $('#addPersonnelButton').toggle();
     $('#poolNameLabel').toggle();
-    $('#referentNameLabel').toggle();
     $('#personnelMailsLabel').toggle();
     $('#esNameDiv').hide();
     $('#toggleDiv').hide();
-    $('#referentName').toggle();
     $('#poolName').toggle();
     $('#createPoolButton').toggle();
     $('#personnelMails').multiple_emails({

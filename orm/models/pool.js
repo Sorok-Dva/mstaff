@@ -2,7 +2,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Pool = sequelize.define('Pool', {
     name: DataTypes.STRING,
-    referent: DataTypes.STRING,
     user_id: DataTypes.STRING,
     es_id: DataTypes.INTEGER,
   }, {});
