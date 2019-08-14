@@ -1488,10 +1488,25 @@ User_Candidate.viewMyPools = (req, res, next) => {
           [Op.col]: 'pool.id'
         }
       },
-      include: {
+      include: [{
         model: Models.Establishment,
         attributes: ['name'],
-      }
+        as: 'es',
+        on: {
+          '$pool.es_id$': {
+            [Op.col]: 'pool->es.id'
+          },
+        },
+      },
+      {
+        model: Models.User,
+        attributes: ['email'],
+        on: {
+          '$pool.user_id$': {
+            [Op.col]: 'pool->User.id'
+          },
+        },
+      }]
     }
   }).then(pools => {
     return res.render('candidates/my-pools', { main: 'pools', pools } );

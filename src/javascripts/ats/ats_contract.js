@@ -3,19 +3,19 @@ function resetAvailability(){
   candidateDatas.wish.partTime = false;
   candidateDatas.wish.dayTime = false;
   candidateDatas.wish.nightTime = false;
-};
+}
 
 function resetInternshipDate(){
   candidateDatas.wish.start = undefined;
   candidateDatas.wish.end = undefined;
-};
+}
 
 function selectTemplate(checkedSwitch){
   switch (checkedSwitch) {
-    case 'cdi-cdd':
-      return 'cdiTime';
+    case 'durable':
+      return 'durableContract';
       break;
-    case 'vacation':
+    case 'punctual':
       return 'experience';
       break;
     case 'internship':
@@ -24,7 +24,7 @@ function selectTemplate(checkedSwitch){
     default:
       return 'experience';
   }
-};
+}
 
 function contractListener(){
   $('#backToPost').click(function () {
@@ -37,7 +37,7 @@ function contractListener(){
       saveDatas();
       let selected = $('#contractChoices input:checked').attr('name');
       let template = selectTemplate(selected);
-      if (selected === 'vacation' && permissions.recap){
+      if (selected === 'punctual' && permissions.recap){
         permissions.recap = false;
         loadTemplate(`/views/ats/recap.hbs`, {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
           $('#atsPart').html(html);
@@ -72,7 +72,7 @@ function contractListener(){
 
 function verifyInputs(){
   return ($('#contractChoices input:checked').length) ? true : notify('contractChoice');
-};
+}
 
 function notify(error){
   switch (error) {
@@ -86,15 +86,15 @@ function notify(error){
       break;
   }
   return false;
-};
+}
 
 function saveDatas(){
-  candidateDatas.wish.contractType = $('#contractChoices input:checked').prop('name');
-};
+  candidateDatas.wish.contractCategory = $('#contractChoices input:checked').prop('name');
+}
 
 function init_contract(){
   contractListener();
-};
+}
 
 $(document).ready(() => {
   init_contract();

@@ -71,6 +71,7 @@ function saveDatas(){
 };
 
 function init_internshipTime(){
+  candidateDatas.wish.contractType = 'internship';
   internshipTimeListener();
   $('#internshipDate input').datetimepicker({
     format: 'D MMMM YYYY',
