@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 const crypto = require('crypto');
+const { Op } = require('sequelize');
 const mailer = require(`${__}/bin/mailer`);
 
 const Models = require(`${__}/orm/models/index`);
@@ -265,6 +266,25 @@ BackOffice_Group.getUsers = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+BackOffice_Group.getEsFromUser = (req, res, next) => {
+  let model = req.params.type;
+  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  let query = {};
+  switch (model) {
+    case 'UsersGroupsEs' : query.group_id = req.params.id; query.user_id = req.params.user_id; break;
+    case 'UsersSuperGroupsEs' : query.supergroup_id = req.params.id; query.user_id = req.params.user_id; break;
+    default:
+      return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
+  }
+  Models[model].findAll({
+    where: query,
+    attributes: ['es_id']
+  }).then( esUserGroup => {
+    if (!esUserGroup) return res.status(400).send({ body: req.body, error: 'User no have linked ES in this group.' });
+    return res.status(200).send(esUserGroup);
+  }).catch(error => next(new BackError(error)));
+};
+
 BackOffice_Group.removeUser = (req, res, next) => {
   let query = { user_id: req.params.userId };
   let model = req.params.type;
@@ -277,7 +297,9 @@ BackOffice_Group.removeUser = (req, res, next) => {
   }
   return Models[model].findOne({ where: query }).then(groupUser => {
     if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this group.' });
-    return groupUser.destroy().then(data => res.status(201).send({ deleted: true, data }));
+    return groupUser.destroy().then(
+      data => res.status(201).send({ deleted: true, data })
+    );
   }).catch(error => next(new BackError(error)));
 };
 
