@@ -34,9 +34,12 @@ function skillListener() {
         $('#atsPart').html(html);
       })
     } else {
-      loadTemplate('/views/ats/identity.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
-        $('#atsPart').html(html);
-      })
+      $.ajax({ url: `/views/partials/tooltips/emailHint.hbs`, cache: true, success: (source) => {
+          Handlebars.registerPartial(`tooltips/emailHint`, source);
+          loadTemplate('/views/ats/identity.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
+            $('#atsPart').html(html);
+          })
+        }}).catch((xhr, status, error) => catchError(xhr, status, error));
     }
   });
 }
@@ -53,13 +56,13 @@ function editSkill(id){
   resetForm();
   $('#skill').val(candidateDatas.skills[i].name).trigger('keyup');
   starsSelector(`star${candidateDatas.skills[i].stars}`);
-};
+}
 
 function deleteSkill(id){
   createModal({ id: 'removeDiplomaSkill', modal: 'ats/removeSkill', title: 'Confirmation' }, () => {
     $('#btnAtsRemoveSkill').attr('onclick', `validateDeleteSkill(${id})`);
   });
-};
+}
 
 function validateDeleteSkill(id){
   resetForm();
@@ -75,13 +78,13 @@ let customClass = `class="row justify-content-between align-items-center mt-3 re
 let editButton = `<button class="btn padding-0 mr-3" onclick="editSkill(${item.id})"><i class="fal fa-edit"></i></button>`;
 let deleteButton = `<button class="btn padding-0" onclick="deleteSkill(${item.id})"><i class="fal fa-trash-alt"></i></button>`;
 $(`<div ${customClass} data-id="${item.id}">${title}<div>${editButton}${deleteButton}</div></div>`).appendTo($('.recap'));
-};
+}
 
 function generateDatasRecap(){
   $('.recap-item').remove();
   candidateDatas.skills.forEach( skill => addToDatasRecap(skill));
   $('#recap').addClass('d-lg-block');
-};
+}
 
 function starsSelector(id){
   $('#stars div i').css('display', 'none');
@@ -111,7 +114,7 @@ function starsSelector(id){
       $('#legend').html('Je sais former');
       break;
   }
-};
+}
 
 function starsSelected(){
   if ($('#star3 i.fas.fa-star').prop('style').display === 'inline-block')
@@ -121,7 +124,7 @@ function starsSelected(){
   if ($('#star1 i.fas.fa-star').prop('style').display === 'inline-block')
     return 1;
   return 0;
-};
+}
 
 function createSkillList(skills, input){
   arrays.skills = [];
@@ -133,13 +136,13 @@ function createSkillList(skills, input){
     source: arrays.skills,
     minLength: 1
   });
-};
+}
 
 function verifyInputs(){
   let skill = !$.isEmptyObject($('#skill').val()) && $('#skill').val().length > 2 ? true : notify('noSkill');
   let stars = starsSelected() > 0 ? true : notify('noStars')
   return (skill && stars);
-};
+}
 
 function notify(error){
   switch (error) {
@@ -169,7 +172,7 @@ function notify(error){
       break
   }
   return false;
-};
+}
 
 function saveDatas(editMode){
   let current = {};
@@ -187,12 +190,12 @@ function saveDatas(editMode){
   } else {
     candidateDatas.skills.push(current);
   }
-};
+}
 
 function init_skill(){
   skillListener();
   createSkillList(databaseDatas.allSkills, $('#skill'));
-};
+}
 
 $(document).ready(() => {
   init_skill();

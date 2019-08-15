@@ -1,8 +1,11 @@
 function recapListener(){
   $('#backToIdentity').click(function() {
-    loadTemplate('/views/ats/identity.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
+    $.ajax({ url: `/views/partials/tooltips/emailHint.hbs`, cache: true, success: (source) => {
+        Handlebars.registerPartial(`tooltips/emailHint`, source);
+        loadTemplate('/views/ats/identity.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
+          $('#atsPart').html(html);
+        })
+      }}).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 
   $('#toLegal').click(function() {
@@ -61,11 +64,14 @@ function recapListener(){
   });
 
   $('#editIdentity').click(function() {
-    loadTemplate('/views/ats/identity.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-      $('#atsPart').html(html);
-    })
+    $.ajax({ url: `/views/partials/tooltips/emailHint.hbs`, cache: true, success: (source) => {
+        Handlebars.registerPartial(`tooltips/emailHint`, source);
+        loadTemplate('/views/ats/identity.hbs', { candidateDatas, databaseDatas, arrays, permissions }, (html) => {
+          $('#atsPart').html(html);
+        })
+      }}).catch((xhr, status, error) => catchError(xhr, status, error));
   });
-};
+}
 
 $(document).ready(() => {
   recapListener();
