@@ -27,7 +27,7 @@
   </div>
 
   <div id="linkEsUserGroup" style="display: none">
-    <select id="EsUserGroupSelect" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
+    <select id="esid" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
             data-live-search="true">
     </select>
   </div>
@@ -82,9 +82,9 @@
       <div class="row">
         <label for="includeEs" class="col-md-4 control-label">Inclure dans</label>
         <div class="col-md-8">
-      <select id="esid" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
-              data-live-search="true">
-      </select>
+          <select id="esidNew" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
+                  data-live-search="true">
+          </select>
         </div>
       </div>
     </div>
@@ -100,6 +100,23 @@
 </div>
 <script>
 
+  $.get('/api/back-office/groups/UsersGroups/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
+    if (data) {
+      data.forEach(function(element)
+      {
+        let actions = `<button type="button" title="Etablissements liés à ce compte" class="btn btn-simple btn-primary btn-icon table-action"
+          onclick="viewAllowedEs('${element.User.id}')"> <i class="ti-flag-alt-2"></i> </button> <button type="button" title="Modifier utilisateur"
+          class="btn btn-simple btn-warning btn-icon table-action"
+           onclick="modifyUser('${element.User.id}' , '${element.User.email}', '${element.role}')">
+           <i class="ti-pencil-alt"></i> </button><button title="Supprimer utilisateur" type="button"
+           class="btn btn-simple btn-danger btn-icon table-action" onclick="deleteUser(${element.User.id})"><i class="ti-close"></i></button>`;
+        let markup = `<tr><td><a>${element.User.id}</a></td><td>${element.User.email}</td><td>${element.User.firstName}</td>
+          <td>${element.User.lastName}</td><td data-id=${element.User.id}>${element.role}</td><td class='text-right'>${actions}</td></tr>`;
+        $("table tbody#usersGroupTable").append(markup);
+      });
+    }
+  });
+
   $.get('/api/back-office/linkES/' + $('input[name="group_id"]').val(), (data) => {
     if (data) {
       data.forEach(element => {
@@ -107,9 +124,15 @@
           value: element.es.id,
           text: element.es.name
         }));
+
+        $('#esidNew').append($('<option>', {
+          value: element.es.id,
+          text: element.es.name
+        }));
       });
     }
     $('#esid').selectpicker();
+    $('#esidNew').selectpicker();
   });
 
     function viewAllowedEs(user_id)
@@ -119,6 +142,16 @@
     $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
     $('div#linkEsUserGroup').show();
     $('button#modifyESLinkInModal').show();
+
+    $.get('/api/back-office/groups/UsersGroupsEs/' + $('input[name="group_id"]').val() + '/user/' + user_id, (data) => {
+      if(data) {
+        let val = [];
+        data.forEach(element => {
+          val.push(element.es_id);
+        });
+        $('#esid').selectpicker('val', val );
+      }
+    });
   }
 
   function deleteUser(user_id)
@@ -177,6 +210,7 @@
   $('#AUemail').blur(() => {
     if($('button#btnDisplayAddUser').val() === "0") {
       let email = $('#AUemail').val();
+      if (!email) return false;
       $.get(`/api/user/emailAvailable/${email}`, (result) => {
         if (!result.available) {
           $('.toHide').hide();
@@ -223,7 +257,7 @@
     user.email = $('input[name="AUemail"]').val();
     user.role = $('select[name="role"] option').filter(":selected").val();
     user._csrf = $('meta[name="csrf-token"]').attr('content');
-    user.es = $('select#esid').val();
+    user.es = $('select#esidNew').val();
 
     if (!userExists) {
       user.firstName = $('input[name="AUfirstName"]').val();
@@ -231,18 +265,38 @@
       user.phone = $('input[name="AUphone"]').val();
     }
 
+    if(!user.email || !user.firstName && !userExists || !user.lastName && !userExists || !user.phone && !userExists)
+    {
+      return  notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Informations manquantes :',
+        message: `Veuillez remplir tous les champs demandés.`
+      });
+    }
+
+    if(!user.es.length)
+    {
+      return  notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Aucun établissement selectionné :',
+        message: `Vous n'avez pas sélectionné d'établissement. Veuillez au moins en ajouter 1.`
+      });
+    }
+
     $.put('/api/back-office/groups/UsersGroups/' + group_id + '/add/user', user, (data) => {
       if (data.status === 'Already exists') {
         notification({
           icon: 'exclamation',
           type: 'danger',
-          title: 'Utilisateur déjà présent dans cet établissement.',
+          title: 'Utilisateur déjà présent dans ce groupe.',
         });
       } else if (data.status === 'Not an ES account') {
         notification({
           icon: 'exclamation',
           type: 'danger',
-          title: 'Utilisateur non ajouté à l\'établissement:',
+          title: 'Utilisateur non ajouté au groupe :',
           message: `Cet utilisateur existe déjà avec un autre type de compte (${data.user.type}) et ne peut donc pas
           être ajouté à un établissement.`
         });
