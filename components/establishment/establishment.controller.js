@@ -46,7 +46,8 @@ Establishment.find = (id, next) => {
     where: { id },
     include: {
       model: Models.Offer,
-      as: 'offers'
+      as: 'offers',
+      where: { status: 'published' }
     }
   }).then(es => {
     if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
