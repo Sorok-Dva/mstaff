@@ -1,4 +1,4 @@
-function durableContractListener(){
+function punctualContractListener(){
   $('#backToContract').click(function () {
     loadTemplate('/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
       $('#atsPart').html(html);
@@ -12,23 +12,14 @@ function durableContractListener(){
       })
     }
   });
-  $('#durableTypeChoices input').change(function () {
+  $('#punctualTypeChoices input').change(function () {
     if (this.checked){
       switch(this.id){
-        case 'cdiToggle':
-          $('#cpToggle, #clToggle, #alToggle, #rclToggle').prop('checked', false);
+        case 'cddToggle':
+          $('#rlToggle').prop('checked', false);
           break;
-        case 'cpToggle':
-          $('#cdiToggle, #clToggle, #alToggle, #rclToggle').prop('checked', false);
-          break;
-        case 'clToggle':
-          $('#cdiToggle, #cpToggle, #alToggle, #rclToggle').prop('checked', false);
-          break;
-        case 'alToggle':
-          $('#cdiToggle, #cpToggle, #clToggle, #rclToggle').prop('checked', false);
-          break;
-        case 'rclToggle':
-          $('#cdiToggle, #cpToggle, #clToggle, #alToggle').prop('checked', false);
+        case 'rlToggle':
+          $('#cddToggle').prop('checked', false);
           break;
       }
     }
@@ -36,7 +27,7 @@ function durableContractListener(){
 }
 
 function verifyInputs(){
-  return ($('#durableTypeChoices input:checked').length) ? true : notify('contractChoice');
+  return ($('#punctualTypeChoices input:checked').length) ? true : notify('contractChoice');
 }
 
 function notify(error){
@@ -54,9 +45,9 @@ function notify(error){
 }
 
 function saveDatas(){
-  candidateDatas.wish.contractType = $('#durableTypeChoices input:checked').prop('name');
+  candidateDatas.wish.contractType = $('#punctualTypeChoices input:checked').prop('name');
 }
 
 $(document).ready(() => {
-  durableContractListener();
+  punctualContractListener();
 });
