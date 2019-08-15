@@ -157,7 +157,6 @@ BackOffice_Group.Add = (req, res, next) => {
 
 BackOffice_Group.Remove = (req, res, next) => {
   let model = req.params.type;
-  let arrays;
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   if (model !== 'Groups' && model !== 'SuperGroups') return next(new BackError(`Modèle "${model}" non autorisé.`, httpStatus.NOT_FOUND));
   return Models[model].findOne({ where: { id: req.params.id } }).then(group => {
@@ -211,10 +210,10 @@ BackOffice_Group.addUser = (req, res, next) => {
       }
 
       let arrayBulk = [];
-
       req.body.es.forEach(element => {
         arrayBulk.push({ user_id: user.id, group_id: req.params.id, es_id: element });
       });
+
       Models.UsersGroupsEs.bulkCreate(arrayBulk).then(() => {
         Models[model].findOrCreate({
           where: query,
