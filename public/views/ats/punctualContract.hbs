@@ -1,0 +1,41 @@
+<i id="backToContract" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+<!-- Heading -->
+<div class="height-80 d-flex flex-column justify-content-center">
+  <div class="row justify-content-center mb-1 mb-md-1">
+    <h2 class="text-center col-12 underline">Quel type de contrat ?</h2>
+  </div>
+
+  <div id="punctualTypeChoices" class="row justify-content-center">
+    <div class="card text-center col-6 height-10 width-40">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <h2 class="card-title">Missions / Vacations / CDD</h2>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="cddToggle" name="CDD"
+            {{#ifCond candidateDatas.wish.contractType '===' 'CDD'}} checked{{/ifCond}}>
+          <label class="custom-control-label" for="cddToggle"></label>
+        </div>
+
+      </div>
+    </div>
+    <div class="w-100"></div>
+
+    <div class="card text-center col-6 height-10 width-40">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <h2 class="card-title">Remplacement Libéral</h2>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="rlToggle" name="RL"
+            {{#ifCond candidateDatas.wish.contractType '===' 'RL'}} checked{{/ifCond}}>
+          <label class="custom-control-label" for="rlToggle"></label>
+        </div>
+
+      </div>
+    </div>
+    <div class="w-100"></div>
+
+  </div>
+</div>
+<div class="row justify-content-end">
+  <div class="custom-cursor" id="toExperience"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
+</div>
+
+<script src="/assets/dist/js/ats/ats_punctualContract.min.js"></script>

@@ -16,7 +16,7 @@ function selectTemplate(checkedSwitch){
       return 'durableContract';
       break;
     case 'punctual':
-      return 'experience';
+      return 'punctualContract';
       break;
     case 'internship':
       return 'internshipTime';

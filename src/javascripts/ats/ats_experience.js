@@ -96,7 +96,7 @@ function selectTemplate(savedValue){
       return 'durableContract';
       break;
     case 'punctual':
-      return 'contract';
+      return 'punctualContract';
       break;
     case 'internship':
       return 'internshipTime';
