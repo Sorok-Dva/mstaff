@@ -14,32 +14,32 @@ function editSection(sectionId){
   let formsPart = $('#formsPart');
   switch (sectionId) {
     case 'natureSection':
-      loadTemplate('/static/views/job_board/natureSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/natureSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'contextSection':
-      loadTemplate('/static/views/job_board/contextSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/contextSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'detailsSection':
-      loadTemplate('/static/views/job_board/detailsSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/detailsSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'postDescriptionSection':
-      loadTemplate('/static/views/job_board/postDescriptionSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/postDescriptionSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'requirementSection':
-      loadTemplate('/static/views/job_board/requirementSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/requirementSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'termsSection':
-      loadTemplate('/static/views/job_board/termsSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/termsSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
