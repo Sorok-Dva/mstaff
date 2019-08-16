@@ -92,11 +92,7 @@ function saveDatas(){
   candidateDatas.wish.contractCategory = $('#contractChoices input:checked').prop('name');
 }
 
-function init_contract(){
-  contractListener();
-}
-
 $(document).ready(() => {
-  init_contract();
+  contractListener();
 });
 

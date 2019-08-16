@@ -1,3 +1,10 @@
+function resetAvailability(){
+  candidateDatas.wish.fullTime = false;
+  candidateDatas.wish.partTime = false;
+  candidateDatas.wish.dayTime = false;
+  candidateDatas.wish.nightTime = false;
+}
+
 function durableContractListener(){
   $('#backToContract').click(function () {
     loadTemplate('/views/ats/contract.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
@@ -7,9 +14,16 @@ function durableContractListener(){
   $('#toExperience').click(function () {
     if (verifyInputs()){
       saveDatas();
-      loadTemplate('/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
-        $('#atsPart').html(html);
-      })
+      let selected = $('#durableTypeChoices input:checked').attr('name');
+      if (selected === 'CDI'){
+        loadTemplate('/views/ats/cdiTime.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+          $('#atsPart').html(html);
+        })
+      } else {
+        loadTemplate('/views/ats/experience.hbs', {candidateDatas, databaseDatas, arrays, permissions}, (html) => {
+          $('#atsPart').html(html);
+        })
+      }
     }
   });
   $('#durableTypeChoices input').change(function () {
@@ -20,15 +34,19 @@ function durableContractListener(){
           break;
         case 'cpToggle':
           $('#cdiToggle, #clToggle, #alToggle, #rclToggle').prop('checked', false);
+          resetAvailability();
           break;
         case 'clToggle':
           $('#cdiToggle, #cpToggle, #alToggle, #rclToggle').prop('checked', false);
+          resetAvailability();
           break;
         case 'alToggle':
           $('#cdiToggle, #cpToggle, #clToggle, #rclToggle').prop('checked', false);
+          resetAvailability();
           break;
         case 'rclToggle':
           $('#cdiToggle, #cpToggle, #clToggle, #alToggle').prop('checked', false);
+          resetAvailability();
           break;
       }
     }
