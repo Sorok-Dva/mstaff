@@ -52,17 +52,17 @@ function contractListener(){
   $('#contractChoices input').change(function () {
     if (this.checked){
       switch(this.id){
-        case 'cdiToggle':
-          $('#vacationToggle, #internshipToggle').prop('checked', false);
+        case 'durableToggle':
+          $('#punctualToggle, #internshipToggle').prop('checked', false);
           resetInternshipDate();
           break;
-        case 'vacationToggle':
-          $('#cdiToggle, #internshipToggle').prop('checked', false);
+        case 'punctualToggle':
+          $('#durableToggle, #internshipToggle').prop('checked', false);
           resetAvailability();
           resetInternshipDate();
           break;
         case 'internshipToggle':
-          $('#cdiToggle, #vacationToggle').prop('checked', false);
+          $('#durableToggle, #punctualToggle').prop('checked', false);
           resetAvailability();
           break;
       }

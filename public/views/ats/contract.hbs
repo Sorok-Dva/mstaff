@@ -11,9 +11,9 @@
       <i class="fal fa-infinity fa-3x"></i>
       <h1 class="card-title">Un travail durable</h1>
       <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="cdiToggle" name="durable"
+        <input type="checkbox" class="custom-control-input" id="durableToggle" name="durable"
               {{#ifCond candidateDatas.wish.contractCategory '===' 'durable'}} checked{{/ifCond}}>
-        <label class="custom-control-label" for="cdiToggle"></label>
+        <label class="custom-control-label" for="durableToggle"></label>
       </div>
 
     </div>
@@ -25,9 +25,9 @@
       <i class="fal fa-calendar-alt fa-3x"></i>
       <h1 class="card-title">Des missions ponctuelles</h1>
       <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="vacationToggle" name="punctual"
+        <input type="checkbox" class="custom-control-input" id="punctualToggle" name="punctual"
           {{#ifCond candidateDatas.wish.contractCategory '===' 'punctual'}} checked{{/ifCond}}>
-        <label class="custom-control-label" for="vacationToggle"></label>
+        <label class="custom-control-label" for="punctualToggle"></label>
       </div>
     </div>
   </div>

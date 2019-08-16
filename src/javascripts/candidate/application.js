@@ -6,46 +6,81 @@ let geoActivate = false;
 let ApplicationIsAddMode = true;
 
 // Step #1
+
+function resetAllCheckboxExcept(name) {
+  $('#step1').find(':input').not(`[name=${name}]`).prop('checked', false);
+  if (name !== 'cdi-cdd') {
+    $('#activityType').hide();
+    $('#timeType').hide();
+    delete application.timeType;
+  }
+}
+
+function showContractTypeDiv(selected, isChecked){
+  let durable = $('#contractDurableType');
+  let punctual = $('#contractPunctualType');
+
+  if (isChecked){
+    switch (selected) {
+      case 'durableContract':
+        durable.show();
+        punctual.hide();
+        break;
+      case 'punctualContract':
+        durable.hide();
+        punctual.show();
+        break;
+    }
+  } else {
+    durable.hide();
+    punctual.hide();
+    delete application.contractType;
+  }
+}
+
 $('#step1 input[type="checkbox"]').change(function () {
   let selected = $(this).attr('name');
-  let resetAllCheckboxExcept = (name) => {
-    $('#step1').find(':input').not(`[name=${name}]`).prop('checked', false);
-    if (name !== 'cdi-cdd'){
-      $('#activityType').hide();
-      $('#timeType').hide();
-      delete application.timeType;
-    }
-  };
-
   switch (selected) {
-    case 'cdi-cdd':
+    case 'durableContract':
       resetAllCheckboxExcept(selected);
-      if (this.checked){
-        $('#activityType').show();
-        $('#timeType').show();
-        application.contractType = {name: selected, value: 'CDI / CDD'};
-        application.timeType = {};
-      } else {
-        $('#activityType').hide();
-        $('#timeType').hide();
-        delete application.contractType;
-        delete application.timeType;
-      }
+      showContractTypeDiv(selected, this.checked);
       break;
-    case 'vacation':
+    case 'punctualContract':
       resetAllCheckboxExcept(selected);
-      if (this.checked){
-        application.contractType = { name: selected, value: 'VACATION' };
-        delete application.timeType;
-      } else delete application.contractType;
+      showContractTypeDiv(selected, this.checked);
       break;
     case 'internship':
       resetAllCheckboxExcept(selected);
+      showContractTypeDiv(selected);
+
       if (this.checked){
         application.contractType = { name: selected, value: 'STAGE' };
         delete application.timeType;
-      } else delete application.contractType;
+      }
       break;
+
+    // case 'cdi-cdd':
+    //   resetAllCheckboxExcept(selected);
+    //   if (this.checked){
+    //     $('#activityType').show();
+    //     $('#timeType').show();
+    //     application.contractType = {name: selected, value: 'CDI / CDD'};
+    //     application.timeType = {};
+    //   } else {
+    //     $('#activityType').hide();
+    //     $('#timeType').hide();
+    //     delete application.contractType;
+    //     delete application.timeType;
+    //   }
+    //   break;
+    // case 'vacation':
+    //   resetAllCheckboxExcept(selected);
+    //   if (this.checked){
+    //     application.contractType = { name: selected, value: 'VACATION' };
+    //     delete application.timeType;
+    //   } else delete application.contractType;
+    //   break;
+
     case 'full_time':
       this.checked ? application.timeType.fullTime = { name: selected, value: 'TEMPS PLEIN' } : delete application.timeType.fullTime;
       break;
@@ -644,6 +679,8 @@ $(document).ready(function () {
   let searchCity = $('#searchCity');
   const keyEnter = 13;
 
+  $('#contractDurableType').hide();
+  $('#contractPunctualType').hide();
   selectPostType.select2();
   selectServiceType.selectpicker();
   allServiceType.prop('disabled', true);
