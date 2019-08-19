@@ -23,7 +23,7 @@ function showContractTypeDiv(selected, isChecked){
   let durable = $('#contractDurableType');
   let punctual = $('#contractPunctualType');
   let activityType = $('#activityType');
-  let timeType = $('#timeTy
+  let timeType = $('#timeType');
 
   durable.hide();
   punctual.hide();
