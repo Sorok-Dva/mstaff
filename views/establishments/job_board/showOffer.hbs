@@ -106,7 +106,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/trumbowyg.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/langs/fr.min.js"></script>
 <script>
-  let offer = JSON.parse(`{{{json offer}}}`);
+  let offer = {
+    id: {{offer.id}},
+    es_id: {{offer.es_id}},
+    need_id: {{offer.need_id}},
+    createdBy: {{offer.createdBy}},
+    name: '{{offer.name}}',
+    status: '{{offer.status}}',
+  };
+
+  console.log(JSON.parse(`{{json offer.nature_section}}`))
 </script>
 
 <script src="/assets/dist/js/job_board/job_board.min.js"></script>
