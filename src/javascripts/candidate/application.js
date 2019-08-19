@@ -19,6 +19,10 @@ function resetContractDurableTypeCheckboxExcept(name){
   }
 }
 
+function resetContractPunctualTypeCheckboxExcept(name){
+  $('#contractPunctualType input').not(`[name=${name}]`).prop('checked', false);
+}
+
 function showContractTypeDiv(selected, isChecked){
   let durable = $('#contractDurableType');
   let punctual = $('#contractPunctualType');
@@ -93,7 +97,7 @@ $('#contractPunctualType input[type="checkbox"]').change(function() {
   let selected = $(this).attr('name');
   delete application.contractType;
   delete application.timeType;
-  resetContractDurableTypeCheckboxExcept(selected);
+  resetContractPunctualTypeCheckboxExcept(selected);
   if (this.checked){
     switch (selected) {
       case 'CDD':
