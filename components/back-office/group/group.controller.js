@@ -297,9 +297,23 @@ BackOffice_Group.removeUser = (req, res, next) => {
   }
   return Models[model].findOne({ where: query }).then(groupUser => {
     if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this group.' });
-    return groupUser.destroy().then(
-      data => res.status(201).send({ deleted: true, data })
-    );
+    return groupUser.destroy().then( data => {
+      if (model === 'UsersGroups') {
+        model = 'UsersGroupsEs';
+        query = { user_id: req.params.userId, group_id: req.params.id };
+      }
+      return Models[model].destroy({ where: query }).then(data => {
+        res.status(201).send({ deleted: true, data });
+      })
+      /*
+      return Models[model].findAll({ where: query }).then(groupUserEs => {
+        if (!groupUserEs) return res.status(400).send({ body: req.body, error: 'User not have ES linked in this group' });
+        return groupUserEs.destroy().then(data => {
+          res.status(201).send({ deleted: true, data });
+        });
+      });
+       */
+    })
   }).catch(error => next(new BackError(error)));
 };
 
