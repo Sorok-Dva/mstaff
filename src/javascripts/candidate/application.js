@@ -22,9 +22,13 @@ function resetContractDurableTypeCheckboxExcept(name){
 function showContractTypeDiv(selected, isChecked){
   let durable = $('#contractDurableType');
   let punctual = $('#contractPunctualType');
+  let activityType = $('#activityType');
+  let timeType = $('#timeTy
 
   durable.hide();
   punctual.hide();
+  activityType.hide();
+  timeType.hide();
   if (isChecked){
     switch (selected) {
       case 'durableContract':
