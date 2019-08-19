@@ -13,7 +13,7 @@
                 <th>Souhait</th>
                 <th>Type de contrat</th>
                 <th>Établissement(s)</th>
-                <th>Validité</th>
+                {{!-- <th>Validité</th>--}}
                 <th>Action</th>
               </tr>
               </thead>
@@ -22,15 +22,15 @@
                 {{#each wishes as |wish|}}
                   <tr data-applicationId="{{wish.id}}">
                     <td>{{wish.name}}</td>
-                    <td>{{wish.contract_type}}</td>
+                    <td>{{contractType wish.contract_type}}</td>
                     <td>
                       <span class="showEsList" style="cursor: pointer" data-applicationId="{{wish.id}}">
                         {{wish.es_count}}
                       </span>
                     </td>
-                    <td>
+                    {{!--<td>
                       {{{wishValidity wish}}}
-                    </td>
+                    </td>--}}
                     <td>
                       <a href="/wish/edit/{{wish.id}}">
                         <button class="btn btn-simple btn-outline-warning btn-icon editWish" data-id="{{wish.id}}">
@@ -63,4 +63,4 @@
   </div>
 </div>
 
-<script src="/static/assets/dist/js/removeApplication.min.js"></script>
+<script src="/assets/dist/js/candidate/removeApplication.min.js"></script>

@@ -29,7 +29,7 @@
         } else {
           errorsHandler('Une erreur est survenue');
         }
-      }).catch(error => errorsHandler(error));
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
     }
   });
 </script>

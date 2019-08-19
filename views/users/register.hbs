@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="/static/assets/css/telinput/intlTelInput.css">
+<link rel="stylesheet" href="/assets/css/telinput/intlTelInput.css">
 <style>
   .iti-flag {
-    background-image: url("/static/assets/images/telinput/flags.png");
+    background-image: url("/assets/images/telinput/flags.png");
   }
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .iti-flag {
-      background-image: url("/static/assets/images/telinput/flags@2x.png");
+      background-image: url("/assets/images/telinput/flags@2x.png");
     }
   }
 </style>
@@ -51,8 +51,9 @@
           <div class="row">
             <div class="col-6 birthday">
               <label for="birthday">{{tr.pages.register.form_birthDate_label}}</label>
-              <input id="birthday" name="birthday" type="date" value="{{body.birthday}}"
+              <input id="birthday" type="text" value="{{body.birthday}}"
                      class="form-control" required="">
+              <input id="birthdayHidden" type="hidden" name="birthday" value="{{body.birthday}}" required>
             </div>
             <div class="col-6 postal_code">
               <label for="postal_code">{{tr.pages.register.form_postalCode_label}}</label>
@@ -62,6 +63,7 @@
             </div>
           </div>
         </div>
+
         <div class="form-group">
           <div class="row">
             <div class="col-6 town">
@@ -85,7 +87,10 @@
                  class="form-control" value="{{body.phone}}" required="">
         </div>
         <div class="form-group email">
-          <label for="email">{{tr.pages.register.form_email_label}}</label>
+          <label for="email">
+            {{tr.pages.register.form_email_label}}
+            <i class="fal fa-question-circle"  data-toggle="tooltip" data-html="true" data-placement="right" title="{{> tooltips/emailHint }}"></i>
+          </label>
           <input id="email" name="email" type="email" email="true"
                  placeholder="{{tr.pages.register.form_email_ph}}"
                  class="form-control" value="{{body.email}}" required="">
@@ -146,11 +151,11 @@
     <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
       <!-- Image -->
       <div class="bg-cover vh-100 mt-n1 mr-n3"
-           style="background-image: url(/static/assets/images/login-cover-hd.jpg);"></div>
+           style="background-image: url(/assets/images/login-cover-hd.jpg);"></div>
     </div>
   </div>
 </div>
-  <script src="/static/assets/js/telinput/intlTelInput.js"></script>
+  <script src="/assets/js/telinput/intlTelInput.js"></script>
   <script>
     $('#email').blur(() => {
       let email = $('#email').val();
@@ -170,6 +175,15 @@
     $(document).ready(function () {
       let input = document.querySelector("#phone");
       window.intlTelInput(input);
+
+      $('#birthday').datetimepicker({
+        format: 'DD MM YYYY'
+      });
+
+      $('#birthday').on('dp.change',  function (){
+        let value = moment($('#birthday').data("DateTimePicker").date()).format('YYYY-MM-DD');
+        $('#birthdayHidden').val(value);
+      });
     });
     $('#password').focus(() => {
       $('.passwordStrength').show();
@@ -177,5 +191,7 @@
     $('#password').blur(() => {
       $('.passwordStrength').hide();
     });
+
+
   </script>
-  <script src="/static/assets/dist/js/passwordStrengthChecker.min.js"></script>
+  <script src="/assets/dist/js/utils/passwordStrengthChecker.min.js"></script>

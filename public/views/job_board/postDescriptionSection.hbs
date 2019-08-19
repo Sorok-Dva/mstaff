@@ -1,0 +1,43 @@
+<div class=" text-left shadow-grey col-12 p-3 mb-4 postDescriptionSection">
+  <h1 class="text-center">Description du poste</h1>
+  <form id="postDescriptionForm">
+    <div class="form-group">
+      <label for="postPresentation">Présentation du poste</label>
+      <textarea type="text" class="form-control input-blue" id="postPresentation"></textarea>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="postTeam" placeholder="Composition de l'équipe">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="postUphill" placeholder="Rattachement hiérarchique amont">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="postBacking" placeholder="Rattachement hiérarchique aval">
+    </div>
+
+    <div class="form-group">
+      <label for="postExtern">Relations fonctionnelles externes à l'établissement</label>
+      <input type="text" class="form-control input-blue" id="postExternal">
+    </div>
+
+    <div class="form-group">
+      <label for="postIntern">Relations fonctionnelles internes à l'établissement</label>
+      <textarea type="text" class="form-control input-blue" id="postInternal"></textarea>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="postInternService" placeholder="Relations fonctionnelles internes au service">
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="savePostDescription()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelPostDescription()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearPostDescription()">Effacer</button>
+  </div>
+</div>
+
+<script src="/assets/dist/js/job_board/job_board_postDescription.min.js"></script>

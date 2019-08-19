@@ -23,6 +23,11 @@ router.post('/:esId(\\d+)/get/candidate/:userId(\\d+)',
   User.Candidate.getProfile
 );
 
+router.post('/:esId(\\d+)/get/candidate/:userId(\\d+)/applications',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  User.Candidate.getApplicationsInEs
+);
+
 router.post('/:esId(\\d+)/addNeed',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Establishment.Need.Create);
@@ -78,6 +83,14 @@ router.post('/need/:editNeedId(\\d+)/edit',
 router.delete('/need/:id(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Establishment.Need.delete);
+
+/**
+ * @Route('/:esId(\d+)/create/offer/fromNeed/:needId(\\d+)/') POST;
+ * Create Offer from Need
+ */
+router.post('/:esId(\\d+)/create/offer/fromNeed/:needId(\\d+)',
+  Authentication.ensureIsEs && Authentication.verifyEsAccess,
+  Establishment.Offer.Create);
 
 /**
  * @Route('/conference/:id(\\d+)') DELETE;

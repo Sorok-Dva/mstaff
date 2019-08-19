@@ -72,7 +72,7 @@
             message: `Vous avez déjà un entretien d'enregistrer par rapport à ce besoin avec ce candidat.`
           });
         }
-      }).catch(errors => errorsHandler(errors));
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
     });
   });
 </script>

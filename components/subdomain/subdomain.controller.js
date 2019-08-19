@@ -1,8 +1,5 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator/check');
 const { _ } = require('lodash');
-const { BackError } = require(`${__}/helpers/back.error`);
-const httpStatus = require('http-status');
 
 const Models = require(`${__}/orm/models/index`);
 

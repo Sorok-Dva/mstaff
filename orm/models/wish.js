@@ -3,20 +3,38 @@ module.exports = (sequelize, DataTypes) => {
   const Wish = sequelize.define('Wish', {
     candidate_id: DataTypes.INTEGER,
     name: DataTypes.STRING,
-    contract_type: DataTypes.STRING,
+    contract_type: {
+      type: DataTypes.ENUM,
+      values: ['internship', 'CDI', 'CDD', 'CP', 'CL', 'AL', 'RCL', 'RL']
+    },
     posts: {
       type: DataTypes.JSON,
       get() {
-        return JSON.parse(this.getDataValue('posts'))
+        if (this.getDataValue('posts') === null)
+          return [];
+        else {
+          let data = JSON.parse(this.getDataValue('posts'));
+          if (typeof data === 'string') return [data];
+          else return data;
+        }
       },
       set(data) {
-        this.setDataValue('posts', JSON.stringify(data));
+        if (data === null)
+          this.setDataValue('posts', data);
+        else
+          this.setDataValue('posts', JSON.stringify(data));
       }
     },
     services: {
       type: DataTypes.JSON,
       get() {
-        return JSON.parse(this.getDataValue('services'))
+        if (this.getDataValue('services') === null)
+          return [];
+        else {
+          let data = JSON.parse(this.getDataValue('services'));
+          if (typeof data === 'string') return [data];
+          else return data;
+        }
       },
       set(data) {
         if (data === null)

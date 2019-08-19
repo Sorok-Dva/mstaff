@@ -8,7 +8,7 @@ $(document).ready(function () {
     $('#notificationsContainer').hide();
 
     $.get(`/api/user/notification/${notifId}`, (data) => {
-      loadTemplate('/static/views/notification/main.hbs', data, (html) => {
+      loadTemplate('/views/notification/main.hbs', data, (html) => {
         $('#notificationData').html(html).show();
         $('#notif-see-all').hide();
         $('#notif-back').attr('data-id', notifId);
@@ -50,7 +50,7 @@ $(document).ready(function () {
             });
             $('#notif-back').trigger('click');
           }
-        }).catch(errors => errorsHandler(errors));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
         break;
       case 'conf/availability':
         let confid = target.attr('data-confid');
@@ -64,7 +64,7 @@ $(document).ready(function () {
             });
             $('#notif-back').trigger('click');
           }
-        }).catch(errors => errorsHandler(errors));
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
         break;
     }
   })

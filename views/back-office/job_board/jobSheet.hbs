@@ -1,0 +1,83 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/ui/trumbowyg.min.css" />
+<div class="row">
+  <div class="col-md-12">
+    <form method="post" class="card" style="padding: 15px">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+      <fieldset>
+        <legend>
+          <h5 style="text-align: center">Modification de la fiche métier "{{jobSheet.name}}" - <button type="button" id="deleteSheet" class="btn btn-danger"><i class="fal fa-trash"></i></button></h5>
+        </legend>
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="name">Nom</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Nom de la fiche métier"
+                   value="{{jobSheet.name}}">
+          </div>
+          <div class="form-group col-md-12">
+            <label for="description">Description</label>
+            <textarea name="description" id="" cols="30" rows="10" class="form-control" placeholder="Description (HTML) du métier">
+              {{{jobSheet.description}}}
+            </textarea>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="activities">Activités</label>
+            <textarea name="activities" id="" cols="30" rows="10" class="form-control" placeholder="Activités (HTML) du métier">
+              {{{jobSheet.activities}}}
+            </textarea>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="knowHow">Savoir Faire</label>
+            <textarea name="knowHow" id="" cols="30" rows="10" class="form-control" placeholder="Savoir-Faire (HTML) du métier">
+              {{{jobSheet.knowHow}}}
+            </textarea>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="knowledge">Connaissances</label>
+            <textarea name="knowledge" id="" cols="30" rows="10" class="form-control" placeholder="Connaissances (HTML) du métier">
+              {{{jobSheet.knowledge}}}
+            </textarea>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="infos">Informations</label>
+            <textarea name="infos" id="" cols="30" rows="10" class="form-control" placeholder="Informations (HTML) du métier">
+              {{{jobSheet.infos}}}
+            </textarea>
+          </div>
+        </div>
+      </fieldset>
+      <button type="button" class="btn btn-info">Pré-visualisé (soon)</button>
+      <button type="submit" class="btn btn-success">Sauvegarder la fiche métier</button>
+    </form>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/trumbowyg.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/langs/fr.min.js"></script>
+<script>
+  $('textarea').trumbowyg({
+    lang: 'fr',
+    btns: [
+      ['viewHTML'],
+      ['undo', 'redo'], // Only supported in Blink browsers
+      ['formatting'],
+      ['strong', 'em', 'del'],
+      ['superscript', 'subscript'],
+      ['link'],
+      ['insertImage'],
+      ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+      ['unorderedList', 'orderedList'],
+      ['horizontalRule'],
+      ['removeformat'],
+    ],
+    tagsToRemove: ['script', 'link']
+  });
+
+  $('#deleteSheet').click(function() {
+    if (confirm('Voulez vous vraiment supprimer cette fiche métier ?')) {
+      $.delete(`/api/back-office/references/jobSheets/{{jobSheet.id}}`, { _csrf }, (data) => {
+        if (data.deleted) {
+          $(location).attr('href', '/back-office/jobBoard/sheets')
+        }
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
+    }
+  })
+</script>

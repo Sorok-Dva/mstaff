@@ -23,7 +23,7 @@
                 <span style="font-size:17px"><span style="color:#A9A9A9">{{this.needCandidate.Need.post}}</span></span><br>
               {{/if}}
               {{#if this.needCandidate.Need.contract_type}}
-                <span style="font-size:16px">{{this.needCandidate.Need.contract_type}} {{#if this.need.start}}à partir du {{date this.need.start 'DD/MM/YYYY'}}{{/if}}
+                <span style="font-size:16px">{{contractType this.needCandidate.Need.contract_type}} {{#if this.need.start}}à partir du {{date this.need.start 'DD/MM/YYYY'}}{{/if}}
                   {{#if this.need.end}}jusqu'au {{date this.need.end 'DD/MM/YYYY'}}{{/if}}<br></span>
               {{else}}
                 <span style="font-size:16px">{{#if this.need.start}}à partir du {{date this.need.start 'DD/MM/YYYY'}}{{/if}}

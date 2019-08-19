@@ -1,13 +1,12 @@
 let activeBtnLoader;
 
-jQuery.each([ 'put', 'patch', 'delete' ], function ( i, method ) {
-  jQuery[ method ] = function ( url, data, callback, type ) {
-    if ( jQuery.isFunction( data ) ) {
+jQuery.each([ 'put', 'patch', 'delete' ], (i, method) => {
+  jQuery[ method ] = (url, data, callback, type) => {
+    if (jQuery.isFunction(data)) {
       type = type || callback;
       callback = data;
       data = undefined;
     }
-
     return jQuery.ajax({
       url: url,
       type: method,
@@ -18,6 +17,16 @@ jQuery.each([ 'put', 'patch', 'delete' ], function ( i, method ) {
     });
   };
 });
+
+let debug = (data) => {
+  let debugEnable = $('meta[name="debug"]').attr('content');
+  if (debugEnable === 'false') return false;
+  console.time('debug finished in');
+  console.log('%c [DEBUG] :', 'color: orange; font-weight: bold', data);
+  console.trace('StackTrace');
+  if (typeof data === 'object') console.table(data);
+  console.timeEnd('debug finished in');
+};
 
 let notification = (opts) => {
   $.notify({
@@ -46,6 +55,7 @@ let notification = (opts) => {
 };
 
 let errorsHandler = data => {
+  debug(data);
   if (_.isNil(data.responseJSON)) {
     notification({
       icon: 'exclamation',
@@ -79,32 +89,107 @@ let errorsHandler = data => {
   }
 };
 
+let catchError = (xhr, status, error) => {
+  debug({xhr, status, error});
+  let title, message;
+  switch (error) {
+    case 'Bad Request':
+      title = 'Mauvaise requête.';
+      break;
+    case 'Internal Server Error':
+      title = 'Une erreur interne est survenue';
+      if (xhr.responseJSON) {
+        if (typeof xhr.responseJSON.message === 'object') {
+          switch (xhr.responseJSON.message.name) {
+            case 'SequelizeForeignKeyConstraintError':
+              message = `ForeignKeyConstraintError: ${xhr.responseJSON.message.original.sqlMessage}`;
+              break;
+            default:
+              message = xhr.responseJSON.message.sqlMessage;
+          }
+        } else if (typeof xhr.responseJSON.message === 'string') {
+          message = xhr.responseJSON.message;
+        }
+      }
+      break;
+    case 'Forbidden':
+      title = 'Accès non autorisé :';
+      message = 'Vous n\'avez pas accès à cette page.';
+      break;
+    case 'Not Found':
+      title = xhr.responseJSON ? xhr.responseJSON.message : 'Page introuvable';
+      break;
+    case 'Request Time-out':
+      title = 'Requête expirée.';
+      break;
+    case 'Unauthorized':
+      title = 'Accès non autorisé.';
+      break;
+    // First mstaff easter-egg, thanks RFC 2324 :D
+    case 'I’m a teapot':
+      title = 'Je suis une théière :D';
+      break;
+    case '':
+      title = 'Connexion perdue :';
+      message = 'La connexion entre votre ordinateur et Mstaff est actuallement impossible. Veuillez vérifier votre connexion ou réessayer dans quelques minutes.';
+      break;
+    default:
+      title = xhr.responseJSON ? xhr.responseJSON.name : `Erreur inconnue (erreur HTTP ${error})`;
+      message = xhr.responseJSON ? xhr.responseJSON.message : null;
+  }
+  if (!_.isNil(title)) {
+    notification({
+      icon: 'exclamation',
+      type: 'danger',
+      title,
+      message
+    });
+  }
+};
+
 let loadTemplate = (url, data, callback) => {
   if (data.partials) {
     for (let i = 0; i < data.partials.length; i++) {
-      $.ajax({ url: `/static/views/partials/${data.partials[i]}.hbs`, cache: true, success: function (source) {
+      $.ajax({ url: `/views/partials/${data.partials[i]}.hbs`, cache: true, success: (source) => {
         Handlebars.registerPartial(`${data.partials[i]}`, source);
-      } });
+      }}).catch((xhr, status, error) => {
+        $('#loadingModal').modal('hide');
+        catchError(xhr, status, error)
+      });
     }
   }
-  $.ajax({ url, cache: true, success: function (source) {
+  $.ajax({ url, cache: true, success: (source) => {
     if (data.modal) {
-      $.ajax({ url: `/static/views/modals/partials/${data.modal}.hbs`, cache: true, success: function (modal) {
+      $.ajax({ url: `/views/modals/partials/${data.modal}.hbs`, cache: true, success: (modal) => {
         Handlebars.registerPartial(`${data.modal}`, modal);
         let template = Handlebars.compile(source);
-        return callback(template(data));
-      } });
+          return callback(template(data));
+      }}).catch((xhr, status, error) => {
+        $('#loadingModal').modal('hide');
+        catchError(xhr, status, error);
+      });
     } else {
       let template = Handlebars.compile(source);
       return callback(template(data));
     }
-  } });
+  }}).catch((xhr, status, error) => {
+    $('#loadingModal').modal('hide');
+    catchError(xhr, status, error);
+  });
 };
 
 let createModal = (opts, callback) => {
-  $(`#${opts.id}`).remove();
-  loadTemplate('/static/views/modals/main.hbs', opts, (html) => {
+  $('#loadingModal').modal({
+    backdrop: 'static',
+    keyboard: false
+  });
+  if ($(`#${opts.id}`).length > 0) {
+    $(`#${opts.id}`).modal('hide');
+    $(`#${opts.id}`).remove();
+  }
+  loadTemplate('/views/modals/main.hbs', opts, (html) => {
     $('body').append(html);
+    $('#loadingModal').modal('hide');
     if ('cantBeClose' in opts) {
       if (opts.cantBeClose) {
         $(`#${opts.id}`).modal({

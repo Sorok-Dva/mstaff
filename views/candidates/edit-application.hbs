@@ -14,7 +14,7 @@
     margin-left: 15%;
   }
 </style>
-<link rel="stylesheet" href="/static/assets/css/nouislider.css"/>
+<link rel="stylesheet" href="/assets/css/nouislider.css"/>
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.10/css/bootstrap-select.min.css"/>
 <div class="row">
@@ -64,35 +64,36 @@
               </div>
             </div>
             <hr>
-            <div id="contractType" class="row">
+
+            <div id="contractDurability" class="row">
               <div class="col-sm-3">
-                <h2 class="text-bold mt-5">Type de contrat *:</h2>
+                <h2 class="text-bold mt-5">Que recherchez-vous ?*:</h2>
               </div>
-              <div class="col-sm-9">
-                <div id="contracts" class="row sub-step">
-                  <div class="form-group col-4 mt-5">
-                    <div class="checkbox">
-                      <input id="cdi-cdd" name="cdi-cdd" type="checkbox" {{#ifCond wish.contract_type '===' 'cdi-cdd'}}checked=""{{/ifCond}}>
-                      <label for="cdi-cdd">
-                        <h1>CDI / CDD</h1>
-                      </label>
-                    </div>
+              <div class="col-sm-9 row">
+                <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                  <h1 class="card-title">Un travail durable</h1>
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="durableContract" name="durableContract"
+                      {{#ifCond (contractDurabilityType wish.contract_type 'durable') '===' true}} checked{{/ifCond}}>
+                    <label class="custom-control-label" for="durableContract"></label>
                   </div>
-                  <div class="form-group col-4 mt-5">
-                    <div class="checkbox">
-                      <input id="vacation" name="vacation" type="checkbox" {{#ifCond wish.contract_type '===' 'vacation'}}checked=""{{/ifCond}}>
-                      <label for="vacation">
-                        <h1>VACATION</h1>
-                      </label>
-                    </div>
+                </div>
+
+                <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                  <h1 class="card-title">Des missions ponctuelles</h1>
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="punctualContract" name="punctualContract"
+                      {{#ifCond (contractDurabilityType wish.contract_type 'punctual') '===' true}} checked{{/ifCond}}>
+                    <label class="custom-control-label" for="punctualContract"></label>
                   </div>
-                  <div class="form-group col-4 mt-5">
-                    <div class="checkbox">
-                      <input id="internship" name="internship" type="checkbox" {{#ifCond wish.contract_type '===' 'internship'}}checked=""{{/ifCond}}>
-                      <label for="internship">
-                        <h1>STAGE</h1>
-                      </label>
-                    </div>
+                </div>
+
+                <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                  <h1 class="card-title">Stage</h1>
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="internship" name="internship"
+                      {{#ifCond (contractDurabilityType wish.contract_type 'internship') '===' true}} checked{{/ifCond}}>
+                    <label class="custom-control-label" for="internship"></label>
                   </div>
                 </div>
               </div>
@@ -100,64 +101,143 @@
                 <hr>
               </div>
             </div>
-            {{#ifCond wish.contract_type '===' 'cdi-cdd'}}
-            <div id="activityType" class="row">
-              <div class="col-sm-3 mt-3">
-                <h2 class="text-bold">Type d'activité *:</h2>
-              </div>
-              <div class="col-sm-9">
-                <div id="activity" class="row sub-step">
-                  <div class="form-group col-4 mt-3">
-                    <div class="checkbox">
-                      <input id="full_time" name="full_time" type="checkbox" {{#if @root.wish.full_time}}checked=""{{/if}}>
-                      <label for="full_time">
-                        <h3>Temps plein</h3>
-                      </label>
+
+            {{#ifCond (contractDurabilityType wish.contract_type 'durable') '===' true}}
+              <div id="contractDurableType" class="row">
+                <div class="col-sm-3">
+                  <h2 class="text-bold mt-5">Type de contrat *:</h2>
+                </div>
+                <div class="col-sm-9 row">
+
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">CDI</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="cdi" name="CDI"
+                        {{#ifCond @root.wish.contract_type '===' 'CDI'}} checked {{/ifCond}}>
+                      <label class="custom-control-label" for="cdi"></label>
                     </div>
                   </div>
-                  <div class="form-group col-4 mt-3">
-                    <div class="checkbox">
-                      <input id="part_time" name="part_time" type="checkbox" {{#if @root.wish.part_time}}checked=""{{/if}}>
-                      <label for="part_time">
-                        <h3>Temps partiel</h3>
-                      </label>
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Apprentissage / Contrat Pro</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="cp" name="CP"
+                      {{#ifCond @root.wish.contract_type '===' 'CP'}} checked {{/ifCond}}>
+                      <label class="custom-control-label" for="cp"></label>
                     </div>
                   </div>
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Collaboration Libérale</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="cl" name="CL"
+                      {{#ifCond @root.wish.contract_type '===' 'CL'}} checked {{/ifCond}}>
+                      <label class="custom-control-label" for="cl"></label>
+                    </div>
+                  </div>
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Installation / Association Libérale</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="al" name="AL"
+                      {{#ifCond @root.wish.contract_type '===' 'AL'}} checked {{/ifCond}}>
+                      <label class="custom-control-label" for="al"></label>
+                    </div>
+                  </div>
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Reprise Cabinet Libéral</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="rcl" name="RCL"
+                      {{#ifCond @root.wish.contract_type '===' 'RCL'}} checked {{/ifCond}}>
+                      <label class="custom-control-label" for="rcl"></label>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-12">
+                  <hr>
                 </div>
               </div>
-              <div class="col-12">
-                <hr>
-              </div>
-            </div>
-            <div id="timeType" class="row" style="display: none;">
-              <div class="col-sm-3 mt-3">
-                <h2 class="text-bold">Aménagement horaire *:</h2>
-              </div>
-              <div class="col-sm-9">
-                <div id="time" class="row sub-step">
-                  <div class="form-group col-4 mt-3">
-                    <div class="checkbox">
-                      <input id="daytime" name="daytime" type="checkbox" {{#ifCond @root.wish.day_time '===' true}}checked=""{{/ifCond}}>
-                      <label for="daytime">
-                        <h3>Jour</h3>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="form-group col-4 mt-3">
-                    <div class="checkbox">
-                      <input id="nighttime" name="nighttime" type="checkbox" {{#ifCond @root.wish.night_time '===' true}}checked=""{{/ifCond}}>
-                      <label for="nighttime">
-                        <h3>Nuit</h3>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12">
-                <hr>
-              </div>
-            </div>
             {{/ifCond}}
+
+            {{#ifCond (contractDurabilityType wish.contract_type 'punctual') '===' true}}
+              <div id="contractPunctualType" class="row">
+                <div class="col-sm-3">
+                  <h2 class="text-bold mt-5">Type de contrat *:</h2>
+                </div>
+                <div class="col-sm-9 row">
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Missions / Vacations / CDD</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="cdd" name="CDD"
+                        {{#ifCond @root.wish.contract_type '===' 'CDD'}} checked {{/ifCond}}>
+                      <label class="custom-control-label" for="cdd"></label>
+                    </div>
+                  </div>
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Remplacement Libéral</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="rl" name="RL"
+                        {{#ifCond @root.wish.contract_type '===' 'RL'}} checked {{/ifCond}}>
+                      <label class="custom-control-label" for="rl"></label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <hr>
+                </div>
+              </div>
+            {{/ifCond}}
+
+            {{#ifCond @root.wish.contract_type '===' 'CDI'}}
+              <div id="activityType" class="row">
+                <div class="col-sm-3 mt-3">
+                  <h2 class="text-bold">Type d'activité *:</h2>
+                </div>
+                <div class="col-sm-9 row">
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Temps plein</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="full_time" name="full_time" {{#if @root.wish.full_time}}checked=""{{/if}}>
+                      <label class="custom-control-label" for="full_time"></label>
+                    </div>
+                  </div>
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Temps partiel</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="part_time" name="part_time" {{#if @root.wish.part_time}}checked=""{{/if}}>
+                      <label class="custom-control-label" for="part_time"></label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <hr>
+                </div>
+              </div>
+
+              <div id="timeType" class="row">
+                <div class="col-sm-3 mt-3">
+                  <h2 class="text-bold">Aménagement horaire *:</h2>
+                </div>
+                <div class="col-sm-9 row">
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Jour</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="daytime" name="daytime" {{#ifCond @root.wish.day_time '===' true}}checked=""{{/ifCond}}>
+                      <label class="custom-control-label" for="daytime"></label>
+                    </div>
+                  </div>
+                  <div class="form-group col-4 d-flex flex-column justify-content-center text-center">
+                    <h3 class="card-title mb-2">Nuit</h3>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="nighttime" name="nighttime" {{#ifCond @root.wish.night_time '===' true}}checked=""{{/ifCond}}>
+                      <label class="custom-control-label" for="nighttime"></label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <hr>
+                </div>
+              </div>
+            {{/ifCond}}
+
             <div id="postType" class="row">
               <div class="col-3">
                 <h2 class="text-bold mt-5">Type de poste *:</h2>
@@ -353,9 +433,9 @@
 </div>
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
-<script src="/static/assets/js/nouislider.min.js"></script>
-<script src="/static/assets/dist/js/application.min.js"></script>
-<script src="/static/assets/dist/js/addApplication.min.js"></script>
+<script src="/assets/js/nouislider.min.js"></script>
+<script src="/assets/dist/js/candidate/application.min.js"></script>
+<script src="/assets/dist/js/candidate/addApplication.min.js"></script>
 
 <script>
   application.wish = [];
@@ -382,4 +462,4 @@
     {{/if}}
 </script>
 
-<script src="/static/assets/dist/js/editApplication.min.js"></script>
+<script src="/assets/dist/js/candidate/editApplication.min.js"></script>

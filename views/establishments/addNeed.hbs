@@ -48,10 +48,11 @@
 </style>
 <script>
   let esId = {{user.opts.currentEs}};
-  let esList = [{{#each esList as |account|}}{{account.Establishment.id}},{{/each}}];
+  let esList = [ {{#each esList as |account|}}{{account.Establishment.id}},{{/each}} ];
   let list = [{{#each posts as |post|}}"{{{post.name}}}",{{/each}}];
   let baseCVCount = {{candidatesCount.length}};
   let need = {
+    fullEs: esList,
     selectedCandidates: [ {{#each need.candidates as |candidate|}}{{candidate.candidate_id}},{{/each}} ],
     firstSearch: {{#if need}}false{{else}}true{{/if}},
     filterQuery: {
@@ -60,7 +61,7 @@
   };
 </script>
 <div class="col-md-12">
-  <h1 class="text-center">Vous avez accès à <span class="badge badge-soft-primary" id="cvCount">{{candidatesCount.length}}</span> professionnels au sein de votre CVthèque.</h1>
+  <h1 class="text-center">Vous avez accès à <span class="badge badge-soft-primary" id="cvCount">{{number candidatesCount.length}}</span> professionnels au sein de votre CVthèque.</h1>
   <h4 id="searchCount" class="text-center" style="display: none;"></h4>
   <div id="selectAllSearch" class="text-center p-4" style="display: none;">
     <div class="text-center">
@@ -75,21 +76,21 @@
   <div class="col-12 col-md-8 col-lg-8">
     <div class="form-group">
       <div class="searchbar-wrapper">
-        <div style="border: 1px solid #DDD" class="searchbar-wrapper-input">
+        <div style="border: 1px solid #DDD" class="searchbar-wrapper-input row">
           <input placeholder="Indiquez un type de poste" style="border: 0px" id="post" type="text"
-                 class="form-control float-left" autocomplete="off" value="{{need.post}}">
-          <div>
+                 class="form-control float-left col-8 col-md-6 col-lg-8" autocomplete="off" value="{{need.post}}">
+          <div class="col-4 col-md-6 col-lg-4">
             <button onclick="resetSearch()" id="resetSearch" data-toggle="tooltip" data-placement="top"
-                    data-original-title="Réinitialiser ma recherche" class="btn btn-outline-warning float-right"
+                    data-original-title="Réinitialiser ma recherche" class="btn btn-outline-warning float-right col-2 col-lg-2"
                     style="{{#unless need}}display: none;{{/unless}}margin-left: 5px;">
               <i class="fal fa-undo-alt"></i>
             </button>
-            <button id="saveNeed" {{#if need.id}}data-need-id="{{need.id}}"{{/if}} class="btn btn-outline-success float-right"
+            <button id="saveNeed" {{#if need.id}}data-need-id="{{need.id}}"{{/if}} class="btn btn-outline-success float-right col-2 col-lg-3 col-xl-2"
                     data-toggle="tooltip" data-placement="top" data-original-title="Enregistrer ma recherche"
                     style="margin-left: 5px;">
               <i class="fal fa-save"></i>
             </button>
-            <button id="searchCandidates" class="btn btn-large btn-outline-primary float-right">
+            <button id="searchCandidates" class="btn btn-large btn-outline-primary float-right col-6 col-lg-8 col-xl-6">
               Rechercher
             </button>
           </div>
@@ -109,7 +110,7 @@
         Service <span id="btnServiceType">{{need.service}}</span>
       </button>
       <button id="btnFilters" class="btn btn-{{#unless need.contract_type}}outline-{{/unless}}info" onclick="return showContractModal()">
-        Contrat <span id="btnContractType" style="text-transform: uppercase">{{need.contract_type}}</span>
+        Contrat <span id="btnContractType" style="text-transform: uppercase">{{contractType need.contract_type}}</span>
       </button>
       <button id="btnFilters" class="btn btn-{{#unless need.start}}outline-{{/unless}}info" onclick="return showTimeModal()">
         Période <span id="btnTimeType">{{#if need.start}}{{date need.start 'DD/MM/YYYY'}}{{/if}}{{#if need.end}} - {{date need.end 'DD/MM/YYYY'}}{{/if}}</span>
@@ -170,8 +171,7 @@
   </div>
 </div>
 <select class="form-control" id="selectServiceType" data-toggle="" data-live-search="true"
-        title="Séléctionner un type de service" style="display: none">
-  <option>Séléctionner un type de service</option>
+        title="Séléctionner un type de service" multiple="multiple" style="display: none">
   {{#each services as |service|}}
     <option value="{{service.id}}" data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
   {{/each}}
@@ -185,7 +185,7 @@
 </select>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
-<script src="/static/assets/dist/js/addNeed.es.min.js"></script>
+<script src="/assets/dist/js/rh/addNeed.es.min.js"></script>
 <script>
   let size = 52;
     {{#if need}}

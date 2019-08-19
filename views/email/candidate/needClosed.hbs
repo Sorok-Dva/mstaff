@@ -23,7 +23,7 @@
                 <span style="font-size:17px"><span style="color:#A9A9A9">{{this.need.post}}</span></span><br>
               {{/if}}
               {{#if this.need.contract_type}}
-                <span style="font-size:16px">{{this.need.contract_type}} {{#if this.needObj.start}}à partir du {{this.needObj.start}}{{/if}}
+                <span style="font-size:16px">{{contractType this.need.contract_type}} {{#if this.needObj.start}}à partir du {{this.needObj.start}}{{/if}}
                   {{#if this.needObj.end}}jusqu'au {{this.needObj.end}}{{/if}}<br></span>
               {{else}}
                 <span style="font-size:16px">{{#if this.needObj.start}}À partir du {{this.needObj.start}}{{/if}}

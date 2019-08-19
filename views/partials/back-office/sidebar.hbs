@@ -5,7 +5,7 @@
   -->
   <div class="logo">
     <a href="#" class="simple-text logo-mini">
-      <img src="/static/assets/images/PICTO.png" width="50" alt="Mstaff" style="margin: -25%">
+      <img src="/assets/images/PICTO.png" width="50" alt="Mstaff" style="margin: -25%">
     </a>
     <a href="#" class="simple-text logo-normal">
       Mstaff
@@ -199,6 +199,33 @@
           </ul>
         </div>
       </li>
+      <li{{#ifCond a.main '===' 'pools'}} class="active"{{/ifCond}}>
+        <a data-toggle="collapse" href="#poolsOverview"
+           aria-expanded="{{#ifCond a.main '===' 'pools'}}true{{else}}false{{/ifCond}}">
+          <i class="fal fa-users-class"></i>
+          <p>Gestion des pools
+            <b class="caret"></b>
+          </p>
+        </a>
+        <div class="collapse{{#ifCond a.main '===' 'pools'}} in{{/ifCond}}" id="poolsOverview">
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'pool-list'}} class="active"{{/ifCond}}>
+              <a href="/back-office/pools/pool-list">
+                <i class="fal fa-users"></i>
+                <span class="sidebar-normal"> Liste des pools </span>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'pool-links'}} class="active"{{/ifCond}}>
+              <a href="/back-office/pools/pool-links">
+                <i class="fal fa-bezier-curve"></i>
+                <span class="sidebar-normal"> Liaison des pools </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
       <li{{#ifCond a.main '===' 'configuration'}} class="active"{{/ifCond}}>
         <a data-toggle="collapse" href="#configOverview"
            aria-expanded="{{#ifCond a.main '===' 'configuration'}}true{{else}}false{{/ifCond}}">
@@ -233,6 +260,7 @@
             </li>
           </ul>
         </div>
+      </li>
       <li{{#ifCond a.main '===' 'serverSettings'}} class="active"{{/ifCond}}>
         <a data-toggle="collapse" href="#serverSettingsOverview"
            aria-expanded="{{#ifCond a.main '===' 'serverSettings'}}true{{else}}false{{/ifCond}}">
@@ -249,11 +277,40 @@
                 <span class="sidebar-normal">Général</span>
               </a>
             </li>
+            <li{{#ifCond a.sub '===' 'db_dumps'}} class="active"{{/ifCond}}>
+              <a href="/back-office/server/db_dumps">
+                <i class="fal fa-database"></i>
+                <span class="sidebar-normal">Sauvegardes DB</span>
+              </a>
+            </li>
           </ul>
         </div>
+      </li>
+      <li{{#ifCond a.main '===' 'job_board'}} class="active"{{/ifCond}}>
+        <a data-toggle="collapse" href="#jobBoardOverview"
+           aria-expanded="{{#ifCond a.main '===' 'job_board'}}true{{else}}false{{/ifCond}}">
+          <i class="fal fa-browser"></i>
+          <p>Publicateur d'offres
+            <b class="caret"></b>
+          </p>
+        </a>
+        <div class="collapse{{#ifCond a.main '===' 'job_board'}} in{{/ifCond}}" id="jobBoardOverview">
+          <ul class="nav">
+            <li{{#ifCond a.sub '===' 'jobSheets'}} class="active"{{/ifCond}}>
+              <a href="/back-office/jobBoard/sheets">
+                <i class="fal fa-file-contract"></i>
+                <span class="sidebar-normal">Fiches métiers</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <a href="/logout"> <i class="fal fa-door-open"></i><p class="sidebar-normal">Se déconnecter </p> </a>
+      </li>
       <li>
         <a href="https://analytics.google.com/" target="_blank">
-          <img src="/static/assets/images/ga.png" style="height: 65px;" alt="Google Analytics">
+          <img src="/assets/images/ga.png" style="height: 65px;" alt="Google Analytics">
         </a>
       </li>
     </ul>

@@ -1,0 +1,52 @@
+<link href="/assets/css/multiple-emails.css" rel="stylesheet">
+<script src="/assets/js/multiple-emails.js"></script>
+<div class="modal-body">
+  <div class="form-group">
+    <label for="newPersonnelMails"> Ajoutez des soignants à votre pool </label>
+    <input id="newPersonnelMails" type="text" class="form-control">
+  </div>
+</div>
+<ul id="listInvited" class="list-group">
+</ul>
+<div class="modal-footer">
+  <button type="button" id="createPoolButton" class="btn btn-outline-info float-right">
+    Valider
+  </button>
+</div>
+
+<input type="text" id="pool_id" value="{{pool_id}}" style="display:none">
+<script>
+  $(document).ready(function() {
+    let pool_id = $('input#pool_id').val();
+    $.get(`/pool/${pool_id}/invites`, (response) => {
+      response.emails.forEach(data => {
+        $('ul#listInvited').append(`<li class="list-group-item d-flex justify-content-between align-items-center"
+        data-id="${data.email}"> ${data.email} <a data-id="${data.email}" class="fas fa-trash-alt" onclick="removeUserInvite(this)"
+        style="cursor: pointer"></a></li>`);
+      });
+    });
+    $('#newPersonnelMails').multiple_emails({
+      position: 'top',
+      theme: 'bootstrap',
+      checkDupEmail: true
+    });
+  });
+
+  function removeUserInvite(data)
+  {
+    let pool_id = $('input#pool_id').val();
+    let email = data.dataset.id;
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    $.delete(`/pool/${pool_id}/invites`, {_csrf, email}, (response) => {
+      if (response === 'Invitation removed from pool') {
+        $(`ul#listInvited li[data-id="${email}"]`).remove();
+        notification({
+          icon: 'check-circle',
+          type: 'success',
+          title: `Invitation supprimée :`,
+          message: `L'invitation pour ${email} selectionné a bien été supprimée.`
+        });
+      }
+    });
+  }
+</script>

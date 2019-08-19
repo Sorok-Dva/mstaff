@@ -4,10 +4,29 @@
       <div class="col-md-12">
         <select class="form-control" name="contractType" id="contractType">
           <option value="">Séléctionner un type de contrat</option>
-          <option value="cdi-cdd">CDI/CDD</option>
-          <option value="vacation">VACATION</option>
-          <option value="internship">STAGE</option>
+          <option value="long">Un travail durable</option>
+          <option value="short">Des missions ponctuelles</option>
+          <option value="internship">Un stage</option>
         </select>
+        <div id="contractTypeFinalLong" style="display: none">
+          <hr>
+          <select class="form-control" name="contractTypeFinalLong">
+            <option value="">Séléctionner un type de contrat</option>
+            <option value="CDI">CDI</option>
+            <option value="CP">Apprentissage / Contrat Pro</option>
+            <option value="CL">Collaboration Libérale</option>
+            <option value="AL">Installation / Association Libérale</option>
+            <option value="RCL">Reprise Cabinet Libéral</option>
+          </select>
+        </div>
+        <div id="contractTypeFinalShort" style="display: none">
+          <hr>
+          <select class="form-control" name="contractTypeFinalShort">
+            <option value="">Séléctionner un type de contrat</option>
+            <option value="CDD">Missions / Vacations / CDD</option>
+            <option value="RL">Remplacement Libéral</option>
+          </select>
+        </div>
       </div>
     </div>
   </form>
@@ -24,18 +43,57 @@
       return false;
     }
     $('select#contractType').removeClass('error').addClass('success');
+    let type = this.value;
+
+    switch (type) {
+      case 'long':
+        // $('select#contractType').attr('disabled', 'disabled');
+        $('#contractTypeFinalLong').show();
+        $('#contractTypeFinalShort').hide();
+        break;
+      case 'short':
+        // $('select#contractType').attr('disabled', 'disabled');
+        $('#contractTypeFinalShort').show();
+        $('#contractTypeFinalLong').hide();
+        break;
+      case 'internship':
+        need.filterQuery.contractType = 'internship';
+        $('.modal#contractType').modal('hide');
+        $('#btnContractType').html('STAGE');
+        $('#btnContractType').parent().removeClass('btn-outline-info').addClass('btn-info');
+        return searchCandidates();
+      default:
+        //notif wrong value
+    }
+  });
+
+  $('select[name="contractTypeFinalLong"]').on('change', function () {
+    if (this.value === '') {
+      $('select[name="contractTypeFinalLong"]').addClass('error');
+      return false;
+    }
+    $('select[name="contractTypeFinalLong"]').removeClass('error').addClass('success');
     need.filterQuery.contractType = this.value;
-
     $('.modal#contractType').modal('hide');
-    $('#btnContractType').html($('#contractType option:selected').text());
-    $('#btnContractType').parent().removeClass('btn-outline-info').addClass('btn-info');;
+    $('#btnContractType').html($(`option[value="${this.value}"]`).text());
+    $('#btnContractType').parent().removeClass('btn-outline-info').addClass('btn-info');
+    return searchCandidates();
+  });
 
-   /* if (need.firstSearch) return showTimeModal();
-    else */return searchCandidates();
+  $('select[name="contractTypeFinalShort"]').on('change', function () {
+    if (this.value === '') {
+      $('select[name="contractTypeFinalShort"]').addClass('error');
+      return false;
+    }
+    $('select[name="contractTypeFinalShort"]').removeClass('error').addClass('success');
+    need.filterQuery.contractType = this.value;
+    $('.modal#contractType').modal('hide');
+    $('#btnContractType').html($(`option[value="${this.value}"]`).text());
+    $('#btnContractType').parent().removeClass('btn-outline-info').addClass('btn-info');
+    return searchCandidates();
   });
 
   $('#ignoreContract').click(function() {
-    // need.firstSearch = false;
     if (!_.isNil(need.filterQuery.contractType)) {
       delete need.filterQuery.contractType;
       $('#btnContractType').empty();

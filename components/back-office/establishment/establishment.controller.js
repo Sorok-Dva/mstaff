@@ -1,6 +1,6 @@
 const __ = process.cwd();
 const _ = require('lodash');
-const { validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator');
 const { Sequelize, Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');

@@ -1,0 +1,23 @@
+<link href="/assets/css/multiple-emails.css" rel="stylesheet">
+<script src="/assets/js/multiple-emails.js"></script>
+<div class="modal-body">
+  <div class="form-group">
+
+    <div class="col-md-12">
+      <label for="poolName" id="poolNameLabel"> Nom de votre pool </label>
+      <input id="poolName" type="text" class="form-control">
+    </div>
+    <div class="col-md-12">
+      <label for="personnelMails" id="personnelMailsLabel" style="display:none"> Ajoutez des soignants à votre pool </label>
+      <input id="personnelMails" type="text" class="form-control" style="display:none;">
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="addPersonnelButton" class="btn btn-outline-info float-right" style="margin-bottom: 5px;" onclick="personnelStep()">
+    Ajouter des soignants
+  </button>
+  <button type="button" id="createPoolButton" class="btn btn-outline-info float-right" style="margin-bottom: 5px; display:none">
+    Valider
+  </button>
+</div>

@@ -22,7 +22,7 @@
             title: 'Besoin modifié avec succès.',
           });
         }
-      }).catch(errors => errorsHandler(errors));
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
       {{else}}
         if (need.selectedCandidates.length > 0) {
           createModal({

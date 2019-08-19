@@ -2,6 +2,7 @@
   <form role="form" class="form-horizontal">
     <div class="row">
       <div class="col-md-12" id="selectServiceTypeTrg">
+        <label for="selectServiceType">Séléctionner un type de service</label>
       </div>
     </div>
   </form>
@@ -10,28 +11,18 @@
   <button type="button" id="ignoreService" class="btn btn-default pull-left"
           data-dismiss="modal" onclick="">Ignorer
   </button>
+  <button type="button" id="validateService" class="btn btn-default"
+          data-dismiss="modal" onclick="">Valider
+  </button>
 </div>
+
 <script>
+
   $('#selectServiceType').clone().appendTo('#selectServiceTypeTrg');
   $('#selectServiceTypeTrg > #selectServiceType').attr('id', 'serviceTypeSelect');
-  $('#serviceTypeSelect').select2();
+  $('#serviceTypeSelect').select2({multiple: true});
   $('#serviceTypeSelect').show();
-  $('select#serviceTypeSelect').on('change', function () {
-    if (this.value === '') {
-      $('select#serviceTypeSelect').addClass('error');
-      return false;
-    }
-    $('select#serviceTypeSelect').removeClass('error').addClass('success');
-    need.filterQuery.service = $('#serviceTypeSelect option:selected').text();
-    need.filterQuery.serviceId = $('#serviceTypeSelect option:selected').attr('value');
-
-    $('.modal#serviceType').modal('hide');
-    $('#btnServiceType').html(need.filterQuery.service);
-    $('#btnServiceType').parent().removeClass('btn-outline-info').addClass('btn-info');
-
-    /*if (need.firstSearch) return showContractModal();
-    else */return searchCandidates();
-  });
+  $('#serviceTypeSelect').val(need.filterQuery.serviceId).trigger('change');
 
   $('#ignoreService').click(function() {
     // need.firstSearch = false;
@@ -42,5 +33,26 @@
       $('#btnServiceType').parent().removeClass('btn-info').addClass('btn-outline-info');
     }
     searchCandidates();
+  });
+
+  $('#validateService').click(function() {
+    let values = $('#serviceTypeSelect').val();
+    if (!values.length) {
+      $('select#serviceTypeSelect').addClass('error');
+      return false;
+    }
+    $('select#serviceTypeSelect').removeClass('error').addClass('success');
+    if(values.length > 1)
+      need.filterQuery.service = "[Multiples]";
+    else
+      need.filterQuery.service = $('#serviceTypeSelect option:selected').text();
+    need.filterQuery.serviceId = values;
+
+    $('.modal#serviceType').modal('hide');
+    $('#btnServiceType').html(need.filterQuery.service);
+    $('#btnServiceType').parent().removeClass('btn-outline-info').addClass('btn-info');
+
+    /*if (need.firstSearch) return showContractModal();
+    else */return searchCandidates();
   });
 </script>

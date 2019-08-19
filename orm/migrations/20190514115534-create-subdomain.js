@@ -19,27 +19,27 @@ module.exports = {
         references: {
           model: 'Establishments',
           key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       group_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Groups',
           key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       super_group_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'SuperGroups',
           key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

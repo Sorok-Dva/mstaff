@@ -1,5 +1,5 @@
 const __ = process.cwd();
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const { mkdirIfNotExists } = require(`${__}/helpers/helpers`);
 const { Op } = require('sequelize');
@@ -9,11 +9,6 @@ const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
 const Sequelize = require(`${__}/bin/sequelize`);
 const Mailer = require(`${__}/components/mailer`);
-
-/*const AvatarStorage = require('../../../helpers/avatar.storage');*/
-const path = require('path');
-const multer = require('multer');
-
 
 const User_Candidate = {};
 
@@ -57,12 +52,59 @@ User_Candidate.getProfile = (req, res, next) => {
     }, {
       model: Models.CandidateDocument,
       as: 'documents'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'start', 'DESC' ],
+      [ 'formations', 'start', 'DESC' ],
+      [ 'qualifications', 'start', 'DESC' ],
+      [ 'skills', 'stars', 'DESC' ],
+      [ 'equipments', 'stars', 'DESC' ],
+      [ 'softwares', 'stars', 'DESC' ]
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     candidate.views += 1;
     candidate.save();
     return res.status(200).send(candidate);
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.getApplicationsInEs = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: { user_id: req.params.userId },
+    include: [{
+      model: Models.User,
+      attributes: { exclude: ['password'] },
+      on: {
+        '$Candidate.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      },
+      required: true
+    }, {
+      model: Models.Application,
+      as: 'applications',
+      on: {
+        '$Candidate.id$': {
+          [Op.col]: 'applications.candidate_id'
+        }
+      },
+      where: { es_id: req.params.esId },
+      include: {
+        model: Models.Wish,
+        on: {
+          '$applications.wish_id$': {
+            [Op.col]: 'applications->Wish.id'
+          }
+        },
+      }
+    }],
+    order: [
+      [ 'applications', 'createdAt', 'DESC' ]
+    ]
+  }).then(data => {
+    if (_.isNil(data)) return next(new BackError('Candidat introuvable', 404));
+    return res.status(200).send(data);
   }).catch(error => next(new BackError(error)));
 };
 
@@ -216,7 +258,7 @@ User_Candidate.viewProfile = (req, res, next) => {
       as: 'wishes'
     }],
     order: [
-      [ 'experiences', 'start', 'ASC' ],
+      [ 'experiences', 'start', 'DESC' ],
       [ 'formations', 'start', 'ASC' ],
       [ 'qualifications', 'start', 'ASC' ],
     ]
@@ -337,9 +379,9 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
       as: 'formations'
     }],
     order: [
-      [ 'experiences', 'start', 'ASC' ],
-      [ 'formations', 'start', 'ASC' ],
-      [ 'qualifications', 'start', 'ASC' ],
+      [ 'experiences', 'start', 'DESC' ],
+      [ 'formations', 'start', 'DESC' ],
+      [ 'qualifications', 'start', 'DESC' ],
     ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
@@ -1422,7 +1464,200 @@ User_Candidate.viewConferences = (req, res, next) => {
       let a = { main: 'conferences' };
       return res.render('candidates/calendar', { a, conferences });
     })
-  })
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.viewPools = (req, res, next) => {
+  Models.UserPool.count({ where: { user_id: req.user.id } }).then(poolsCount => {
+    if (poolsCount > 0) {
+      return User_Candidate.viewMyPools(req, res, next);
+    } else {
+      return res.render('candidates/pools', { a: { main: 'pools' } });
+    }
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.viewMyPools = (req, res, next) => {
+  Models.UserPool.findAll({
+    where: { user_id: req.user.id },
+    include: {
+      model: Models.Pool,
+      as: 'pool',
+      on: {
+        '$UserPool.pool_id$': {
+          [Op.col]: 'pool.id'
+        }
+      },
+      include: [{
+        model: Models.Establishment,
+        attributes: ['name'],
+        as: 'es',
+        on: {
+          '$pool.es_id$': {
+            [Op.col]: 'pool->es.id'
+          },
+        },
+      },
+      {
+        model: Models.User,
+        attributes: ['email'],
+        on: {
+          '$pool.user_id$': {
+            [Op.col]: 'pool->User.id'
+          },
+        },
+      }]
+    }
+  }).then(pools => {
+    return res.render('candidates/my-pools', { main: 'pools', pools } );
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.poolInvite = (req, res, next) => {
+  Models.InvitationPools.findOne({
+    attributes: ['token', 'pool_id', 'email'],
+    where: { token: req.params.token }
+  }).then(inviteInfos => {
+    if (!_.isNil(inviteInfos))
+      return req.logout() + req.session.destroy() + res.render('onboarding/pool', { inviteInfos, layout: 'onepage' } );
+    else
+      return next(new BackError('Token introuvable et/ou déjà utilisé', 404));
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.assignPool = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+  return Sequelize.transaction(t => {
+    return Models.User.findOne({
+      where: { email: req.body.email },
+      attributes: ['id'],
+    }, { transaction: t }).then(user => {
+      let user_id = user.id;
+      return Models.UserPool.create({
+        pool_id: req.body.pool_id,
+        user_id: user_id,
+        availability: req.body.data.availability,
+        post: req.body.data.post,
+        service: req.body.data.services
+      }, { transaction: t }).then(() => {
+        return Models.InvitationPools.destroy({ where: { email: req.body.email, token: req.params.token }
+        }, { transaction: t }).then(() => {
+          res.status(200).send('user affiliated to pool');
+        }).catch(error => next(new BackError(error)));
+      }).catch(error => next(new BackError(error)));
+    }).catch(error => next(new BackError(error)));
+  });
+};
+
+User_Candidate.viewPoolAvailability = (req, res, next) => {
+  Models.UserPool.findOne({
+    where: { id: req.params.id },
+    attributes: ['availability'],
+  }).then(availability => {
+    return res.status(200).send(availability);
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.updatePoolStatus = (req, res, next) => {
+  Models.UserPool.update({
+    available: req.body.state
+  }, {
+    returning: true,
+    where: {
+      user_id: req.user.id,
+      id: req.params.id
+    }
+  }).then(() => {
+    return res.status(200).send('Availability status updated');
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.updatePoolAvailability = (req, res, next) => {
+  Models.UserPool.update(
+    { availability: req.body.availability },
+    { returning: true, where: { user_id: req.user.id, id: req.params.id } }
+  ).then(() => {
+    return res.status(200).send('Availability planning updated');
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.getPoolServices = (req, res, next) => {
+  Models.UserPool.findOne({
+    where: { id: req.params.id, user_id: req.user.id },
+    attributes: ['service']
+  }).then((services) => {
+    return res.status(200).send(services);
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.updatePoolServices = (req, res, next) => {
+  Models.UserPool.update(
+    { service: req.body.services },
+    { where: { user_id: req.user.id, id: req.params.id } }
+  ).then(() => {
+    return res.status(200).send('Services updated');
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.viewPoolDocument = (req, res, next) => {
+  Models.UserPool.findOne({ where: { id: req.params.id }, attributes: ['planning'] }).then(result => {
+    if (!Object.keys(result.planning).length) {
+      return next(new BackError('Document introuvable', 404));
+    } else {
+      if (fs.existsSync(`./public/uploads/candidates/pools/${result.planning.filename}`)) {
+        return res.sendFile(`${__}/public/uploads/candidates/pools/${result.planning.filename}`);
+      } else {
+        return next(new BackError('Document introuvable sur ce serveur', 404));
+      }
+    }
+  });
+};
+
+User_Candidate.deletePoolDocument = (req, res, next) => {
+  Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
+    if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
+    return Models.UserPool.findOne({ where: { id: req.params.id, user_id: req.user.id }, attributes: ['planning'] });
+  }).then(result => {
+    if (!Object.keys(result.planning).length) {
+      return res.status(404).send('Document introuvable.')
+    } else {
+      if (fs.existsSync(`./public/uploads/candidates/pools/${result.planning.filename}`)) {
+        fs.unlinkSync(`./public/uploads/candidates/pools/${result.planning.filename}`)
+      }
+      Models.UserPool.update(
+        { planning: {} },
+        { where: { user_id: req.user.id, id: req.params.id } }).then(() => {
+        return res.status(200).send('Document Supprimé.');
+      }).catch(error => next(new BackError(error)));
+    }
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.uploadPoolDocument = (req, res, next) => {
+  if (Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  let file = Object.values(req.files)[0][0];
+  if (!['jpeg', 'jpg', 'png', 'pdf'].includes(file.mimetype.split('/')[1])) {
+    return res.status(400).send('Mauvais format, seul les formats jpeg, jpg et png sont autorisés.');
+  }
+
+  Models.UserPool.findOne({ where: { user_id: req.user.id, id: req.params.id } }).then(result => {
+    if (_.isNil(result)) return next(new BackError('Affiliation du candidat au pool introuvable', 404));
+    if (null == result.planning || !result.planning.length)
+    {
+      Models.UserPool.update(
+        { planning: { 'path': file.path, 'name': file.originalname, 'filename': file.filename } },
+        { where: { user_id: req.user.id, id: req.params.id }
+        }).then(document => {
+        return res.status(200).send(document);
+      }).catch(error => next(new BackError(error)));
+    } else {
+      return res.status(400).send('Document already exist for this user');
+    }
+  }).catch(error => next(new BackError(error)));
 };
 
 User_Candidate.viewUpload = (req, res, next) => {

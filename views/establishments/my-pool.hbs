@@ -1,0 +1,67 @@
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<style>
+  .class-icon {
+    text-align: center;
+    margin-top: 15px;
+  }
+  .header-spacing {
+    margin-top: 15px;
+  }
+  .toggle.ios, .toggle-on.ios, .toggle-off.ios {
+    border-radius: 20px;
+    background-color: #D8D8D8;
+  }
+</style>
+
+{{ user.options }}
+
+<div class="col-md-12 text-center">
+{{#ifCond pools.length '<=' 0}}
+    <h2 style="font-weight: 400"> Vous n'avez pas encore créé de pool de remplaçants. </h2>
+{{else}}
+  <h2 style="font-weight: 400">Il y a actuellement {{ @root.pools.length }} pool{{#ifCond @root.pools.length '>' 1}}s{{/ifCond}}.</h2>
+{{/ifCond}}
+</div>
+
+<div class="row">
+  <div class="col-12 col-md-12 col-lg-12" style="margin-bottom: 25px; display:flex">
+    <button class="btn btn-primary rounded-circle" style="width: 50px; height: 50px;" data-group="{{group}}" onclick="createPool(this)"> + </button>
+    <span style="margin-top: 15px; margin-left: 10px"><h2> Créer un nouveau pool</h2></span>
+  </div>
+  {{#each pools as |pool|}}
+    <div class="col-12 col-md-12 col-lg-4 card-competence">
+      <div class="card">
+        <div class="card-header header-spacing">
+          <div class="row">
+            <div class="col-md-6">
+              <h3 class="card-title"><i class="fal fa-school"></i> {{pool.name}}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-5" >
+              <a href="#">
+                <button class="btn btn-outline-primary" style="width:100%" data-pool="{{pool.id}}" onclick="poolUsersList(this)"> Volontaires </button>
+              </a>
+            </div>
+            <div class="col-lg-5">
+              <a href="#">
+                <button class="btn btn-outline-primary" style="width:100%" data-pool="{{pool.id}}" onclick="poolInvitation(this)"> Inviter </button>
+              </a>
+            </div>
+            <div class="col-lg-2">
+              <a href="#">
+                <button class="btn btn-outline-secondary" style="width:100%" data-pool="{{pool.id}}" data-name="{{pool.name}}"
+                        onclick="editPool(this)"> <i class="fal fa-cog"></i> </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>
+<script src="/assets/dist/js/pools/es_pools.min.js"></script>

@@ -28,12 +28,12 @@ router.post('/establishment/:id(\\d+)/add/user',
   HTTPValidation.BackOfficeController.addUserInEstablishment,
   BackOffice.Establishment.addUser);
 
-router.post('/establishment/:id(\\d+)/remove/user/:userId',
+router.post('/establishment/:id(\\d+)/remove/user/:userId(\\d+)',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.addUserInEstablishment,
   BackOffice.Establishment.removeUser);
 
-router.post('/establishment/:id(\\d+)/edit/user/:userId',
+router.post('/establishment/:id(\\d+)/edit/user/:userId(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Establishment.editUserRole);
 
@@ -46,16 +46,6 @@ router.post('/candidates/resetProfilePercentage/', Authentication.ensureIsAdmin,
  * @Route('/back-office/references/:type') POST;
  * Create Reference Model data
  */
-router.post('/references/categories',
-  Authentication.ensureIsAdmin,
-  BackOffice.Reference.AddCategory
-).put('/references/categories/:id(\\d+)',
-  Authentication.ensureIsAdmin,
-  BackOffice.Reference.EditCategory
-).delete('/references/categories/:id(\\d+)',
-  Authentication.ensureIsAdmin,
-  BackOffice.Reference.DeleteCategory);
-
 router.post('/references/:type',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.Add
@@ -65,6 +55,10 @@ router.post('/references/:type',
 ).delete('/references/:type/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Reference.Delete);
+
+router.put('/references/posts/multiple/category',
+  Authentication.ensureIsAdmin,
+  BackOffice.Reference.EditMulTipleCategory);
 
 router.post('/configuration/skills/',
   Authentication.ensureIsAdmin,
@@ -93,11 +87,11 @@ router.get('/groups/:type/:id(\\d+)/users/all', Authentication.ensureIsAdmin, Ba
   .post('/groups/:type/:id(\\d+)/edit/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.editUser)
   .delete('/groups/:type/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUser);
 
-router.put('/linkES/:id',
+router.put('/linkES/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Group.EditLinkES);
 
-router.put('/linkGroup/:id',
+router.put('/linkGroup/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Group.EditLinkGroup);
 
@@ -105,9 +99,18 @@ router.put('/linkGroup/:id',
  * @Route('/back-office/references/:type') POST;
  * Create Reference Model data
  */
-
 router.get('/eslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getEsLinksList);
 router.get('/groupslinks/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.getGroupLinksList);
 router.get('/establishments/all', Authentication.ensureIsAdmin, BackOffice.Establishment.getEstablishmentList);
+
+router.get(
+  '/server/db_dumps/:name',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.DownloadDatabaseDumps)
+  .delete(
+    '/server/db_dumps/:name',
+    Authentication.ensureIsAdmin,
+    BackOffice.Server.RemoveDatabaseDumps
+  );
 
 module.exports = router;

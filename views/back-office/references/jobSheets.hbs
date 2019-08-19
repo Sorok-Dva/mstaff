@@ -1,0 +1,108 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="toolbar">
+          <button id="addJobSheet" title="Ajouter une fiche métier" class="btn btn-primary" style="margin-right:10px"><i class="fal fa-plus"></i></button>
+        </div>
+        <table id="jobSheets-table" class="table">
+          <thead>
+          <th data-field="id" class="text-center">ID</th>
+          <th data-field="name" data-sortable="true">Nom</th>
+          <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
+              data-formatter="operateFormatter">Actions
+          </th>
+          </thead>
+          <tbody>
+          {{#each jobSheets as |sheet|}}
+            <tr data-id="{{sheet.id}}">
+              <td>{{sheet.id}}</td>
+              <td>{{sheet.name}}</td>
+              <td></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let table = $('#jobSheets-table');
+
+  operateFormatter = (value, row, index) => {
+    return [
+      '<div class="table-icons">',
+      '<a title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+      '<i class="ti-pencil-alt"></i>',
+      '</a>',
+      '<a title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+      '<i class="ti-close"></i>',
+      '</a>',
+      '</div>',
+    ].join('');
+  };
+
+  $(document).ready(() => {
+    window.operateEvents = {
+      'click .edit': (e, value, row, index) => {
+        $(location).attr('href', `/back-office/jobBoard/sheet/${row.id}`);
+      },
+      'click .remove': (e, value, row, index) => {
+        if (confirm('Voulez vous vraiment supprimer cette fiche métier ?')) {
+          $.delete(`/api/back-office/references/jobSheets/${row.id}`, { _csrf }, () => {
+            table.bootstrapTable('remove', {
+              field: 'id',
+              values: [row.id]
+            });
+            notification({
+              icon: 'check-circle',
+              type: 'success',
+              title: 'Fiche métier supprimée.',
+            });
+          });
+        }
+      }
+    };
+
+    table.bootstrapTable({
+      toolbar: ".toolbar",
+      search: true,
+      showColumns: true,
+      pagination: true,
+      searchAlign: 'left',
+      pageSize: 25,
+      clickToSelect: true,
+      pageList: [10, 25, 50, 100, 200, 500],
+      icons: {
+        columns: 'fa fa-columns',
+        detailOpen: 'fa fa-plus-circle',
+        detailClose: 'ti-close'
+      }
+    });
+
+    //activate the tooltips after the data table is initialized
+    $('[rel="tooltip"]').tooltip();
+
+    $(window).resize(() => {
+      table.bootstrapTable('resetView');
+    });
+
+    $('#addJobSheet').click(function() {
+      let promptInput = prompt('Nom de la nouvelle fiche métier');
+      if (!_.isNil(promptInput)) {
+        $.post('/api/back-office/references/jobSheets', { _csrf, promptInput }, (data) => {
+          if (data.status === 'Created') {
+            $(location).attr('href', '/back-office/jobBoard/sheet/' + data.reference.id);
+          } else {
+            notification({
+              icon: 'exclamation',
+              type: 'danger',
+              title: 'Une fiche métier portant déjà ce nom existe.',
+            });
+          }
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
+      }
+    });
+  });
+</script>

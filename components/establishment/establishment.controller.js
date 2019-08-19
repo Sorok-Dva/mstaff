@@ -1,12 +1,8 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator/check');
-const { Op, Sequelize } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 
-const sequelize = require(`${__}/bin/sequelize`);
-const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
 
 const Establishment = {};
@@ -47,7 +43,12 @@ Establishment.Select = (req, res, next) => {
 
 Establishment.find = (id, next) => {
   Models.Establishment.findOne({
-    where: { id }
+    where: { id },
+    include: {
+      model: Models.Offer,
+      as: 'offers',
+      where: { status: 'published' }
+    }
   }).then(es => {
     if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
     else next(es);

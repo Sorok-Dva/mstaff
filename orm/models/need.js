@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     post: DataTypes.STRING,
     service: DataTypes.STRING,
     diploma: DataTypes.STRING,
-    contract_type: DataTypes.STRING,
+    contract_type: {
+      type: DataTypes.ENUM,
+      values: ['internship', 'CDI', 'CDD', 'CP', 'CL', 'AL', 'RCL', 'RL']
+    },
     is_available: DataTypes.STRING,
     postal_code: DataTypes.STRING,
     start: DataTypes.DATE,
@@ -28,6 +31,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'need_id',
       as: 'candidates'
     });
+    Need.hasOne(models.Offer, {
+      foreignKey: 'need_id',
+      sourceKey: 'id'
+    });
+    Need.hasOne(models.JobSheet, {
+      foreignKey: 'name',
+      sourceKey: 'post'
+    })
   };
   return Need;
 };

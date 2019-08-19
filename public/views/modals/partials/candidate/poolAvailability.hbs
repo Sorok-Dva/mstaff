@@ -1,0 +1,12 @@
+<div class="modal-body">
+  <div id="vacationDate"></div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-primary" onClick="updateAvailability({{pool}})"
+          id="validateDisponibility"> Valider mes disponibilités </button>
+</div>
+
+<script> data = { availability: {} } </script>
+<script src="/assets/dist/js/pools/calendar.min.js"></script>
+<script>loadPreviousDatas({{pool}});</script>

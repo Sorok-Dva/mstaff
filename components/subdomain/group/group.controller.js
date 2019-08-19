@@ -2,7 +2,6 @@ const __ = process.cwd();
 const { _ } = require('lodash');
 const { Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
-const httpStatus = require('http-status');
 
 const Models = require(`${__}/orm/models/index`);
 

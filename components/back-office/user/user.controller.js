@@ -1,7 +1,7 @@
 const __ = process.cwd();
 const _ = require('lodash');
 const { Sequelize, Op } = require('sequelize');
-const { validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 let User = require(`${__}/components/user`);
 const Models = require(`${__}/orm/models/index`);
@@ -167,7 +167,7 @@ BackOffice_Users.getList = (req, res, next) => {
 let _getInclude = (type) => {
   let include;
   switch (type) {
-    case 'candidate':
+    case 'candidates':
       include = {
         model: Models.Candidate,
         as: 'candidate',
@@ -192,10 +192,8 @@ let _getInclude = (type) => {
     case 'es':
       include = {
         model: Models.ESAccount,
-        required: true,
         include: {
           model: Models.Establishment,
-          required: true
         }
       };
       break;

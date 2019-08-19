@@ -1,0 +1,50 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label for="poolName"> Sélectionner un pool </label>
+    <select id="poolName" name="selectPool" class="selectpicker col-md-12"
+            data-live-search="true">
+    </select>
+    <label for="poolUser"> Sélectionner un candidat : </label>
+    <select id="poolUser" name="selectUser" class="selectpicker col-md-12"
+            data-live-search="true">
+    </select>
+    <label for="poolEstablishment">Assigner un établissement <i>(optionnel)</i> :</label>
+    <select id="poolEstablishment" name="selectEstablishment" class="selectpicker col-md-12"
+            data-live-search="true">
+    </select>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" id="createPoolButton" class="btn btn-outline-info float-right">
+    Valider
+  </button>
+</div>
+
+<script>
+  $.get('/back-office/pool-dependencies/all', function (data) {
+    $.each(data[0], function (i, pool) {
+      $('#poolName').append($('<option>', {
+        value: pool.id,
+        text: pool.name,
+      }));
+      $('#poolName').selectpicker('refresh');
+    });
+    data[1].forEach(candidate => {
+      $('#poolUser').append($('<option>', {
+        value: candidate.id,
+        text: candidate.firstName + ' ' + candidate.lastName + ' (' + candidate.email + ')',
+      }));
+      $('#poolUser').selectpicker('refresh');
+    });
+    data[2].forEach(establishment => {
+      $('#poolEstablishment').append($('<option>', {
+        value: establishment.id,
+        text: establishment.name,
+      }));
+      $('#poolEstablishment').selectpicker('refresh'); // TODO: Unselect this, idk why it's prefilled
+    });
+  });
+  $('#poolName').selectpicker();
+  $('#poolUser').selectpicker();
+  $('#poolEstablishment').selectpicker();
+</script>
