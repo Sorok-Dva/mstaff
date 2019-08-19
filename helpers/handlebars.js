@@ -304,6 +304,34 @@ module.exports.register = async (Handlebars) => {
       case 'internship': return 'Stage';
       case 'vacation': return 'Vacation';
       case 'cdi-cdd': return 'CDI/CDD';
+      case 'CDI': return 'CDI';
+      case 'CP': return 'Apprentissage / Contrat Pro';
+      case 'CL': return 'Collaboration Libérale';
+      case 'AL': return 'Installation / Association Libérale';
+      case 'RCL': return 'Reprise Cabinet Libéral';
+      case 'CDD': return 'Missions / Vacations / CDD';
+      case 'RL': return 'Remplacement Libéral';
     }
   });
+
+  Handlebars.registerHelper('contractDurabilityType', (contract, durability) => {
+    let result = false;
+    switch (durability) {
+      case 'durable':
+        if (contract === 'CDI' || contract === 'CP' || contract === 'CL' || contract === 'AL' || contract === 'RCL')
+          result = true;
+        break;
+      case 'punctual':
+        if (contract === 'CDD' || contract === 'RL')
+          result = true;
+        break;
+      case 'internship':
+        if (contract === 'internship')
+          result = true;
+        break;
+    }
+    return result;
+  });
+
+
 };

@@ -2,6 +2,7 @@ const __ = process.cwd();
 const { Sequelize, Op } = require('sequelize');
 const moment = require('moment');
 const fs = require('fs');
+const _ = require('lodash');
 
 const Models = require(`${__}/orm/models/index`);
 const layout = 'admin';
@@ -70,8 +71,8 @@ BackOffice.viewIndex = (req, res, next) => {
     // it's really ugly, if you have a smartest solution don't hesitate to improve this shit !
     fs.readdir( '/srv/db_dumps/', (error, db_dumps) => {
       fs.readdir( `${__}/public/uploads`, (error, uploads) => {
-        render.documents = uploads.length;
-        render.db_dumps = db_dumps.length;
+        render.documents = _.isNil(uploads) ? 0 : uploads.length;
+        render.db_dumps = _.isNil(db_dumps) ? 0 : db_dumps.length;
         render.wishesWeek = data;
         render.usersWeekCount = 0; render.usersLoginWeekCount = 0; render.usersLAWeekCount = 0; render.wishesWeekCount = 0;
         /* eslint-disable no-return-assign */

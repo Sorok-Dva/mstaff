@@ -76,18 +76,14 @@ let showPostModal = () => {
           if (response.status === 'Already exists') {
             notify('already-exist-post');
           } else {
-            let select = `<select name="categories">
-                  {{#each @root.datas.categories as |category|}}
-                    <option value="{{category.id}}">{{category.name}}</option>
-                  {{/each}}
-                </select>`
             table.bootstrapTable('insertRow', {
               index: 0,
               row: {
                 id: response.reference.id,
                 name: response.reference.name,
-                category: select,
-                actions: ''
+                category: 'none',
+                modifcategory: select,
+                actions: '<td></td>'
               }
             });
             $(`tr[data-index="0"]`).attr("data-id", `${response.reference.id}`);
@@ -134,8 +130,8 @@ let edit = (e, value, row, index) => {
 let remove = (e, value, row, index) => {
   createModal({
     id: 'removePostModal',
-    title: 'Supprimer un poste',
-    modal: 'back-office/removePost'
+    title: 'Etes vous sur de vouloir supprimer ce poste ?',
+    actions: ['<button type="button" class="btn btn-danger" id="btnRemovePost">Oui</button>','<button type="button" class="btn btn-success" id="btnCancel" data-dismiss="modal">Annuler</button>'],
   }, () => {
     let _csrf = $('meta[name="csrf-token"]').attr('content');
     $('button#btnRemovePost').click(function () {
@@ -146,6 +142,7 @@ let remove = (e, value, row, index) => {
           field: 'id',
           values: [row.id]
         });
+        $('#removePostModal').modal('hide');
         notify('deleted-post');
       });
     });

@@ -305,7 +305,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
       model: Models.Application,
       as: 'applications',
       attributes: { exclude: ['lat', 'lon'] },
-      where: { es_id: req.user.opts.currentEs },
+      where: { es_id: filterQuery.establishments || req.user.opts.currentEs },
       required: true,
       on: {
         '$Candidate.id$': {
@@ -370,7 +370,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
     }]
   };
 
-  if (!_.isNil(filterQuery.contractType)) query.include[2].include[0].where.contract_type = filterQuery.contractType;
+  if (!_.isNil(filterQuery.contractType)) query.include[3].include[0].where.contract_type = filterQuery.contractType;
   if (!_.isNil(filterQuery.is_available)) {
     query.where = {
       [Op.and]: [
@@ -379,9 +379,9 @@ Establishment_Application.getCandidates = (req, res, next) => {
     };
   }
   if (!_.isNil(filterQuery.lastName)) {
-    query.where[1] = {
+    query.where = {
       [Op.and]: [
-        Sequelize.literal('`Candidate->User`.`lastName` REGEXP\'(' + filterQuery.lastName + ')\'')
+        Sequelize.literal('`User`.`lastName` REGEXP\'(' + filterQuery.lastName + ')\'')
       ]
     };
   }

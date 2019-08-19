@@ -20,7 +20,6 @@ Establishment_Need.ViewAll = (req, res, next) => {
     include: [{
       model: Models.NeedCandidate,
       as: 'candidates',
-      required: true
     }, {
       model: Models.User,
     }, {

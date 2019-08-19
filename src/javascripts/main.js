@@ -148,16 +148,17 @@ let catchError = (xhr, status, error) => {
 };
 
 let loadTemplate = (url, data, callback) => {
-  data.partials.map(e => {
-    $.ajax({ url: `/views/partials/${e}.hbs`, cache: true, success: (source) => {
-        Handlebars.registerPartial(`${e}`, source);
+  if (data.partials) {
+    for (let i = 0; i < data.partials.length; i++) {
+      $.ajax({ url: `/views/partials/${data.partials[i]}.hbs`, cache: true, success: (source) => {
+        Handlebars.registerPartial(`${data.partials[i]}`, source);
       }}).catch((xhr, status, error) => {
-      $('#loadingModal').modal('hide');
-      catchError(xhr, status, error)
-    });
-  });
+        $('#loadingModal').modal('hide');
+        catchError(xhr, status, error)
+      });
+    }
+  }
   $.ajax({ url, cache: true, success: (source) => {
-
     if (data.modal) {
       $.ajax({ url: `/views/modals/partials/${data.modal}.hbs`, cache: true, success: (modal) => {
         Handlebars.registerPartial(`${data.modal}`, modal);

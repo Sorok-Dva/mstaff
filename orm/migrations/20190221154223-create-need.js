@@ -40,7 +40,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       contract_type: {
-        type: Sequelize.STRING
+        type: Sequelize.ENUM,
+        values: ['internship', 'CDI', 'CDD', 'CP', 'CL', 'AL', 'RCL', 'RL']
       },
       is_available: {
         type: Sequelize.STRING

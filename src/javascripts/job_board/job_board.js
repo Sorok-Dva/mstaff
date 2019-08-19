@@ -14,32 +14,32 @@ function editSection(sectionId){
   let formsPart = $('#formsPart');
   switch (sectionId) {
     case 'natureSection':
-      loadTemplate('/static/views/job_board/natureSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/natureSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'contextSection':
-      loadTemplate('/static/views/job_board/contextSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/contextSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'detailsSection':
-      loadTemplate('/static/views/job_board/detailsSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/detailsSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'postDescriptionSection':
-      loadTemplate('/static/views/job_board/postDescriptionSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/postDescriptionSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'requirementSection':
-      loadTemplate('/static/views/job_board/requirementSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/requirementSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
     case 'termsSection':
-      loadTemplate('/static/views/job_board/termsSection.hbs', {offer}, (html) => {
+      loadTemplate('/views/job_board/termsSection.hbs', {offer}, (html) => {
         formsPart.html(html);
       });
       break;
@@ -195,19 +195,20 @@ function load_natureSection(){
     startDate = moment(offer.nature_section.start).format("D/MM/YYYY");
 
   switch (offer.nature_section.contract_type) {
-    case 'cdi-cdd':
-      contractType = 'CDI';
-      break;
-    case 'vacation':
-      contractType = 'VACATION';
-      break;
-    case 'internship':
-      contractType = 'STAGE';
-      break;
+    case 'internship': contractType = 'Stage'; break;
+    case 'vacation': contractType = 'Vacation'; break;
+    case 'cdi-cdd': contractType = 'CDI/CDD'; break;
+    case 'CDI': contractType = 'CDI'; break;
+    case 'CP': contractType = 'Apprentissage / Contrat Pro'; break;
+    case 'CL': contractType = 'Collaboration Libérale'; break;
+    case 'AL': contractType = 'Installation / Association Libérale'; break;
+    case 'RCL': contractType = 'Reprise Cabinet Libéral'; break;
+    case 'CDD': contractType = 'Missions / Vacations / CDD'; break;
+    case 'RL': contractType = 'Remplacement Libéral'; break;
   }
 
   $('.nature-p-1').text(contractType);
-  $('.nature-p-2').text('à partir du '.concat(startDate));
+  $('.nature-p-2').text('À partir du '.concat(startDate));
 }
 
 function load_contextSection(){

@@ -81,7 +81,7 @@
                   {{date application.createdAt 'DD/MM/YYYY H:mm' }}
                 </td>
                 <td>{{application.Wish.Candidate.User.firstName}} {{application.Wish.Candidate.User.lastName}}</td>
-                <td>{{application.Wish.contract_type}}</td>
+                <td>{{contractType application.Wish.contract_type}}</td>
                 <td>
                   <label {{{otherPostsPopover application.Wish.posts}}} class="wrapword label label-success">{{firstPost application.Wish.posts}}</label>
                 </td>

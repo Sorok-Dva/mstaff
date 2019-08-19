@@ -345,5 +345,12 @@ Handlebars.registerHelper('contractType', (type) => {
     case 'internship': return 'Stage';
     case 'vacation': return 'Vacation';
     case 'cdi-cdd': return 'CDI/CDD';
+    case 'CDI': return 'CDI';
+    case 'CP': return 'Apprentissage / Contrat Pro';
+    case 'CL': return 'Collaboration Libérale';
+    case 'AL': return 'Installation / Association Libérale';
+    case 'RCL': return 'Reprise Cabinet Libéral';
+    case 'CDD': return 'Missions / Vacations / CDD';
+    case 'RL': return 'Remplacement Libéral';
   }
 });
