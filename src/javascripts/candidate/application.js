@@ -8,11 +8,14 @@ let ApplicationIsAddMode = true;
 // Step #1
 
 function resetAllCheckboxExcept(name) {
-  $('#step1').find(':input').not(`[name=${name}]`).prop('checked', false);
-  if (name !== 'cdi-cdd') {
-    $('#activityType').hide();
-    $('#timeType').hide();
-    delete application.timeType;
+  $('#step1 input').not(`[name=${name}]`).prop('checked', false);
+}
+
+function resetContractDurableTypeCheckboxExcept(name){
+  $('#contractDurableType input').not(`[name=${name}]`).prop('checked', false);
+  if (name !== 'CDI'){
+    $('#activityType input').prop('checked', false);
+    $('#timeType input').prop('checked', false);
   }
 }
 
@@ -20,73 +23,101 @@ function showContractTypeDiv(selected, isChecked){
   let durable = $('#contractDurableType');
   let punctual = $('#contractPunctualType');
 
+  durable.hide();
+  punctual.hide();
   if (isChecked){
     switch (selected) {
       case 'durableContract':
         durable.show();
-        punctual.hide();
         break;
       case 'punctualContract':
-        durable.hide();
         punctual.show();
         break;
     }
-  } else {
-    durable.hide();
-    punctual.hide();
-    delete application.contractType;
   }
 }
 
-$('#step1 input[type="checkbox"]').change(function () {
+$('#contractDurability input[type="checkbox"]').change(function() {
+  let selected = $(this).attr('name');
+  delete application.contractType;
+  delete application.timeType;
+  resetAllCheckboxExcept(selected);
+  showContractTypeDiv(selected, this.checked);
+  switch (selected) {
+    case 'internship':
+      delete application.timeType;
+      if (this.checked) application.contractType = { name: selected, value: 'STAGE' };
+      break;
+  }
+});
+
+$('#contractDurableType input[type="checkbox"]').change(function() {
+  let selected = $(this).attr('name');
+  let activityType = $('#activityType');
+  let timeType = $('#timeType');
+
+  delete application.contractType;
+  delete application.timeType;
+  resetContractDurableTypeCheckboxExcept(selected);
+  activityType.hide();
+  timeType.hide();
+  if (this.checked){
+    switch (selected) {
+      case 'CDI':
+        activityType.show();
+        timeType.show();;
+        application.contractType = {name: selected, value: 'CDI'};
+        application.timeType = {};
+        break;
+      case 'CP':
+        application.contractType = { name: selected, value: 'Apprentissage / Contrat Pro' };
+        break;
+      case 'CL':
+        application.contractType = { name: selected, value: 'Collaboration Libérale' };
+        break;
+      case 'AL':
+        application.contractType = { name: selected, value: 'Installation / Association Libérale' };
+        break;
+      case 'RCL':
+        application.contractType = { name: selected, value: 'Reprise Cabinet Libéral' };
+        break;
+    }
+  }
+});
+
+$('#contractPunctualType input[type="checkbox"]').change(function() {
+  let selected = $(this).attr('name');
+  delete application.contractType;
+  delete application.timeType;
+  resetContractDurableTypeCheckboxExcept(selected);
+  if (this.checked){
+    switch (selected) {
+      case 'CDD':
+        application.contractType = { name: selected, value: 'Missions / Vacations / CDD' };
+        break;
+      case 'RL':
+          application.contractType = { name: selected, value: 'Remplacement Libéral' };
+        break;
+    }
+  }
+});
+
+
+$('#activityType input[type="checkbox"]').change(function() {
   let selected = $(this).attr('name');
   switch (selected) {
-    case 'durableContract':
-      resetAllCheckboxExcept(selected);
-      showContractTypeDiv(selected, this.checked);
-      break;
-    case 'punctualContract':
-      resetAllCheckboxExcept(selected);
-      showContractTypeDiv(selected, this.checked);
-      break;
-    case 'internship':
-      resetAllCheckboxExcept(selected);
-      showContractTypeDiv(selected);
-
-      if (this.checked){
-        application.contractType = { name: selected, value: 'STAGE' };
-        delete application.timeType;
-      }
-      break;
-
-    // case 'cdi-cdd':
-    //   resetAllCheckboxExcept(selected);
-    //   if (this.checked){
-    //     $('#activityType').show();
-    //     $('#timeType').show();
-    //     application.contractType = {name: selected, value: 'CDI / CDD'};
-    //     application.timeType = {};
-    //   } else {
-    //     $('#activityType').hide();
-    //     $('#timeType').hide();
-    //     delete application.contractType;
-    //     delete application.timeType;
-    //   }
-    //   break;
-    // case 'vacation':
-    //   resetAllCheckboxExcept(selected);
-    //   if (this.checked){
-    //     application.contractType = { name: selected, value: 'VACATION' };
-    //     delete application.timeType;
-    //   } else delete application.contractType;
-    //   break;
-
     case 'full_time':
       this.checked ? application.timeType.fullTime = { name: selected, value: 'TEMPS PLEIN' } : delete application.timeType.fullTime;
       break;
     case 'part_time':
       this.checked ? application.timeType.partTime = { name: selected, value: 'TEMPS PARTIEL' } : delete application.timeType.partTime;
       break;
+  }
+});
+
+$('#timeType input[type="checkbox"]').change(function() {
+  let selected = $(this).attr('name');
+  switch (selected) {
     case 'daytime':
       this.checked ? application.timeType.dayTime = { name: selected, value: 'fa-sun' } : delete application.timeType.dayTime;
       break;
@@ -605,7 +636,7 @@ let createRecap = () => {
   $('#recapActivityType').hide().find('h3').html('');
   $('#recapHourType').hide();
   $('#availability').parent().hide();
-  if (application.contractType.name === 'cdi-cdd') {
+  if (application.contractType.name === 'CDI') {
     if('fullTime' in application.timeType)
       $('#recapActivityType h3').first().html(application.timeType.fullTime.value);
     if('partTime' in application.timeType)
