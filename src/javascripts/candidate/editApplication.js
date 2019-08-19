@@ -30,16 +30,31 @@ let editWish = () => {
 
 let rewriteContractType = () => {
   switch (application.wish[0].contract_type) {
-    case 'cdi-cdd':
-      application.contractType = {name: 'cdi-cdd', value: 'CDI / CDD'};
+    case 'CDI':
+      application.contractType = {name: 'CDI', value: 'CDI'};
       application.timeType = {};
       application.wish[0].full_time ? application.timeType.fullTime = { name: 'full_time', value: 'TEMPS PLEIN' } : null;
       application.wish[0].part_time ? application.timeType.partTime = { name: 'part_time', value: 'TEMPS PARTIEL' } : null;
       application.wish[0].full_time ? application.timeType.dayTime = { name: 'daytime', value: 'fa-sun' } : null;
       application.wish[0].full_time ? application.timeType.nightTime = { name: 'nighttime', value: 'fa-moon' } : null;
       break;
-    case 'vacation':
-      application.contractType = {name: 'vacation', value: 'VACATION'};
+    case 'CP':
+      application.contractType = { name: 'CP', value: 'Apprentissage / Contrat Pro' };
+      break;
+    case 'CL':
+      application.contractType = { name: 'CL', value: 'Collaboration Libérale' };
+      break;
+    case 'AL':
+      application.contractType = { name: 'AL', value: 'Installation / Association Libérale' };
+      break;
+    case 'RCL':
+      application.contractType = { name: 'RCL', value: 'Reprise Cabinet Libéral' };
+      break;
+    case 'CDD':
+      application.contractType = { name: 'CDD', value: 'Missions / Vacations / CDD' };
+      break;
+    case 'RL':
+      application.contractType = { name: 'RL', value: 'Remplacement Libéral' };
       break;
     case 'internship':
       application.contractType = {name: 'internship', value: 'STAGE'};

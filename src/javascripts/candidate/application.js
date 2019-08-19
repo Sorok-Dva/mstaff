@@ -710,8 +710,10 @@ $(document).ready(function () {
   let searchCity = $('#searchCity');
   const keyEnter = 13;
 
-  $('#contractDurableType').hide();
-  $('#contractPunctualType').hide();
+  if (ApplicationIsAddMode){
+    $('#contractDurableType').hide();
+    $('#contractPunctualType').hide();
+  }
   selectPostType.select2();
   selectServiceType.selectpicker();
   allServiceType.prop('disabled', true);

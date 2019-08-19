@@ -313,4 +313,25 @@ module.exports.register = async (Handlebars) => {
       case 'RL': return 'Remplacement Libéral';
     }
   });
+
+  Handlebars.registerHelper('contractDurabilityType', (contract, durability) => {
+    let result = false;
+    switch (durability) {
+      case 'durable':
+        if (contract === 'CDI' || contract === 'CP' || contract === 'CL' || contract === 'AL' || contract === 'RCL')
+          result = true;
+        break;
+      case 'punctual':
+        if (contract === 'CDD' || contract === 'RL')
+          result = true;
+        break;
+      case 'internship':
+        if (contract === 'internship')
+          result = true;
+        break;
+    }
+    return result;
+  });
+
+
 };
