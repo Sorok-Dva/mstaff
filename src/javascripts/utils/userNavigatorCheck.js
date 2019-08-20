@@ -22,13 +22,5 @@ $(document).ready(function() {
   } else if (isSafari(navigator.userAgent)) {
   } else if ((navigator.userAgent.indexOf('Trident') !== -1) || (!!document.documentMode === true)) {
     noIE();
-  } else {
-    createModal({
-      id: 'alertBadNavigatorModal',
-      title: 'Attention : navigateur obsolète détecté !',
-      modal: 'badNavigator',
-      cantBeClose: true,
-      navigator: 'Inconnu'
-    });
   }
 });
