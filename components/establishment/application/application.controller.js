@@ -396,7 +396,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
     };
   }
   if (!_.isNil(filterQuery.postal_code)) {
-    query.include[1].where = {
+    query.include[2].where = {
       postal_code: { [Op.startsWith]: filterQuery.postal_code }
     };
   }
