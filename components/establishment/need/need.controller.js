@@ -22,10 +22,10 @@ Establishment_Need.ViewAll = (req, res, next) => {
       as: 'candidates',
     }, {
       model: Models.User,
-    }, {
+    }/*, {
       model: Models.Offer,
       attributes: ['id', 'need_id']
-    }]
+    }*/]
   }).then(needs => {
     res.render('establishments/needs', { needs, a: { main: 'needs' } });
   }).catch(error => next(new BackError(error)));

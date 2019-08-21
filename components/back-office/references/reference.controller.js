@@ -35,7 +35,7 @@ BackOffice_References.View = (req, res, next) => {
 };
 
 BackOffice_References.Add = (req, res, next) => {
-  if (!allowedModels.includes(req.params.type)) return next(new BackError(`Modèle non autorisé pour cette route.`, httpStatus.FORBIDDEN));
+  if (! allowedModels.includes(req.params.type)) return next(new BackError(`Modèle non autorisé pour cette route.`, httpStatus.FORBIDDEN));
   let model = req.params.type === 'categories' ? 'MstaffCategories' : req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   const errors = validationResult(req);
@@ -74,7 +74,7 @@ BackOffice_References.Edit = (req, res, next) => {
 };
 
 BackOffice_References.Delete = (req, res, next) => {
-  if (!allowedModels.includes(req.params.type)) return next(new BackError(`Modèle non autorisé pour cette route.`, httpStatus.FORBIDDEN));
+  if (! allowedModels.includes(req.params.type)) return next(new BackError(`Modèle non autorisé pour cette route.`, httpStatus.FORBIDDEN));
   let model = req.params.type === 'categories' ? 'MstaffCategories' : req.params.type.charAt(0).toUpperCase() + req.params.type.slice(1, -1);
   if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   const errors = validationResult(req);
