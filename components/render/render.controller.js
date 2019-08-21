@@ -19,6 +19,7 @@ Render.Index = (req, res, next) => {
   if (req.user && req.user.type === 'admin') {
     return res.redirect('/back-office')
   }
+  // return res.redirect('https://welcome.mstaff.co
   return res.render('index', { layout: 'landing' })
 };
 
@@ -44,8 +45,6 @@ Render.Logout = (req, res) => req.logout() + req.session.destroy() + res.redirec
 Render.Register = (req, res) => res.render('users/register', { layout: 'onepage' });
 
 Render._404 = (req, res) => res.render('error', { error: 'Lien invalide' });
-
-Render.RegisterDemo = (req, res) => res.render('demo/register');
 
 Render.ResetPassword = (req, res) => res.render('users/reset-passwd', { layout: 'onepage' });
 

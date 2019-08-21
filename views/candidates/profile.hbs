@@ -16,10 +16,10 @@
       <div class="image"></div>
       <div class="content">
         <div class="card-profile">
-          <div class="avatar avatar-xxl avatar-{{#if candidate.is_available}}on{{else}}off{{/if}}line">
-            <img id="candidateAvatar"{{#if user.photo}} src="/api/avatar/view/{{user.photo}}" {{else}} src="/static/assets/images/face-0.jpg" {{/if}}class="avatar-img rounded-circle border-black" alt="avatar">
+          <div id="availability-state" class="avatar avatar-xxl avatar-{{#if candidate.is_available}}on{{else}}off{{/if}}line">
+            <img id="candidateAvatar"{{#if user.photo}} src="/uploads/avatars/{{user.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}}class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
-          <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> candidatePercentageTooltip candidate.percentage}}">
+          <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> tooltips/candidatePercentage candidate.percentage}}">
             <span class="label label-default rank-label">{{{candidateProfilePercentage candidate.percentage}}}</span>
           </div>
           <h2 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
@@ -44,8 +44,10 @@
         </div>
         <p class="description text-center p-4">
           {{candidate.description}}
-          <a href="/profile/edit"><i class="fa fa-pencil"></i></a>
         </p>
+        <div class="text-center">
+          <a class="btn btn-outline-success" href="/profile/edit"> <i class="fal fa-pencil" aria-hidden="true"></i> Modifier mes informations</a>
+        </div>
       </div>
       <hr>
       <div class="text-center">
@@ -65,7 +67,9 @@
             <h4><i class="fal fa-phone"></i> {{candidate.User.phone}}</h4>
           </div>
           <div class="col-12 col-lg-12">
-            <h4><i class="fal fa-envelope"></i> {{candidate.User.email}}</h4>
+            <h4><i class="fal fa-envelope"></i> {{candidate.User.email}}
+              <i class="fal fa-question-circle"  data-toggle="tooltip" data-html="true" data-placement="right" title="{{> tooltips/emailHint }}"></i>
+            </h4>
           </div>
           <div class="col-12 col-lg-12">
             <h4><i class="fal fa-map-marked-alt"></i> {{candidate.User.postal_code}} {{candidate.User.town}}</h4>
@@ -89,7 +93,7 @@
           <label for="file-upload" id="file-drag">
             {{#if candidate.video}}
               <video id="video-preview" style="width:inherit" controls>
-                <source src="/static/uploads/candidates/videos/{{candidate.video}}" id="videoSrc">
+                <source src="/uploads/candidates/videos/{{candidate.video}}" id="videoSrc">
               </video>
             {{else}}
               <video id="video-preview" style="display:none;width:inherit" controls>
@@ -125,7 +129,7 @@
             {{#each candidate.wishes as |wish|}}
               <li class="wish">
                 <h5>
-                  <a href="/wish/edit/{{wish.id}}">{{wish.contract_type}} dans {{wish.es_count}} établissement(s)</a>
+                  <a href="/wish/edit/{{wish.id}}">{{contractType wish.contract_type}} dans {{wish.es_count}} établissement(s)</a>
                 </h5>
               </li>
             {{/each}}
@@ -388,9 +392,9 @@
     </div>
   </div>
 </div>
-<script src="/static/assets/dist/js/uploadVideo.min.js"></script>
+<script src="/assets/dist/js/candidate/uploadVideo.min.js"></script>
 {{#unless candidate.percentage}}
-  <script src="/static/assets/dist/js/newMstaffCandidate.min.js"></script>
+  <script src="/assets/dist/js/candidate/newMstaffCandidate.min.js"></script>
 {{/unless}}
 <script>
   $('input[name="is_available"]').change(function() {
@@ -400,10 +404,12 @@
       $('div.label-text').removeClass('label-text-unavailable').addClass('label-text-available');
       $('div.label-text').children('b').html('Je suis disponible');
       available = true;
+      $('#availability-state').removeClass().addClass("avatar avatar-xxl avatar-online");
     } else {
       $('#ctaAvailability').removeClass('state-available').addClass('state-unavailable');
       $('div.label-text').removeClass('label-text-available').addClass('label-text-unavailable');
-      $('div.label-text').children('b').html('Je suis indisponible')
+      $('div.label-text').children('b').html('Je suis indisponible');
+      $('#availability-state').removeClass().addClass("avatar avatar-xxl avatar-offline");
     }
 
     $.post('/api/candidate/availability', { _csrf, available });

@@ -4,7 +4,6 @@ const path = require('path');
 const express = require('express');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const esRouter = require('./routes/es');
 const esSubDomainRouter = require('./routes/esSubdomain');
 const groupSubDomainRouter = require('./routes/groupSubdomain');
@@ -17,7 +16,6 @@ const apiBackOfficeRouter = require('./routes/api/backOffice');
 const apiEsRouter = require('./routes/api/establishment');
 
 const app = express();
-let staticMaxAge = null;
 
 if (Env.isProd || Env.isPreProd) app.use(Express.sentryRequestHandler);
 if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
@@ -30,7 +28,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 if (Env.isProd) {
   app.set('view cache', true);
-  staticMaxAge = { maxAge: '30 days' };
 }
 
 // ------ Express
@@ -40,8 +37,7 @@ app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.compress);
 app.use(Express.methodOverride);
 app.use(Express.helmet);
-app.use('/static', Express.unauthorizedStatics);
-app.use('/static', express.static(path.join(__dirname, 'public'), staticMaxAge));
+if (Env.isDev || Env.isLocal || Env.isPreProd) app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(Express.cookieParser);
 app.use(Express.csurf);
 app.use(Express.session);
@@ -54,21 +50,12 @@ app.use(Express.setLocals);
 app.use(Express.wildcardSubdomains);
 app.use(Express.readOnlySessionForImpersonation);
 
-process.on('unhandledRejection', reason => {
-  //@TODO Fix Sentry.send for unhandled rejection in prod or pre-prod env
-  /* eslint-disable no-console */
-  if (Env.isPreProd || Env.isProd) Express.sentryUnhandledRejection(reason);
-  else console.log(reason);
-  /* eslint-enable no-console */
-});
-
-// ------ ROUTESm
+// ------ ROUTES
 app.use('/', indexRouter);
 app.use('/', candidateRouter); //candidate
 app.use('/', esRouter); //recruiter
 app.use('/esDomain', esSubDomainRouter);
 app.use('/groupDomain', groupSubDomainRouter);
-app.use('/user', usersRouter);
 app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
 app.use('/api/user', apiUserRouter);

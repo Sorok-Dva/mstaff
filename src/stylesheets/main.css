@@ -731,9 +731,9 @@ span.round-tab:hover {
   font-family: 'Font Awesome 5 Pro';
   color: #a6a6a6;
   position: absolute;
-  left: 24px;
+  left: 15px;
   content: "\f002";
-  top: 20px;
+  top: 17px;
   font-size: 22px;
 }
 

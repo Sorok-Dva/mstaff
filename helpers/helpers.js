@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const moment = require('moment');
 const _ = require('lodash');
 
@@ -54,8 +53,6 @@ module.exports = {
   plain: e => e && e.get({ plain: true }),
   omitValue: (l, label) => _.filter(l, e => e !== label),
   omitByNil,
-  mapToId: (array, idKey) => _.map(array, idKey),
-  mapPick: (sequelizeArray, fields) => _.map(sequelizeArray, element => _.pick(element, fields)),
   isInt: (value) => {
     if (isNaN(value)) return false;
     return Number.isInteger(parseFloat(value));
@@ -105,11 +102,6 @@ module.exports = {
   },
   reformatOpts,
   upperCaseFirstLetter: str => _.upperFirst(str),
-  makeGulpCommand: (args) => {
-    const nodeBin = path.resolve(process.cwd(), './node_modules/.bin');
-    const env = _.assign({}, process.env, { PATH: `${path.dirname(process.execPath)}:${process.env.PATH}:${nodeBin}` });
-    // return () => spawnAsync('gulp', args, { env });
-  },
   getDate: (date) => date && moment(date).local().format('YYYY-MM-DD'),
   setToMidnight: m => moment(m).set({ millisecond: 0, second: 0, minute: 0, hour: 0 }),
   setToMidday: m => moment(m).set({ millisecond: 0, second: 0, minute: 0, hour: 8 }),

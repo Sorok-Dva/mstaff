@@ -1,5 +1,5 @@
 const __ = process.cwd();
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const { mkdirIfNotExists } = require(`${__}/helpers/helpers`);
 const { Op } = require('sequelize');
@@ -9,11 +9,6 @@ const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
 const Sequelize = require(`${__}/bin/sequelize`);
 const Mailer = require(`${__}/components/mailer`);
-
-/*const AvatarStorage = require('../../../helpers/avatar.storage');*/
-const path = require('path');
-const multer = require('multer');
-
 
 const User_Candidate = {};
 
@@ -57,12 +52,59 @@ User_Candidate.getProfile = (req, res, next) => {
     }, {
       model: Models.CandidateDocument,
       as: 'documents'
-    }]
+    }],
+    order: [
+      [ 'experiences', 'start', 'DESC' ],
+      [ 'formations', 'start', 'DESC' ],
+      [ 'qualifications', 'start', 'DESC' ],
+      [ 'skills', 'stars', 'DESC' ],
+      [ 'equipments', 'stars', 'DESC' ],
+      [ 'softwares', 'stars', 'DESC' ]
+    ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
     candidate.views += 1;
     candidate.save();
     return res.status(200).send(candidate);
+  }).catch(error => next(new BackError(error)));
+};
+
+User_Candidate.getApplicationsInEs = (req, res, next) => {
+  Models.Candidate.findOne({
+    where: { user_id: req.params.userId },
+    include: [{
+      model: Models.User,
+      attributes: { exclude: ['password'] },
+      on: {
+        '$Candidate.user_id$': {
+          [Op.col]: 'User.id'
+        }
+      },
+      required: true
+    }, {
+      model: Models.Application,
+      as: 'applications',
+      on: {
+        '$Candidate.id$': {
+          [Op.col]: 'applications.candidate_id'
+        }
+      },
+      where: { es_id: req.params.esId },
+      include: {
+        model: Models.Wish,
+        on: {
+          '$applications.wish_id$': {
+            [Op.col]: 'applications->Wish.id'
+          }
+        },
+      }
+    }],
+    order: [
+      [ 'applications', 'createdAt', 'DESC' ]
+    ]
+  }).then(data => {
+    if (_.isNil(data)) return next(new BackError('Candidat introuvable', 404));
+    return res.status(200).send(data);
   }).catch(error => next(new BackError(error)));
 };
 
@@ -104,7 +146,13 @@ User_Candidate.uploadDocument = (req, res, next) => {
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(result => {
     if (_.isNil(result)) return next(new BackError('Candidat introuvable', 404));
     candidate = result;
-    return Models.CandidateDocument.findOne({ where: { name: file.originalname, type: file.fieldname } });
+    return Models.CandidateDocument.findOne({
+      where: {
+        candidate_id: candidate.id,
+        name: file.originalname,
+        type: file.fieldname
+      }
+    });
   }).then(document => {
     if (_.isNil(document)) {
       Models.CandidateDocument.create({
@@ -118,6 +166,7 @@ User_Candidate.uploadDocument = (req, res, next) => {
         return res.status(200).send(document);
       });
     } else {
+      // the document were upload previously so if there is an error we delete the new document of our server as it's not saved in DB
       if (fs.existsSync(`./public/uploads/documents/${document.filename}`)) {
         fs.unlinkSync(`./public/uploads/documents/${document.filename}`)
       }
@@ -209,7 +258,7 @@ User_Candidate.viewProfile = (req, res, next) => {
       as: 'wishes'
     }],
     order: [
-      [ 'experiences', 'start', 'ASC' ],
+      [ 'experiences', 'start', 'DESC' ],
       [ 'formations', 'start', 'ASC' ],
       [ 'qualifications', 'start', 'ASC' ],
     ]
@@ -330,9 +379,9 @@ User_Candidate.getFormationsAndXP = (req, res, next) => {
       as: 'formations'
     }],
     order: [
-      [ 'experiences', 'start', 'ASC' ],
-      [ 'formations', 'start', 'ASC' ],
-      [ 'qualifications', 'start', 'ASC' ],
+      [ 'experiences', 'start', 'DESC' ],
+      [ 'formations', 'start', 'DESC' ],
+      [ 'qualifications', 'start', 'DESC' ],
     ]
   }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError('Candidat introuvable', 404));
@@ -1419,12 +1468,11 @@ User_Candidate.viewConferences = (req, res, next) => {
 };
 
 User_Candidate.viewPools = (req, res, next) => {
-  let a = { main: 'pools' };
   Models.UserPool.count({ where: { user_id: req.user.id } }).then(poolsCount => {
     if (poolsCount > 0) {
       return User_Candidate.viewMyPools(req, res, next);
     } else {
-      return res.render('candidates/pools', { a });
+      return res.render('candidates/pools', { a: { main: 'pools' } });
     }
   }).catch(error => next(new BackError(error)));
 };
@@ -1440,10 +1488,25 @@ User_Candidate.viewMyPools = (req, res, next) => {
           [Op.col]: 'pool.id'
         }
       },
-      include: {
+      include: [{
         model: Models.Establishment,
         attributes: ['name'],
-      }
+        as: 'es',
+        on: {
+          '$pool.es_id$': {
+            [Op.col]: 'pool->es.id'
+          },
+        },
+      },
+      {
+        model: Models.User,
+        attributes: ['email'],
+        on: {
+          '$pool.user_id$': {
+            [Op.col]: 'pool->User.id'
+          },
+        },
+      }]
     }
   }).then(pools => {
     return res.render('candidates/my-pools', { main: 'pools', pools } );

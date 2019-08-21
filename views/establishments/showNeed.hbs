@@ -8,7 +8,7 @@
         {{/if}}
         {{#if need.contract_type}}
           <div class="badge badge-warning">
-            {{need.contract_type}}
+            {{contractType need.contract_type}}
           </div>
         {{/if}}
         {{#if need.start}}
@@ -100,4 +100,4 @@
   let esId = {{need.es_id}};
   let nId = {{need.id}};
 </script>
-<script src="/static/assets/dist/js/showNeed.es.min.js"></script>
+<script src="/assets/dist/js/rh/showNeed.es.min.js"></script>

@@ -1,8 +1,5 @@
 const __ = process.cwd();
 const { BackError } = require(`${__}/helpers/back.error`);
-const { Op } = require('sequelize');
-const _ = require('lodash');
-const fs = require('fs');
 const Models = require(`${__}/orm/models/index`);
 
 const Api = {};
@@ -59,14 +56,6 @@ Api.getCategoriesList = (req, res, next) => {
   Models.CategoriesPostsServices.findAll().then(categories => {
     res.status(200).send({ categories });
   }).catch(error => next(new BackError(error)));
-};
-
-Api.getUserAvatar = (req, res, next) => {
-  if (fs.existsSync(`./public/uploads/avatars/${req.params.name}`)) {
-    return res.sendFile(`${__}/public/uploads/avatars/${req.params.name}`);
-  } else {
-    return res.sendFile(`${__}/public/assets/images/face-0.jpg`);
-  }
 };
 
 Api.getPoolDatas = (req, res, next) => {

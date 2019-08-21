@@ -12,12 +12,12 @@
         <div class="content">
           <div class="card-profile">
             <div class="avatar avatar-xxl {{#if this.candidate.is_available}}on{{else}}off{{/if}}line">
-            <img {{#if this.candidate.User.photo}}src="/api/avatar/view/{{this.candidate.User.photo}}"
-            {{else}}src="/static/assets/images/face-0.jpg"{{/if}} class="avatar-img rounded-circle border-blue"
+            <img {{#if this.candidate.User.photo}}src="/uploads/avatars/{{this.candidate.User.photo}}"
+            {{else}}src="/assets/images/face-0.jpg"{{/if}} class="avatar-img rounded-circle border-blue"
               alt="avatar">
             </div>
             <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top"
-                 title="{{> candidatePercentageTooltip this.candidate.percentage}}">
+                 title="{{> tooltips/candidatePercentage this.candidate.percentage}}">
               <span class="label label-default rank-label">{{{candidateProfilePercentage
                   this.candidate.percentage}}}</span>
             </div>
@@ -26,7 +26,7 @@
             </h2>
           </div>
           <p class="description show-read-more text-center p-4">
-            {{this.candidate.description}}
+            <span>{{this.candidate.description}}</span>
           </p>
         </div>
         <hr>
@@ -66,7 +66,7 @@
           </div>
           <div class="card-content text-center">
             <video id="video-preview" style="width:100%" controls>
-              <source src="/static/uploads/candidates/{{this.candidates}}/videos/{{this.candidate.video}}"
+              <source src="/uploads/candidates/{{this.candidates}}/videos/{{this.candidate.video}}"
                       id="videoSrc">
             </video>
           </div>
@@ -315,17 +315,17 @@
 
   $(document).ready(function(){
     let maxLength = 200;
-    $(".show-read-more").each(function(){
+    $(".show-read-more span").each(function(){
       let myStr = $(this).text();
       if($.trim(myStr).length > maxLength){
         let newStr = myStr.substring(0, maxLength);
-        $(this).empty().html(newStr);
-        $(this).append('<br /><button href="javascript:void(0);" class="btn btn-outline-primary read-more">Afficher la motivation du candidat</button>');
+        $(this).empty().html(newStr +" ...");
+        $(this).append('<br /><button href="javascript:void(0);" class="btn btn-outline-primary read-more mt-3">Afficher la suite</button>');
         $(this).append('<span class="more-text">' + myStr + '</span>');
       }
     });
     $(".read-more").click(function(){
-      $(this).siblings(".more-text").contents().unwrap();
+      $(".show-read-more span").text($(".more-text").text());
       $(this).remove();
     });
   });

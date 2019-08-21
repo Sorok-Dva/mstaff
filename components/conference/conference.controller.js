@@ -1,9 +1,7 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator/check');
 const { Op } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
-const moment = require('moment');
 const httpStatus = require('http-status');
 
 const Models = require(`${__}/orm/models/index`);
@@ -157,7 +155,7 @@ Conference.sendInvitationNotification = (conference, req) => {
         to: candidate.User.id,
         subject: 'Un entretien vous a été proposé !',
         title: `Bravo !\n L'établissement ${req.es.name} vous propose un entretien d'embauche.`,
-        image: '/static/assets/images/wink.jpg',
+        image: '/assets/images/wink.jpg',
         opts: {
           type: 'ConferenceNotifyCandidate',
           details: {
@@ -205,7 +203,7 @@ Conference.sendDeleteNotification = (conference, req) => {
         to: conference.candidate_id,
         subject: 'Un entretien a été annulé.',
         title: `L'établissement ${req.es.name} a annulé un entretien d'embauche.`,
-        image: '/static/assets/images/sad.jpg',
+        image: '/assets/images/sad.jpg',
         opts: {
           type: 'ConferenceNotifyCandidate',
           template: 'delete',

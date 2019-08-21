@@ -1,93 +1,98 @@
 <div class="row">
   {{#each this as |data|}}
-    <div class="col-12 col-md-6 col-lg-3" data-card-user="{{data.Wish.Candidate.id}}"
-      {{#if data.Establishment.ArchivedCandidates.0.candidate_id}}
+    <div class="col-12 col-md-6 col-lg-3" data-card-user="{{data.id}}"
+      {{#if data.applications.0.Establishment.ArchivedCandidates.0.candidate_id}}
          data-archived="true" style="display:none"{{else}} data-archived="false"{{/if}}
-      {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
+      {{#if data.applications.0.Establishment.FavoriteCandidates.0.candidate_id}}
          data-favorite="true"{{else}} data-favorite="false"{{/if}}>
       <div class="card card-user">
         <div class="icons" style="z-index: 1">
           <div class="float-left">
                 <span class="float-right" style="margin: 5px">
-                  <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
-                     onclick="addCandidate({{data.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
-                  <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
-                     onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unselect')"
+                  <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{data.id}}"
+                     onclick="addCandidate({{data.id}}, 'select')" style="cursor: pointer;"></i>
+                  <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{data.id}}"
+                     onclick="removeCandidate({{data.id}}, 'unselect')"
                      style="display:none;cursor: pointer; color: #35e035"></i>
                 </span>
           </div>
           <div class="actions float-right p-2">
-            <i class="fal fa-archive archiveCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
-              {{#if data.Establishment.ArchivedCandidates.0.candidate_id}}
-               onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unarchive')"
+            <i class="fal fa-archive archiveCandidate fa-1d3x" data-id="{{data.id}}"
+              {{#if data.applications.0.Establishment.ArchivedCandidates.0.candidate_id}}
+               onclick="removeCandidate({{data.id}}, 'unarchive')"
                style="cursor: pointer; color: rgb(14, 206, 164)"
               {{else}}
-               onclick="addCandidate({{data.Wish.Candidate.id}}, 'archive')"
+               onclick="addCandidate({{data.id}}, 'archive')"
                style="cursor: pointer;"
               {{/if}}></i>
-            <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.Wish.Candidate.id}}"
-              {{#if data.Establishment.FavoriteCandidates.0.candidate_id}}
-               onclick="removeCandidate({{data.Wish.Candidate.id}}, 'unfav')"
+            <i class="fal fa-star favCandidate fa-1d3x" data-id="{{data.id}}"
+              {{#if data.applications.0.Establishment.FavoriteCandidates.0.candidate_id}}
+               onclick="removeCandidate({{data.id}}, 'unfav')"
                style="cursor: pointer; color: gold"
               {{else}}
-               onclick="addCandidate({{data.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"
+               onclick="addCandidate({{data.id}}, 'favorite')" style="cursor: pointer"
               {{/if}}>
             </i>
           </div>
         </div>
         <div class="content">
           <div class="card-profile">
-            <div class="avatar avatar-xxl avatar-{{#if data.Wish.Candidate.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
-              <img {{#if data.Wish.Candidate.User.photo}}src="/api/avatar/view/{{data.Wish.Candidate.User.photo}}"{{else}}src="/static/assets/images/face-0.jpg"{{/if}} id="candidateAvatar"
+            <div class="avatar avatar-xxl avatar-{{#if data.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
+              <img {{#if data.User.photo}}src="/uploads/avatars/{{data.User.photo}}"{{else}}src="/assets/images/face-0.jpg"{{/if}} id="candidateAvatar"
                    class="avatar-img rounded-circle border-blue" alt="avatar">
             </div>
-            <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> candidatePercentageTooltip this.Wish.Candidate.percentage}}">
-              <span class="label label-default rank-label">{{{candidateProfilePercentage
-                  this.Wish.Candidate.percentage}}}</span>
+            <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> tooltips/candidatePercentage this.percentage}}">
+              <span class="label label-default rank-label">{{{candidateProfilePercentage this.percentage}}}</span>
             </div>
-            <h4 class="title">{{data.Wish.Candidate.User.firstName}} {{data.Wish.Candidate.User.lastName}},
-              <small>{{age data.Wish.Candidate.User.birthday 'years'}} ans</small>
-              ,
-              <small><b><i class="fal fa-map-marker-alt"></i> {{data.Wish.Candidate.User.town}}</b></small>
+            <h4 class="title">{{data.User.firstName}} {{data.User.lastName}},
+              <small>{{age data.User.birthday 'years'}} ans</small>,
+              <small><b><i class="fal fa-map-marker-alt"></i> {{data.User.town}}</b></small>
             </h4>
           </div>
           <div class="text-center">
             <h4>
-              <div class="{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"></div>
-              <span class="text-{{#unless data.Wish.Candidate.is_available}}un{{/unless}}available"
+              <div class="{{#unless data.is_available}}un{{/unless}}available"></div>
+              <span class="text-{{#unless data.is_available}}un{{/unless}}available"
                     style="line-height: 1.8">
-                {{#if data.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
+                {{#if data.is_available}}Disponible{{else}} Indisponible{{/if}}
               </span>
             </h4>
-            <h4 class="text-muted">
-              <i class="fal fa-sun fa-2x"{{#if data.Wish.day_time}} style="color: #04e900"{{/if}}></i>
-              <i class="fal fa-moon fa-2x"{{#if data.Wish.night_time}} style="color: #04e900"{{/if}}></i>
-            </h4>
-            {{#if data.Wish.posts}}
-              <h4 {{{otherPostsPopover this.Wish.posts}}}>
-                <label class="col-8 wrapword badge badge-soft-success">{{firstPost this.Wish.posts}}</label>
+            {{#if this.applications}}
+              <hr style="width: 45%; margin: auto">
+              <h4 class="text-muted mt-2">
+                Expérience dans les postes
               </h4>
-            {{/if}}
-            {{#if data.Wish.services}}
+              <h4 {{{otherPostsPopover this.experiences}}}>
+                <label class="col-8 wrapword badge badge-soft-success">{{firstPost this.experiences}}</label>
+              </h4>
               <hr style="width: 45%; margin: auto">
               <h4 class="text-muted mt-2">
                 Expérience dans les services
               </h4>
-              <h5 {{{otherServicesPopover this.Wish.services}}}>
-                <div class="badge badge-soft-secondary">{{firstService this.Wish.services}}</div>
-              </h5>
+              <h4 {{{otherServicesPopover this.experiences}}}>
+                <div class="badge badge-soft-secondary">{{firstService this.experiences}}</div>
+              </h4>
+              <hr style="width: 45%; margin: auto;">
+            {{else}}
+              <hr style="width: 45%; margin: auto">
+              <h4 class="text-muted mt-2">
+                Aucune expériences
+              </h4>
               <hr style="width: 45%; margin: auto;">
             {{/if}}
           </div>
           <div class="col-md-12 text-center profile-cta">
             <div class="col-md-12">
-              <button class="btn btn-outline-info" onclick="showCandidateProfile({{data.Wish.Candidate.User.id}})">
-                Accéder au profil complet
+              <button class="btn btn-outline-info" onclick="showCandidateProfile({{data.User.id}})">
+                Profil
+              </button>
+              <button class="btn btn-outline-success" onclick="showCandidateApplications({{data.User.id}})">
+                Candidatures ({{this.applications.length}})
               </button>
             </div>
             <div class="col-md-12">
               <p class="text-muted">
-                <small>Inscrit le {{date data.Wish.Candidate.User.createdAt 'DD/MM/YYYY'}}</small>
+                <small>Profil actualisé le {{date data.User.updatedAt 'DD/MM/YYYY'}}</small>
               </p>
             </div>
           </div>

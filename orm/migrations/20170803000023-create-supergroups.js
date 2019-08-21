@@ -14,11 +14,11 @@ module.exports = {
       },
       logo: {
         type: Sequelize.STRING,
-        defaultValue: '/static/assets/images/default_hospital.jpg'
+        defaultValue: '/assets/images/default_hospital.jpg'
       },
       banner: {
         type: Sequelize.STRING,
-        defaultValue: '/static/assets/images/cover-es.jpg'
+        defaultValue: '/assets/images/cover-es.jpg'
       },
       domain_name: {
         type: Sequelize.STRING

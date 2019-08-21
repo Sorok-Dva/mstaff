@@ -35,7 +35,7 @@
                     <select class="form-control input-md" name="service_id" id="service_id" required=""
                             data-toggle="select">
                       {{#each services as |service|}}
-                        <option value="{{service.id}}">{{service.name}}</option>
+                        <option value="{{service.id}}" data-text="{{service.name}}">{{service.name}}</option>
                       {{/each}}
                     </select>
                   </div>
@@ -295,4 +295,4 @@
     </div>
   </div>
 </div>
-<script src="/static/assets/dist/js/formations.min.js"></script>
+<script src="/assets/dist/js/candidate/formations.min.js"></script>

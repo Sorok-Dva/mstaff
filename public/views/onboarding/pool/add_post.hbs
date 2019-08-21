@@ -13,7 +13,10 @@
     overflow: hidden scroll;
   }
 </style>
+
+{{#ifCond data.emailExist '===' false}}
 <i id="backToMain" class="fal fa-arrow-circle-left fa-2x custom-cursor"></i>
+{{/ifCond}}
 
 <div class="height-80 d-flex flex-column justify-content-center">
   <h1 class="text-center mb-5">Poste et Services</h1>
@@ -34,4 +37,4 @@
   <div class="custom-cursor" id="toAvailability"><i class="fal fa-arrow-circle-right fa-2x"></i></div>
 </div>
 
-<script src="/static/assets/dist/js/onboarding_pool_post.min.js"></script>
+<script src="/assets/dist/js/onboarding/pool_post.min.js"></script>

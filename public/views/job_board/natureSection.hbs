@@ -13,18 +13,23 @@
 
     <div class="form-group">
       <label for="natureJobSheet">Métier</label>
-      <textarea type="text" class="form-control input-blue" id="natureJobSheet">
-        {{this.jobSheet.description}}
-      </textarea>
+      <textarea type="text" class="form-control input-blue" id="natureJobSheet"></textarea>
     </div>
 
     <div class="form-group">
       <label for="contract_type">Type de contrat</label>
       <select name="contract_type" id="contract_type">
         <option value=""></option>
-        <option value="cdi-cdd">CDI</option>
-        <option value="vacation">VACATION</option>
-        <option value="internship">STAGE</option>
+        <option value="" disabled>Un travail durable</option>
+        <option value="CDI">CDI</option>
+        <option value="CP">Apprentissage / Contrat Pro</option>
+        <option value="CL">Collaboration Libérale</option>
+        <option value="AL">Installation / Association Libérale</option>
+        <option value="RCL">Reprise Cabinet Libéral</option>
+        <option value="" disabled>Des missions ponctuelles</option>
+        <option value="CDD">Missions / Vacations / CDD</option>
+        <option value="RL">Remplacement Libéral</option>
+        <option value="internship">Un stage</option>
       </select>
     </div>
 
@@ -52,4 +57,6 @@
     <button class="btn btn-outline-info" onclick="clearNature()">Effacer</button>
   </div>
 </div>
+
+<script src="/assets/dist/js/job_board/job_board_nature.min.js"></script>
 

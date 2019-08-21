@@ -27,7 +27,7 @@ router.get('/candidates',
  * @Route('/document/view/:id') GET;
  * Show documents user page
  */
-router.get('/candidate/:candidateId/document/view/:id',
+router.get('/candidate/:candidateId(\\d+)/document/view/:id(\\d+)',
   Authentication.ensureIsEs,
   Establishment.Application.viewCandidateDocument);
 

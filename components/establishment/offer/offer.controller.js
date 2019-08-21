@@ -1,15 +1,11 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator/check');
-const { Op, Sequelize } = require('sequelize');
+const { validationResult } = require('express-validator');
+const { Op } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
-const Notification = require(`${__}/components/notification`);
-const moment = require('moment');
 const httpStatus = require('http-status');
 
-const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
-const Mailer = require(`${__}/components/mailer`);
 
 const Establishment_Offer = {};
 
@@ -94,31 +90,60 @@ Establishment_Offer.Create = (req, res, next) => {
     }]
   }).then(need => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.needId} introuvable.`, httpStatus.NOT_FOUND));
-    let nature_section = {};
-    let context_section = {};
-    let postDescription_section = {};
-    let prerequisites_section = {};
-    if (!_.isNil(need.post)) nature_section.post = need.post;
-    if (!_.isNil(need.contract_type)) nature_section.contract_type = need.contract_type;
-    if (!_.isNil(need.start)) nature_section.start = moment(need.start).format('DD/MM/YYYY');
-    if (!_.isNil(need.end)) nature_section.end = moment(need.end).format('DD/MM/YYYY');
-    if (!_.isNil(need.JobSheet.description)) nature_section.jobSheet = need.JobSheet.description;
-    if (!_.isNil(need.Establishment.name)) context_section.place = need.Establishment.name;
-    if (!_.isNil(need.Establishment.town)) context_section.address = need.Establishment.address + ' ' + need.Establishment.town;
-    if (!_.isNil(need.Establishment.url)) context_section.website = need.Establishment.url;
-    if (!_.isNil(need.Establishment.logo)) context_section.logo = need.Establishment.logo;
-    if (!_.isNil(need.JobSheet.activities)) postDescription_section.presentation = need.JobSheet.activities;
-    if (!_.isNil(need.JobSheet.infos)) postDescription_section.internal = need.JobSheet.infos;
-    if (!_.isNil(need.JobSheet.knowHow)) prerequisites_section.skills = need.JobSheet.knowHow;
-    if (!_.isNil(need.JobSheet.knowledge)) prerequisites_section.knowledge = need.JobSheet.knowledge;
+    if (_.isNil(need.JobSheet)) need.JobSheet = {};
     Models.Offer.create({
       name: need.name,
       need_id: need.id,
       es_id: need.es_id,
-      nature_section,
-      context_section,
-      postDescription_section,
-      prerequisites_section,
+      nature_section: {
+        post: _.isNil(need.post) ? '' : need.post,
+        contract_type: _.isNil(need.contract_type) ? '' : need.contract_type,
+        start: _.isNil(need.start) ? '' : need.start,
+        end: _.isNil(need.end) ? '' : need.end,
+        jobSheet: _.isNil(need.JobSheet.description) ? '' : need.JobSheet.description,
+        contractDuration: '',
+        grade: '',
+        category: ''
+      },
+      context_section: {
+        place: _.isNil(need.Establishment.name) ? '' : need.Establishment.name,
+        address: _.isNil(need.Establishment.town) ? '' : need.Establishment.address + ' ' + need.Establishment.town,
+        website: _.isNil(need.Establishment.url) ? '' : need.Establishment.url,
+        logo: _.isNil(need.Establishment.logo) ? '' : need.Establishment.logo,
+        attach: '',
+        pole: '',
+        presentation: ''
+      },
+      details_section: {
+        schedule: '',
+        roll: '',
+        quota: '',
+        strain: '',
+        access: '',
+        housing: '',
+        remuneration: '',
+        risk: ''
+      },
+      postDescription_section: {
+        presentation: '',
+        team: '',
+        uphill: '',
+        backing: '',
+        external: '',
+        internal: '',
+        internService: ''
+      },
+      prerequisites_section: {
+        diploma: '',
+        skill: '',
+        knowledge: ''
+      },
+      terms_sections: {
+        recruit: '',
+        mail: '',
+        contractual: '',
+        military: ''
+      },
       status: 'draft',
       createdBy: req.user.id
     }).then(offer => {

@@ -5,7 +5,6 @@
  */
 // require('appmetrics-dash').attach();
 const app = require('../app');
-const sequelize = require('./sequelize');
 const debug = require('debug')('mstaff:server');
 const http = require('http');
 const { spawn } = require('child_process');
@@ -34,14 +33,6 @@ const server = http.createServer(app);
 server.listen(port, () => {
   console.log('%s Server is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
   console.log('Press %s to stop\n', chalk.red('CTRL-C'));
-  sequelize.authenticate().then(() => {
-    console.log('[SEQUELIZE] %s Connection has been established successfully.', chalk.green('✓'));
-  }).catch(err => {
-    console.log('[SEQUELIZE] %s Unable to connect to the database.', chalk.red('✗'), err.message);
-    // process.exit(1);
-  }).finally(() => {
-    // sequelize.close();
-  });
   if (conf.ENV === 'local' || conf.ENV === 'development' || conf.ENV === 'dev_test') {
     const gulp = spawn('gulp');
     gulp.stdout.setEncoding('utf8');
@@ -56,7 +47,6 @@ server.on('listening', onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
   const port = parseInt(val, 10);
 
@@ -113,12 +103,9 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+// Memory Leak Detection
 memwatch.on('leak', (info) => {
-  discord(`**DEV SERVER - Memory Leak Detected** ${JSON.stringify(info)}`, 'debug');
+  discord('**Memory Leak Detected**', 'infos');
+  discord(JSON.stringify(info), 'infos');	
   console.error('Memory leak detected:\n', info);
-});
-
-memwatch.on('stats', (stats) => {
-  discord(`**DEV SERVER - Garbage Collector** ${JSON.stringify(stats)}`, 'debug');
-  console.error('Garbage Colletor detected:\n', stats);
 });

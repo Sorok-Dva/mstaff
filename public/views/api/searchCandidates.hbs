@@ -1,76 +1,79 @@
 <div class="row">
   {{#each this}}
-    {{#unless this.Establishment.ArchivedCandidates.0.candidate_id}}
-      <div class="col-12 col-md-6 col-lg-3" data-card-user="{{this.Wish.Candidate.id}}">
+    {{#unless this.applications.0.Establishment.ArchivedCandidates.0.candidate_id}}
+      <div class="col-12 col-md-6 col-lg-3" data-card-user="{{this.id}}">
         <div class="card card-user">
           <div class="icons" style="z-index: 1">
             <div class="float-left">
             <span class="float-right" style="margin: 5px">
-              <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="addCandidate({{this.Wish.Candidate.id}}, 'select')" style="cursor: pointer;"></i>
-              <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{this.Wish.Candidate.id}}" onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
+              <i class="selectCandidate fal fa-square fa-1d3x" data-id="{{this.id}}" onclick="addCandidate({{this.id}}, 'select')" style="cursor: pointer;"></i>
+              <i class="unselectCandidate fal fa-check-square fa-1d3x" data-id="{{this.id}}" onclick="removeCandidate({{this.id}}, 'unselect')" style="display:none;cursor: pointer; color: #35e035"></i>
             </span>
             </div>
             <div class="actions float-right p-2">
-              <i class="fal fa-archive fa-1d3x" onclick="addCandidate({{this.Wish.Candidate.id}}, 'archive')"
+              <i class="fal fa-archive fa-1d3x" onclick="addCandidate({{this.id}}, 'archive')"
                      style="cursor: pointer"></i>
-                  <i class="fal fa-star favCandidate fa-1d3x" data-id="{{this.Wish.Candidate.id}}"
-                    {{#if this.Establishment.FavoriteCandidates.0.candidate_id}}
-                     onclick="removeCandidate({{this.Wish.Candidate.id}}, 'unfav')" style="cursor: pointer; color: gold"
+                  <i class="fal fa-star favCandidate fa-1d3x" data-id="{{this.id}}"
+                    {{#if this.applications.0.Establishment.FavoriteCandidates.0.candidate_id}}
+                     onclick="removeCandidate({{this.id}}, 'unfav')" style="cursor: pointer; color: gold"
                     {{else}}
-                     onclick="addCandidate({{this.Wish.Candidate.id}}, 'favorite')" style="cursor: pointer"
+                     onclick="addCandidate({{this.id}}, 'favorite')" style="cursor: pointer"
                     {{/if}}>
                   </i>
             </div>
           </div>
           <div class="content">
             <div class="card-profile">
-              <div class="avatar avatar-xxl avatar-{{#if this.Wish.Candidate.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
-                <img {{#if this.Wish.Candidate.User.photo}}src="/api/avatar/view/{{this.Wish.Candidate.User.photo}}"{{else}}src="/static/assets/images/face-0.jpg"{{/if}} id="candidateAvatar" class="avatar-img rounded-circle border-blue" alt="avatar">
+              <div class="avatar avatar-xxl avatar-{{#if this.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
+                <img {{#if this.User.photo}}src="/uploads/avatars/{{this.User.photo}}"{{else}}src="/assets/images/face-0.jpg"{{/if}} id="candidateAvatar" class="avatar-img rounded-circle border-blue" alt="avatar">
               </div>
-              <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> candidatePercentageTooltip this.Wish.Candidate.percentage}}">
-                <span class="label label-default rank-label">{{{candidateProfilePercentage this.Wish.Candidate.percentage}}}</span>
+              <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> tooltips/candidatePercentage this.percentage}}">
+                <span class="label label-default rank-label">{{{candidateProfilePercentage this.percentage}}}</span>
               </div>
-              <h4 class="title">{{this.Wish.Candidate.User.firstName}} {{this.Wish.Candidate.User.lastName}},
-                <small>{{age this.Wish.Candidate.User.birthday 'years'}} ans</small>,
-                <small><b><i class="fal fa-map-marker-alt"></i> {{this.Wish.Candidate.User.town}}</b></small>
+              <h4 class="title">{{this.User.firstName}} {{this.User.lastName}},
+                <small>{{age this.User.birthday 'years'}} ans</small>,
+                <small><b><i class="fal fa-map-marker-alt"></i> {{this.User.town}}</b></small>
               </h4>
             </div>
             <div class="text-center">
               <h4>
-                <div class="{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available"></div>
-                <span class="text-{{#unless this.Wish.Candidate.is_available}}un{{/unless}}available" style="line-height: 1.8">
-                  {{#if this.Wish.Candidate.is_available}}Disponible{{else}} Indisponible{{/if}}
+                <div class="{{#unless this.is_available}}un{{/unless}}available"></div>
+                <span class="text-{{#unless this.is_available}}un{{/unless}}available" style="line-height: 1.8">
+                  {{#if this.is_available}}Disponible{{else}} Indisponible{{/if}}
                 </span>
               </h4>
-              <h4 class="text-muted">
-                <i class="fal fa-sun fa-2x"{{#if this.Wish.day_time}} style="color: #04e900"{{/if}}></i>
-                <i class="fal fa-moon fa-2x"{{#if this.Wish.night_time}} style="color: #04e900"{{/if}}></i>
-              </h4>
-              {{#if data.Wish.posts}}
-                <h4 {{{otherPostsPopover this.Wish.posts}}}>
-                  <label class="col-8 wrapword badge badge-soft-success">{{firstPost this.Wish.posts}}</label>
-                </h4>
-              {{/if}}
-              {{#if data.Wish.services}}
+              {{#if this.applications}}
                 <hr style="width: 45%; margin: auto">
                 <h4 class="text-muted mt-2">
-                  Expérience dans les services
+                  Intéressé(e) par les postes
                 </h4>
-                <h5 {{{otherServicesPopover this.Wish.services}}}>
-                  <div class="badge badge-soft-secondary">{{firstService this.Wish.services}}</div>
-                </h5>
+                <h4 {{{otherPostsPopover_Search this.applications}}}>
+                  <label class="col-8 wrapword badge badge-soft-success">{{firstPost_Search this.applications}}</label>
+                </h4>
+              {{/if}}
+              {{#if this.applications.0.Wish.services}}
+                <hr style="width: 45%; margin: auto">
+                <h4 class="text-muted mt-2">
+                  Intéressé(e) par les services
+                </h4>
+                <h4 {{{otherServicesPopover_Search this.applications}}}>
+                  <label class="col-8 wrapword badge badge-soft-secondary">{{firstService_Search this.applications}}</label>
+                </h4>
                 <hr style="width: 45%; margin: auto;">
               {{/if}}
             </div>
             <div class="col-md-12 text-center profile-cta">
               <div class="col-md-12">
-                <button class="btn btn-outline-info" onclick="showCandidateProfile({{this.Wish.Candidate.User.id}})">Accéder
-                  au profil complet
+                <button class="btn btn-outline-info" onclick="showCandidateProfile({{this.User.id}})">
+                  Profil
+                </button>
+                <button class="btn btn-outline-success" onclick="showCandidateApplications({{this.User.id}})">
+                  Candidatures ({{this.applications.length}})
                 </button>
               </div>
               <div class="col-md-12">
                 <p class="text-muted">
-                  <small>Inscrit le {{date this.Wish.Candidate.User.createdAt 'DD/MM/YYYY'}}</small>
+                  <small>Profil actualisé le {{date this.User.updatedAt 'DD/MM/YYYY'}}</small>
                 </p>
               </div>
             </div>

@@ -1,10 +1,5 @@
 const __ = process.cwd();
-const { validationResult } = require('express-validator/check');
-const { Op, Sequelize } = require('sequelize');
-const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
-const httpStatus = require('http-status');
-const moment = require('moment');
 const crypto = require('crypto');
 const fs = require('fs');
 
@@ -36,7 +31,6 @@ Establishment_Pool.Add = (req, res, next) => {
   let full_name = req.user.fullName;
   Models.Pool.create({
     name: req.body.pool,
-    referent: req.body.referent,
     user_id: req.user.id,
     es_id: req.user.opts.currentEs
   }).then(pool => {
@@ -61,7 +55,6 @@ Establishment_Pool.Add = (req, res, next) => {
 Establishment_Pool.Edit = (req, res, next) => {
   Models.Pool.findOne({ where: { id: req.body.pool } }).then(pool => {
     pool.name = req.body.name;
-    pool.referent = req.body.referent;
     pool.save();
     res.status(200).json('Modifications done')
   }).catch(error => next(new Error(error)));

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Authentication } = require('../../middlewares/index');
+const { HTTPValidation } = require('../../middlewares');
 const Api = require(`../../components/api`);
 const Establishment = require(`../../components/establishment`);
 
@@ -16,12 +16,10 @@ router.get('/softwares/all', Api.Main.getSoftwaresList);
 router.get('/pool/data/all', Api.Main.getPoolDatas);
 router.get('/categoriesPostsServices/all', Api.Main.getCategoriesList);
 router.post('/establishments/findByGeo', Establishment.Reference.findByGeo);
-router.get('/establishments/findByCity/:city', Establishment.Reference.findByCity);
-
-/**
- * @Route('/api/avatar/view/:name') GET;
- * Show user avatar (or default avatar if the photo isn't found in the fs)
- */
-router.get('/avatar/view/:name', Authentication.ensureAuthenticated, Api.Main.getUserAvatar);
+router.get(
+  '/establishments/findByCity/:city',
+  HTTPValidation.ApiController.findByCity,
+  Establishment.Reference.findByCity
+);
 
 module.exports = router;

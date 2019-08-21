@@ -173,13 +173,14 @@ module.exports.register = async (Handlebars) => {
   });
 
   Handlebars.registerHelper('weekStats', (object) => {
+    if (_.isNil(object)) return [];
     let res = [];
     for (let day = 6; day >= 0; day--) {
       let date = day === 0 ? moment().format('MMM Do YY') : moment().subtract(day, 'days').format('MMM Do YY');
       let isNull = true;
-      object.map((user) => {
-        if (date === moment(user.createdAt).format('MMM Do YY')){
-          res.push(user.dataValues.count);
+      object.map((entity) => {
+        if (date === moment(entity.createdAt || entity.last_login || entity.updatedAt).format('MMM Do YY')){
+          res.push(entity.dataValues.count);
           isNull = false;
         }
       });
@@ -287,4 +288,50 @@ module.exports.register = async (Handlebars) => {
       return `<h4 data-h4-wishId="${wish.id}"><i class="fal fa-clock" data-wish-id="${wish.id}" style="color: ${color}"></i> ${timeLeft} jours</h4>`;
     }
   });
+
+  /**
+   * Returns french text of contract type
+   *
+   * ```handlebars
+   * {{contractType wish.contract_type}}
+   * <!-- results in: 'Stage' for example -->
+   * ```
+   * @param {string} `type` Contract Type
+   * @return {String} Transformed text
+   */
+  Handlebars.registerHelper('contractType', (type) => {
+    switch (type) {
+      case 'internship': return 'Stage';
+      case 'vacation': return 'Vacation';
+      case 'cdi-cdd': return 'CDI/CDD';
+      case 'CDI': return 'CDI';
+      case 'CP': return 'Apprentissage / Contrat Pro';
+      case 'CL': return 'Collaboration Libérale';
+      case 'AL': return 'Installation / Association Libérale';
+      case 'RCL': return 'Reprise Cabinet Libéral';
+      case 'CDD': return 'Missions / Vacations / CDD';
+      case 'RL': return 'Remplacement Libéral';
+    }
+  });
+
+  Handlebars.registerHelper('contractDurabilityType', (contract, durability) => {
+    let result = false;
+    switch (durability) {
+      case 'durable':
+        if (contract === 'CDI' || contract === 'CP' || contract === 'CL' || contract === 'AL' || contract === 'RCL')
+          result = true;
+        break;
+      case 'punctual':
+        if (contract === 'CDD' || contract === 'RL')
+          result = true;
+        break;
+      case 'internship':
+        if (contract === 'internship')
+          result = true;
+        break;
+    }
+    return result;
+  });
+
+
 };
