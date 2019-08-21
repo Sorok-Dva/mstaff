@@ -765,12 +765,14 @@ $(document).ready(function () {
     }
 
     if (selectedCategories === '5'){
-      selectServiceType.val("56").trigger('change');
+      const id = $(`#selectServiceType option[data-text='Services Libéraux']`).val();
+      selectServiceType.val(id).trigger('change');
       selectServiceType.prop('disabled', true);
       selectServiceType.selectpicker('refresh');
     }
     if (selectedCategories === '4'){
-      selectServiceType.val("55").trigger('change');
+      const id = $(`#selectServiceType option[data-text='Services généraux']`).val();
+      selectServiceType.val(id).trigger('change');
       selectServiceType.prop('disabled', true);
       selectServiceType.selectpicker('refresh');
     }
