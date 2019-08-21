@@ -397,13 +397,16 @@ let editDiploma = (id) => {
 
 let lockService = (category) => {
   let inputServices = $('#service_id');
-  ;
+  let id = null;
   if (category === "5")
-    inputServices.val("56").trigger('change');
+    id = $(`#service_id option[data-text='Services Libéraux']`).val();
   if (category === "4")
-    inputServices.val("55").trigger('change');
+    id = $(`#service_id option[data-text='Services généraux']`).val();
   if (category === "5" || category === "4"){
-    inputServices.prop('disabled', true);
+    if (id !== null){
+      inputServices.val(id).trigger('change');
+      inputServices.prop('disabled', true);
+    }
   }
   else {
     inputServices.prop('disabled', false);
