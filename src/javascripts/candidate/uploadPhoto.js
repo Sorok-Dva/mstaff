@@ -8,7 +8,6 @@ $(document).ready(() => {
     let files = document.querySelector('[type=file]').files;
     let formData = new FormData();
     let format = files[0].type.split('/')[1];
-    let _csrf = $('meta[name="csrf-token"]').attr('content');
     if (!['jpeg', 'jpg', 'png'].includes(format)) {
       notification({
         icon: 'exclamation',
