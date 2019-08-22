@@ -56,7 +56,7 @@
               <img id="candidateAvatar" {{#if usr.photo}} src="/uploads/avatars/{{usr.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}} class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
         </div>
-        <form id="avatarForm" action="/api/candidate/add/photo?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
+        <form id="avatarForm" action="/api/candidate/add/photo" method="post" data-csrf="{{csrfToken}}" enctype="multipart/form-data">
           <span id="editAvatar" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px; background-color: white;">
               <i class="fal fa-camera-alt"></i> <input type="file" id="imgInp" name="avatar" onchange="avatarSelected()">
             </span>
