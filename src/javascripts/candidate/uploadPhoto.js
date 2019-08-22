@@ -17,7 +17,7 @@ $(document).ready(() => {
       return false;
     }
     formData.append('photo', files[0], files[0].name);
-    formData.append('data-csrf', $(this).attr('_csrf'));
+    formData.append('_csrf', $(this).attr('_csrf'));
     jQuery.ajax({
       url: $(this).attr('action'),
       data: formData,
