@@ -8,6 +8,7 @@ $(document).ready(() => {
     let files = document.querySelector('[type=file]').files;
     let formData = new FormData();
     let format = files[0].type.split('/')[1];
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
     if (!['jpeg', 'jpg', 'png'].includes(format)) {
       notification({
         icon: 'exclamation',
@@ -18,7 +19,7 @@ $(document).ready(() => {
     }
     formData.append('photo', files[0], files[0].name);
     jQuery.ajax({
-      url: $(this).attr('action'),
+      url: $(this).attr('action') + `?_csrf=${_csrf}`,
       data: formData,
       cache: false,
       contentType: false,
