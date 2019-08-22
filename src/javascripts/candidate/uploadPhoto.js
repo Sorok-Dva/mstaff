@@ -19,7 +19,7 @@ $(document).ready(() => {
     }
     formData.append('photo', files[0], files[0].name);
     jQuery.ajax({
-      url: $(this).attr('action') + `?_csrf=${_csrf}`,
+      url: $(this).attr('action'),
       data: formData,
       cache: false,
       contentType: false,
