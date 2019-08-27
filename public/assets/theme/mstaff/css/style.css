@@ -41,6 +41,10 @@ body, a {
   display: block;
 }
 
+.card-list .card {
+  margin-bottom: 2rem;
+}
+
 .card {
   padding: 2rem;
   border: 1px solid #cdcdcd;
