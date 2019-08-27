@@ -30,6 +30,9 @@ h1, h2, h3, h4, h5, h6 {
 .banner-info-card .banner-info-card__body > * + * {
   margin-top: 1rem;
 }
+.banner-info-card .banner-info-card__body > * + *:last-child {
+  margin-bottom: 2rem;
+}
 
 .image-ratio {
   background-position: center;
