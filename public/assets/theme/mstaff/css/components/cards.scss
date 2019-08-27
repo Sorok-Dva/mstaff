@@ -16,6 +16,12 @@
 		.banner-info-card__header__title{
 			margin-top:1rem;
 			font-size:1.5em;
+			font-weight:bold;
+		}
+		.banner-info-card__header__title__baseline{
+			display:block;
+			font-size:.75em;
+			font-weight:normal;
 		}
 	}
 	.banner-info-card__body{
@@ -24,6 +30,7 @@
 
 		.banner-info-card__body__title{
 			font-size:1.25em;
+			font-weight:bold;
 		}
 
 		& > * + *{
