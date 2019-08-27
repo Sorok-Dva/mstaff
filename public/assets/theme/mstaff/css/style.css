@@ -27,6 +27,11 @@ body, a {
   margin-bottom: 1.5rem;
 }
 
+.aic {
+  display: flex;
+  align-items: center;
+}
+
 .push {
   display: flex;
   justify-content: space-between;
@@ -39,6 +44,7 @@ body, a {
   text-transform: uppercase;
   color: #ffffff;
   font-weight: bold;
+  font-size: 0.85em;
 }
 .button.button-blue {
   background-color: #03a9de;
@@ -54,6 +60,7 @@ body, a {
 }
 .button.button-big {
   padding: 1.5rem 0.5rem;
+  font-size: 1em;
 }
 
 .card-list .card {

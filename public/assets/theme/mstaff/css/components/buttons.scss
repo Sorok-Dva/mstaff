@@ -5,6 +5,7 @@
 	text-transform:uppercase;
 	color:$fontColorLight;
 	font-weight:bold;
+	font-size:.85em;
 
 	&.button-blue{
 		background-color:$mainColorBlue;
@@ -22,6 +23,7 @@
 
 	&.button-big{
 		padding:1.5rem .5rem;
+		font-size:1em;
 	}
 
 }
