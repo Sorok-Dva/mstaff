@@ -34,7 +34,7 @@ body, a {
 
 .button {
   display: inline-block;
-  padding: 1.5rem 0.5rem;
+  padding: 1rem;
   text-align: center;
   text-transform: uppercase;
   color: #ffffff;
@@ -51,6 +51,9 @@ body, a {
 }
 .button.button-fluid {
   display: block;
+}
+.button.button-big {
+  padding: 1.5rem 0.5rem;
 }
 
 .card-list .card {
