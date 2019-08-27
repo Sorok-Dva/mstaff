@@ -16,7 +16,11 @@
                                     <h3 class="banner-info-card__header__title">{{es.name}}</h3>
                                 </div>
                                 <div class="banner-info-card__body">
-                                    {{#if es.address}}<p>{{es.address}} {{es.town}}</p>{{/if}}
+                                    {{#if es.address}}
+                                        <p>{{es.address}} {{es.town}}</p>
+                                    {{else}}
+                                        <p>Lorem ipsum dolor sit amet</p>
+                                    {{/if}}
                                 </div>
                             </div>
 
