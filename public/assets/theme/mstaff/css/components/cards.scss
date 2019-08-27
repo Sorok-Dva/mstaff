@@ -20,11 +20,19 @@
 		.banner-info-card__header__title{
 			font-size:1.5em;
 			font-weight:bold;
+
+			& + .banner-info-card__header__title__baseline{
+				margin-top:1rem;
+			}
 		}
 		.banner-info-card__header__title__baseline{
 			display:block;
 			font-size:.75em;
 			font-weight:normal;
+
+			& + .banner-info-card__header__title{
+				margin-top:1rem;
+			}
 		}
 	}
 	.banner-info-card__body{
