@@ -4,6 +4,10 @@ h1, h2, h3, h4, h5, h6, p, a, div, span {
   font-family: "Muli", Verdana, Arial, sans-serif;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
 .banner-info-card {
   background-color: #262626;
   color: #ffffff;
@@ -18,7 +22,7 @@ h1, h2, h3, h4, h5, h6, p, a, div, span {
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title {
   margin-top: 1rem;
-  font-size: 2em;
+  font-size: 1.5em;
 }
 .image-ratio {
   background-position: center;
