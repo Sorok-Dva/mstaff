@@ -1,6 +1,9 @@
 .button{
 	display:inline-block;
-	padding:1rem;
+	padding:1.5rem;
+	text-align:center;
+	text-transform:uppercase;
+	color:$fontColorLight;
 
 	&.button-blue{
 		background-color:$mainColorBlue;

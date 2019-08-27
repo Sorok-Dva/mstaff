@@ -8,9 +8,16 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
+body, a {
+  color: #000000;
+}
+
 .button {
   display: inline-block;
-  padding: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffffff;
 }
 .button.button-blue {
   background-color: #03a9de;
@@ -52,6 +59,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 .banner-info-card .banner-info-card__body > * + *:last-child {
   margin-bottom: 2rem;
+}
+.banner-info-card .banner-info-card__body .button:last-child {
+  margin: 2rem 0;
 }
 
 .image-ratio {
