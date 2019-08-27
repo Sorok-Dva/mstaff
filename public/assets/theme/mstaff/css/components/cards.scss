@@ -22,6 +22,10 @@
 		padding:0 2rem 1px 2rem;
 		margin-top:2rem;
 
+		.banner-info-card__body__title{
+			font-size:1.25em;
+		}
+
 		& > * + *{
 			margin-top:1.5rem;
 
