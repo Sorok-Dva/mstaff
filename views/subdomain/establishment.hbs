@@ -28,41 +28,35 @@
 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm">
 
-                    <div class="row">
+                <div class="col-xl-10 col-lg-9">
 
-                        <div class="col-sm-10">
+                    <h1 class="baseline baseline-page">Retrouvez ici les <span>offres d'emploi</span> postées par <span>{{es.name}}</span></h1>
 
-                            <h1 class="baseline baseline-page">Retrouvez ici les <span>offres d'emploi</span> postées par <span>{{es.name}}</span></h1>
+                    <div class="container-fluid">
+                        <div class="row card-list">
 
-                            <div class="container-fluid">
-                                <div class="row card-list">
-
-                                    {{#repeat 10}}
-                                        <div class="col-sm-6">
-                                            <div class="card">
-                                                <div class="card__thumbnail-container"></div>
-                                                <div class="card__body content-type-text">
-                                                    <h3 class="card__body__title title">Ergotherapeuthe</h3>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis!</p>
+                            {{#repeat 10}}
+                                <div class="col-sm-6">
+                                    <div class="card">
+                                        <div class="card__thumbnail-container"></div>
+                                        <div class="card__body content-type-text">
+                                            <h3 class="card__body__title title">Ergotherapeuthe</h3>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis!</p>
+                                        </div>
+                                        <div class="card__footer">
+                                            <div class="push">
+                                                <div class="aic">
+                                                    <div class="tag tag-blue">CDI</div>
                                                 </div>
-                                                <div class="card__footer">
-                                                    <div class="push">
-                                                        <div class="aic">
-                                                            <div class="tag tag-blue">CDI</div>
-                                                        </div>
-                                                        <div class="aic">
-                                                            <a href="#" class="button button-pink">Postuler</a>
-                                                        </div>
-                                                    </div>
+                                                <div class="aic">
+                                                    <a href="#" class="button button-pink">Postuler</a>
                                                 </div>
                                             </div>
                                         </div>
-                                    {{/repeat}}
-
+                                    </div>
                                 </div>
-                            </div>
+                            {{/repeat}}
 
                         </div>
                     </div>
