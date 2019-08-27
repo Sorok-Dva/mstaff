@@ -45,29 +45,29 @@ body, a {
   color: #ffffff;
   font-weight: bold;
   font-size: 0.85em;
-  -webkit-transition: background-color 0.3s ease;
-  -moz-transition: background-color 0.3s ease;
-  -ms-transition: background-color 0.3s ease;
-  -o-transition: background-color 0.3s ease;
-  transition: background-color 0.3s ease;
+  -webkit-transition: background-color 0.2s ease;
+  -moz-transition: background-color 0.2s ease;
+  -ms-transition: background-color 0.2s ease;
+  -o-transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 .button.button-blue {
   background-color: #03a9de;
 }
 .button.button-blue:hover {
-  background-color: #025c79;
+  background-color: #0283ac;
 }
 .button.button-green {
   background-color: #0ecea4;
 }
 .button.button-green:hover {
-  background-color: #086e58;
+  background-color: #0b9e7e;
 }
 .button.button-pink {
   background-color: #e91e63;
 }
 .button.button-pink:hover {
-  background-color: #930e3b;
+  background-color: #c1134e;
 }
 .button.button-fluid {
   display: block;

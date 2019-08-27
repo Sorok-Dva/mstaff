@@ -6,31 +6,31 @@
 	color:$fontColorLight;
 	font-weight:bold;
 	font-size:.85em;
-	-webkit-transition:background-color .3s ease;
-	-moz-transition:background-color .3s ease;
-	-ms-transition:background-color .3s ease;
-	-o-transition:background-color .3s ease;
-	transition:background-color .3s ease;
+	-webkit-transition:background-color .2s ease;
+	-moz-transition:background-color .2s ease;
+	-ms-transition:background-color .2s ease;
+	-o-transition:background-color .2s ease;
+	transition:background-color .2s ease;
 
 	&.button-blue{
 		background-color:$mainColorBlue;
 
 		&:hover{
-			background-color:darken($mainColorBlue, 20%);
+			background-color:darken($mainColorBlue, 10%);
 		}
 	}
 	&.button-green{
 		background-color:$mainColorGreen;
 
 		&:hover{
-			background-color:darken($mainColorGreen, 20%);
+			background-color:darken($mainColorGreen, 10%);
 		}
 	}
 	&.button-pink{
 		background-color:$mainColorPink;
 
 		&:hover{
-			background-color:darken($mainColorPink, 20%);
+			background-color:darken($mainColorPink, 10%);
 		}
 	}
 
