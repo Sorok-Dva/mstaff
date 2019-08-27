@@ -1,5 +1,9 @@
+$backgroundColorDark:#262626;
+$backgroundColorLight:#333333;
+
 @import "lib/reset.css";
 @import "lib/grid.min.css";
 
+@import "components/cards.scss";
 @import "components/image.scss";
 @import "components/map.scss";

@@ -1,5 +1,8 @@
 @import "lib/reset.css";
 @import "lib/grid.min.css";
+.banner-info-card {
+  background-color: #262626;
+}
 .image-ratio {
   background-position: center;
   -webkit-background-size: cover;

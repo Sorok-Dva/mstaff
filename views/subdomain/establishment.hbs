@@ -8,10 +8,20 @@
                 <div class="col-sm">
 
                     <div class="row">
-                        <div class="col-sm-4">
-                            qzd
+                        <div class="col-sm-3 p-0">
+
+                            <div class="banner-info-card">
+                                <div class="banner-info-card__header">
+                                    <img src="{{es.logo}}" alt="Logo {{es.name}}" class="banner-info-card__header__image">
+                                    <h3 class="banner-info-card__header__title">{{es.name}}</h3>
+                                </div>
+                                <div class="banner-info-card__body">
+                                    {{#if es.address}}<p>{{es.address}} {{es.town}}</p>{{/if}}
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-9">
                             qzd
                         </div>
                     </div>
