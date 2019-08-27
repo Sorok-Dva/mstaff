@@ -12,9 +12,12 @@
 			-webkit-border-radius:999px;
 			-moz-border-radius:999px;
 			border-radius:999px;
+
+			& + *{
+				margin-top:1rem;
+			}
 		}
 		.banner-info-card__header__title{
-			margin-top:1rem;
 			font-size:1.5em;
 			font-weight:bold;
 		}
