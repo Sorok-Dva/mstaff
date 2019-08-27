@@ -1,0 +1,8 @@
+.content-type-text > * + * {
+  margin-top: 1.5rem;
+}
+.content-type-text > * + *:last-child {
+  margin-bottom: 2rem;
+}
+
+/*# sourceMappingURL=content-type.css.map */

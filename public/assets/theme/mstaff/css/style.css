@@ -45,6 +45,9 @@ body, a {
   padding: 2rem;
   border: 1px solid #cdcdcd;
 }
+.card .card__body .card__body__title {
+  font-size: 1.25em;
+}
 .card .card__body p {
   color: #373737;
 }
@@ -98,6 +101,13 @@ body, a {
 }
 .banner-info-card .banner-info-card__body .button:last-child {
   margin: 2rem 0;
+}
+
+.content-type-text > * + * {
+  margin-top: 1.5rem;
+}
+.content-type-text > * + *:last-child {
+  margin-bottom: 2rem;
 }
 
 .image-ratio {
