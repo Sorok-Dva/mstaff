@@ -64,7 +64,7 @@ body, a {
   font-weight: bold;
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title + .banner-info-card__header__title__baseline {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title__baseline {
   display: block;
@@ -72,7 +72,7 @@ body, a {
   font-weight: normal;
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title__baseline + .banner-info-card__header__title {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 .banner-info-card .banner-info-card__body {
   padding: 0 2rem 1px 2rem;
