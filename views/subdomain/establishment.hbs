@@ -12,28 +12,26 @@
 
                     <div class="row">
 
-                        <div class="col-sm-2 banner-info-card-container">
-                            <div class="banner-info-card">
-                                <div class="banner-info-card__header">
-                                    <div class="image-ratio image-ratio-40 banner-info-card__header__image" style="background-image:url('{{es.logo}}');"></div>
-                                    <span class="banner-info-card__header__title__baseline">Établissement</span>
-                                    <h3 class="banner-info-card__header__title title">{{es.name}}</h3>
-                                </div>
-                                <div class="banner-info-card__body content-type-text">
-                                    <h4 class="banner-info-card__body__title title">Informations</h4>
-                                    {{#if es.address}}
-                                        <p><i class="far fa-map-marker-alt"></i> {{es.address}} {{es.town}}</p>
-                                    {{else}}
-                                        <p><i class="far fa-map-marker-alt"></i> Lorem ipsum dolor sit amet</p>
-                                    {{/if}}
+                        <div class="banner-info-card">
+                            <div class="banner-info-card__header">
+                                <div class="image-ratio image-ratio-40 banner-info-card__header__image" style="background-image:url('{{es.logo}}');"></div>
+                                <span class="banner-info-card__header__title__baseline">Établissement</span>
+                                <h3 class="banner-info-card__header__title title">{{es.name}}</h3>
+                            </div>
+                            <div class="banner-info-card__body content-type-text">
+                                <h4 class="banner-info-card__body__title title">Informations</h4>
+                                {{#if es.address}}
+                                    <p><i class="far fa-map-marker-alt"></i> {{es.address}} {{es.town}}</p>
+                                {{else}}
                                     <p><i class="far fa-map-marker-alt"></i> Lorem ipsum dolor sit amet</p>
-                                    <p><i class="far fa-map-marker-alt"></i> Lorem ipsum dolor sit amet</p>
-                                    <a href="/join" class="button button-pink button-fluid button-big">Candidature spontanée</a>
-                                </div>
+                                {{/if}}
+                                <p><i class="far fa-map-marker-alt"></i> Lorem ipsum dolor sit amet</p>
+                                <p><i class="far fa-map-marker-alt"></i> Lorem ipsum dolor sit amet</p>
+                                <a href="/join" class="button button-pink button-fluid button-big">Candidature spontanée</a>
                             </div>
                         </div>
 
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
 
                             <h1 class="baseline baseline-page">Retrouvez ici les <span>offres d'emploi</span> postées par <span>{{es.name}}</span></h1>
 
@@ -46,7 +44,7 @@
                                                 <div class="card__thumbnail-container"></div>
                                                 <div class="card__body content-type-text">
                                                     <h3 class="card__body__title title">Ergotherapeuthe</h3>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis! Blanditiis doloribus excepturi impedit iusto pariatur.</p>
+                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis!</p>
                                                 </div>
                                                 <div class="card__footer">
                                                     <div class="push">

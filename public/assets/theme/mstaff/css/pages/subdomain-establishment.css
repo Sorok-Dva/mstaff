@@ -1,4 +1,4 @@
-body.page-subdomain-establishment .banner-info-card-container {
+body.page-subdomain-establishment .banner-info-card {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -7,6 +7,7 @@ body.page-subdomain-establishment .banner-info-card-container {
   -ms-transform: translateX(-50%) translateY(-50%);
   -o-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%);
+  z-index: 999;
 }
 
 /*# sourceMappingURL=subdomain-establishment.css.map */
