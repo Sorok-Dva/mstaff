@@ -2,8 +2,9 @@ $backgroundColorDark:#262626;
 $backgroundColorLight:#333333;
 
 $fontColorLight:#ffffff;
-$fontColorLightFade:#bbbbbb;
+$fontColorLightFade:#cdcdcd;
 $fontColorDark:#000000;
+$fontColorDarkFade:#373737;
 
 $mainColorBlue:#03a9de;
 $mainColorGreen:#0ecea4;
@@ -19,3 +20,4 @@ $mainColorPink:#e91e63;
 @import "components/cards";
 @import "components/image";
 @import "components/map";
+@import "components/tags";

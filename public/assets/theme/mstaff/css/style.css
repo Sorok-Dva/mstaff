@@ -41,6 +41,9 @@ body, a {
   display: block;
 }
 
+.card .card__body p {
+  color: #373737;
+}
 .banner-info-card {
   background-color: #262626;
   color: #ffffff;
@@ -70,7 +73,7 @@ body, a {
   display: block;
   font-size: 0.75em;
   font-weight: normal;
-  color: #bbbbbb;
+  color: #cdcdcd;
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title__baseline + .banner-info-card__header__title {
   margin-top: 0.5rem;
@@ -139,6 +142,27 @@ body, a {
 .map-container > div {
   width: 100%;
   height: 100%;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.5rem;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-weight: bold;
+}
+.tag.tag-blue {
+  background-color: #03a9de;
+}
+.tag.tag-green {
+  background-color: #0ecea4;
+}
+.tag.tag-pink {
+  background-color: #e91e63;
+}
+.tag.tag-fluid {
+  display: block;
 }
 
 /*# sourceMappingURL=style.css.map */

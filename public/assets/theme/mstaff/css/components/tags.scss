@@ -1,0 +1,23 @@
+.tag{
+	display:inline-block;
+	padding:.5rem;
+	text-align:center;
+	text-transform:uppercase;
+	color:$fontColorLight;
+	font-weight:bold;
+
+	&.tag-blue{
+		background-color:$mainColorBlue;
+	}
+	&.tag-green{
+		background-color:$mainColorGreen;
+	}
+	&.tag-pink{
+		background-color:$mainColorPink;
+	}
+
+	&.tag-fluid{
+		display:block;
+	}
+
+}
