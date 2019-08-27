@@ -151,9 +151,9 @@ body, a {
 .tag {
   display: inline-block;
   padding: 0.5rem;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
+  -webkit-border-radius: 999px;
+  -moz-border-radius: 999px;
+  border-radius: 999px;
   text-align: center;
   text-transform: uppercase;
   font-size: 0.75em;
