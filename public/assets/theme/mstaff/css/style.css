@@ -188,10 +188,14 @@ body, a {
   font-size: 1.5em;
 }
 
+.baseline {
+  font-weight: normal;
+}
 .baseline span {
   font-weight: bold;
 }
 .baseline.baseline-page {
+  margin: 3rem 0;
   font-size: 1.5em;
   color: #03a9de;
   text-align: center;

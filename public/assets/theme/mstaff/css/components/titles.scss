@@ -7,11 +7,14 @@
 }
 
 .baseline{
+	font-weight:normal;
+
 	span{
 		font-weight:bold;
 	}
 
 	&.baseline-page{
+		margin:3rem 0;
 		font-size:1.5em;
 		color:$mainColorBlue;
 		text-align:center;
