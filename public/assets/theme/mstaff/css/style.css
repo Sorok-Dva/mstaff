@@ -49,7 +49,7 @@ body, a {
   font-size: 1.25em;
 }
 .card .card__body p {
-  color: #373737;
+  color: #696969;
 }
 .banner-info-card {
   background-color: #262626;
@@ -71,7 +71,6 @@ body, a {
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title {
   font-size: 1.5em;
-  font-weight: bold;
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title + .banner-info-card__header__title__baseline {
   margin-top: 0.5rem;
@@ -91,7 +90,6 @@ body, a {
 }
 .banner-info-card .banner-info-card__body .banner-info-card__body__title {
   font-size: 1.25em;
-  font-weight: bold;
 }
 .banner-info-card .banner-info-card__body > * + * {
   margin-top: 1.5rem;
@@ -107,7 +105,7 @@ body, a {
   margin-top: 1.5rem;
 }
 .content-type-text > * + *:last-child {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .image-ratio {
@@ -181,6 +179,13 @@ body, a {
 }
 .tag.tag-fluid {
   display: block;
+}
+
+.title {
+  font-weight: bold;
+}
+.title.title-page {
+  font-size: 1.5em;
 }
 
 /*# sourceMappingURL=style.css.map */

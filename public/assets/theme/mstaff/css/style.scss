@@ -6,7 +6,7 @@ $borderColorLight:#cdcdcd;
 $fontColorLight:#ffffff;
 $fontColorLightFade:#cdcdcd;
 $fontColorDark:#000000;
-$fontColorDarkFade:#373737;
+$fontColorDarkFade:#696969;
 
 $mainColorBlue:#03a9de;
 $mainColorGreen:#0ecea4;
@@ -24,3 +24,4 @@ $mainColorPink:#e91e63;
 @import "components/image";
 @import "components/map";
 @import "components/tags";
+@import "components/titles";
