@@ -123,6 +123,11 @@ module.exports = {
     Subdomain.Main.find(req, res, (subdomain) => {
       if (subdomain.es_id) {
         Establishment.Main.find(subdomain.es_id, (data) => {
+          // XXX: Remove this from here
+          if (data.banner) {
+            data.banner = data.banner.replace('/static', '');
+          }
+          // XXX: Remove this to here
           res.locals.es = data;
           req.es = data;
           req.url = `/esDomain${req.url}`;
