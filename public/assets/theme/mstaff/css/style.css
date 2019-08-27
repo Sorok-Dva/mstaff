@@ -45,15 +45,29 @@ body, a {
   color: #ffffff;
   font-weight: bold;
   font-size: 0.85em;
+  -webkit-transition: background-color 0.3s ease;
+  -moz-transition: background-color 0.3s ease;
+  -ms-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 .button.button-blue {
   background-color: #03a9de;
 }
+.button.button-blue:hover {
+  background-color: #025c79;
+}
 .button.button-green {
   background-color: #0ecea4;
 }
+.button.button-green:hover {
+  background-color: #086e58;
+}
 .button.button-pink {
   background-color: #e91e63;
+}
+.button.button-pink:hover {
+  background-color: #930e3b;
 }
 .button.button-fluid {
   display: block;
