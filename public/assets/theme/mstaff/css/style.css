@@ -36,4 +36,12 @@
   padding-bottom: 100%;
 }
 
+.map-container {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
 /*# sourceMappingURL=style.css.map */
