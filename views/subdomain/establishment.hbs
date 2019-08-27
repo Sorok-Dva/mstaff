@@ -7,7 +7,14 @@
             <div class="row">
                 <div class="col-sm">
 
-                    qqzdqzd
+                    <div class="row">
+                        <div class="col-sm-4">
+                            qzd
+                        </div>
+                        <div class="col-sm-8">
+                            qzd
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -26,7 +33,7 @@
     if (document.getElementById('map')) {
         let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};
         let map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 10,
+            zoom: 8,
             center: pos
         });
         marker = new google.maps.Marker({
