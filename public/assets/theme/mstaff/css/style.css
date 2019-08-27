@@ -70,6 +70,7 @@ body, a {
   display: block;
   font-size: 0.75em;
   font-weight: normal;
+  color: #bbbbbb;
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title__baseline + .banner-info-card__header__title {
   margin-top: 0.5rem;
