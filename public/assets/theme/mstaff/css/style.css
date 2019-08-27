@@ -188,4 +188,13 @@ body, a {
   font-size: 1.5em;
 }
 
+.baseline span {
+  font-weight: bold;
+}
+.baseline.baseline-page {
+  font-size: 1.5em;
+  color: #03a9de;
+  text-align: center;
+}
+
 /*# sourceMappingURL=style.css.map */
