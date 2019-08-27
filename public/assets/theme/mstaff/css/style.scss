@@ -1,9 +1,12 @@
 $backgroundColorDark:#262626;
 $backgroundColorLight:#333333;
+$fontColorLight:#ffffff;
 
 @import "lib/reset.css";
 @import "lib/grid.min.css";
 
-@import "components/cards.scss";
-@import "components/image.scss";
-@import "components/map.scss";
+@import "global/fonts";
+
+@import "components/cards";
+@import "components/image";
+@import "components/map";

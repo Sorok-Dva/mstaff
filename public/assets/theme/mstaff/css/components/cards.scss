@@ -1,9 +1,18 @@
 .banner-info-card{
 	background-color:$backgroundColorDark;
+	color:$fontColorLight;
 
 	.banner-info-card__header{
+		padding:3rem 0;
+		text-align:center;
+
 		.banner-info-card__header__image{
-			width:50%;
+			display:inline-block;
+			width:40%;
+		}
+		.banner-info-card__header__title{
+			margin-top:1rem;
+			font-size:2em;
 		}
 	}
 	.banner-info-card__body{
