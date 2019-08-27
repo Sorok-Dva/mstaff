@@ -4,6 +4,10 @@ a {
   text-decoration: none;
 }
 
+i {
+  margin-right: 0.5em;
+}
+
 h1, h2, h3, h4, h5, h6, p, a, div, span {
   font-family: "Muli", Verdana, Arial, sans-serif;
 }
@@ -61,7 +65,7 @@ body, a {
   margin-top: 2rem;
 }
 .banner-info-card .banner-info-card__body > * + * {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 .banner-info-card .banner-info-card__body > * + *:last-child {
   margin-bottom: 2rem;
