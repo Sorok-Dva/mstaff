@@ -3,6 +3,9 @@
 .banner-info-card {
   background-color: #262626;
 }
+.banner-info-card .banner-info-card__header .banner-info-card__header__image {
+  width: 50%;
+}
 .image-ratio {
   background-position: center;
   -webkit-background-size: cover;

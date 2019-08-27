@@ -124,6 +124,9 @@ module.exports = {
       if (subdomain.es_id) {
         Establishment.Main.find(subdomain.es_id, (data) => {
           // XXX: Remove this from here
+          if (data.logo) {
+            data.logo = data.logo.replace('/static', '');
+          }
           if (data.banner) {
             data.banner = data.banner.replace('/static', '');
           }
