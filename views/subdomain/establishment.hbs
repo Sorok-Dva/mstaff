@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="col-sm p-0">
+    <div class="col-sm-6 p-0">
         <div class="image-ratio image-ratio-30" style="background-image:url('{{es.banner}}');"></div>
 
         <div class="container-fluid">
@@ -15,10 +15,33 @@
 
     </div>
 
-    <div class="col-sm">
-        qzd
-    </div>
-
 </div>
 
-<div class="map-container"></div>
+<div class="map-container">
+    <div id="map"></div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script>
+    if (document.getElementById('map')) {
+        let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};
+        let map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            center: pos
+        });
+        marker = new google.maps.Marker({
+            position: pos,
+            map: map
+        });
+        cityCircle = new google.maps.Circle({
+            strokeColor: '#337AB7',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#5BBBE5',
+            fillOpacity: 0.35,
+            map: map,
+            center: pos,
+            radius: pos.rayon * 1000 || 10000
+        });
+    }
+</script>
