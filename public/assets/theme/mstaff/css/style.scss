@@ -1,12 +1,18 @@
 $backgroundColorDark:#262626;
 $backgroundColorLight:#333333;
+
 $fontColorLight:#ffffff;
+
+$mainColorBlue:#03a9de;
+$mainColorGreen:#0ecea4;
+$mainColorPink:#e91e63;
 
 @import "lib/reset.css";
 @import "lib/grid.min.css";
 
 @import "global/fonts";
 
+@import "components/buttons";
 @import "components/cards";
 @import "components/image";
 @import "components/map";

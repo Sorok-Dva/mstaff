@@ -8,6 +8,23 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
+.button {
+  display: inline-block;
+  padding: 1rem;
+}
+.button.button-blue {
+  background-color: #03a9de;
+}
+.button.button-green {
+  background-color: #0ecea4;
+}
+.button.button-pink {
+  background-color: #e91e63;
+}
+.button.button-fluid {
+  display: block;
+}
+
 .banner-info-card {
   background-color: #262626;
   color: #ffffff;
@@ -19,6 +36,9 @@ h1, h2, h3, h4, h5, h6 {
 .banner-info-card .banner-info-card__header .banner-info-card__header__image {
   display: inline-block;
   width: 40%;
+  -webkit-border-radius: 999px;
+  -moz-border-radius: 999px;
+  border-radius: 999px;
 }
 .banner-info-card .banner-info-card__header .banner-info-card__header__title {
   margin-top: 1rem;

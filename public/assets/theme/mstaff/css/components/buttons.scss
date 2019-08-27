@@ -1,0 +1,19 @@
+.button{
+	display:inline-block;
+	padding:1rem;
+
+	&.button-blue{
+		background-color:$mainColorBlue;
+	}
+	&.button-green{
+		background-color:$mainColorGreen;
+	}
+	&.button-pink{
+		background-color:$mainColorPink;
+	}
+
+	&.button-fluid{
+		display:block;
+	}
+
+}

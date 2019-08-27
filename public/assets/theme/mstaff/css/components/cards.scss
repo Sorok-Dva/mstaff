@@ -9,6 +9,9 @@
 		.banner-info-card__header__image{
 			display:inline-block;
 			width:40%;
+			-webkit-border-radius:999px;
+			-moz-border-radius:999px;
+			border-radius:999px;
 		}
 		.banner-info-card__header__title{
 			margin-top:1rem;
