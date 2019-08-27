@@ -83,11 +83,11 @@ body, a {
 
 .card {
   padding: 2rem;
-  border: 1px solid #cdcdcd;
+  border: 1px solid #e1e1e1;
 }
 .card .card__body .card__body__title {
   font-size: 1.25em;
-  color: #696969;
+  color: #1e1e1e;
 }
 .card .card__body p {
   font-size: 0.8em;
@@ -209,7 +209,7 @@ body, a {
 
 .tag {
   display: inline-block;
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
   -webkit-border-radius: 999px;
   -moz-border-radius: 999px;
   border-radius: 999px;
