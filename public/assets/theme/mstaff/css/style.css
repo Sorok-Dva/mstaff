@@ -20,6 +20,18 @@ body, a {
   color: #000000;
 }
 
+.content-type-text > * + * {
+  margin-top: 1.5rem;
+}
+.content-type-text > * + *:last-child {
+  margin-bottom: 1.5rem;
+}
+
+.push {
+  display: flex;
+  justify-content: space-between;
+}
+
 .button {
   display: inline-block;
   padding: 1.5rem 0.5rem;
@@ -103,13 +115,6 @@ body, a {
 }
 .banner-info-card .banner-info-card__body .button:last-child {
   margin: 2rem 0;
-}
-
-.content-type-text > * + * {
-  margin-top: 1.5rem;
-}
-.content-type-text > * + *:last-child {
-  margin-bottom: 1.5rem;
 }
 
 .image-ratio {
