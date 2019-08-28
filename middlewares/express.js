@@ -124,7 +124,7 @@ module.exports = {
       if (subdomain.es_id) {
         Establishment.Main.find(subdomain.es_id, (data) => {
           res.locals.es = data;
-          req.es = data;
+          req.session.es = data;
           req.url = `/esDomain${req.url}`;
           return next();
         });

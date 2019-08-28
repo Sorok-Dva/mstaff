@@ -267,7 +267,7 @@ Establishment_Need.notify = (req, i, needCandidate, need) => {
       fromEs: req.params.esId,
       to: candidate.User.id,
       subject: 'Un établissement est intéressé par votre profil !',
-      title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
+      title: `Bonne nouvelle !\n L'établissement ${req.session.es.name} est intéressé par votre profil !`,
       image: '/assets/images/happy.jpg',
       opts: {
         type: 'NeedNotifyCandidate',
@@ -308,7 +308,7 @@ Establishment_Need.notify = (req, i, needCandidate, need) => {
             needCandidate,
             needObj: needObj,
             need,
-            es: req.es
+            es: req.session.es
           }
         });
       })
@@ -355,7 +355,7 @@ Establishment_Need.Close = (need, req) => {
       needs.forEach(need => {
         let notifObject = {
           fromUser: req.user.id,
-          fromEs: req.es.id,
+          fromEs: req.session.es.id,
           to: need.Candidate.user_id,
           opts: {
             details: {
@@ -369,14 +369,14 @@ Establishment_Need.Close = (need, req) => {
 
         if (need.status === 'notified' || need.status === 'canceled') {
           notifObject.subject = 'Un établissement a clôturé une offre pour laquelle vous étiez disponible.';
-          notifObject.title = `L'établissement ${req.es.name} a clôturé une offre pour laquelle vous étiez disponible.`;
+          notifObject.title = `L'établissement ${req.session.es.name} a clôturé une offre pour laquelle vous étiez disponible.`;
           notifObject.image = '/assets/images/sad.jpg';
           notifObject.opts.type = 'NeedNotifyClosedCandidate';
           Mailer.Main.notifyCandidatesNeedClosed(need.Candidate.User.email, need);
         }
         if (need.status === 'selected') {
           notifObject.subject = 'Vous avez été sélectionné pour l\'offre suivante...';
-          notifObject.title = `L'établissement ${req.es.name} vous a sélectionné pour cette offre dont vous trouverez les détails 
+          notifObject.title = `L'établissement ${req.session.es.name} vous a sélectionné pour cette offre dont vous trouverez les détails 
           ci-dessous et va prendre rapidement contact avec vous.`;
           notifObject.image = '/assets/images/wink.jpg';
           notifObject.opts.type = 'NeedNotifySelectedCandidate';
@@ -517,7 +517,7 @@ Establishment_Need.CandidateAction = (req, res, next) => {
             fromEs: needCandidate.Need.Establishment.id,
             to: needCandidate.Candidate.User.id,
             subject: 'Un établissement est intéressé par votre profil !',
-            title: `Bonne nouvelle !\n L'établissement ${req.es.name} est intéressé par votre profil !`,
+            title: `Bonne nouvelle !\n L'établissement ${req.session.es.name} est intéressé par votre profil !`,
             image: '/assets/images/happy.jpg',
             opts: {
               type: 'NeedNotifyCandidate',
