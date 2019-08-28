@@ -262,15 +262,15 @@ BackOffice_Group.getUsers = (req, res, next) => {
 
 BackOffice_Group.getEsFromUser = (req, res, next) => {
   let model = req.params.type;
-  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   let query = {};
   switch (model) {
-    case 'UsersGroupsEs' : query.group_id = req.params.id; query.user_id = req.params.user_id; break;
-    case 'UsersSuperGroupsEs' : query.supergroup_id = req.params.id; query.user_id = req.params.user_id; break;
+    case 'group' : query.group_id = req.params.id; query.user_id = req.params.user_id; break;
+    case 'usergroup' : query.supergroup_id = req.params.id; query.user_id = req.params.user_id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
   }
-  Models[model].findAll({
+  Models.UsersGroups.findAll({
     where: query,
     attributes: ['es_id']
   }).then( esUserGroup => {
