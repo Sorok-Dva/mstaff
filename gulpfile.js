@@ -7,6 +7,8 @@ const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
+const sass = require('gulp-sass');
+sass.compiler = require('node-sass');
 
 const DST_PATH = './public/assets/dist';
 const CSS_SRC = './src/stylesheets/*.css';
@@ -14,6 +16,8 @@ const CSS_DST = './public/assets/dist/css';
 const JS_SRC_BASE = './src/javascripts/*.js';
 const JS_SRC_SUBFOLDERS = './src/javascripts/*/*.js';
 const JS_DST = './public/assets/dist/js';
+const THEME_CSS_SRC = './src/theme/mstaff/css/*.scss';
+const THEME_CSS_DST = './public/assets/theme/mstaff/css';
 
 /**
  * @task clean
@@ -52,6 +56,14 @@ let watchJs = () => {
   );
 };
 
+let watchSass = () => {
+  watch(
+    [THEME_CSS_SRC],
+    { events: 'all', ignoreInitial: false },
+    series(buildTheme)
+  );
+};
+
 let buildStyles = () => {
   if (Env.current === 'development') {
     return src(CSS_SRC)
@@ -85,6 +97,16 @@ let buildScripts = () => {
 
 };
 
+let buildTheme = () => {
+  if (Env.current === 'development') {
+    return src(THEME_CSS_SRC)
+      .pipe(sass().on('error', sass.logError))
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(dest(THEME_CSS_DST))
+      .pipe(browsersync.reload({ stream: true }))
+  }
+};
+
 /*
 *
 // Optimize Images
@@ -111,10 +133,12 @@ function images() {
 }
 */
 // Export commands.
-exports.default = parallel(browserSync, watchCss, watchJs); // $ gulp
+exports.default = parallel(browserSync, watchCss, watchJs, watchSass); // $ gulp
 exports.clean = clean; // $ gulp clean
 exports.css = buildStyles; // $ gulp css
 exports.js = buildScripts; // $ gulp js
+exports.theme = buildTheme; // $ gulp theme
 exports.watchCSS = watchCss; // $ gulp watch
 exports.watchJS = watchJs; // $ gulp watch
-exports.build = series(clean, buildStyles, buildScripts); // $ gulp build
+exports.watchSass = watchSass; // $ gulp watch
+exports.build = series(clean, buildStyles, buildScripts, buildTheme); // $ gulp build

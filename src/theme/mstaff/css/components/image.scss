@@ -1,0 +1,36 @@
+.image-ratio{
+	background-position:center;
+	-webkit-background-size:cover;
+	background-size:cover;
+
+	&.image-ratio-10{
+		padding-bottom:10%;
+	}
+	&.image-ratio-20{
+		padding-bottom:20%;
+	}
+	&.image-ratio-30{
+		padding-bottom:30%;
+	}
+	&.image-ratio-40{
+		padding-bottom:40%;
+	}
+	&.image-ratio-50{
+		padding-bottom:50%;
+	}
+	&.image-ratio-60{
+		padding-bottom:60%;
+	}
+	&.image-ratio-70{
+		padding-bottom:70%;
+	}
+	&.image-ratio-80{
+		padding-bottom:80%;
+	}
+	&.image-ratio-90{
+		padding-bottom:90%;
+	}
+	&.image-ratio-100{
+		padding-bottom:100%;
+	}
+}
