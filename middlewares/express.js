@@ -150,7 +150,7 @@ module.exports = {
     });
   },
   checkThemeCSSImport: (req, res, next) => {
-    let themeCSSDir = path.join(__dirname, '../public/assets/theme/mstaff/css');
+    let themeCSSDir = '../public/assets/theme/mstaff/css';
     res.locals.themeLayoutCssImport = res.locals.pageName && path.existsSync(themeCSSDir + '/pages/' + res.locals.pageName + '.min.css');
     res.locals.themePageCssImport = res.locals.layout && path.existsSync(themeCSSDir + '/layout/' + res.locals.layout + '.min.css');
     return next();
