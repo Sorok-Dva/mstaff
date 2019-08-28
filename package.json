@@ -96,6 +96,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "gulp": "^4.0.0",
     "gulp-clean-css": "^4.0.0",
+    "gulp-cssimport": "^7.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",

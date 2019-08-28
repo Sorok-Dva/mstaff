@@ -5,6 +5,7 @@ const del = require('del');
 const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
+const cssimport = require('gulp-cssimport');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass');
@@ -103,6 +104,7 @@ let buildTheme = () => {
   if (Env.current === 'development') {
     return src(THEME_CSS_MAIN)
       .pipe(sass().on('error', sass.logError))
+      .pipe(cssimport())
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(THEME_CSS_DST))
       .pipe(browsersync.reload({ stream: true }))
