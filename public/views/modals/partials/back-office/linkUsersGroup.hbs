@@ -143,7 +143,7 @@
     $('div#linkEsUserGroup').show();
     $('button#modifyESLinkInModal').show();
 
-    $.get('/api/back-office/groups/UsersGroupsEs/' + $('input[name="group_id"]').val() + '/user/' + user_id, (data) => {
+    $.get('/api/back-office/groups/group/' + $('input[name="group_id"]').val() + '/user/' + user_id, (data) => {
       if(data) {
         let val = [];
         data.forEach(element => {
@@ -161,7 +161,7 @@
     $("table tbody#usersGroupTable").find("tr a").each(function(data) {
       if($(this).text() === user_id.toString()) {
         $(this).parents("tr").remove();
-        $.delete(`/api/back-office/groups/UsersGroups/${group_id}/remove/user/${user_id}`, { _csrf }, () => {
+        $.delete(`/api/back-office/groups/group/${group_id}/remove/user/${user_id}`, { _csrf }, () => {
           notification({
             icon: 'check-circle',
             type: 'success',

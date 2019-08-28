@@ -282,32 +282,15 @@ BackOffice_Group.getEsFromUser = (req, res, next) => {
 BackOffice_Group.removeUser = (req, res, next) => {
   let query = { user_id: req.params.userId };
   let model = req.params.type;
-  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   switch (model) {
-    case 'UsersGroups' : query.id_group = req.params.id; break;
-    case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+    case 'group' : query.group_id = req.params.id; break;
+    case 'supergroup' : query.supergroup_id = req.params.id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
   }
-  return Models[model].findOne({ where: query }).then(groupUser => {
-    if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this group.' });
-    return groupUser.destroy().then(() => {
-      if (model === 'UsersGroups') {
-        model = 'UsersGroupsEs';
-        query = { user_id: req.params.userId, group_id: req.params.id };
-      }
-      return Models[model].destroy({ where: query }).then(data => {
-        res.status(201).send({ deleted: true, data });
-      })
-      /*
-      return Models[model].findAll({ where: query }).then(groupUserEs => {
-        if (!groupUserEs) return res.status(400).send({ body: req.body, error: 'User not have ES linked in this group' });
-        return groupUserEs.destroy().then(data => {
-          res.status(201).send({ deleted: true, data });
-        });
-      });
-       */
-    })
+  return Models.UsersGroups.destroy({ where: query }).then(data => {
+    res.status(201).send({ deleted: true, data });
   }).catch(error => next(new BackError(error)));
 };
 
