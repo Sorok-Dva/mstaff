@@ -18,7 +18,7 @@ const CSS_DST = './public/assets/dist/css';
 const JS_SRC_BASE = './src/javascripts/*.js';
 const JS_SRC_SUBFOLDERS = './src/javascripts/*/*.js';
 const JS_DST = './public/assets/dist/js';
-const THEME_CSS_DIR = './src/theme/mstaff/css/';
+const THEME_CSS_DIR = './src/theme/mstaff/css';
 const THEME_CSS_DST = './public/assets/theme/mstaff/css';
 
 /**
@@ -60,7 +60,7 @@ let watchJs = () => {
 
 let watchSass = () => {
   watch(
-    [THEME_CSS_DIR + '*/*.scss'],
+    [THEME_CSS_DIR + '/*/*.scss'],
     { events: 'all', ignoreInitial: false },
     series(buildTheme)
   );
@@ -101,16 +101,16 @@ let buildScripts = () => {
 
 let buildTheme = () => {
   if (Env.current === 'development') {
-    let main = src(THEME_CSS_DIR + 'style.css')
+    let main = src(THEME_CSS_DIR + '/style.css')
       .pipe(sass().on('error', sass.logError))
       .pipe(cssimport())
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(THEME_CSS_DST));
 
-    let pages = src(THEME_CSS_DIR + 'pages/*.scss')
+    let pages = src(THEME_CSS_DIR + '/pages/*.scss')
       .pipe(sass().on('error', sass.logError))
       .pipe(rename({ suffix: '.min' }))
-      .pipe(dest(THEME_CSS_DST + 'pages/'));
+      .pipe(dest(THEME_CSS_DST + '/pages'));
 
     return merge(main, pages);
   }
