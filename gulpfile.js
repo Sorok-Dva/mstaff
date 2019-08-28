@@ -101,7 +101,7 @@ let buildScripts = () => {
 
 let buildTheme = () => {
   if (Env.current === 'development') {
-    let main = src(THEME_CSS_DIR + '/style.css')
+    let main = src(THEME_CSS_DIR + '/style.scss')
       .pipe(sass().on('error', sass.logError))
       .pipe(cssimport())
       .pipe(rename({ suffix: '.min' }))
