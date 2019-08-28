@@ -38,6 +38,7 @@
 .banner-info-card{
 	background-color:$backgroundColorDark;
 	color:$fontColorLight;
+	box-shadow:0 0 50px black, 0 0 5px rgba(0,0,0,.7);
 
 	.banner-info-card__header{
 		padding:3rem 0;

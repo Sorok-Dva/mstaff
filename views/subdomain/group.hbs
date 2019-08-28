@@ -63,6 +63,10 @@
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
 <script>
+    let locations = [];
+    {{#each group.es as |data|}}
+        locations.push();
+    {{/each}}
     if (document.getElementById('map')) {
         //let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};
         let map = new google.maps.Map(document.getElementById('map'), {
