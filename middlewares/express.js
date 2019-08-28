@@ -154,8 +154,8 @@ module.exports = {
     let { render } = res;
     res.render = (view, locals, cb) => {
       let themeCSSDir = 'public/assets/theme/mstaff/css';
-      locals.themeLayoutCSSImport = locals.pageName && fs.existsSync(themeCSSDir + '/pages/' + locals.pageName + '.min.css');
-      locals.themePageCSSImport = locals.layout && fs.existsSync(themeCSSDir + '/layout/' + locals.layout + '.min.css');
+      locals.themeLayoutCSSImport = locals.pageName && fs.existsSync(themeCSSDir + '/layout/' + locals.pageName + '.min.css');
+      locals.themePageCSSImport = locals.layout && fs.existsSync(themeCSSDir + '/pages/' + locals.layout + '.min.css');
       render.call(res, view, locals, cb)
     };
     return next();
