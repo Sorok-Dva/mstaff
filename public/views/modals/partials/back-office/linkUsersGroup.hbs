@@ -173,6 +173,7 @@
   }
 
   function modifyUser(user_id, email, role) {
+    $('#esid-form').hide();
     $('input#AUemail').val(email).attr('disabled', true);
     $('h6#textDisplayer').text('Modifier le rôle d\'utilisateur de votre groupe');
     $('div#displayAddUser').show();
