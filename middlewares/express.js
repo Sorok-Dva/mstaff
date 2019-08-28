@@ -152,7 +152,7 @@ module.exports = {
   checkThemeCSSImport: (req, res, next) => {
     let { render } = res;
     res.render = (view, locals, cb) => {
-      console.log('TESTTESTTESTTESTTESTTESTTESTTEST');
+      console.log(res.locals.pageName);
       let themeCSSDir = '../public/assets/theme/mstaff/css';
       res.locals.themeLayoutCssImport = res.locals.pageName && path.existsSync(themeCSSDir + '/pages/' + res.locals.pageName + '.min.css');
       res.locals.themePageCssImport = res.locals.layout && path.existsSync(themeCSSDir + '/layout/' + res.locals.layout + '.min.css');
