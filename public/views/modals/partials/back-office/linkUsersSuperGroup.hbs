@@ -81,7 +81,7 @@
 </div>
 <script>
 
-  $.get('/api/back-office/groups/UsersSuperGroups/' + $('input[name="supergroup_id"]').val() + '/users/all', (data) => {
+  $.get('/api/back-office/groups/supergroup/' + $('input[name="supergroup_id"]').val() + '/users/all', (data) => {
     if (data) {
       data.forEach(function(element)
       {

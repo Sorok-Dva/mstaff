@@ -100,7 +100,7 @@
 </div>
 <script>
 
-  $.get('/api/back-office/groups/UsersGroups/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
+  $.get('/api/back-office/groups/group/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
     if (data) {
       data.forEach(function(element)
       {
@@ -285,7 +285,7 @@
       });
     }
 
-    $.put('/api/back-office/groups/UsersGroups/' + group_id + '/add/user', user, (data) => {
+    $.put('/api/back-office/groups/group/' + group_id + '/add/user', user, (data) => {
       if (data.status === 'Already exists') {
         notification({
           icon: 'exclamation',

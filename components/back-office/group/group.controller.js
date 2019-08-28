@@ -181,7 +181,7 @@ BackOffice_Group.addUser = (req, res, next) => {
   const errors = validationResult(req);
   let model = req.params.type;
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
 
   try {
     Models.User.findOrCreate({
@@ -201,19 +201,18 @@ BackOffice_Group.addUser = (req, res, next) => {
     }).spread((user, created) => {
       if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
 
-
-      let query = {  user_id: user.id };
-      switch (model) {
-        case 'UsersGroups' : query.id_group = req.params.id; break;
-        case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
-        default:
-          return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
-      }
-
       let arrayBulk = [];
       req.body.es.forEach(element => {
         arrayBulk.push({ user_id: user.id, group_id: req.params.id, es_id: element });
       });
+
+      let query = { user_id: user.id };
+      switch (model) {
+        case 'group' : query.id_group = req.params.id; break;
+        case 'supergroup' : query.id_supergroup = req.params.id; break;
+        default:
+          return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
+      }
 
       Models.UsersGroupsEs.bulkCreate(arrayBulk).then(() => {
         Models[model].findOrCreate({
@@ -244,15 +243,15 @@ BackOffice_Group.addUser = (req, res, next) => {
 
 BackOffice_Group.getUsers = (req, res, next) => {
   let model = req.params.type;
-  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   let query = {};
   switch (model) {
-    case 'UsersGroups' : query.id_group = req.params.id; break;
-    case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+    case 'group' : query.group_id = req.params.id; break;
+    case 'supergroup' : query.supergroup_id = req.params.id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
   }
-  Models[model].findAll({
+  Models.UsersGroups.findAll({
     where: query,
     attributes: ['role'],
     include: [{
@@ -297,7 +296,7 @@ BackOffice_Group.removeUser = (req, res, next) => {
   }
   return Models[model].findOne({ where: query }).then(groupUser => {
     if (!groupUser) return res.status(400).send({ body: req.body, error: 'User is not in this group.' });
-    return groupUser.destroy().then( data => {
+    return groupUser.destroy().then(() => {
       if (model === 'UsersGroups') {
         model = 'UsersGroupsEs';
         query = { user_id: req.params.userId, group_id: req.params.id };
