@@ -54,7 +54,7 @@ Subdomain_Group.find = (id, next) => {
 Subdomain_Group.ViewATS = (req, res, next) => {
   let esList = [];
   let esInfos = [];
-  req.group.es.forEach( item => {
+  req.session.group.es.forEach( item => {
     esInfos.push({ name: item.es.name, finess: item.es.finess, town: item.es.town });
     esList.push(item.es.finess);
   });
