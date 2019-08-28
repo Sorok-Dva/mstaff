@@ -18,12 +18,11 @@ $mainColorPink:#e91e63;
 @import "global/base.scss";
 @import "global/fonts.scss";
 
-@import "layout/content-type.scss";
-@import "layout/layout.scss";
-
 @import "components/buttons.scss";
 @import "components/cards.scss";
+@import "components/content-type.scss";
 @import "components/image.scss";
+@import "components/layout.scss";
 @import "components/map.scss";
 @import "components/pages.scss";
 @import "components/tags.scss";

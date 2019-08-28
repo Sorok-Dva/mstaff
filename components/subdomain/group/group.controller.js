@@ -8,7 +8,7 @@ const Models = require(`${__}/orm/models/index`);
 const Subdomain_Group = {};
 
 Subdomain_Group.ViewIndex = (req, res, next) => {
-  return res.render('subdomain/group', { layout: 'subdomain' })
+  return res.render('subdomain/group', { layout: 'subdomain', pageName: 'subdomain-establishment' })
 };
 
 Subdomain_Group.find = (id, next) => {
