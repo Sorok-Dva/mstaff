@@ -140,11 +140,11 @@ module.exports = {
       } else if (subdomain.group_id) {
         Subdomain.Group.find(subdomain.group_id, (data) => {
           // XXX: Remove this from here
-          if (data.logo) {
-            data.logo = data.logo.replace('/static', '');
+          if (data.group.logo) {
+            data.group.logo = data.group.logo.replace('/static', '');
           }
-          if (data.banner) {
-            data.banner = data.banner.replace('/static', '');
+          if (data.group.banner) {
+            data.group.banner = data.group.banner.replace('/static', '');
           }
           res.locals.group = data.group;
           res.locals.group.es = data.es;
