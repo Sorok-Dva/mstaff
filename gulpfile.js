@@ -99,6 +99,7 @@ let buildScripts = () => {
 };
 
 let buildTheme = () => {
+  console.log('DEBUG THEME COMPILING');
   if (Env.current === 'development') {
     return src(THEME_CSS_SRC)
       .pipe(sass().on('error', sass.logError))

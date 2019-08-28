@@ -1,6 +1,6 @@
-body.page-subdomain-establishment{
+@media (min-width: 992px){
+	body.page-subdomain-establishment{
 
-	@media (min-width: 992px){
 		.banner-info-card{
 			position:fixed;
 			top:50%;
@@ -12,6 +12,6 @@ body.page-subdomain-establishment{
 			transform:translateX(-50%) translateY(-50%);
 			z-index:999;
 		}
-	}
 
+	}
 }
