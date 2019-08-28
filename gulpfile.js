@@ -1,5 +1,4 @@
 const { src, dest, watch, series, parallel } = require('gulp');
-const gulp_watch = require('gulp-watch');
 const { Env } = require('./helpers/helpers');
 const config = require('dotenv').config().parsed;
 const del = require('del');
@@ -17,7 +16,8 @@ const CSS_DST = './public/assets/dist/css';
 const JS_SRC_BASE = './src/javascripts/*.js';
 const JS_SRC_SUBFOLDERS = './src/javascripts/*/*.js';
 const JS_DST = './public/assets/dist/js';
-const THEME_CSS_SRC = './src/theme/mstaff/css/*.scss';
+const THEME_CSS_MAIN = './src/theme/mstaff/css/style.scss';
+const THEME_CSS_DIR = './src/theme/mstaff/css/*/*.scss';
 const THEME_CSS_DST = './public/assets/theme/mstaff/css';
 
 /**
@@ -58,8 +58,8 @@ let watchJs = () => {
 };
 
 let watchSass = () => {
-  gulp_watch(
-    [THEME_CSS_SRC],
+  watch(
+    [THEME_CSS_DIR],
     { events: 'all', ignoreInitial: false },
     series(buildTheme)
   );
@@ -101,7 +101,7 @@ let buildScripts = () => {
 let buildTheme = () => {
   console.log('DEBUG THEME COMPILING');
   if (Env.current === 'development') {
-    return src(THEME_CSS_SRC)
+    return src(THEME_CSS_MAIN)
       .pipe(sass().on('error', sass.logError))
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(THEME_CSS_DST))
