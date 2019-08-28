@@ -100,6 +100,7 @@
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-terser": "^1.2.0",
+    "gulp-watch": "^5.0.1",
     "mocha": "^6.0.2",
     "node-sass": "^4.12.0",
     "nyc": "^13.3.0",

@@ -1,4 +1,5 @@
 const { src, dest, watch, series, parallel } = require('gulp');
+const gulp_watch = require('gulp-watch');
 const { Env } = require('./helpers/helpers');
 const config = require('dotenv').config().parsed;
 const del = require('del');
@@ -57,7 +58,7 @@ let watchJs = () => {
 };
 
 let watchSass = () => {
-  watch(
+  gulp_watch(
     [THEME_CSS_SRC],
     { events: 'all', ignoreInitial: false },
     series(buildTheme)
