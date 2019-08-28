@@ -232,7 +232,7 @@
     let user_id = $('input#user_id').val();
     let role = $('#role option:selected').val();
     let _csrf = $('meta[name="csrf-token"]').attr('content');
-    $.post(`/api/back-office/groups/UsersGroups/${group_id}/edit/user/${user_id}`, {role, _csrf}, () => {
+    $.post(`/api/back-office/groups/group/${group_id}/edit/user/${user_id}`, {role, _csrf}, () => {
       notification({
         icon: 'check-circle',
         type: 'success',

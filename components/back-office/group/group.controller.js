@@ -297,18 +297,19 @@ BackOffice_Group.removeUser = (req, res, next) => {
 BackOffice_Group.editUser = (req, res, next) => {
   let query = { user_id: req.params.userId };
   let model = req.params.type;
-  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   switch (model) {
-    case 'UsersGroups' : query.id_group = req.params.id; break;
-    case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+    case 'group' : query.group_id = req.params.id; break;
+    case 'supergroup' : query.supergroup_id = req.params.id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
   }
-  return Models[model].findOne({ where: query }).then(groupUser => {
-    groupUser.update({ role: req.body.role }).then(savedUserGroup => {
-      return res.status(201).json({ status: 'Modified user group role' });
-    }).catch(error => next(new BackError(error)));
-  })
+  return Models.UsersGroups.update(
+    { role: req.body.role },
+    { where: query }
+  ).then(() => {
+    return res.status(201).json({ status: 'Modified user group role' });
+  }).catch(error => next(new BackError(error)));
 };
 
 BackOffice_Group.getGroupLinksList = (req, res, next) => {
