@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const conf = require('dotenv').config().parsed;
 const packageJson = require('../package');
+const fs = require('fs');
 const path = require('path');
 const { Env } = require('../helpers/helpers');
 const { Establishment, Server, Subdomain } = require('../components');
@@ -153,8 +154,8 @@ module.exports = {
     let { render } = res;
     res.render = (view, locals, cb) => {
       let themeCSSDir = '../public/assets/theme/mstaff/css';
-      locals.themeLayoutCssImport = locals.pageName && path.existsSync(themeCSSDir + '/pages/' + locals.pageName + '.min.css');
-      locals.themePageCssImport = locals.layout && path.existsSync(themeCSSDir + '/layout/' + locals.layout + '.min.css');
+      locals.themeLayoutCssImport = locals.pageName && fs.existsSync(themeCSSDir + '/pages/' + locals.pageName + '.min.css');
+      locals.themePageCssImport = locals.layout && fs.existsSync(themeCSSDir + '/layout/' + locals.layout + '.min.css');
       render.call(res, view, locals, cb)
     };
     return next();
