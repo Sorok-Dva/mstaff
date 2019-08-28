@@ -150,9 +150,13 @@ module.exports = {
     });
   },
   checkThemeCSSImport: (req, res, next) => {
-    let themeCSSDir = '../public/assets/theme/mstaff/css';
-    res.locals.themeLayoutCssImport = res.locals.pageName && path.existsSync(themeCSSDir + '/pages/' + res.locals.pageName + '.min.css');
-    res.locals.themePageCssImport = res.locals.layout && path.existsSync(themeCSSDir + '/layout/' + res.locals.layout + '.min.css');
+    let { render } = res;
+    res.render = (view, locals, cb) => {
+      let themeCSSDir = '../public/assets/theme/mstaff/css';
+      res.locals.themeLayoutCssImport = res.locals.pageName && path.existsSync(themeCSSDir + '/pages/' + res.locals.pageName + '.min.css');
+      res.locals.themePageCssImport = res.locals.layout && path.existsSync(themeCSSDir + '/layout/' + res.locals.layout + '.min.css');
+      render.call(res, view, locals, cb)
+    };
     return next();
   }
 };
