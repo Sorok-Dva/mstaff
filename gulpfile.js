@@ -6,6 +6,7 @@ const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
 const cssimport = require('gulp-cssimport');
+const merge = require('merge-stream');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass');
@@ -17,8 +18,7 @@ const CSS_DST = './public/assets/dist/css';
 const JS_SRC_BASE = './src/javascripts/*.js';
 const JS_SRC_SUBFOLDERS = './src/javascripts/*/*.js';
 const JS_DST = './public/assets/dist/js';
-const THEME_CSS_MAIN = './src/theme/mstaff/css/style.scss';
-const THEME_CSS_DIR = './src/theme/mstaff/css/*/*.scss';
+const THEME_CSS_DIR = './src/theme/mstaff/css/';
 const THEME_CSS_DST = './public/assets/theme/mstaff/css';
 
 /**
@@ -60,7 +60,7 @@ let watchJs = () => {
 
 let watchSass = () => {
   watch(
-    [THEME_CSS_DIR],
+    [THEME_CSS_DIR + '*/*.scss'],
     { events: 'all', ignoreInitial: false },
     series(buildTheme)
   );
@@ -100,14 +100,21 @@ let buildScripts = () => {
 };
 
 let buildTheme = () => {
-  console.log('DEBUG THEME COMPILING');
   if (Env.current === 'development') {
-    return src(THEME_CSS_MAIN)
+    let main = src(THEME_CSS_DIR + 'style.css')
       .pipe(sass().on('error', sass.logError))
       .pipe(cssimport())
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(THEME_CSS_DST))
-      .pipe(browsersync.reload({ stream: true }))
+      .pipe(browsersync.reload({ stream: true }));
+
+    let pages = src(THEME_CSS_DIR + 'pages/*.scss')
+      .pipe(sass().on('error', sass.logError))
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(dest(THEME_CSS_DST + 'pages/'))
+      .pipe(browsersync.reload({ stream: true }));
+
+    return merge(main, pages);
   }
 };
 
