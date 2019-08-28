@@ -1,0 +1,21 @@
+body.page-subdomain-establishment{
+
+	.page-banner__body{
+		align-items:flex-end;
+
+		.container{
+			text-align:right;
+
+			.banner-info-card{
+				display:inline-block;
+				text-align:left;
+				padding:0 1rem;
+				font-size:.9em;
+				-webkit-box-shadow:0 10px 20px $backgroundColorDark;
+				-moz-box-shadow:0 10px 20px $backgroundColorDark;
+				box-shadow:0 10px 20px $backgroundColorDark;
+			}
+		}
+	}
+
+}

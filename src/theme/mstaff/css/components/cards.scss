@@ -36,9 +36,9 @@
 }
 
 .banner-info-card{
+	padding:1px 0;
 	background-color:$backgroundColorDark;
 	color:$fontColorLight;
-	box-shadow:0 0 50px black, 0 0 5px rgba(0,0,0,.7);
 
 	.banner-info-card__header{
 		padding:3rem 0;
@@ -74,7 +74,7 @@
 		}
 	}
 	.banner-info-card__body{
-		padding:0 2rem 1px 2rem;
+		padding:0 2rem;
 		margin-top:2rem;
 
 		.banner-info-card__body__title{

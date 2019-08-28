@@ -3,34 +3,46 @@
 	-webkit-background-size:cover;
 	background-size:cover;
 
-	&.image-ratio-10{
+	&:after{
+		content:"";
+		display:block;
+	}
+
+	&.image-ratio-10:after{
 		padding-bottom:10%;
 	}
-	&.image-ratio-20{
+	&.image-ratio-20:after{
 		padding-bottom:20%;
 	}
-	&.image-ratio-30{
+	&.image-ratio-30:after{
 		padding-bottom:30%;
 	}
-	&.image-ratio-40{
+	&.image-ratio-40:after{
 		padding-bottom:40%;
 	}
-	&.image-ratio-50{
+	&.image-ratio-50:after{
 		padding-bottom:50%;
 	}
-	&.image-ratio-60{
+	&.image-ratio-60:after{
 		padding-bottom:60%;
 	}
-	&.image-ratio-70{
+	&.image-ratio-70:after{
 		padding-bottom:70%;
 	}
-	&.image-ratio-80{
+	&.image-ratio-80:after{
 		padding-bottom:80%;
 	}
-	&.image-ratio-90{
+	&.image-ratio-90:after{
 		padding-bottom:90%;
 	}
-	&.image-ratio-100{
+	&.image-ratio-100:after{
 		padding-bottom:100%;
 	}
+}
+
+.image-round{
+	width:100%;
+	-webkit-border-radius:999px;
+	-moz-border-radius:999px;
+	border-radius:999px;
 }
