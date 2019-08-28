@@ -1,3 +1,5 @@
+@import "../global/colors.scss";
+
 body.page-subdomain-establishment{
 
 	.page-banner__body{
@@ -11,9 +13,9 @@ body.page-subdomain-establishment{
 				text-align:left;
 				padding:0 1rem;
 				font-size:.9em;
-				-webkit-box-shadow:0 10px 20px $backgroundColorDark;
-				-moz-box-shadow:0 10px 20px $backgroundColorDark;
-				box-shadow:0 10px 20px $backgroundColorDark;
+				-webkit-box-shadow:0 10px 30px $backgroundColorDark, 0 10px 5px transparentize($backgroundColorDark, .5);
+				-moz-box-shadow:0 10px 30px $backgroundColorDark, 0 10px 5px transparentize($backgroundColorDark, .5);
+				box-shadow:0 10px 30px $backgroundColorDark, 0 10px 5px transparentize($backgroundColorDark, .5);
 			}
 		}
 	}
