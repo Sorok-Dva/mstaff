@@ -105,14 +105,12 @@ let buildTheme = () => {
       .pipe(sass().on('error', sass.logError))
       .pipe(cssimport())
       .pipe(rename({ suffix: '.min' }))
-      .pipe(dest(THEME_CSS_DST))
-      .pipe(browsersync.reload({ stream: true }));
+      .pipe(dest(THEME_CSS_DST));
 
     let pages = src(THEME_CSS_DIR + 'pages/*.scss')
       .pipe(sass().on('error', sass.logError))
       .pipe(rename({ suffix: '.min' }))
-      .pipe(dest(THEME_CSS_DST + 'pages/'))
-      .pipe(browsersync.reload({ stream: true }));
+      .pipe(dest(THEME_CSS_DST + 'pages/'));
 
     return merge(main, pages);
   }
