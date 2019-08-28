@@ -11,6 +11,9 @@
 	.card__thumbnail-container{
 
 	}
+	.card__header{
+		margin-bottom:1rem;
+	}
 	.card__body{
 		.card__body__title{
 			font-size:1.25em;
@@ -24,6 +27,11 @@
 	}
 	.card__footer{
 
+	}
+
+	.card__legend{
+		color:$fontColorDarkFade;
+		font-size:.8em;
 	}
 }
 

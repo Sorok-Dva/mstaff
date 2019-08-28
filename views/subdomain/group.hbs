@@ -32,12 +32,15 @@
                     <div class="container-fluid">
                         <div class="row card-list">
 
-                            {{#each group.es as |es|}}
+                            {{#each group.es as |data|}}
                                 <div class="col-sm-12">
                                     <div class="card">
+                                        <div class="card__header">
+                                            <div class="card__legend"><i class="far fa-map-marker-alt"></i> {{data.es.town}}</div>
+                                        </div>
                                         <div class="card__thumbnail-container"></div>
                                         <div class="card__body content-type-text">
-                                            <h3 class="card__body__title title">{{es.name}}</h3>
+                                            <h3 class="card__body__title title">{{data.es.name}}</h3>
                                         </div>
                                     </div>
                                 </div>
