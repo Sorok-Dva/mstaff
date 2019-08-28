@@ -6,7 +6,7 @@ const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
 const cssimport = require('gulp-cssimport');
-const merge = require('merge-stream');
+const mergestream = require('merge-stream');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass');
@@ -112,7 +112,7 @@ let buildTheme = () => {
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(THEME_CSS_DST + '/pages'));
 
-    return merge(main, pages);
+    return mergestream(main, pages);
   }
 };
 
