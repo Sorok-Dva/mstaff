@@ -202,38 +202,32 @@ BackOffice_Group.addUser = (req, res, next) => {
       if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
 
       let arrayBulk = [];
-      req.body.es.forEach(element => {
-        arrayBulk.push({ user_id: user.id, group_id: req.params.id, es_id: element });
-      });
-
-      let query = { user_id: user.id };
-      switch (model) {
-        case 'group' : query.id_group = req.params.id; break;
-        case 'supergroup' : query.id_supergroup = req.params.id; break;
-        default:
-          return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
+      let query = { user_id: req.params.user_id };
+      if (model === 'group') {
+        query.group_id = req.params.id;
+        req.body.es.forEach(element => {
+          arrayBulk.push({ user_id: user.id, group_id: req.params.id, es_id: element });
+        });
+      } else if (model === 'supergroup') {
+        query.supergroup_id = req.params.id;
+        req.body.es.forEach(element => {
+          arrayBulk.push({ user_id: user.id, group_id: req.params.id, supergroup_id: req.params.id, es_id: element });
+        });
       }
 
-      Models.UsersGroupsEs.bulkCreate(arrayBulk).then(() => {
-        Models[model].findOrCreate({
-          where: query,
-          defaults: {
-            role: req.body.role,
-          }
-        }).spread((group, groupCreated) => {
-          if (created) {
-            mailer.sendEmail({
-              to: user.email,
-              subject: 'Bienvenue sur Mstaff !',
-              template: 'es/new_user',
-              context: { user }
-            });
-            return res.status(201).json({ status: 'Created and added to group/supergroup', user, group });
-          } else {
-            if (groupCreated) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
-            return res.status(200).json({ status: 'Already exists', user, group });
-          }
-        });
+      Models.UsersGroups.bulkCreate(arrayBulk).spread((group, groupCreated) => {
+        if (created) {
+          mailer.sendEmail({
+            to: user.email,
+            subject: 'Bienvenue sur Mstaff !',
+            template: 'es/new_user',
+            context: { user }
+          });
+          return res.status(201).json({ status: 'Created and added to group/supergroup', user, group });
+        } else {
+          if (groupCreated) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
+          return res.status(200).json({ status: 'Already exists', user, group });
+        }
       });
     });
   } catch (errors) {
@@ -254,6 +248,7 @@ BackOffice_Group.getUsers = (req, res, next) => {
   Models.UsersGroups.findAll({
     where: query,
     attributes: ['role'],
+    group: ['user_id'],
     include: [{
       model: Models.User,
       attributes: ['id', 'firstName', 'lastName', 'email'],
