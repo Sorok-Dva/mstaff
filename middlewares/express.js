@@ -150,17 +150,12 @@ module.exports = {
       }
     });
   },
-  checkThemeCSSImport: (req, res, next) => {
+  themeCSSImport: (req, res, next) => {
     let { render } = res;
     res.render = (view, locals, cb) => {
       let themeCSSDir = 'public/assets/theme/mstaff/css';
-      console.log('--- DEBUG ---');
-      console.log(locals.pageName);
-      console.log(themeCSSDir + '/pages/' + locals.pageName + '.min.css');
-      console.log(fs.existsSync(themeCSSDir + '/pages/' + locals.pageName + '.min.css'));
-      console.log('--- DEBUG ---');
-      locals.themeLayoutCssImport = locals.pageName && fs.existsSync(themeCSSDir + '/pages/' + locals.pageName + '.min.css');
-      locals.themePageCssImport = locals.layout && fs.existsSync(themeCSSDir + '/layout/' + locals.layout + '.min.css');
+      locals.themeLayoutCSSImport = locals.pageName && fs.existsSync(themeCSSDir + '/pages/' + locals.pageName + '.min.css');
+      locals.themePageCSSImport = locals.layout && fs.existsSync(themeCSSDir + '/layout/' + locals.layout + '.min.css');
       render.call(res, view, locals, cb)
     };
     return next();

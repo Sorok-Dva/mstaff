@@ -49,7 +49,7 @@ app.use(Express.flash);
 app.use(Express.setLocals);
 app.use(Express.wildcardSubdomains);
 app.use(Express.readOnlySessionForImpersonation);
-app.use(Express.checkThemeCSSImport);
+app.use(Express.themeCSSImport);
 
 // ------ ROUTES
 app.use('/', indexRouter);
