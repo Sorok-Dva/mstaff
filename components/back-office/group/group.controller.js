@@ -26,10 +26,10 @@ BackOffice_Group.GetLinkES = (req, res, next) => {
    */
   Models.EstablishmentGroups.findAll({
     where: { id_group: req.params.id },
-    attributes: ['id'],
+    attributes: ['id_es'],
     include: [{
       model: Models.Establishment, as: 'es',
-      attributes: ['id', 'name', 'finess'],
+      attributes: ['name', 'finess'],
       required: true,
     }]
   }).then(usersGroup => {
@@ -202,7 +202,7 @@ BackOffice_Group.addUser = (req, res, next) => {
       if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
 
       let arrayBulk = [];
-      let query = { user_id: req.params.user_id };
+      let query = { user_id: user.id };
       if (model === 'group') {
         query.group_id = req.params.id;
         req.body.es.forEach(element => {
@@ -214,21 +214,23 @@ BackOffice_Group.addUser = (req, res, next) => {
           arrayBulk.push({ user_id: user.id, group_id: req.params.id, supergroup_id: req.params.id, es_id: element });
         });
       }
+      Models.UsersGroups.findOne({ where: query }).then( userInGroup => {
+        if (userInGroup) return res.status(200).json({ status: 'Already exists', userInGroup });
 
-      Models.UsersGroups.bulkCreate(arrayBulk).spread((group, groupCreated) => {
-        if (created) {
-          mailer.sendEmail({
-            to: user.email,
-            subject: 'Bienvenue sur Mstaff !',
-            template: 'es/new_user',
-            context: { user }
-          });
-          return res.status(201).json({ status: 'Created and added to group/supergroup', user, group });
-        } else {
-          if (groupCreated) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
-          return res.status(200).json({ status: 'Already exists', user, group });
-        }
-      });
+        Models.UsersGroups.bulkCreate(arrayBulk).spread((group, groupCreated) => {
+          if (created) {
+            mailer.sendEmail({
+              to: user.email,
+              subject: 'Bienvenue sur Mstaff !',
+              template: 'es/new_user',
+              context: { user }
+            });
+            return res.status(201).json({ status: 'Created and added to group/supergroup', user, group });
+          } else {
+            if (groupCreated) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
+          }
+        }).catch(error => next(new BackError(error)));
+      }).catch(error => next(new BackError(error)));
     });
   } catch (errors) {
     return next(new BackError(errors));

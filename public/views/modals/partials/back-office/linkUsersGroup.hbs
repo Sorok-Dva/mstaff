@@ -121,12 +121,14 @@
     if (data) {
       data.forEach(element => {
         $('#esid').append($('<option>', {
-          value: element.es.id,
+          value: element.id_es,
           text: element.es.name
         }));
 
+        console.log(element);
+
         $('#esidNew').append($('<option>', {
-          value: element.es.id,
+          value: element.id_es,
           text: element.es.name
         }));
       });
@@ -211,7 +213,7 @@
   $('#AUemail').blur(() => {
     if($('button#btnDisplayAddUser').val() === "0") {
       let email = $('#AUemail').val();
-      if (!email) return false;
+      if (!email.length) return;
       $.get(`/api/user/emailAvailable/${email}`, (result) => {
         if (!result.available) {
           $('.toHide').hide();
