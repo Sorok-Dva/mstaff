@@ -1,5 +1,16 @@
+body.has-header{
+	padding-top:112px;
+}
+
 .page-header{
+	position:fixed;
+	left:0;
+	right:0;
+	top:0;
 	padding:1rem 0;
+	background-color:$backgroundColorDark;
+	color:$fontColorLight;
+	z-index:999;
 
 	.header-logo{
 		width:80px;
@@ -9,6 +20,12 @@
 		font-size:1.5rem;
 		white-space:nowrap;
 		font-family: 'Josefin Sans', Verdana, Arial, sans-serif;
+	}
+	.header-title-label{
+		display:block;
+		margin-bottom:.5rem;
+		font-size:.7em;
+		color:$fontColorLightFade;
 	}
 
 }

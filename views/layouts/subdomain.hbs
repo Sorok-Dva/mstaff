@@ -28,10 +28,10 @@
 
     <!-- theme -->
     <link rel="stylesheet" href="/assets/theme/mstaff/css/style.min.css">
-    {{#if themeLayoutCSSImport}}<link rel="stylesheet" href="/assets/theme/mstaff/css/layout/subdomain.min.css">{{/if}}
+    {{#if themeLayoutCSSImport}}<link rel="stylesheet" href="/assets/theme/mstaff/css/layout/{{layoutName}}.min.css">{{/if}}
     {{#if themePageCSSImport}}<link rel="stylesheet" href="/assets/theme/mstaff/css/pages/{{pageName}}.min.css">{{/if}}
 </head>
-<body class="page-{{pageName}} layout-subdomain">
+<body class="page-{{pageName}} layout-{{layoutName}} has-header">
 {{{body}}}
 </body>
 </html>

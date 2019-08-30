@@ -146,6 +146,7 @@ module.exports = {
           if (data.group.banner) {
             data.group.banner = data.group.banner.replace('/static', '');
           }
+          // XXX: Remove this to here
           res.locals.group = data.group;
           res.locals.group.es = data.es;
           req.group = data;

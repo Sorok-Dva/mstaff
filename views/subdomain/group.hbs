@@ -1,56 +1,60 @@
-<div class="row">
+<header class="page-header">
+    <div class="container">
 
-    <div class="col-sm-6 p-0">
-
-        <div class="page-banner">
-            <div class="image-ratio image-ratio-40" style="background-image:url('{{group.banner}}');"></div>
-            <div class="page-banner-shadow"></div>
-        </div>
-
-        <div class="container-fluid">
-            <div class="row">
-
-                <div class="col-sm-12 p-0">
-
-                    <div class="banner-info-card">
-                        <div class="banner-info-card__header">
-                            <div class="image-ratio image-ratio-40 banner-info-card__header__image" style="background-image:url('{{group.logo}}');"></div>
-                            <span class="banner-info-card__header__title__baseline">Groupe</span>
-                            <h3 class="banner-info-card__header__title title">{{group.name}}</h3>
-                        </div>
-                        <div class="banner-info-card__body">
-                            <a href="/join" class="button button-pink button-fluid button-big">Candidature spontanée</a>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-sm-12 col-lg-8 col-xl-9">
-
-                    <h1 class="baseline baseline-page">Retrouvez ici les <span>établissement</span> du groupe <span>{{group.name}}</span></h1>
-
-                    <div class="container-fluid">
-                        <div class="row card-list">
-
-                            {{#each group.es as |data|}}
-                                <div class="col-sm-12">
-                                    <div class="card">
-                                        <div class="card__header">
-                                            <div class="card__legend"><i class="far fa-map-marker-alt"></i> {{data.es.town}}</div>
-                                        </div>
-                                        <div class="card__thumbnail-container"></div>
-                                        <div class="card__body content-type-text">
-                                            <h3 class="card__body__title title">{{data.es.name}}</h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            {{/each}}
-
-                        </div>
-                    </div>
-
+        <div class="push">
+            <div class="aic">
+                <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{group.logo}}');"></div>
+                <div>
+                    <span class="header-title-label">Groupe</span>
+                    <h1 class="header-title">{{group.name}}</h1>
                 </div>
             </div>
+            <div class="aic">
+                <a href="#" class="button button-pink button-fluid">Retourner sur le site</a>
+                <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-sm-6 p-0">
+
+            <div class="page-banner">
+                <div class="image-ratio image-ratio-40" style="background-image:url('{{group.banner}}');"></div>
+                <div class="page-banner__shadow"></div>
+            </div>
+
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-sm-6 col-lg-4 offset-lg-1">
+
+            <h1 class="baseline baseline-page">Retrouvez ici les <span>établissement</span> du groupe <span>{{group.name}}</span></h1>
+
+            <div class="row card-list">
+
+                {{#each group.es as |data|}}
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card__header">
+                                <div class="card__legend"><i class="far fa-map-marker-alt"></i> {{data.es.town}}</div>
+                            </div>
+                            <div class="card__thumbnail-container"></div>
+                            <div class="card__body content-type-text">
+                                <h3 class="card__body__title title">{{data.es.name}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+
+            </div>
+
         </div>
 
     </div>
@@ -68,10 +72,10 @@
         locations.push();
     {{/each}}
     if (document.getElementById('map')) {
-        //let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};
+        let pos = {lat: 43.599072, lng: 1.440293, rayon: 5};
         let map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
-            //center: pos,
+            zoom: 10,
+            center: pos,
             mapTypeControl: false
         });
         /*marker = new google.maps.Marker({
