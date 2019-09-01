@@ -149,6 +149,7 @@ module.exports = {
           // XXX: Remove this to here
           res.locals.group = data.group;
           res.locals.group.es = data.es;
+          res.locals.subdomainSuffix = Env.isDev() ? 'medikstaff.com' : 'mstaff.co';
           req.group = data;
           req.url = `/groupDomain${req.url}`;
           return next();
