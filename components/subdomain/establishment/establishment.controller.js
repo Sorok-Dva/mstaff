@@ -1,36 +1,41 @@
 const __ = process.cwd();
-const { Sequelize } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
+const { Op, Sequelize } = require('sequelize');
 
 const Models = require(`${__}/orm/models/index`);
 
 const Establishment_Website = {};
 
 Establishment_Website.ViewIndex = (req, res, next) => {
-  Models.Establishments.findOne({
+  Models.Establishment.findOne({
     where: {
       finess: req.es.finess
     },
     include: [
       {
-        attributes: [],
         model: Models.EstablishmentGroups,
-        where: {
-          id_es: Sequelize.col('Establishments.id')
-        },
         include: [
           {
-            attributes: [['domain_name', 'group_domain']],
             model: Models.Groups,
-            where: {
-              id: Sequelize.col('EstablishmentGroups.id_group')
+            as: 'Group',
+            on: {
+              '$EstablishmentGroups.id_group$': { [ Op.col ]: 'EstablishmentGroups->Group.id' }
             }
           }
         ]
       }
     ]
   }).then(ref => {
-    return res.render('subdomain/establishment', { ref, layout: 'subdomain', pageName: 'subdomain-establishment', layoutName: 'subdomain' })
+    let hasGroup = ref.EstablishmentGroups && ref.EstablishmentGroups.length == 1;
+    return res.render('subdomain/establishment', {
+      ref,
+      hasGroup: hasGroup,
+      layout: 'subdomain',
+      pageName: 'subdomain-establishment',
+      layoutName: 'subdomain'
+    })
+  }).catch(err => {
+    console.log(err);
   })
 };
 

@@ -49,9 +49,11 @@
                             <div class="card__body content-type-text">
                                 <h3 class="card__body__title title">{{data.es.name}}</h3>
                             </div>
-                            <div class="card__footer">
-                                <a href="" class="button button-pink">Postuler</a>
+                            {{#if data.es.domain_name}}
+                            <div class="card__footer tar">
+                                <a href="{{data.es.domain_name}}{{subdomainSuffix}}" class="button button-pink">Postuler</a>
                             </div>
+                            {{/if}}
                         </div>
                     </div>
                 {{/each}}
@@ -62,11 +64,15 @@
 
         <div class="w-100"></div>
 
-    </div>
+        <div class="col-sm-6 p-0">
 
-    <footer class="page-footer">
-        <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
-    </footer>
+            <footer class="page-footer">
+                <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
+            </footer>
+
+        </div>
+
+    </div>
 
 </div>
 

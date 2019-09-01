@@ -10,7 +10,8 @@
                 </div>
             </div>
             <div class="aic">
-                <a href="#" class="button button-pink button-fluid">Site web</a>
+                {{#if hasGroup}}<a href="{{es.EstablishmentGroups.0.Group.domain_name}}" class="button button-green button-fluid">Accéder au groupe</a>{{/if}}
+                {{#if es.url}}<a href="{{es.url}}" class="button button-green button-fluid">Site web</a>{{/if}}
                 <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
             </div>
         </div>
@@ -56,8 +57,10 @@
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card__thumbnail-container"></div>
+                                <div class="card__header">
+                                    <h3 class="card__title title">Ergotherapeuthe</h3>
+                                </div>
                                 <div class="card__body content-type-text">
-                                    <h3 class="card__body__title title">Ergotherapeuthe</h3>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis!</p>
                                 </div>
                                 <div class="card__footer">
@@ -82,3 +85,7 @@
     </div>
 
 </div>
+
+<footer class="page-footer">
+    <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
+</footer>

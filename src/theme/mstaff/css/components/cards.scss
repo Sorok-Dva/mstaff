@@ -15,10 +15,6 @@
 		margin-bottom:1rem;
 	}
 	.card__body{
-		.card__body__title{
-			font-size:1.25em;
-			color:$fontColorDark;
-		}
 		p{
 			font-size:.8em;
 			line-height:2em;
@@ -26,7 +22,12 @@
 		}
 	}
 	.card__footer{
+		margin-top:1rem;
+	}
 
+	.card__title{
+		font-size:1.25em;
+		color:$fontColorDark;
 	}
 
 	.card__legend{
