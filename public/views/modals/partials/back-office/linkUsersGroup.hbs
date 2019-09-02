@@ -116,6 +116,7 @@
       });
     }
   });
+  let userExists;
 
   $.get('/api/back-office/groups/group/linkES/' + $('input[name="group_id"]').val(), (data) => {
     if (data) {
@@ -254,7 +255,7 @@
     let group_id = $('input[name="group_id"]').val();
     let user = {};
 
-    user.email = $('input[name="AUemail"]').val();
+    user.email = $('input[name="AUemail"]').val().replace(/\s/g, '');
     user.role = $('select[name="role"] option').filter(":selected").val();
     user._csrf = $('meta[name="csrf-token"]').attr('content');
     user.es = $('select#esidNew').val();
