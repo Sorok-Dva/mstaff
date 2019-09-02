@@ -211,7 +211,6 @@
   $('#AUemail').blur(() => {
     if($('button#btnDisplayAddUser').val() === "0") {
       let email = $('#AUemail').val();
-      if (!email.length) return;
       $.get(`/api/user/emailAvailable/${email}`, (result) => {
         if (!result.available) {
           $('.toHide').hide();

@@ -217,7 +217,7 @@ BackOffice_Group.addUser = (req, res, next) => {
       Models.UsersGroups.findOne({ where: query }).then( userInGroup => {
         if (userInGroup) return res.status(200).json({ status: 'Already exists', userInGroup });
 
-        Models.UsersGroups.bulkCreate(arrayBulk).spread((group, groupCreated) => {
+        Models.UsersGroups.bulkCreate(arrayBulk).spread((group) => {
           if (created) {
             mailer.sendEmail({
               to: user.email,
@@ -227,7 +227,7 @@ BackOffice_Group.addUser = (req, res, next) => {
             });
             return res.status(201).json({ status: 'Created and added to group/supergroup', user, group });
           } else {
-            if (groupCreated) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
+            if (group) return res.status(201).json({ status: 'Added to group/supergroup', user, group });
           }
         }).catch(error => next(new BackError(error)));
       }).catch(error => next(new BackError(error)));
