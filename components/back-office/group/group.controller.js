@@ -13,31 +13,52 @@ const layout = 'admin';
 const BackOffice_Group = {};
 
 BackOffice_Group.GetLinkES = (req, res, next) => {
-  /*
+
   let model = req.params.type;
-  if (_.isNil(Models[model])) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
-  let query = { };
+  if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  let query = {};
   switch (model) {
-    case 'UsersGroups' : query.id_group = req.params.id; break;
-    case 'UsersSuperGroups' : query.id_supergroup = req.params.id; break;
+    case 'group' : query.id_group = req.params.id; break;
+    case 'supergroup' : query.id_super_group = req.params.id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
   }
-   */
-  Models.EstablishmentGroups.findAll({
-    where: { id_group: req.params.id },
-    attributes: ['id_es'],
-    include: [{
-      model: Models.Establishment, as: 'es',
-      attributes: ['name', 'finess'],
-      required: true,
-    }]
-  }).then(usersGroup => {
-    //if (_.isNil(usersGroup)) return next(new BackError(`Users in Group ${req.params.id} not found`, httpStatus.NOT_FOUND));
-    return res.status(200).send(usersGroup);
-  }).catch(error => next(new BackError(error)));
+  if (model === 'group') {
+    Models.EstablishmentGroups.findAll({
+      where: query,
+      attributes: ['id_es'],
+      include: [{
+        model: Models.Establishment, as: 'es',
+        attributes: ['name', 'finess'],
+        required: true,
+      }]
+    }).then(esGroup => {
+      return res.status(200).send(esGroup);
+    }).catch(error => next(new BackError(error)));
+  } else {
+    Models.GroupsSuperGroups.findAll({
+      where: query,
+      attributes: ['id'],
+      include: [{
+        model: Models.Groups,
+        attributes: ['id', 'name'],
+        include: [{
+          model: Models.EstablishmentGroups,
+          attributes: ['id_es'],
+          include: [{
+            model: Models.Establishment, as: 'es',
+            attributes: ['name', 'finess'],
+            required: true,
+          }]
+        }]
+      }]
+    }).then(esGroupSuperGroup => {
+      return res.status(200).send(esGroupSuperGroup);
+    }).catch(error => next(new BackError(error)));
+  }
 };
 
+// TODO Edit link ES
 BackOffice_Group.EditLinkES = (req, res, next) => {
   if (!req.body.selectInput || !req.params.id) {
     return res.status(400).json({ status: 'invalid input' })
