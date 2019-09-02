@@ -127,7 +127,7 @@ Authentication.verifyEsAccess = (req, res, next) => {
     }
   }).then(es => {
     if (!es) return res.status(403).send(`You don't have access to this establishment.`);
-    req.session.es = es;
+    req.session.RH_es = es;
     next();
   });
 };
