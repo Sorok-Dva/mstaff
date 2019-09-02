@@ -92,9 +92,8 @@
   <button style="display:none" type="button" class="btn btn-default" id="addUserInModal"> Ajouter l'utilisateur</button>
   <button style="display:none" type="button" class="btn btn-default" id="modifyUserInModal">Modifier le rôle</button>
 </div>
-<script>
-  let userExists;
 
+<script>
   $.get('/api/back-office/groups/supergroup/' + $('input[name="supergroup_id"]').val() + '/users/all', (data) => {
     if (data) {
       data.forEach(function(element)

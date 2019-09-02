@@ -98,8 +98,8 @@
   <button style="display:none" type="button" class="btn btn-default" id="modifyUserInModal">Modifier le rôle</button>
   <button style="display:none" type="button" class="btn btn-default" id="modifyESLinkInModal">Modifier établissements liés</button>
 </div>
-<script>
 
+<script>
   $.get('/api/back-office/groups/group/' + $('input[name="group_id"]').val() + '/users/all', (data) => {
     if (data) {
       data.forEach(function(element)
@@ -116,7 +116,6 @@
       });
     }
   });
-  let userExists;
 
   $.get('/api/back-office/groups/group/linkES/' + $('input[name="group_id"]').val(), (data) => {
     if (data) {
