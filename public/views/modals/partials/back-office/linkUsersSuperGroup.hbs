@@ -93,6 +93,8 @@
   <button style="display:none" type="button" class="btn btn-default" id="modifyUserInModal">Modifier le rôle</button>
 </div>
 <script>
+  let userExists;
+
   $.get('/api/back-office/groups/supergroup/' + $('input[name="supergroup_id"]').val() + '/users/all', (data) => {
     if (data) {
       data.forEach(function(element)
@@ -116,25 +118,14 @@
         if (element.Group.EstablishmentGroups.length > 0) {
           $('#groupList').append(`<a data-toggle="tab" href="#${element.Group.id}" type="button" class="btn btn-sm btn-default">${element.Group.name}</a>`);
           $('#esList').append(`<div class="tab-pane" id="${element.Group.id}"><ul class="list-group"></ul>`);
-          //esList
+          $(`#esList #${element.Group.id} ul`).append(`<a class="list-group-item" onclick="$(\`#esList #${element.Group.id} ul input[type='checkbox']\`)
+          .attr('checked', 'checked')">Tout sélectionner</a><a class="list-group-item" onclick="$(\`#esList #${element.Group.id} ul input[type='checkbox']\`)
+          .attr('checked', false)">Tout désélectionner</a>`);
           element.Group.EstablishmentGroups.forEach(es => {
             $(`#esList #${element.Group.id} ul`).append(`<li class="list-group-item">
               <input type="checkbox" class="custom-control-input" data-es="${es.id_es}" data-group="${element.Group.id}" id="toggle">
                 <label class="custom-control-label" for="">${es.id_es} - ${es.es.name}</label></li>`);
-            /*
-              console.log("Group Name : " + element.Group.name);
-              console.log("Group ID : "+ element.Group.id);
-              console.log("ES Name : " + es.es.name);
-              console.log("ES ID : " + es.id_es);
-            */
-            /*
-            $('#esidNew').append($('<option>', {
-              value: JSON.stringify({group: element.Group.id, es: es.id_es}),
-              text: `${element.Group.name} -> ${es.es.name} `
-            }));
-
-             */
-          })
+          });
         }
       });
     }
@@ -147,7 +138,7 @@
     $("table tbody#usersSuperGroupTable").find("tr a").each(function(data) {
       if($(this).text() === user_id.toString()) {
         $(this).parents("tr").remove();
-        $.delete(`/api/back-office/groups/UsersSuperGroups/${supergroup_id}/remove/user/${user_id}`, { _csrf }, () => {
+        $.delete(`/api/back-office/groups/supergroup/${supergroup_id}/remove/user/${user_id}`, { _csrf }, () => {
           notification({
             icon: 'check-circle',
             type: 'success',
@@ -237,7 +228,7 @@
     let supergroup_id = $('input[name="supergroup_id"]').val();
     let user = {};
 
-    user.email = $('input[name="AUemail"]').val();
+    user.email = $('input[name="AUemail"]').val().replace(/\s/g, '');
     user.role = $('select[name="role"] option').filter(":selected").val();
     user._csrf = $('meta[name="csrf-token"]').attr('content');
     user.es = [];
