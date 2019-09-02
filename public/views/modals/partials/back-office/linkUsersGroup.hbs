@@ -142,6 +142,7 @@
     $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
     $('div#linkEsUserGroup').show();
     $('button#modifyESLinkInModal').show();
+    $('input#user_id').val(user_id);
 
     $.get('/api/back-office/groups/group/' + $('input[name="group_id"]').val() + '/user/' + user_id, (data) => {
       if(data) {
@@ -225,6 +226,18 @@
         errorsHandler(errors);
       });
     }
+  });
+
+  $('button#modifyESLinkInModal').click(function() {
+    let group_id = $('input[name="group_id"]').val();
+    let user_id = $('input#user_id').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    let es = $('select#esid').val();
+
+    $.put(`/api/back-office/groups/group/linkES/${group_id}/user/${user_id}`, {_csrf, es}, () => {
+
+    });
+
   });
 
   $('button#modifyUserInModal').click(function() {
