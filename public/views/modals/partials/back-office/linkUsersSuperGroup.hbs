@@ -76,9 +76,10 @@
       <div class="row">
         <label for="includeEs" class="col-md-4 control-label">Inclure dans</label>
         <div class="col-md-8">
-          <select id="esidNew" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
-                  data-live-search="true">
-          </select>
+          <div class="btn-group" id="groupList">
+          </div>
+          <div class="tab-content" id="esList" style="min-height: 250px;">
+          </div>
         </div>
       </div>
     </div>
@@ -92,7 +93,6 @@
   <button style="display:none" type="button" class="btn btn-default" id="modifyUserInModal">Modifier le rôle</button>
 </div>
 <script>
-
   $.get('/api/back-office/groups/supergroup/' + $('input[name="supergroup_id"]').val() + '/users/all', (data) => {
     if (data) {
       data.forEach(function(element)
@@ -113,26 +113,31 @@
   $.get('/api/back-office/groups/supergroup/linkES/' + $('input[name="supergroup_id"]').val(), (data) => {
     if (data) {
       data.forEach(element => {
-
         if (element.Group.EstablishmentGroups.length > 0) {
-          console.log(element.Group.name);
+          $('#groupList').append(`<a data-toggle="tab" href="#${element.Group.id}" type="button" class="btn btn-sm btn-default">${element.Group.name}</a>`);
+          $('#esList').append(`<div class="tab-pane" id="${element.Group.id}"><ul class="list-group"></ul>`);
+          //esList
           element.Group.EstablishmentGroups.forEach(es => {
+            $(`#esList #${element.Group.id} ul`).append(`<li class="list-group-item">
+              <input type="checkbox" class="custom-control-input" data-es="${es.id_es}" data-group="${element.Group.id}" id="toggle">
+                <label class="custom-control-label" for="">${es.id_es} - ${es.es.name}</label></li>`);
             /*
               console.log("Group Name : " + element.Group.name);
               console.log("Group ID : "+ element.Group.id);
               console.log("ES Name : " + es.es.name);
               console.log("ES ID : " + es.id_es);
             */
+            /*
             $('#esidNew').append($('<option>', {
               value: JSON.stringify({group: element.Group.id, es: es.id_es}),
               text: `${element.Group.name} -> ${es.es.name} `
             }));
+
+             */
           })
         }
       });
     }
-    $('#esid').selectpicker();
-    $('#esidNew').selectpicker();
   });
 
   function deleteUser(user_id)
@@ -235,7 +240,7 @@
     user.email = $('input[name="AUemail"]').val();
     user.role = $('select[name="role"] option').filter(":selected").val();
     user._csrf = $('meta[name="csrf-token"]').attr('content');
-    user.es = $('select#esidNew').val();
+    user.es = [];
 
     if (!userExists) {
       user.firstName = $('input[name="AUfirstName"]').val();
@@ -243,7 +248,9 @@
       user.phone = $('input[name="AUphone"]').val();
     }
 
-    //$('select#esidNew').val().forEach(el => { console.log(JSON.parse(el)) })
+    $('#esList input:checkbox:checked').each(function() {
+      user.es.push( JSON.stringify({ group_id: this.dataset.group, es_id: this.dataset.es }));
+    });
 
     $.put('/api/back-office/groups/supergroup/' + supergroup_id + '/add/user', user, (data) => {
       if (data.status === 'Already exists') {
