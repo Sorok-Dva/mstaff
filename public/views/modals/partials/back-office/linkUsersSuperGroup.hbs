@@ -71,6 +71,18 @@
         </div>
       </div>
     </div>
+
+    <div id="esid-form" class="form-group">
+      <div class="row">
+        <label for="includeEs" class="col-md-4 control-label">Inclure dans</label>
+        <div class="col-md-8">
+          <select id="esidNew" name="selectName" class="selectpicker col-md-12" multiple data-actions-box="true"
+                  data-live-search="true">
+          </select>
+        </div>
+      </div>
+    </div>
+
     <input type="hidden" name="supergroup_id" value="{{ this.group.id }}">
     <input type="hidden" id="user_id">
   </div>
@@ -96,6 +108,31 @@
         $("table tbody#usersSuperGroupTable").append(markup);
       });
     }
+  });
+
+  $.get('/api/back-office/groups/supergroup/linkES/' + $('input[name="supergroup_id"]').val(), (data) => {
+    if (data) {
+      data.forEach(element => {
+
+        if (element.Group.EstablishmentGroups.length > 0) {
+          console.log(element.Group.name);
+          element.Group.EstablishmentGroups.forEach(es => {
+            /*
+              console.log("Group Name : " + element.Group.name);
+              console.log("Group ID : "+ element.Group.id);
+              console.log("ES Name : " + es.es.name);
+              console.log("ES ID : " + es.id_es);
+            */
+            $('#esidNew').append($('<option>', {
+              value: JSON.stringify({group: element.Group.id, es: es.id_es}),
+              text: `${element.Group.name} -> ${es.es.name} `
+            }));
+          })
+        }
+      });
+    }
+    $('#esid').selectpicker();
+    $('#esidNew').selectpicker();
   });
 
   function deleteUser(user_id)
@@ -198,6 +235,7 @@
     user.email = $('input[name="AUemail"]').val();
     user.role = $('select[name="role"] option').filter(":selected").val();
     user._csrf = $('meta[name="csrf-token"]').attr('content');
+    user.es = $('select#esidNew').val();
 
     if (!userExists) {
       user.firstName = $('input[name="AUfirstName"]').val();
@@ -205,7 +243,9 @@
       user.phone = $('input[name="AUphone"]').val();
     }
 
-    $.put('/api/back-office/groups/UsersSuperGroups/' + supergroup_id + '/add/user', user, (data) => {
+    //$('select#esidNew').val().forEach(el => { console.log(JSON.parse(el)) })
+
+    $.put('/api/back-office/groups/supergroup/' + supergroup_id + '/add/user', user, (data) => {
       if (data.status === 'Already exists') {
         notification({
           icon: 'exclamation',
