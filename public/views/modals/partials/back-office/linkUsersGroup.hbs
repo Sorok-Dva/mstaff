@@ -117,7 +117,7 @@
     }
   });
 
-  $.get('/api/back-office/linkES/' + $('input[name="group_id"]').val(), (data) => {
+  $.get('/api/back-office/groups/group/linkES/' + $('input[name="group_id"]').val(), (data) => {
     if (data) {
       data.forEach(element => {
         $('#esid').append($('<option>', {
