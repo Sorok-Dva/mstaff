@@ -232,7 +232,8 @@ BackOffice_Group.addUser = (req, res, next) => {
       } else if (model === 'supergroup') {
         query.supergroup_id = req.params.id;
         req.body.es.forEach(element => {
-          arrayBulk.push({ user_id: user.id, group_id: req.params.id, supergroup_id: req.params.id, es_id: element });
+          let data = JSON.parse(element);
+          arrayBulk.push({ user_id: user.id, group_id: data.group, supergroup_id: req.params.id, es_id: data.es });
         });
       }
       Models.UsersGroups.findOne({ where: query }).then( userInGroup => {
