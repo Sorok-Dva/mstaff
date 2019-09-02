@@ -333,5 +333,5 @@ module.exports.register = async (Handlebars) => {
     return result;
   });
 
-
+  Handlebars.registerHelper('escape', (variable) => variable.replace(/(['"`])/g, '\\$1'));
 };
