@@ -227,13 +227,13 @@ BackOffice_Group.addUser = (req, res, next) => {
       if (model === 'group') {
         query.group_id = req.params.id;
         req.body.es.forEach(element => {
-          arrayBulk.push({ user_id: user.id, group_id: req.params.id, es_id: element });
+          arrayBulk.push({ user_id: user.id, group_id: req.params.id, es_id: element, role: req.body.role });
         });
       } else if (model === 'supergroup') {
         query.supergroup_id = req.params.id;
         req.body.es.forEach(element => {
           let data = JSON.parse(element);
-          arrayBulk.push({ user_id: user.id, group_id: data.group_id, supergroup_id: req.params.id, es_id: data.es_id });
+          arrayBulk.push({ user_id: user.id, group_id: data.group_id, supergroup_id: req.params.id, es_id: data.es_id, role: req.body.role });
         });
       }
       Models.UsersGroups.findOne({ where: query }).then( userInGroup => {
