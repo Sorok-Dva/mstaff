@@ -113,9 +113,56 @@
     createdBy: {{offer.createdBy}},
     name: '{{offer.name}}',
     status: '{{offer.status}}',
+    nature_section: {
+      post: '{{offer.nature_section.post}}',
+      contract_type:'{{offer.nature_section.contract_type}}',
+      start: '{{offer.nature_section.start}}',
+      end: '{{offer.nature_section.end}}',
+      jobSheet: `{{{escape offer.nature_section.jobSheet}}}`,
+      contractDuration: '{{offer.nature_section.contractDuration}}',
+      grade: '{{offer.nature_section.grade}}',
+      category: '{{offer.nature_section.category}}'
+    },
+    context_section: {
+      place: '{{offer.context_section.place}}',
+      address: '{{offer.context_section.address}}',
+      website: '{{offer.context_section.website}}',
+      logo: '{{offer.context_section.logo}}',
+      attach: '{{offer.context_section.attach}}',
+      pole: '{{offer.context_section.pole}}',
+      presentation: '{{{escape offer.context_section.presentation}}}'
+    },
+    details_section: {
+      schedule: '{{offer.details_section.schedule}}',
+      roll: '{{offer.details_section.roll}}',
+      quota: '{{offer.details_section.quota}}',
+      strain: '{{offer.details_section.strain}}',
+      access: '{{offer.details_section.access}}',
+      housing: '{{offer.details_section.housing}}',
+      remuneration: '{{offer.details_section.remuneration}}',
+      risk: '{{offer.details_section.risk}}'
+    },
+    postDescription_section: {
+      presentation: '{{{escape offer.postDescription_section.presentation}}}',
+      team: '{{offer.postDescription_section.team}}',
+      uphill: '{{offer.postDescription_section.uphill}}',
+      backing: '{{offer.postDescription_section.backing}}',
+      external: '{{offer.postDescription_section.external}}',
+      internal: '{{offer.postDescription_section.internal}}',
+      internService: '{{{escape offer.postDescription_section.internService}}}'
+    },
+    prerequisites_section: {
+      diploma: '{{offer.prerequisites_section.diploma}}',
+      skill: '{{{escape offer.prerequisites_section.skill}}}',
+      knowledge: '{{{escape offer.prerequisites_section.knowledge}}}'
+    },
+    terms_sections: {
+      recruit: '{{offer.terms_sections.recruit}}',
+      mail: '{{offer.terms_sections.mail}}',
+      contractual: '{{offer.terms_sections.contractual}}',
+      military: '{{offer.terms_sections.military}}'
+    },
   };
-
-  console.log(JSON.parse(`{{json offer.nature_section}}`))
 </script>
 
 <script src="/assets/dist/js/job_board/job_board.min.js"></script>
