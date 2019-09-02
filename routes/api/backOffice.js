@@ -89,8 +89,8 @@ router.get('/groups/:type/:id(\\d+)/users/all', Authentication.ensureIsAdmin, Ba
 
 router.get('/groups/:type/:id(\\d+)/user/:user_id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.getEsFromUser);
 
-router.put('/linkES/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditLinkES)
-  .get('/linkES/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.GetLinkES);
+router.put('/groups/:type/linkES/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditLinkES)
+  .get('/groups/:type/linkES/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.GetLinkES);
 
 router.put('/linkGroup/:id(\\d+)',
   Authentication.ensureIsAdmin,
