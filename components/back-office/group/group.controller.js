@@ -58,22 +58,32 @@ BackOffice_Group.GetLinkES = (req, res, next) => {
   }
 };
 
-// TODO Edit link ES
 BackOffice_Group.EditLinkES = (req, res, next) => {
-  if (!req.body.selectInput || !req.params.id) {
-    return res.status(400).json({ status: 'invalid input' })
+  let model = req.params.type;
+  if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  let query = { user_id: req.params.userId };
+  let arrayBulk = [];
+
+  if (model === 'group')
+  {
+    query.group_id = req.params.id; query.supergroup_id = null;
+    req.body.es.forEach(element => {
+      arrayBulk.push({ user_id: query.user_id, group_id: req.params.id, es_id: element });
+    });
+  } else if (model === 'supergroup') {
+    query.supergroup_id = req.params.id;
+    req.body.es.forEach(element => {
+      let data = JSON.parse(element);
+      arrayBulk.push({ user_id: query.user_id, group_id: data.group_id, supergroup_id: req.params.id, es_id: data.es_id });
+    });
+  } else {
+    return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
   }
-  return Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(esGroup => {
-    if (esGroup.length !== 0) {
-      Models.EstablishmentGroups.destroy({ where: { id_group: req.params.id } });
-    }
-    for (let i = 0; i < req.body.selectInput.length; i++) {
-      Models.EstablishmentGroups.create({
-        id_es: req.body.selectInput[i],
-        id_group: req.params.id
-      }).then(res.status(200))
-    }
-    return res.status(200).json({ status: 'ok' });
+
+  Models.UsersGroups.destroy({ where: query }).then(() => {
+    Models.UsersGroups.bulkCreate(arrayBulk).spread((group) => {
+      return res.status(200).json({ status: 'ok' });
+    }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
 };
 
