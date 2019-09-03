@@ -234,10 +234,33 @@
     let _csrf = $('meta[name="csrf-token"]').attr('content');
     let es = $('select#esid').val();
 
-    $.put(`/api/back-office/groups/group/linkES/${group_id}/user/${user_id}`, {_csrf, es}, () => {
+    if (!es) {
+      return notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Erreur :',
+        message: `Vous devez sélectionner au moins un établissement.`
+      });
+    }
 
+    $.post(`/api/back-office/groups/group/linkES/${group_id}/user/${user_id}`, {_csrf, es}, (data) => {
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Succes :',
+        message: 'Liens groupe / établissements mis à jour.'
+      });
+      $('#linkGroupModal').modal('hide');
+      $(`td[data-id="${user_id}"]`).text(role);
+    }).catch(errors => {
+      errorsHandler(errors);
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Les liens groupe / établissements n\'a pas été mis à jour :',
+        message: `Nous n'avons pas pu modifier les liens groupe / établissements, veuillez réessayer.`
+      });
     });
-
   });
 
   $('button#modifyUserInModal').click(function() {
@@ -249,7 +272,8 @@
       notification({
         icon: 'check-circle',
         type: 'success',
-        title: 'L\'utilisateur a changé de rôle :' + role
+        title: 'Role modifié : ',
+        message: 'L\'utilisateur a changé de rôle :' + role
       });
       $(`td[data-id="${user_id}"]`).text(role);
     }).catch(errors => {
@@ -303,7 +327,8 @@
         notification({
           icon: 'exclamation',
           type: 'danger',
-          title: 'Utilisateur déjà présent dans ce groupe.',
+          title: 'Erreur :',
+          message:'Utilisateur déjà présent dans ce groupe.'
         });
       } else if (data.status === 'Not an ES account') {
         notification({
@@ -314,12 +339,13 @@
           être ajouté à un établissement.`
         });
       } else {
-        $('#linkGroupModal').modal('hide');
         notification({
           icon: 'check-circle',
           type: 'success',
-          title: 'Utilisateur ajouté à l\'établissement.'
+          title: 'Succes : ',
+          message: 'Utilisateur ajouté à l\'établissement.'
         });
+        $('#linkGroupModal').modal('hide');
       }
     });
   });
