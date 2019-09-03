@@ -71,34 +71,34 @@
         </div>
       </div>
     </div>
-
-    <div id="esid-form" class="form-group">
-      <div class="row">
-        <label for="includeEs" class="col-md-4 control-label">Inclure dans</label>
-        <div class="col-md-8">
-          <div class="btn-group" id="groupList">
-          </div>
-          <div class="tab-content" id="esList" style="min-height: 250px;">
-          </div>
-        </div>
-      </div>
-    </div>
-
     <input type="hidden" name="supergroup_id" value="{{ this.group.id }}">
     <input type="hidden" id="user_id">
   </div>
 </div>
+
+<div id="esid-form" style="display:none">
+  <div class="col-md-12">
+  <h6>Inclure l'utilisateur dans :</h6>
+      <select  id="groupList" class="form-control"></select>
+      <div class="tab-content" id="esList" style="min-height: 250px;">
+      </div>
+    </div>
+</div>
+
 <div class="modal-footer">
   <button style="display:none" type="button" class="btn btn-default" id="addUserInModal"> Ajouter l'utilisateur</button>
   <button style="display:none" type="button" class="btn btn-default" id="modifyUserInModal">Modifier le rôle</button>
+  <button style="display:none" type="button" class="btn btn-default" id="modifyESLinkInModal">Modifier établissements liés</button>
 </div>
 
 <script>
+
   $.get('/api/back-office/groups/supergroup/' + $('input[name="supergroup_id"]').val() + '/users/all', (data) => {
     if (data) {
       data.forEach(function(element)
       {
-        let actions = `<button type="button" title="Modifier utilisateur"
+        let actions = `<button type="button" title="Etablissements liés à ce compte" class="btn btn-simple btn-primary btn-icon table-action"
+          onclick="viewAllowedEs('${element.User.id}')"> <i class="ti-flag-alt-2"></i> </button><button type="button" title="Modifier utilisateur"
           class="btn btn-simple btn-warning btn-icon table-action"
            onclick="modifyUser('${element.User.id}' , '${element.User.email}', '${element.role}')">
            <i class="ti-pencil-alt"></i> </button><button title="Supprimer utilisateur" type="button"
@@ -115,20 +115,43 @@
     if (data) {
       data.forEach(element => {
         if (element.Group.EstablishmentGroups.length > 0) {
-          $('#groupList').append(`<a data-toggle="tab" href="#${element.Group.id}" type="button" class="btn btn-sm btn-default">${element.Group.name}</a>`);
-          $('#esList').append(`<div class="tab-pane" id="${element.Group.id}"><ul class="list-group"></ul>`);
-          $(`#esList #${element.Group.id} ul`).append(`<a class="list-group-item" onclick="$(\`#esList #${element.Group.id} ul input[type='checkbox']\`)
-          .attr('checked', 'checked')">Tout sélectionner</a><a class="list-group-item" onclick="$(\`#esList #${element.Group.id} ul input[type='checkbox']\`)
-          .attr('checked', false)">Tout désélectionner</a>`);
+          $('#groupList').append(new Option(`${element.Group.name}`, `${element.Group.id}`, false, false));
+          $('#esList').append(`<ul id="${element.Group.id}" style="display:none"><div class="list-group-item"><a onclick="$(\`#esList #${element.Group.id} input[type='checkbox']\`)
+          .prop('checked', 'checked')">Tout sélectionner</a> | <a onclick="$(\`#esList #${element.Group.id} input[type='checkbox']\`)
+          .prop('checked', false)">Tout désélectionner</a></div></ul>`);
           element.Group.EstablishmentGroups.forEach(es => {
-            $(`#esList #${element.Group.id} ul`).append(`<li class="list-group-item">
-              <input type="checkbox" class="custom-control-input" data-es="${es.id_es}" data-group="${element.Group.id}" id="toggle">
-                <label class="custom-control-label" for="">${es.id_es} - ${es.es.name}</label></li>`);
+            $(`#esList #${element.Group.id}`).append(`<div class="list-group-item"><input type="checkbox" data-es="${es.id_es}" data-group="${element.Group.id}">
+                <label class="custom-control-label" for="">${es.id_es} - ${es.es.name}</label></div>`);
           });
         }
       });
+      $("#groupList option:first").attr('selected','selected').change();
     }
+  }).catch((xhr, status, error) => catchError(xhr, status, error));
+
+  $('#groupList').change(function() {
+    $(`#esList ul`).hide();
+    $(`#esList #${$(this).val()}`).show();
   });
+
+  function viewAllowedEs(user_id)
+  {
+    $('#esid-form').show();
+    $('h6#textDisplayer').text('Modifier les établissements qui seront visibles par cet utilisateur');
+    $('div#displayAllUsers').hide();
+    $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
+    $('div#linkEsUserGroup').show();
+    $('button#modifyESLinkInModal').show();
+    $('input#user_id').val(user_id);
+
+    $.get('/api/back-office/groups/supergroup/' + $('input[name="supergroup_id"]').val() + '/user/' + user_id, (data) => {
+      if(data) {
+        data.forEach(element => {
+          $(`#esList #${element.group_id} [data-es="${element.es_id}"]`).prop('checked',true);
+        });
+      }
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
+  }
 
   function deleteUser(user_id)
   {
@@ -162,6 +185,8 @@
 
   $('button#btnDisplayAddUser').click(function () {
     if(this.value === "1") {
+      $('#esid-form').show();
+      $('#esList input[type="checkbox"]').prop('checked',false);
       $('button#btnDisplayAddUser').text('Retour à la liste d\'utilisateurs').prop('value', '0');
       $('h6#textDisplayer').text('Ajouter un nouvel utilisateur à votre supergroupe');
       $('button#addUserInModal').show();
@@ -169,6 +194,9 @@
       $('button#modifyUserInModal').hide();
       $('div#displayAllUsers').hide();
     } else {
+      $('#esid-form').hide();
+      $('#modifyESLinkInModal').hide();
+      $('#esList input[type="checkbox"]').prop('checked',false);
       $('button#btnDisplayAddUser').text('Ajouter utilisateur').prop('value', '1');
       $('h6#textDisplayer').text('Liste des utilisateurs présents dans votre supergroupe');
       $('div#displayAddUser').hide();
@@ -179,6 +207,44 @@
       $('.toHide').show();
       $('.alertUserExists').hide();
     }
+  });
+
+  $('button#modifyESLinkInModal').click(function() {
+    let supergroup_id = $('input[name="supergroup_id"]').val();
+    let user_id = $('input#user_id').val();
+    let _csrf = $('meta[name="csrf-token"]').attr('content');
+    let es = [];
+
+    $('#esList input:checkbox:checked').each(function() {
+      es.push( JSON.stringify({ group_id: this.dataset.group, es_id: this.dataset.es }));
+    });
+
+    if (!es) {
+      return notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Erreur :',
+        message: `Vous devez sélectionner au moins un établissement.`
+      });
+    }
+
+    $.post(`/api/back-office/groups/supergroup/linkES/${supergroup_id}/user/${user_id}`, {_csrf, es}, () => {
+      notification({
+        icon: 'check-circle',
+        type: 'success',
+        title: 'Succes :',
+        message: 'Liens supergroupe / établissements mis à jour.'
+      });
+      $('#linkGroupModal').modal('hide');
+    }).catch(errors => {
+      errorsHandler(errors);
+      notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Les liens supergroupe / établissements n\'a pas été mis à jour :',
+        message: `Nous n'avons pas pu modifier les liens supergroupe / établissements, veuillez réessayer.`
+      });
+    });
   });
 
   $('#AUemail').blur(() => {
@@ -242,6 +308,16 @@
       user.es.push( JSON.stringify({ group_id: this.dataset.group, es_id: this.dataset.es }));
     });
 
+    if(!user.es.length)
+    {
+      return  notification({
+        icon: 'exclamation',
+        type: 'danger',
+        title: 'Aucun établissement selectionné :',
+        message: `Vous n'avez pas sélectionné d'établissement. Veuillez au moins en ajouter 1.`
+      });
+    }
+
     $.put('/api/back-office/groups/supergroup/' + supergroup_id + '/add/user', user, (data) => {
       if (data.status === 'Already exists') {
         notification({
@@ -265,6 +341,6 @@
           title: 'Utilisateur ajouté au supergroupe.'
         });
       }
-    });
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 </script>
