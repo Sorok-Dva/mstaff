@@ -135,7 +135,7 @@
     $('#esidNew').selectpicker();
   });
 
-    function viewAllowedEs(user_id)
+  function viewAllowedEs(user_id)
   {
     $('h6#textDisplayer').text('Modifier les établissements qui seront visibles par cet utilisateur');
     $('div#displayAllUsers').hide();
@@ -194,6 +194,7 @@
       $('div#displayAddUser').show();
       $('button#modifyUserInModal').hide();
       $('div#displayAllUsers').hide();
+      $('#esid-form').show();
     } else {
       $('button#modifyESLinkInModal').hide();
       $('div#linkEsUserGroup').hide();
@@ -251,7 +252,6 @@
         message: 'Liens groupe / établissements mis à jour.'
       });
       $('#linkGroupModal').modal('hide');
-      $(`td[data-id="${user_id}"]`).text(role);
     }).catch(errors => {
       errorsHandler(errors);
       notification({
