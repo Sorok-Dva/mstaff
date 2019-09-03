@@ -82,7 +82,7 @@ BackOffice_Group.EditLinkES = (req, res, next) => {
 
   Models.UsersGroups.destroy({ where: query }).then(() => {
     Models.UsersGroups.bulkCreate(arrayBulk).spread((group) => {
-      return res.status(200).json({ status: 'ok' });
+      return res.status(200).json({ status: 'Modified', group });
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
 };
