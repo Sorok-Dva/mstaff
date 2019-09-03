@@ -274,7 +274,7 @@ BackOffice_Group.getUsers = (req, res, next) => {
   if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   let query = {};
   switch (model) {
-    case 'group' : query.group_id = req.params.id; break;
+    case 'group' : query.group_id = req.params.id; query.supergroup_id = null; break;
     case 'supergroup' : query.supergroup_id = req.params.id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
@@ -299,14 +299,14 @@ BackOffice_Group.getEsFromUser = (req, res, next) => {
   if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   let query = {};
   switch (model) {
-    case 'group' : query.group_id = req.params.id; query.user_id = req.params.user_id; break;
-    case 'usergroup' : query.supergroup_id = req.params.id; query.user_id = req.params.user_id; break;
+    case 'group' : query.group_id = req.params.id; query.user_id = req.params.user_id; query.supergroup_id = null; break;
+    case 'supergroup' : query.supergroup_id = req.params.id; query.user_id = req.params.user_id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
   }
   Models.UsersGroups.findAll({
     where: query,
-    attributes: ['es_id']
+    attributes: ['es_id', 'supergroup_id', 'group_id']
   }).then( esUserGroup => {
     if (!esUserGroup) return res.status(400).send({ body: req.body, error: 'User no have linked ES in this group.' });
     return res.status(200).send(esUserGroup);
@@ -318,7 +318,7 @@ BackOffice_Group.removeUser = (req, res, next) => {
   let model = req.params.type;
   if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   switch (model) {
-    case 'group' : query.group_id = req.params.id; break;
+    case 'group' : query.group_id = req.params.id; query.supergroup_id = null; break;
     case 'supergroup' : query.supergroup_id = req.params.id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
@@ -333,7 +333,7 @@ BackOffice_Group.editUser = (req, res, next) => {
   let model = req.params.type;
   if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   switch (model) {
-    case 'group' : query.group_id = req.params.id; break;
+    case 'group' : query.group_id = req.params.id; query.supergroup_id = null; break;
     case 'supergroup' : query.supergroup_id = req.params.id; break;
     default:
       return next(new BackError(`Modèle "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
