@@ -13,7 +13,6 @@ const layout = 'admin';
 const BackOffice_Group = {};
 
 BackOffice_Group.GetLinkES = (req, res, next) => {
-
   let model = req.params.type;
   if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
   let query = {};
@@ -64,8 +63,7 @@ BackOffice_Group.EditLinkES = (req, res, next) => {
   let query = { user_id: req.params.userId };
   let arrayBulk = [];
 
-  if (model === 'group')
-  {
+  if (model === 'group') {
     query.group_id = req.params.id; query.supergroup_id = null;
     req.body.es.forEach(element => {
       arrayBulk.push({ user_id: query.user_id, group_id: req.params.id, es_id: element });
@@ -197,8 +195,6 @@ BackOffice_Group.Remove = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-
-
 BackOffice_Group.ViewSuperGroups = (req, res) => {
   return Models.SuperGroups.findAll().then(superGroup => {
     res.render('back-office/users/list_supergroups', {
@@ -208,7 +204,6 @@ BackOffice_Group.ViewSuperGroups = (req, res) => {
 };
 
 BackOffice_Group.addUser = (req, res, next) => {
-
   const errors = validationResult(req);
   let model = req.params.type;
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
