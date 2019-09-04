@@ -115,7 +115,7 @@
         $("table tbody#usersGroupTable").append(markup);
       });
     }
-  });
+  }).catch((xhr, status, error) => catchError(xhr, status, error));
 
   $.get('/api/back-office/groups/group/linkES/' + $('input[name="group_id"]').val(), (data) => {
     if (data) {
@@ -133,7 +133,7 @@
     }
     $('#esid').selectpicker();
     $('#esidNew').selectpicker();
-  });
+  }).catch((xhr, status, error) => catchError(xhr, status, error));
 
   function viewAllowedEs(user_id)
   {
@@ -152,14 +152,14 @@
         });
         $('#esid').selectpicker('val', val );
       }
-    });
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   }
 
   function deleteUser(user_id)
   {
     let group_id = $('input[name="group_id"]').val();
     let _csrf = $('meta[name="csrf-token"]').attr('content');
-    $("table tbody#usersGroupTable").find("tr a").each(function(data) {
+    $("table tbody#usersGroupTable").find("tr a").each(function() {
       if($(this).text() === user_id.toString()) {
         $(this).parents("tr").remove();
         $.delete(`/api/back-office/groups/group/${group_id}/remove/user/${user_id}`, { _csrf }, () => {
@@ -223,9 +223,7 @@
           $('.alertUserExists').hide();
           userExists = false;
         }
-      }).catch(errors => {
-        errorsHandler(errors);
-      });
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
     }
   });
 
@@ -244,7 +242,7 @@
       });
     }
 
-    $.post(`/api/back-office/groups/group/linkES/${group_id}/user/${user_id}`, {_csrf, es}, (data) => {
+    $.post(`/api/back-office/groups/group/linkES/${group_id}/user/${user_id}`, {_csrf, es}, () => {
       notification({
         icon: 'check-circle',
         type: 'success',
@@ -252,8 +250,8 @@
         message: 'Liens groupe / établissements mis à jour.'
       });
       $('#linkGroupModal').modal('hide');
-    }).catch(errors => {
-      errorsHandler(errors);
+    }).catch((xhr, status, error) => {
+      catchError(xhr, status, error);
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -276,8 +274,8 @@
         message: 'L\'utilisateur a changé de rôle :' + role
       });
       $(`td[data-id="${user_id}"]`).text(role);
-    }).catch(errors => {
-      errorsHandler(errors);
+    }).catch((xhr, status, error) => {
+      catchError(xhr, status, error);
       notification({
         icon: 'exclamation',
         type: 'danger',
@@ -347,6 +345,6 @@
         });
         $('#linkGroupModal').modal('hide');
       }
-    });
+    }).catch((xhr, status, error) => catchError(xhr, status, error));
   });
 </script>

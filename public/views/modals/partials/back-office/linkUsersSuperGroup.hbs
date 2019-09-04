@@ -78,11 +78,11 @@
 
 <div id="esid-form" style="display:none">
   <div class="col-md-12">
-  <h6>Inclure l'utilisateur dans :</h6>
-      <select  id="groupList" class="form-control"></select>
-      <div class="tab-content" id="esList" style="min-height: 250px;">
-      </div>
+    <h6>Inclure l'utilisateur dans :</h6>
+    <select  id="groupList" class="form-control"></select>
+    <div class="tab-content" id="esList" style="min-height: 250px;">
     </div>
+  </div>
 </div>
 
 <div class="modal-footer">
@@ -157,7 +157,7 @@
   {
     let supergroup_id = $('input[name="supergroup_id"]').val();
     let _csrf = $('meta[name="csrf-token"]').attr('content');
-    $("table tbody#usersSuperGroupTable").find("tr a").each(function(data) {
+    $("table tbody#usersSuperGroupTable").find("tr a").each(function() {
       if($(this).text() === user_id.toString()) {
         $(this).parents("tr").remove();
         $.delete(`/api/back-office/groups/supergroup/${supergroup_id}/remove/user/${user_id}`, { _csrf }, () => {
