@@ -6,13 +6,13 @@ const Models = require(`${__}/orm/models/index`);
 const Establishment_Website = {};
 
 Establishment_Website.ViewIndex = (req, res, next) => {
-  Models.EstablishmentReference.findOne({ where: { finess_et: req.es.finess } }).then(ref => {
+  Models.EstablishmentReference.findOne({ where: { finess_et: req.session.es.finess } }).then(ref => {
     return res.render('subdomain/establishment', { ref, layout: 'subdomain' })
   })
 };
 
 Establishment_Website.ViewATS = (req, res, next) => {
-  return res.render('establishments/site/ats/index', { es: req.es.finess, layout: 'onepage' })
+  return res.render('establishments/site/ats/index', { es: req.session.es.finess, layout: 'onepage' })
 };
 
 Establishment_Website.ViewRegister = (req, res, next) => {

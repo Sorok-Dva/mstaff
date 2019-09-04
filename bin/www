@@ -17,7 +17,6 @@ const discord = require('./discord-bot');
 /**
  * Get port from environment and store in Express.
  */
-
 const port = normalizePort(process.env.PORT || conf.PORT);
 app.set('port', port);
 
@@ -105,7 +104,7 @@ function onListening() {
 
 // Memory Leak Detection
 memwatch.on('leak', (info) => {
-  discord('**Memory Leak Detected**', 'infos');
-  discord(JSON.stringify(info), 'infos');	
+  discord('**Memory Leak Detected**', 'debug');
+  discord(JSON.stringify(info), 'debug');
   console.error('Memory leak detected:\n', info);
 });

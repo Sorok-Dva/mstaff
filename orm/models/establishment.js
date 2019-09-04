@@ -23,7 +23,20 @@ module.exports = (sequelize, DataTypes) => {
     contact_identity: DataTypes.STRING,
     contact_post: DataTypes.STRING,
     contact_email: DataTypes.STRING,
-    contact_phone: DataTypes.STRING
+    contact_phone: DataTypes.STRING,
+    structure_number: DataTypes.STRING,
+    attachement_direction: DataTypes.STRING,
+    region_code: DataTypes.STRING,
+    long_wording: DataTypes.STRING,
+    spinneret: DataTypes.STRING,
+    primary_group_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Groups',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE'
+    },
   }, {});
   Establishment.associate = function (models) {
     Establishment.hasOne(models.EstablishmentReference, {
@@ -63,6 +76,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id_es',
       sourceKey: 'id',
       onDelete: 'CASCADE'
+    });
+    Establishment.belongsTo(models.Groups, {
+      targetKey: 'id',
+      onDelete: 'SET NULL'
     })
   };
   return Establishment;
