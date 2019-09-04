@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   EstablishmentGroup.associate = function (models) {
     EstablishmentGroup.belongsTo(models.Establishment, {
-      foreignKey: 'id',
+      foreignKey: 'id_es',
       onDelete: 'CASCADE',
       as: 'es'
     });
