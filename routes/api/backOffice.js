@@ -87,9 +87,10 @@ router.get('/groups/:type/:id(\\d+)/users/all', Authentication.ensureIsAdmin, Ba
   .post('/groups/:type/:id(\\d+)/edit/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.editUser)
   .delete('/groups/:type/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUser);
 
-router.put('/linkES/:id(\\d+)',
-  Authentication.ensureIsAdmin,
-  BackOffice.Group.EditLinkES);
+router.get('/groups/:type/:id(\\d+)/user/:user_id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.getEsFromUser);
+
+router.post('/groups/:type/linkES/:id(\\d+)/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditLinkES)
+  .get('/groups/:type/linkES/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.GetLinkES);
 
 router.put('/linkGroup/:id(\\d+)',
   Authentication.ensureIsAdmin,
