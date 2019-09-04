@@ -4,7 +4,6 @@ const { validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 const crypto = require('crypto');
-const { Op } = require('sequelize');
 const mailer = require(`${__}/bin/mailer`);
 
 const Models = require(`${__}/orm/models/index`);
