@@ -46,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       onUpdate: 'CASCADE'
     },
+    location_updatedAt: DataTypes.DATE,
   }, {});
   Establishment.associate = function (models) {
     Establishment.hasOne(models.EstablishmentReference, {

@@ -126,13 +126,17 @@ module.exports = {
               },
               allowNull: true,
               onDelete: 'SET NULL'
-            }, { transaction: transaction })
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'location_updatedAt', {
+              type: Sequelize.DATE,
+              allowNull: true
+            }, { transaction: transaction }),
           ]);
 
         })
         .then(() => {
 
-          return queryInterface.bulkInsert('Establishments', [
+          /*return queryInterface.bulkInsert('Establishments', [
             {
               name: 'test',
               category: 'test',
@@ -149,7 +153,7 @@ module.exports = {
               long_wording: 'test',
               spinneret: 'test'
             }
-          ], {transaction: transaction});
+          ], {transaction: transaction});*/
 
         });
 
@@ -159,14 +163,24 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
-    /*  return Promise.all([
+      return Promise.all([
+        queryInterface.removeColumn('Establishments', 'street_number', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'street_name', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'city', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'department', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'region', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'country', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'postal_code', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'lat', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'lng', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'structure_number', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'attachement_direction', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'region_code', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'long_wording', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'spinneret', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'primary_group_id', { transaction: t }),
-      ])*/
+        queryInterface.removeColumn('Establishments', 'location_updatedAt', { transaction: t }),
+      ])
     })
   }
 };
