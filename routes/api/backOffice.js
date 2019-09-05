@@ -23,6 +23,11 @@ router.post('/establishment/create',
   HTTPValidation.BackOfficeController.createEstablishmentFromReference,
   BackOffice.Establishment.create);
 
+router.post('/establishment/validate-create',
+  Authentication.ensureIsAdmin,
+  HTTPValidation.BackOfficeController.createEstablishmentFromReference,
+  BackOffice.Establishment.validateCreate);
+
 router.post('/establishment/:id(\\d+)/add/user',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.addUserInEstablishment,

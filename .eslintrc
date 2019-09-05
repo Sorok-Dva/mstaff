@@ -7,8 +7,8 @@
     "eslint:recommended"
   ],
   "parserOptions": {
+    "ecmaVersion": 9,
     "ecmaFeatures": {
-      "ecmaVersion": 8,
       "experimentalObjectRestSpread": true,
       "jsx": true
     },
