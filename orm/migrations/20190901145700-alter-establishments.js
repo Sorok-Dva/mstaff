@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    const Op = Sequelize.Op;
+    const { Op } = Sequelize;
     let refsConstraintName = [];
     return queryInterface.sequelize.transaction((t) => {
       const fn = function removeConstraint(v){

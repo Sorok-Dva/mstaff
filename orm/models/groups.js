@@ -14,8 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Group.hasMany(models.Establishment, {
+      foreignKey: 'primary_group_id',
       sourceKey: 'id',
-    })
+      onDelete: 'SET NULL'
+    });
   };
   return Group;
 };
