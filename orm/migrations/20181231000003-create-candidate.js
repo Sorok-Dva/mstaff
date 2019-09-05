@@ -40,10 +40,6 @@ module.exports = {
       percentage: {
         type: Sequelize.JSON
       },
-      is_available: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
