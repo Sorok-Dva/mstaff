@@ -77,9 +77,9 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: 'id',
       onDelete: 'CASCADE'
     });
-    Establishment.hasOne(models.Groups, {
-      foreignKey: 'id',
-      sourceKey: 'primary_group_id',
+    Establishment.belongsTo(models.Groups, {
+      foreignKey: 'primary_group_id',
+      targetKey: 'id'
     });
   };
   return Establishment;
