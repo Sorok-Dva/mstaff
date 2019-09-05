@@ -7,6 +7,7 @@ const indexRouter = require('./routes/index');
 const esRouter = require('./routes/es');
 const esSubDomainRouter = require('./routes/esSubdomain');
 const groupSubDomainRouter = require('./routes/groupSubdomain');
+const supergroupSubDomainRouter = require('./routes/supergroupSubdomain');
 const candidateRouter = require('./routes/candidate');
 const boRouter = require('./routes/backOffice');
 const apiRouter = require('./routes/api/api');
@@ -25,13 +26,13 @@ app.set('env', Env.current);
 app.set('trust proxy', true);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.set('view engine', '.hbs');
 if (Env.isProd) {
   app.set('view cache', true);
 }
 
 // ------ Express
-app.engine('hbs', Express.exphbs);
+app.engine('.hbs', Express.exphbs.engine);
 app.use(express.json({ limit: '150mb' }));
 app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.compress);
@@ -57,6 +58,7 @@ app.use('/', candidateRouter); //candidate
 app.use('/', esRouter); //recruiter
 app.use('/esDomain', esSubDomainRouter);
 app.use('/groupDomain', groupSubDomainRouter);
+app.use('/supergroupDomain', supergroupSubDomainRouter);
 app.use('/back-office', boRouter);
 app.use('/api', apiRouter);
 app.use('/api/user', apiUserRouter);

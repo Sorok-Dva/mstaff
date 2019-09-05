@@ -30,8 +30,14 @@
     <link rel="stylesheet" href="/assets/theme/mstaff/css/style.min.css">
     {{#if themeLayoutCSSImport}}<link rel="stylesheet" href="/assets/theme/mstaff/css/layout/{{layoutName}}.min.css">{{/if}}
     {{#if themePageCSSImport}}<link rel="stylesheet" href="/assets/theme/mstaff/css/pages/{{pageName}}.min.css">{{/if}}
+    {{{block "stylesheets"}}}
 </head>
 <body class="page-{{pageName}} layout-{{layoutName}} has-header">
-{{{body}}}
+    {{{block "body"}}}
+
+    <script src="/assets/theme/mstaff/lib/jquery-3.4.1.min.js"></script>
+    {{#if themeLayoutJSImport}}<script src="/assets/theme/mstaff/js/layout/{{layoutName}}.js"></script>{{/if}}
+    {{#if themePageJSImport}}<script src="/assets/theme/mstaff/js/pages/{{pageName}}.js"></script>{{/if}}
+    {{{block "scripts"}}}
 </body>
 </html>

@@ -1,7 +1,3 @@
-body.has-header{
-	padding-top:112px;
-}
-
 .page-header{
 	position:fixed;
 	left:0;
@@ -60,8 +56,16 @@ body.has-header{
 	}
 }
 
+.page-filters{
+	margin-bottom:2rem;
+}
+
 .page-footer{
-	padding:1rem 0;
+	padding:.75rem 0;
 	background-color:$backgroundColorDark;
 	text-align:center;
+
+	img{
+		max-height:25px;
+	}
 }

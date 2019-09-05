@@ -1,3 +1,4 @@
+const util = require('util');
 const _ = require('lodash');
 const conf = require('dotenv').config().parsed;
 const packageJson = require('../package');
@@ -20,7 +21,12 @@ const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
-require('../helpers/handlebars').register(require('handlebars'));
+let handlebars = require('handlebars');
+const extend = require('handlebars-extend-block');
+handlebars = extend(handlebars);
+require('../helpers/handlebars').register(handlebars);
+
+
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -39,8 +45,8 @@ module.exports = {
   cookieParser: cookieParser(conf.SECRET),
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
-  exphbs: exphbs({
-    extname: 'hbs',
+  exphbs: exphbs.create({
+    extname: '.hbs',
     defaultLayout: 'default',
     layoutsDir: path.join(__dirname, '../views/layouts'),
     partialsDir: path.join(__dirname, '../views/partials')
@@ -121,9 +127,9 @@ module.exports = {
   wildcardSubdomains: (req, res, next) => {
     let excludedSubdomains = ['dev', 'pre-prod', 'monitoring', 'welcome', 'admin'];
     if (req.url.search('static') !== -1 || req.subdomains.length === 0 || excludedSubdomains.includes(req.subdomains[0])) return next();
-    Subdomain.Main.find(req, res, (subdomain) => {
+    Subdomain.Main.find(req, res, subdomain => {
       if (subdomain.es_id) {
-        Establishment.Main.find(subdomain.es_id, (data) => {
+        Subdomain.Establishment.find(subdomain.es_id, data => {
           // XXX: Remove this from here
           if (data.logo) {
             data.logo = data.logo.replace('/static', '');
@@ -138,7 +144,7 @@ module.exports = {
           return next();
         });
       } else if (subdomain.group_id) {
-        Subdomain.Group.find(subdomain.group_id, (data) => {
+        Subdomain.Group.find(subdomain.group_id, data => {
           // XXX: Remove this from here
           if (data.group.logo) {
             data.group.logo = data.group.logo.replace('/static', '');
@@ -149,11 +155,24 @@ module.exports = {
           // XXX: Remove this to here
           res.locals.group = data.group;
           res.locals.group.es = data.es;
-          res.locals.subdomainSuffix = Env.isDev ? 'medikstaff.com' : 'mstaff.co';
           req.group = data;
           req.url = `/groupDomain${req.url}`;
           return next();
         });
+      } else if (subdomain.super_group_id) {
+        Subdomain.SuperGroup.find(subdomain.super_group_id, data => {
+          // XXX: Remove this from here
+          if (data.logo) {
+            data.logo = data.logo.replace('/static', '');
+          }
+          if (data.banner) {
+            data.banner = data.banner.replace('/static', '');
+          }
+          // XXX: Remove this to here
+          res.locals.supergroup = data;
+          req.url = `/supergroupDomain${req.url}`;
+          return next();
+        })
       } else {
         return next();
       }
@@ -162,9 +181,11 @@ module.exports = {
   themeCSSImport: (req, res, next) => {
     let { render } = res;
     res.render = (view, locals, cb) => {
-      let themeCSSDir = 'public/assets/theme/mstaff/css';
-      locals.themeLayoutCSSImport = locals.layoutName && fs.existsSync(themeCSSDir + '/layout/' + locals.layoutName + '.min.css');
-      locals.themePageCSSImport = locals.pageName && fs.existsSync(themeCSSDir + '/pages/' + locals.pageName + '.min.css');
+      let themeDir = 'public/assets/theme/mstaff';
+      locals.themeLayoutCSSImport = locals.layoutName && fs.existsSync(themeDir + '/css/layout/' + locals.layoutName + '.min.css');
+      locals.themePageCSSImport = locals.pageName && fs.existsSync(themeDir + '/css/pages/' + locals.pageName + '.min.css');
+      locals.themeLayoutJSImport = locals.layoutName && fs.existsSync(themeDir + '/js/layout/' + locals.layoutName + '.js');
+      locals.themePageJSImport = locals.pageName && fs.existsSync(themeDir + '/js/pages/' + locals.pageName + '.js');
       render.call(res, view, locals, cb)
     };
     return next();

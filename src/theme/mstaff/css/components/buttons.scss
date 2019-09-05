@@ -6,6 +6,7 @@
 	color:$fontColorLight;
 	font-weight:bold;
 	font-size:.85em;
+	cursor:pointer;
 	-webkit-transition:background-color .2s ease;
 	-moz-transition:background-color .2s ease;
 	-ms-transition:background-color .2s ease;
@@ -38,9 +39,19 @@
 		display:block;
 	}
 
+	&.button-small{
+		padding:.75rem;
+	}
+
 	&.button-big{
 		padding:1.5rem .5rem;
 		font-size:1em;
+	}
+
+	&.button-icon-big{
+		i{
+			font-size:1.25em;
+		}
 	}
 
 }

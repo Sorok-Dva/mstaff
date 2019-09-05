@@ -52,7 +52,7 @@ Establishment.find = (id, next) => {
   }).then(es => {
     if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
     else next(es);
-  })
+  }).catch(error => next(new Error(error)));
 };
 
 module.exports = Establishment;

@@ -1,4 +1,8 @@
 .card-list{
+	& > *{
+		width:100%;
+	}
+
 	.card{
 		margin-bottom:2rem;
 	}
@@ -13,6 +17,10 @@
 	}
 	.card__header{
 		margin-bottom:1rem;
+
+		.card__legend + .card__title{
+			margin-top:.5rem;
+		}
 	}
 	.card__body{
 		p{
@@ -90,8 +98,8 @@
 			}
 		}
 
-		.button:last-child{
-			margin:2rem 0;
+		& > .button + .button{
+			margin-top:.75rem;
 		}
 	}
 }

@@ -1,42 +1,49 @@
 const __ = process.cwd();
+const { _ } = require('lodash');
+const { Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
-const { Op, Sequelize } = require('sequelize');
 
 const Models = require(`${__}/orm/models/index`);
 
 const Establishment_Website = {};
 
 Establishment_Website.ViewIndex = (req, res, next) => {
+  let hasGroup = res.locals.es.EstablishmentGroups && res.locals.es.EstablishmentGroups.length == 1;
+  return res.render('subdomain/establishment', {
+    hasGroup: hasGroup,
+    layout: 'subdomain',
+    pageName: 'subdomain-establishment',
+    layoutName: 'subdomain'
+  });
+};
+
+Establishment_Website.find = (id, next) => {
   Models.Establishment.findOne({
-    where: {
-      finess: req.es.finess
-    },
+    where: { id },
     include: [
       {
-        model: Models.EstablishmentGroups,
-        include: [
-          {
-            model: Models.Groups,
-            as: 'Group',
-            on: {
-              '$EstablishmentGroups.id_group$': { [ Op.col ]: 'EstablishmentGroups->Group.id' }
-            }
-          }
-        ]
+        model: Models.Offer,
+        as: 'offers',
+        on: {
+          '$Establishment.id$': {
+            [Op.col]: 'offers.es_id'
+          },
+        }
+      },
+      {
+        model: Models.EstablishmentReference,
+        as: 'ref',
+        on: {
+          '$Establishment.finess$': {
+            [Op.col]: 'ref.finess_et'
+          },
+        }
       }
     ]
-  }).then(ref => {
-    let hasGroup = ref.EstablishmentGroups && ref.EstablishmentGroups.length == 1;
-    return res.render('subdomain/establishment', {
-      ref,
-      hasGroup: hasGroup,
-      layout: 'subdomain',
-      pageName: 'subdomain-establishment',
-      layoutName: 'subdomain'
-    })
-  }).catch(err => {
-    console.log(err);
-  })
+  }).then(es => {
+    if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
+    next(es);
+  }).catch( error => next(new BackError(error)));
 };
 
 Establishment_Website.ViewATS = (req, res, next) => {

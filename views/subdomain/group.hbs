@@ -1,111 +1,219 @@
-<header class="page-header">
-    <div class="container">
+{{#extend "body"}}
 
-        <div class="push">
-            <div class="aic">
-                <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{group.logo}}');"></div>
-                <div>
-                    <span class="header-title-label">Groupe</span>
-                    <h1 class="header-title">{{group.name}}</h1>
+    <header class="page-header">
+        <div class="container">
+
+            <div class="push">
+                <div class="aic jcc">
+                    <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{group.logo}}');"></div>
+                    <div>
+                        <span class="header-title-label">Groupe</span>
+                        <h1 class="header-title">{{group.name}}</h1>
+                    </div>
+                </div>
+                <div class="aic jcc">
+                    <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
                 </div>
             </div>
-            <div class="aic">
-                <a href="#" class="button button-pink button-fluid">Site web</a>
-                <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
-            </div>
-        </div>
-
-    </div>
-</header>
-
-<div class="container-fluid">
-
-    <div class="row">
-
-        <div class="col-sm-6 p-0">
-
-            <div class="page-banner">
-                <div class="image-ratio image-ratio-40" style="background-image:url('{{group.banner}}');"></div>
-                <div class="page-banner__shadow"></div>
-            </div>
 
         </div>
+    </header>
 
-        <div class="w-100"></div>
+    <div class="container-fluid">
 
-        <div class="col-sm-6 col-lg-4 offset-lg-1">
+        <div class="row">
 
-            <h1 class="baseline baseline-page">Retrouvez ici les <span>établissement</span> du groupe <span>{{group.name}}</span></h1>
+            <div class="col-12 col-md-6 no-gutters">
 
-            <div class="row card-list">
+                <div class="page-banner">
+                    <div class="image-ratio image-ratio-40" style="background-image:url('{{group.banner}}');"></div>
+                    <div class="page-banner__shadow"></div>
+                </div>
 
-                {{#each group.es as |data|}}
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card__header">
-                                <div class="card__legend"><i class="far fa-map-marker-alt"></i> {{data.es.town}}</div>
-                            </div>
-                            <div class="card__thumbnail-container"></div>
-                            <div class="card__body content-type-text">
-                                <h3 class="card__body__title title">{{data.es.name}}</h3>
-                            </div>
-                            {{#if data.es.domain_name}}
-                            <div class="card__footer tar">
-                                <a href="{{data.es.domain_name}}{{subdomainSuffix}}" class="button button-pink">Postuler</a>
-                            </div>
-                            {{/if}}
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-12 col-md-6">
+
+                <h1 class="baseline baseline-page">Retrouvez ici les <span>établissement</span> du groupe <span>{{group.name}}</span></h1>
+
+                <div class="row">
+                    <div class="col-12 col-xl-8 offset-xl-2">
+
+                        <div class="page-filters">
+                            <div class="button button-pink filter-clear"><i class="fas fa-times"></i>Afficher tous les établissements</div>
                         </div>
+
+                        <div class="card-list establishment-list">
+
+                            {{#each group.es as |data|}}
+                                <div class="establishment mix" data-establishment-id="{{data.es.id}}">
+                                    <div class="card">
+                                        <div class="card__header">
+                                            {{#if data.es.town}}<div class="card__legend"><i class="far fa-map-marker-alt"></i>{{data.es.town}}</div>{{/if}}
+                                            <h3 class="card__title title">{{data.es.name}}</h3>
+                                        </div>
+                                        <div class="card__thumbnail-container"></div>
+                                        {{#if data.es.domain_name}}
+                                            <div class="card__footer tar">
+                                                {{#ifCond data.es.offers.length '!=' 0}}<a href="https://{{data.es.domain_name}}.medikstaff.com" class="button button-green">Accéder aux offres ({{data.es.offers.length}})</a>{{/ifCond}}
+                                                <a href="https://{{data.es.domain_name}}.medikstaff.com/join" class="button button-pink">Candidature spontanée</a>
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/each}}
+
+                        </div>
+
                     </div>
-                {{/each}}
+                </div>
+
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-12 col-md-6 no-gutters">
+
+                <footer class="page-footer">
+                    <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
+                </footer>
 
             </div>
 
         </div>
 
-        <div class="w-100"></div>
-
-        <div class="col-sm-6 p-0">
-
-            <footer class="page-footer">
-                <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
-            </footer>
-
-        </div>
-
     </div>
 
-</div>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
 
-<div class="map-container">
-    <div id="map"></div>
-</div>
+{{/extend}}
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
-<script>
-    let locations = [];
-    {{#each group.es as |data|}}
-        locations.push();
-    {{/each}}
-    if (document.getElementById('map')) {
-        let pos = {lat: 43.599072, lng: 1.440293, rayon: 5};
-        let map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 10,
-            center: pos,
-            mapTypeControl: false
+{{#extend "scripts"}}
+    <script src="/assets/theme/mstaff/js/modules/adjust-layout.js"></script>
+    <script>
+        let options = {
+            selector: 'body > .container-fluid > .row > [class*="col"]:nth-child(3)',
+            hasPageHeader: true,
+            hasPageBanner: true,
+            hasPageFooter: true
+        };
+
+        $(document).ready(() => {
+
+            adjustLayout(options);
+
+            $(window).resize(function(){
+                adjustLayout(options);
+            });
+
         });
-        /*marker = new google.maps.Marker({
-            position: pos,
-            map: map
-        });*/
-        cityCircle = new google.maps.Circle({
-            strokeColor: '#337AB7',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#5BBBE5',
-            fillOpacity: 0.35,
-            map: map,
-            //center: pos,
-            //radius: pos.rayon * 1000 || 10000
+    </script>
+
+    <script src="/assets/theme/mstaff/lib/mixitup.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+    <script>
+        let establishments = [];
+        {{#each group.es as |data|}}
+            establishments.push({
+                id: {{data.es.id}},
+                name: "{{data.es.name}}",
+                lat: {{data.es.ref.lat}},
+                lng: {{data.es.ref.lon}}
+            });
+        {{/each}}
+        let mixer = null;
+
+        $(document).ready(function(){
+            initMap();
+            initGrid();
         });
-    }
-</script>
+
+
+
+        function initMap(){
+
+            let map = new google.maps.Map(document.getElementById('map'), {
+                mapTypeControl: false
+            });
+            let bounds = new google.maps.LatLngBounds();
+
+            let markers = [];
+            for(let i = 0; i < establishments.length; i++){
+                let marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(establishments[i].lat, establishments[i].lng),
+                    map: map
+                });
+
+                let info = new google.maps.InfoWindow({
+                    content: '<h1 class="card__title title">' + establishments[i].name + '</h1>'
+                });
+
+                marker.addListener('mouseover', function(){
+                    info.open(map, marker);
+                });
+                marker.addListener('mouseout', function(){
+                    info.close();
+                });
+                marker.addListener('click', function(){
+                    if($(window).scrollTop() === 0){
+                        filterEstablishmentsById(establishments[i].id);
+                    }else{
+                        $('html,body').animate({scrollTop: 0}, {
+                            complete: function(){
+                                filterEstablishmentsById(establishments[i].id);
+                            }
+                        });
+                    }
+                });
+                markers.push(marker);
+
+                $('.establishment[data-establishment-id="' + establishments[i].id + '"]').hover(function(){
+                    info.open(map, marker);
+                }, function(){
+                    info.close();
+                });
+
+                bounds.extend(marker.position);
+            }
+
+            new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+            map.fitBounds(bounds);
+
+        }
+
+        /**
+         * On list filtering end, scrollbar disappear, changing .page-banner height because it is relative to width %, making scrollbar reappear, and so on...
+         * We will then fix .page-banner height on filtering, and clear it on filters clearing
+         */
+        function initGrid(){
+            mixer = mixitup('.establishment-list', {
+                callbacks: {
+                    onMixStart: function(){
+                        $('.page-banner').css({height: $('.page-banner').height()});
+                    }
+                }
+            });
+
+            $('.page-filters').hide();
+            $('.filter-clear').click(function(){
+                $('.page-filters').slideUp();
+                mixer
+                    .filter('*')
+                    .then(function(){
+                        $('.page-banner').removeAttr('style');
+                    });
+            });
+        }
+
+        function filterEstablishmentsById(es_id){
+
+            mixer.filter('[data-establishment-id="' + es_id + '"]');
+            $('.page-filters').slideDown();
+        }
+    </script>
+{{/extend}}

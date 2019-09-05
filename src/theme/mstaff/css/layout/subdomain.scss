@@ -1,0 +1,21 @@
+body.layout-subdomain{
+
+	@media (max-width: 767px){
+		.page-header{
+			.push{
+				& > div{
+					width:100%;
+
+					&:last-child{
+						margin-top:1rem;
+					}
+				}
+			}
+		}
+
+		.map-container{
+			display:none;
+		}
+	}
+
+}
