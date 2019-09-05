@@ -16,7 +16,7 @@
       <div class="image"></div>
       <div class="content">
         <div class="card-profile">
-          <div id="availability-state" class="avatar avatar-xxl avatar-{{#if candidate.is_available}}on{{else}}off{{/if}}line">
+          <div id="availability-state" class="avatar avatar-xxl">
             <img id="candidateAvatar"{{#if user.photo}} src="/uploads/avatars/{{user.photo}}" {{else}} src="/assets/images/face-0.jpg" {{/if}}class="avatar-img rounded-circle border-black" alt="avatar">
           </div>
           <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> tooltips/candidatePercentage candidate.percentage}}">
@@ -25,22 +25,6 @@
           <h2 class="title">{{candidate.User.firstName}} {{candidate.User.lastName}}<br />
             <small>{{age candidate.User.birthday 'years'}} ans</small>
           </h2>
-        </div>
-        <div class="col-12">
-          <div id="ctaAvailability" class="text-center state-{{#unless candidate.is_available}}un{{/unless}}available">
-            <label class="label">
-              <div class="label-text label-text-{{#unless candidate.is_available}}un{{/unless}}available available-target">
-               <b> Je suis {{#unless candidate.is_available}}in{{/unless}}disponible</b>
-              </div>
-              <div class="toggle mt-1">
-                <input class="toggle-state" type="checkbox" name="is_available" {{#if candidate.is_available}}checked{{/if}} />
-                <div class="toggle-inner">
-                  <div class="indicator"></div>
-                </div>
-                <div class="active-bg"></div>
-              </div>
-            </label>
-          </div>
         </div>
         <p class="description text-center p-4">
           {{candidate.description}}
@@ -396,22 +380,3 @@
 {{#unless candidate.percentage}}
   <script src="/assets/dist/js/candidate/newMstaffCandidate.min.js"></script>
 {{/unless}}
-<script>
-  $('input[name="is_available"]').change(function() {
-    let available = false;
-    if (this.checked) {
-      $('#ctaAvailability').removeClass('state-unavailable').addClass('state-available');
-      $('div.label-text').removeClass('label-text-unavailable').addClass('label-text-available');
-      $('div.label-text').children('b').html('Je suis disponible');
-      available = true;
-      $('#availability-state').removeClass().addClass("avatar avatar-xxl avatar-online");
-    } else {
-      $('#ctaAvailability').removeClass('state-available').addClass('state-unavailable');
-      $('div.label-text').removeClass('label-text-available').addClass('label-text-unavailable');
-      $('div.label-text').children('b').html('Je suis indisponible');
-      $('#availability-state').removeClass().addClass("avatar avatar-xxl avatar-offline");
-    }
-
-    $.post('/api/candidate/availability', { _csrf, available });
-  });
-</script>

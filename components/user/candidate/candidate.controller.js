@@ -454,7 +454,12 @@ User_Candidate.getWishes = (req, res, next) => {
   Models.Candidate.findOne({ where: { user_id: req.user.id } }).then(candidate => {
     if (_.isNil(candidate)) return next(new BackError(`Candidat introuvable.`, 404));
     render.candidate = candidate;
-    return Models.Wish.findAll({ where: { candidate_id: candidate.id } });
+    return Models.Wish.findAll({
+      where: { candidate_id: candidate.id },
+      include: {
+        model: Models.Application
+      }
+    });
   }).then(wishes => {
     render.wishes = wishes;
     return res.render('candidates/applications', render)
@@ -1081,18 +1086,19 @@ User_Candidate.addWish = (req, res, next) => {
       req.flash('success_msg', `Souhait ajouté avec succès auprès de ${req.body.es_count} établissements.`);
       res.status(201).send({ wish });
       req.body.es = JSON.parse(`[${req.body.es}]`);
-      for (let i = 0; i < req.body.es.length; i++) {
-        Models.Establishment.findOne({ where: { finess: req.body.es[i] } }).then(es => {
+      req.body.es.forEach(esRef => {
+        Models.Establishment.findOne({ where: { finess: esRef }, attributes: ['id'] }).then(es => {
           Models.Application.create({
             name: req.body.name || 'Candidature sans nom',
             wish_id: wish.id,
             candidate_id: candidate.id,
-            ref_es_id: req.body.es[i],
+            ref_es_id: esRef,
             es_id: !_.isNil(es) ? es.id : null,
+            is_available: true,
             new: true
           });
         }).catch(error => next(new BackError(error)));
-      }
+      });
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
 };
@@ -1673,20 +1679,26 @@ User_Candidate.viewUpload = (req, res, next) => {
   })
 };
 
-User_Candidate.setAvailability = (req, res, next) => {
+User_Candidate.setWishAvailability = (req, res, next) => {
   Models.User.findOne({
     where: { id: req.user.id },
+    attributes: ['id'],
     include: {
       model: Models.Candidate,
       as: 'candidate',
-      required: true
+      required: true,
+      attributes: ['id']
     }
   }).then(user => {
     if (_.isNil(user)) return res.status(400).send('Utilisateur introuvable.');
-    user.candidate.is_available = req.body.available;
-    user.candidate.save().then(result => {
-      return res.status(200).send(result.is_available);
-    });
+    Models.Application.update(
+      { is_available: req.body.available },
+      {
+        where: {
+          wish_id: req.params.id,
+          candidate_id: user.candidate.id
+        }
+      }).then(result => res.status(200).send(result)).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
 };
 
