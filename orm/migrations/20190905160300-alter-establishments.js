@@ -62,6 +62,42 @@ module.exports = {
         .then(() => {
 
           return Promise.all([
+            queryInterface.addColumn('Establishments', 'street_number', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'street_name', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'city', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'department', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'region', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'country', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'postal_code', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'lat', {
+              type: Sequelize.FLOAT,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'lng', {
+              type: Sequelize.FLOAT,
+              allowNull: true
+            }, { transaction: transaction }),
             queryInterface.addColumn('Establishments', 'structure_number', {
               type: Sequelize.STRING,
               allowNull: true
