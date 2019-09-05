@@ -334,4 +334,24 @@ module.exports.register = (Handlebars) => {
   });
 
   Handlebars.registerHelper('escape', (variable) => variable.replace(/(['"`])/g, '\\$1'));
+
+  Handlebars.registerHelper('isAvailable', (method, applications) => {
+    if (_.isNil(applications) || applications.length === 0) {
+      switch (method) {
+        case 'avatarClass': return 'off';
+        case 'class': return 'unavailable';
+        case 'text': return 'Indisponible';
+        case 'input': return '';
+      }
+    }
+    let available = false;
+    // eslint-disable-next-line no-return-assign
+    applications.map(application => application.is_available ? available = true : null);
+    switch (method) {
+      case 'avatarClass': return available ? 'on' : 'off';
+      case 'class': return available ? 'available' : 'unavailable';
+      case 'text': return available ? 'Disponible' : 'Indisponible';
+      case 'input': return available ? 'checked' : '';
+    }
+  });
 };
