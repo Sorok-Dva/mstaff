@@ -374,7 +374,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
   if (!_.isNil(filterQuery.is_available)) {
     query.where = {
       [Op.and]: [
-        Sequelize.literal('`Candidate`.`is_available` = ' + `${filterQuery.is_available === 'true' ? '1' : '0'}`)
+        Sequelize.literal('`applications`.`is_available` = ' + `${filterQuery.is_available === 'true' ? '1' : '0'}`)
       ]
     };
   }
