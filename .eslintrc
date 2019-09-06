@@ -100,10 +100,6 @@
     "no-use-before-define": [
       "off"
     ],
-    "max-len": [
-      "error",
-      150
-    ],
     "no-continue": [
       "off"
     ],
