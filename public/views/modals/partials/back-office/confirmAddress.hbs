@@ -1,0 +1,44 @@
+<div class="row" style="padding-top:15px; margin: auto !important;">
+    <div class="col-md-12">
+        <h1>Confirmez vous les informations liées à l'adresse que vous avez renseigné ?</h1>
+        {{#each address}}
+            <p><b>{{@key}}:</b> {{.}}</p>
+        {{/each}}
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="btn btn-primary pull-right" id="no">Non, je vais modifier l'adresse</div>
+    <div class="btn btn-primary pull-right" id="yes">Oui</div>
+</div>
+<script>
+    $('#yes').click(function(){
+      let data = JSON.parse('{{{json es_data}}}');
+        data._csrf = $('meta[name="csrf-token"]').attr('content');
+        $.post('/api/back-office/establishment/validate-create', data, (response) => {
+          console.log();
+            if (response.status === 'Created') {
+                $('#confirmAddress').modal('hide');
+                $('#addESfromREFModal').modal('hide');
+                notification({
+                    icon: 'check-circle',
+                    type: 'success',
+                    title: 'Établissement créé avec succès.',
+                    message: 'Vous allez être redirigé vers la page établissement dans quelques instants.',
+                    onClosed: () => $(location).attr('href', `/back-office/es/${response.es.id}`)
+                })
+            } else {
+                $('#confirmAddress').modal('hide');
+                $('#addESfromREFModal').modal('hide');
+                notification({
+                    icon: 'exclamation-circle',
+                    type: 'warning',
+                    title: 'Cet établissement est déjà branché à Mstaff.'
+                })
+            }
+        })
+            .catch((xhr, status, error) => catchError(xhr, status, error));
+    });
+    $('#no').click(function(){
+        $('#confirmAddress').modal('hide');
+    });
+</script>

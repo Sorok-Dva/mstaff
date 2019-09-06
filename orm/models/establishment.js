@@ -24,6 +24,15 @@ module.exports = (sequelize, DataTypes) => {
     contact_post: DataTypes.STRING,
     contact_email: DataTypes.STRING,
     contact_phone: DataTypes.STRING,
+    street_number: DataTypes.STRING,
+    street_name: DataTypes.STRING,
+    city: DataTypes.STRING,
+    department: DataTypes.STRING,
+    region: DataTypes.STRING,
+    country: DataTypes.STRING,
+    postal_code: DataTypes.STRING,
+    lat: DataTypes.FLOAT,
+    lng: DataTypes.FLOAT,
     structure_number: DataTypes.STRING,
     attachement_direction: DataTypes.STRING,
     region_code: DataTypes.STRING,
@@ -37,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       onUpdate: 'CASCADE'
     },
+    location_updatedAt: DataTypes.DATE,
   }, {});
   Establishment.associate = function (models) {
     Establishment.hasOne(models.EstablishmentReference, {

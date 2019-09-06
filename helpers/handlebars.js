@@ -4,7 +4,7 @@
 const moment = require('moment');
 const _ = require('lodash');
 
-module.exports.register = (Handlebars) => {
+module.exports.register = async (Handlebars) => {
   /**
    * Returns date with defined format (using moment.js)
    *
@@ -237,6 +237,7 @@ module.exports.register = (Handlebars) => {
   });
 
   Handlebars.registerHelper('json', function (context) {
+    console.log(context);
     return JSON.stringify(context);
   });
 
