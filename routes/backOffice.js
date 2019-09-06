@@ -222,4 +222,10 @@ router.get('/server/db_dumps',
   Authentication.ensureIsAdmin,
   BackOffice.Server.ViewDatabaseDumps);
 
+router.get(
+  '/server/add/message/',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.RenderAddMessage
+);
+
 module.exports = router;
