@@ -18,7 +18,7 @@ module.exports = {
       },
       msgType: {
         type: Sequelize.ENUM,
-        values: ['error', 'warning', 'success', 'info', 'default'],
+        values: ['danger', 'warning', 'success', 'info', 'default'],
         allowNull: false
       },
       type: {

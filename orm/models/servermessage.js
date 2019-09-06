@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     message: DataTypes.TEXT,
     msgType: {
       type: DataTypes.ENUM,
-      values: ['error', 'warning', 'success', 'info', 'default']
+      values: ['danger', 'warning', 'success', 'info', 'default']
     },
     type: {
       type: DataTypes.ENUM,
