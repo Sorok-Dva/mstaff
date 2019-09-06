@@ -119,4 +119,22 @@ router.get(
     BackOffice.Server.RemoveDatabaseDumps
   );
 
+router.get(
+  '/server/message/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.viewMessage
+).post(
+  '/server/message',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.AddMessage
+).put(
+  '/server/message/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.EditMessage
+).delete(
+  '/server/message/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.RemoveMessage
+);
+
 module.exports = router;
