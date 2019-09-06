@@ -237,7 +237,6 @@ module.exports.register = async (Handlebars) => {
   });
 
   Handlebars.registerHelper('json', function (context) {
-    console.log(context);
     return JSON.stringify(context);
   });
 
