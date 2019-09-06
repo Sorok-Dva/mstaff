@@ -46,6 +46,7 @@ BackOffice_Server.AddMessage = (req, res, next) => {
   Models.ServerMessage.create({
     name: req.body.name,
     message: req.body.message,
+    msgType: req.body.msgType,
     type: req.body.type,
     fromDate: req.body.fromDate,
     untilDate: req.body.untilDate,
@@ -66,6 +67,7 @@ BackOffice_Server.EditMessage = (req, res, next) => {
   Models.ServerMessage.update({
     name: req.body.name,
     message: req.body.message,
+    msgType: req.body.msgType,
     type: req.body.type,
     fromDate: req.body.fromDate,
     untilDate: req.body.untilDate,
