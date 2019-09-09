@@ -1,7 +1,11 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
+    const __ = process.cwd();
     const { Op } = Sequelize;
+    const Models = require(`${__}/orm/models/index`);
+
+
 
     return queryInterface.sequelize.transaction(transaction => {
 
@@ -26,9 +30,14 @@ module.exports = {
 
           return queryInterface.bulkDelete('Establishments', {
             name: {
-              [Op.or]: [{[Op.like]: '%CROIX-ROUGE%'}, {[Op.like]: '%CROIX ROUGE%'}]
-            } }, {transaction: transaction}
+              [Op.or]: [{ [Op.like]: '%CROIX-ROUGE%' }, { [Op.like]: '%CROIX ROUGE%' }]
+            } }, { transaction: transaction }
           );
+
+        })
+        .then(() => {
+
+          return queryInterface.sequelize.query('DELETE FROM EstablishmentGroups WHERE id_es NOT IN (SELECT id FROM Establishments);', { transaction: transaction });
 
         })
         .then(() => {
