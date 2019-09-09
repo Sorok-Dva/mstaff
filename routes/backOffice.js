@@ -223,6 +223,12 @@ router.get('/server/db_dumps',
   BackOffice.Server.ViewDatabaseDumps);
 
 router.get(
+  '/server/message/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.viewMessage
+);
+
+router.get(
   '/server/add/message/',
   Authentication.ensureIsAdmin,
   BackOffice.Server.RenderAddMessage
