@@ -36,7 +36,7 @@ module.exports.geocode = async address => {
     return Promise.resolve(JSON.parse(response));
 
   } catch ( error ){
-    return Promise.reject({ status: 'UNEXPECTED_ERROR', error: error });
+    return Promise.reject({ status: 'GEOCODING_REQUEST_ERROR', error: error });
   }
 };
 
@@ -76,6 +76,12 @@ module.exports.formatResponse = response => {
 
 };
 
+/**
+ *
+ * @param address
+ * @returns {Promise<*>}
+ * Can be rejected with status GEOCODING_REQUEST_ERROR, GEOCODING_RESULTS_ERROR, GEOCODING_LOCATION_ERROR, or with google map api response status
+ */
 module.exports.getAddress = async address => {
   return module.exports.geocode(address)
     .then(response => {

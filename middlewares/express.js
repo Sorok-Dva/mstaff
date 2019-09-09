@@ -139,7 +139,7 @@ module.exports = {
           }
           // XXX: Remove this to here
           res.locals.es = data;
-          req.es = data;
+          req.session.es = data;
           req.url = `/esDomain${req.url}`;
           return next();
         });
@@ -155,7 +155,7 @@ module.exports = {
           // XXX: Remove this to here
           res.locals.group = data.group;
           res.locals.group.es = data.es;
-          req.group = data;
+          req.session.group = data;
           req.url = `/groupDomain${req.url}`;
           return next();
         });
