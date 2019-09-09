@@ -23,6 +23,11 @@ router.post('/establishment/create',
   HTTPValidation.BackOfficeController.createEstablishmentFromReference,
   BackOffice.Establishment.create);
 
+router.post('/establishment/validate-create',
+  Authentication.ensureIsAdmin,
+  HTTPValidation.BackOfficeController.createEstablishmentFromReference,
+  BackOffice.Establishment.validateCreate);
+
 router.post('/establishment/:id(\\d+)/add/user',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.addUserInEstablishment,
@@ -87,9 +92,10 @@ router.get('/groups/:type/:id(\\d+)/users/all', Authentication.ensureIsAdmin, Ba
   .post('/groups/:type/:id(\\d+)/edit/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.editUser)
   .delete('/groups/:type/:id(\\d+)/remove/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.removeUser);
 
-router.put('/linkES/:id(\\d+)',
-  Authentication.ensureIsAdmin,
-  BackOffice.Group.EditLinkES);
+router.get('/groups/:type/:id(\\d+)/user/:user_id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.getEsFromUser);
+
+router.post('/groups/:type/linkES/:id(\\d+)/user/:userId(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.EditLinkES)
+  .get('/groups/:type/linkES/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.GetLinkES);
 
 router.put('/linkGroup/:id(\\d+)',
   Authentication.ensureIsAdmin,
@@ -112,5 +118,23 @@ router.get(
     Authentication.ensureIsAdmin,
     BackOffice.Server.RemoveDatabaseDumps
   );
+
+router.get(
+  '/server/message/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.viewMessage
+).post(
+  '/server/message',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.AddMessage
+).put(
+  '/server/message/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.EditMessage
+).delete(
+  '/server/message/:id(\\d+)',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.RemoveMessage
+);
 
 module.exports = router;

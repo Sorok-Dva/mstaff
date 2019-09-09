@@ -5,6 +5,7 @@ const { Sequelize, Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
 const crypto = require('crypto');
+const gmap = require(__ + '/helpers/google-map-api');
 
 const mailer = require(`${__}/bin/mailer`);
 const Models = require(`${__}/orm/models/index`);
@@ -12,64 +13,128 @@ const layout = 'admin';
 
 const BackOffice_Establishment = {};
 
-BackOffice_Establishment.create = (req, res, next) => {
+BackOffice_Establishment.create = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+
+
+
+  let form_data = {
+    name: req.body.name,
+    finess_et: req.body.finess_et,
+    finess_ej: req.body.finess_ej,
+    siret: req.body.siret,
+    phone: req.body.phone,
+    address: req.body.address,
+    town: req.body.addr_town,
+    sector: req.body.sector,
+    salaries_count: req.body.salaries_count,
+    contact_identity: req.body.contactIdentity,
+    contact_post: req.body.contactPost,
+    contact_email: req.body.contactEmail,
+    contact_phone: req.body.contactPhone,
+    domain_enable: parseInt(req.body.domain_enable),
+    domain_name: req.body.domain_name,
+    logo: req.body.logo,
+    banner: req.body.banner
+  };
+
+
+
+  gmap.getAddress(req.body.address)
+    .then(address_data => {
+      const label_map = gmap.getLabelMap();
+      let address = {};
+      for (const labelMapKey in label_map) {
+        if (!address_data[labelMapKey]) continue;
+        address[label_map[labelMapKey]] = address_data[labelMapKey];
+      }
+
+      return res.status(200).json({
+        status: 'OK',
+        address: address,
+        es_data: {
+          ...form_data, ...address_data
+        }
+      });
+    })
+    .catch(error => {
+      return res.status(200).json({ status: error.status });
+    });
+
+};
+
+BackOffice_Establishment.validateCreate = (req, res, next) => {
+
+  let form_data = {
+    name: req.body.name,
+    finess_ej: req.body.finess_ej,
+    siret: req.body.siret,
+    phone: req.body.phone,
+    address: req.body.address,
+    sector: req.body.sector,
+    salaries_count: parseInt(req.body.salaries_count),
+    contact_identity: req.body.contact_identity,
+    contact_post: req.body.contact_post,
+    contact_email: req.body.contact_email,
+    contact_phone: req.body.contact_phone,
+    domain_enable: parseInt(req.body.domain_enable),
+    domain_name: req.body.domain_name,
+    logo: req.body.logo,
+    banner: req.body.banner,
+    street_number: req.body.street_number,
+    street_name: req.body.street_name,
+    city: req.body.city,
+    department: req.body.department,
+    region: req.body.region,
+    country: req.body.country,
+    postal_code: req.body.postal_code,
+    lat: req.body.lat,
+    lng: req.body.lng
+  };
 
   try {
     Models.Establishment.findOrCreate({
       where: { finess: req.body.finess_et },
-      defaults: {
-        name: req.body.name,
-        finess_ej: req.body.finess_ej,
-        siret: req.body.siret,
-        phone: req.body.phone,
-        address: req.body.address,
-        town: req.body.addr_town,
-        sector: req.body.sector,
-        salaries_count: req.body.salaries_count,
-        contact_identity: req.body.contactIdentity,
-        contact_post: req.body.contactPost,
-        contact_email: req.body.contactEmail,
-        contact_phone: req.body.contactPhone,
-        domain_enable: parseInt(req.body.domain_enable),
-        domain_name: req.body.domain_name,
-        logo: req.body.logo,
-        banner: req.body.banner
-      }
-    }).spread((es, created) => {
-      if (created) {
-        if (!_.isNil(es.domain_name)) {
-          Models.Subdomain.findOrCreate({
-            where: { name: es.domain_name },
-            defaults: {
-              enable: parseInt(req.body.domain_enable),
-              es_id: es.id
-            }
-          }).spread((subdomain, subCreated) => {
-            if (!subCreated) {
-              req.flash('error_msg', `Ce sous domaine est déjà utilisé.`);
-              es.domain_name = null;
-              es.domain_enable = false;
-              es.save();
-            }
-
-            Models.EstablishmentReference.findOne({
-              where: { finess_et: es.finess }
-            }).then(ref => {
-              ref.es_id = es.id;
-              ref.save();
-              return res.status(200).json({ status: 'Created', es });
-            }).catch(errors => next(new BackError(errors)));
-          })
-        }
-      } else {
-        return res.status(200).json({ status: 'Already exists', es });
-      }
+      defaults: form_data
     })
+      .spread((es, created) => {
+        if (created) {
+          if (!_.isNil(es.domain_name)) {
+            Models.Subdomain.findOrCreate({
+              where: { name: es.domain_name },
+              defaults: {
+                enable: parseInt(req.body.domain_enable),
+                es_id: es.id
+              }
+            })
+              .spread((subdomain, subCreated) => {
+                if (!subCreated) {
+                  req.flash('error_msg', `Ce sous domaine est déjà utilisé.`);
+                  es.domain_name = null;
+                  es.domain_enable = false;
+                  es.save();
+                }
+
+                Models.EstablishmentReference.findOne({
+                  where: { finess_et: es.finess }
+                })
+                  .then(ref => {
+                    ref.es_id = es.id;
+                    ref.save();
+                    return res.status(200).json({ status: 'Created', es });
+                  })
+                  .catch(errors => next(new BackError(errors)));
+              });
+          }
+        } else {
+          return res.status(200).json({ status: 'Already exists', es });
+        }
+      });
   } catch (errors) {
     return next(new BackError(errors));
   }
+
 };
 
 BackOffice_Establishment.Edit = (req, res, next) => {

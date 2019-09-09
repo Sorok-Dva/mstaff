@@ -19,8 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       set(data) {
         this.setDataValue('percentage', JSON.stringify(data));
       }
-    },
-    is_available: DataTypes.BOOLEAN
+    }
   }, {});
   Candidate.associate = (models) => {
     Candidate.belongsTo(models.User, {

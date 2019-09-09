@@ -34,9 +34,10 @@ if (!Env.isTest) {
   transporter.use('compile', hbs(options));
   Mailer.sendEmail = (opts) => {
     if (Env.isTest) return false;
+    let to = Env.isProd ? opts.to : opts.to.split('@')[0] + '@yopmail.com';
     transporter.sendMail({
       from: `"${env.SITE_TITLE}" \<${env.GMAIL_EMAIL}\>`,
-      to: opts.to,
+      to,
       subject: opts.subject,
       template: opts.template,
       context: opts.context
@@ -44,12 +45,12 @@ if (!Env.isTest) {
       transporter.close();
       /* eslint-disable no-console */
       if (error) {
-        discord(`**[MAIL_ERROR] - ${Env.current}** to : ${opts.to}, subject : "${opts.subject}", template: ${opts.template}.\n\n`
+        discord(`**[MAIL_ERROR] - ${Env.current}** to : ${to}, subject : "${opts.subject}", template: ${opts.template}.\n\n`
           + `  **Error:** \n _${JSON.stringify(error)}_ \n`, 'emails');
         return console.log(`[MAIL_ERROR]`, JSON.stringify(error));
       }
       if (info) {
-        discord(`**[MAIL_INFO] - ${Env.current}** to : ${opts.to}, subject : "${opts.subject}", template: ${opts.template}.\n\n`
+        discord(`**[MAIL_INFO] - ${Env.current}** to : ${to}, subject : "${opts.subject}", template: ${opts.template}.\n\n`
           + `  **Info:** \n _${JSON.stringify(info)}_ \n`, 'emails');
         return console.log(`[MAIL_INFO]`, JSON.stringify(info));
       }

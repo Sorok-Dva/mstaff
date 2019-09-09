@@ -26,26 +26,11 @@
             <input type="text" class="form-control" id="newESSiret" name="siret" placeholder="Numéro Siret"
                    value="{{this.es.siret}}">
           </div>
-          <div class="form-group col-md-2">
-            <label for="newESAddressNum">Numéro d'adresse</label>
-            <input type="text" class="form-control" id="newESAddressNum" name="addr_num" placeholder="12"
-                   value="{{this.es.address_num}}" autocomplete="fckgooglechromeandhisbadautocompletesystem">
-          </div>
-          <div class="form-group col-md-2">
-            <label for="newESAddressType">Type d'adresse</label>
-            <input type="text" class="form-control" id="newESAddressType" name="addr_type"
-                   placeholder="Avenue, Chemin, Rue, etc" value="{{this.es.address_type}}">
-          </div>
-          <div class="form-group col-md-3">
-            <label for="newESAddressName">Nom de l'adresse</label>
-            <input type="text" class="form-control" id="newESAddressName" name="addr_name" placeholder="De la liberté"
-                   value="{{this.es.address_name}}">
-          </div>
-          <div class="form-group col-md-3">
-            <label for="newESAddressTown">Code postal et ville</label>
-            <input type="text" class="form-control" id="newESAddressTown" name="addr_town" placeholder="75000 PARIS"
-                   value="{{this.es.address_town}}" required>
-          </div>
+            <div class="form-group col-md-3">
+                <label for="newESAddress">Adresse</label>
+                <input type="text" class="form-control" id="newESAddress" name="address" placeholder="12 Rue De la liberté 75000 PARIS"
+                       value="{{this.es.address_num}} {{this.es.address_type}} {{this.es.address_name}} {{this.es.address_town}}" required>
+            </div>
           <div class="form-group col-md-2">
             <label for="newESPhone">Numéro de téléphone</label>
             <input type="text" class="form-control" id="newESPhone" name="phone" placeholder="+331020304"
@@ -141,33 +126,30 @@
   <button type="submit" id="createES{{this.es.id}}" class="btn btn-primary pull-right">Brancher l'établissement</button>
 </div>
 <script>
-  $('#createES{{this.es.id}}').click(function () {
-    let data = {};
-    $.each($('#createNewESForm').serializeArray(), function (_, kv) {
-      data[kv.name] = kv.value;
+    $('#createES{{this.es.id}}').click(function () {
+        let data = {};
+        $.each($('#createNewESForm').serializeArray(), function (_, kv) {
+            data[kv.name] = kv.value;
+        });
+        data._csrf = $('meta[name="csrf-token"]').attr('content');
+        $.post('/api/back-office/establishment/create', data, (data) => {
+            if (data.status === 'OK') {
+                createModal({
+                    id: 'confirmAddress',
+                    modal: 'back-office/confirmAddress',
+                    size: 'modal-lg',
+                    style: 'width:50%;margin-top:50px;',
+                    title: 'Confirm',
+                    address: data.address,
+                    es_data: data.es_data
+                });
+            } else {
+                notification({
+                    icon: 'exclamation-circle',
+                    type: 'warning',
+                    title: 'Nous n\'arrivons pas à trouver l\'adresse que vous avez renseigné, essayez de la modifier.'
+                });
+            }
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
     });
-    data.address = `${data.addr_num} ${data.addr_type} ${data.addr_name}`;
-    data._csrf = $('meta[name="csrf-token"]').attr('content');
-    delete data.addr_num;
-    delete data.addr_type;
-    delete data.addr_name;
-    $.post('/api/back-office/establishment/create', data, (data) => {
-      if (data.status === 'Created') {
-        $('#addESfromREFModal').modal('hide');
-        notification({
-          icon: 'check-circle',
-          type: 'success',
-          title: 'Établissement créer avec succès.',
-          message: 'Vous allez être redirigé vers la page établissement dans quelques instants.',
-          onClosed: () => $(location).attr('href', `/back-office/es/${data.es.id}`)
-        })
-      } else {
-        notification({
-          icon: 'exclamation-circle',
-          type: 'warning',
-          title: 'Cet établissement est déjà branché à Mstaff.'
-        })
-      }
-    }).catch((xhr, status, error) => catchError(xhr, status, error));
-  });
 </script>

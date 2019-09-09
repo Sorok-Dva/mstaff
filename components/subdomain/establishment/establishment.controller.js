@@ -47,7 +47,7 @@ Establishment_Website.find = (id, next) => {
 };
 
 Establishment_Website.ViewATS = (req, res, next) => {
-  return res.render('establishments/site/ats/index', { es: req.es.finess, layout: 'onepage' })
+  return res.render('establishments/site/ats/index', { es: req.session.es.finess, layout: 'onepage' })
 };
 
 Establishment_Website.ViewRegister = (req, res, next) => {
