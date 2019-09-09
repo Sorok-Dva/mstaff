@@ -29,16 +29,22 @@ module.exports.getLabelMap = () => {
 module.exports.geocode = async address => {
   try {
     const response = await request('https://maps.googleapis.com/maps/api/geocode/json?key=' + apiKey + '&address=' + address);
+
+    if (response.status !== 'OK')
+      return Promise.reject({ status: response.status });
+
     return Promise.resolve(JSON.parse(response));
+
   } catch ( error ){
-    return Promise.reject(error);
+    return Promise.reject({ status: 'UNEXPECTED_ERROR', error: error });
   }
 };
 
 module.exports.formatResponse = response => {
-  if (!response.results || !response.results.length || response.results.length !== 1 || !response.results[0].address_components) return null;
-  if (!response.results[0].geometry || !response.results[0].geometry.location) return null;
-
+  if (!response.results || !response.results.length || response.results.length !== 1 || !response.results[0].address_components)
+    throw new Error('GEOCODING_RESULTS_ERROR');
+  if (!response.results[0].geometry || !response.results[0].geometry.location)
+    throw new Error('GEOCODING_LOCATION_ERROR');
 
   let data = {
     street_number: null,

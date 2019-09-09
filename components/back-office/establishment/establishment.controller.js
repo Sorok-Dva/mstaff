@@ -41,28 +41,33 @@ BackOffice_Establishment.create = async (req, res, next) => {
 
 
 
-  let gmap_response = await gmap.geocode(req.body.address);
-  if (gmap_response.status !== 'OK')
-    return res.status(200).json({ status: gmap_response.status });
+  gmap.geocode(req.body.address)
+    .then(response => {
+      let address_data = null;
+      try {
+        address_data = gmap.formatResponse(response);
+      } catch (error) {
+        return res.status(200).json({ status: error });
+      }
 
-  let address_data = gmap.formatResponse(gmap_response);
-  if (!address_data)
-    return res.status(200).json({ status: 'GEOCODING_ERROR' });
+      const label_map = gmap.getLabelMap();
+      let address = {};
+      for (const labelMapKey in label_map) {
+        if (!address_data[labelMapKey]) continue;
+        address[label_map[labelMapKey]] = address_data[labelMapKey];
+      }
 
-  const label_map = gmap.getLabelMap();
-  let address = {};
-  for (const labelMapKey in label_map) {
-    if (!address_data[labelMapKey]) continue;
-    address[label_map[labelMapKey]] = address_data[labelMapKey];
-  }
-
-  return res.status(200).json({
-    status: 'OK',
-    address: address,
-    es_data: {
-      ...form_data, ...address_data
-    }
-  });
+      return res.status(200).json({
+        status: 'OK',
+        address: address,
+        es_data: {
+          ...form_data, ...address_data
+        }
+      });
+    })
+    .catch(error => {
+      return res.status(200).json({ status: error.status });
+    });
 
 };
 
