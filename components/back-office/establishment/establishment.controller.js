@@ -41,15 +41,8 @@ BackOffice_Establishment.create = async (req, res, next) => {
 
 
 
-  gmap.geocode(req.body.address)
-    .then(response => {
-      let address_data = null;
-      try {
-        address_data = gmap.formatResponse(response);
-      } catch (error) {
-        return res.status(200).json({ status: error });
-      }
-
+  gmap.getAddress(req.body.address)
+    .then(address_data => {
       const label_map = gmap.getLabelMap();
       let address = {};
       for (const labelMapKey in label_map) {

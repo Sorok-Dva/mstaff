@@ -75,3 +75,14 @@ module.exports.formatResponse = response => {
   return data;
 
 };
+
+module.exports.getAddress = async address => {
+  return module.exports.geocode(address)
+    .then(response => {
+      try {
+        return module.exports.formatResponse(response);
+      } catch (error) {
+        return Promise.reject({ status: error.message });
+      }
+    });
+};
