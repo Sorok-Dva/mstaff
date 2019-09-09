@@ -57,7 +57,13 @@ BackOffice_Server.AddMessage = (req, res, next) => {
 BackOffice_Server.viewMessage = (req, res, next) => {
   Models.ServerMessage.findOne({
     where: { id: req.params.id }
-  }).then(message => res.render('back-office/messages/view', { layout, message })).catch(error => next(new BackError(error)));
+  }).then(message => res.render('back-office/messages/add',
+    {
+      layout,
+      message,
+      cardTitle: `Message serveur #${req.params.id} (${message.name})`,
+      a: { main: 'serverSettings', sub: 'messages' }
+    })).catch(error => next(new BackError(error)));
 };
 
 BackOffice_Server.EditMessage = (req, res, next) => {
@@ -78,9 +84,14 @@ BackOffice_Server.EditMessage = (req, res, next) => {
 BackOffice_Server.RemoveMessage = (req, res, next) => {
   Models.ServerMessage.destroy({
     where: { id: req.params.id }
-  }).then(message => res.status(200).send(message)).catch(error => next(new BackError(error)));
+  }).then(message => res.status(200).send({ deleted: true })).catch(error => next(new BackError(error)));
 };
 
-BackOffice_Server.RenderAddMessage = (req, res, next) => res.render('back-office/messages/add', { layout });
+BackOffice_Server.RenderAddMessage = (req, res, next) => {
+  res.render('back-office/messages/add', {
+    layout, cardTitle: `Ajouter un message pour les utilisateurs Mstaff`,
+    a: { main: 'serverSettings', sub: 'messages' }
+  });
+};
 
 module.exports = BackOffice_Server;
