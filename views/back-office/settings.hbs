@@ -141,8 +141,8 @@
   });
 
   let saveServer = () => {
-    let maintenance = $('select[name="type"]').val();
-    $.post('/api/back-office/server/maintenance', { _csrf, maintenance, }, (data) => {
+    let maintenance = $('select[name="maitenance"]').val();
+    $.post('/api/back-office/server/maintenance', { _csrf, maintenance }, (data) => {
       if (data) {
         notification({
           icon: 'check-circle',

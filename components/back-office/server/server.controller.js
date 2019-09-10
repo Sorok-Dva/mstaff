@@ -8,6 +8,16 @@ const fs = require('fs');
 
 const BackOffice_Server = {};
 
+BackOffice_Server.Maintenance = (req, res, next) => {
+  Models.ServerParameter.update({ value: req.body.maintenance, edit_by: req.user.id }, {
+    where: {
+      param: 'maintenance'
+    }
+  }).then(newParam => {
+    return res.status(200).send(newParam);
+  })
+};
+
 BackOffice_Server.ViewDatabaseDumps = (req, res, next) => {
   let databaseDumps = [];
   fs.readdir('/srv/db_dumps', (err, files) => {

@@ -120,6 +120,12 @@ router.get(
   );
 
 router.post(
+  '/server/maintenance',
+  Authentication.ensureIsAdmin,
+  BackOffice.Server.Maintenance,
+);
+
+router.post(
   '/server/message',
   Authentication.ensureIsAdmin,
   BackOffice.Server.AddMessage
