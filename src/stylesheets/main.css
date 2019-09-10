@@ -1358,3 +1358,7 @@ td.fc-day.fc-past {
   word-break: break-all;
   white-space: normal;
 }
+
+.alert>p, .alert>ul {
+  margin-bottom: 0;
+}

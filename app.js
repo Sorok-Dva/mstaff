@@ -43,6 +43,7 @@ app.use(Express.csurf);
 app.use(Express.session);
 app.use(Express.i18n);
 app.use(Express.verifyMaintenance);
+app.use(Express.getServerMessages);
 app.use(Express.passportInit);
 app.use(Express.passportSession);
 app.use(Express.flash);
