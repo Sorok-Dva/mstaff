@@ -1,20 +1,24 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.18.0/ui/trumbowyg.min.css" />
-<div id="generatedMessage"></div>
+<div id="generatedMessage">
+  {{#if message}}
+    <div class="alert alert-{{message.msgType}}">{{{message.message}}}</div>
+  {{/if}}
+</div>
 <div class="row">
   <div class="col-lg-8 col-md-7">
     <div class="card">
       <div class="card-header">
-        <h4 class="title">Ajouter un message pour les utilisateurs Mstaff</h4>
+        <h4 class="title">{{cardTitle}}</h4>
       </div>
       <div class="card-content">
         <div class="row">
           <div class="form-group col-md-12">
             <label for="name">Titre (pour le BO)</label>
-            <input type="text" class="form-control border-input" name="title" placeholder="Titre (réservé pour le back-office)" required>
+            <input type="text" class="form-control border-input" name="title" placeholder="Titre (réservé pour le back-office)" value="{{message.name}}" required>
           </div>
           <div class="form-group col-md-12">
             <label for="name">Message (HTML autorisé)</label>
-            <textarea name="message" id="message" cols="30" rows="10" class="form-control" placeholder="Un message court et concis." required></textarea>
+            <textarea name="message" id="message" cols="30" rows="10" class="form-control" placeholder="Un message court et concis." required>{{{message.message}}}</textarea>
           </div>
         </div>
       </div>
@@ -31,38 +35,38 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label>Destiné</label>
-                <select class="form-control" name="type">
-                  <option value="full">à toute l'application (visible sur toutes les pages)</option>
-                  <option value="group">aux Pages Groupe</option>
-                  <option value="superGroup">aux Pages SuperGroupe</option>
-                  <option value="es">aux Pages Établissement</option>
-                  <option value="rh">l'Espace RH</option>
-                  <option value="candidate">l'Espace Candidat</option>
+                <select class="form-control" name="type" value="{{message.type}}">
+                  <option value="full"{{#ifCond message.type '===' 'full'}} selected{{/ifCond}}>à toute l'application (visible sur toutes les pages)</option>
+                  <option value="group"{{#ifCond message.type '===' 'group'}} selected{{/ifCond}}>aux Pages Groupe</option>
+                  <option value="superGroup"{{#ifCond message.type '===' 'superGroup'}} selected{{/ifCond}}>aux Pages SuperGroupe</option>
+                  <option value="es"{{#ifCond message.type '===' 'es'}} selected{{/ifCond}}>aux Pages Établissement</option>
+                  <option value="rh"{{#ifCond message.type '===' 'rh'}} selected{{/ifCond}}>l'Espace RH</option>
+                  <option value="candidate"{{#ifCond message.type '===' 'candidate'}} selected{{/ifCond}}>l'Espace Candidat</option>
                 </select>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
                 <label>Type de message</label>
-                <select class="form-control" name="msgType">
-                  <option value="info">Information (encadré bleu)</option>
-                  <option value="success">Succès (encadré vert)</option>
-                  <option value="warning">Attention (encadré orange)</option>
-                  <option value="danger">Erreur (encadré rouge)</option>
-                  <option value="default">Defaut (encadré gris)</option>
+                <select class="form-control" name="msgType" >
+                  <option value="info"{{#ifCond message.msgType '===' 'info'}} selected{{/ifCond}}>Information (encadré bleu)</option>
+                  <option value="success"{{#ifCond message.msgType '===' 'success'}} selected{{/ifCond}}>Succès (encadré vert)</option>
+                  <option value="warning"{{#ifCond message.msgType '===' 'warning'}} selected{{/ifCond}}>Attention (encadré orange)</option>
+                  <option value="danger"{{#ifCond message.msgType '===' 'danger'}} selected{{/ifCond}}>Erreur (encadré rouge)</option>
+                  <option value="default"{{#ifCond message.msgType '===' 'default'}} selected{{/ifCond}}>Defaut (encadré gris)</option>
                 </select>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
                 <label>Afficher à partir du</label>
-                <input type="datetime-local" class="form-control border-input" name="fromDate" placeholder="DD/MM/YYYY HH:mm" required>
+                <input type="datetime-local" class="form-control border-input" name="fromDate" placeholder="DD/MM/YYYY HH:mm" value="{{date message.fromDate 'YYYY-MM-DDTHH:mm'}}" required>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group">
                 <label>Enlever le message le</label>
-                <input type="datetime-local" class="form-control border-input" name="untilDate" placeholder="DD/MM/YYYY HH:mm" required>
+                <input type="datetime-local" class="form-control border-input" name="untilDate" placeholder="DD/MM/YYYY HH:mm" value="{{date message.untilDate 'YYYY-DD-MMTHH:mm'}}" required>
               </div>
             </div>
           </div>
@@ -124,24 +128,44 @@
     let untilDate = $('input[name="untilDate"]').val();
     let name = $('input[name="title"]').val();
 
-    $.post('/api/back-office/server/message', {
-      _csrf,
-      message,
-      name,
-      msgType: color,
-      type,
-      fromDate: _.isNil(fromDate) ? null : new Date(fromDate),
-      untilDate: _.isNil(untilDate) ? null : new Date(untilDate)
-    }, (data) => {
-      if (data.id) {
-        notification({
-          icon: 'check-circle',
-          type: 'success',
-          title: 'Message serveur enregistré avec succès',
-          onClosed: () => $(location).attr('href', `/back-office/settings`)
-        });
-      }
-
-    }).catch((xhr, status, error) => catchError(xhr, status, error));
+    {{#if message}}
+      $.put('/api/back-office/server/message/{{message.id}}', {
+        _csrf,
+        message,
+        name,
+        msgType: color,
+        type,
+        fromDate: _.isNil(fromDate) ? null : new Date(fromDate),
+        untilDate: _.isNil(untilDate) ? null : new Date(untilDate)
+      }, (data) => {
+        if (data) {
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Message serveur enregistré avec succès',
+            onClosed: () => $(location).attr('href', `/back-office/settings`)
+          });
+        }
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
+    {{else}}
+      $.post('/api/back-office/server/message', {
+        _csrf,
+        message,
+        name,
+        msgType: color,
+        type,
+        fromDate: _.isNil(fromDate) ? null : new Date(fromDate),
+        untilDate: _.isNil(untilDate) ? null : new Date(untilDate)
+      }, (data) => {
+        if (data.id) {
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: 'Message serveur enregistré avec succès',
+            onClosed: () => $(location).attr('href', `/back-office/settings`)
+          });
+        }
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
+    {{/if}}
   }
 </script>

@@ -92,7 +92,11 @@ BackOffice.ViewStats = (req, res) => {
 };
 
 BackOffice.ViewSettings = (req, res, next) => {
-  res.render('back-office/settings', { layout, title: 'Paramètres de l\'application', a: { main: 'serverSettings', sub: 'main' } })
+  Models.ServerMessage.findAll().then(serverMessages => {
+    res.render('back-office/settings', {
+      serverMessages,
+      layout, title: 'Paramètres de l\'application', a: { main: 'serverSettings', sub: 'main' } })
+  })
 };
 
 module.exports = BackOffice;

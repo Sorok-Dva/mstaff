@@ -338,4 +338,14 @@ module.exports.register = async (Handlebars) => {
       case 'input': return available ? 'checked' : '';
     }
   });
+
+  Handlebars.registerHelper('showServerMessages', (serverMessages, user) => {
+    let finalServerMessages = [];
+    let userType = user ? user.type === 'es' ? 'rh' : user.type : null;
+    serverMessages.forEach(message => {
+      if (message.type === 'full') finalServerMessages.push(`<div class="alert alert-${message.msgType}">${message.message}</div>`);
+      if (message.type === userType) finalServerMessages.push(`<div class="alert alert-${message.msgType}">${message.message}</div>`);
+    });
+    return finalServerMessages;
+  })
 };
