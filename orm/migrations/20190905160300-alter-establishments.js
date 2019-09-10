@@ -5,7 +5,7 @@ module.exports = {
 
     return queryInterface.sequelize.transaction(transaction => {
 
-      return queryInterface.getForeignKeyReferencesForTable('EstablishmentGroups', { transaction: transaction })
+      return queryInterface.getForeignKeyReferencesForTable('Subdomains', { transaction: transaction })
         .then(foreignKeys => {
 
           let promises = [];
@@ -14,7 +14,7 @@ module.exports = {
             const foreignKey = foreignKeys[i];
 
             promises.push(
-              queryInterface.removeConstraint('EstablishmentGroups', foreignKey.constraintName, { transaction: transaction })
+              queryInterface.removeConstraint('Subdomains', foreignKey.constraintName, { transaction: transaction })
             );
 
           }
@@ -24,24 +24,10 @@ module.exports = {
         })
         .then(() => {
 
-          return queryInterface.bulkDelete('Establishments', {
-            name: {
-              [Op.or]: [{ [Op.like]: '%CROIX-ROUGE%' }, { [Op.like]: '%CROIX ROUGE%' }]
-            } }, { transaction: transaction }
-          );
-
-        })
-        .then(() => {
-
-          return queryInterface.sequelize.query('DELETE FROM EstablishmentGroups WHERE id_es NOT IN (SELECT id FROM Establishments);', { transaction: transaction });
-
-        })
-        .then(() => {
-
           return Promise.all([
-            queryInterface.addConstraint('EstablishmentGroups', ['id_es'], {
+            queryInterface.addConstraint('Subdomains', ['es_id'], {
               type: 'foreign key',
-              name: 'EstablishmentGroups_ibfk_3',
+              name: 'Subdomains_ibfk1',
               references: {
                 table: 'Establishments',
                 field: 'id'
@@ -50,9 +36,9 @@ module.exports = {
               onUpdate: 'CASCADE',
               transaction: transaction
             }),
-            queryInterface.addConstraint('EstablishmentGroups', ['id_group'], {
+            queryInterface.addConstraint('Subdomains', ['group_id'], {
               type: 'foreign key',
-              name: 'EstablishmentGroups_ibfk_4',
+              name: 'Subdomains_ibfk2',
               references: {
                 table: 'Groups',
                 field: 'id'
@@ -60,8 +46,28 @@ module.exports = {
               onDelete: 'CASCADE',
               onUpdate: 'CASCADE',
               transaction: transaction
-            })
+            }),
+            queryInterface.addConstraint('Subdomains', ['super_group_id'], {
+              type: 'foreign key',
+              name: 'Subdomains_ibfk3',
+              references: {
+                table: 'SuperGroups',
+                field: 'id'
+              },
+              onDelete: 'CASCADE',
+              onUpdate: 'CASCADE',
+              transaction: transaction
+            }),
           ]);
+
+        })
+        .then(() => {
+
+          return queryInterface.bulkDelete('Establishments', {
+            name: {
+              [Op.or]: [{ [Op.like]: '%CROIX-ROUGE%' }, { [Op.like]: '%CROIX ROUGE%' }]
+            } }, { transaction: transaction }
+          );
 
         })
         .then(() => {
