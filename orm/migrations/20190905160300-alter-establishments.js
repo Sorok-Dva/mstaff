@@ -1,7 +1,11 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
+    const __ = process.cwd();
     const { Op } = Sequelize;
+    const Models = require(`${__}/orm/models/index`);
+
+
 
     return queryInterface.sequelize.transaction(transaction => {
 

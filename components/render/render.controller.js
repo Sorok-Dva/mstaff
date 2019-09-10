@@ -1,5 +1,6 @@
 const __ = process.cwd();
 const _ = require('lodash');
+const { Env } = require(`${__}/helpers/helpers`);
 const { BackError } = require(`${__}/helpers/back.error`);
 const Models = require(`${__}/orm/models/index`);
 
@@ -47,5 +48,18 @@ Render.Register = (req, res) => res.render('users/register', { layout: 'onepage'
 Render._404 = (req, res) => res.render('error', { error: 'Lien invalide' });
 
 Render.ResetPassword = (req, res) => res.render('users/reset-passwd', { layout: 'onepage' });
+
+if (Env.isDev) {
+  Render.Test = (req, res) => {
+
+    Models.sequelize.query('SELECT * FROM EstablishmentGroups WHERE id_es NOT IN (SELECT id FROM Establishments);', { type: Models.sequelize.QueryTypes.SELECT })
+      .then((queryResponse) => {
+        console.log(queryResponse);
+        console.log(queryResponse.length);
+      });
+
+    res.render('test');
+  };
+}
 
 module.exports = Render;

@@ -119,11 +119,13 @@ router.get(
     BackOffice.Server.RemoveDatabaseDumps
   );
 
-router.get(
-  '/server/message/:id(\\d+)',
+router.post(
+  '/server/maintenance',
   Authentication.ensureIsAdmin,
-  BackOffice.Server.viewMessage
-).post(
+  BackOffice.Server.Maintenance,
+);
+
+router.post(
   '/server/message',
   Authentication.ensureIsAdmin,
   BackOffice.Server.AddMessage

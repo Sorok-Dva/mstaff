@@ -45,6 +45,13 @@ module.exports = {
     partialsDir: path.join(__dirname, '../views/partials')
   }),
   flash: flash(),
+  getServerMessages: (req, res, next) => {
+    if (req.url.search('static') !== -1 || req.url.search('back-office') !== -1) return next();
+    Server.Main.getActualMessages(messages => {
+      res.locals.serverMessages = messages;
+      next();
+    });
+  },
   helmet: helmet(), // secure apps by setting various HTTP headers
   i18n: i18n({
     translationsPath: path.join(__dirname, '../i18n'),
