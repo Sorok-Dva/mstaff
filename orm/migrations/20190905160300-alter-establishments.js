@@ -146,6 +146,12 @@ module.exports = {
               type: Sequelize.DATE,
               allowNull: true
             }, { transaction: transaction }),
+            queryInterface.addColumn('Applications', 'is_available', {
+              type: Sequelize.BOOL,
+              allowNull: true,
+              defaultValue: 1
+            }, { transaction: transaction }),
+            queryInterface.removeColumn('Candidates', 'is_available', { transaction: transaction }),
           ]);
 
         })
