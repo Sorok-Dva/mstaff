@@ -147,7 +147,7 @@ module.exports = {
               allowNull: true
             }, { transaction: transaction }),
             queryInterface.addColumn('Applications', 'is_available', {
-              type: Sequelize.BOOL,
+              type: Sequelize.BOOLEAN,
               allowNull: true,
               defaultValue: 1
             }, { transaction: transaction }),
