@@ -154,21 +154,30 @@ module.exports = {
 
         })*/
         .then(() => {
+          return new Promise((resolve, reject) => {
+            fs.readFile(`${__}/orm/jsonDatas/croix-rouge.json`, 'utf8', (err, data) => {
+              if (err)
+                return reject(err);
+              try {
+                let datas = JSON.parse(data);
+                let arrayDatas = [];
 
-          fs.readFile(`${__}/orm/jsonDatas/croix-rouge.json`, 'utf8', (err, data) => {
-            let datas = JSON.parse(data);
-            let arrayDatas = [];
-            datas.forEach(d => {
-              let formattedObject = {};
-              for (const dKey in d) {
-                if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2')
-                  continue;
-                formattedObject[dKey] = d[dKey];
+                datas.forEach(d => {
+                  let formattedObject = {};
+                  for (const dKey in d) {
+                    if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2')
+                      continue;
+                    formattedObject[dKey] = d[dKey];
+                  }
+                  formattedObject.address = d.address1 + ' ' + d.address2 + ' ' + d.address3 + ' ' + d.town1 + ' ' + d.town2;
+                  arrayDatas.push(formattedObject);
+                });
+                queryInterface.bulkInsert('Establishments', arrayDatas, {transaction: transaction})
+                resolve();
+              } catch (e) {
+                reject(e);
               }
-              formattedObject.address = d.address1 + ' ' + d.address2 + ' ' + d.address3 + ' ' + d.town1 + ' ' + d.town2;
-              arrayDatas.push(formattedObject);
             });
-            console.log(arrayDatas);
           });
 
 
