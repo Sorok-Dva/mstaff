@@ -60,6 +60,7 @@ BackOffice_Server.AddMessage = (req, res, next) => {
     type: req.body.type,
     fromDate: req.body.fromDate,
     untilDate: req.body.untilDate,
+    enable: true,
     author: req.user.id
   }).then(message => res.status(201).send(message)).catch(error => next(new BackError(error)));
 };
@@ -80,15 +81,21 @@ BackOffice_Server.EditMessage = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
-  Models.ServerMessage.update({
-    name: req.body.name,
-    message: req.body.message,
-    msgType: req.body.msgType,
-    type: req.body.type,
-    fromDate: req.body.fromDate,
-    untilDate: req.body.untilDate,
-    author: req.user.id
-  }, { where: { id: req.params.id } }).then(message => res.status(200).send(message)).catch(error => next(new BackError(error)));
+  if (req.params.action === 'enable') {
+    Models.ServerMessage.update({
+      enable: req.body.enable
+    }, { where: { id: req.params.id } }).then(message => res.status(200).send(message)).catch(error => next(new BackError(error)));
+  } else {
+    Models.ServerMessage.update({
+      name: req.body.name,
+      message: req.body.message,
+      msgType: req.body.msgType,
+      type: req.body.type,
+      fromDate: req.body.fromDate,
+      untilDate: req.body.untilDate,
+      author: req.user.id
+    }, { where: { id: req.params.id } }).then(message => res.status(200).send(message)).catch(error => next(new BackError(error)));
+  }
 };
 
 BackOffice_Server.RemoveMessage = (req, res, next) => {
