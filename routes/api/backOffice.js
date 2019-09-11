@@ -130,7 +130,7 @@ router.post(
   Authentication.ensureIsAdmin,
   BackOffice.Server.AddMessage
 ).put(
-  '/server/message/:id(\\d+)',
+  '/server/message/:id(\\d+)/:action?',
   Authentication.ensureIsAdmin,
   BackOffice.Server.EditMessage
 ).delete(
