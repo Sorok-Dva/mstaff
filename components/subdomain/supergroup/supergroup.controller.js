@@ -29,7 +29,31 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
         // XXX: "address" is now "results" and is an array of results
 
         Models.Establishment.findAll({
-          where: address
+          where: address,
+          include: {
+            model: Models.EstablishmentGroups,
+            on: {
+              'Establishment.id': 'EstablishmentGroups.id_es'
+            },
+            include: {
+              model: Models.Groups,
+              on: {
+                'EstablishmentGroups.id_group': 'Groups.id'
+              },
+              include: {
+                model: Models.GroupsSuperGroups,
+                on: {
+                  'Groups.id': 'GroupsSuperGroups.id_group'
+                },
+                include: {
+                  model: Models.SuperGroups,
+                  on: {
+                    'GroupsSuperGroups.id_super_group': 'SuperGroups.id'
+                  }
+                }
+              }
+            }
+          }
         })
           .then(establishments => {
 

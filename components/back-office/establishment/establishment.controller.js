@@ -24,8 +24,7 @@ BackOffice_Establishment.create = async (req, res, next) => {
     finess_ej: req.body.finess_ej,
     siret: req.body.siret,
     phone: req.body.phone,
-    address: req.body.address,
-    town: req.body.addr_town,
+    user_address: req.body.user_address,
     sector: req.body.sector,
     salaries_count: req.body.salaries_count,
     contact_identity: req.body.contactIdentity,
@@ -40,10 +39,10 @@ BackOffice_Establishment.create = async (req, res, next) => {
 
 
 
-  gmap.getAddress(req.body.address, false, true)
+  gmap.getAddress(req.body.user_address, false, true)
     .then(results => {
       const label_map = gmap.getLabelMap();
-      let formated_results = [];
+      let formatted_results = [];
 
       for (let i = 0; i < results.length; i++) {
         let address = {};
@@ -51,14 +50,14 @@ BackOffice_Establishment.create = async (req, res, next) => {
           if (!results[i][labelMapKey]) continue;
           address[label_map[labelMapKey]] = results[i][labelMapKey];
         }
-        formated_results.push(address);
+        formatted_results.push(address);
       }
 
       return res.status(200).json({
         status: 'OK',
         form_data: form_data,
         results: results,
-        formated_results: formated_results
+        formatted_results: formatted_results
       });
     })
     .catch(error => {
@@ -74,7 +73,6 @@ BackOffice_Establishment.validateCreate = (req, res, next) => {
     finess_ej: req.body.form_data.finess_ej,
     siret: req.body.form_data.siret,
     phone: req.body.form_data.phone,
-    address: req.body.form_data.address,
     sector: req.body.form_data.sector,
     salaries_count: parseInt(req.body.form_data.salaries_count),
     contact_identity: req.body.form_data.contact_identity,
@@ -85,6 +83,8 @@ BackOffice_Establishment.validateCreate = (req, res, next) => {
     domain_name: req.body.form_data.domain_name,
     logo: req.body.form_data.logo,
     banner: req.body.form_data.banner,
+    user_address: req.body.form_data.user_address,
+    formatted_address: req.body.address_data.formatted_address,
     street_number: req.body.address_data.street_number,
     street_name: req.body.address_data.street_name,
     city: req.body.address_data.city,
@@ -273,8 +273,8 @@ BackOffice_Establishment.EditLocation = (req, res, next) => {
         for (const addressDataKey in req.body.address_data) {
           establishment[addressDataKey] = req.body.address_data[addressDataKey];
         }
+        establishment.user_address = req.body.form_data.user_address;
         establishment.location_updatedAt = moment().format('YYYY-MM-DD HH:mm:ss');
-        establishment.address = req.body.form_data.address;
         establishment.save();
       });
   } catch (error) {
@@ -618,8 +618,6 @@ BackOffice_Establishment.bulkUpdateESLocation = (req, res, next) => {
   })
     .then((establishments) => {
 
-      console.log(establishments.length);
-
       let operations = [];
       let promises = [];
       let to = 0;
@@ -633,17 +631,23 @@ BackOffice_Establishment.bulkUpdateESLocation = (req, res, next) => {
         };
         operations.push(operation);
 
-        if (!establishment.ref){
-          operation.status = 'MISSING_ESTABLISHMENT_REFERENCE_ERROR';
-          continue;
-        }
-
         let address = '';
-        address += establishment.ref.address_num ? establishment.ref.address_num + ' ' : '';
-        address += establishment.ref.address_type ? establishment.ref.address_type + ' ' : '';
-        address += establishment.ref.address_name ? establishment.ref.address_name + ' ' : '';
-        address += establishment.ref.address_town ? establishment.ref.address_town + ' ' : '';
+        if (establishment.user_address){
+          address = establishment.user_address;
+        } else {
+          if (!establishment.ref){
+            operation.status = 'MISSING_ESTABLISHMENT_REFERENCE_ERROR';
+            continue;
+          }
+
+          address += establishment.ref.address_num ? establishment.ref.address_num + ' ' : '';
+          address += establishment.ref.address_type ? establishment.ref.address_type + ' ' : '';
+          address += establishment.ref.address_name ? establishment.ref.address_name + ' ' : '';
+          address += establishment.ref.address_town ? establishment.ref.address_town + ' ' : '';
+        }
         operation.request_address = address;
+
+
 
         let promise = new Promise((resolve, reject) => {
 
@@ -665,6 +669,7 @@ BackOffice_Establishment.bulkUpdateESLocation = (req, res, next) => {
                     operation.status = 'UNEXPECTED_ERROR';
                   }
 
+                  establishment.user_address = address;
                   establishment.location_updatedAt = moment().format('YYYY-MM-DD HH:mm:ss');
 
                   return establishment.save()

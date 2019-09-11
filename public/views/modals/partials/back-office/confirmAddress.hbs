@@ -14,10 +14,13 @@
 
 <div class="row" style="padding-top:15px; margin: auto !important;">
     <div class="col-md-12">
-        {{#each formated_results as |formated_result|}}
+        {{#each formatted_results as |formatted_result|}}
             <div class="card address-card{{#ifCond @key '==' 0}} selected{{/ifCond}}" data-index="{{@key}}">
+                <div class="card-header" style="padding-bottom:1rem;border-bottom:1px solid rgba(0,0,0,.1);">
+                    <h5 style="margin:0;font-weight:bold;">{{lookup (lookup ../results @key) 'formatted_address'}}</h5>
+                </div>
                 <div class="card-content">
-                    {{#each formated_result}}
+                    {{#each formatted_result}}
                         <p><b>{{@key}}:</b> {{.}}</p>
                     {{/each}}
                 </div>

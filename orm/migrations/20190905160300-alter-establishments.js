@@ -77,6 +77,14 @@ module.exports = {
         .then(() => {
 
           return Promise.all([
+            queryInterface.addColumn('Establishments', 'user_address', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
+            queryInterface.addColumn('Establishments', 'formatted_address', {
+              type: Sequelize.STRING,
+              allowNull: true
+            }, { transaction: transaction }),
             queryInterface.addColumn('Establishments', 'street_number', {
               type: Sequelize.STRING,
               allowNull: true
@@ -185,6 +193,8 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
+        queryInterface.removeColumn('Establishments', 'user_address', { transaction: t }),
+        queryInterface.removeColumn('Establishments', 'formatted_address', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'street_number', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'street_name', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'city', { transaction: t }),

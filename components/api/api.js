@@ -76,18 +76,18 @@ Api.geolocAddress = (req, res, next) => {
   gmap.getAddress(req.body.address, req.body.withNulls, req.body.withLocation)
     .then((results) => {
       const label_map = gmap.getLabelMap();
-      let formated_results = [];
+      let formatted_results = [];
       for (let i = 0; i < results.length; i++) {
         let address = {};
         for (const labelMapKey in label_map) {
           if (!results[i][labelMapKey]) continue;
           address[label_map[labelMapKey]] = results[i][labelMapKey];
         }
-        formated_results.push(address);
+        formatted_results.push(address);
       }
       res.status(200).send({
         results: results,
-        formated_results: formated_results,
+        formatted_results: formatted_results,
       });
     })
     .catch(error => next(new BackError(error)));

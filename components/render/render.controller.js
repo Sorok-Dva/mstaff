@@ -52,10 +52,30 @@ Render.ResetPassword = (req, res) => res.render('users/reset-passwd', { layout: 
 if (Env.isDev) {
   Render.Test = (req, res) => {
 
-    Models.sequelize.query('SELECT * FROM EstablishmentGroups WHERE id_es NOT IN (SELECT id FROM Establishments);', { type: Models.sequelize.QueryTypes.SELECT })
-      .then((queryResponse) => {
-        console.log(queryResponse);
-        console.log(queryResponse.length);
+    Models.Establishment.findAll({
+      include: {
+        model: Models.EstablishmentGroups,
+        include: {
+          model: Models.Groups,
+          include: {
+            model: Models.GroupsSuperGroups,
+            include: {
+              model: Models.SuperGroups
+            }
+          }
+        }
+      },
+      where: {
+        '$EstablishmentGroups->Group->GroupsSuperGroups->SuperGroup$': 2
+      }
+    })
+      .then((response) => {
+        console.log('SUCCESS');
+        console.log(response.length);
+      })
+      .catch(error => {
+        console.log('ERROR');
+        console.log(error);
       });
 
     res.render('test');

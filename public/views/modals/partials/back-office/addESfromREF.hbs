@@ -28,7 +28,7 @@
           </div>
             <div class="form-group col-md-3">
                 <label for="newESAddress">Adresse</label>
-                <input type="text" class="form-control" id="newESAddress" name="address" placeholder="12 Rue De la liberté 75000 PARIS"
+                <input type="text" class="form-control" id="newESAddress" name="user_address" placeholder="12 Rue De la liberté 75000 PARIS"
                        value="{{this.es.address_num}} {{this.es.address_type}} {{this.es.address_name}} {{this.es.address_town}}" required>
             </div>
           <div class="form-group col-md-2">
@@ -173,7 +173,7 @@
                     title: 'Confirmez vous les informations liées à l\'adresse que vous avez renseigné ?',
                     form_data: response_body.form_data,
                     results: response_body.results,
-                    formated_results: response_body.formated_results,
+                    formatted_results: response_body.formatted_results,
                     onConfirm: 'onConfirm'
                 });
             } else {

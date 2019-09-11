@@ -85,6 +85,8 @@ module.exports.formatResult = (result, withNulls = true, withLocation = false) =
     data.lng = result.geometry.location.lng;
   }
 
+  data.formatted_address = result.formatted_address;
+
   return data;
 
 };

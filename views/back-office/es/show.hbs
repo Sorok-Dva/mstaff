@@ -70,8 +70,8 @@
             </legend>
             <div class="form-row clearfix">
                 <div class="form-group col-md-12">
-                    <label for="address">Adresse</label>
-        <input type="text" class="form-control" id="address" name="address" value="{{#if es.address}}{{es.address}}{{else}}{{es.ref.address_num}} {{es.ref.address_type}} {{es.ref.address_name}} {{es.ref.address_town}}{{/if}}" data-ref-address="{{es.ref.address_num}} {{es.ref.address_type}} {{es.ref.address_name}} {{es.ref.address_town}}">
+                    <label for="user_address">Adresse</label>
+        <input type="text" class="form-control" id="user_address" name="user_address" value="{{#if es.user_address}}{{es.user_address}}{{else}}{{es.ref.address_num}} {{es.ref.address_type}} {{es.ref.address_name}} {{es.ref.address_town}}{{/if}}" data-ref-address="{{es.ref.address_num}} {{es.ref.address_type}} {{es.ref.address_name}} {{es.ref.address_town}}">
                 </div>
             </div>
             <div class="form-row clearfix">
@@ -83,6 +83,10 @@
             <br>
             <br>
             <div class="form-row clearfix">
+                <div class="form-group col-md-12">
+                    <label for="street_number">Adresse complète</label>
+                    <input type="text" class="form-control" id="street_number" name="street_number" value="{{es.formatted_address}}" disabled>
+                </div>
                 <div class="form-group col-md-3">
                     <label for="street_number">Numéro</label>
                     <input type="text" class="form-control" id="street_number" name="street_number" value="{{es.street_number}}" disabled>
@@ -340,7 +344,7 @@
     $('#updateLocation').click(function(){
     	$.post('/api/address/geoloc', {
             _csrf: $('meta[name="csrf-token"]').attr('content'),
-    		address: $('#address').val(),
+    		address: $('#user_address').val(),
             withLocation: true
         }, response => {
             createModal({
@@ -350,16 +354,16 @@
                 style: 'width:50%;margin-top:50px;',
                 title: 'Confirmez vous les informations liées à l\'adresse que vous avez renseigné ?',
                 form_data: {
-                	address: $('#address').val()
+                    user_address: $('#user_address').val()
                 },
                 results: response.results,
-                formated_results: response.formated_results,
+                formatted_results: response.formatted_results,
                 onConfirm: 'onConfirm'
             });
         });
     });
 
     $('#loadRefAddress').click(function(){
-    	$('input[name="address"]').val($('input[name="address"]').attr('data-ref-address'));
+    	$('input[name="user_address"]').val($('input[name="user_address"]').attr('data-ref-address'));
     });
 </script>
