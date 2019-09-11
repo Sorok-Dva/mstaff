@@ -8,7 +8,7 @@ module.exports = {
     return queryInterface.sequelize.transaction(transaction => {
 
       return queryInterface.getForeignKeyReferencesForTable('Subdomains', { transaction: transaction })
-      /* .then(foreignKeys => {
+        .then(foreignKeys => {
 
           let promises = [];
 
@@ -25,7 +25,6 @@ module.exports = {
 
         })
         .then(() => {
-
           return Promise.all([
             queryInterface.addConstraint('Subdomains', ['es_id'], {
               type: 'foreign key',
@@ -64,7 +63,6 @@ module.exports = {
 
         })
         .then(() => {
-
           return queryInterface.bulkDelete('Establishments', {
             name: {
               [Op.or]: [{ [Op.like]: '%CROIX-ROUGE%' }, { [Op.like]: '%CROIX ROUGE%' }]
@@ -73,7 +71,6 @@ module.exports = {
 
         })
         .then(() => {
-
           return Promise.all([
             queryInterface.addColumn('Establishments', 'street_number', {
               type: Sequelize.STRING,
@@ -151,8 +148,7 @@ module.exports = {
             }, { transaction: transaction }),
             queryInterface.removeColumn('Candidates', 'is_available', { transaction: transaction }),
           ]);
-
-        })*/
+        })
         .then(() => {
           return new Promise((resolve, reject) => {
             fs.readFile(`${__}/orm/jsonDatas/croix-rouge.json`, 'utf8', (err, data) => {
@@ -167,49 +163,28 @@ module.exports = {
                   for (const dKey in d) {
                     if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2')
                       continue;
+                    if (dKey === 'Adresse physique - Complément'){
+                      d.address1 = d[dKey];
+                      continue;
+                    }
                     formattedObject[dKey] = d[dKey];
                   }
                   formattedObject.address = d.address1 + ' ' + d.address2 + ' ' + d.address3 + ' ' + d.town1 + ' ' + d.town2;
                   arrayDatas.push(formattedObject);
                 });
-                queryInterface.bulkInsert('Establishments', arrayDatas, {transaction: transaction})
-                resolve();
+                resolve (queryInterface.bulkInsert('Establishments', arrayDatas, { transaction: transaction }));
               } catch (e) {
                 reject(e);
               }
             });
           });
-
-
-
-          /*return queryInterface.bulkInsert('Establishments', [
-            {
-              name: 'test',
-              category: 'test',
-              finess: 'test',
-              siret: 'test',
-              code: 'test',
-              sector: 'test',
-              address: 'test',
-              town: 'test',
-              url: 'test',
-              structure_number: 'test',
-              attachement_direction: '',
-              region_code: 'test',
-              long_wording: 'test',
-              spinneret: 'test'
-            }
-          ], {transaction: transaction});*/
-
         });
-
     });
-
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
-      /* return Promise.all([
+      return Promise.all([
         queryInterface.removeColumn('Establishments', 'street_number', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'street_name', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'city', { transaction: t }),
@@ -232,7 +207,7 @@ module.exports = {
           allowNull: true,
           defaultValue: 1
         }, { transaction: t }),
-      ])*/
+      ])
     })
   }
 };
