@@ -3,14 +3,12 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     const __ = process.cwd();
     const { Op } = Sequelize;
-    const Models = require(`${__}/orm/models/index`);
-
-
+    const fs = require('fs');
 
     return queryInterface.sequelize.transaction(transaction => {
 
       return queryInterface.getForeignKeyReferencesForTable('Subdomains', { transaction: transaction })
-        .then(foreignKeys => {
+      /* .then(foreignKeys => {
 
           let promises = [];
 
@@ -106,11 +104,11 @@ module.exports = {
               allowNull: true
             }, { transaction: transaction }),
             queryInterface.addColumn('Establishments', 'lat', {
-              type: Sequelize.FLOAT,
+              type: Sequelize.DECIMAL(10, 8),
               allowNull: true
             }, { transaction: transaction }),
             queryInterface.addColumn('Establishments', 'lng', {
-              type: Sequelize.FLOAT,
+              type: Sequelize.DECIMAL(11, 8),
               allowNull: true
             }, { transaction: transaction }),
             queryInterface.addColumn('Establishments', 'structure_number', {
@@ -154,8 +152,26 @@ module.exports = {
             queryInterface.removeColumn('Candidates', 'is_available', { transaction: transaction }),
           ]);
 
-        })
+        })*/
         .then(() => {
+
+          fs.readFile(`${__}/orm/jsonDatas/croix-rouge.json`, 'utf8', (err, data) => {
+            let datas = JSON.parse(data);
+            let arrayDatas = [];
+            datas.forEach(d => {
+              let formattedObject = {};
+              for (const dKey in d) {
+                if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2')
+                  continue;
+                formattedObject[dKey] = d[dKey];
+              }
+              formattedObject.address = d.address1 + ' ' + d.address2 + ' ' + d.address3 + ' ' + d.town1 + ' ' + d.town2;
+              arrayDatas.push(formattedObject);
+            });
+            console.log(arrayDatas);
+          });
+
+
 
           /*return queryInterface.bulkInsert('Establishments', [
             {
@@ -184,7 +200,7 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
-      return Promise.all([
+      /* return Promise.all([
         queryInterface.removeColumn('Establishments', 'street_number', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'street_name', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'city', { transaction: t }),
@@ -201,7 +217,13 @@ module.exports = {
         queryInterface.removeColumn('Establishments', 'spinneret', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'primary_group_id', { transaction: t }),
         queryInterface.removeColumn('Establishments', 'location_updatedAt', { transaction: t }),
-      ])
+        queryInterface.removeColumn('Applications', 'is_available', { transaction: t }),
+        queryInterface.addColumn('Candidates', 'is_available', {
+          type: Sequelize.BOOLEAN,
+          allowNull: true,
+          defaultValue: 1
+        }, { transaction: t }),
+      ])*/
     })
   }
 };
