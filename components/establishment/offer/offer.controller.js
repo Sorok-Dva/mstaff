@@ -81,6 +81,7 @@ Establishment_Offer.Create = (req, res, next) => {
     where: { id: req.params.needId, es_id: req.user.opts.currentEs },
     include: [{
       model: Models.Establishment,
+      attributes: ['name', 'town', 'address', 'url', 'logo'],
       required: true
     }, {
       model: Models.JobSheet,
