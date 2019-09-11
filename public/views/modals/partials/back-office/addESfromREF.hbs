@@ -126,22 +126,55 @@
   <button type="submit" id="createES{{this.es.id}}" class="btn btn-primary pull-right">Brancher l'établissement</button>
 </div>
 <script>
+
+    function onConfirm(request){
+        return $.post('/api/back-office/establishment/validate-create', request, (response) => {
+
+            if(response.status === 'Created'){
+                $('#confirmAddress').modal('hide');
+                $('#addESfromREFModal').modal('hide');
+
+                notification({
+                    icon: 'check-circle',
+                    type: 'success',
+                    title: 'Établissement créé avec succès.',
+                    message: 'Vous allez être redirigé vers la page établissement dans quelques instants.',
+                    onClosed: () => $(location).attr('href', `/back-office/es/${response.es.id}`)
+                });
+
+            }else{
+
+                $('#confirmAddress').modal('hide');
+                $('#addESfromREFModal').modal('hide');
+
+                notification({
+                    icon: 'exclamation-circle',
+                    type: 'warning',
+                    title: 'Cet établissement est déjà branché à Mstaff.'
+                });
+            }
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
+    }
+
     $('#createES{{this.es.id}}').click(function () {
-        let data = {};
+        let request_body = {};
+        request_body._csrf = $('meta[name="csrf-token"]').attr('content');
         $.each($('#createNewESForm').serializeArray(), function (_, kv) {
-            data[kv.name] = kv.value;
+            request_body[kv.name] = kv.value;
         });
-        data._csrf = $('meta[name="csrf-token"]').attr('content');
-        $.post('/api/back-office/establishment/create', data, (data) => {
-            if (data.status === 'OK') {
+
+        $.post('/api/back-office/establishment/create', request_body, (response_body) => {
+            if (response_body.status === 'OK') {
                 createModal({
                     id: 'confirmAddress',
                     modal: 'back-office/confirmAddress',
                     size: 'modal-lg',
                     style: 'width:50%;margin-top:50px;',
-                    title: 'Confirm',
-                    address: data.address,
-                    es_data: data.es_data
+                    title: 'Confirmez vous les informations liées à l\'adresse que vous avez renseigné ?',
+                    form_data: response_body.form_data,
+                    results: response_body.results,
+                    formated_results: response_body.formated_results,
+                    onConfirm: 'onConfirm'
                 });
             } else {
                 notification({

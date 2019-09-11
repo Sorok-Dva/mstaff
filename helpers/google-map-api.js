@@ -28,42 +28,50 @@ module.exports.getLabelMap = () => {
 
 module.exports.geocode = async address => {
   try {
-    const response = await request('https://maps.googleapis.com/maps/api/geocode/json?key=' + apiKey + '&address=' + address);
+    //let response = await request('https://maps.googleapis.com/maps/api/geocode/json?key=' + apiKey + '&address=' + address);
+    let response = await request({
+      uri: 'https://maps.googleapis.com/maps/api/geocode/json',
+      qs: {
+        key: apiKey,
+        address: address
+      }
+    });
+    response = JSON.parse(response);
+
+    if (!response.status)
+      return Promise.reject({ status: 'GEOCODING_UNEXPECTED_ERROR' });
 
     if (response.status !== 'OK')
       return Promise.reject({ status: response.status });
 
-    return Promise.resolve(JSON.parse(response));
+    if (!response.results || !response.results.length)
+      return Promise.reject({ status: 'GEOCODING_NO_RESULTS_ERROR' });
 
-  } catch ( error ){
+    return Promise.resolve(response);
+
+  } catch (error){
     return Promise.reject({ status: 'GEOCODING_REQUEST_ERROR', error: error });
   }
 };
 
-module.exports.formatResponse = response => {
-  if (!response.results || !response.results.length || response.results.length !== 1 || !response.results[0].address_components)
-    throw new Error('GEOCODING_RESULTS_ERROR');
-  if (!response.results[0].geometry || !response.results[0].geometry.location)
-    throw new Error('GEOCODING_LOCATION_ERROR');
+module.exports.formatResult = (result, withNulls = true, withLocation = false) => {
+  if (withLocation && (!result.geometry || !result.geometry.location))
+    throw new Error('GEOCODING_RESULT_LOCATION_ERROR');
 
-  let data = {
-    street_number: null,
-    street_name: null,
-    city: null,
-    department: null,
-    region: null,
-    country: null,
-    postal_code: null,
-    lat: response.results[0].geometry.location.lat,
-    lng: response.results[0].geometry.location.lng
-  };
+  if (!result.address_components)
+    throw new Error('GEOCODING_RESULT_DATA_ERROR');
 
   const keyMap = module.exports.getKeyMap();
 
-  response.results[0].address_components.forEach(addressComponent => {
+  let data = {};
+
+  result.address_components.forEach(addressComponent => {
 
     for (const key in keyMap) {
       const google_key = keyMap[key];
+
+      if (withNulls && data[key] === undefined)
+        data[key] = null;
 
       if (addressComponent.types.includes(google_key)) {
         data[key] = addressComponent.long_name;
@@ -72,21 +80,31 @@ module.exports.formatResponse = response => {
 
   });
 
+  if (withLocation) {
+    data.lat = result.geometry.location.lat;
+    data.lng = result.geometry.location.lng;
+  }
+
   return data;
 
 };
 
 /**
- *
  * @param address
+ * @param withNulls
+ * @param withLocation
  * @returns {Promise<*>}
- * Can be rejected with status GEOCODING_REQUEST_ERROR, GEOCODING_RESULTS_ERROR, GEOCODING_LOCATION_ERROR, or with google map api response status
+ * Can be rejected with status GEOCODING_REQUEST_ERROR, GEOCODING_RESULTS_ERROR, GEOCODING_LOCATION_ERROR, GEOCODING_UNEXPECTED_ERROR, or with google map api response status
  */
-module.exports.getAddress = async address => {
+module.exports.getAddress = async (address, withNulls = true, withLocation = false) => {
   return module.exports.geocode(address)
     .then(response => {
+      let results = [];
       try {
-        return module.exports.formatResponse(response);
+        for (let i = 0; i < response.results.length; i++) {
+          results.push(module.exports.formatResult(response.results[i], withNulls, withLocation));
+        }
+        return results;
       } catch (error) {
         return Promise.reject({ status: error.message });
       }

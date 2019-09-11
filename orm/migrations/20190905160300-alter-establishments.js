@@ -106,11 +106,11 @@ module.exports = {
               allowNull: true
             }, { transaction: transaction }),
             queryInterface.addColumn('Establishments', 'lat', {
-              type: Sequelize.FLOAT,
+              type: Sequelize.DECIMAL(10, 8),
               allowNull: true
             }, { transaction: transaction }),
             queryInterface.addColumn('Establishments', 'lng', {
-              type: Sequelize.FLOAT,
+              type: Sequelize.DECIMAL(11, 8),
               allowNull: true
             }, { transaction: transaction }),
             queryInterface.addColumn('Establishments', 'structure_number', {

@@ -1,0 +1,82 @@
+{{#extend "body"}}
+
+    <div class="page-body">
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-12">
+
+                    <header class="page-header">
+
+                        <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{supergroup.logo}}');"></div>
+                        <span class="header-title-label">Super Groupe</span>
+                        <h1 class="header-title">{{supergroup.name}}</h1>
+
+                    </header>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-12">
+
+                    <div class="baseline baseline-page">Lorem ipsum dolor sit amet, consectetur adipisicing elit.<span><br>Lorem ipsum dolor sit amet.</span></div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-6 offset-3 tac">
+
+                    <form method="post">
+                        <label for="search">Où êtes-vous ?</label>
+                        <input type="text" name="search" placeholder="42 rue du test, Paris">
+                        <input type="hidden" name="address_components">
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+                        <button class="button button-pink">Rechercher</button>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+    <script>
+        $(document).ready(function(){
+            initForm();
+        });
+
+
+        function initForm(){
+            let autocomplete = new google.maps.places.Autocomplete($('input[name="search"]').get(0));
+            autocomplete.setFields(['address_components', 'geometry']);
+
+            autocomplete.addListener('place_changed', function(){
+                let place = autocomplete.getPlace();
+
+                console.log(place);
+
+                if(!place.address_components || place.address_components.length === 0)
+                    return;
+
+                $('input[name="address_components"]').val(JSON.stringify(place.address_components));
+            });
+        }
+    </script>
+{{/extend}}

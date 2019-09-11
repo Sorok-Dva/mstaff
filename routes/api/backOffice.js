@@ -28,6 +28,10 @@ router.post('/establishment/validate-create',
   HTTPValidation.BackOfficeController.createEstablishmentFromReference,
   BackOffice.Establishment.validateCreate);
 
+router.post('/establishment/:id(\\d+)/update-location',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.EditLocation);
+
 router.post('/establishment/:id(\\d+)/add/user',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.addUserInEstablishment,
@@ -41,6 +45,10 @@ router.post('/establishment/:id(\\d+)/remove/user/:userId(\\d+)',
 router.post('/establishment/:id(\\d+)/edit/user/:userId(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Establishment.editUserRole);
+
+router.post('/establishment/bulk-update-location',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.bulkUpdateESLocation);
 
 router.get('/establishment/:esId(\\d+)/needs', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeeds);
 router.get('/establishment/:esId(\\d+)/need/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeed);
