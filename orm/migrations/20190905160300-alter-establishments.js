@@ -169,7 +169,8 @@ module.exports = {
                     }
                     formattedObject[dKey] = d[dKey];
                   }
-                  formattedObject.address = d.address1 + ' ' + d.address2 + ' ' + d.address3 + ' ' + d.town1 + ' ' + d.town2;
+                  formattedObject.address = d.address1 + ' ' + d.address2 + ' ' + d.address3;
+                  formattedObject.town = d.town1 + ' ' + d.town2;
                   arrayDatas.push(formattedObject);
                 });
                 resolve (queryInterface.bulkInsert('Establishments', arrayDatas, { transaction: transaction }));
