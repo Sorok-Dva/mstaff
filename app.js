@@ -2,6 +2,7 @@ const { Env } = require('./helpers/helpers');
 const { ErrorHandler, Express } = require('./middlewares');
 const path = require('path');
 const express = require('express');
+const Models = require('./orm/models/index');
 
 const indexRouter = require('./routes/index');
 const esRouter = require('./routes/es');
@@ -74,5 +75,7 @@ app.use(ErrorHandler.client);
 app.use(ErrorHandler.log);
 // if (Env.isProd || Env.isPreProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
+
+Models.init();
 
 module.exports = app;
