@@ -12,58 +12,57 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
       if (req.body.address_components) {
         try {
           let result = { address_components: JSON.parse(req.body.address_components) };
-          resolve(gmap.formatResult(result));
+          resolve(gmap.formatResult(result, false));
         } catch (error) {
           reject({ status: error.message });
         }
       } else if (req.body.search) {
-        resolve(gmap.getAddress(req.body.search, false, false));
+        resolve(gmap.getAddress(req.body.search, false));
       } else {
         reject({ status: 'BAD_REQUEST' });
       }
     });
 
     getAddressPromise
-      .then((address) => {
+      .then((results) => {
+        if (results.length > 1)
+          return Promise.reject({ status: 'GEOCODING_TOO_MUCH_RESULTS_ERROR' });
 
-        // XXX: "address" is now "results" and is an array of results
+        let getEstablishmentsPromise = new Promise((resolve, reject) => {
 
-        Models.Establishment.findAll({
-          where: address,
-          include: {
-            model: Models.EstablishmentGroups,
-            on: {
-              'Establishment.id': 'EstablishmentGroups.id_es'
-            },
-            include: {
-              model: Models.Groups,
-              on: {
-                'EstablishmentGroups.id_group': 'Groups.id'
-              },
-              include: {
-                model: Models.GroupsSuperGroups,
-                on: {
-                  'Groups.id': 'GroupsSuperGroups.id_group'
-                },
-                include: {
-                  model: Models.SuperGroups,
-                  on: {
-                    'GroupsSuperGroups.id_super_group': 'SuperGroups.id'
-                  }
-                }
-              }
+          if (
+            // Linteur de merde! Obligé d'explicitement signifier le prototype, les avantages de JS et de son héritage prototypal sont morts
+            Object.prototype.hasOwnProperty.call(results[0].address, 'street_number') ||
+            Object.prototype.hasOwnProperty.call(results[0].address, 'street_name') ||
+            Object.prototype.hasOwnProperty.call(results[0].address, 'city') ||
+            Object.prototype.hasOwnProperty.call(results[0].address, 'postal_code')
+          ) {
+            return resolve(
+              Models.Establishment.repository.rawGetInRange(results[0].location, 100, [
+                'LEFT JOIN EstablishmentGroups ON InBounds.id = EstablishmentGroups.id_es',
+                'LEFT JOIN Groups ON EstablishmentGroups.id_group = Groups.id',
+                'LEFT JOIN GroupsSuperGroups ON Groups.id = GroupsSuperGroups.id_group',
+                'LEFT JOIN SuperGroups ON GroupsSuperGroups.id_super_group = SuperGroups.id'
+              ], 'WHERE SuperGroups.id = ' + res.locals.supergroup.id)
+            );
+          } else {
+            let where = {};
+            for (const addressKey in results[0].address) {
+              where[addressKey] = results[0].address[addressKey];
             }
+            return resolve(Models.Establishment.repository.getWhereBelongsToSuperGroup(res.locals.supergroup.id, where));
           }
-        })
-          .then(establishments => {
 
+        });
+
+        getEstablishmentsPromise
+          .then(establishments => {
             res.render('subdomain/supergroup-search', {
               layout: 'subdomain',
-              pageName: 'subdomain-supergroup-search',
-              layoutName: 'subdomain',
+              pageName: 'subdomain-supergroup-results',
+              layoutName: 'map-results',
               establishments: establishments
             });
-
           })
           .catch(error => next(new Error(error)));
 
@@ -76,7 +75,7 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
 
     res.render('subdomain/supergroup', {
       layout: 'subdomain',
-      pageName: 'subdomain-supergroup',
+      pageName: 'subdomain-supergroup-search',
       layoutName: 'map-search'
     });
 

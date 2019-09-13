@@ -73,22 +73,9 @@ Api.getPoolDatas = (req, res, next) => {
 Api.geolocAddress = (req, res, next) => {
   if (!req.body.address)
     return res.status(400).send();
-  gmap.getAddress(req.body.address, req.body.withNulls, req.body.withLocation)
+  gmap.getAddress(req.body.address, req.body.withNulls === true || req.body.withNulls === 'true')
     .then((results) => {
-      const label_map = gmap.getLabelMap();
-      let formatted_results = [];
-      for (let i = 0; i < results.length; i++) {
-        let address = {};
-        for (const labelMapKey in label_map) {
-          if (!results[i][labelMapKey]) continue;
-          address[label_map[labelMapKey]] = results[i][labelMapKey];
-        }
-        formatted_results.push(address);
-      }
-      res.status(200).send({
-        results: results,
-        formatted_results: formatted_results,
-      });
+      res.status(200).send(results);
     })
     .catch(error => next(new BackError(error)));
 };

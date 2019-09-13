@@ -39,25 +39,12 @@ BackOffice_Establishment.create = async (req, res, next) => {
 
 
 
-  gmap.getAddress(req.body.user_address, false, true)
+  gmap.getAddress(req.body.user_address, false)
     .then(results => {
-      const label_map = gmap.getLabelMap();
-      let formatted_results = [];
-
-      for (let i = 0; i < results.length; i++) {
-        let address = {};
-        for (const labelMapKey in label_map) {
-          if (!results[i][labelMapKey]) continue;
-          address[label_map[labelMapKey]] = results[i][labelMapKey];
-        }
-        formatted_results.push(address);
-      }
-
       return res.status(200).json({
         status: 'OK',
         form_data: form_data,
-        results: results,
-        formatted_results: formatted_results
+        results: results
       });
     })
     .catch(error => {
@@ -84,16 +71,16 @@ BackOffice_Establishment.validateCreate = (req, res, next) => {
     logo: req.body.form_data.logo,
     banner: req.body.form_data.banner,
     user_address: req.body.form_data.user_address,
-    formatted_address: req.body.address_data.formatted_address,
-    street_number: req.body.address_data.street_number,
-    street_name: req.body.address_data.street_name,
-    city: req.body.address_data.city,
-    department: req.body.address_data.department,
-    region: req.body.address_data.region,
-    country: req.body.address_data.country,
-    postal_code: req.body.address_data.postal_code,
-    lat: req.body.address_data.lat,
-    lng: req.body.address_data.lng,
+    formatted_address: req.body.formatted_address,
+    street_number: req.body.address.street_number,
+    street_name: req.body.address.street_name,
+    city: req.body.address.city,
+    department: req.body.address.department,
+    region: req.body.address.region,
+    country: req.body.address.country,
+    postal_code: req.body.address.postal_code,
+    lat: req.body.location.lat,
+    lng: req.body.location.lng,
     location_updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
   };
 
@@ -270,10 +257,14 @@ BackOffice_Establishment.EditLocation = (req, res, next) => {
     Models.Establishment.findOne({ where: { id: req.params.id } })
       .then((establishment) => {
         if (_.isNil(establishment)) return next();
-        for (const addressDataKey in req.body.address_data) {
-          establishment[addressDataKey] = req.body.address_data[addressDataKey];
+        for (const addressKey in req.body.address) {
+          establishment[addressKey] = req.body.address[addressKey];
+        }
+        for (const locationKey in req.body.location) {
+          establishment[locationKey] = req.body.location[locationKey];
         }
         establishment.user_address = req.body.form_data.user_address;
+        establishment.formatted_address = req.body.formatted_address;
         establishment.location_updatedAt = moment().format('YYYY-MM-DD HH:mm:ss');
         establishment.save();
       });
@@ -654,7 +645,7 @@ BackOffice_Establishment.bulkUpdateESLocation = (req, res, next) => {
           setTimeout(() => {
 
             resolve(
-              gmap.getAddress(address, false, true)
+              gmap.getAddress(address, false)
                 .then(results => {
 
                   if (results.length > 1) {
@@ -662,15 +653,18 @@ BackOffice_Establishment.bulkUpdateESLocation = (req, res, next) => {
                   }
 
                   try {
-                    for (const addressDataKey in results[0]) {
-                      establishment[addressDataKey] = results[0][addressDataKey];
+                    for (const addressKey in results[0].address) {
+                      establishment[addressKey] = results[0].address[addressKey];
                     }
+                    for (const locationKey in results[0].location) {
+                      establishment[locationKey] = results[0].location[locationKey];
+                    }
+                    establishment.user_address = address;
+                    establishment.formatted_address = results[0].formatted_address;
+                    establishment.location_updatedAt = moment().format('YYYY-MM-DD HH:mm:ss');
                   } catch (error) {
                     operation.status = 'UNEXPECTED_ERROR';
                   }
-
-                  establishment.user_address = address;
-                  establishment.location_updatedAt = moment().format('YYYY-MM-DD HH:mm:ss');
 
                   return establishment.save()
                     .then(() => {

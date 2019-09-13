@@ -14,13 +14,13 @@
 
 <div class="row" style="padding-top:15px; margin: auto !important;">
     <div class="col-md-12">
-        {{#each formatted_results as |formatted_result|}}
+        {{#each results as |result|}}
             <div class="card address-card{{#ifCond @key '==' 0}} selected{{/ifCond}}" data-index="{{@key}}">
                 <div class="card-header" style="padding-bottom:1rem;border-bottom:1px solid rgba(0,0,0,.1);">
-                    <h5 style="margin:0;font-weight:bold;">{{lookup (lookup ../results @key) 'formatted_address'}}</h5>
+                    <h5 style="margin:0;font-weight:bold;">{{lookup result 'formatted_address'}}</h5>
                 </div>
                 <div class="card-content">
-                    {{#each formatted_result}}
+                    {{#each (lookup result 'labeled_address')}}
                         <p><b>{{@key}}:</b> {{.}}</p>
                     {{/each}}
                 </div>
@@ -39,11 +39,8 @@
     });
 
     $('#yes').click(function(){
-
-        let results = [];
-        {{#each results as |result|}}
-            results.push(JSON.parse(`{{{json result}}}`));
-        {{/each}}
+    	// We should have declared this variable outside this function so the JSON is not parsed each time we click the #yes button, but because this script can be loaded multiple times (each time the modal is rendered), second load will cause a conflict because "results" will already be declared.
+        let results = JSON.parse(`{{{json results}}}`);
 
         if($('.address-card.selected').length !== 1 || !results[$('.address-card.selected').attr('data-index')])
         	return;
@@ -53,7 +50,9 @@
         {{#if form_data}}
             request.form_data = JSON.parse(`{{{json form_data}}}`);
         {{/if}}
-        request.address_data = results[$('.address-card.selected').attr('data-index')];
+        request.address = results[$('.address-card.selected').attr('data-index')].address;
+        request.formatted_address = results[$('.address-card.selected').attr('data-index')].formatted_address;
+        request.location = results[$('.address-card.selected').attr('data-index')].location;
 
         {{#if onConfirm}}
             eval('{{onConfirm}}(request);');

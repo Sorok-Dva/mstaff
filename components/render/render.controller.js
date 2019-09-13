@@ -3,6 +3,7 @@ const _ = require('lodash');
 const { Env } = require(`${__}/helpers/helpers`);
 const { BackError } = require(`${__}/helpers/back.error`);
 const Models = require(`${__}/orm/models/index`);
+const sequelize = require(__ + '/bin/sequelize');
 
 const Render = {};
 
@@ -52,33 +53,16 @@ Render.ResetPassword = (req, res) => res.render('users/reset-passwd', { layout: 
 if (Env.isDev) {
   Render.Test = (req, res) => {
 
-    Models.Establishment.findAll({
-      include: {
-        model: Models.EstablishmentGroups,
-        include: {
-          model: Models.Groups,
-          include: {
-            model: Models.GroupsSuperGroups,
-            include: {
-              model: Models.SuperGroups
-            }
-          }
-        }
-      },
-      where: {
-        '$EstablishmentGroups->Group->GroupsSuperGroups->SuperGroup$': 2
-      }
-    })
-      .then((response) => {
-        console.log('SUCCESS');
-        console.log(response.length);
-      })
-      .catch(error => {
-        console.log('ERROR');
-        console.log(error);
-      });
-
-    res.render('test');
+    try {
+      Models.Establishment.repository.getWhereBelongsToSuperGroup(2)
+        .then(results => {
+          console.log(results.length);
+          res.status(200).send();
+        });
+    } catch (e) {
+      console.log(e);
+      res.status(500).send();
+    }
   };
 }
 

@@ -345,7 +345,7 @@
     	$.post('/api/address/geoloc', {
             _csrf: $('meta[name="csrf-token"]').attr('content'),
     		address: $('#user_address').val(),
-            withLocation: true
+            withNulls: false
         }, response => {
             createModal({
                 id: 'confirmAddress',
@@ -356,8 +356,7 @@
                 form_data: {
                     user_address: $('#user_address').val()
                 },
-                results: response.results,
-                formatted_results: response.formatted_results,
+                results: response,
                 onConfirm: 'onConfirm'
             });
         });
