@@ -1,9 +1,8 @@
-<div class="row">
+<div class="row" id="es-container">
   {{#each esAccounts as |account|}}
     <div class="col-4 col-lg-4">
       <div class="card">
         <div class="card-body">
-          <!-- Avatar -->
           <div class="text-center">
             <span class="card-avatar avatar avatar-lg mx-auto">
               {{#if account.Establishment.logo}}
@@ -13,55 +12,38 @@
               {{/if}}
             </span>
           </div>
-
-          <!-- Title -->
           <h2 class="card-title text-center mb-3">
-            <a href="/select/es/{{account.Establishment.id}}">{{account.Establishment.name}}</a>
+            <a href="/select/es/es/{{account.Establishment.id}}">{{account.Establishment.name}}</a>
           </h2>
-
-       {{!--   <!-- Text -->
-          {{#if account.Establishment.domain_enable}}
-            <p class="card-text text-center text-muted mb-4">
-              (<a target="_blank" href="https://{{account.Establishment.domain_name}}.{{@root.domain}}">
-              https://{{account.Establishment.domain_name}}.{{@root.domain}}</a> )
-            </p>
-          {{/if}}
---}}
-          {{!--<!-- Divider -->
-          <hr>
-          <div class="row align-items-center">
-            <div class="col ml-2">
-              <!-- Time -->
-              <p class="card-text small text-muted">
-                <i class="fe fe-clock"></i> Dernière connexion
-              </p>
-
-            </div>
-            <div class="col-auto">
-              <!-- Avatar group -->
-              <div class="avatar-group">
-                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Ab Hadley">
-                  <img src="/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
-                </span>
-                <span  class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Adolfo Hess">
-                  <img src="/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
-                </span>
-                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Daniela Dewitt">
-                  <img src="/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
-                </span>
-                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Miyah Myles">
-                  <img src="/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
-                </span>
-                <div class="avatar avatar-xs">
-                  <div class="avatar-title rounded-circle">+7</div>
-                </div>
-              </div>
-
-            </div>
-          </div> <!-- / .row -->--}}
-
-        </div> <!-- / .card-body -->
+        </div>
       </div>
     </div>
   {{/each}}
 </div>
+
+<script type="text/javascript">
+  $.get(`/select/groups`, (result) => {
+    result.groups.forEach(element => {
+      $('div #es-container').append(`
+      <div class="col-4 col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="text-center">
+            <span class="card-avatar avatar avatar-lg mx-auto">
+                <img alt="Logo ${element.Establishment.name}" src="/assets/images/default_hospital.jpg" class="avatar-img rounded">
+            </span>
+          </div>
+          <h2 class="card-title text-center mb-3">
+            <a href="/select/es/group/${element.es_id}">${element.Establishment.name}</a>
+          </h2>
+          <h5 id="${element.id}" class="text-center"></h5>
+        </div>
+      </div>
+    </div>`);
+      if(element.supergroup_id !== null)
+        $(`#${element.id}`).text(`${element.SuperGroup.name} - ${element.Group.name}`);
+      else
+        $(`#${element.id}`).text(`${element.Group.name}`);
+    });
+  }).catch(errors => { errorsHandler(errors); });
+</script>
