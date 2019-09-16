@@ -11,9 +11,13 @@ router.get('/select/es',
   Authentication.ensureIsEs,
   Establishment.Main.ViewAccounts);
 
-router.get('/select/es/:currentEsId',
+router.get('/select/es/:type/:currentEsId',
   Authentication.ensureIsEs,
   Establishment.Main.Select);
+
+router.get('/select/groups',
+  Authentication.ensureIsEs,
+  Establishment.Main.ViewAllGroups);
 
 /**
  * @Route('/candidates') GET;

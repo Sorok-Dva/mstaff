@@ -7,6 +7,28 @@ const Models = require(`${__}/orm/models/index`);
 
 const Establishment = {};
 
+Establishment.ViewAllGroups = (req, res, next) => {
+  Models.UsersGroups.findAll({
+    where: { user_id: req.user.id },
+    include: [
+      {
+        model: Models.Establishment,
+        attributes: ['name', 'logo', 'id']
+      },
+      {
+        model: Models.Groups,
+        attributes: ['name']
+      },
+      {
+        model: Models.SuperGroups,
+        attributes: ['name']
+      }
+    ]
+  }).then(groupAccounts => {
+    res.status(200).send({ groups: groupAccounts });
+  }).catch(error => next(new BackError(error)));
+};
+
 Establishment.ViewAccounts = (req, res, next) => {
   Models.ESAccount.findAll({
     where: { user_id: req.user.id },
@@ -20,7 +42,16 @@ Establishment.ViewAccounts = (req, res, next) => {
 };
 
 Establishment.Select = (req, res, next) => {
-  Models.ESAccount.findOne({
+  let model = req.params.type;
+  if (_.isNil(model)) return next(new BackError(`Type "${model}" introuvable.`, httpStatus.NOT_FOUND));
+  if (model === 'es')
+    model = 'ESAccount';
+  else if (model === 'group')
+    model = 'UsersGroups';
+  else
+    return next(new BackError(`Type "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
+
+  Models[model].findOne({
     where: { user_id: req.user.id, es_id: req.params.currentEsId },
     include: {
       model: Models.Establishment,
