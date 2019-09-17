@@ -95,7 +95,7 @@ Establishment_Offer.Create = (req, res, next) => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.needId} introuvable.`, httpStatus.NOT_FOUND));
     if (_.isNil(need.JobSheet)) need.JobSheet = {};
     Models.Offer.create({
-      name: need.name,
+      name: _.isNil(need.JobSheet.name) ? need.JobSheet.name : need.name,
       need_id: need.id,
       es_id: need.es_id,
       nature_section: {
