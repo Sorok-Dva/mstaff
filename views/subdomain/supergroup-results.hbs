@@ -1,0 +1,90 @@
+{{#extend "body"}}
+
+    <div class="page-body">
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-9 no-gutters">
+
+                    <div class="map" id="map"></div>
+
+                </div>
+
+                <div class="col-3 no-gutters right-column">
+
+                    <header class="column-header page-header">
+
+                        <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{supergroup.logo}}');"></div>
+                        <span class="header-title-label">Super Groupe</span>
+                        <h1 class="header-title">{{supergroup.name}}</h1>
+
+                    </header>
+
+                    <div class="column-body">
+
+                        <div class="result-list">
+                            {{#each establishments as |establishment|}}
+                                <div class="result" data-establishment-id="{{establishment.id}}">
+                                    <h5 class="title">{{establishment.name}}</h5>
+                                    {{#if establishment.formatted_address}}<span class="title-label"><i class="fas fa-map-marker-alt"></i>{{establishment.formatted_address}}</span>{{/if}}
+                                </div>
+                            {{/each}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-map-marker-alt"></i>
+            <form action="/" method="post">
+                <input type="text" name="search" placeholder="42 rue du test, Paris">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            </form>
+        </div>
+
+    </div>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+    <script src="/assets/theme/mstaff/js/modules/map.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+    <script>
+        let establishments = [];
+        {{#each establishments as |establishment|}}
+        {{#if establishment.lat}}
+            establishments.push({
+                id: {{establishment.id}},
+                name: "{{establishment.name}}",
+                lat: {{establishment.lat}},
+                lng: {{establishment.lng}}
+            });
+        {{/if}}
+        {{/each}}
+
+
+
+        $(document).ready(function(){
+            initAutocompleteInput($('input[name="search"]').get(0));
+            initResultMap(document.getElementById('map'), establishments, forEachMarker);
+        });
+
+
+
+        function forEachMarker(marker, info, result){
+            $('.result[data-establishment-id="' + result.id + '"]').hover(function(){
+                info.open(map, marker);
+            }, function(){
+                info.close();
+            });
+        }
+    </script>
+{{/extend}}

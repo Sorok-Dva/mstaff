@@ -42,4 +42,7 @@ router.get('/services/all',
 router.get('/atsDatas/all',
   Subdomain.Establishment.GetAtsDatas);
 
+router.get('/offer/:id(\\d+)',
+  Subdomain.Establishment.ShowOffer);
+
 module.exports = router;

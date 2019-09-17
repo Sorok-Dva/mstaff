@@ -1,4 +1,18 @@
 function adjustLayout(options){
+
+    $(document).ready(() => {
+
+        _adjustLayout(options);
+
+        $(window).resize(function(){
+            _adjustLayout(options);
+        });
+
+    });
+
+}
+
+function _adjustLayout(options){
     if(!options.selector)
         throw Error();
 

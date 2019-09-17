@@ -1,115 +1,70 @@
 {{#extend "body"}}
 
-    <header class="page-header">
+    <div class="page-body">
+
         <div class="container">
 
-            <div class="push">
-                <div class="aic jcc">
-                    <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{supergroup.logo}}');"></div>
-                    <div>
+            <div class="row">
+
+                <div class="col-12">
+
+                    <header class="page-header">
+
+                        <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{supergroup.logo}}');"></div>
                         <span class="header-title-label">Super Groupe</span>
                         <h1 class="header-title">{{supergroup.name}}</h1>
-                    </div>
-                </div>
-                <div class="aic jcc">
-                    <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
-                </div>
-            </div>
 
-        </div>
-    </header>
+                    </header>
 
-    <div class="container-fluid">
-
-        <div class="row">
-
-            <div class="col-12 col-md-6 no-gutters">
-
-                <div class="page-banner">
-                    <div class="image-ratio image-ratio-40" style="background-image:url('{{supergroup.banner}}');"></div>
-                    <div class="page-banner__shadow"></div>
                 </div>
 
             </div>
 
-            <div class="w-100"></div>
+            <div class="row">
 
-            <div class="col-12 col-md-6">
+                <div class="col-12">
 
-                <h1 class="baseline baseline-page">Retrouvez ici les <span>établissement</span> du super-groupe <span>{{supergroup.name}}</span></h1>
+                    <div class="baseline baseline-page">Lorem ipsum dolor sit amet, consectetur adipisicing elit.<span><br>Lorem ipsum dolor sit amet.</span></div>
 
-                <div class="row">
-                    <div class="col-12 col-xl-8 offset-xl-2">
-
-                        <div class="page-filters">
-                            <div class="button button-pink filter-clear"><i class="fas fa-times"></i>Afficher tous les établissements</div>
-                        </div>
-
-                        <div class="card-list establishment-list">
-
-                            {{#each group.es as |data|}}
-                                <div class="establishment mix" data-establishment-id="{{data.es.id}}">
-                                    <div class="card">
-                                        <div class="card__header">
-                                            {{#if data.es.town}}<div class="card__legend"><i class="far fa-map-marker-alt"></i>{{data.es.town}}</div>{{/if}}
-                                            <h3 class="card__title title">{{data.es.name}}</h3>
-                                        </div>
-                                        <div class="card__thumbnail-container"></div>
-                                        {{#if data.es.domain_name}}
-                                            <div class="card__footer tar">
-                                                {{#ifCond data.es.offers.length '!=' 0}}<a href="https://{{data.es.domain_name}}.medikstaff.com" class="button button-green">Accéder aux offres ({{data.es.offers.length}})</a>{{/ifCond}}
-                                                <a href="https://{{data.es.domain_name}}.medikstaff.com/join" class="button button-pink">Candidature spontanée</a>
-                                            </div>
-                                        {{/if}}
-                                    </div>
-                                </div>
-                            {{/each}}
-
-                        </div>
-
-                    </div>
                 </div>
 
             </div>
 
-            <div class="w-100"></div>
+            <div class="row">
 
-            <div class="col-12 col-md-6 no-gutters">
+                <div class="col-6 offset-3 tac">
 
-                <footer class="page-footer">
-                    <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
-                </footer>
+                    <form method="post">
+                        <label for="search">Où êtes-vous ?</label>
+                        <input type="text" name="search" placeholder="42 rue du test, Paris">
+                        <input type="hidden" name="address_components">
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+                        <button class="button button-pink">Rechercher</button>
+                    </form>
+
+                    <br>
+                    <br>
+                    <a href="#" style="color:#e91e63;font-style:italic;">Afficher tous les établissement de {{supergroup.name}}</a>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
 
-    <div class="map-container">
-        <div id="map"></div>
+
     </div>
 
 {{/extend}}
 
 {{#extend "scripts"}}
-    <script src="/assets/theme/mstaff/js/modules/adjust-layout.js"></script>
+    <script src="/assets/theme/mstaff/js/modules/map.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
     <script>
-        let options = {
-            selector: 'body > .container-fluid > .row > [class*="col"]:nth-child(3)',
-            hasPageHeader: true,
-            hasPageBanner: true,
-            hasPageFooter: true
-        };
-
-        $(document).ready(() => {
-
-            adjustLayout(options);
-
-            $(window).resize(function(){
-                adjustLayout(options);
-            });
-
+        $(document).ready(function(){
+            initAutocompleteInput($('input[name="search"]').get(0));
         });
     </script>
 {{/extend}}

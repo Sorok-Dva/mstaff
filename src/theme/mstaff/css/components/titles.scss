@@ -4,6 +4,10 @@
 	&.title-page{
 		font-size:1.5em;
 	}
+
+	& + .title-label{
+		margin-top:.5rem;
+	}
 }
 
 .baseline{
@@ -18,4 +22,11 @@
 		font-size:1.25em;
 		text-align:center;
 	}
+}
+
+.title-label{
+	display:block;
+	font-size:.7em;
+	font-style:italic;
+	color:$fontColorLightFade;
 }

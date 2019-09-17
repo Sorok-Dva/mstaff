@@ -1,0 +1,86 @@
+@import "../global/colors";
+
+body.layout-map-results{
+
+    .page-body{
+        position:fixed;
+        top:0;
+        right:0;
+        bottom:0;
+        left:0;
+
+        & > .container-fluid{
+            height:100%;
+
+            & > .row{
+                height:100%;
+
+                & > [class*="col"]{
+                    height:100%;
+                }
+            }
+        }
+
+        .map{
+            height:100%;
+        }
+
+        .right-column{
+            overflow-x:hidden;
+
+            .column-header{
+                padding:2rem 0;
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+                -webkit-box-shadow:0 0 15px transparentize($backgroundColorDark, .8);
+                -moz-box-shadow:0 0 15px transparentize($backgroundColorDark, .8);
+                box-shadow:0 0 15px transparentize($backgroundColorDark, .8);
+
+                & > *:not(:last-child){
+                    margin-bottom:1rem;
+                }
+            }
+
+            .column-body{
+                .result-list{
+                    .result{
+                        padding:2rem;
+                        border-bottom:1px solid $borderColorLight;
+                    }
+                }
+            }
+        }
+
+        .search-bar{
+            position:absolute;
+            top:1rem;
+            left:1rem;
+
+            input[name="search"]{
+                position:relative;
+                padding:1rem 2rem 1rem 4rem;
+                font-size:1.25em;
+                font-family: 'Work Sans', Verdana, Arial, sans-serif;
+                font-style:italic;
+            }
+
+            i{
+                position:absolute;
+                left:1.5rem;
+                top:50%;
+                font-size:1.5em;
+                color:$fontColorDarkFade;
+                z-index:1;
+                -webkit-transform:translateY(-50%);
+                -moz-transform:translateY(-50%);
+                -ms-transform:translateY(-50%);
+                -o-transform:translateY(-50%);
+                transform:translateY(-50%);
+            }
+
+        }
+
+    }
+
+}

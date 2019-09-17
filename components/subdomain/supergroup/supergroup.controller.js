@@ -38,13 +38,16 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
             Object.prototype.hasOwnProperty.call(results[0].address, 'postal_code')
           ) {
             return resolve(
-              Models.Establishment.repository.rawGetInRange(results[0].location, 100, [
+              Models.Establishment.repository.getWhereBelongsToSuperGroup(res.locals.supergroup.id)
+            );
+            /*return resolve(
+              Models.Establishment.repository.rawGetInRange(results[0].location, 1000, [
                 'LEFT JOIN EstablishmentGroups ON InBounds.id = EstablishmentGroups.id_es',
-                'LEFT JOIN Groups ON EstablishmentGroups.id_group = Groups.id',
-                'LEFT JOIN GroupsSuperGroups ON Groups.id = GroupsSuperGroups.id_group',
+                'LEFT JOIN `Groups` ON EstablishmentGroups.id_group = Groups.id',
+                'LEFT JOIN GroupsSuperGroups ON `Groups`.id = GroupsSuperGroups.id_group',
                 'LEFT JOIN SuperGroups ON GroupsSuperGroups.id_super_group = SuperGroups.id'
               ], 'WHERE SuperGroups.id = ' + res.locals.supergroup.id)
-            );
+            );*/
           } else {
             let where = {};
             for (const addressKey in results[0].address) {
@@ -55,9 +58,9 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
 
         });
 
-        getEstablishmentsPromise
+        return getEstablishmentsPromise
           .then(establishments => {
-            res.render('subdomain/supergroup-search', {
+            return res.render('subdomain/supergroup-results', {
               layout: 'subdomain',
               pageName: 'subdomain-supergroup-results',
               layoutName: 'map-results',
@@ -67,13 +70,11 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
           .catch(error => next(new Error(error)));
 
       })
-      .catch(error => {
-        // TODO
-      });
+      .catch(error => next(new Error(error.status)));
 
   } else {
 
-    res.render('subdomain/supergroup', {
+    res.render('subdomain/supergroup-search', {
       layout: 'subdomain',
       pageName: 'subdomain-supergroup-search',
       layoutName: 'map-search'

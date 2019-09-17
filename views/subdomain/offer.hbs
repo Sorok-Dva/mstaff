@@ -14,7 +14,6 @@
                 <div class="aic jcc">
                     {{#if es.url}}<a href="{{es.url}}" class="button button-green button-fluid">Site web</a>{{/if}}
                     {{#if hasGroup}}<a href="{{es.EstablishmentGroups.0.Group.domain_name}}" class="button button-green button-fluid">Accéder au groupe</a>{{/if}}
-                    <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
                 </div>
             </div>
 
@@ -66,27 +65,27 @@
                             {{#each needs as |need|}}
 
 
-                                    <div class="col-12 no-gutters">
-                                        <div class="card">
-                                            <div class="card__thumbnail-container"></div>
-                                            <div class="card__header">
-                                                <h3 class="card__title title">Ergotherapeuthe</h3>
-                                            </div>
-                                            <div class="card__body content-type-text">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis!</p>
-                                            </div>
-                                            <div class="card__footer">
-                                                <div class="push">
-                                                    <div class="aic">
-                                                        <div class="tag tag-blue">CDI</div>
-                                                    </div>
-                                                    <div class="aic">
-                                                        <a href="offer/1" class="button button-pink">Voir l'offre</a>
-                                                    </div>
+                                <div class="col-12 no-gutters">
+                                    <div class="card">
+                                        <div class="card__thumbnail-container"></div>
+                                        <div class="card__header">
+                                            <h3 class="card__title title">Ergotherapeuthe</h3>
+                                        </div>
+                                        <div class="card__body content-type-text">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis!</p>
+                                        </div>
+                                        <div class="card__footer">
+                                            <div class="push">
+                                                <div class="aic">
+                                                    <div class="tag tag-blue">CDI</div>
+                                                </div>
+                                                <div class="aic">
+                                                    <a href="offer/1" class="button button-pink">Voir l'offre</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
                             {{/each}}
 
@@ -140,20 +139,20 @@
                 if(!$(this).hasClass('map-shown')){
 
                     $(this)
-                        .removeClass('button-green')
-                        .addClass('map-shown button-pink')
-                        .empty()
-                        .append('<i class="fas fa-times"></i>Fermer la carte');
+                            .removeClass('button-green')
+                            .addClass('map-shown button-pink')
+                            .empty()
+                            .append('<i class="fas fa-times"></i>Fermer la carte');
                     $('.show-map-col').addClass('col-md-6');
                     $('.map-container').show();
 
                 }else{
 
                     $(this)
-                        .removeClass('map-shown button-pink')
-                        .addClass('button-green')
-                        .empty()
-                        .append('<i class="fas fa-route"></i>Comment m\'y rendre');
+                            .removeClass('map-shown button-pink')
+                            .addClass('button-green')
+                            .empty()
+                            .append('<i class="fas fa-route"></i>Comment m\'y rendre');
                     $('.show-map-col').removeClass('col-md-6');
 
                     setTimeout(function(){

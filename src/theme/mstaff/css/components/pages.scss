@@ -1,12 +1,4 @@
 .page-header{
-	position:fixed;
-	left:0;
-	right:0;
-	top:0;
-	padding:1rem 0;
-	background-color:$backgroundColorDark;
-	color:$fontColorLight;
-	z-index:999;
 
 	.header-logo{
 		width:80px;
@@ -52,7 +44,21 @@
 		left:0;
 		right:0;
 		display:flex;
-		align-items:center;
+		align-items:flex-end;
+
+		.container{
+			text-align:right;
+
+			.banner-info-card{
+				display:inline-block;
+				text-align:left;
+				padding:0 1rem;
+				font-size:.9em;
+				-webkit-box-shadow:0 10px 30px $backgroundColorDark, 0 10px 5px transparentize($backgroundColorDark, .5);
+				-moz-box-shadow:0 10px 30px $backgroundColorDark, 0 10px 5px transparentize($backgroundColorDark, .5);
+				box-shadow:0 10px 30px $backgroundColorDark, 0 10px 5px transparentize($backgroundColorDark, .5);
+			}
+		}
 	}
 }
 

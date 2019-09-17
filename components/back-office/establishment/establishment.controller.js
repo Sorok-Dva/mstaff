@@ -1,5 +1,6 @@
 const __ = process.cwd();
 const _ = require('lodash');
+const fs = require('fs');
 const { validationResult } = require('express-validator');
 const { Sequelize, Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
@@ -200,7 +201,7 @@ BackOffice_Establishment.Edit = (req, res, next) => {
                 else subCheckOk = true
               } else subCheckOk = true;
 
-              es.update({
+              let update = {
                 name: req.body.name,
                 category: req.body.category,
                 finess_ej: req.body.finess_ej,
@@ -216,9 +217,21 @@ BackOffice_Establishment.Edit = (req, res, next) => {
                 contact_phone: req.body.contactPhone,
                 domain_enable: parseInt(req.body.domain_enable),
                 domain_name: req.body.domain_name,
-                logo: req.body.logo,
-                banner: req.body.banner,
-              }).then(savedEs => {
+              };
+              if (req.uploads && req.uploads.logo){
+                update.logo = req.uploads.logo.dir.replace('public', '') + '/' + req.uploads.logo.name;
+                if (fs.existsSync('public' + es.logo)){
+                  fs.unlinkSync('public' + es.logo)
+                }
+              }
+              if (req.uploads && req.uploads.banner){
+                update.banner = req.uploads.banner.dir.replace('public', '') + '/' + req.uploads.banner.name;
+                if (fs.existsSync('public' + es.banner)){
+                  fs.unlinkSync('public' + es.banner)
+                }
+              }
+
+              es.update(update).then(savedEs => {
                 if (subCheckOk) {
                   if (subESExist) {
                     esSubdomain.update({

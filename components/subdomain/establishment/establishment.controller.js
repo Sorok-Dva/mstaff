@@ -8,13 +8,30 @@ const Models = require(`${__}/orm/models/index`);
 const Establishment_Website = {};
 
 Establishment_Website.ViewIndex = (req, res, next) => {
-  let hasGroup = res.locals.es.EstablishmentGroups && res.locals.es.EstablishmentGroups.length == 1;
-  return res.render('subdomain/establishment', {
-    hasGroup: hasGroup,
-    layout: 'subdomain',
-    pageName: 'subdomain-establishment',
-    layoutName: 'subdomain'
-  });
+  Models.Need.findAll({
+    where: {
+      es_id: res.locals.es.id
+    },
+    include: [
+      {
+        model: Models.Offer,
+        on: {
+          need_id: '$Need.id$',
+          es_id: res.locals.es.id
+        }
+      }
+    ]
+  })
+    .then(needs => {
+      debugger;
+      return res.render('subdomain/establishment', {
+        needs: needs,
+        hasGroup: res.locals.es.EstablishmentGroups && res.locals.es.EstablishmentGroups.length == 1,
+        layout: 'subdomain',
+        pageName: 'subdomain-establishment',
+        layoutName: 'subdomain'
+      });
+    }).catch( error => next(new BackError(error)));
 };
 
 Establishment_Website.find = (id, next) => {
@@ -44,6 +61,20 @@ Establishment_Website.find = (id, next) => {
     if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
     next(es);
   }).catch( error => next(new BackError(error)));
+};
+
+Establishment_Website.ShowOffer = (req, res, next) => {
+  return res.render('subdomain/offer', {
+    layout: 'subdomain',
+    pageName: 'subdomain-establishment-offer',
+    layoutName: 'subdomain'
+  });
+  /*Models.Offer.findOne({
+    where: { id: req.params.id }
+  })
+    .then((offer) => {
+      return res.render('subdomain/offer', { offer: offer });
+    }).catch(error => next(new Error(error)));*/
 };
 
 Establishment_Website.ViewATS = (req, res, next) => {

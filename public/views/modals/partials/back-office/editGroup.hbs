@@ -4,14 +4,6 @@
     <input class="form-control" type="text" id="groupValueEdit" value="{{this.group.name}}">
   </div>
   <div class="form-group">
-    <label for="groupLogoEdit">Logo</label>
-    <input class="form-control" type="text" id="groupLogoEdit" value="{{this.group.logo}}">
-  </div>
-  <div class="form-group">
-    <label for="groupBannerEdit">Bannière</label>
-    <input class="form-control" type="text" id="groupBannerEdit" value="{{this.group.banner}}">
-  </div>
-  <div class="form-group">
     <label for="groupDomainEdit">Domaine</label>
     <select class="form-control" id="groupDomainEdit" name="domaine_enable">
       <option value="0" {{#ifCond this.group.domain_enable '===' 'Inactif'}}selected="selected"{{/ifCond}}>Inactif</option>
@@ -27,7 +19,21 @@
       <div class="col-md-4" style="margin-left: -26px;"><h4>.mstaff.co</h4></div>
     </div>
   </div>
+    <div class="form-group">
+        <label for="logo" style="display: block;">Logo</label>
+        {{#if this.group.logo}}
+            <img src="{{this.group.logo}}" alt="logo" style="max-width:100%;">
+        {{/if}}
+        <input class="form-control" type="file" id="logo" name="logo">
+    </div>
+    <div class="form-group">
+        <label for="banner" style="display: block;">Bannière</label>
+        {{#if this.group.banner}}
+            <img src="{{this.group.banner}}" alt="logo" style="max-width:100%;">
+        {{/if}}
+        <input class="form-control" type="file" id="banner" name="banner">
+    </div>
 </div>
 <div class="modal-footer">
-  <button type="butto1n" class="btn btn-default" id="btnEditGroup"> Modifier le groupe</button>
+  <button type="button" class="btn btn-default" id="btnEditGroup"> Modifier le groupe</button>
 </div>

@@ -1,6 +1,7 @@
 const { Authentication, HTTPValidation } = require('../../middlewares/index');
 const { BackOffice } = require('../../components');
 const express = require('express');
+const fileUpload = require('../../helpers/file-upload');
 const router = express.Router();
 
 router.get(
@@ -91,7 +92,9 @@ router.post('/configuration/equipments/',
     Authentication.ensureIsAdmin,
     BackOffice.Configuration.RemoveEquipment);
 
-router.put('/groups/:type/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.Edit)
+router.put('/groups/:type/:id(\\d+)', Authentication.ensureIsAdmin, fileUpload.getUploader((req) => {
+  return 'public/uploads/' + req.params.type + '/' + req.params.id;
+}).fields([{ name: 'logo', maxCount: 1 }, { name: 'banner', maxCount: 1 }]), BackOffice.Group.Edit)
   .delete('/groups/:type/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.Remove)
   .post('/groups/:type', Authentication.ensureIsAdmin, BackOffice.Group.Add);
 

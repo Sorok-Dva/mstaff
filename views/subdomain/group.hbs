@@ -95,95 +95,64 @@
 {{#extend "scripts"}}
     <script src="/assets/theme/mstaff/js/modules/adjust-layout.js"></script>
     <script>
-        let options = {
+        adjustLayout({
             selector: 'body > .container-fluid > .row > [class*="col"]:nth-child(3)',
             hasPageHeader: true,
             hasPageBanner: true,
             hasPageFooter: true
-        };
-
-        $(document).ready(() => {
-
-            adjustLayout(options);
-
-            $(window).resize(function(){
-                adjustLayout(options);
-            });
-
         });
     </script>
 
     <script src="/assets/theme/mstaff/lib/mixitup.min.js"></script>
+    <script src="/assets/theme/mstaff/js/modules/map.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
     <script>
         let establishments = [];
-        {{#each group.es as |data|}}
+        {{#each group.es as |establishment|}}
+        {{#if establishment.lat}}
             establishments.push({
-                id: {{data.es.id}},
-                name: "{{data.es.name}}",
-                lat: {{data.es.ref.lat}},
-                lng: {{data.es.ref.lon}}
+                id: {{establishment.id}},
+                name: "{{establishment.name}}",
+                lat: {{establishment.lat}},
+                lng: {{establishment.lon}}
             });
+        {{/if}}
         {{/each}}
         let mixer = null;
 
+
+
         $(document).ready(function(){
-            initMap();
+            initResultMap(document.getElementById('map'), establishments, forEachMarker);
             initGrid();
         });
 
 
 
-        function initMap(){
-
-            let map = new google.maps.Map(document.getElementById('map'), {
-                mapTypeControl: false
+        function forEachMarker(marker, info, result){
+            marker.addListener('click', function(){
+                if($(window).scrollTop() === 0){
+                    filterEstablishmentsById(result.id);
+                }else{
+                    $('html,body').animate({scrollTop: 0}, {
+                        complete: function(){
+                            filterEstablishmentsById(result.id);
+                        }
+                    });
+                }
             });
-            let bounds = new google.maps.LatLngBounds();
 
-            let markers = [];
-            for(let i = 0; i < establishments.length; i++){
-                let marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(establishments[i].lat, establishments[i].lng),
-                    map: map
-                });
+            $('.result[data-establishment-id="' + result.id + '"]').hover(function(){
+                info.open(map, marker);
+            }, function(){
+                info.close();
+            });
+        }
 
-                let info = new google.maps.InfoWindow({
-                    content: '<h1 class="card__title title">' + establishments[i].name + '</h1>'
-                });
-
-                marker.addListener('mouseover', function(){
-                    info.open(map, marker);
-                });
-                marker.addListener('mouseout', function(){
-                    info.close();
-                });
-                marker.addListener('click', function(){
-                    if($(window).scrollTop() === 0){
-                        filterEstablishmentsById(establishments[i].id);
-                    }else{
-                        $('html,body').animate({scrollTop: 0}, {
-                            complete: function(){
-                                filterEstablishmentsById(establishments[i].id);
-                            }
-                        });
-                    }
-                });
-                markers.push(marker);
-
-                $('.establishment[data-establishment-id="' + establishments[i].id + '"]').hover(function(){
-                    info.open(map, marker);
-                }, function(){
-                    info.close();
-                });
-
-                bounds.extend(marker.position);
-            }
-
-            new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-            map.fitBounds(bounds);
-
+        function filterEstablishmentsById(es_id){
+            mixer.filter('[data-establishment-id="' + es_id + '"]');
+            $('.page-filters').slideDown();
         }
 
         /**
@@ -208,12 +177,6 @@
                         $('.page-banner').removeAttr('style');
                     });
             });
-        }
-
-        function filterEstablishmentsById(es_id){
-
-            mixer.filter('[data-establishment-id="' + es_id + '"]');
-            $('.page-filters').slideDown();
         }
     </script>
 {{/extend}}
