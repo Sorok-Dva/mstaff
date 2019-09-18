@@ -5,182 +5,63 @@ module.exports = {
     const { Op } = Sequelize;
     const fs = require('fs');
 
-    return queryInterface.sequelize.transaction(transaction => {
+    let sql = '' +
+      /*'DELETE FROM Establishments WHERE name LIKE "%CROIX%ROUGE%";' +
+      'ALTER TABLE Establishments ADD street_number VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD city, VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD region VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD country VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD postal_code VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD lat DECIMAL(10,8);' +
+      'ALTER TABLE Establishments ADD lng DECIMAL(11,8);' +
+      'ALTER TABLE Establishments ADD structure_number VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD attachement_direction VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD region_code VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD long_wording VARCHAR(255);' +
+      'ALTER TABLE Establishments ADD spinneret VARCHAR(255);' +*/
+      'ALTER TABLE Establishments ADD primary_group_id INT,' +
+      'ADD CONSTRAINT fk_primary_group_id FOREIGN KEY (primary_group_id) REFERENCES Groups(id) ON DELETE SET NULL ON UPDATE CASCADE;';
+      // 'ALTER TABLE Establishments ADD location_updatedAt VARCHAR(255);';
 
-      return queryInterface.getForeignKeyReferencesForTable('Subdomains', { transaction: transaction })
-        .then(foreignKeys => {
+    // sql = 'START TRANSACTION;' + sql + 'COMMIT;';
 
-          let promises = [];
-
-          for (let i = 0; i < foreignKeys.length; i++) {
-            const foreignKey = foreignKeys[i];
-
-            promises.push(
-              queryInterface.removeConstraint('Subdomains', foreignKey.constraintName, { transaction: transaction })
-            );
-
-          }
-
-          return Promise.all(promises);
-
-        })
-        .then(() => {
-          return Promise.all([
-            queryInterface.addConstraint('Subdomains', ['es_id'], {
-              type: 'foreign key',
-              name: 'Subdomains_ibfk1',
-              references: {
-                table: 'Establishments',
-                field: 'id'
-              },
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-              transaction: transaction
-            }),
-            queryInterface.addConstraint('Subdomains', ['group_id'], {
-              type: 'foreign key',
-              name: 'Subdomains_ibfk2',
-              references: {
-                table: 'Groups',
-                field: 'id'
-              },
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-              transaction: transaction
-            }),
-            queryInterface.addConstraint('Subdomains', ['super_group_id'], {
-              type: 'foreign key',
-              name: 'Subdomains_ibfk3',
-              references: {
-                table: 'SuperGroups',
-                field: 'id'
-              },
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-              transaction: transaction
-            }),
-          ]);
-
-        })
-        .then(() => {
-          return queryInterface.bulkDelete('Establishments', {
-            name: {
-              [Op.or]: [{ [Op.like]: '%CROIX-ROUGE%' }, { [Op.like]: '%CROIX ROUGE%' }]
-            } }, { transaction: transaction }
-          );
-
-        })
-        .then(() => {
-          return Promise.all([
-            queryInterface.addColumn('Establishments', 'street_number', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'street_name', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'city', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'department', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'region', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'country', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'postal_code', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'lat', {
-              type: Sequelize.DECIMAL(10, 8),
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'lng', {
-              type: Sequelize.DECIMAL(11, 8),
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'structure_number', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'attachement_direction', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'region_code', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'long_wording', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'spinneret', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'primary_group_id', {
-              type: Sequelize.INTEGER,
-              references: {
-                model: 'Groups',
-                key: 'id'
-              },
-              allowNull: true,
-              onDelete: 'SET NULL'
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'location_updatedAt', {
-              type: Sequelize.DATE,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Applications', 'is_available', {
-              type: Sequelize.BOOLEAN,
-              allowNull: true,
-              defaultValue: 1
-            }, { transaction: transaction }),
-            queryInterface.removeColumn('Candidates', 'is_available', { transaction: transaction }),
-          ]);
-        })
-        .then(() => {
-          return new Promise((resolve, reject) => {
-            fs.readFile(`${__}/orm/jsonDatas/croix-rouge.json`, 'utf8', (err, data) => {
-              if (err)
-                return reject(err);
-              try {
-                let datas = JSON.parse(data);
-                let arrayDatas = [];
-
-                datas.forEach(d => {
-                  let formattedObject = {};
-                  for (const dKey in d) {
-                    if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2')
-                      continue;
-                    if (dKey === 'Adresse physique - Complément'){
-                      d.address1 = d[dKey];
-                      continue;
-                    }
-                    formattedObject[dKey] = d[dKey];
-                  }
-                  formattedObject.address = d.address1 + ' ' + d.address2 + ' ' + d.address3;
-                  formattedObject.town = d.town1 + ' ' + d.town2;
-                  arrayDatas.push(formattedObject);
-                });
-                resolve (queryInterface.bulkInsert('Establishments', arrayDatas, { transaction: transaction }));
-              } catch (e) {
-                reject(e);
-              }
-            });
-          });
-        });
+    return queryInterface.sequelize.query(sql).catch( (err) => {
+      queryInterface.sequelize.query('ROLLBACK;');
+      return Promise.reject('Unexpected error, all changes have been manually rollbacked' + err);
     });
+
+
+    /*.then(() => {
+        /!*return new Promise((resolve, reject) => {
+          fs.readFile(`${__}/orm/jsonDatas/croix-rouge.json`, 'utf8', (err, data) => {
+            if (err)
+              return reject(err);
+            try {
+              let datas = JSON.parse(data);
+              let arrayDatas = [];
+
+              datas.forEach(d => {
+                let formattedObject = {};
+                for (const dKey in d) {
+                  if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2')
+                    continue;
+                  if (dKey === 'Adresse physique - Complément'){
+                    d.address1 = d[dKey];
+                    continue;
+                  }
+                  formattedObject[dKey] = d[dKey];
+                }
+                formattedObject.address = d.address1 + ' ' + d.address2 + ' ' + d.address3;
+                formattedObject.town = d.town1 + ' ' + d.town2;
+                arrayDatas.push(formattedObject);
+              });
+              resolve (queryInterface.bulkInsert('Establishments', arrayDatas, { transaction: transaction }));
+            } catch (e) {
+              reject(e);
+            }
+          });
+        });*!/
+      });*/
   },
 
   down: (queryInterface, Sequelize) => {

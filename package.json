@@ -55,6 +55,7 @@
     "intl-tel-input": "^16.0.2",
     "jimp": "^0.6.8",
     "jsonwebtoken": "^8.5.1",
+    "knex": "^0.19.4",
     "lodash": "^4.17.15",
     "md5": "^2.2.1",
     "method-override": "^3.0.0",
