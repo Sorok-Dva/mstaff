@@ -18,12 +18,13 @@ Establishment_Website.ViewIndex = (req, res, next) => {
         on: {
           need_id: '$Need.id$',
           es_id: res.locals.es.id
-        }
+        },
+        require: false
       }
     ]
   })
     .then(needs => {
-      debugger;
+      console.log(needs);
       return res.render('subdomain/establishment', {
         needs: needs,
         hasGroup: res.locals.es.EstablishmentGroups && res.locals.es.EstablishmentGroups.length == 1,

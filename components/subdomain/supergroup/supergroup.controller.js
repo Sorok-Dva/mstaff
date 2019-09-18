@@ -38,16 +38,17 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
             Object.prototype.hasOwnProperty.call(results[0].address, 'postal_code')
           ) {
             return resolve(
-              Models.Establishment.repository.getWhereBelongsToSuperGroup(res.locals.supergroup.id)
-            );
-            /*return resolve(
-              Models.Establishment.repository.rawGetInRange(results[0].location, 1000, [
-                'LEFT JOIN EstablishmentGroups ON InBounds.id = EstablishmentGroups.id_es',
-                'LEFT JOIN `Groups` ON EstablishmentGroups.id_group = Groups.id',
-                'LEFT JOIN GroupsSuperGroups ON `Groups`.id = GroupsSuperGroups.id_group',
-                'LEFT JOIN SuperGroups ON GroupsSuperGroups.id_super_group = SuperGroups.id'
+              Models.Establishment.repository.rawGetInRange(results[0].location, 100, [
+                '`Groups`.id AS group_id',
+                '`Groups`.name AS group_name',
+                '`Groups`.domain_name AS group_domain'
+              ], [
+                'LEFT OUTER JOIN EstablishmentGroups ON InBounds.id = EstablishmentGroups.id_es',
+                'LEFT OUTER JOIN `Groups` ON EstablishmentGroups.id_group = Groups.id',
+                'LEFT OUTER JOIN GroupsSuperGroups ON `Groups`.id = GroupsSuperGroups.id_group',
+                'LEFT OUTER JOIN SuperGroups ON GroupsSuperGroups.id_super_group = SuperGroups.id'
               ], 'WHERE SuperGroups.id = ' + res.locals.supergroup.id)
-            );*/
+            );
           } else {
             let where = {};
             for (const addressKey in results[0].address) {
@@ -59,12 +60,27 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
         });
 
         return getEstablishmentsPromise
-          .then(establishments => {
+          .then(rows => {
+            let establishmentsByGroups = {};
+            for (let i = 0; i < rows.length; i++){
+              const row = rows[i];
+              if (!establishmentsByGroups[row.dataValues.group_id])
+                establishmentsByGroups[row.dataValues.group_id] = {
+                  id: row.dataValues.group_id,
+                  name: row.dataValues.group_name,
+                  domain: row.dataValues.group_domain,
+                  establishments: []
+                };
+              establishmentsByGroups[row.dataValues.group_id].establishments.push(row.dataValues);
+            }
             return res.render('subdomain/supergroup-results', {
               layout: 'subdomain',
               pageName: 'subdomain-supergroup-results',
               layoutName: 'map-results',
-              establishments: establishments
+              establishmentsByGroups: establishmentsByGroups,
+              establishments: rows,
+              address: results[0],
+              range: 100
             });
           })
           .catch(error => next(new Error(error)));

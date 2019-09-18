@@ -64,7 +64,7 @@
                         <div class="row card-list">
 
                             {{#each needs as |need|}}
-
+                                {{#if need.Offer}}
 
                                     <div class="col-12 no-gutters">
                                         <div class="card">
@@ -88,6 +88,7 @@
                                         </div>
                                     </div>
 
+                                {{/if}}
                             {{/each}}
 
                         </div>

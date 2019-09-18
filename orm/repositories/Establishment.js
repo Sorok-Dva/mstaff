@@ -2,7 +2,7 @@ const __ = process.cwd();
 const Models = require(`${__}/orm/models/index`);
 const sequelize = require(__ + '/bin/sequelize');
 
-module.exports.rawGetInRange = (center, radius, join = '', where = '') => {
+module.exports.rawGetInRange = (center, radius, select, join, where) => {
   function rad2Deg(rad){
     return rad * (180 / Math.PI);
   }
@@ -28,8 +28,14 @@ module.exports.rawGetInRange = (center, radius, join = '', where = '') => {
   };
 
   let sql = '' +
-    'SELECT InBounds.*' +
-    ', ACOS(SIN(' + lat_rad + ')*SIN(RADIANS(InBounds.lat)) + COS(' + lat_rad + ')*COS(RADIANS(InBounds.lat))*COS(RADIANS(InBounds.lng)-' + lng_rad + ')) * ' + earth_radius + ' AS distance' + '\n' +
+    'SELECT InBounds.*';
+  if (select) {
+    if (Array.isArray(select))
+      sql += ', ' + select.join(', ') + '\n';
+    if (typeof select == 'string')
+      sql += ', ' + select.replace(/^,/, '') + '\n';
+  }
+  sql += ', ACOS(SIN(' + lat_rad + ')*SIN(RADIANS(InBounds.lat)) + COS(' + lat_rad + ')*COS(RADIANS(InBounds.lat))*COS(RADIANS(InBounds.lng)-' + lng_rad + ')) * ' + earth_radius + ' AS distance' + '\n' +
     'FROM (' + '\n' +
     'SELECT Establishments.*' + '\n' +
     'FROM Establishments' + '\n' +

@@ -55,4 +55,12 @@
 		}
 	}
 
+	&.button-icon-only{
+		padding-left:1rem;
+		padding-right:1rem;
+		i{
+			margin:0;
+		}
+	}
+
 }

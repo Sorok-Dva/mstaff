@@ -25,10 +25,36 @@
                     <div class="column-body">
 
                         <div class="result-list">
-                            {{#each establishments as |establishment|}}
-                                <div class="result" data-establishment-id="{{establishment.id}}">
-                                    <h5 class="title">{{establishment.name}}</h5>
-                                    {{#if establishment.formatted_address}}<span class="title-label"><i class="fas fa-map-marker-alt"></i>{{establishment.formatted_address}}</span>{{/if}}
+                            {{#each establishmentsByGroups as |group|}}
+                                <div class="result-section open">
+                                    <div class="result-section-header" data-group-id="{{group.id}}">
+                                        <div class="push">
+                                            <div class="aic">
+                                                <div class="result-section-header-toggle">
+                                                    <i class="fas fa-caret-right"></i>
+                                                </div>
+                                                <h4 class="title"><i class="fas fa-city"></i>{{group.name}}</h4>
+                                            </div>
+                                            <div class="fdc jcc">
+                                                <div class="button button-small button-pink button-icon-only"><i class="fas fa-eye"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="result-section-body">
+                                        {{#each (lookup group 'establishments') as |establishment|}}
+                                            <div class="result" data-establishment-id="{{establishment.id}}">
+                                                <div class="push">
+                                                    <div class="fdc jcc">
+                                                        <h5 class="title"><i class="fas fa-building"></i>{{establishment.name}}</h5>
+                                                        {{#if establishment.formatted_address}}<span class="title-label"><i class="fas fa-map-marker-alt"></i>{{establishment.formatted_address}}</span>{{/if}}
+                                                    </div>
+                                                    <div class="fdc jcc">
+                                                        <div class="button button-small button-green button-icon-only"><i class="fas fa-eye"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    </div>
                                 </div>
                             {{/each}}
                         </div>
@@ -42,9 +68,15 @@
         </div>
 
         <div class="search-bar">
-            <i class="fas fa-map-marker-alt"></i>
             <form action="/" method="post">
-                <input type="text" name="search" placeholder="42 rue du test, Paris">
+                <div class="input-container" data-input-name="search">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" name="search" placeholder="42 rue du test, Paris">
+                </div>
+                <div class="input-container" data-input-name="range">
+                    <i class="fas fa-road"></i>
+                    <input type="number" name="range" max="1000" value="{{range}}">
+                </div>
                 <input type="hidden" name="_csrf" value="{{csrfToken}}">
             </form>
         </div>
@@ -58,6 +90,24 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
     <script>
+        let establishmentsByGroups = {};
+        {{#each establishmentsByGroups as |group|}}
+            establishmentsByGroups[{{group.id}}] = {
+                name: '{{group.name}}',
+                domain: '{{group.domain}}',
+                establishments: [
+                    {{#each group.establishments as |establishment|}}
+                    {
+                        id: {{establishment.id}},
+                        name: "{{establishment.name}}",
+                        lat: {{establishment.lat}},
+                        lng: {{establishment.lng}}
+                    },
+                    {{/each}}
+                ],
+            };
+        {{/each}}
+
         let establishments = [];
         {{#each establishments as |establishment|}}
         {{#if establishment.lat}}
@@ -73,18 +123,58 @@
 
 
         $(document).ready(function(){
-            initAutocompleteInput($('input[name="search"]').get(0));
-            initResultMap(document.getElementById('map'), establishments, forEachMarker);
+            //initAutocompleteInput($('input[name="search"]').get(0));
+            initResultMap(document.getElementById('map'), establishments, forEachMarker, function(map, infos){
+                let circle = new google.maps.Circle({
+                    strokeColor: '#337AB7',
+                    strokeOpacity: 0.2,
+                    strokeWeight: 2,
+                    fillColor: '#5BBBE5',
+                    fillOpacity: 0.1,
+                    map: map,
+                    center: { lat: {{address.location.lat}}, lng: {{address.location.lng}} },
+                    radius: parseInt('{{range}}') * 1000
+                });
+
+                map.addListener('dragstart', function(){
+                    $('.result').removeClass('focused');
+                    for(let i = 0; i < infos.length; i++){
+                        const info = infos[i];
+                        info.close();
+                    }
+                });
+            });
         });
 
 
 
-        function forEachMarker(marker, info, result){
-            $('.result[data-establishment-id="' + result.id + '"]').hover(function(){
-                info.open(map, marker);
-            }, function(){
-                info.close();
-            });
+        function forEachMarker(marker, info, result, map){
+            $('.result[data-establishment-id="' + result.id + '"]')
+                .hover(function(){
+                    info.open(map, marker);
+                }, function(){
+                	if(!$(this).hasClass('focused')){
+                        info.close();
+                    }
+                })
+                .click(function(){
+                    $('.result').removeClass('focused');
+                	$(this).addClass('focused');
+                    info.open(map, marker);
+                    map.setZoom(13);
+                    map.setCenter(marker.position);
+                });
         }
+
+        $('.result-section-header').click(function(){
+        	const $section = $(this).closest('.result-section');
+        	if($section.hasClass('open')){
+                $section.removeClass('open');
+        		$('.result', $section).slideUp();
+            }else{
+                $section.addClass('open');
+                $('.result', $section).slideDown();
+            }
+        });
     </script>
 {{/extend}}

@@ -12,7 +12,7 @@ function initAutocompleteInput(input_element){
 	});
 }
 
-function initResultMap(map_element, results, for_each_marker){
+function initResultMap(map_element, results, for_each_marker, callback){
 
 	let map = new google.maps.Map(map_element, {
 		mapTypeControl: false
@@ -20,6 +20,7 @@ function initResultMap(map_element, results, for_each_marker){
 	let bounds = new google.maps.LatLngBounds();
 
 	let markers = [];
+	let infos = [];
 	for(let i = 0; i < results.length; i++){
 		let marker = new google.maps.Marker({
 			position: new google.maps.LatLng(results[i].lat, results[i].lng),
@@ -39,14 +40,18 @@ function initResultMap(map_element, results, for_each_marker){
 		});
 
 		if(for_each_marker){
-			for_each_marker(marker, info, results[i]);
+			for_each_marker(marker, info, results[i], map);
 		}
 
 		bounds.extend(marker.position);
 		markers.push(marker);
+		infos.push(info);
 	}
 
 	new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 	map.fitBounds(bounds);
+
+	if(callback)
+		callback(map, infos);
 
 }
