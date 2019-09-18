@@ -15,6 +15,7 @@
             <th data-field="target" data-sortable="true">Cible</th>
             <th data-field="fromDate" data-sortable="true">Date</th>
             <th data-field="untilDate" data-sortable="true">Jusqu'au</th>
+            <th data-field="enable" data-sortable="true">État</th>
             <th data-field="actions" class="td-actions text-right" data-events="operateEvents"
                 data-formatter="operateFormatter">Actions</th>
             </thead>
@@ -29,6 +30,9 @@
                 <td>{{message.type}}</td>
                 <td>{{date message.fromDate 'DD/MM/YYYY H:mm'}}</td>
                 <td>{{date message.untilDate 'DD/MM/YYYY H:mm'}}</td>
+                <td>
+                  <input class="test" type="checkbox" name="enable" data-id="{{message.id}}" {{#if message.enable}}checked{{/if}} />
+                </td>
                 <td></td>
               </tr>
             {{/each}}
@@ -133,6 +137,20 @@
     $(window).resize(() => {
       table.bootstrapTable('resetView');
     });
+
+    $('.test').click(function () {
+      let id = $(this).attr('data-id');
+      let enable = $(this).prop('checked');
+      $.put(`/api/back-office/server/message/${id}/enable`, { _csrf, enable }, (data) => {
+        if (data) {
+          notification({
+            icon: 'check-circle',
+            type: 'success',
+            title: `Message ${enable ? 'activé' : 'désactivé' } avec succès.`
+          })
+        }
+      }).catch((xhr, status, error) => catchError(xhr, status, error));
+    });
   });
 
   $('#server').submit(e => {
@@ -151,5 +169,5 @@
         });
       }
     }).catch((xhr, status, error) => catchError(xhr, status, error));
-  }
+  };
 </script>

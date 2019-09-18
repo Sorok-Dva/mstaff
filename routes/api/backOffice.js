@@ -112,6 +112,10 @@ router.put('/linkGroup/:id(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Group.EditLinkGroup);
 
+router.put('/linkES/:id',
+  Authentication.ensureIsAdmin,
+  BackOffice.Group.EditGroupLinkES);
+
 /**
  * @Route('/back-office/references/:type') POST;
  * Create Reference Model data
@@ -141,7 +145,7 @@ router.post(
   Authentication.ensureIsAdmin,
   BackOffice.Server.AddMessage
 ).put(
-  '/server/message/:id(\\d+)',
+  '/server/message/:id(\\d+)/:action?',
   Authentication.ensureIsAdmin,
   BackOffice.Server.EditMessage
 ).delete(

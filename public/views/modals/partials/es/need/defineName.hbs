@@ -35,6 +35,7 @@
             need._csrf = _csrf;
             $.post(`/api/es/${esId}/addNeed`, need, (data) => {
               if (data.id) {
+                $('#needNameModal').modal('hide');
                 createModal({
                   id: 'needSavedModal',
                   modal: 'es/need/saved',
@@ -42,7 +43,7 @@
                   needId: data.id
                 })
               }
-            });
+            }).catch((xhr, status, error) => catchError(xhr, status, error));;
           } else {
             notification({
               icon: 'exclamation',

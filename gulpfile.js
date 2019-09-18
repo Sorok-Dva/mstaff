@@ -1,7 +1,7 @@
 const { src, dest, watch, series, parallel } = require('gulp');
 const { Env } = require('./helpers/helpers');
 const config = require('dotenv').config().parsed;
-const del = require('del');
+const cleanFolder = require('gulp-clean');
 const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
@@ -25,9 +25,7 @@ const THEME_CSS_DST = './public/assets/theme/mstaff/css';
  * @task clean
  * cleans the destination directory of old files
  */
-let clean = (done) => {
-  del([DST_PATH], done())
-};
+let clean = () => src(DST_PATH + '/*').pipe(cleanFolder());
 
 let browserSync = (done) => {
   if (Env.current === 'development' && config.BROWSERSYNC !== 'false') {
@@ -72,12 +70,12 @@ let buildStyles = () => {
       .pipe(cleanCSS())
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(CSS_DST))
-      .pipe(browsersync.reload({ stream: true }))
+      .pipe(browsersync.reload({ stream: true }));
   } else {
     return src(CSS_SRC)
       .pipe(cleanCSS())
       .pipe(rename({ suffix: '.min' }))
-      .pipe(dest(CSS_DST))
+      .pipe(dest(CSS_DST));
   }
 };
 
