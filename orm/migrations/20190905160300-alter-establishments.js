@@ -23,7 +23,7 @@ module.exports = {
       'ADD CONSTRAINT fk_primary_group_id FOREIGN KEY (primary_group_id) REFERENCES Groups(id) ON DELETE SET NULL ON UPDATE CASCADE;';
       // 'ALTER TABLE Establishments ADD location_updatedAt VARCHAR(255);';
 
-    // sql = 'START TRANSACTION;' + sql + 'COMMIT;';
+    sql = 'START TRANSACTION;' + sql + 'COMMIT;';
 
     return queryInterface.sequelize.query(sql).catch( (err) => {
       queryInterface.sequelize.query('ROLLBACK;');
