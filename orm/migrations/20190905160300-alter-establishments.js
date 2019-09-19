@@ -2,46 +2,36 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     const __ = process.cwd();
-    const { Op } = Sequelize;
     const fs = require('fs');
-    const Models = require(`${__}/orm/models/index`);
-
-    let sql = '' +
-      'START TRANSACTION;' +
-      'DELETE FROM Establishments WHERE name LIKE "%CROIX%ROUGE%";' +
-      'ALTER TABLE Establishments ADD street_number VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD city, VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD region VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD country VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD postal_code VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD lat DECIMAL(10,8);' +
-      'ALTER TABLE Establishments ADD lng DECIMAL(11,8);' +
-      'ALTER TABLE Establishments ADD structure_number VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD attachement_direction VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD region_code VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD long_wording VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD spinneret VARCHAR(255);' +
-      'ALTER TABLE Establishments ADD primary_group_id INT, ADD CONSTRAINT fk_primary_group_id FOREIGN KEY (primary_group_id) REFERENCES `Groups`(id) ON DELETE SET NULL ON UPDATE CASCADE;' +
-      'ALTER TABLE Establishments ADD location_updatedAt VARCHAR(255);' +
-      'COMMIT;';
-
-
-    /*    return queryInterface.sequelize.query(sql)
-      .then( () => {*/
-
 
     return new Promise((resolve, reject) => {
       fs.readFile(`${__}/orm/jsonDatas/croix-rouge.json`, 'utf8', (err, data) => {
         if (err)
           return reject(err);
         try {
-          let datas = JSON.parse(data);
-
-          let request = 'INSERT INTO Establishments ' +
+          let establishments = JSON.parse(data);
+          let request = '' +
+            'START TRANSACTION;' +
+            'DELETE FROM Establishments WHERE name LIKE "%CROIX%ROUGE%";' +
+            'ALTER TABLE Establishments ADD street_number VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD city VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD region VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD country VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD postal_code VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD lat DECIMAL(10,8);' +
+            'ALTER TABLE Establishments ADD lng DECIMAL(11,8);' +
+            'ALTER TABLE Establishments ADD structure_number VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD attachement_direction VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD region_code VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD long_wording VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD spinneret VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD primary_group_id INT, ADD CONSTRAINT fk_primary_group_id FOREIGN KEY (primary_group_id) REFERENCES `Groups`(id) ON DELETE SET NULL ON UPDATE CASCADE;' +
+            'ALTER TABLE Establishments ADD location_updatedAt VARCHAR(255);' +
+            'INSERT INTO Establishments ' +
             '(structure_number, attachement_direction, region_code, name, long_wording, spinneret, sector, category, code, url, siret, finess, address, town) VALUES ';
 
-          for (let i = 0; i < datas.length; i++) {
-            let d = datas[i];
+          for (let i = 0; i < establishments.length; i++) {
+            let d = establishments[i];
             let o = {};
 
             for (const dKey in d) {
@@ -102,29 +92,25 @@ module.exports = {
               ${o.town}
               )`;
 
-            if (i < datas.length -1)
+            if (i < establishments.length -1)
               request += ',';
             else request += ';';
           }
-          console.log(request);
-          resolve ();
+
+          request += 'COMMI;';
+          resolve (request);
         } catch (e) {
           reject(e);
         }
       });
     })
-      .then( () => {
-
-      });
-
-
-    /*  })
+      .then( (request) => {
+        return queryInterface.sequelize.query(request);
+      })
       .catch( (err) => {
         queryInterface.sequelize.query('ROLLBACK;');
         return Promise.reject('Unexpected error, all changes have been manually rollbacked' + err);
-      });*/
-
-
+      });
   },
 
   down: (queryInterface, Sequelize) => {
