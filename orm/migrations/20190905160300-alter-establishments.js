@@ -28,7 +28,7 @@ module.exports = {
             'ALTER TABLE Establishments ADD primary_group_id INT, ADD CONSTRAINT fk_primary_group_id FOREIGN KEY (primary_group_id) REFERENCES `Groups`(id) ON DELETE SET NULL ON UPDATE CASCADE;' +
             'ALTER TABLE Establishments ADD location_updatedAt VARCHAR(255);' +
             'INSERT INTO Establishments ' +
-            '(structure_number, attachement_direction, region_code, name, long_wording, spinneret, sector, category, code, url, siret, finess, address, town) VALUES ';
+            '(structure_number, attachement_direction, region_code, `name`, long_wording, spinneret, sector, category, `code`, url, siret, finess, address, town) VALUES ';
 
           for (let i = 0; i < establishments.length; i++) {
             let d = establishments[i];
@@ -75,29 +75,14 @@ module.exports = {
             o.address = o.address === '' ? 'NULL' : o.address;
             o.town = o.town === '' ? 'NULL' : o.town;
 
-            request += `(
-              ${o.structure_number}, 
-              ${o.attachement_direction}, 
-              ${o.region_code}, 
-              ${o.name}, 
-              ${o.long_wording}, 
-              ${o.spinneret}, 
-              ${o.sector}, 
-              ${o.category}, 
-              ${o.code}, 
-              ${o.url}, 
-              ${o.siret}, 
-              ${o.finess}, 
-              ${o.address}, 
-              ${o.town}
-              )`;
+            request += `("${o.structure_number}","${o.attachement_direction}","${o.region_code}","${o.name}","${o.long_wording}","${o.spinneret}","${o.sector}","${o.category}","${o.code}","${o.url}","${o.siret}","${o.finess}","${o.address}","${o.town}")`;
 
             if (i < establishments.length -1)
               request += ',';
             else request += ';';
           }
 
-          request += 'COMMI;';
+          request += 'COMMIT;';
           resolve (request);
         } catch (e) {
           reject(e);
@@ -108,9 +93,12 @@ module.exports = {
         return queryInterface.sequelize.query(request);
       })
       .catch( (err) => {
-        queryInterface.sequelize.query('ROLLBACK;');
-        return Promise.reject('Unexpected error, all changes have been manually rollbacked' + err);
+        return queryInterface.sequelize.query('ROLLBACK;')
+          .then( () => {
+            return Promise.reject('Unexpected error, all changes have been manually rollbacked\n' + err);
+          });
       });
+
   },
 
   down: (queryInterface, Sequelize) => {
