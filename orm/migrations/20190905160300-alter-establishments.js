@@ -42,22 +42,48 @@ module.exports = {
 
           for (let i = 0; i < datas.length; i++) {
             let d = datas[i];
-
             let o = {};
+
             for (const dKey in d) {
-              if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2')
+              if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2' || dKey === 'addComp')
                 continue;
-              if (dKey === 'Adresse physique - Complément'){
-                d.address1 = d[dKey];
-                continue;
-              }
               o[dKey] = d[dKey];
             }
-            d.address1 = d.address1 === undefined ? '' : d.address1;
-            d.address2 = d.address2 === undefined ? '' : d.address2;
-            d.address3 = d.address3 === undefined ? '' : d.address3;
-            o.address = d.address1 + ' ' + d.address2 + ' ' + d.address3;
-            o.town = d.town1 + ' ' + d.town2;
+
+            let add = [d.addComp, d.address1, d.address2, d.address3];
+            let town = [d.town1, d.town2];
+
+            o.address = '';
+            o.town = '';
+
+            add.forEach( item => {
+              if (item)
+                o.address += '' + item;
+              if (o.address)
+                o.address += ' ';
+            });
+
+            town.forEach( item => {
+              if (item)
+                o.town += '' + item;
+              if (o.town)
+                o.town += ' ';
+            });
+
+            o.structure_number = o.structure_number === '' ? 'NULL' : o.structure_number;
+            o.attachement_direction = o.attachement_direction === '' ? 'NULL' : o.attachement_direction;
+            o.region_code = o.region_code === '' ? 'NULL' : o.region_code;
+            o.name = o.name === '' ? 'NULL' : o.name;
+            o.long_wording = o.long_wording === '' ? 'NULL' : o.long_wording;
+            o.spinneret = o.spinneret === '' ? 'NULL' : o.spinneret;
+            o.sector = o.sector === '' ? 'NULL' : o.sector;
+            o.category = o.category === '' ? 'NULL' : o.category;
+            o.code = o.code === '' ? 'NULL' : o.code;
+            o.url = o.url === '' ? 'NULL' : o.url;
+            o.siret = o.siret === '' ? 'NULL' : o.siret;
+            o.finess = o.finess === '' ? 'NULL' : o.finess;
+            o.address = o.address === '' ? 'NULL' : o.address;
+            o.town = o.town === '' ? 'NULL' : o.town;
 
             request += `(
               ${o.structure_number}, 
@@ -68,7 +94,8 @@ module.exports = {
               ${o.spinneret}, 
               ${o.sector}, 
               ${o.category}, 
-              ${o.code}, ${o.url}, 
+              ${o.code}, 
+              ${o.url}, 
               ${o.siret}, 
               ${o.finess}, 
               ${o.address}, 
@@ -80,54 +107,15 @@ module.exports = {
             else request += ';';
           }
           console.log(request);
-
-
-          // datas.forEach(d => {
-          //   let o = {};
-          //   for (const dKey in d) {
-          //     if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2')
-          //       continue;
-          //     if (dKey === 'Adresse physique - Complément'){
-          //       d.address1 = d[dKey];
-          //       continue;
-          //     }
-          //     o[dKey] = d[dKey];
-          //   }
-          //   d.address1 = d.address1 === undefined ? '' : d.address1;
-          //   d.address2 = d.address2 === undefined ? '' : d.address2;
-          //   d.address3 = d.address3 === undefined ? '' : d.address3;
-          //   o.address = d.address1 + ' ' + d.address2 + ' ' + d.address3;
-          //   o.town = d.town1 + ' ' + d.town2;
-          //
-          //   let request = 'INSERT INTO Establishments ' +
-          //     '(structure_number, attachement_direction, region_code, name, long_wording, spinneret, sector, category, code, url, siret, finess, address, town) VALUES ';
-          //   request +=
-          //     `(
-          //     ${o.structure_number},
-          //     ${o.attachement_direction},
-          //     ${o.region_code},
-          //     ${o.name},
-          //     ${o.long_wording},
-          //     ${o.spinneret},
-          //     ${o.sector},
-          //     ${o.category},
-          //     ${o.code}, ${o.url},
-          //     ${o.siret},
-          //     ${o.finess},
-          //     ${o.address},
-          //     ${o.town}
-          //     )`;
-          //
-          //   console.log('SQL : ', request);
-          // });
-          resolve (
-            // queryInterface.bulkInsert('Establishments', arrayDatas, { transaction: transaction })
-          );
+          resolve ();
         } catch (e) {
           reject(e);
         }
       });
-    });
+    })
+      .then( () => {
+
+      });
 
 
     /*  })
