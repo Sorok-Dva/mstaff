@@ -11,7 +11,6 @@ module.exports = {
         try {
           let establishments = JSON.parse(data);
           let request = '' +
-            'START TRANSACTION;' +
             'DELETE FROM Establishments WHERE name LIKE "%CROIX%ROUGE%";' +
             'ALTER TABLE Establishments ADD street_number VARCHAR(255);' +
             'ALTER TABLE Establishments ADD city VARCHAR(255);' +
@@ -29,6 +28,8 @@ module.exports = {
             'ALTER TABLE Establishments ADD location_updatedAt VARCHAR(255);' +
             'INSERT INTO Establishments ' +
             '(structure_number, attachement_direction, region_code, `name`, long_wording, spinneret, sector, category, `code`, url, siret, finess, address, town) VALUES ';
+
+          let delRequest = 'DELETE FROM Establishments WHERE finess IN (';
 
           for (let i = 0; i < establishments.length; i++) {
             let d = establishments[i];
@@ -77,12 +78,21 @@ module.exports = {
 
             request += `("${o.structure_number}","${o.attachement_direction}","${o.region_code}","${o.name}","${o.long_wording}","${o.spinneret}","${o.sector}","${o.category}","${o.code}","${o.url}","${o.siret}","${o.finess}","${o.address}","${o.town}")`;
 
-            if (i < establishments.length -1)
+            if (o.finess)
+              delRequest += `'${o.finess}'`;
+
+            if (i < establishments.length -1){
               request += ',';
-            else request += ';';
+              if (o.finess)
+                delRequest += ',';
+            }
+            else {
+              request += ';';
+              delRequest += ');';
+              request = delRequest + request;
+            }
           }
 
-          request += 'COMMIT;';
           resolve (request);
         } catch (e) {
           reject(e);
@@ -93,34 +103,11 @@ module.exports = {
         return queryInterface.sequelize.query(request);
       })
       .catch( (err) => {
-        return queryInterface.sequelize.query('ROLLBACK;')
-          .then( () => {
-            return Promise.reject('Unexpected error, all changes have been manually rollbacked\n' + err);
-          });
+        return Promise.reject('Unexpected error, all changes have been manually rollbacked\n' + err);
       });
 
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction((t) => {
-      return Promise.all([
-        queryInterface.removeColumn('Establishments', 'street_number', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'street_name', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'city', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'department', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'region', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'country', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'postal_code', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'lat', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'lng', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'structure_number', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'attachement_direction', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'region_code', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'long_wording', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'spinneret', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'primary_group_id', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'location_updatedAt', { transaction: t })
-      ])
-    })
   }
 };
