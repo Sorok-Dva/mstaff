@@ -19,7 +19,7 @@ const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
-require('../helpers/handlebars').register(require('handlebars'));
+let hbsHelpers = require('../helpers/handlebars').register(require('handlebars'));
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -38,11 +38,12 @@ module.exports = {
   cookieParser: cookieParser(conf.SECRET),
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
-  exphbs: exphbs({
+  exphbs: exphbs.create({
     extname: 'hbs',
     defaultLayout: 'default',
     layoutsDir: path.join(__dirname, '../views/layouts'),
-    partialsDir: path.join(__dirname, '../views/partials')
+    partialsDir: path.join(__dirname, '../views/partials'),
+    helpers: hbsHelpers
   }),
   flash: flash(),
   getServerMessages: (req, res, next) => {

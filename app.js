@@ -21,17 +21,15 @@ if (Env.isProd || Env.isPreProd) app.use(Express.sentryRequestHandler);
 if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
 
 // express config
+app.engine('hbs', Express.exphbs.engine);
 app.set('env', Env.current);
 app.set('trust proxy', true);
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-if (Env.isProd) {
-  app.set('view cache', true);
-}
+app.set('views', path.join(__dirname, 'views'));
+
+if (Env.isProd) app.set('view cache', true);
 
 // ------ Express
-app.engine('hbs', Express.exphbs);
 app.use(express.json({ limit: '150mb' }));
 app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.cookieParser);
