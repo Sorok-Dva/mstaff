@@ -16,6 +16,7 @@ Server.verifyMaintenance = callback => {
 Server.getActualMessages = callback => {
   Models.ServerMessage.findAll({
     where: {
+      enable: true,
       fromDate: { [Op.lte]: new Date() },
       untilDate: { [Op.gte]: new Date() }
     }

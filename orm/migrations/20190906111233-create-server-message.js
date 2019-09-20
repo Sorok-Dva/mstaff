@@ -32,6 +32,9 @@ module.exports = {
       untilDate: {
         type: Sequelize.DATE
       },
+      enable: {
+        type: Sequelize.BOOLEAN
+      },
       author: {
         type: Sequelize.INTEGER,
         allowNull: false,

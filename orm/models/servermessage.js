@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     fromDate: DataTypes.DATE,
     untilDate: DataTypes.DATE,
+    enable: DataTypes.BOOLEAN,
     author: DataTypes.INTEGER
   }, {});
   ServerMessage.associate = (models) => {
