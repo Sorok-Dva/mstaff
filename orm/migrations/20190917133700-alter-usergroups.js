@@ -50,77 +50,75 @@ module.exports = {
       })
     });
 
-    return queryInterface.sequelize.transaction(t => {
-      return queryInterface.dropTable('UsersGroups', { transaction: t }).then(() => {
-        return queryInterface.createTable('UsersGroups', {
-          id: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: Sequelize.INTEGER
+    return queryInterface.dropTable('UsersGroups').then(() => {
+      return queryInterface.createTable('UsersGroups', {
+        id: {
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: Sequelize.INTEGER
+        },
+        user_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: 'Users',
+            key: 'id',
           },
-          user_id: {
-            type: Sequelize.INTEGER,
-            references: {
-              model: 'Users',
-              key: 'id',
-            },
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE',
-            allowNull: false
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+          allowNull: false
+        },
+        supergroup_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: 'SuperGroups',
+            key: 'id'
           },
-          supergroup_id: {
-            type: Sequelize.INTEGER,
-            references: {
-              model: 'SuperGroups',
-              key: 'id'
-            },
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE',
-            allowNull: true
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+          allowNull: true
+        },
+        group_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: 'Groups',
+            key: 'id'
           },
-          group_id: {
-            type: Sequelize.INTEGER,
-            references: {
-              model: 'Groups',
-              key: 'id'
-            },
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE',
-            allowNull: true
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+          allowNull: true
+        },
+        es_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: 'Establishments',
+            key: 'id'
           },
-          es_id: {
-            type: Sequelize.INTEGER,
-            references: {
-              model: 'Establishments',
-              key: 'id'
-            },
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE',
-            allowNull: false
-          },
-          role: {
-            type: Sequelize.STRING,
-            defaultValue: 'User'
-          },
-          last_use: {
-            type: Sequelize.DATE
-          },
-          createdAt: {
-            allowNull: false,
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-          },
-          updatedAt: {
-            allowNull: false,
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-          }
-        }, { transaction: t }).then(() => {
-          return Models.UsersGroups.bulkCreate(UsersGroupsTable, { transaction: t }).then(() => {
-            return queryInterface.dropTable('ESAccounts', { transaction: t }).then(() => {
-              return queryInterface.dropTable('UsersSuperGroups', { transaction: t }).then(() => {});
-            });
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+          allowNull: false
+        },
+        role: {
+          type: Sequelize.STRING,
+          defaultValue: 'User'
+        },
+        last_use: {
+          type: Sequelize.DATE
+        },
+        createdAt: {
+          allowNull: false,
+          type: Sequelize.DATE,
+          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        },
+        updatedAt: {
+          allowNull: false,
+          type: Sequelize.DATE,
+          defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        }
+      }).then(() => {
+        return Models.UsersGroups.bulkCreate(UsersGroupsTable).then(() => {
+          return queryInterface.dropTable('ESAccounts').then(() => {
+            return queryInterface.dropTable('UsersSuperGroups').then(() => {});
           });
         });
       });
