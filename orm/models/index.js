@@ -6,6 +6,12 @@ const basename = path.basename(module.filename);
 const config = require(`${__dirname}/../config/config.json`)[Env.current];
 // eslint-disable-next-line no-console
 config.logging = config.logging ? console.log : null;
+config.pool = {
+  max: 5,
+  min: 0,
+  acquire: 30000,
+  idle: 10000
+};
 
 const db = {};
 
