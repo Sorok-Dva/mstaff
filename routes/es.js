@@ -11,7 +11,7 @@ router.get('/select/es',
   Authentication.ensureIsEs,
   Establishment.Main.ViewAccounts);
 
-router.get('/select/es/:type/:currentEsId',
+router.get('/select/es/:currentEsId',
   Authentication.ensureIsEs,
   Establishment.Main.Select);
 
