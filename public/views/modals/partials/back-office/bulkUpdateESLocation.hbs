@@ -1,0 +1,57 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <p style="margin:3rem 0 2rem 0;font-style:italic;text-align:center;">Les établissements ont été mis à jour avant la date suivante le seront à nouveau.</p>
+            <form action="#">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <input type="checkbox" id="update_nulls" name="update_nulls" checked style="display:inline-block">
+                        <label for="update_nulls">Mettre à jour les établissements qui ne l'ont jamais été ?</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="date">Date</label>
+                        <input type="date" class="form-control" id="date" name="date">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="btn btn-primary pull-right" id="update">Mettre à jour</div>
+</div>
+<script>
+    $('form').submit(function(event){
+        event.preventDefault();
+        return false;
+    });
+
+    $('#update').click(function(){
+        $.post('/api/back-office/establishment/bulk-update-location', {
+        	date: $('input[name="date"]').val(),
+            update_nulls: $('input[name="update_nulls"]').is(':checked'),
+            _csrf: $('meta[name="csrf-token"]').attr('content')
+        }, response => {
+
+        	if(!response.operations){
+                notification({
+                    icon: 'exclamation-circle',
+                    type: 'warning',
+                    title: 'Une erreur inattendue est survenue.'
+                });
+                return;
+            }
+
+            createModal({
+                id: 'bulkUpdateESLocationResponse',
+                modal: 'back-office/bulkUpdateESLocationResponse',
+                size: 'modal-lg',
+                style: 'width:50%;margin-top:50px;',
+                title: 'Resultat de l\'opération',
+                operations: response.operations
+            });
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
+    });
+</script>

@@ -1,6 +1,7 @@
 const { Authentication } = require('../middlewares');
 const { BackOffice } = require('../components');
 const express = require('express');
+const fileUpload = require('../helpers/file-upload');
 const router = express.Router();
 
 /**
@@ -117,6 +118,9 @@ router.get('/es/:id(\\d+)',
 ).post(
   '/es/:id(\\d+)',
   Authentication.ensureIsAdmin,
+  fileUpload.getUploader((req) => {
+    return 'public/uploads/es/' + req.params.id;
+  }).fields([{ name: 'logo', maxCount: 1 }, { name: 'banner', maxCount: 1 }]),
   BackOffice.Establishment.Edit);
 
 /**

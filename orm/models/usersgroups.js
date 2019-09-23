@@ -2,10 +2,11 @@
 module.exports = (sequelize, DataTypes) => {
   const UsersGroups = sequelize.define('UsersGroups', {
     user_id: DataTypes.INTEGER,
-    group_id: DataTypes.INTEGER,
     supergroup_id: DataTypes.INTEGER,
+    group_id: DataTypes.INTEGER,
     es_id: DataTypes.INTEGER,
-    role: DataTypes.STRING
+    role: DataTypes.STRING,
+    last_use: DataTypes.DATE
   }, {});
   UsersGroups.associate = function (models) {
     UsersGroups.belongsTo(models.User, {

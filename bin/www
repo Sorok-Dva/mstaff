@@ -12,7 +12,6 @@ const { spawn } = require('child_process');
 const memwatch = require('node-memwatch');
 const chalk = require('chalk');
 const conf = require('dotenv').config().parsed;
-const discord = require('./discord-bot');
 
 /**
  * Get port from environment and store in Express.
@@ -104,7 +103,6 @@ function onListening() {
 
 // Memory Leak Detection
 memwatch.on('leak', (info) => {
-  discord('**Memory Leak Detected**', 'debug');
-  discord(JSON.stringify(info), 'debug');
   console.error('Memory leak detected:\n', info);
+  // process.exit();
 });
