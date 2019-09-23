@@ -56,6 +56,24 @@ BackOffice_Group.GetLinkES = (req, res, next) => {
   }
 };
 
+BackOffice_Group.EditGroupLinkES = (req, res, next) => {
+  if (!req.body.selectInput || !req.params.id) {
+    return res.status(400).json({ status: 'invalid input' })
+  }
+  return Models.EstablishmentGroups.findAll({ where: { id_group: req.params.id } }).then(esGroup => {
+    if (esGroup.length !== 0) {
+      Models.EstablishmentGroups.destroy({ where: { id_group: req.params.id } });
+    }
+    for (let i = 0; i < req.body.selectInput.length; i++) {
+      Models.EstablishmentGroups.create({
+        id_es: req.body.selectInput[i],
+        id_group: req.params.id
+      }).then(res.status(200))
+    }
+    return res.status(200).json({ status: 'ok' });
+  }).catch(error => next(new BackError(error)));
+};
+
 BackOffice_Group.EditLinkES = (req, res, next) => {
   let model = req.params.type;
   if (_.isNil(model)) return next(new BackError(`Modèle "${model}" introuvable.`, httpStatus.NOT_FOUND));
