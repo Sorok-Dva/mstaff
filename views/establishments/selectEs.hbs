@@ -1,8 +1,18 @@
 <div class="row" id="es-container">
   {{#each esAccounts as |account|}}
+    {{ log account }}
     <div class="col-4 col-lg-4">
       <div class="card">
         <div class="card-body">
+          <div class="text-left">
+            {{#if account.SuperGroup.name}}
+            <span class="badge badge-primary"> Supergroupe </span>
+            {{else if account.Group.name}}
+              <span class="badge badge-success"> Groupe </span>
+            {{ else }}
+              <span class="badge badge-info">Etablissement</span>
+            {{/if}}
+          </div>
           <div class="text-center">
             <span class="card-avatar avatar avatar-lg mx-auto">
               {{#if account.Establishment.logo}}
@@ -13,37 +23,17 @@
             </span>
           </div>
           <h2 class="card-title text-center mb-3">
-            <a href="/select/es/es/{{account.Establishment.id}}">{{account.Establishment.name}}</a>
+            <a href="/select/es/{{account.Establishment.id}}">{{account.Establishment.name}}</a>
           </h2>
+          <div class="text-center">
+            {{#if account.SuperGroup.name}}
+              <small> {{account.SuperGroup.name}} - {{account.Group.name}}</small>
+            {{else if account.Group.name}}
+              <small> {{account.Group.name}}</small>
+            {{/if}}
+          </div>
         </div>
       </div>
     </div>
   {{/each}}
 </div>
-
-<script type="text/javascript">
-  $.get(`/select/groups`, (result) => {
-    result.groups.forEach(element => {
-      $('div #es-container').append(`
-      <div class="col-4 col-lg-4">
-      <div class="card">
-        <div class="card-body">
-          <div class="text-center">
-            <span class="card-avatar avatar avatar-lg mx-auto">
-                <img alt="Logo ${element.Establishment.name}" src="/assets/images/default_hospital.jpg" class="avatar-img rounded">
-            </span>
-          </div>
-          <h2 class="card-title text-center mb-3">
-            <a href="/select/es/group/${element.es_id}">${element.Establishment.name}</a>
-          </h2>
-          <h5 id="${element.id}" class="text-center"></h5>
-        </div>
-      </div>
-    </div>`);
-      if(element.supergroup_id !== null)
-        $(`#${element.id}`).text(`${element.SuperGroup.name} - ${element.Group.name}`);
-      else
-        $(`#${element.id}`).text(`${element.Group.name}`);
-    });
-  }).catch(errors => { errorsHandler(errors); });
-</script>

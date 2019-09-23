@@ -30,28 +30,23 @@ Establishment.ViewAllGroups = (req, res, next) => {
 };
 
 Establishment.ViewAccounts = (req, res, next) => {
-  Models.ESAccount.findAll({
+  Models.UsersGroups.findAll({
     where: { user_id: req.user.id },
-    include: {
+    include: [{
       model: Models.Establishment,
       required: true
-    }
+    }, {
+      model: Models.Groups
+    }, {
+      model: Models.SuperGroups
+    }]
   }).then(esAccounts => {
     res.render('establishments/selectEs', { esAccounts, a: { main: 'selectEs' } });
   }).catch(error => next(new BackError(error)));
 };
 
 Establishment.Select = (req, res, next) => {
-  let model = req.params.type;
-  if (_.isNil(model)) return next(new BackError(`Type "${model}" introuvable.`, httpStatus.NOT_FOUND));
-  if (model === 'es')
-    model = 'ESAccount';
-  else if (model === 'group')
-    model = 'UsersGroups';
-  else
-    return next(new BackError(`Type "${model}" non autorisé pour cette requête.`, httpStatus.NOT_FOUND));
-
-  Models[model].findOne({
+  Models.UsersGroups.findOne({
     where: { user_id: req.user.id, es_id: req.params.currentEsId },
     include: {
       model: Models.Establishment,
