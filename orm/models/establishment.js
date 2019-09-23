@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'es_id',
       as: 'subdomain'
     });
-    Establishment.hasMany(models.ESAccount, {
+    Establishment.hasMany(models.UsersGroups, {
       foreignKey: 'es_id',
       sourceKey: 'id'
     });
