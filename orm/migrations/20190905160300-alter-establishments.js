@@ -2,216 +2,112 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     const __ = process.cwd();
-    const { Op } = Sequelize;
-    const Models = require(`${__}/orm/models/index`);
+    const fs = require('fs');
 
+    return new Promise((resolve, reject) => {
+      fs.readFile(`${__}/orm/jsonDatas/croix-rouge.json`, 'utf8', (err, data) => {
+        if (err)
+          return reject(err);
+        try {
+          let establishments = JSON.parse(data);
+          let request = '' +
+            'DELETE FROM Establishments WHERE name LIKE "%CROIX%ROUGE%";' +
+            'ALTER TABLE Establishments ADD street_number VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD city VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD region VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD country VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD postal_code VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD lat DECIMAL(10,8);' +
+            'ALTER TABLE Establishments ADD lng DECIMAL(11,8);' +
+            'ALTER TABLE Establishments ADD structure_number VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD attachement_direction VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD region_code VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD long_wording VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD spinneret VARCHAR(255);' +
+            'ALTER TABLE Establishments ADD primary_group_id INT, ADD CONSTRAINT fk_primary_group_id FOREIGN KEY (primary_group_id) REFERENCES `Groups`(id) ON DELETE SET NULL ON UPDATE CASCADE;' +
+            'ALTER TABLE Establishments ADD location_updatedAt VARCHAR(255);' +
+            'INSERT INTO Establishments ' +
+            '(structure_number, attachement_direction, region_code, `name`, long_wording, spinneret, sector, category, `code`, url, siret, finess, address, town) VALUES ';
 
+          let delRequest = 'DELETE FROM Establishments WHERE finess IN (';
 
-    return queryInterface.sequelize.transaction(transaction => {
+          for (let i = 0; i < establishments.length; i++) {
+            let d = establishments[i];
+            let o = {};
 
-      return queryInterface.getForeignKeyReferencesForTable('Subdomains', { transaction: transaction })
-        .then(foreignKeys => {
+            for (const dKey in d) {
+              if (dKey === 'address1' || dKey === 'address2' || dKey === 'address3' || dKey === 'town1' || dKey === 'town2' || dKey === 'addComp')
+                continue;
+              o[dKey] = d[dKey];
+            }
 
-          let promises = [];
+            let add = [d.addComp, d.address1, d.address2, d.address3];
+            let town = [d.town1, d.town2];
 
-          for (let i = 0; i < foreignKeys.length; i++) {
-            const foreignKey = foreignKeys[i];
+            o.address = '';
+            o.town = '';
 
-            promises.push(
-              queryInterface.removeConstraint('Subdomains', foreignKey.constraintName, { transaction: transaction })
-            );
+            add.forEach( item => {
+              if (item)
+                o.address += '' + item;
+              if (o.address)
+                o.address += ' ';
+            });
 
+            town.forEach( item => {
+              if (item)
+                o.town += '' + item;
+              if (o.town)
+                o.town += ' ';
+            });
+
+            o.structure_number = o.structure_number === '' ? 'NULL' : o.structure_number;
+            o.attachement_direction = o.attachement_direction === '' ? 'NULL' : o.attachement_direction;
+            o.region_code = o.region_code === '' ? 'NULL' : o.region_code;
+            o.name = o.name === '' ? 'NULL' : o.name;
+            o.long_wording = o.long_wording === '' ? 'NULL' : o.long_wording;
+            o.spinneret = o.spinneret === '' ? 'NULL' : o.spinneret;
+            o.sector = o.sector === '' ? 'NULL' : o.sector;
+            o.category = o.category === '' ? 'NULL' : o.category;
+            o.code = o.code === '' ? 'NULL' : o.code;
+            o.url = o.url === '' ? 'NULL' : o.url;
+            o.siret = o.siret === '' ? 'NULL' : o.siret;
+            o.finess = o.finess === '' ? 'NULL' : o.finess;
+            o.address = o.address === '' ? 'NULL' : o.address;
+            o.town = o.town === '' ? 'NULL' : o.town;
+
+            request += `("${o.structure_number}","${o.attachement_direction}","${o.region_code}","${o.name}","${o.long_wording}","${o.spinneret}","${o.sector}","${o.category}","${o.code}","${o.url}","${o.siret}","${o.finess}","${o.address}","${o.town}")`;
+
+            if (o.finess)
+              delRequest += `'${o.finess}'`;
+
+            if (i < establishments.length -1){
+              request += ',';
+              if (o.finess)
+                delRequest += ',';
+            }
+            else {
+              request += ';';
+              delRequest += ');';
+              request = delRequest + request;
+            }
           }
 
-          return Promise.all(promises);
-
-        })
-        .then(() => {
-
-          return Promise.all([
-            queryInterface.addConstraint('Subdomains', ['es_id'], {
-              type: 'foreign key',
-              name: 'Subdomains_ibfk1',
-              references: {
-                table: 'Establishments',
-                field: 'id'
-              },
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-              transaction: transaction
-            }),
-            queryInterface.addConstraint('Subdomains', ['group_id'], {
-              type: 'foreign key',
-              name: 'Subdomains_ibfk2',
-              references: {
-                table: 'Groups',
-                field: 'id'
-              },
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-              transaction: transaction
-            }),
-            queryInterface.addConstraint('Subdomains', ['super_group_id'], {
-              type: 'foreign key',
-              name: 'Subdomains_ibfk3',
-              references: {
-                table: 'SuperGroups',
-                field: 'id'
-              },
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-              transaction: transaction
-            }),
-          ]);
-
-        })
-        .then(() => {
-
-          return queryInterface.bulkDelete('Establishments', {
-            name: {
-              [Op.or]: [{ [Op.like]: '%CROIX-ROUGE%' }, { [Op.like]: '%CROIX ROUGE%' }]
-            } }, { transaction: transaction }
-          );
-
-        })
-        .then(() => {
-
-          return Promise.all([
-            queryInterface.addColumn('Establishments', 'user_address', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'formatted_address', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'street_number', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'street_name', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'city', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'department', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'region', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'country', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'postal_code', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'lat', {
-              type: Sequelize.DECIMAL(10, 8),
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'lng', {
-              type: Sequelize.DECIMAL(11, 8),
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'structure_number', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'attachement_direction', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'region_code', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'long_wording', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'spinneret', {
-              type: Sequelize.STRING,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'primary_group_id', {
-              type: Sequelize.INTEGER,
-              references: {
-                model: 'Groups',
-                key: 'id'
-              },
-              allowNull: true,
-              onDelete: 'SET NULL'
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Establishments', 'location_updatedAt', {
-              type: Sequelize.DATE,
-              allowNull: true
-            }, { transaction: transaction }),
-            queryInterface.addColumn('Applications', 'is_available', {
-              type: Sequelize.BOOLEAN,
-              allowNull: true,
-              defaultValue: 1
-            }, { transaction: transaction }),
-            queryInterface.removeColumn('Candidates', 'is_available', { transaction: transaction }),
-          ]);
-
-        })
-        .then(() => {
-
-          /*return queryInterface.bulkInsert('Establishments', [
-            {
-              name: 'test',
-              category: 'test',
-              finess: 'test',
-              siret: 'test',
-              code: 'test',
-              sector: 'test',
-              address: 'test',
-              town: 'test',
-              url: 'test',
-              structure_number: 'test',
-              attachement_direction: '',
-              region_code: 'test',
-              long_wording: 'test',
-              spinneret: 'test'
-            }
-          ], {transaction: transaction});*/
-
-        });
-
-    });
+          resolve (request);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    })
+      .then( (request) => {
+        return queryInterface.sequelize.query(request);
+      })
+      .catch( (err) => {
+        return Promise.reject('Unexpected error, all changes have been manually rollbacked\n' + err);
+      });
 
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction((t) => {
-      return Promise.all([
-        queryInterface.removeColumn('Establishments', 'user_address', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'formatted_address', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'street_number', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'street_name', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'city', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'department', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'region', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'country', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'postal_code', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'lat', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'lng', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'structure_number', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'attachement_direction', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'region_code', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'long_wording', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'spinneret', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'primary_group_id', { transaction: t }),
-        queryInterface.removeColumn('Establishments', 'location_updatedAt', { transaction: t }),
-      ])
-    })
   }
 };

@@ -122,7 +122,7 @@ Authentication.verifyEsAccess = (req, res, next) => {
   Models.Establishment.findOne({
     where: { id: req.params.esId || req.user.opts.currentEs },
     include: {
-      model: Models.ESAccount,
+      model: Models.UsersGroups,
       where: { user_id: req.user.id }
     }
   }).then(es => {

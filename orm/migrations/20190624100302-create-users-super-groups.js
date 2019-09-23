@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('UsersGroups', {
+    return queryInterface.createTable('UsersSuperGroups', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,16 +12,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
-          key: 'id',
+          key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         allowNull: false
       },
-      id_group: {
+      id_supergroup: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Groups',
+          model: 'SuperGroups',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -45,6 +45,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('UsersGroups');
+    return queryInterface.dropTable('UsersSuperGroups');
   }
 };

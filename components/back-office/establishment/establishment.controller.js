@@ -399,10 +399,12 @@ BackOffice_Establishment.addUser = (req, res, next) => {
       }
     }).spread((user, created) => {
       if (!created && user.type !== 'es') return res.status(200).json({ status: 'Not an ES account', user });
-      Models.ESAccount.findOrCreate({
+      Models.UsersGroups.findOrCreate({
         where: {
           user_id: user.id,
-          es_id: req.params.id
+          es_id: req.params.id,
+          group_id: null,
+          supergroup_id: null,
         },
         defaults: {
           role: req.body.role,
@@ -432,7 +434,7 @@ BackOffice_Establishment.editUserRole = (req, res, next) => {
     where: { id: req.params.userId },
     attributes: ['id', 'firstName', 'lastName'],
     include: {
-      model: Models.ESAccount,
+      model: Models.UsersGroups,
       required: true,
       where: {
         user_id: req.params.userId,
@@ -440,8 +442,8 @@ BackOffice_Establishment.editUserRole = (req, res, next) => {
       }
     }
   }).then(esAccount => {
-    esAccount.ESAccounts[0].role = req.body.newRole;
-    esAccount.ESAccounts[0].save().then(newResult => {
+    esAccount.UsersGroups[0].role = req.body.newRole;
+    esAccount.UsersGroups[0].save().then(newResult => {
       return res.status(200).send(newResult);
     });
   }).catch(errors => next(new BackError(errors)));
@@ -452,15 +454,17 @@ BackOffice_Establishment.removeUser = (req, res, next) => {
     where: { id: req.params.userId },
     attributes: ['id', 'firstName', 'lastName'],
     include: {
-      model: Models.ESAccount,
+      model: Models.UsersGroups,
       required: true,
       where: {
         user_id: req.params.userId,
-        es_id: req.params.id
+        es_id: req.params.id,
+        group_id: null,
+        supergroup_id: null,
       }
     }
   }).then(esAccount => {
-    esAccount.ESAccounts[0].destroy().then(destroyedESAccount => {
+    esAccount.UsersGroups[0].destroy().then(destroyedESAccount => {
       return res.status(200).send(destroyedESAccount);
     }).catch(errors => next(new BackError(errors)));
   }).catch(errors => next(new BackError(errors)));
@@ -528,6 +532,57 @@ BackOffice_Establishment.getNeed = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+BackOffice_Establishment.View = (req, res, next) => {
+  Models.Establishment.findOne({
+    where: { id: req.params.id },
+    include: [{
+      model: Models.UsersGroups,
+      where: { es_id: req.params.id },
+      required: false,
+      include: {
+        model: Models.User,
+        on: {
+          'UsersGroups.user_id$': {
+            [Op.col]: 'UsersGroups->User.id'
+          }
+        },
+      }
+    }, {
+      model: Models.EstablishmentReference,
+      on: {
+        '$Establishment.finess$': {
+          [Op.col]: 'ref.finess_et'
+        }
+      },
+      as: 'ref',
+      required: true,
+    }]
+  }).then(data => {
+    if (_.isNil(data)) {
+      req.flash('error_msg', 'Cet établissement n\'existe pas.');
+      return res.redirect('/back-office/es');
+    }
+    Models.Candidate.findAll({
+      include: [{
+        model: Models.Application,
+        as: 'applications',
+        required: true,
+        where: {
+          ref_es_id: data.dataValues.finess
+        },
+      }]
+    }).then(candidates => {
+      res.render('back-office/es/show', {
+        layout,
+        candidates,
+        title: `Établissement ${data.dataValues.name}`,
+        a: { main: 'es', sub: 'es_one' },
+        es: data
+      })
+    });
+  }).catch(error => next(new BackError(error)));
+};
+
 BackOffice_Establishment.ViewList = (req, res, next) => {
   Models.Establishment.findAll({
     attributes: [
@@ -539,7 +594,7 @@ BackOffice_Establishment.ViewList = (req, res, next) => {
       attributes: ['id'],
       required: false
     }, {
-      model: Models.ESAccount,
+      model: Models.UsersGroups,
       attributes: ['id'],
       required: false
     }]
