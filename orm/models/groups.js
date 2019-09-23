@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     Group.hasMany(models.Establishment, {
       foreignKey: 'primary_group_id',
       sourceKey: 'id',
-      onDelete: 'SET NULL'
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE'
     });
   };
   return Group;
