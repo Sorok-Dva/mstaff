@@ -118,7 +118,7 @@ module.exports = {
       }).then(() => {
         return Models.UsersGroups.bulkCreate(UsersGroupsTable).then(() => {
           return queryInterface.dropTable('ESAccounts').then(() => {
-            return queryInterface.dropTable('UsersSuperGroups').then(() => {});
+            return queryInterface.dropTable('UsersSuperGroups');
           });
         });
       });
