@@ -1,6 +1,7 @@
 const __ = process.cwd();
 const { BackError } = require(`${__}/helpers/back.error`);
 const Models = require(`${__}/orm/models/index`);
+const gmap = require(`${__}/helpers/google-map-api`);
 
 const Api = {};
 
@@ -67,6 +68,16 @@ Api.getPoolDatas = (req, res, next) => {
     datas.services = services;
     res.status(200).send(datas);
   }).catch(error => next(new BackError(error)));
+};
+
+Api.geolocAddress = (req, res, next) => {
+  if (!req.body.address)
+    return res.status(400).send();
+  gmap.getAddress(req.body.address, req.body.withNulls === true || req.body.withNulls === 'true')
+    .then((results) => {
+      res.status(200).send(results);
+    })
+    .catch(error => next(new BackError(error)));
 };
 
 module.exports = Api;

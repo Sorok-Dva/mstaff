@@ -1,6 +1,8 @@
+const util = require('util');
 const _ = require('lodash');
 const conf = require('dotenv').config().parsed;
 const packageJson = require('../package');
+const fs = require('fs');
 const path = require('path');
 const { Env } = require('../helpers/helpers');
 const { Establishment, Server, Subdomain } = require('../components');
@@ -19,7 +21,10 @@ const passport = require('passport');
 const helmet = require('helmet');
 const i18n = require('i18n-express');
 const logger = require('morgan');
-let hbsHelpers = require('../helpers/handlebars').register(require('handlebars'));
+let handlebars = require('handlebars');
+const extend = require('handlebars-extend-block');
+handlebars = extend(handlebars);
+let hbsHelpers = require('../helpers/handlebars').register(handlebars);
 
 let sessionStore = new MySQLStore({
   host: config.host,
@@ -39,11 +44,10 @@ module.exports = {
   cors: cors(), // enable CORS - Cross Origin Resource Sharing
   csurf: csurf({ cookie: true }), // enable crsf token middleware
   exphbs: exphbs.create({
-    extname: 'hbs',
+    extname: '.hbs',
     defaultLayout: 'default',
     layoutsDir: path.join(__dirname, '../views/layouts'),
-    partialsDir: path.join(__dirname, '../views/partials'),
-    helpers: hbsHelpers
+    partialsDir: path.join(__dirname, '../views/partials')
   }),
   flash: flash(),
   getServerMessages: (req, res, next) => {
@@ -128,25 +132,76 @@ module.exports = {
   wildcardSubdomains: (req, res, next) => {
     let excludedSubdomains = ['dev', 'pre-prod', 'monitoring', 'welcome', 'admin'];
     if (req.url.search('static') !== -1 || req.subdomains.length === 0 || excludedSubdomains.includes(req.subdomains[0])) return next();
-    Subdomain.Main.find(req, res, (subdomain) => {
+    Subdomain.Main.find(req, res, subdomain => {
       if (subdomain.es_id) {
-        Establishment.Main.find(subdomain.es_id, (data) => {
+        Subdomain.Establishment.find(subdomain.es_id, data => {
+          // XXX: Remove this from here
+          if (data.logo) {
+            data.logo = data.logo.replace('/static', '');
+          }
+          if (data.banner) {
+            data.banner = data.banner.replace('/static', '');
+          }
+          // XXX: Remove this to here
           res.locals.es = data;
           req.session.es = data;
           req.url = `/esDomain${req.url}`;
           return next();
         });
       } else if (subdomain.group_id) {
-        Subdomain.Group.find(subdomain.group_id, (data) => {
+        Subdomain.Group.find(subdomain.group_id, data => {
+          // XXX: Remove this from here
+          if (data.group.logo) {
+            data.group.logo = data.group.logo.replace('/static', '');
+          }
+          if (data.group.banner) {
+            data.group.banner = data.group.banner.replace('/static', '');
+          }
+          // XXX: Remove this to here
           res.locals.group = data.group;
           res.locals.group.es = data.es;
           req.session.group = data;
           req.url = `/groupDomain${req.url}`;
           return next();
         });
+      } else if (subdomain.super_group_id) {
+        Subdomain.SuperGroup.find(subdomain.super_group_id, data => {
+          // XXX: Remove this from here
+          if (data.logo) {
+            data.logo = data.logo.replace('/static', '');
+          }
+          if (data.banner) {
+            data.banner = data.banner.replace('/static', '');
+          }
+          // XXX: Remove this to here
+          res.locals.supergroup = data;
+          req.url = `/supergroupDomain${req.url}`;
+          return next();
+        })
       } else {
         return next();
       }
     });
+  },
+  themeCSSImport: (req, res, next) => {
+    let { render } = res;
+    res.render = (view, locals, cb) => {
+      let themeDir = 'public/assets/theme/mstaff';
+      locals.themeLayoutCSSImport = locals.layoutName && fs.existsSync(themeDir + '/css/layout/' + locals.layoutName + '.min.css');
+      locals.themePageCSSImport = locals.pageName && fs.existsSync(themeDir + '/css/pages/' + locals.pageName + '.min.css');
+      locals.themeLayoutJSImport = locals.layoutName && fs.existsSync(themeDir + '/js/layout/' + locals.layoutName + '.js');
+      locals.themePageJSImport = locals.pageName && fs.existsSync(themeDir + '/js/pages/' + locals.pageName + '.js');
+      render.call(res, view, locals, cb)
+    };
+    return next();
+  },
+  appDomain: (req, res, next) => {
+    if (Env.isDev){
+      res.locals.appDomain = 'medikstaff.com';
+    } else if (Env.isProd){
+      res.locals.appDomain = 'mstaff.co';
+    }
+    res.locals.appProtocol = 'https';
+    return next();
   }
 };

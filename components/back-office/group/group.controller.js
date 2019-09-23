@@ -1,5 +1,6 @@
 const __ = process.cwd();
 const _ = require('lodash');
+const fs = require('fs');
 const { validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
 const httpStatus = require('http-status');
@@ -170,13 +171,25 @@ BackOffice_Group.Edit = (req, res, next) => {
           } else subCheckOk = true
         } else subCheckOk = true;
 
-        group.update({
+        let update = {
           name: req.body.name,
-          logo: req.body.logo,
-          banner: req.body.banner,
           domain_enable: parseInt(req.body.domain_enable),
           domain_name: req.body.domain_name,
-        }).then(savedGroup => {
+        };
+        if (req.uploads && req.uploads.logo){
+          update.logo = req.uploads.logo.dir.replace('public', '') + '/' + req.uploads.logo.name;
+          if (fs.existsSync('public' + group.logo)){
+            fs.unlinkSync('public' + group.logo)
+          }
+        }
+        if (req.uploads && req.uploads.banner){
+          update.banner = req.uploads.banner.dir.replace('public', '') + '/' + req.uploads.banner.name;
+          if (fs.existsSync('public' + group.banner)){
+            fs.unlinkSync('public' + group.banner)
+          }
+        }
+
+        group.update(update).then(savedGroup => {
           if (subCheckOk) {
             if (subGroupExist) {
               groupSubdomain.update({
@@ -193,9 +206,9 @@ BackOffice_Group.Edit = (req, res, next) => {
               }
               Models.Subdomain.create(query);
             }
-            return res.status(200).json({ status: 'Modified', error });
+            return res.status(200).json({ status: 'Modified', error, group: savedGroup });
           } else {
-            return res.status(200).json({ status: 'Modified', error });
+            return res.status(200).json({ status: 'Modified', error, group: savedGroup });
           }
         });
       })

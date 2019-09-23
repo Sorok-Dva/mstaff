@@ -41,6 +41,15 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+db.init = () => {
+  Object.keys(db).forEach(modelName => {
+    let path = __dirname + '/../repositories/' + modelName + '.js';
+    if (fs.existsSync(path)) {
+      db[modelName].repository = require(path);
+    }
+  });
+};
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

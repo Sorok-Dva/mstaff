@@ -1,6 +1,7 @@
 const { Authentication, HTTPValidation } = require('../../middlewares/index');
 const { BackOffice } = require('../../components');
 const express = require('express');
+const fileUpload = require('../../helpers/file-upload');
 const router = express.Router();
 
 router.get(
@@ -28,6 +29,10 @@ router.post('/establishment/validate-create',
   HTTPValidation.BackOfficeController.createEstablishmentFromReference,
   BackOffice.Establishment.validateCreate);
 
+router.post('/establishment/:id(\\d+)/update-location',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.EditLocation);
+
 router.post('/establishment/:id(\\d+)/add/user',
   Authentication.ensureIsAdmin,
   HTTPValidation.BackOfficeController.addUserInEstablishment,
@@ -41,6 +46,10 @@ router.post('/establishment/:id(\\d+)/remove/user/:userId(\\d+)',
 router.post('/establishment/:id(\\d+)/edit/user/:userId(\\d+)',
   Authentication.ensureIsAdmin,
   BackOffice.Establishment.editUserRole);
+
+router.post('/establishment/bulk-update-location',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.bulkUpdateESLocation);
 
 router.get('/establishment/:esId(\\d+)/needs', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeeds);
 router.get('/establishment/:esId(\\d+)/need/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Establishment.getNeed);
@@ -83,7 +92,9 @@ router.post('/configuration/equipments/',
     Authentication.ensureIsAdmin,
     BackOffice.Configuration.RemoveEquipment);
 
-router.put('/groups/:type/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.Edit)
+router.put('/groups/:type/:id(\\d+)', Authentication.ensureIsAdmin, fileUpload.getUploader((req) => {
+  return 'public/uploads/' + req.params.type + '/' + req.params.id;
+}).fields([{ name: 'logo', maxCount: 1 }, { name: 'banner', maxCount: 1 }]), BackOffice.Group.Edit)
   .delete('/groups/:type/:id(\\d+)', Authentication.ensureIsAdmin, BackOffice.Group.Remove)
   .post('/groups/:type', Authentication.ensureIsAdmin, BackOffice.Group.Add);
 

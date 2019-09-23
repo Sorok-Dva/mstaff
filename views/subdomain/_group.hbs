@@ -1,0 +1,171 @@
+<!-- HEADER -->
+<style>
+  .locateES {
+    cursor: pointer;
+  }
+</style>
+<script>let map, mapAll, marker, cityCircle, markers = [], pos = { lat: 0, lng: 0, rayon: 5 };</script>
+<div class="header">
+  <!-- Image -->
+  <img src="{{group.banner}}" class="header-img-top" alt="Bannière {{group.name}}"
+       style="object-fit: cover; height: 344px">
+  <div class="container-fluid">
+    <!-- Body -->
+    <div class="header-body mt-n5 mt-md-n6">
+      <div class="row align-items-end">
+        <div class="col-auto">
+          <!-- Avatar -->
+          <div class="avatar avatar-xxl header-avatar-top">
+            <img src="{{group.logo}}" alt="Logo {{group.name}}" class="avatar-img rounded border border-4 border-body">
+          </div>
+
+        </div>
+        <div class="col mb-3 ml-n3 ml-md-n2">
+          <!-- Pretitle -->
+          <h6 class="header-pretitle">
+            Page groupe
+          </h6>
+
+          <!-- Title -->
+          <h1 class="header-title">
+            {{group.name}}
+          </h1>
+        </div>
+        <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
+          <!-- Button -->
+          <a href="/join" class="btn btn-outline-primary d-block d-md-inline-block">
+            Candidature spontanée
+          </a>
+        </div>
+      </div> <!-- / .row -->
+    </div> <!-- / .header-body -->
+  </div>
+</div> <!-- / .header -->
+
+<!-- CONTENT -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-xl-8">
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Title -->
+              <h4 class="card-header-title">
+                Il y a <b>{{group.es.length}}</b> établissements dans ce groupe
+              </h4>
+            </div>
+          </div> <!-- / .row -->
+        </div>
+        <div class="card-body">
+          {{#each group.es as |data|}}
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-8">
+                    {{data.es.town}} - {{data.es.name}}
+                  </div>
+                  <div class="col-4">
+                    <span class="float-right locateES" data-toggle="tooltip" data-placement="top"
+                          data-original-title="Localiser l'établissement sur la carte"
+                          onclick="addMarker({lat: {{data.es.ref.lat}}, lon: {{data.es.ref.lon}} })">
+                      <i class="fal fa-map-pin fa-2x"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-xl-4">
+      <div class="card" id="mapHeader">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <!-- Title -->
+              <h4 class="card-header-title">
+                Carte du groupe
+              </h4>
+            </div>
+          </div> <!-- / .row -->
+        </div>
+        <div class="card-body">
+          <div id="map" style="height: 420px;width: 100%;">
+            <div class="col-12 text-center">
+              <i class="fal fa-map-marked fa-10x mt-4"></i>
+              <h2 class="mt-6">Cliquez sur l'icone <i class="fal fa-map-pin fa-2x"></i> pour localiser un établissement sur la carte</h2>
+            </div>
+          </div>
+        </div> <!-- / .card-body -->
+      </div> <!-- / .card -->
+    </div>
+  </div> <!-- / .row -->
+</div>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+<script>
+  $(document).ready(() => {
+    let locations = [
+      {{#each group.es as |data|}}
+        {
+          position: { lat: {{data.es.ref.lat}}, lng: {{data.es.ref.lon}} },
+          info: {
+            name: "{{data.es.name}}",
+            address: "{{data.es.address}} {{data.es.town}}"
+          }
+        },
+      {{/each}}
+    ];
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 5,
+      center: { lat: locations[0].position.lat, lng: locations[0].position.lng }
+    });
+    markers = locations.map((location, i) => {
+      let marker = new google.maps.Marker({
+        position: location.position,
+        map: map,
+        title: location.info.name
+      });
+      new google.maps.Circle({
+        strokeColor: '#337AB7',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#5BBBE5',
+        fillOpacity: 0.35,
+        map: map,
+        center: location.position,
+        radius: 0.2 * 1000 || 10000
+      });
+      let contentString = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          `<h1 id="firstHeading" class="firstHeading">${location.info.name}</h1>`+
+          '<div id="bodyContent">'+
+          `<p>${location.info.address}</p>`+
+          '<p></p>'+
+          '</div>'+
+          '</div>';
+      let infowindow = new google.maps.InfoWindow({
+        content: contentString
+      });
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+    });
+  });
+
+  let addMarker = (es) => {
+    if (document.getElementById('map')) {
+      map.setZoom(12);
+      map.setCenter({ lat: es.lat, lng: es.lon });
+    }
+    $(location).attr('href', '#mapHeader');
+  };
+
+  let removeAllMarker = () => {
+    markers.forEach((marker) => marker.setMap(null));
+    markers = [];
+  };
+</script>

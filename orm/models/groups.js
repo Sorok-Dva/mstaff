@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: 'id',
       onDelete: 'SET NULL'
     });
+    Group.hasMany(models.GroupsSuperGroups, {
+      foreignKey: 'id_group',
+      sourceKey: 'id',
+      onDelete: 'CASCADE'
+    });
   };
   return Group;
 };

@@ -3,6 +3,7 @@ const { ErrorHandler, Express } = require('./middlewares');
 const path = require('path');
 const express = require('express');
 const routes = require('./routes/router');
+const Models = require('./orm/models/index');
 
 const app = express();
 
@@ -13,12 +14,13 @@ if (Env.isLocal || Env.isDev) app.use(Express.loggerDev);
 app.engine('hbs', Express.exphbs.engine);
 app.set('env', Env.current);
 app.set('trust proxy', true);
-app.set('view engine', 'hbs');
+// view engine setup
 app.set('views', path.join(__dirname, 'views'));
-
+app.set('view engine', '.hbs');
 if (Env.isProd) app.set('view cache', true);
 
 // ------ Express
+app.engine('.hbs', Express.exphbs.engine);
 app.use(express.json({ limit: '150mb' }));
 app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(Express.cookieParser);
@@ -37,6 +39,8 @@ app.use(Express.flash);
 app.use(Express.setLocals);
 app.use(Express.wildcardSubdomains);
 app.use(Express.readOnlySessionForImpersonation);
+app.use(Express.themeCSSImport);
+app.use(Express.appDomain);
 
 // mount all routes on / path
 app.use('/', routes);
@@ -48,5 +52,7 @@ app.use(ErrorHandler.client);
 app.use(ErrorHandler.log);
 // if (Env.isProd || Env.isPreProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
+
+Models.init();
 
 module.exports = app;
