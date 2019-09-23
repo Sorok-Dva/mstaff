@@ -4,10 +4,18 @@ $backgroundColorLight:#333333;
 $borderColorLight:#e1e1e1;
 
 $fontColorLight:#ffffff;
-$fontColorLightFade:#cdcdcd;
 $fontColorDark:#323a45;
-$fontColorDarkFade:#696969;
+$fontColorLightFade:lighten($fontColorDark, 50%);
+$fontColorDarkFade:lighten($fontColorDark, 20%);
+$fontColorDarkSmooth:lighten($fontColorDark, 35%);
 
 $mainColorBlue:#03a9de;
 $mainColorGreen:#0ecea4;
 $mainColorPink:#e91e63;
+
+$bootstrapPrimary:#007bff;
+$bootstrapSecondary:#6c757d;
+$bootstrapSuccess:#28a745;
+$bootstrapDanger:#dc3545;
+$bootstrapWarning:#ffc107;
+$bootstrapInfo:#17a2b8;

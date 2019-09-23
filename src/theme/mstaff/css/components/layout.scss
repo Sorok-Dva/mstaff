@@ -6,6 +6,14 @@
 	display:flex;
 	justify-content:center;
 }
+.jcfs{
+	display:flex;
+	justify-content:flex-start;
+}
+.jcfe{
+	display:flex;
+	justify-content:flex-end;
+}
 
 .tar{
 	text-align:right;
@@ -16,18 +24,53 @@
 }
 
 .fdc{
+	display:flex;
 	flex-direction:column;
+}
+.nw{
+	white-space:nowrap;
 }
 
 .push{
 	display:flex;
 	justify-content:space-between;
-	flex-wrap:wrap;
 
-	& > div:first-child > *{
+	& > div:last-child{
+		margin-left:2rem;
+	}
+
+	& > .aic:first-child > *:not(:last-child){
 		margin-right:1rem;
 	}
-	& > div:last-child > *{
+	& > .aic:last-child > *:not(:first-child){
 		margin-left:1rem;
+	}
+}
+
+
+
+i{
+	margin-right:.5em;
+}
+
+.icon-only{
+	i{
+		margin-right:0;
+	}
+}
+
+.icon-padding{
+	position:relative;
+	padding-left:2em;
+
+	i{
+		position:absolute;
+		top:50%;
+		left:0;
+		-webkit-transform:translateY(-50%);
+		-moz-transform:translateY(-50%);
+		-ms-transform:translateY(-50%);
+		-o-transform:translateY(-50%);
+		transform:translateY(-50%);
 	}
 }

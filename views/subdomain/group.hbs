@@ -4,14 +4,14 @@
         <div class="container">
 
             <div class="push">
-                <div class="aic jcc">
+                <div class="aic">
                     <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{group.logo}}');"></div>
                     <div>
                         <span class="header-title-label">Groupe</span>
                         <h1 class="header-title">{{group.name}}</h1>
                     </div>
                 </div>
-                <div class="aic jcc">
+                <div class="aic">
                     <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
                 </div>
             </div>
@@ -42,25 +42,34 @@
                     <div class="col-12 col-xl-8 offset-xl-2">
 
                         <div class="page-filters">
-                            <div class="button button-pink filter-clear"><i class="fas fa-times"></i>Afficher tous les établissements</div>
+                            <div class="button button-blue filter-clear"><i class="fas fa-times"></i>Afficher tous les établissements</div>
                         </div>
 
                         <div class="card-list establishment-list">
 
                             {{#each group.es as |data|}}
-                                <div class="establishment mix" data-establishment-id="{{data.es.id}}">
+                                <div class="establishment mix" data-establishment-id="{{data.es.id}}"{{#if data.es.domain_enable}}{{#if data.es.domain_name}} data-establishment-domain-name="{{../appProtocol}}://{{data.es.domain_name}}.{{../appDomain}}"{{/if}}{{/if}}>
                                     <div class="card">
-                                        <div class="card__header">
-                                            {{#if data.es.town}}<div class="card__legend"><i class="far fa-map-marker-alt"></i>{{data.es.town}}</div>{{/if}}
-                                            <h3 class="card__title title">{{data.es.name}}</h3>
-                                        </div>
-                                        <div class="card__thumbnail-container"></div>
-                                        {{#if data.es.domain_name}}
-                                            <div class="card__footer tar">
-                                                {{#ifCond data.es.offers.length '!=' 0}}<a href="https://{{data.es.domain_name}}.medikstaff.com" class="button button-green">Accéder aux offres ({{data.es.offers.length}})</a>{{/ifCond}}
-                                                <a href="https://{{data.es.domain_name}}.medikstaff.com/join" class="button button-pink">Candidature spontanée</a>
+                                        <div class="card__body">
+                                            <div class="push">
+                                                <div>
+                                                    {{#if data.es.formatted_address}}
+                                                        <div class="card__legend"><i class="far fa-map-marker-alt"></i>{{data.es.formatted_address}}</div>
+                                                    {{/if}}
+                                                    <h3 class="card__title title">{{data.es.name}}</h3>
+                                                    {{#ifCond data.es.offers.length '!=' 0}}
+                                                        <div class="card__footer">
+                                                            <div class="tag tag-blue">{{data.es.offers.length}} offre{{#ifCond data.es.offers.length '>' 1}}s{{/ifCond}}</div>
+                                                        </div>
+                                                    {{/ifCond}}
+                                                </div>
+                                                <div class="fdc jcfe">
+                                                    {{#if data.es.domain_enable}}{{#if data.es.domain_name}}
+                                                        <a href="https://{{data.es.domain_name}}.{{../appDomain}}/join" class="button button-pink">Candidature spontanée</a>
+                                                    {{/if}}{{/if}}
+                                                </div>
                                             </div>
-                                        {{/if}}
+                                        </div>
                                     </div>
                                 </div>
                             {{/each}}
@@ -104,19 +113,19 @@
     </script>
 
     <script src="/assets/theme/mstaff/lib/mixitup.min.js"></script>
-    <script src="/assets/theme/mstaff/js/modules/map.js"></script>
+    <script src="/assets/theme/mstaff/js/modules/map-helper.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
     <script>
         let establishments = [];
-        {{#each group.es as |establishment|}}
-        {{#if establishment.lat}}
-            establishments.push({
-                id: {{establishment.id}},
-                name: "{{establishment.name}}",
-                lat: {{establishment.lat}},
-                lng: {{establishment.lon}}
-            });
+        {{#each group.es as |data|}}
+        {{#if data.es.lat}}
+            establishments[{{data.es.id}}] = {
+                id: {{data.es.id}},
+                name: "{{data.es.name}}",
+                lat: {{data.es.lat}},
+                lng: {{data.es.lng}}
+            };
         {{/if}}
         {{/each}}
         let mixer = null;
@@ -124,13 +133,26 @@
 
 
         $(document).ready(function(){
-            initResultMap(document.getElementById('map'), establishments, forEachMarker);
+
+            MapHelper.initResultMap(document.getElementById('map'), establishments, {
+            	'forEachMarker': forEachMarker,
+                'fitMarkers': true
+            });
             initGrid();
+
+            $('.establishment').click(function(){
+            	if($(this).attr('data-establishment-domain-name'))
+                    window.location.href = $(this).attr('data-establishment-domain-name');
+            });
+
         });
 
 
 
-        function forEachMarker(marker, info, result){
+        function forEachMarker(map, markers, info, results, resultId){
+        	const result = results[resultId];
+        	const marker = markers[resultId];
+
             marker.addListener('click', function(){
                 if($(window).scrollTop() === 0){
                     filterEstablishmentsById(result.id);
@@ -143,11 +165,15 @@
                 }
             });
 
-            $('.result[data-establishment-id="' + result.id + '"]').hover(function(){
-                info.open(map, marker);
-            }, function(){
-                info.close();
-            });
+            $('.establishment[data-establishment-id="' + result.id + '"]')
+                .hover(function(){
+                	if(MapHelper.isMarkerVisible(map, result.id)){
+                        info.setContent('<h1 class="card__title title">' + result.name + '</h1>');
+                        info.open(map, marker);
+                    }
+                }, function(){
+                    info.close();
+                });
         }
 
         function filterEstablishmentsById(es_id){

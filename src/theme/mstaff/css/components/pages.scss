@@ -49,7 +49,7 @@
 		.container{
 			text-align:right;
 
-			.banner-info-card{
+			.black-card{
 				display:inline-block;
 				text-align:left;
 				padding:0 1rem;
@@ -59,6 +59,32 @@
 				box-shadow:0 10px 30px $backgroundColorDark, 0 10px 5px transparentize($backgroundColorDark, .5);
 			}
 		}
+	}
+}
+
+.page-content{
+	margin:4rem 0;
+}
+
+.page-title{
+	font-size:2.5em;
+	font-weight:normal!important;
+
+	&:not(:first-child){
+		margin-top:1rem;
+	}
+}
+
+.page-section{
+	margin-top:2rem;
+	color:$fontColorDarkSmooth;
+	line-height:1.75em;
+
+	.page-section-title{
+		margin-bottom:1rem;
+		font-size:1.5em;
+		font-weight:normal!important;
+		color:$fontColorDark;
 	}
 }
 

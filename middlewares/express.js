@@ -196,5 +196,14 @@ module.exports = {
       render.call(res, view, locals, cb)
     };
     return next();
+  },
+  appDomain: (req, res, next) => {
+    if (Env.isDev){
+      res.locals.appDomain = 'medikstaff.com';
+    } else if (Env.isProd){
+      res.locals.appDomain = 'mstaff.co';
+    }
+    res.locals.appProtocol = 'https';
+    return next();
   }
 };

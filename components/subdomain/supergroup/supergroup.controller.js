@@ -8,85 +8,126 @@ const Subdomain_SuperGroup = {};
 
 Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
   if (req.method == 'POST') {
-    let getAddressPromise = new Promise(function (resolve, reject) {
-      if (req.body.address_components) {
-        try {
-          let result = { address_components: JSON.parse(req.body.address_components) };
-          resolve(gmap.formatResult(result, false));
-        } catch (error) {
-          reject({ status: error.message });
-        }
-      } else if (req.body.search) {
-        resolve(gmap.getAddress(req.body.search, false));
-      } else {
-        reject({ status: 'BAD_REQUEST' });
-      }
-    });
 
-    getAddressPromise
-      .then((results) => {
-        if (results.length > 1)
-          return Promise.reject({ status: 'GEOCODING_TOO_MUCH_RESULTS_ERROR' });
+    console.log(req.body);
 
-        let getEstablishmentsPromise = new Promise((resolve, reject) => {
+    if (!req.body.all && !req.body.search)
+      return res.render('subdomain/supergroup-search', {
+        layout: 'subdomain',
+        pageName: 'subdomain-supergroup-search',
+        layoutName: 'map-search'
+      });
+
+    let range = req.body.range ? parseInt(req.body.range) : null;
+
+    let getDataPromise = null;
+    if (req.body.all){
+      getDataPromise = Models.SuperGroups.repository.getEstablishments(res.locals.supergroup.id)
+        .then(results => {
+          return { geocodingType: 'none', dataType: 'model', dataResult: results };
+        });
+    } else {
+      getDataPromise = gmap.getAddress(req.body.search, false)
+        .then((geocodingResult) => {
+          if (geocodingResult.length > 1)
+            return Promise.reject({ status: 'GEOCODING_TOO_MUCH_RESULTS_ERROR' });
 
           if (
-            // Linteur de merde! Obligé d'explicitement signifier le prototype, les avantages de JS et de son héritage prototypal sont morts
-            Object.prototype.hasOwnProperty.call(results[0].address, 'street_number') ||
-            Object.prototype.hasOwnProperty.call(results[0].address, 'street_name') ||
-            Object.prototype.hasOwnProperty.call(results[0].address, 'city') ||
-            Object.prototype.hasOwnProperty.call(results[0].address, 'postal_code')
+          // Linteur de merde! Obligé d'explicitement signifier le prototype, les avantages de JS et de son héritage prototypal sont morts
+            Object.prototype.hasOwnProperty.call(geocodingResult[0].address, 'street_number') ||
+                Object.prototype.hasOwnProperty.call(geocodingResult[0].address, 'street_name') ||
+                Object.prototype.hasOwnProperty.call(geocodingResult[0].address, 'city') ||
+                Object.prototype.hasOwnProperty.call(geocodingResult[0].address, 'postal_code')
           ) {
-            return resolve(
-              Models.Establishment.repository.rawGetInRange(results[0].location, 100, [
-                '`Groups`.id AS group_id',
-                '`Groups`.name AS group_name',
-                '`Groups`.domain_name AS group_domain'
-              ], [
-                'LEFT OUTER JOIN EstablishmentGroups ON InBounds.id = EstablishmentGroups.id_es',
-                'LEFT OUTER JOIN `Groups` ON EstablishmentGroups.id_group = Groups.id',
-                'LEFT OUTER JOIN GroupsSuperGroups ON `Groups`.id = GroupsSuperGroups.id_group',
-                'LEFT OUTER JOIN SuperGroups ON GroupsSuperGroups.id_super_group = SuperGroups.id'
-              ], 'WHERE SuperGroups.id = ' + res.locals.supergroup.id)
-            );
+            range = range ? range : 200;
+            return Models.Establishment.repository.rawGetInRange(geocodingResult[0].location, range, [
+              '`Groups`.id AS group_id',
+              '`Groups`.name AS group_name',
+              '`Groups`.domain_name AS group_domain_name',
+              '`Groups`.domain_enable AS group_domain_enable',
+            ], [
+              'LEFT OUTER JOIN EstablishmentGroups ON InBounds.id = EstablishmentGroups.id_es',
+              'LEFT OUTER JOIN `Groups` ON EstablishmentGroups.id_group = Groups.id',
+              'LEFT OUTER JOIN GroupsSuperGroups ON `Groups`.id = GroupsSuperGroups.id_group',
+              'LEFT OUTER JOIN SuperGroups ON GroupsSuperGroups.id_super_group = SuperGroups.id'
+            ], 'WHERE SuperGroups.id = ' + res.locals.supergroup.id)
+              .then(rows => {
+                return { geocodingType: 'range', geocodingResult: geocodingResult[0], dataType: 'row', dataResult: rows };
+              });
           } else {
             let where = {};
-            for (const addressKey in results[0].address) {
-              where[addressKey] = results[0].address[addressKey];
+            for (const addressKey in geocodingResult[0].address) {
+              where[addressKey] = geocodingResult[0].address[addressKey];
             }
-            return resolve(Models.Establishment.repository.getWhereBelongsToSuperGroup(res.locals.supergroup.id, where));
+            return Models.SuperGroups.repository.getEstablishments(res.locals.supergroup.id, where)
+              .then(results => {
+                return { geocodingType: 'zone', geocodingResult: geocodingResult[0], dataType: 'model', dataResult: results };
+              });
           }
-
         });
+    }
 
-        return getEstablishmentsPromise
-          .then(rows => {
-            let establishmentsByGroups = {};
-            for (let i = 0; i < rows.length; i++){
-              const row = rows[i];
-              if (!establishmentsByGroups[row.dataValues.group_id])
-                establishmentsByGroups[row.dataValues.group_id] = {
-                  id: row.dataValues.group_id,
-                  name: row.dataValues.group_name,
-                  domain: row.dataValues.group_domain,
+    getDataPromise
+      .then(result => {
+        let establishments = {};
+        let establishmentsByGroups = {};
+        if (result.dataType === 'row'){
+          for (let i = 0; i < result.dataResult.length; i++){
+            const row = result.dataResult[i];
+            if (!establishmentsByGroups[row.dataValues.group_id])
+              establishmentsByGroups[row.dataValues.group_id] = {
+                id: row.dataValues.group_id,
+                name: row.dataValues.group_name,
+                domain_name: row.dataValues.group_domain_name,
+                domain_enable: row.dataValues.group_domain_enable,
+                establishments: []
+              };
+            establishmentsByGroups[row.dataValues.group_id].establishments.push(row.dataValues);
+            if (!establishments[row.dataValues.id])
+              establishments[row.dataValues.id] = row.dataValues;
+          }
+        } else {
+          for (let i = 0; i < result.dataResult.length; i++){
+            const establishment = result.dataResult[i];
+            for (let j = 0; j < establishment.EstablishmentGroups.length; j++){
+              const group = establishment.EstablishmentGroups[j].Group;
+              if (!establishmentsByGroups[group.id])
+                establishmentsByGroups[group.id] = {
+                  id: group.id,
+                  name: group.name,
+                  domain_name: group.domain_name,
+                  domain_enable: group.domain_enable,
                   establishments: []
                 };
-              establishmentsByGroups[row.dataValues.group_id].establishments.push(row.dataValues);
+              establishmentsByGroups[group.id].establishments.push(establishment);
             }
-            return res.render('subdomain/supergroup-results', {
-              layout: 'subdomain',
-              pageName: 'subdomain-supergroup-results',
-              layoutName: 'map-results',
-              establishmentsByGroups: establishmentsByGroups,
-              establishments: rows,
-              address: results[0],
-              range: 100
-            });
-          })
-          .catch(error => next(new Error(error)));
+            if (!establishments[establishment.id])
+              establishments[establishment.id] = establishment;
+          }
+        }
 
+        console.log(result);
+
+        return res.render('subdomain/supergroup-results', {
+          layout: 'subdomain',
+          pageName: 'subdomain-supergroup-results',
+          layoutName: 'map-results',
+          establishments: establishments,
+          establishmentsByGroups: establishmentsByGroups,
+          geocodingType: result.geocodingType,
+          address: result.geocodingType !== 'none' ? result.geocodingResult : null,
+          search: result.geocodingType !== 'none' ? req.body.search : null,
+          range: range
+        });
       })
-      .catch(error => next(new Error(error.status)));
+      .catch(error => {
+        res.render('subdomain/supergroup-search', {
+          layout: 'subdomain',
+          pageName: 'subdomain-supergroup-search',
+          layoutName: 'map-search',
+          geoError: error
+        });
+      });
 
   } else {
 

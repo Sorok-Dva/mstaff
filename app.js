@@ -53,6 +53,7 @@ app.use(Express.setLocals);
 app.use(Express.wildcardSubdomains);
 app.use(Express.readOnlySessionForImpersonation);
 app.use(Express.themeCSSImport);
+app.use(Express.appDomain);
 
 // ------ ROUTES
 app.use('/', indexRouter);

@@ -4,211 +4,162 @@
         <div class="container">
 
             <div class="push">
-                <div class="aic jcc">
+                <div class="aic">
                     <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{es.logo}}');"></div>
                     <div>
                         <span class="header-title-label">Établissement</span>
                         <h1 class="header-title">{{es.name}}</h1>
                     </div>
                 </div>
-                <div class="aic jcc">
+                <div class="aic">
                     {{#if es.url}}<a href="{{es.url}}" class="button button-green button-fluid">Site web</a>{{/if}}
                     {{#if hasGroup}}<a href="{{es.EstablishmentGroups.0.Group.domain_name}}" class="button button-green button-fluid">Accéder au groupe</a>{{/if}}
+                    <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
                 </div>
             </div>
 
         </div>
     </header>
 
-    <div class="container-fluid">
+    <div class="page-banner">
+        <div class="image-ratio image-ratio-40 page-banner__image" style="background-image:url('{{es.banner}}');"></div>
+        <div class="page-banner__shadow"></div>
+    </div>
+
+    <div class="container">
 
         <div class="row">
 
-            <div class="col-12 no-gutters show-map-col">
+            <div class="col-8">
 
-                <div class="page-banner">
-                    <div class="image-ratio image-ratio-40 page-banner__image" style="background-image:url('{{es.banner}}');"></div>
-                    <div class="page-banner__shadow"></div>
-                    <div class="page-banner__body">
-                        <div class="container">
-
-                            <div class="banner-info-card">
-                                <div class="banner-info-card__body content-type-text">
-                                    <h4 class="banner-info-card__body__title title">Informations</h4>
-                                    {{#if es.address}}
-                                        <p><i class="far fa-map-marker-alt"></i>{{es.address}} {{es.town}}</p>
-                                    {{else}}
-                                        <p><i class="far fa-map-marker-alt"></i>Lorem ipsum dolor sit amet</p>
-                                    {{/if}}
-                                    <a href="#" class="button button-green button-fluid button-icon-big button-small show-map-button"><i class="fas fa-route"></i>Comment m'y rendre</a>
-                                    <a href="{{#if es.address}}https://www.bienici.com/recherche/location/{{es.code}}{{else}}https://www.bienici.com/{{/if}}" target="_blank" class="button button-green button-fluid button-icon-big button-small"><i class="fas fa-home-lg-alt"></i>Habiter autour</a>
-                                </div>
-                            </div>
-
+                <div class="page-content">
+                    {{#if offer.nature_section.contract_type}}
+                        <div class="tag tag-blue">{{offer.nature_section.contract_type}}</div>
+                    {{/if}}
+                    <h1 class="title page-title">{{offer.name}}</h1>
+                    <div class="title-label"><i class="fas fa-calendar-alt"></i>{{date offer.createdAt 'DD/MM/Y'}}</div>
+                    {{#if offer.postDescription_section.presentation}}
+                        <div class="page-section">
+                            {{{offer.postDescription_section.presentation}}}
                         </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="w-100"></div>
-
-            <div class="col-12 no-gutters show-map-col">
-
-                <div class="container">
-
-                    <h1 class="baseline baseline-page">Retrouvez ici les <span>offres d'emploi</span> postées par <span>{{es.name}}</span></h1>
-
-                    <div class="container-fluid">
-                        <div class="row card-list">
-
-                            {{#each needs as |need|}}
-
-
-                                <div class="col-12 no-gutters">
-                                    <div class="card">
-                                        <div class="card__thumbnail-container"></div>
-                                        <div class="card__header">
-                                            <h3 class="card__title title">Ergotherapeuthe</h3>
-                                        </div>
-                                        <div class="card__body content-type-text">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis!</p>
-                                        </div>
-                                        <div class="card__footer">
-                                            <div class="push">
-                                                <div class="aic">
-                                                    <div class="tag tag-blue">CDI</div>
-                                                </div>
-                                                <div class="aic">
-                                                    <a href="offer/1" class="button button-pink">Voir l'offre</a>
-                                                </div>
-                                            </div>
+                    {{/if}}
+                    {{#if offer.nature_section.jobSheet}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.nature_section.entries.jobSheet}}</h3>
+                            {{{offer.nature_section.jobSheet}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.context_section.presentation}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.context_section.entries.presentation}}</h3>
+                            {{{offer.context_section.presentation}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.prerequisites_section.skill}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.prerequisites_section.entries.skill}}</h3>
+                            {{{offer.prerequisites_section.skill}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.prerequisites_section.knowledge}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.prerequisites_section.entries.knowledge}}</h3>
+                            {{{offer.prerequisites_section.knowledge}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.postDescription_section.internal}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.postDescription_section.entries.internal}}</h3>
+                            {{{offer.postDescription_section.internal}}}
+                        </div>
+                    {{/if}}
+                    <div class="page-section">
+                        <h3 class="title page-section-title">Détails</h3>
+                        <div class="table">
+                            {{#each sectionLabels as |section sectionKey|}}
+                                <div class="table-section" data-key="{{sectionKey}}">
+                                    <div class="table-section-header row">
+                                        <div class="table-col col-12">
+                                            {{section.label}}
                                         </div>
                                     </div>
+                                    {{#each section.entries as |entryLabel entryKey|}}
+                                        {{#if (lookup (lookup ../../offer sectionKey) entryKey)}}
+                                            <div class="table-row row" data-key="{{entryKey}}">
+                                                <div class="table-col table-label col-3 aic">
+                                                    {{entryLabel}}
+                                                </div>
+                                                <div class="table-col col-9 aic">
+                                                    {{lookup (lookup ../../offer sectionKey) entryKey}}
+                                                </div>
+                                            </div>
+                                        {{/if}}
+                                    {{/each}}
                                 </div>
-
                             {{/each}}
-
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
-            <div class="w-100"></div>
-
-            <div class="col-12 no-gutters show-map-col">
-
-                <footer class="page-footer">
-                    <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
-                </footer>
-
+            <div class="col-4 black-card-col">
+                <div class="black-card">
+                    <div class="black-card__header">
+                        <div class="image-ratio image-ratio-100 image-round black-card__header__image" style="background-image:url('{{offer.context_section.logo}}');"></div>
+                        <span class="black-card__header__title__baseline">{{offer.name}}</span>
+                        <h2 class="title black-card__header__title">{{es.name}}</h2>
+                    </div>
+                    <div class="black-card__body">
+                        <div class="black-card__body__title">Établissement</div>
+                        {{#if es.formatted_address}}
+                            <p><i class="far fa-map-marker-alt"></i>{{es.formatted_address}}</p>
+                        {{/if}}
+                        {{#if es.url}}
+                            <p><i class="fas fa-browser"></i>{{es.url}}</p>
+                        {{/if}}
+                        <div class="black-card__body__title">Poste</div>
+                        {{#if offer.nature_section.start}}
+                            <p><i class="fas fa-calendar-alt"></i>{{offer.nature_section.start}}</p>
+                        {{/if}}
+                        {{#if offer.nature_section.contractDuration}}
+                            <p><i class="fas fa-history"></i>{{offer.nature_section.contractDuration}}</p>
+                        {{/if}}
+                        {{#if offer.nature_section.grade}}
+                            <p><i class="fas fa-graduation-cap"></i>{{offer.nature_section.grade}}</p>
+                        {{/if}}
+                        {{#if offer.nature_section.category}}
+                            <p><i class="fas fa-certificate"></i>{{offer.nature_section.category}}</p>
+                        {{/if}}
+                        {{#if offer.context_section.attach}}
+                            <p><i class="fas fa-link"></i>{{offer.context_section.attach}}</p>
+                        {{/if}}
+                        {{#if offer.context_section.pole}}
+                            <p><i class="fas fa-flag"></i>{{offer.context_section.pole}}</p>
+                        {{/if}}
+                        {{#if offer.context_section.website}}
+                            <p><i class="fas fa-city"></i>{{offer.context_section.website}}</p>
+                        {{/if}}
+                        {{#if offer.details_section.remuneration}}
+                            <p><i class="fas fa-money-bill-wave"></i>{{offer.details_section.remuneration}}</p>
+                        {{/if}}
+                    </div>
+                    <div class="black-card__footer">
+                        <a href="#" class="button button-pink button-big button-fluid">Postuler</a>
+                        <a href="/login">J'ai déjà un compte Mstaff</a>
+                    </div>
+                </div>
             </div>
 
         </div>
 
     </div>
 
-    <div class="map-container">
-        <div id="map"></div>
-    </div>
+    <footer class="page-footer">
+        <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
+    </footer>
 
 {{/extend}}
 
 {{#extend "scripts"}}
-    <script>
-        $(document).ready(() => {
 
-            $('.page-banner').css({minHeight: ($('.banner-info-card').outerHeight() + 20) + 'px'});
-
-            $(window).resize(function(){
-                $('.page-banner').css({minHeight: ($('.banner-info-card').outerHeight() + 20) + 'px'});
-            });
-
-        });
-    </script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
-    <script>
-        $(document).ready(function(){
-
-            initMap();
-
-            $('.show-map-button').click(function(){
-                if(!$(this).hasClass('map-shown')){
-
-                    $(this)
-                            .removeClass('button-green')
-                            .addClass('map-shown button-pink')
-                            .empty()
-                            .append('<i class="fas fa-times"></i>Fermer la carte');
-                    $('.show-map-col').addClass('col-md-6');
-                    $('.map-container').show();
-
-                }else{
-
-                    $(this)
-                            .removeClass('map-shown button-pink')
-                            .addClass('button-green')
-                            .empty()
-                            .append('<i class="fas fa-route"></i>Comment m\'y rendre');
-                    $('.show-map-col').removeClass('col-md-6');
-
-                    setTimeout(function(){
-                        $('.map-container').hide();
-                    }, 500); // 500 is the duration of css transition
-
-                }
-            });
-
-        });
-
-        function initMap(){
-            navigator.geolocation.getCurrentPosition(function(position){
-                $('.map-container').show();
-                $('.show-map-button').css({display: "block"});
-
-                let directionsService = new google.maps.DirectionsService();
-                let directionsDisplay = new google.maps.DirectionsRenderer();
-
-                let map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 10,
-                    center: new google.maps.LatLng({{es.ref.lat}}, {{es.ref.lon}}),
-                    mapTypeControl: false
-                });
-
-                directionsService.route({
-                    origin: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                    destination: new google.maps.LatLng({{es.ref.lat}}, {{es.ref.lon}}),
-                    travelMode: 'DRIVING'
-                }, function(result, status){
-                    if(status == 'OK'){
-                        directionsDisplay.setMap(map);
-                        directionsDisplay.setDirections(result);
-                    }else{
-
-                        let marker = new google.maps.Marker({
-                            position: new google.maps.LatLng({{es.ref.lat}}, {{es.ref.lon}}),
-                            map: map
-                        });
-                        let info = new google.maps.InfoWindow({
-                            content: '<h1 class="card__title title">{{es.name}}</h1>'
-                        });
-                        marker.addListener('mouseover', function(){
-                            info.open(map, marker);
-                        });
-                        marker.addListener('mouseout', function(){
-                            info.close();
-                        });
-
-                    }
-                });
-
-            }, function(){
-                $('.map-container').hide();
-                $('.show-map-button').hide();
-            });
-        }
-    </script>
 {{/extend}}

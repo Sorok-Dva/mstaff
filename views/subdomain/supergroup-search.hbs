@@ -34,18 +34,32 @@
 
                 <div class="col-6 offset-3 tac">
 
-                    <form method="post">
+                    <form method="post"{{#if geoError}} class="error"{{/if}}>
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
                         <label for="search">Où êtes-vous ?</label>
                         <input type="text" name="search" placeholder="42 rue du test, Paris">
-                        <input type="hidden" name="address_components">
-                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        {{#if geoError}}
+                            <div class="form-error">
+                                {{#ifCond geoError.status '==' 'ZERO_RESULTS'}}
+                                    Aucun résultat pour l'adresse que vous avez renseigné.<br>Essayez d'être plus précis.
+                                {{else ifCond geoError.status '==' 'GEOCODING_TOO_MUCH_RESULTS_ERROR'}}
+                                    Nous avons trouvé plusieurs résultats pour l'adresse que vous avez renseigné.<br>Impossible de vous géolocaliser.
+                                {{else}}
+                                    Une erreur est survenue.<br>Veuillez réessayer.
+                                {{/ifCond}}
+                            </div>
+                        {{/if}}
 
                         <button class="button button-pink">Rechercher</button>
                     </form>
 
                     <br>
                     <br>
-                    <a href="#" style="color:#e91e63;font-style:italic;">Afficher tous les établissement de {{supergroup.name}}</a>
+                    <form method="post">
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        <input type="hidden" name="all" value="1">
+                        <button class="im-a-link text-pink">Afficher tous les établissement de {{supergroup.name}}</button>
+                    </form>
 
                 </div>
 
@@ -60,11 +74,11 @@
 {{/extend}}
 
 {{#extend "scripts"}}
-    <script src="/assets/theme/mstaff/js/modules/map.js"></script>
+    <script src="/assets/theme/mstaff/js/modules/map-helper.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
     <script>
         $(document).ready(function(){
-            //initAutocompleteInput($('input[name="search"]').get(0));
+            MapHelper.initAutocompleteInput($('input[name="search"]').get(0), true);
         });
     </script>
 {{/extend}}

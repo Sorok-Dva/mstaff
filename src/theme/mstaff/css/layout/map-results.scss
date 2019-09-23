@@ -74,14 +74,42 @@ body.layout-map-results{
                         .title{
                             font-size:1.25em;
                             font-family: 'Josefin Sans', Verdana, Arial, sans-serif;
+
+                            &.icon-padding{
+                                i{
+                                    margin-top:-2px;
+                                }
+                            }
                         }
                     }
 
                     .result{
+                        -webkit-transition:-webkit-box-shadow .1s ease;
+                        -moz-transition:-moz-box-shadow .1s ease;
+                        -ms-transition:box-shadow .1s ease;
+                        -o-transition:box-shadow .1s ease;
+                        transition:box-shadow .1s ease;
+
                         &:hover, &.focused{
-                            -webkit-box-shadow:inset 0 0 30px transparentize($backgroundColorDark, .9);
-                            -moz-box-shadow:inset 0 0 30px transparentize($backgroundColorDark, .9);
-                            box-shadow:inset 0 0 30px transparentize($backgroundColorDark, .9);
+                            -webkit-box-shadow:inset 0 0 30px transparentize($backgroundColorDark, .9), inset 0 0 10px transparentize($backgroundColorDark, .9);
+                            -moz-box-shadow:inset 0 0 30px transparentize($backgroundColorDark, .9), inset 0 0 10px transparentize($backgroundColorDark, .9);
+                            box-shadow:inset 0 0 30px transparentize($backgroundColorDark, .9), inset 0 0 10px transparentize($backgroundColorDark, .9);
+                        }
+
+                        .result-title{
+                            margin-bottom:.25rem;
+                        }
+
+                        .title-label + .title-label{
+                            margin-left:2rem;
+                        }
+
+                        i.fa-arrows-alt-h{
+                            -webkit-transform:rotate(45deg);
+                            -moz-transform:rotate(45deg);
+                            -ms-transform:rotate(45deg);
+                            -o-transform:rotate(45deg);
+                            transform:rotate(45deg);
                         }
                     }
 
@@ -112,27 +140,6 @@ body.layout-map-results{
                 .input-container{
                     position:relative;
 
-                    input{
-                        padding:1rem 2rem 1rem 4rem;
-                        font-size:1.25em;
-                        font-family: 'Work Sans', Verdana, Arial, sans-serif;
-                        color:$fontColorDarkFade;
-
-                        &[name="range"]{
-                            padding-right:3rem;
-                            max-width:8em;
-                            border-left:1px solid $borderColorLight;
-                            text-align:right;
-                            font-weight:bold;
-                            -moz-appearance:textfield;
-
-                            &::-webkit-outer-spin-button, &::-webkit-inner-spin-button{
-                                -webkit-appearance:none;
-                                margin:0;
-                            }
-                        }
-                    }
-
                     i{
                         position:absolute;
                         left:1.5rem;
@@ -145,6 +152,14 @@ body.layout-map-results{
                         -ms-transform:translateY(-50%);
                         -o-transform:translateY(-50%);
                         transform:translateY(-50%);
+
+                        &.fa-arrows-alt-h{
+                            -webkit-transform:translateY(-50%) rotate(45deg);
+                            -moz-transform:translateY(-50%) rotate(45deg);
+                            -ms-transform:translateY(-50%) rotate(45deg);
+                            -o-transform:translateY(-50%) rotate(45deg);
+                            transform:translateY(-50%) rotate(45deg);
+                        }
                     }
 
                     &[data-input-name="range"]:after{
@@ -161,6 +176,31 @@ body.layout-map-results{
                         -ms-transform:translateY(-50%);
                         -o-transform:translateY(-50%);
                         transform:translateY(-50%);
+                    }
+                }
+
+                input{
+                    padding:1rem 2rem 1rem 4rem;
+                    font-size:1.25em;
+                    font-family: 'Work Sans', Verdana, Arial, sans-serif;
+                    color:$fontColorDarkFade;
+
+                    &[name="range"]{
+                        padding-right:3rem;
+                        max-width:8em;
+                        border-left:1px solid $borderColorLight;
+                        text-align:right;
+                        font-weight:bold;
+                        -moz-appearance:textfield;
+
+                        &::-webkit-outer-spin-button, &::-webkit-inner-spin-button{
+                            -webkit-appearance:none;
+                            margin:0;
+                        }
+                    }
+
+                    &[type="submit"]{
+                        display:none;
                     }
                 }
             }

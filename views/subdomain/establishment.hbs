@@ -4,14 +4,14 @@
         <div class="container">
 
             <div class="push">
-                <div class="aic jcc">
+                <div class="aic">
                     <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{es.logo}}');"></div>
                     <div>
                         <span class="header-title-label">Établissement</span>
                         <h1 class="header-title">{{es.name}}</h1>
                     </div>
                 </div>
-                <div class="aic jcc">
+                <div class="aic">
                     {{#if es.url}}<a href="{{es.url}}" class="button button-green button-fluid">Site web</a>{{/if}}
                     {{#if hasGroup}}<a href="{{es.EstablishmentGroups.0.Group.domain_name}}" class="button button-green button-fluid">Accéder au groupe</a>{{/if}}
                     <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
@@ -33,16 +33,17 @@
                     <div class="page-banner__body">
                         <div class="container">
 
-                            <div class="banner-info-card">
-                                <div class="banner-info-card__body content-type-text">
-                                    <h4 class="banner-info-card__body__title title">Informations</h4>
-                                    {{#if es.address}}
-                                        <p><i class="far fa-map-marker-alt"></i>{{es.address}} {{es.town}}</p>
-                                    {{else}}
-                                        <p><i class="far fa-map-marker-alt"></i>Lorem ipsum dolor sit amet</p>
+                            <div class="black-card">
+                                <div class="black-card__body content-type-text">
+                                    <h4 class="black-card__body__title title">Informations</h4>
+                                    {{#if es.formatted_address}}
+                                        <p><i class="far fa-map-marker-alt"></i>{{es.formatted_address}}</p>
+                                    {{/if}}
+                                    {{#if es.url}}
+                                        <p><i class="fas fa-browser"></i>{{es.url}}</p>
                                     {{/if}}
                                     <a href="#" class="button button-green button-fluid button-icon-big button-small show-map-button"><i class="fas fa-route"></i>Comment m'y rendre</a>
-                                    <a href="{{#if es.address}}https://www.bienici.com/recherche/location/{{es.code}}{{else}}https://www.bienici.com/{{/if}}" target="_blank" class="button button-green button-fluid button-icon-big button-small"><i class="fas fa-home-lg-alt"></i>Habiter autour</a>
+                                    <a href="{{#if es.postal_code}}https://www.bienici.com/recherche/location/{{es.postal_code}}{{else}}https://www.bienici.com/{{/if}}" target="_blank" class="button button-green button-fluid button-icon-big button-small"><i class="fas fa-home-lg-alt"></i>Habiter autour</a>
                                 </div>
                             </div>
 
@@ -64,31 +65,27 @@
                         <div class="row card-list">
 
                             {{#each needs as |need|}}
-                                {{#if need.Offer}}
-
-                                    <div class="col-12 no-gutters">
-                                        <div class="card">
-                                            <div class="card__thumbnail-container"></div>
-                                            <div class="card__header">
-                                                <h3 class="card__title title">Ergotherapeuthe</h3>
-                                            </div>
-                                            <div class="card__body content-type-text">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A amet at consequuntur cum expedita facere hic ipsam iure laborum, provident quae repudiandae, velit veritatis!</p>
-                                            </div>
-                                            <div class="card__footer">
-                                                <div class="push">
-                                                    <div class="aic">
+                                <div class="col-12 no-gutters">
+                                    <div class="card">
+                                        <div class="card__body">
+                                            <div class="push">
+                                                <div>
+                                                    <div class="title-label"><i class="fas fa-calendar-alt"></i>{{date need.Offer.createdAt 'DD/MM/Y'}}</div>
+                                                    <h3 class="card__title title">{{need.Offer.name}}</h3>
+                                                    <div>
+                                                        {{{need.Offer.postDescription_section.presentation}}}
+                                                    </div>
+                                                    <div class="card__footer">
                                                         <div class="tag tag-blue">CDI</div>
                                                     </div>
-                                                    <div class="aic">
-                                                        <a href="offer/1" class="button button-pink">Voir l'offre</a>
-                                                    </div>
+                                                </div>
+                                                <div class="fdc jcfe">
+                                                    <a href="offer/1" class="button button-pink nw">Voir l'offre</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                {{/if}}
+                                </div>
                             {{/each}}
 
                         </div>
@@ -119,13 +116,22 @@
 {{/extend}}
 
 {{#extend "scripts"}}
+    <script src="/assets/theme/mstaff/js/modules/adjust-layout.js"></script>
+    <script src="/assets/theme/mstaff/js/modules/map-helper.js"></script>
     <script>
+        adjustLayout({
+            selector: 'body > .container-fluid > .row > [class*="col"]:nth-child(3)',
+            hasPageHeader: true,
+            hasPageBanner: true,
+            hasPageFooter: true
+        });
+
         $(document).ready(() => {
 
-            $('.page-banner').css({minHeight: ($('.banner-info-card').outerHeight() + 20) + 'px'});
+            $('.page-banner').css({minHeight: ($('.black-card').outerHeight() + 20) + 'px'});
 
             $(window).resize(function(){
-                $('.page-banner').css({minHeight: ($('.banner-info-card').outerHeight() + 20) + 'px'});
+                $('.page-banner').css({minHeight: ($('.black-card').outerHeight() + 20) + 'px'});
             });
 
         });
@@ -171,39 +177,47 @@
                 $('.map-container').show();
                 $('.show-map-button').css({display: "block"});
 
-                let directionsService = new google.maps.DirectionsService();
-                let directionsDisplay = new google.maps.DirectionsRenderer();
+                MapHelper.initResultMap(document.getElementById('map'), [
+                    {
+                    	id: 1,
+                        name: '{{es.name}}',
+                        lat: '{{es.lat}}',
+                        lng: '{{es.lng}}'
+                    }
+                ], {
+                	'center': new google.maps.LatLng({{es.lat}}, {{es.lng}}),
+                    'zoom': 10,
+                    'clusterize': false,
+                    'onInit': function(map, info){
+                        let directionsService = new google.maps.DirectionsService();
+                        let directionsDisplay = new google.maps.DirectionsRenderer();
 
-                let map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 10,
-                    center: new google.maps.LatLng({{es.ref.lat}}, {{es.ref.lon}}),
-                    mapTypeControl: false
-                });
+                        directionsService.route({
+                            origin: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                            destination: new google.maps.LatLng({{es.lat}}, {{es.lng}}),
+                            travelMode: 'DRIVING'
+                        }, function(result, status){
+                            if(status == 'OK'){
+                                directionsDisplay.setMap(map);
+                                directionsDisplay.setDirections(result);
+                            }else{
 
-                directionsService.route({
-                    origin: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                    destination: new google.maps.LatLng({{es.ref.lat}}, {{es.ref.lon}}),
-                    travelMode: 'DRIVING'
-                }, function(result, status){
-                    if(status == 'OK'){
-                        directionsDisplay.setMap(map);
-                        directionsDisplay.setDirections(result);
-                    }else{
+                                let marker = new google.maps.Marker({
+                                    position: new google.maps.LatLng({{es.lat}}, {{es.lng}}),
+                                    map: map
+                                });
+                                let info = new google.maps.InfoWindow({
+                                    content: '<h1 class="card__title title">{{es.name}}</h1>'
+                                });
+                                marker.addListener('mouseover', function(){
+                                    info.open(map, marker);
+                                });
+                                marker.addListener('mouseout', function(){
+                                    info.close();
+                                });
 
-                        let marker = new google.maps.Marker({
-                            position: new google.maps.LatLng({{es.ref.lat}}, {{es.ref.lon}}),
-                            map: map
+                            }
                         });
-                        let info = new google.maps.InfoWindow({
-                            content: '<h1 class="card__title title">{{es.name}}</h1>'
-                        });
-                        marker.addListener('mouseover', function(){
-                            info.open(map, marker);
-                        });
-                        marker.addListener('mouseout', function(){
-                            info.close();
-                        });
-
                     }
                 });
 

@@ -11,19 +11,19 @@ module.exports.rawGetInRange = (center, radius, select, join, where) => {
     return deg * (Math.PI / 180);
   }
 
-  let lat_rad = deg2Rad(center.lat);
-  let lng_rad = deg2Rad(center.lng);
-  let earth_radius = 6371;
-  let radius_ratio = radius / earth_radius;
+  const earth_radius = 6371;
+  let latRad = deg2Rad(center.lat);
+  let lngRad = deg2Rad(center.lng);
+  let radiusRatio = radius / earth_radius;
 
   let bounds = {
     max: {
-      lat: center.lat + rad2Deg(radius_ratio),
-      lng: center.lng + rad2Deg(Math.asin(radius_ratio) / Math.cos(deg2Rad(center.lat)))
+      lat: center.lat + rad2Deg(radiusRatio),
+      lng: center.lng + rad2Deg(Math.asin(radiusRatio) / Math.cos(deg2Rad(center.lat)))
     },
     min: {
-      lat: center.lat - rad2Deg(radius_ratio),
-      lng: center.lng - rad2Deg(Math.asin(radius_ratio) / Math.cos(deg2Rad(center.lat)))
+      lat: center.lat - rad2Deg(radiusRatio),
+      lng: center.lng - rad2Deg(Math.asin(radiusRatio) / Math.cos(deg2Rad(center.lat)))
     }
   };
 
@@ -35,7 +35,7 @@ module.exports.rawGetInRange = (center, radius, select, join, where) => {
     if (typeof select == 'string')
       sql += ', ' + select.replace(/^,/, '') + '\n';
   }
-  sql += ', ACOS(SIN(' + lat_rad + ')*SIN(RADIANS(InBounds.lat)) + COS(' + lat_rad + ')*COS(RADIANS(InBounds.lat))*COS(RADIANS(InBounds.lng)-' + lng_rad + ')) * ' + earth_radius + ' AS distance' + '\n' +
+  sql += ', ACOS(SIN(' + latRad + ')*SIN(RADIANS(InBounds.lat)) + COS(' + latRad + ')*COS(RADIANS(InBounds.lat))*COS(RADIANS(InBounds.lng)-' + lngRad + ')) * ' + earth_radius + ' AS distance' + '\n' +
     'FROM (' + '\n' +
     'SELECT Establishments.*' + '\n' +
     'FROM Establishments' + '\n' +
