@@ -8,9 +8,6 @@ const Subdomain_SuperGroup = {};
 
 Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
   if (req.method == 'POST') {
-
-    console.log(req.body);
-
     if (!req.body.all && !req.body.search)
       return res.render('subdomain/supergroup-search', {
         layout: 'subdomain',
@@ -105,9 +102,6 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
               establishments[establishment.id] = establishment;
           }
         }
-
-        console.log(result);
-
         return res.render('subdomain/supergroup-results', {
           layout: 'subdomain',
           pageName: 'subdomain-supergroup-results',
@@ -130,13 +124,11 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
       });
 
   } else {
-
     res.render('subdomain/supergroup-search', {
       layout: 'subdomain',
       pageName: 'subdomain-supergroup-search',
       layoutName: 'map-search'
     });
-
   }
 };
 
