@@ -24,7 +24,7 @@
           </div>
           <div class="content">
             <div class="card-profile">
-              <div class="avatar avatar-xxl avatar-{{isAvailable 'avatarClass' this.applications}}line" style="margin-top: -30px;">
+              <div class="avatar avatar-xxl avatar-{{#if this.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
                 <img {{#if this.User.photo}}src="/uploads/avatars/{{this.User.photo}}"{{else}}src="/assets/images/face-0.jpg"{{/if}} id="candidateAvatar" class="avatar-img rounded-circle border-blue" alt="avatar">
               </div>
               <div class="rank-label-container" data-toggle="tooltip" data-html="true" data-placement="top" title="{{> tooltips/candidatePercentage this.percentage}}">
@@ -37,9 +37,9 @@
             </div>
             <div class="text-center">
               <h4>
-                <div class="{{isAvailable 'class' this.applications}}"></div>
-                <span class="text-{{isAvailable 'class' this.applications}}">
-                  {{isAvailable 'text' this.applications}}
+                <div class="{{#unless this.is_available}}un{{/unless}}available"></div>
+                <span class="text-{{#unless this.is_available}}un{{/unless}}available" style="line-height: 1.8">
+                  {{#if this.is_available}}Disponible{{else}} Indisponible{{/if}}
                 </span>
               </h4>
               {{#if this.applications}}

@@ -330,23 +330,6 @@ Handlebars.registerHelper('otherServicesPopover_Search', applications => {
   } else return '';
 });
 
-Handlebars.registerHelper('isAvailable', (method, applications) => {
-  if (_.isNil(applications) || applications.length === 0) {
-    switch (method) {
-      case 'avatarClass': return 'off';
-      case 'class': return 'unavailable';
-      case 'text': return 'Indisponible';
-    }
-  }
-  let available = false;
-  applications.map(application => application.is_available ? available = true : null);
-  switch (method) {
-    case 'avatarClass': return available ? 'on' : 'off';
-    case 'class': return available ? 'available' : 'unavailable';
-    case 'text': return available ? 'Disponible' : 'Indisponible';
-  }
-});
-
 /**
  * Returns french text of contract type
  *

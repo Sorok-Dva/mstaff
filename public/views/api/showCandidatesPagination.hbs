@@ -37,7 +37,7 @@
         </div>
         <div class="content">
           <div class="card-profile">
-            <div class="avatar avatar-xxl {{!--helper get all application availability--}}avatar-{{isAvailable 'avatarClass' this.applications}}line" style="margin-top: -30px;">
+            <div class="avatar avatar-xxl avatar-{{#if data.is_available}}on{{else}}off{{/if}}line" style="margin-top: -30px;">
               <img {{#if data.User.photo}}src="/uploads/avatars/{{data.User.photo}}"{{else}}src="/assets/images/face-0.jpg"{{/if}} id="candidateAvatar"
                    class="avatar-img rounded-circle border-blue" alt="avatar">
             </div>
@@ -51,9 +51,10 @@
           </div>
           <div class="text-center">
             <h4>
-              <div class="{{isAvailable 'class' this.applications}}"></div>
-              <span class="text-{{isAvailable 'class' this.applications}}">
-                {{isAvailable 'text' this.applications}}
+              <div class="{{#unless data.is_available}}un{{/unless}}available"></div>
+              <span class="text-{{#unless data.is_available}}un{{/unless}}available"
+                    style="line-height: 1.8">
+                {{#if data.is_available}}Disponible{{else}} Indisponible{{/if}}
               </span>
             </h4>
             {{#if this.applications}}

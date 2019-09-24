@@ -1,4 +1,3 @@
-const { Env } = require('../helpers/helpers');
 const { Authentication, Express, HTTPValidation } = require('../middlewares');
 const { Render, User } = require('../components');
 const express = require('express');
@@ -87,9 +86,5 @@ router.get('/reset/password',
  * 404 Page
  */
 router.get('/404', Render.View._404);
-
-if (Env.isDev) {
-  router.get('/test', Render.View.Test)
-}
 
 module.exports = router;

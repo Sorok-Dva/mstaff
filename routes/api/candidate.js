@@ -30,6 +30,10 @@ const docsUpload = multer({ storage: storage('candidates/documents/', 'doc') }).
 );
 const poolDocsUpload = multer({ storage: storage('candidates/pools/', 'doc') }).fields([{ name: 'POOL', maxCount: 1 }]);
 
+router.post('/availability',
+  Authentication.ensureIsCandidate,
+  User.Candidate.setAvailability);
+
 /**
  * @Route('/api/user/:action/video') POST;
  * Candidate upload video/ delete to his profile.
@@ -124,9 +128,6 @@ router.get('/wish/:id(\\d+)',
     Authentication.ensureIsCandidate,
     User.Candidate.editWish
   );
-router.post('/wish/:id(\\d+)/availability',
-  Authentication.ensureIsCandidate,
-  User.Candidate.setWishAvailability);
 
 router.get('/wish/:id(\\d+)/getEsList',
   Authentication.ensureIsCandidate,

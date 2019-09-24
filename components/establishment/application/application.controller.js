@@ -15,13 +15,13 @@ Establishment_Application.getEstablishments = (req, res, next) => {
     include: [{
       model: Models.Establishment,
       on: {
-        'UsersGroups.es_id$': {
+        '$ESAccount.es_id$': {
           [Op.col]: 'Establishment.id'
         }
       }
     }]
   };
-  Models.UsersGroups.findAll(query).then(eslist => {
+  Models.ESAccount.findAll(query).then(eslist => {
     return res.status(200).send(eslist);
   })
 };
@@ -54,7 +54,7 @@ Establishment_Application.getCVs = (req, res, next) => {
       where: { id: req.user.id },
       attributes: ['id'],
       include: {
-        model: Models.UsersGroups,
+        model: Models.ESAccount,
         required: true,
         include: {
           model: Models.Establishment,
@@ -63,7 +63,7 @@ Establishment_Application.getCVs = (req, res, next) => {
         }
       }
     }).then(rh => {
-      render.esList = rh.UsersGroups;
+      render.esList = rh.ESAccounts;
       Models.Application.findAndCountAll(query).then(applications => {
         render.candidatesCount = applications.count;
         if (req.params.editNeedId) {
@@ -374,7 +374,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
   if (!_.isNil(filterQuery.is_available)) {
     query.where = {
       [Op.and]: [
-        Sequelize.literal('`applications`.`is_available` = ' + `${filterQuery.is_available === 'true' ? '1' : '0'}`)
+        Sequelize.literal('`Candidate`.`is_available` = ' + `${filterQuery.is_available === 'true' ? '1' : '0'}`)
       ]
     };
   }
@@ -396,7 +396,7 @@ Establishment_Application.getCandidates = (req, res, next) => {
     };
   }
   if (!_.isNil(filterQuery.postal_code)) {
-    query.include[2].where = {
+    query.include[1].where = {
       postal_code: { [Op.startsWith]: filterQuery.postal_code }
     };
   }

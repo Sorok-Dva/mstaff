@@ -74,45 +74,35 @@ $(document).ready(() => {
       }, () => {
         $('button#btnEditGroup').click(function () {
           if ($('input#groupValueEdit').val() !== '') {
-            let formData = new FormData();
-            formData.append('name', $('input#groupValueEdit').val());
-            formData.append('domain_name', $('input#groupUrlEdit').val());
-            formData.append('domain_enable', $('input#groupDomainEdit').val());
-            let logo = $('input#logo').get(0).files;
-            let banner = $('input#banner').get(0).files;
-            if(logo.length)
-              formData.append('logo', logo[0], logo[0].name);
-            if(banner.length)
-              formData.append('banner', banner[0], banner[0].name);
-            $.ajax({
-              url: `/api/back-office/groups/Groups/${row.id}?_csrf=` + $('meta[name="csrf-token"]').attr('content'),
-              type: 'PUT',
-              data: formData,
-              processData: false,
-              contentType: false,
-              cache: false,
-              success: data => {
-                if (data.error) {
-                  notification({
-                    icon: 'exclamation',
-                    type: 'danger',
-                    title: 'Un problème est survenu :',
-                    message: data.error
-                  });
-                }
-                $('#editGroupModal').modal('hide');
-                $(`tr[data-id="${id}"] td#g-name`).text(data.group.name);
-                $(`tr[data-id="${id}"] td#g-logo`).text(data.group.logo);
-                $(`tr[data-id="${id}"] td#g-banner`).text(data.group.banner);
-                $(`tr[data-id="${id}"] td#g-domain`).text(data.group.domain_name);
-                $(`tr[data-id="${id}"] td#g-state`).text(data.group.domain_enable ? 'Actif' : 'Inactif');
+            let _csrf = $('meta[name="csrf-token"]').attr('content');
+            let name = $('input#groupValueEdit').val();
+            let logo = $('input#groupLogoEdit').val();
+            let banner = $('input#groupBannerEdit').val();
+            let domain_name = $('input#groupUrlEdit').val();
+            let domain_enable = $('select#groupDomainEdit').val();
+            $.put(`/api/back-office/groups/Groups/${row.id}`, {
+              name, logo, banner, domain_name, domain_enable, _csrf
+            }, (data) => {
+              if (data.error) {
                 notification({
-                  icon: 'check-circle',
-                  type: 'success',
-                  title: 'Groupe modifié :',
-                  message: 'Le groupe a bien été modifié.'
+                  icon: 'exclamation',
+                  type: 'danger',
+                  title: 'Un problème est survenue :',
+                  message: data.error
                 });
               }
+              $('#editGroupModal').modal('hide');
+              $(`tr[data-id="${id}"] td#g-name`).text(name);
+              $(`tr[data-id="${id}"] td#g-logo`).text(logo);
+              $(`tr[data-id="${id}"] td#g-banner`).text(banner);
+              $(`tr[data-id="${id}"] td#g-domain`).text(domain_name);
+              $(`tr[data-id="${id}"] td#g-state`).text(domain_enable === '0' ? 'Inactif' : 'Actif');
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Groupe modifié :',
+                message: 'Le groupe a bien été modifié.'
+              });
             });
           } else {
             if ($('input#groupValueEdit').val() === '') {

@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const statuses = require('http-status');
+const statuses = require('statuses');
 const Sentry = require('../bin/sentry');
 const { BackError } = require('../helpers/back.error');
 const { Env } = require('../helpers/helpers');

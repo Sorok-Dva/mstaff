@@ -7,10 +7,10 @@ function isSafari(userAgent){
 }
 
 function noIE(){
-  if ( confirm( "Internet explorer n'est plus à jour, merci de télécharger et d'installer Microsoft Edge." ) ) {
-    $(location).attr('href', 'https://www.microsoft.com/fr-fr/windows/microsoft-edge');
+  if ( confirm( "Votre navigateur est obsolète, merci d'utiliser un navigateur récent (Google Chrome, Mozilla Firefox, Opera, ..." ) ) {
+    $(location).attr('href', 'https://www.google.com/intl/fr_fr/chrome/');
   } else {
-    $(location).attr('href', 'https://www.microsoft.com/fr-fr/windows/microsoft-edge');
+    $(location).attr('href', 'https://www.google.com/intl/fr_fr/chrome/');
   }
 }
 
@@ -22,5 +22,13 @@ $(document).ready(function() {
   } else if (isSafari(navigator.userAgent)) {
   } else if ((navigator.userAgent.indexOf('Trident') !== -1) || (!!document.documentMode === true)) {
     noIE();
+  } else {
+    createModal({
+      id: 'alertBadNavigatorModal',
+      title: 'Attention : navigateur obsolète détecté !',
+      modal: 'badNavigator',
+      cantBeClose: true,
+      navigator: 'Inconnu'
+    });
   }
 });

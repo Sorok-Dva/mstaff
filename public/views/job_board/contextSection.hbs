@@ -30,12 +30,12 @@
     </div>
 
     <div class="form-group d-flex flex-column justify-content-center align-items-center">
-      <img class="custom-cursor"
-           src="{{#if offer.context_section.logo}}{{offer.context_section.logo}}{{else}}/assets/images/default_hospital.jpg{{/if}}"
-           alt="Logo Etablissement" width="25%" id="contextLogo">
-      <span id="editLogo" class="btn btn-default btn-file rounded-circle" style="border: 1px solid black; margin-top: -42px;">
-        <i class="fal fa-camera-alt"></i> <input type="file" id="imgInp" name="logo" onchange="logoSelected()">
-      </span>
+      {{#if offer.context_section.logo}}
+        <img class="custom-cursor" src="/assets/images/default_hospital.jpg" alt="Logo Etablissement" width="25%" id="contextLogo">
+      {{else}}
+        <i class="fal fa-image fa-3x custom-cursor"></i>
+      {{/if}}
+      <p class="custom-cursor" onclick="addLogoContext()">Ajouter une photo ou un logo</p>
     </div>
   </form>
 

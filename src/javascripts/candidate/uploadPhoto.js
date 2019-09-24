@@ -18,7 +18,7 @@ $(document).ready(() => {
     }
     formData.append('photo', files[0], files[0].name);
     jQuery.ajax({
-      url: $('#avatarForm').attr('action'),
+      url: $(this).attr('action'),
       data: formData,
       cache: false,
       contentType: false,

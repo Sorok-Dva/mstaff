@@ -3,16 +3,8 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const { Env } = require(`../../helpers/helpers`);
 const basename = path.basename(module.filename);
+const conf = require('dotenv').config().parsed;
 const config = require(`${__dirname}/../config/config.json`)[Env.current];
-// eslint-disable-next-line no-console
-config.logging = config.logging ? console.log : null;
-config.pool = {
-  max: 5,
-  min: 0,
-  acquire: 30000,
-  idle: 10000
-};
-
 const db = {};
 
 let sequelize;
@@ -40,15 +32,6 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
 });
-
-db.init = () => {
-  Object.keys(db).forEach(modelName => {
-    let path = __dirname + '/../repositories/' + modelName + '.js';
-    if (fs.existsSync(path)) {
-      db[modelName].repository = require(path);
-    }
-  });
-};
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

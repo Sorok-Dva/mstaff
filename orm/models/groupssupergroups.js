@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   GroupsSuperGroup.associate = function (models) {
     GroupsSuperGroup.belongsTo(models.Groups, {
-      foreignKey: 'id_group',
+      foreignKey: 'id',
       onDelete: 'CASCADE'
     });
     GroupsSuperGroup.belongsTo(models.SuperGroups, {
-      foreignKey: 'id_super_group',
+      foreignKey: 'id',
       onDelete: 'CASCADE'
     });
   };

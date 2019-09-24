@@ -102,7 +102,8 @@
               </div>
             </div>
 
-              <div id="contractDurableType" class="row" {{#ifCond (contractDurabilityType wish.contract_type 'durable') '===' false}}style="display: none;" {{/ifCond}}>
+            {{#ifCond (contractDurabilityType wish.contract_type 'durable') '===' true}}
+              <div id="contractDurableType" class="row">
                 <div class="col-sm-3">
                   <h2 class="text-bold mt-5">Type de contrat *:</h2>
                 </div>
@@ -154,8 +155,10 @@
                   <hr>
                 </div>
               </div>
+            {{/ifCond}}
 
-              <div id="contractPunctualType" class="row" {{#ifCond (contractDurabilityType wish.contract_type 'punctual') '===' false}}style="display: none;" {{/ifCond}}>
+            {{#ifCond (contractDurabilityType wish.contract_type 'punctual') '===' true}}
+              <div id="contractPunctualType" class="row">
                 <div class="col-sm-3">
                   <h2 class="text-bold mt-5">Type de contrat *:</h2>
                 </div>
@@ -181,6 +184,7 @@
                   <hr>
                 </div>
               </div>
+            {{/ifCond}}
 
             {{#ifCond @root.wish.contract_type '===' 'CDI'}}
               <div id="activityType" class="row">
@@ -261,7 +265,7 @@
                           title="Services" disabled>
                     {{#each services as |service|}}
                       <option value="{{service.id}}"
-                              data-categorie="{{service.categoriesPS_id}}" data-text="{{service.name}}">{{service.name}}</option>
+                              data-categorie="{{service.categoriesPS_id}}">{{service.name}}</option>
                     {{/each}}
                   </select>
                 </div>

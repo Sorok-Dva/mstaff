@@ -70,15 +70,17 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   Offer.associate = (models) => {
-    Offer.belongsTo(models.Establishment, {
-      foreignKey: 'es_id',
+    Offer.hasOne(models.Establishment, {
+      foreignKey: 'id',
+      sourceKey: 'es_id',
       onDelete: 'CASCADE'
     });
-    Offer.belongsTo(models.User, {
-      foreignKey: 'createdBy'
+    Offer.hasOne(models.User, {
+      foreignKey: 'id',
+      sourceKey: 'createdBy'
     });
-    Offer.belongsTo(models.Need, {
-      foreignKey: 'need_id',
+    Offer.hasOne(models.Need, {
+      foreignKey: 'id',
       as: 'need'
     });
   };
