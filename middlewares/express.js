@@ -24,7 +24,7 @@ const logger = require('morgan');
 let handlebars = require('handlebars');
 const extend = require('handlebars-extend-block');
 handlebars = extend(handlebars);
-let hbsHelpers = require('../helpers/handlebars').register(handlebars);
+require('../helpers/handlebars').register(handlebars);
 
 let sessionStore = new MySQLStore({
   host: config.host,
