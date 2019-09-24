@@ -1,12 +1,16 @@
 const { src, dest, watch, series, parallel } = require('gulp');
 const { Env } = require('./helpers/helpers');
 const config = require('dotenv').config().parsed;
-const del = require('del');
+const cleanFolder = require('gulp-clean');
 const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
+const cssimport = require('gulp-cssimport');
+const mergestream = require('merge-stream');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
+const sass = require('gulp-sass');
+sass.compiler = require('node-sass');
 
 const DST_PATH = './public/assets/dist';
 const CSS_SRC = './src/stylesheets/*.css';
@@ -14,14 +18,14 @@ const CSS_DST = './public/assets/dist/css';
 const JS_SRC_BASE = './src/javascripts/*.js';
 const JS_SRC_SUBFOLDERS = './src/javascripts/*/*.js';
 const JS_DST = './public/assets/dist/js';
+const THEME_CSS_DIR = './src/theme/mstaff/css';
+const THEME_CSS_DST = './public/assets/theme/mstaff/css';
 
 /**
  * @task clean
  * cleans the destination directory of old files
  */
-let clean = (done) => {
-  del([DST_PATH], done())
-};
+let clean = () => src(DST_PATH + '/*').pipe(cleanFolder());
 
 let browserSync = (done) => {
   if (Env.current === 'development' && config.BROWSERSYNC !== 'false') {
@@ -52,18 +56,26 @@ let watchJs = () => {
   );
 };
 
+let watchSass = () => {
+  watch(
+    [THEME_CSS_DIR + '/*/*.scss'],
+    { events: 'all', ignoreInitial: false },
+    series(buildTheme)
+  );
+};
+
 let buildStyles = () => {
   if (Env.current === 'development') {
     return src(CSS_SRC)
       .pipe(cleanCSS())
       .pipe(rename({ suffix: '.min' }))
       .pipe(dest(CSS_DST))
-      .pipe(browsersync.reload({ stream: true }))
+      .pipe(browsersync.reload({ stream: true }));
   } else {
     return src(CSS_SRC)
       .pipe(cleanCSS())
       .pipe(rename({ suffix: '.min' }))
-      .pipe(dest(CSS_DST))
+      .pipe(dest(CSS_DST));
   }
 };
 
@@ -83,6 +95,28 @@ let buildScripts = () => {
       .pipe(dest(JS_DST));
   }
 
+};
+
+let buildTheme = () => {
+  if (Env.current === 'development') {
+    let main = src(THEME_CSS_DIR + '/style.scss')
+      .pipe(sass().on('error', sass.logError))
+      .pipe(cssimport())
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(dest(THEME_CSS_DST));
+
+    let layout = src(THEME_CSS_DIR + '/layout/*.scss')
+      .pipe(sass().on('error', sass.logError))
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(dest(THEME_CSS_DST + '/layout'));
+
+    let pages = src(THEME_CSS_DIR + '/pages/*.scss')
+      .pipe(sass().on('error', sass.logError))
+      .pipe(rename({ suffix: '.min' }))
+      .pipe(dest(THEME_CSS_DST + '/pages'));
+
+    return mergestream(main, layout, pages);
+  }
 };
 
 /*
@@ -111,10 +145,12 @@ function images() {
 }
 */
 // Export commands.
-exports.default = parallel(browserSync, watchCss, watchJs); // $ gulp
+exports.default = parallel(browserSync, watchCss, watchJs, watchSass); // $ gulp
 exports.clean = clean; // $ gulp clean
 exports.css = buildStyles; // $ gulp css
 exports.js = buildScripts; // $ gulp js
+exports.theme = buildTheme; // $ gulp theme
 exports.watchCSS = watchCss; // $ gulp watch
 exports.watchJS = watchJs; // $ gulp watch
-exports.build = series(clean, buildStyles, buildScripts); // $ gulp build
+exports.watchSass = watchSass; // $ gulp watch
+exports.build = series(clean, buildStyles, buildScripts, buildTheme); // $ gulp build

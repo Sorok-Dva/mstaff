@@ -73,7 +73,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'candidate',
       onDelete: 'CASCADE'
     });
-    User.hasMany(models.ESAccount, {
+    User.hasMany(models.UsersGroups, {
       foreignKey: 'user_id',
       sourceKey: 'id',
       onDelete: 'CASCADE'

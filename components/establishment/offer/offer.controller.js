@@ -3,7 +3,9 @@ const { validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 const { _ } = require('lodash');
 const { BackError } = require(`${__}/helpers/back.error`);
+const { mkdirIfNotExists } = require(`${__}/helpers/helpers`);
 const httpStatus = require('http-status');
+const fs = require('fs');
 
 const Models = require(`${__}/orm/models/index`);
 
@@ -79,6 +81,7 @@ Establishment_Offer.Create = (req, res, next) => {
     where: { id: req.params.needId, es_id: req.user.opts.currentEs },
     include: [{
       model: Models.Establishment,
+      attributes: ['name', 'town', 'address', 'url', 'logo'],
       required: true
     }, {
       model: Models.JobSheet,
@@ -92,7 +95,7 @@ Establishment_Offer.Create = (req, res, next) => {
     if (_.isNil(need)) return next(new BackError(`Besoin ${req.params.needId} introuvable.`, httpStatus.NOT_FOUND));
     if (_.isNil(need.JobSheet)) need.JobSheet = {};
     Models.Offer.create({
-      name: need.name,
+      name: _.isNil(need.JobSheet.name) ? need.JobSheet.name : need.name,
       need_id: need.id,
       es_id: need.es_id,
       nature_section: {
@@ -151,6 +154,40 @@ Establishment_Offer.Create = (req, res, next) => {
       res.status(201).send({ status: 'created', offer });
     }).catch(error => next(new BackError(error)));
   }).catch(error => next(new BackError(error)));
+};
+
+Establishment_Offer.UploadLogo = (req, res, next) => {
+  if (!['add', 'delete'].includes(req.params.action)) return res.status(400).send('Wrong method.');
+  let logo = { filename: null };
+  if (req.params.action === 'add') {
+    if (Object.keys(req.file).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+    if (!['jpeg', 'jpg', 'png'].includes(req.file.mimetype.split('/')[1])) {
+      return res.status(400).send('Mauvais format, seul les formats jpeg, jpg et png sont autorisés.');
+    }
+    logo = req.file;
+  }
+
+  Models.Offer.findOne({ where: { id: req.params.id } }).then(offer => {
+    if (_.isNil(offer)) return next(new BackError('Offre introuvable', 404));
+    if (!_.isNil(offer.context_section.logo)) {
+      mkdirIfNotExists(`${__}/public/uploads/es/offers`);
+      if (fs.existsSync(`${__}/public${offer.context_section.logo}`)) {
+        fs.unlinkSync(`${__}/public${offer.context_section.logo}`)
+      }
+    }
+    let { context_section } = offer;
+    context_section.logo = '/uploads/es/offers/' + logo.filename;
+    offer.context_section = context_section;
+    offer.save().then(() => {
+      if (req.xhr) {
+        return res.status(200).send({ result: 'saved', logo: context_section.logo });
+      } else {
+        return res.redirect(`/job_board/offer/${offer.id}`);
+      }
+    })
+  });
 };
 
 

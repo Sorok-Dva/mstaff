@@ -1,0 +1,279 @@
+<style>
+  .iblock{
+    display: inline-block;
+  }
+</style>
+
+<div class="text-left shadow-grey col-12 p-3 mb-4 natureSection" style="display: none">
+  <h1 class="text-center">Nature de l'offre</h1>
+  <form id="natureForm">
+    <div class="form-group">
+      <label for="natureDate">Date de création de l'offre</label>
+      <input type="text" class="form-control input-blue datepicker" id="natureDate" value="{{date offer.createdAt 'DD/MM/YYYY'}}">
+    </div>
+
+    <div class="form-group">
+      <label for="natureTitle">Titre de l'offre</label>
+      <input type="text" class="form-control input-blue" id="natureTitle" value="{{offer.name}}">
+    </div>
+
+    <div class="form-group">
+      <label for="natureJobSheet">Métier</label>
+      <textarea type="text" class="form-control input-blue" id="natureJobSheet">
+        {{{offer.nature_section.jobSheet}}}
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="contract_type">Type de contrat</label>
+      <select class="form-control" name="contract_type" id="contract_type">
+        <option value=""></option>
+        <option value="cdi-cdd" {{#ifCond offer.nature_section.contract_type '===' 'cdi-cdd'}}selected="selected"{{/ifCond}}>CDI</option>
+        <option value="vacation" {{#ifCond offer.nature_section.contract_type '===' 'vacation'}}selected="selected"{{/ifCond}}>VACATION</option>
+        <option value="internship" {{#ifCond offer.nature_section.contract_type '===' 'internship'}}selected="selected"{{/ifCond}}>STAGE</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="start">Poste à pourvoir à partir du ...</label>
+      <input type="text" class="form-control input-blue datepicker" id="start" value="{{offer.nature_section.start}}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="natureContractDuration" placeholder="Durée du contrat" value="{{offer.nature_section.contractDuration}}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="natureGrade" placeholder="Grade" value="{{offer.nature_section.grade}}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="natureCategory" placeholder="Catégorie" value="{{offer.nature_section.category}}">
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="saveNature()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelNature()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearNature()">Effacer</button>
+  </div>
+</div>
+<div class="text-left shadow-grey col-12 p-3 mb-4 contextSection" style="display: none">
+  <h1 class="text-center">Contexte de travail</h1>
+  <form id="contextForm">
+    <div class="form-group">
+      <label for="place">Localisation du poste</label>
+      <input type="text" class="form-control input-blue" id="place" value="{{offer.context_section.place}}">
+    </div>
+
+    <div class="form-group">
+      <label for="address">Adresse de l'établissement</label>
+      <input type="text" class="form-control input-blue" id="address" value="{{offer.context_section.address}}">
+    </div>
+
+    <div class="form-group">
+      <label for="contextAttach">Rattachement établissement</label>
+      <input type="text" class="form-control input-blue" id="contextAttach" value="{{offer.context_section.attach}}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="website" placeholder="Site" value="{{offer.context_section.website}}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="contextPole" placeholder="Pôle" value="{{offer.context_section.pole}}">
+    </div>
+
+    <div class="form-group">
+      <label for="contextPresentation">Présentation de l'établissement</label>
+      <textarea type="text" class="form-control input-blue" id="contextPresentation">
+        {{{offer.context_section.presentation}}}
+      </textarea>
+    </div>
+
+    <div class="form-group d-flex flex-column justify-content-center align-items-center">
+      {{#if offer.context_section.logo}}
+        <img class="custom-cursor" src="/static/assets/images/default_hospital.jpg" alt="Logo Etablissement" width="25%" id="contextLogo">
+      {{else}}
+        <i class="fal fa-image fa-3x custom-cursor"></i>
+      {{/if}}
+      <p class="custom-cursor" onclick="addLogoContext()">Ajouter une photo ou un logo</p>
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="saveContext()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelContext()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearContext()">Effacer</button>
+  </div>
+</div>
+<div class="text-left shadow-grey col-12 p-3 mb-4 detailsSection" style="display: none">
+  <h1 class="text-center">Détails de l'offre</h1>
+  <form id="detailsForm">
+    <div class="form-group">
+      <label for="detailsSchedule">Horaires</label>
+      <input type="text" class="form-control input-blue" id="detailsSchedule" value="{{offer.details_section.schedule}}">
+    </div>
+
+    <div class="form-group">
+      <label for="detailsRoll">Roulement</label>
+      <input type="text" class="form-control input-blue" id="detailsRoll" value="{{offer.details_section.roll}}">
+    </div>
+
+    <div class="form-group">
+      <label for="detailsQuota">Quotité</label>
+      <input type="text" class="form-control input-blue" id="detailsQuota" value="{{offer.details_section.quota}}">
+    </div>
+
+    <div class="form-group">
+      <label for="detailsStrain">Gardes ou astreintes</label>
+      <input type="text" class="form-control input-blue" id="detailsStrain" value="{{offer.details_section.strain}}">
+    </div>
+
+    <div class="form-group">
+      <label for="detailsAccess">Accès</label>
+      <input type="text" class="form-control input-blue" id="detailsAccess" value="{{offer.details_section.access}}">
+    </div>
+
+    <div class="form-group d-flex">
+      <div class="mr-4">Logement</div>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="detailsHousing" {{#if offer.details_section.housing}}checked="checked"{{/if}}>
+        <label class="custom-control-label" for="detailsHousing"></label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="detailsRemuneration" placeholder="Rémunération" value="{{offer.details_section.remuneration}}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="detailsRisk" placeholder="Risques professionnels et préventives" value="{{offer.details_section.risk}}">
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="saveDetails()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelDetails()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearDetails()">Effacer</button>
+  </div>
+</div>
+<div class="text-left shadow-grey col-12 p-3 mb-4 postDescriptionSection" style="display: none">
+  <h1 class="text-center">Description du poste</h1>
+  <form id="postDescriptionForm">
+    <div class="form-group">
+      <label for="postPresentation">Présentation du poste</label>
+      <textarea type="text" class="form-control input-blue" id="postPresentation">
+        {{{offer.postDescription_section.presentation}}}
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="postTeam" placeholder="Composition de l'équipe" value="{{offer.postDescription_section.team}}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="postUphill" placeholder="Rattachement hiérarchique amont" value="{{offer.postDescription_section.uphill}}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="postBacking" placeholder="Rattachement hiérarchique aval" value="{{offer.postDescription_section.backing}}">
+    </div>
+
+    <div class="form-group">
+      <label for="postExtern">Relations fonctionnelles externes à l'établissement</label>
+      <input type="text" class="form-control input-blue" id="postExternal" value="{{offer.postDescription_section.external}}">
+    </div>
+
+    <div class="form-group">
+      <label for="postIntern">Relations fonctionnelles internes à l'établissement</label>
+      <textarea type="text" class="form-control input-blue" id="postInternal">
+        {{{offer.postDescription_section.internal}}}
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control input-blue" id="postInternService" placeholder="Relations fonctionnelles internes au service" value="{{offer.postDescription_section.internService}}">
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="savePostDescription()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelPostDescription()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearPostDescription()">Effacer</button>
+  </div>
+</div>
+<div class="text-left shadow-grey col-12 p-3 mb-4 requirementSection" style="display: none">
+  <h1 class="text-center">Prérequis</h1>
+  <form id="requirementForm">
+    <div class="form-group">
+      <label for="requirementDiploma">Diplôme</label>
+      <input type="text" class="form-control input-blue" id="requirementDiploma" value="{{offer.prerequisites_section.diploma}}">
+    </div>
+
+    <div class="form-group">
+      <label for="requirementSkill">Compétences</label>
+      <textarea type="text" class="form-control input-blue" id="requirementSkill">
+        {{{offer.prerequisites_section.skills}}}
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="requirementKnowledge">Connaissances</label>
+      <textarea type="text" class="form-control input-blue" id="requirementKnowledge">
+        {{offer.prerequisites_section.knowledge}}
+      </textarea>
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="saveRequirement()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelRequirement()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearRequirement()">Effacer</button>
+  </div>
+</div>
+<div class="text-left shadow-grey col-12 p-3 mb-4 termsSection" style="display: none">
+  <h1 class="text-center">Modalités de candidature</h1>
+  <form id="termsForm">
+    <div class="form-group">
+      <label for="termsRecruit">Responsable du recrutement</label>
+      <input type="text" class="form-control input-blue" id="termsRecruit" value="{{offer.terms_sections.recruit}}">
+    </div>
+
+    <div class="form-group">
+      <label for="termsMail">Mail de contact</label>
+      <input type="text" class="form-control input-blue" id="termsMail" value="{{offer.terms_sections.mail}}">
+    </div>
+
+    <div class="form-group row justify-content-around">
+      <div class="form-group d-flex">
+        <div class="mr-4">Ouvert aux contractuels</div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="termsContractual" {{#if offer.terms_sections.contractual}}checked="checked"{{/if}}>
+          <label class="custom-control-label" for="termsContractual"></label>
+        </div>
+      </div>
+
+      <div class="form-group d-flex">
+        <div class="mr-4">Ouvert aux militaires</div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="termsMilitary" {{#if offer.terms_sections.military}}checked="checked"{{/if}}>
+          <label class="custom-control-label" for="termsMilitary"></label>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button class="btn btn-info" onclick="saveTerms()">Sauvegarder</button>
+    <button class="btn btn-outline-info" onclick="cancelTerms()">Annuler</button>
+    <button class="btn btn-outline-info" onclick="clearTerms()">Effacer</button>
+  </div>
+</div>
+
+<script src="/static/assets/dist/js/job_board_nature.min.js"></script>
+<script src="/static/assets/dist/js/job_board_context.min.js"></script>
+<script src="/static/assets/dist/js/job_board_details.min.js"></script>
+<script src="/static/assets/dist/js/job_board_postDescription.min.js"></script>
+<script src="/static/assets/dist/js/job_board_requirement.min.js"></script>
+<script src="/static/assets/dist/js/job_board_terms.min.js"></script>

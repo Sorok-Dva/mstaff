@@ -1,9 +1,22 @@
 const __ = process.cwd();
+const { validationResult } = require('express-validator');
 const { BackError } = require(`${__}/helpers/back.error`);
+const Models = require(`${__}/orm/models/index`);
+
 const layout = 'admin';
 const fs = require('fs');
 
 const BackOffice_Server = {};
+
+BackOffice_Server.Maintenance = (req, res, next) => {
+  Models.ServerParameter.update({ value: req.body.maintenance, edit_by: req.user.id }, {
+    where: {
+      param: 'maintenance'
+    }
+  }).then(newParam => {
+    return res.status(200).send(newParam);
+  })
+};
 
 BackOffice_Server.ViewDatabaseDumps = (req, res, next) => {
   let databaseDumps = [];
@@ -33,6 +46,68 @@ BackOffice_Server.RemoveDatabaseDumps = (req, res, next) => {
       fs.unlinkSync(path);
       return res.status(200).send({ deleted: true });
     }
+  });
+};
+
+BackOffice_Server.AddMessage = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+  Models.ServerMessage.create({
+    name: req.body.name,
+    message: req.body.message,
+    msgType: req.body.msgType,
+    type: req.body.type,
+    fromDate: req.body.fromDate,
+    untilDate: req.body.untilDate,
+    enable: true,
+    author: req.user.id
+  }).then(message => res.status(201).send(message)).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Server.viewMessage = (req, res, next) => {
+  Models.ServerMessage.findOne({
+    where: { id: req.params.id }
+  }).then(message => res.render('back-office/messages/add',
+    {
+      layout,
+      message,
+      cardTitle: `Message serveur #${req.params.id} (${message.name})`,
+      a: { main: 'serverSettings', sub: 'messages' }
+    })).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Server.EditMessage = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
+  if (req.params.action === 'enable') {
+    Models.ServerMessage.update({
+      enable: req.body.enable
+    }, { where: { id: req.params.id } }).then(message => res.status(200).send(message)).catch(error => next(new BackError(error)));
+  } else {
+    Models.ServerMessage.update({
+      name: req.body.name,
+      message: req.body.message,
+      msgType: req.body.msgType,
+      type: req.body.type,
+      fromDate: req.body.fromDate,
+      untilDate: req.body.untilDate,
+      author: req.user.id
+    }, { where: { id: req.params.id } }).then(message => res.status(200).send(message)).catch(error => next(new BackError(error)));
+  }
+};
+
+BackOffice_Server.RemoveMessage = (req, res, next) => {
+  Models.ServerMessage.destroy({
+    where: { id: req.params.id }
+  }).then(message => res.status(200).send({ deleted: true })).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Server.RenderAddMessage = (req, res, next) => {
+  res.render('back-office/messages/add', {
+    layout, cardTitle: `Ajouter un message pour les utilisateurs Mstaff`,
+    a: { main: 'serverSettings', sub: 'messages' }
   });
 };
 

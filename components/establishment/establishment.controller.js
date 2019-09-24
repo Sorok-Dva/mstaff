@@ -7,20 +7,46 @@ const Models = require(`${__}/orm/models/index`);
 
 const Establishment = {};
 
-Establishment.ViewAccounts = (req, res, next) => {
-  Models.ESAccount.findAll({
+Establishment.ViewAllGroups = (req, res, next) => {
+  Models.UsersGroups.findAll({
     where: { user_id: req.user.id },
-    include: {
+    include: [
+      {
+        model: Models.Establishment,
+        attributes: ['name', 'logo', 'id']
+      },
+      {
+        model: Models.Groups,
+        attributes: ['name']
+      },
+      {
+        model: Models.SuperGroups,
+        attributes: ['name']
+      }
+    ]
+  }).then(groupAccounts => {
+    res.status(200).send({ groups: groupAccounts });
+  }).catch(error => next(new BackError(error)));
+};
+
+Establishment.ViewAccounts = (req, res, next) => {
+  Models.UsersGroups.findAll({
+    where: { user_id: req.user.id },
+    include: [{
       model: Models.Establishment,
       required: true
-    }
+    }, {
+      model: Models.Groups
+    }, {
+      model: Models.SuperGroups
+    }]
   }).then(esAccounts => {
     res.render('establishments/selectEs', { esAccounts, a: { main: 'selectEs' } });
   }).catch(error => next(new BackError(error)));
 };
 
 Establishment.Select = (req, res, next) => {
-  Models.ESAccount.findOne({
+  Models.UsersGroups.findOne({
     where: { user_id: req.user.id, es_id: req.params.currentEsId },
     include: {
       model: Models.Establishment,
@@ -44,11 +70,11 @@ Establishment.Select = (req, res, next) => {
 Establishment.find = (id, next) => {
   Models.Establishment.findOne({
     where: { id },
-    include: {
+    /*include: {
       model: Models.Offer,
       as: 'offers',
       where: { status: 'published' }
-    }
+    }*/
   }).then(es => {
     if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
     else next(es);

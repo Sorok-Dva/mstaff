@@ -1,7 +1,9 @@
 const __ = process.cwd();
 const _ = require('lodash');
+const { Env } = require(`${__}/helpers/helpers`);
 const { BackError } = require(`${__}/helpers/back.error`);
 const Models = require(`${__}/orm/models/index`);
+const sequelize = require(__ + '/bin/sequelize');
 
 const Render = {};
 
@@ -47,5 +49,26 @@ Render.Register = (req, res) => res.render('users/register', { layout: 'onepage'
 Render._404 = (req, res) => res.render('error', { error: 'Lien invalide' });
 
 Render.ResetPassword = (req, res) => res.render('users/reset-passwd', { layout: 'onepage' });
+
+if (Env.isDev) {
+  Render.Test = (req, res) => {
+
+    try {
+      Models.Establishment.repository.rawGetInRange({ lat: 48.081749, lng: 0.829182 }, 100, [
+        'LEFT JOIN EstablishmentGroups ON InBounds.id = EstablishmentGroups.id_es',
+        'LEFT JOIN Groups ON EstablishmentGroups.id_group = Groups.id',
+        'LEFT JOIN GroupsSuperGroups ON Groups.id = GroupsSuperGroups.id_group',
+        'LEFT JOIN SuperGroups ON GroupsSuperGroups.id_super_group = SuperGroups.id'
+      ], 'WHERE SuperGroups.id = ' + 2)
+        .then(results => {
+          console.log(results.length);
+          res.status(200).send();
+        });
+    } catch (e) {
+      console.log(e);
+      res.status(500).send();
+    }
+  };
+}
 
 module.exports = Render;

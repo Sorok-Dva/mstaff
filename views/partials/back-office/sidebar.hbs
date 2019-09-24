@@ -277,6 +277,12 @@
                 <span class="sidebar-normal">Général</span>
               </a>
             </li>
+            <li{{#ifCond a.sub '===' 'messages'}} class="active"{{/ifCond}}>
+              <a href="/back-office/settings">
+                <i class="fal fa-comment-alt-lines"></i>
+                <span class="sidebar-normal">Messages</span>
+              </a>
+            </li>
             <li{{#ifCond a.sub '===' 'db_dumps'}} class="active"{{/ifCond}}>
               <a href="/back-office/server/db_dumps">
                 <i class="fal fa-database"></i>

@@ -1,0 +1,34 @@
+.table{
+    .table-section-header{
+        margin-right:0;
+        margin-left:0;
+        color:$fontColorDarkFade;
+        font-weight:bold;
+        font-size:1.25em;
+
+        .table-col{
+            background-color:rgba(0,0,0,.05);
+        }
+    }
+    .table-row{
+        display:flex;
+        margin-right:0;
+        margin-left:0;
+
+        .table-col{
+            padding:.75rem 1.25rem;
+        }
+    }
+    .table-col{
+        padding:1.25rem;
+        border:3px solid white;
+        border-top:none;
+        border-left:none;
+        box-sizing:border-box;
+        background-color:rgba(0,0,0,.025);
+
+        &.table-label{
+            font-style:italic;
+        }
+    }
+}

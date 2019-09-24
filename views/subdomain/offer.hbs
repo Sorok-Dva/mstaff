@@ -1,0 +1,165 @@
+{{#extend "body"}}
+
+    <header class="page-header">
+        <div class="container">
+
+            <div class="push">
+                <div class="aic">
+                    <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{es.logo}}');"></div>
+                    <div>
+                        <span class="header-title-label">Établissement</span>
+                        <h1 class="header-title">{{es.name}}</h1>
+                    </div>
+                </div>
+                <div class="aic">
+                    {{#if es.url}}<a href="{{es.url}}" class="button button-green button-fluid">Site web</a>{{/if}}
+                    {{#if hasGroup}}<a href="{{es.EstablishmentGroups.0.Group.domain_name}}" class="button button-green button-fluid">Accéder au groupe</a>{{/if}}
+                    <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <div class="page-banner">
+        <div class="image-ratio image-ratio-40 page-banner__image" style="background-image:url('{{es.banner}}');"></div>
+        <div class="page-banner__shadow"></div>
+    </div>
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-8">
+
+                <div class="page-content">
+                    {{#if offer.nature_section.contract_type}}
+                        <div class="tag tag-blue">{{offer.nature_section.contract_type}}</div>
+                    {{/if}}
+                    <h1 class="title page-title">{{offer.name}}</h1>
+                    <div class="title-label"><i class="fas fa-calendar-alt"></i>{{date offer.createdAt 'DD/MM/Y'}}</div>
+                    {{#if offer.postDescription_section.presentation}}
+                        <div class="page-section">
+                            {{{offer.postDescription_section.presentation}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.nature_section.jobSheet}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.nature_section.entries.jobSheet}}</h3>
+                            {{{offer.nature_section.jobSheet}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.context_section.presentation}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.context_section.entries.presentation}}</h3>
+                            {{{offer.context_section.presentation}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.prerequisites_section.skill}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.prerequisites_section.entries.skill}}</h3>
+                            {{{offer.prerequisites_section.skill}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.prerequisites_section.knowledge}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.prerequisites_section.entries.knowledge}}</h3>
+                            {{{offer.prerequisites_section.knowledge}}}
+                        </div>
+                    {{/if}}
+                    {{#if offer.postDescription_section.internal}}
+                        <div class="page-section">
+                            <h3 class="title page-section-title">{{sectionLabels.postDescription_section.entries.internal}}</h3>
+                            {{{offer.postDescription_section.internal}}}
+                        </div>
+                    {{/if}}
+                    <div class="page-section">
+                        <h3 class="title page-section-title">Détails</h3>
+                        <div class="table">
+                            {{#each sectionLabels as |section sectionKey|}}
+                                <div class="table-section" data-key="{{sectionKey}}">
+                                    <div class="table-section-header row">
+                                        <div class="table-col col-12">
+                                            {{section.label}}
+                                        </div>
+                                    </div>
+                                    {{#each section.entries as |entryLabel entryKey|}}
+                                        {{#if (lookup (lookup ../../offer sectionKey) entryKey)}}
+                                            <div class="table-row row" data-key="{{entryKey}}">
+                                                <div class="table-col table-label col-3 aic">
+                                                    {{entryLabel}}
+                                                </div>
+                                                <div class="table-col col-9 aic">
+                                                    {{lookup (lookup ../../offer sectionKey) entryKey}}
+                                                </div>
+                                            </div>
+                                        {{/if}}
+                                    {{/each}}
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4 black-card-col">
+                <div class="black-card">
+                    <div class="black-card__header">
+                        <div class="image-ratio image-ratio-100 image-round black-card__header__image" style="background-image:url('{{offer.context_section.logo}}');"></div>
+                        <span class="black-card__header__title__baseline">{{offer.name}}</span>
+                        <h2 class="title black-card__header__title">{{es.name}}</h2>
+                    </div>
+                    <div class="black-card__body">
+                        <div class="black-card__body__title">Établissement</div>
+                        {{#if es.formatted_address}}
+                            <p><i class="far fa-map-marker-alt"></i>{{es.formatted_address}}</p>
+                        {{/if}}
+                        {{#if es.url}}
+                            <p><i class="fas fa-browser"></i>{{es.url}}</p>
+                        {{/if}}
+                        <div class="black-card__body__title">Poste</div>
+                        {{#if offer.nature_section.start}}
+                            <p><i class="fas fa-calendar-alt"></i>{{offer.nature_section.start}}</p>
+                        {{/if}}
+                        {{#if offer.nature_section.contractDuration}}
+                            <p><i class="fas fa-history"></i>{{offer.nature_section.contractDuration}}</p>
+                        {{/if}}
+                        {{#if offer.nature_section.grade}}
+                            <p><i class="fas fa-graduation-cap"></i>{{offer.nature_section.grade}}</p>
+                        {{/if}}
+                        {{#if offer.nature_section.category}}
+                            <p><i class="fas fa-certificate"></i>{{offer.nature_section.category}}</p>
+                        {{/if}}
+                        {{#if offer.context_section.attach}}
+                            <p><i class="fas fa-link"></i>{{offer.context_section.attach}}</p>
+                        {{/if}}
+                        {{#if offer.context_section.pole}}
+                            <p><i class="fas fa-flag"></i>{{offer.context_section.pole}}</p>
+                        {{/if}}
+                        {{#if offer.context_section.website}}
+                            <p><i class="fas fa-city"></i>{{offer.context_section.website}}</p>
+                        {{/if}}
+                        {{#if offer.details_section.remuneration}}
+                            <p><i class="fas fa-money-bill-wave"></i>{{offer.details_section.remuneration}}</p>
+                        {{/if}}
+                    </div>
+                    <div class="black-card__footer">
+                        <a href="#" class="button button-pink button-big button-fluid">Postuler</a>
+                        <a href="/login">J'ai déjà un compte Mstaff</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="page-footer">
+        <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
+    </footer>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+
+{{/extend}}
