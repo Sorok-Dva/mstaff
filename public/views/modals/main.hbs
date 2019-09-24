@@ -2,8 +2,8 @@
   <div class="modal-dialog {{this.size}}" style="{{this.style}}">
     <div class="modal-content">
       <div class="modal-header">
+        <h4 class="modal-title text-center">{{{this.title}}}</h4>
         {{#unless this.cantBeClose}}<button type="button" class="close" data-dismiss="modal">&times;</button>{{/unless}}
-          <h4 class="modal-title text-center">{{{this.title}}}</h4>
       </div>
       {{#if this.modal}}
         {{> (partial this.modal)}}

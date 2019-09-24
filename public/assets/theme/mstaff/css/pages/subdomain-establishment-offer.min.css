@@ -1,0 +1,17 @@
+body.page-subdomain-establishment-offer .table .table-section[data-key="nature_section"] .table-row[data-key="jobSheet"] {
+  display: none; }
+
+body.page-subdomain-establishment-offer .table .table-section[data-key="context_section"] .table-row[data-key="presentation"] {
+  display: none; }
+
+body.page-subdomain-establishment-offer .table .table-section[data-key="postDescription_section"] .table-row[data-key="presentation"] {
+  display: none; }
+
+body.page-subdomain-establishment-offer .table .table-section[data-key="postDescription_section"] .table-row[data-key="internal"] {
+  display: none; }
+
+body.page-subdomain-establishment-offer .table .table-section[data-key="prerequisites_section"] .table-row[data-key="skill"] {
+  display: none; }
+
+body.page-subdomain-establishment-offer .table .table-section[data-key="prerequisites_section"] .table-row[data-key="knowledge"] {
+  display: none; }
