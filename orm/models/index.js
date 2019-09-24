@@ -41,6 +41,8 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+
+//TO DELETE
 db.init = () => {
   Object.keys(db).forEach(modelName => {
     let path = __dirname + '/../repositories/' + modelName + '.js';
