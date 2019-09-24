@@ -542,7 +542,7 @@ BackOffice_Establishment.View = (req, res, next) => {
       include: {
         model: Models.User,
         on: {
-          'UsersGroups.user_id$': {
+          '$UsersGroups.user_id$': {
             [Op.col]: 'UsersGroups->User.id'
           }
         },
