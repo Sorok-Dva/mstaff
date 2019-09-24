@@ -74,45 +74,35 @@ $(document).ready(() => {
       }, () => {
         $('button#btnEditSuperGroup').click(function () {
           if ($('input#superGroupValueEdit').val() !== '') {
-            let formData = new FormData();
-            formData.append('name', $('input#superGroupValueEdit').val());
-            formData.append('domain_name', $('input#superGroupDomainNameEdit').val());
-            formData.append('domain_enable', $('input#superGroupDomainEdit').val());
-            let logo = $('input#logo').get(0).files;
-            let banner = $('input#banner').get(0).files;
-            if(logo.length)
-              formData.append('logo', logo[0], logo[0].name);
-            if(banner.length)
-              formData.append('banner', banner[0], banner[0].name);
-            $.ajax({
-              url: `/api/back-office/groups/SuperGroups/${row.id}?_csrf=` + $('meta[name="csrf-token"]').attr('content'),
-              type: 'PUT',
-              data: formData,
-              processData: false,
-              contentType: false,
-              cache: false,
-              success: (data) => {
-                if (data.error) {
-                  notification({
-                    icon: 'exclamation',
-                    type: 'danger',
-                    title: 'Un problème est survenue :',
-                    message: data.error
-                  });
-                }
-                $('#editSuperGroupModal').modal('hide');
-                $(`tr[data-id="${id}"] td#sg-name`).text(data.group.name);
-                $(`tr[data-id="${id}"] td#sg-logo`).text(data.group.logo);
-                $(`tr[data-id="${id}"] td#sg-banner`).text(data.group.banner);
-                $(`tr[data-id="${id}"] td#sg-domain`).text(data.group.domain_name);
-                $(`tr[data-id="${id}"] td#sg-state`).text(data.group.domain_enable ? 'Actif' : 'Inactif');
+            let _csrf = $('meta[name="csrf-token"]').attr('content');
+            let name = $('input#superGroupValueEdit').val();
+            let logo = $('input#superGroupLogoEdit').val();
+            let banner = $('input#superGroupBannerEdit').val();
+            let domain_name = $('input#superGroupDomainNameEdit').val();
+            let domain_enable = $('select#superGroupDomainEdit').val();
+            $.put(`/api/back-office/groups/SuperGroups/${row.id}`, {
+              name, logo, banner, domain_name, domain_enable, _csrf
+            }, (data) => {
+              if (data.error) {
                 notification({
-                  icon: 'check-circle',
-                  type: 'success',
-                  title: 'Super groupe modifié :',
-                  message: 'Le super groupe a bien été modifié.'
+                  icon: 'exclamation',
+                  type: 'danger',
+                  title: 'Un problème est survenue :',
+                  message: data.error
                 });
               }
+              $('#editSuperGroupModal').modal('hide');
+              $(`tr[data-id="${id}"] td#sg-name`).text(name);
+              $(`tr[data-id="${id}"] td#sg-logo`).text(logo);
+              $(`tr[data-id="${id}"] td#sg-banner`).text(banner);
+              $(`tr[data-id="${id}"] td#sg-domain`).text(domain_name);
+              $(`tr[data-id="${id}"] td#sg-state`).text(domain_enable === '0' ? 'Inactif' : 'Actif');
+              notification({
+                icon: 'check-circle',
+                type: 'success',
+                title: 'Super groupe modifié :',
+                message: 'Le super groupe a bien été modifié.'
+              });
             });
           } else {
             if ($('input#superGroupValueEdit').val() === '') {

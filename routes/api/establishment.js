@@ -1,20 +1,7 @@
 const { Authentication } = require('../../middlewares/index');
 const { Conference, Establishment, User } = require('../../components');
-const mkdirp = require('mkdirp');
-const multer = require('multer');
 const express = require('express');
-
 const router = express.Router();
-
-const storage = (path, type) => multer.diskStorage({
-  destination: (req, file, cb) => mkdirp(`./public/uploads/${path}`, err => cb(err, `./public/uploads/${path}`)),
-  filename: (req, file, cb) => {
-    let filename = `${req.user.id}${Date.now()}_${file.fieldname}`;
-    cb(null, `${filename}.${file.mimetype.split('/')[1]}`)
-  }
-});
-
-const logoUpload = multer({ storage: storage('es/offers/', 'photo') }).single('logo');
 
 router.post('/:esId(\\d+)/search/candidates',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
@@ -113,13 +100,4 @@ router.delete('/conference/:id(\\d+)',
   Authentication.ensureIsEs && Authentication.verifyEsAccess,
   Conference.Main.delete);
 
-/**
- * @Route('/job_board/offer/:id(\\d+)/:action/logo') POST;
- * Upload / Remove logo for offer
- */
-router.post('/job_board/offer/:id(\\d+)/:action/logo',
-  Authentication.ensureIsEs,
-  logoUpload,
-  Establishment.Offer.UploadLogo)
-;
 module.exports = router;

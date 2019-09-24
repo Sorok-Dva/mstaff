@@ -13,7 +13,7 @@
                 <th>Souhait</th>
                 <th>Type de contrat</th>
                 <th>Établissement(s)</th>
-                 <th>Disponibilité</th>
+                {{!-- <th>Validité</th>--}}
                 <th>Action</th>
               </tr>
               </thead>
@@ -28,24 +28,9 @@
                         {{wish.es_count}}
                       </span>
                     </td>
-                    <td>
-                      <div class="col-12">
-                        <div class="ctaAvailability text-center state-{{isAvailable 'class' wish.Applications}}" data-id="{{wish.id}}">
-                          <label class="label">
-                            <div class="label-text label-text-{{isAvailable 'class' wish.Applications}} available-target" data-id="{{wish.id}}">
-                              <b> Je suis {{isAvailable 'text' wish.Applications}}</b>
-                            </div>
-                            <div class="toggle mt-1">
-                              <input class="toggle-state" type="checkbox" name="is_available" data-id="{{wish.id}}" {{isAvailable 'input' wish.Applications}} />
-                              <div class="toggle-inner">
-                                <div class="indicator"></div>
-                              </div>
-                              <div class="active-bg"></div>
-                            </div>
-                          </label>
-                        </div>
-                      </div>
-                    </td>
+                    {{!--<td>
+                      {{{wishValidity wish}}}
+                    </td>--}}
                     <td>
                       <a href="/wish/edit/{{wish.id}}">
                         <button class="btn btn-simple btn-outline-warning btn-icon editWish" data-id="{{wish.id}}">
@@ -79,21 +64,3 @@
 </div>
 
 <script src="/assets/dist/js/candidate/removeApplication.min.js"></script>
-<script>
-  $('input[name="is_available"]').change(function() {
-    let available = false;
-    let id = $(this).attr('data-id');
-    if (this.checked) {
-      $(`.ctaAvailability[data-id="${id}"]`).removeClass('state-unavailable').addClass('state-available');
-      $(`div.label-text[data-id="${id}"]`).removeClass('label-text-unavailable').addClass('label-text-available');
-      $(`div.label-text[data-id="${id}"]`).children('b').html('Je suis disponible');
-      available = true;
-    } else {
-      $(`.ctaAvailability[data-id="${id}"]`).removeClass('state-available').addClass('state-unavailable');
-      $(`div.label-text[data-id="${id}"]`).removeClass('label-text-available').addClass('label-text-unavailable');
-      $(`div.label-text[data-id="${id}"]`).children('b').html('Je suis indisponible');
-    }
-
-    $.post(`/api/candidate/wish/${id}/availability`, { _csrf, available });
-  });
-</script>

@@ -8,11 +8,7 @@ const Models = require(`${__}/orm/models/index`);
 const Subdomain_Group = {};
 
 Subdomain_Group.ViewIndex = (req, res, next) => {
-  return res.render('subdomain/group', {
-    layout: 'subdomain',
-    pageName: 'subdomain-group',
-    layoutName: 'subdomain'
-  });
+  return res.render('subdomain/group', { layout: 'subdomain' })
 };
 
 Subdomain_Group.find = (id, next) => {
@@ -33,28 +29,17 @@ Subdomain_Group.find = (id, next) => {
           },
         },
         required: true,
-        include: [
-          {
-            model: Models.Offer,
-            as: 'offers',
-            on: {
-              '$es.id$': {
-                [Op.col]: 'es->offers.es_id'
-              },
-            }
-          },
-          {
-            model: Models.EstablishmentReference,
-            as: 'ref',
-            on: {
-              '$es.finess$': {
-                [Op.col]: 'es->ref.finess_et'
-              },
+        include: {
+          model: Models.EstablishmentReference,
+          as: 'ref',
+          on: {
+            '$es.finess$': {
+              [Op.col]: 'es->ref.finess_et'
             },
-            attributes: ['lat', 'lon', 'finess_et'],
-            required: true
-          }
-        ]
+          },
+          attributes: ['lat', 'lon', 'finess_et'],
+          required: true
+        }
       },
       order: [
         [ 'es', 'town', 'ASC' ],
@@ -62,8 +47,8 @@ Subdomain_Group.find = (id, next) => {
     });
   }).then(links => {
     render.es = links;
-    next(render);
-  }).catch(error => next(new Error(error)));
+    next(render)
+  }).catch(error => next(new BackError(error)));
 };
 
 Subdomain_Group.ViewATS = (req, res, next) => {

@@ -21,6 +21,5 @@ router.get(
   HTTPValidation.ApiController.findByCity,
   Establishment.Reference.findByCity
 );
-router.post('/address/geoloc', Api.Main.geolocAddress);
 
 module.exports = router;

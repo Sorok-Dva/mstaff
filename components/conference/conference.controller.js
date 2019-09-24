@@ -154,14 +154,14 @@ Conference.sendInvitationNotification = (conference, req) => {
         fromEs: conference.es_id,
         to: candidate.User.id,
         subject: 'Un entretien vous a été proposé !',
-        title: `Bravo !\n L'établissement ${req.session.es.name} vous propose un entretien d'embauche.`,
+        title: `Bravo !\n L'établissement ${req.es.name} vous propose un entretien d'embauche.`,
         image: '/assets/images/wink.jpg',
         opts: {
           type: 'ConferenceNotifyCandidate',
           details: {
             conference,
             need,
-            es: conference.type === 'physical' ? { name: req.session.es.name, address: req.session.es.address, town: req.session.es.town } : null
+            es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
           },
           message: req.body.message,
           actions: [{
@@ -202,7 +202,7 @@ Conference.sendDeleteNotification = (conference, req) => {
         fromEs: conference.es_id,
         to: conference.candidate_id,
         subject: 'Un entretien a été annulé.',
-        title: `L'établissement ${req.session.es.name} a annulé un entretien d'embauche.`,
+        title: `L'établissement ${req.es.name} a annulé un entretien d'embauche.`,
         image: '/assets/images/sad.jpg',
         opts: {
           type: 'ConferenceNotifyCandidate',
@@ -210,7 +210,7 @@ Conference.sendDeleteNotification = (conference, req) => {
           details: {
             conference,
             need,
-            es: conference.type === 'physical' ? { name: req.session.es.name, address: req.session.es.address, town: req.session.es.town } : null
+            es: conference.type === 'physical' ? { name: req.es.name, address: req.es.address, town: req.es.town } : null
           },
           message: req.body.message,
           needCandidateId: conference.candidate_id

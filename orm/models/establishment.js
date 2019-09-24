@@ -23,32 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     contact_identity: DataTypes.STRING,
     contact_post: DataTypes.STRING,
     contact_email: DataTypes.STRING,
-    contact_phone: DataTypes.STRING,
-    user_address: DataTypes.STRING,
-    formatted_address: DataTypes.STRING,
-    street_number: DataTypes.STRING,
-    street_name: DataTypes.STRING,
-    city: DataTypes.STRING,
-    department: DataTypes.STRING,
-    region: DataTypes.STRING,
-    country: DataTypes.STRING,
-    postal_code: DataTypes.STRING,
-    lat: DataTypes.DECIMAL(10, 8),
-    lng: DataTypes.DECIMAL(11, 8),
-    structure_number: DataTypes.STRING,
-    attachement_direction: DataTypes.STRING,
-    region_code: DataTypes.STRING,
-    long_wording: DataTypes.STRING,
-    spinneret: DataTypes.STRING,
-    primary_group_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Groups',
-        key: 'id',
-      },
-      onUpdate: 'CASCADE'
-    },
-    location_updatedAt: DataTypes.DATE,
+    contact_phone: DataTypes.STRING
   }, {});
   Establishment.associate = function (models) {
     Establishment.hasOne(models.EstablishmentReference, {
@@ -59,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'es_id',
       as: 'subdomain'
     });
-    Establishment.hasMany(models.UsersGroups, {
+    Establishment.hasMany(models.ESAccount, {
       foreignKey: 'es_id',
       sourceKey: 'id'
     });
@@ -88,11 +63,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id_es',
       sourceKey: 'id',
       onDelete: 'CASCADE'
-    });
-    Establishment.belongsTo(models.Groups, {
-      foreignKey: 'primary_group_id',
-      targetKey: 'id'
-    });
+    })
   };
   return Establishment;
 };

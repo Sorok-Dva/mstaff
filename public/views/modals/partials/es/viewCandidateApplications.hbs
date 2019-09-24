@@ -9,7 +9,6 @@
           <table class="table table-hover">
             <thead>
             <tr class="info">
-              <th style="width:1%"></th>
               <th>Date</th>
               <th>Type de contrat</th>
               <th>Postes</th>
@@ -21,9 +20,6 @@
             {{#if data.applications}}
               {{#each data.applications as |application|}}
                 <tr>
-                  <td>
-                    <div class="{{#unless application.is_available}}un{{/unless}}available"></div>
-                  </td>
                   <td>
                     {{date application.Wish.createdAt 'DD/MM/YYYY' }}
                   </td>

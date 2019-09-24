@@ -12,8 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.STRING,
     new: DataTypes.BOOLEAN,
     renewed: DataTypes.BOOLEAN,
-    last_renew: DataTypes.DATE,
-    is_available: DataTypes.BOOLEAN
+    last_renew: DataTypes.DATE
   }, {});
   Application.associate = function (models) {
     Application.belongsTo(models.Candidate, {

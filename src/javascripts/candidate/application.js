@@ -19,20 +19,12 @@ function resetContractDurableTypeCheckboxExcept(name){
   }
 }
 
-function resetContractPunctualTypeCheckboxExcept(name){
-  $('#contractPunctualType input').not(`[name=${name}]`).prop('checked', false);
-}
-
 function showContractTypeDiv(selected, isChecked){
   let durable = $('#contractDurableType');
   let punctual = $('#contractPunctualType');
-  let activityType = $('#activityType');
-  let timeType = $('#timeType');
 
   durable.hide();
   punctual.hide();
-  activityType.hide();
-  timeType.hide();
   if (isChecked){
     switch (selected) {
       case 'durableContract':
@@ -97,7 +89,7 @@ $('#contractPunctualType input[type="checkbox"]').change(function() {
   let selected = $(this).attr('name');
   delete application.contractType;
   delete application.timeType;
-  resetContractPunctualTypeCheckboxExcept(selected);
+  resetContractDurableTypeCheckboxExcept(selected);
   if (this.checked){
     switch (selected) {
       case 'CDD':
@@ -765,14 +757,12 @@ $(document).ready(function () {
     }
 
     if (selectedCategories === '5'){
-      const id = $(`#selectServiceType option[data-text='Services Libéraux']`).val();
-      selectServiceType.val(id).trigger('change');
+      selectServiceType.val("56").trigger('change');
       selectServiceType.prop('disabled', true);
       selectServiceType.selectpicker('refresh');
     }
     if (selectedCategories === '4'){
-      const id = $(`#selectServiceType option[data-text='Services généraux']`).val();
-      selectServiceType.val(id).trigger('change');
+      selectServiceType.val("55").trigger('change');
       selectServiceType.prop('disabled', true);
       selectServiceType.selectpicker('refresh');
     }

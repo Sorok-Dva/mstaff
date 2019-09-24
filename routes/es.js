@@ -15,10 +15,6 @@ router.get('/select/es/:currentEsId',
   Authentication.ensureIsEs,
   Establishment.Main.Select);
 
-router.get('/select/groups',
-  Authentication.ensureIsEs,
-  Establishment.Main.ViewAllGroups);
-
 /**
  * @Route('/candidates') GET;
  * Show Candidates Index page

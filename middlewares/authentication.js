@@ -122,12 +122,12 @@ Authentication.verifyEsAccess = (req, res, next) => {
   Models.Establishment.findOne({
     where: { id: req.params.esId || req.user.opts.currentEs },
     include: {
-      model: Models.UsersGroups,
+      model: Models.ESAccount,
       where: { user_id: req.user.id }
     }
   }).then(es => {
     if (!es) return res.status(403).send(`You don't have access to this establishment.`);
-    req.session.RH_es = es;
+    req.es = es;
     next();
   });
 };

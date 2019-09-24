@@ -75,10 +75,6 @@ module.exports = {
       last_renew: {
         type: Sequelize.DATE,
       },
-      is_available: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

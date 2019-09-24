@@ -67,12 +67,6 @@
     <div class="main-content">
       {{> header}}
       <div class="container-fluid">
-        {{{showServerMessages serverMessages user}}}
-          {{#each serverMessages as |message|}}
-            {{#ifCond message.type '===' 'group'}}
-              <div class="alert alert-{{message.msgType}}">{{{message.message}}}</div>
-            {{/ifCond}}
-          {{/each}}
         {{> flash}}
 
         {{{body}}}

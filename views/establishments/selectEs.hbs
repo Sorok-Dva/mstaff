@@ -1,17 +1,9 @@
-<div class="row" id="es-container">
+<div class="row">
   {{#each esAccounts as |account|}}
     <div class="col-4 col-lg-4">
       <div class="card">
         <div class="card-body">
-          <div class="text-left">
-            {{#if account.SuperGroup.name}}
-            <span class="badge badge-primary"> Supergroupe </span>
-            {{else if account.Group.name}}
-              <span class="badge badge-success"> Groupe </span>
-            {{ else }}
-              <span class="badge badge-info">Etablissement</span>
-            {{/if}}
-          </div>
+          <!-- Avatar -->
           <div class="text-center">
             <span class="card-avatar avatar avatar-lg mx-auto">
               {{#if account.Establishment.logo}}
@@ -21,17 +13,54 @@
               {{/if}}
             </span>
           </div>
+
+          <!-- Title -->
           <h2 class="card-title text-center mb-3">
             <a href="/select/es/{{account.Establishment.id}}">{{account.Establishment.name}}</a>
           </h2>
-          <div class="text-center">
-            {{#if account.SuperGroup.name}}
-              <small> {{account.SuperGroup.name}} - {{account.Group.name}}</small>
-            {{else if account.Group.name}}
-              <small> {{account.Group.name}}</small>
-            {{/if}}
-          </div>
-        </div>
+
+       {{!--   <!-- Text -->
+          {{#if account.Establishment.domain_enable}}
+            <p class="card-text text-center text-muted mb-4">
+              (<a target="_blank" href="https://{{account.Establishment.domain_name}}.{{@root.domain}}">
+              https://{{account.Establishment.domain_name}}.{{@root.domain}}</a> )
+            </p>
+          {{/if}}
+--}}
+          {{!--<!-- Divider -->
+          <hr>
+          <div class="row align-items-center">
+            <div class="col ml-2">
+              <!-- Time -->
+              <p class="card-text small text-muted">
+                <i class="fe fe-clock"></i> Dernière connexion
+              </p>
+
+            </div>
+            <div class="col-auto">
+              <!-- Avatar group -->
+              <div class="avatar-group">
+                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Ab Hadley">
+                  <img src="/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+                </span>
+                <span  class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Adolfo Hess">
+                  <img src="/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+                </span>
+                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Daniela Dewitt">
+                  <img src="/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+                </span>
+                <span class="avatar avatar-xs" data-toggle="tooltip" title="" data-original-title="Miyah Myles">
+                  <img src="/assets/images/face-0.jpg" class="avatar-img rounded-circle" alt="...">
+                </span>
+                <div class="avatar avatar-xs">
+                  <div class="avatar-title rounded-circle">+7</div>
+                </div>
+              </div>
+
+            </div>
+          </div> <!-- / .row -->--}}
+
+        </div> <!-- / .card-body -->
       </div>
     </div>
   {{/each}}
