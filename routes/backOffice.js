@@ -109,6 +109,22 @@ router.get('/es',
   BackOffice.Establishment.ViewList);
 
 /**
+ * @Route('/back-office/es/types') GET;
+ * Show ES List page
+ */
+router.get('/es/types',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.ViewTypesList);
+
+/**
+ * @Route('/back-office/es/types/create') GET;
+ * Show ES List page
+ */
+router.all('/es/types/create',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.CreateType);
+
+/**
  * @Route('/back-office/es/:id(\\d+)') GET;
  * Show ES page
  */

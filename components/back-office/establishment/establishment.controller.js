@@ -608,6 +608,42 @@ BackOffice_Establishment.ViewList = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
+BackOffice_Establishment.ViewTypesList = (req, res, next) => {
+  Models.EstablishmentTypes.findAll({
+    include: {
+      model: Models.Establishment
+    }
+  })
+    .then(establishmentTypes => {
+      res.render('back-office/es/types/list', {
+        layout,
+        title: 'Types d\'établissements',
+        a: { main: 'es', sub: 'es_types' },
+        establishmentTypes
+      })
+    }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Establishment.CreateType = (req, res, next) => {
+  if (req.method === 'POST') {
+    if (!req.body.name)
+      next(new BackError('Missing data.'));
+    let establishementType = Models.EstablishmentTypes.build({
+      name: req.body.name
+    });
+    let errors = establishementType.validate();
+    if (errors)
+      next(new BackError(errors));
+    establishementType.save();
+    return res.redirect('back-office/es/types');
+  }
+  res.render('back-office/es/types/form', {
+    layout,
+    title: 'Types d\'établissements',
+    a: { main: 'es', sub: 'es_types' }
+  });
+};
+
 BackOffice_Establishment.ViewRefList = (req, res, next) => {
   res.render('back-office/es/list_ref', {
     layout,
