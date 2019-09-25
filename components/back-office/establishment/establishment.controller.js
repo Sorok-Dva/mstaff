@@ -624,24 +624,73 @@ BackOffice_Establishment.ViewTypesList = (req, res, next) => {
     }).catch(error => next(new BackError(error)));
 };
 
-BackOffice_Establishment.CreateType = (req, res, next) => {
-  if (req.method === 'POST') {
-    if (!req.body.name)
-      next(new BackError('Missing data.'));
-    let establishementType = Models.EstablishmentTypes.build({
-      name: req.body.name
+BackOffice_Establishment.TypesCreate = (req, res, next) => {
+  if (req.method === 'POST'){
+    Models.EstablishmentTypes.create(req.body)
+      .then(() => {
+        req.flash('success_msg', 'Type d\'établissement créé avec succès.');
+        return res.redirect('/back-office/es/types');
+      })
+      .catch(errors => {
+        req.flash('error_msg', 'Erreur lors de la création du type d\'établissement.');
+        return res.render('back-office/es/types/form', {
+          layout,
+          title: 'Types d\'établissements',
+          a: { main: 'es', sub: 'es_types' },
+          formData: req.body
+        });
+      });
+  } else {
+    return res.render('back-office/es/types/form', {
+      layout,
+      title: 'Types d\'établissements',
+      a: { main: 'es', sub: 'es_types' }
     });
-    let errors = establishementType.validate();
-    if (errors)
-      next(new BackError(errors));
-    establishementType.save();
-    return res.redirect('back-office/es/types');
   }
-  res.render('back-office/es/types/form', {
-    layout,
-    title: 'Types d\'établissements',
-    a: { main: 'es', sub: 'es_types' }
-  });
+};
+
+BackOffice_Establishment.TypesEdit = (req, res, next) => {
+  Models.EstablishmentTypes.findByPk(req.params.id)
+    .then(establishmentType => {
+      if (req.method === 'POST'){
+        establishmentType.update(req.body, { where: { id: req.params.id } })
+          .then(() => {
+            req.flash('success_msg', 'Type d\'établissement édité avec succès.');
+            return res.redirect('/back-office/es/types');
+          })
+          .catch(errors => {
+            req.flash('error_msg', 'Erreur lors de l\'édition du type d\'établissement.');
+            return res.render('back-office/es/types/form', {
+              layout,
+              title: 'Types d\'établissements',
+              a: { main: 'es', sub: 'es_types' },
+              formData: establishmentType
+            });
+          });
+      } else {
+        return res.render('back-office/es/types/form', {
+          layout,
+          title: 'Types d\'établissements',
+          a: { main: 'es', sub: 'es_types' },
+          formData: establishmentType
+        });
+      }
+    }).catch(error => next(new BackError(error)));
+};
+
+BackOffice_Establishment.TypesDelete = (req, res, next) => {
+  Models.EstablishmentTypes.findByPk(req.params.id)
+    .then(establishmentType => {
+      return establishmentType.destroy();
+    })
+    .then(() => {
+      req.flash('success_msg', 'Type d\'établissement supprimé avec succes.');
+      return res.redirect('/back-office/es/types');
+    })
+    .catch(errors => {
+      req.flash('error_msg', 'Erreur lors de la suppression du type d\'établissement.');
+      return res.redirect('/back-office/es/types');
+    });
 };
 
 BackOffice_Establishment.ViewRefList = (req, res, next) => {

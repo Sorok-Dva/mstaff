@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="form-group col-3">
                     <label for="name">Nom</label>
-                    <input type="text" name="name" class="form-control">
+                    <input type="text" name="name" class="form-control"{{#if formData}} value="{{formData.name}}"{{/if}}>
                 </div>
             </div>
             <div class="clearfix">
@@ -17,7 +17,3 @@
         </form>
     </div>
 </div>
-
-<script>
-
-</script>
