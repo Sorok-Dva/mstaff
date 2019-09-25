@@ -73,7 +73,7 @@ Api.getPoolDatas = (req, res, next) => {
 Api.geolocAddress = (req, res, next) => {
   if (!req.body.address)
     return res.status(400).send();
-  gmap.getAddress(req.body.address, req.body.withNulls === true || req.body.withNulls === 'true')
+  gmap.getAddressFromString(req.body.address, req.body.withNulls === true || req.body.withNulls === 'true')
     .then((results) => {
       res.status(200).send(results);
     })

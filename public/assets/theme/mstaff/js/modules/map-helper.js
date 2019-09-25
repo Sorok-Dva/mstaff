@@ -1,7 +1,7 @@
 let MapHelper = {};
 
 MapHelper.initAutocompleteInput = (inputElement, autoSubmit) => {
-	let autocomplete = new google.maps.places.Autocomplete(inputElement);
+	let autocomplete = new google.maps.places.Autocomplete(inputElement, {componentRestrictions: {country: ["fr", "gp", "mq", "gf", "re", "pm", "yt", "nc", "pf", "mf", "tf"]}});
 
 	if(autoSubmit)
 		autocomplete.addListener('place_changed', function(){

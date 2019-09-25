@@ -84,7 +84,9 @@
         </div>
 
         <div class="search-bar">
-            <form action="/" method="post">
+            <form action="/" method="post" class="search-form">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <input type="hidden" name="latlng">
                 {{#ifCond geocodingType '!=' 'none'}}
                     <div class="input-container" data-input-name="search">
                         <i class="fas fa-map-marker-alt"></i>
@@ -97,13 +99,20 @@
                         <input type="number" name="range" max="1000" value="{{../range}}">
                     </div>
                 {{/ifCond}}
-                <input type="hidden" name="_csrf" value="{{csrfToken}}">
                 <input type="submit">
             </form>
         </div>
 
     </div>
 
+{{/extend}}
+
+{{#extend "bodyend"}}
+    <div class="my-location">
+        <div class="pac-item">
+            <i class="fas fa-location"></i> Ma position
+        </div>
+    </div>
 {{/extend}}
 
 {{#extend "scripts"}}
@@ -146,7 +155,34 @@
 
         $(document).ready(function(){
 
-            MapHelper.initAutocompleteInput($('input[name="search"]').get(0), true);
+            const $searchInput = $('input[name="search"]');
+
+            MapHelper.initAutocompleteInput($searchInput.get(0), true);
+
+            $searchInput
+                .focusin(function(){
+                    $('.my-location')
+                        .css({
+                            top: $searchInput.offset().top + $searchInput.outerHeight(),
+                            left: $searchInput.offset().left,
+                            width: $searchInput.innerWidth()
+                        })
+                        .show()
+                })
+                .focusout(function(){
+                    // This is dirty but working
+                    setTimeout(function(){
+                        $('.my-location')
+                            .hide();
+                    }, 250);
+                });
+
+            $('.my-location').click(function(){
+                navigator.geolocation.getCurrentPosition(function(position){
+                    $('input[name="latlng"]').val(position.coords.latitude + ',' + position.coords.longitude);
+                    $('.search-form').submit();
+                });
+            });
 
             let map = MapHelper.initResultMap(document.getElementById('map'), establishments, {
                 {{#ifCond geocodingType '!=' 'none'}}

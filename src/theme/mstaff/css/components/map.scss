@@ -31,4 +31,9 @@
 
 .pac-item{
 	font-family:'Work Sans', Verdana, Arial, sans-serif;
+	color:$fontColorDarkFade;
+
+	.pac-item-query{
+		color:$fontColorDark;
+	}
 }

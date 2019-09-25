@@ -98,25 +98,23 @@ let buildScripts = () => {
 };
 
 let buildTheme = () => {
-  if (Env.current === 'development') {
-    let main = src(THEME_CSS_DIR + '/style.scss')
-      .pipe(sass().on('error', sass.logError))
-      .pipe(cssimport())
-      .pipe(rename({ suffix: '.min' }))
-      .pipe(dest(THEME_CSS_DST));
+  let main = src(THEME_CSS_DIR + '/style.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(cssimport())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(dest(THEME_CSS_DST));
 
-    let layout = src(THEME_CSS_DIR + '/layout/*.scss')
-      .pipe(sass().on('error', sass.logError))
-      .pipe(rename({ suffix: '.min' }))
-      .pipe(dest(THEME_CSS_DST + '/layout'));
+  let layout = src(THEME_CSS_DIR + '/layout/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(dest(THEME_CSS_DST + '/layout'));
 
-    let pages = src(THEME_CSS_DIR + '/pages/*.scss')
-      .pipe(sass().on('error', sass.logError))
-      .pipe(rename({ suffix: '.min' }))
-      .pipe(dest(THEME_CSS_DST + '/pages'));
+  let pages = src(THEME_CSS_DIR + '/pages/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(dest(THEME_CSS_DST + '/pages'));
 
-    return mergestream(main, layout, pages);
-  }
+  return mergestream(main, layout, pages);
 };
 
 /*

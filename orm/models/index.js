@@ -3,7 +3,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const { Env } = require(`../../helpers/helpers`);
 const basename = path.basename(module.filename);
-const config = require(`${__dirname}/../config/config.json`)[Env.current];
+const config = require(`../../orm/config/config.json`)[Env.current || 'production'];
 // eslint-disable-next-line no-console
 config.logging = config.logging ? console.log : null;
 config.pool = {
