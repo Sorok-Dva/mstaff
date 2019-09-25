@@ -1,4 +1,6 @@
 const __ = process.cwd();
+const { _ } = require('lodash');
+const { Op } = require('sequelize');
 const { BackError } = require(`${__}/helpers/back.error`);
 
 const Models = require(`${__}/orm/models/index`);
@@ -6,9 +8,70 @@ const Models = require(`${__}/orm/models/index`);
 const Establishment_Website = {};
 
 Establishment_Website.ViewIndex = (req, res, next) => {
-  Models.EstablishmentReference.findOne({ where: { finess_et: req.session.es.finess } }).then(ref => {
-    return res.render('subdomain/establishment', { ref, layout: 'subdomain' })
+  Models.Need.findAll({
+    where: {
+      es_id: res.locals.es.id
+    },
+    include: [
+      {
+        model: Models.Offer,
+        required: true
+      }
+    ]
   })
+    .then(needs => {
+      return res.render('subdomain/establishment', {
+        needs: needs,
+        hasGroup: res.locals.es.EstablishmentGroups && res.locals.es.EstablishmentGroups.length == 1,
+        layout: 'subdomain',
+        pageName: 'subdomain-establishment',
+        layoutName: 'subdomain'
+      });
+    }).catch( error => next(new BackError(error)));
+};
+
+Establishment_Website.find = (id, next) => {
+  Models.Establishment.findOne({
+    where: { id },
+    include: [
+      {
+        model: Models.Offer,
+        as: 'offers',
+        on: {
+          '$Establishment.id$': {
+            [Op.col]: 'offers.es_id'
+          },
+        }
+      },
+      {
+        model: Models.EstablishmentReference,
+        as: 'ref',
+        on: {
+          '$Establishment.finess$': {
+            [Op.col]: 'ref.finess_et'
+          },
+        }
+      }
+    ]
+  }).then(es => {
+    if (_.isNil(es)) return new BackError('Établissement introuvable', 403);
+    next(es);
+  }).catch( error => next(new BackError(error)));
+};
+
+Establishment_Website.ShowOffer = (req, res, next) => {
+  Models.Offer.findOne({
+    where: { id: req.params.id }
+  })
+    .then((offer) => {
+      return res.render('subdomain/offer', {
+        layout: 'subdomain',
+        pageName: 'subdomain-establishment-offer',
+        layoutName: 'subdomain',
+        offer: offer,
+        sectionLabels: Models.Offer.repository.getSectionLabels()
+      });
+    }).catch(error => next(new Error(error)));
 };
 
 Establishment_Website.ViewATS = (req, res, next) => {

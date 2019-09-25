@@ -1,0 +1,108 @@
+@import "../global/colors";
+
+body.layout-map-search{
+    height:100%;
+
+    .page-body{
+
+        .page-header{
+            margin-top:8rem;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+
+            & > *:not(:last-child){
+                margin-bottom:1rem;
+            }
+
+            .header-logo{
+                width:120px;
+            }
+
+            .header-title{
+                font-size:2.5em;
+            }
+
+        }
+
+        .baseline-page{
+            margin:4rem 0;
+            font-weight:bold;
+            font-size:1.75em;
+            font-style:italic;
+
+            span{
+                color:$mainColorPink;
+            }
+        }
+
+        form{
+            label[for="search"]{
+                display:block;
+                margin-bottom:1rem;
+                color:$fontColorDark;
+                font-weight:bold;
+            }
+
+            input[name="search"]{
+                width:100%;
+                padding:.5rem 0;
+                margin-bottom:1rem;
+                border-bottom:1px solid $backgroundColorDark;
+                font-size:1.25em;
+                font-family:'Work Sans', Verdana, Arial, sans-serif;
+                font-style:italic;
+                color:$fontColorDarkFade;
+            }
+
+            .button{
+                margin-top:2rem;
+            }
+
+            .im-a-link{
+                font-style:italic;
+            }
+
+            &.error{
+                input[name="search"]{
+                    border-bottom-color:$bootstrapDanger;
+                }
+            }
+        }
+
+    }
+
+    .pac-container{
+        margin-top:37px;
+    }
+
+    .my-location{
+        display:none;
+        position:absolute;
+        z-index:1001;
+
+        .pac-item{
+            display:flex;
+            align-items:center;
+            padding-top:.25rem;
+            padding-bottom:.25rem;
+            color:$fontColorDark;
+            font-weight:bold;
+            font-size:.9em;
+            background-color:#fff;
+            -webkit-box-shadow:0 0 6px rgba(0,0,0,0.3);
+            -moz-box-shadow:0 0 6px rgba(0,0,0,0.3);
+            box-shadow:0 0 6px rgba(0,0,0,0.3);
+
+            i{
+                font-size:1.25em;
+                color:$fontColorDarkFade;
+            }
+
+            &:hover{
+                background-color:#fafafa;
+            }
+        }
+    }
+
+}

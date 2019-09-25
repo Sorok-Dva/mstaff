@@ -1,3 +1,5 @@
+[![BCH compliance](https://bettercodehub.com/edge/badge/Sorok-Dva/mstaff?branch=master&token=fcae151b6fb34e81aeffa0ddbfd48cc194e3bada)](https://bettercodehub.com/)
+
 # Mstaff Project
 
 ## Prerequisites

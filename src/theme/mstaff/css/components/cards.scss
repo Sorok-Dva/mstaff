@@ -1,0 +1,129 @@
+.card-list{
+	& > *{
+		width:100%;
+	}
+
+	.card{
+		margin-bottom:2rem;
+	}
+}
+
+.card{
+	padding:2rem;
+	border:1px solid $borderColorLight;
+
+	.card__thumbnail-container{
+
+	}
+	.card__header{
+		margin-bottom:1rem;
+	}
+	.card__body{
+		p{
+			font-size:.8em;
+			line-height:2em;
+			color:$fontColorDarkFade;
+		}
+
+		& > *:not(.push):not(:last-child), & > .push > div:not(.fdc) > *:not(.card__footer){
+			margin-bottom:.5rem;
+		}
+	}
+	.card__footer{
+		margin-top:1rem;
+	}
+
+	.card__title{
+		font-size:1.25em;
+		color:$fontColorDark;
+	}
+}
+
+.black-card{
+	background-color:$backgroundColorDark;
+	color:$fontColorLight;
+
+	.black-card__header{
+		padding:3rem 2rem 2rem 2rem;
+		text-align:center;
+
+		.black-card__header__image{
+			display:inline-block;
+			width:60%;
+			-webkit-border-radius:999px;
+			-moz-border-radius:999px;
+			border-radius:999px;
+
+			& + *{
+				margin-top:1rem;
+			}
+		}
+		.black-card__header__title{
+			font-size:1.5em;
+
+			& + .black-card__header__title__baseline{
+				margin-top:.5rem;
+			}
+		}
+		.black-card__header__title__baseline{
+			display:block;
+			font-size:.75em;
+			font-weight:normal;
+			color:$fontColorLightFade;
+
+			& + .black-card__header__title{
+				margin-top:.5rem;
+			}
+		}
+	}
+	.black-card__body{
+		padding:0 2rem;
+		margin-top:2rem;
+		font-size:.9em;
+
+		.black-card__body__title{
+			font-size:1.5em;
+
+			&:not(:first-child){
+				margin-top:3rem;
+			}
+		}
+
+		& > * + *{
+			margin-top:1.5rem;
+
+			&:last-child{
+				margin-bottom:2rem;
+			}
+		}
+
+		& > .button + .button{
+			margin-top:.75rem;
+		}
+	}
+	.black-card__footer{
+		padding:2rem;
+
+		a:not(.button){
+			display:block;
+			text-align:center;
+			color:$fontColorDarkFade;
+			font-style:italic;
+
+			&:not(:first-child){
+				margin-top:2rem;
+			}
+		}
+	}
+}
+
+.black-card-col{
+	.black-card{
+		margin-bottom:-250px;
+		-webkit-transform:translateY(-250px);
+		-moz-transform:translateY(-250px);
+		-ms-transform:translateY(-250px);
+		-o-transform:translateY(-250px);
+		transform:translateY(-250px);
+	}
+}

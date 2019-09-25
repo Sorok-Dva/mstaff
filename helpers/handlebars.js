@@ -144,6 +144,10 @@ module.exports.register = async (Handlebars) => {
     }[operator];
   });
 
+  Handlebars.registerHelper('int', function (context) {
+    return parseInt(context);
+  });
+
   Handlebars.registerHelper('has_passed', (dateString, options) => {
     if (moment(dateString).isAfter(moment())) {
       return options.fn(this);

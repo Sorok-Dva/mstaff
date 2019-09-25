@@ -1,0 +1,17 @@
+form{
+    button, input{
+        border:none;
+        outline:none;
+    }
+
+    .form-error{
+        margin-bottom:1rem;
+    }
+
+    button.im-a-link{
+        background-color:transparent;
+        font-family: 'Work Sans', Verdana, Arial, sans-serif;
+        font-size:1em;
+        cursor:pointer;
+    }
+}

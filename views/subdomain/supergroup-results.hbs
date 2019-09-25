@@ -1,0 +1,284 @@
+{{#extend "body"}}
+
+    <div class="page-body">
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-9 no-gutters">
+
+                    <div class="map" id="map"></div>
+
+                </div>
+
+                <div class="col-3 no-gutters right-column">
+
+                    <a href="/" class="column-header page-header">
+
+                        <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{supergroup.logo}}');"></div>
+                        <span class="header-title-label">Super Groupe</span>
+                        <h1 class="header-title">{{supergroup.name}}</h1>
+
+                    </a>
+
+                    <div class="column-body">
+
+                        <div class="result-list">
+                            {{#each establishmentsByGroups as |group|}}
+                                <div class="result-section open">
+                                    <div class="result-section-header" data-group-id="{{group.id}}">
+                                        <div class="push">
+                                            <div class="aic">
+                                                <div class="result-section-header-toggle">
+                                                    <i class="fas fa-caret-right"></i>
+                                                </div>
+                                                <h4 class="title icon-padding"><i class="fas fa-city"></i>{{group.name}}</h4>
+                                            </div>
+                                            <div class="fdc jcc">
+                                                {{#if group.domain_name}}
+                                                    {{#if group.domain_enable}}
+                                                        <a href="https://{{group.domain_name}}.{{../appDomain}}" target="_blank" class="button button-small button-pink icon-only"><i class="fas fa-eye"></i></a>
+                                                    {{/if}}
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="result-section-body">
+                                        {{#each (lookup group 'establishments') as |establishment|}}
+                                            <div class="result" data-establishment-id="{{establishment.id}}">
+                                                <div class="push">
+                                                    <div class="aic">
+                                                        <div>
+                                                            <i class="fas fa-building"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h5 class="result-title">{{establishment.name}}</h5>
+                                                            <div class="jcfs">
+                                                                {{#if establishment.formatted_address}}<span class="title-label"><i class="fas fa-map-marker-alt"></i>{{establishment.formatted_address}}</span>{{/if}}
+                                                                {{#ifCond ../../geocodingType '==' 'range'}}<span class="title-label nw"><i class="fas fa-arrows-alt-h"></i>{{int establishment.distance}}km</span>{{/ifCond}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fdc jcc">
+                                                        {{#if establishment.domain_name}}
+                                                            {{#if establishment.domain_enable}}
+                                                                <a href="https://{{establishment.domain_name}}.{{../../appDomain}}" target="_blank" class="button button-small button-green icon-only"><i class="fas fa-eye"></i></a>
+                                                            {{/if}}
+                                                        {{/if}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="search-bar">
+            <form action="/" method="post" class="search-form">
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <input type="hidden" name="latlng">
+                {{#ifCond geocodingType '!=' 'none'}}
+                    <div class="input-container" data-input-name="search">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" name="search" placeholder="42 rue du test, Paris"{{#if ../search}} value="{{../search}}"{{/if}}>
+                    </div>
+                {{/ifCond}}
+                {{#ifCond geocodingType '==' 'range'}}
+                    <div class="input-container" data-input-name="range">
+                        <i class="fas fa-arrows-alt-h"></i>
+                        <input type="number" name="range" max="1000" value="{{../range}}">
+                    </div>
+                {{/ifCond}}
+                <input type="submit">
+            </form>
+        </div>
+
+    </div>
+
+{{/extend}}
+
+{{#extend "bodyend"}}
+    <div class="my-location">
+        <div class="pac-item">
+            <i class="fas fa-location"></i> Ma position
+        </div>
+    </div>
+{{/extend}}
+
+{{#extend "scripts"}}
+    <script src="/assets/theme/mstaff/js/modules/debounce.js"></script>
+    <script src="/assets/theme/mstaff/js/modules/map-helper.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+    <script>
+        let establishmentsByGroups = {};
+        {{#each establishmentsByGroups as |group|}}
+            establishmentsByGroups[{{group.id}}] = {
+                name: '{{group.name}}',
+                domain: '{{group.domain}}',
+                establishments: [
+                    {{#each group.establishments as |establishment|}}
+                    {
+                        id: {{establishment.id}},
+                        name: "{{establishment.name}}",
+                        lat: {{establishment.lat}},
+                        lng: {{establishment.lng}}
+                    },
+                    {{/each}}
+                ],
+            };
+        {{/each}}
+
+        let establishments = {};
+        {{#each establishments as |establishment|}}
+        {{#if establishment.lat}}
+            establishments[{{establishment.id}}] = {
+                id: {{establishment.id}},
+                name: "{{establishment.name}}",
+                lat: {{establishment.lat}},
+                lng: {{establishment.lng}}
+            };
+        {{/if}}
+        {{/each}}
+
+
+
+        $(document).ready(function(){
+
+            const $searchInput = $('input[name="search"]');
+
+            MapHelper.initAutocompleteInput($searchInput.get(0), true);
+
+            $searchInput
+                .focusin(function(){
+                    $('.my-location')
+                        .css({
+                            top: $searchInput.offset().top + $searchInput.outerHeight(),
+                            left: $searchInput.offset().left,
+                            width: $searchInput.innerWidth()
+                        })
+                        .show()
+                })
+                .focusout(function(){
+                    // This is dirty but working
+                    setTimeout(function(){
+                        $('.my-location')
+                            .hide();
+                    }, 250);
+                });
+
+            $('.my-location').click(function(){
+                navigator.geolocation.getCurrentPosition(function(position){
+                    $('input[name="latlng"]').val(position.coords.latitude + ',' + position.coords.longitude);
+                    $('.search-form').submit();
+                });
+            });
+
+            let map = MapHelper.initResultMap(document.getElementById('map'), establishments, {
+                {{#ifCond geocodingType '!=' 'none'}}
+                    'center': { lat: {{../address.location.lat}}, lng: {{../address.location.lng}} },
+                {{/ifCond}}
+                'forEachMarker': forEachMarker,
+                {{#ifCond geocodingType '==' 'range'}}
+                    'onInit': function(map, info){
+                        let center = { lat: {{../address.location.lat}}, lng: {{../address.location.lng}} };
+                        let range = parseInt('{{../range}}');
+                        MapHelper.fitRange(map, center, range);
+                    },
+                {{else}}
+                    'fitMarkers': true,
+                {{/ifCond}}
+                'onDragStart': function(map, info){
+                    $('.result').removeClass('focused');
+                    info.close();
+                },
+                'onMarkerMouseout': function(map, markers, info, results, resultId){
+                	if(!$('.result[data-establishment-id="' + resultId + '"]').hasClass('focused')){
+                		info.close();
+                    }
+                }
+            });
+
+            $('.result-section-header').click(function(event){
+                // Prevent event if click on link
+                if(event.target.tagName === 'A' || event.target.parentElement.tagName === 'A')
+                    return;
+
+                const $section = $(this).closest('.result-section');
+                if($section.hasClass('open')){
+                    $section.removeClass('open');
+                    $('.result', $section).slideUp();
+                }else{
+                    $section.addClass('open');
+                    $('.result', $section).slideDown();
+                }
+            });
+
+        });
+
+
+
+        function forEachMarker(map, markers, info, results, resultId){
+        	let result = results[resultId];
+            const marker = markers[resultId];
+
+            marker.addListener('click', function(){
+            	let $result = $('.result[data-establishment-id="' + result.id + '"]');
+                if(!$result.hasClass('focused')){
+                    focusResult(map, info, result, marker);
+                }
+            });
+
+            $('.result[data-establishment-id="' + result.id + '"]')
+                .hover(function(){
+                	if(!$(this).hasClass('focused')){
+                        if(MapHelper.isMarkerVisible(map, result.id)){
+                            info.setContent('<h1 class="card__title title">' + result.name + '</h1>');
+                            info.open(map, marker);
+                        }else{
+                            info.close();
+                        }
+                    }
+                }, function(){
+                	if($('.result.focused').length){
+                		const focusedId = $('.result.focused').attr('data-establishment-id');
+                        info.setContent('<h1 class="card__title title">' + results[focusedId].name + '</h1>');
+                        info.open(map, markers[focusedId]);
+                    }else{
+                        info.close();
+                    }
+                })
+                .click(function(event){
+                	// Prevent event if click on link
+                	if(event.target.tagName === 'A' || event.target.parentElement.tagName === 'A')
+                        return;
+
+                	if($(this).hasClass('focused')){
+                        $('.result').removeClass('focused');
+                        info.close();
+                    }else{
+                        focusResult(map, info, result, marker);
+                    }
+                });
+        }
+
+        function focusResult(map, info, result, marker){
+            $('.result').removeClass('focused');
+            $('.result[data-establishment-id="' + result.id + '"]').addClass('focused');
+            info.setContent('<h1 class="card__title title">' + result.name + '</h1>');
+            info.open(map, marker);
+            map.setZoom(12);
+            map.setCenter(marker.position);
+        }
+    </script>
+{{/extend}}

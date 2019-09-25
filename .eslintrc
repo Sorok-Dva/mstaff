@@ -43,6 +43,7 @@
     "for-direction": "off",
     "keyword-spacing": "error",
     "key-spacing": "error",
+    "no-debugger": "off",
     "no-dupe-arg": "off",
     "no-dupe-keys": "off",
     "no-unused-vars": "off",
