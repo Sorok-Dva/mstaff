@@ -114,7 +114,7 @@ router.get('/es',
  */
 router.get('/es/types',
   Authentication.ensureIsAdmin,
-  BackOffice.Establishment.ViewTypesList);
+  BackOffice.Establishment.TypesList);
 
 router.all('/es/types/create',
   Authentication.ensureIsAdmin,

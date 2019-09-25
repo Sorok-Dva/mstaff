@@ -54,6 +54,15 @@
               <option value="divers"{{#ifCond es.category '===' 'divers'}} selected="selected"{{/ifCond}}>Divers</option>
             </select>
           </div>
+            <div class="form-group col-md-3">
+                <label for="type_id">Type</label>
+                <select class="form-control" id="type_id" name="type_id">
+                    <option value=""> </option>
+                    {{#each establishmentTypes as |establishmentType|}}
+                        <option value="{{establishmentType.id}}"{{#ifCond ../es.EstablishmentType.id '==' establishmentType.id}} selected="selected"{{/ifCond}}>{{establishmentType.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
             <div class="form-group col-md-2">
                 <label for="banner" style="display: block;">Bannière</label>
                 {{#if es.banner}}
