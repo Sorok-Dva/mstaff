@@ -3,7 +3,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const { Env } = require(`../../helpers/helpers`);
 const basename = path.basename(module.filename);
-const config = require(`${__dirname}/../orm/config/config.json`)[Env.current || 'production'];
+const config = require(`../../orm/config/config.json`)[Env.current || 'production'];
 // eslint-disable-next-line no-console
 config.logging = config.logging ? console.log : null;
 config.pool = {
@@ -41,7 +41,6 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-//TO DELETE
 db.init = () => {
   Object.keys(db).forEach(modelName => {
     let path = __dirname + '/../repositories/' + modelName + '.js';

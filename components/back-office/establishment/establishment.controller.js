@@ -40,7 +40,7 @@ BackOffice_Establishment.create = async (req, res, next) => {
 
 
 
-  gmap.getAddress(req.body.user_address, false)
+  gmap.getAddressFromString(req.body.user_address, false)
     .then(results => {
       return res.status(200).json({
         status: 'OK',
@@ -713,7 +713,7 @@ BackOffice_Establishment.bulkUpdateESLocation = (req, res, next) => {
           setTimeout(() => {
 
             resolve(
-              gmap.getAddress(address, false)
+              gmap.getAddressFromString(address, false)
                 .then(results => {
 
                   if (results.length > 1) {
