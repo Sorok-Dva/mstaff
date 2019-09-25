@@ -54,6 +54,33 @@ module.exports.geocode = async address => {
   }
 };
 
+module.exports.revGeocode = async (lat, lng) => {
+  try {
+    let response = await request({
+      uri: 'https://maps.googleapis.com/maps/api/geocode/json',
+      qs: {
+        key: apiKey,
+        latlng: lat + ',' + lng
+      }
+    });
+    response = JSON.parse(response);
+
+    if (!response.status)
+      return Promise.reject({ status: 'GEOCODING_UNEXPECTED_ERROR' });
+
+    if (response.status !== 'OK')
+      return Promise.reject({ status: response.status });
+
+    if (!response.results || !response.results.length)
+      return Promise.reject({ status: 'GEOCODING_NO_RESULTS_ERROR' });
+
+    return Promise.resolve(response);
+
+  } catch (error){
+    return Promise.reject({ status: 'GEOCODING_REQUEST_ERROR', error: error });
+  }
+};
+
 module.exports.formatResult = (result, withNulls = true) => {
   if (!result.geometry || !result.geometry.location)
     throw new Error('GEOCODING_RESULT_LOCATION_ERROR');
@@ -100,8 +127,23 @@ module.exports.formatResult = (result, withNulls = true) => {
  * @returns {Promise<*>}
  * Can be rejected with status GEOCODING_REQUEST_ERROR, GEOCODING_NO_RESULTS_ERROR, GEOCODING_RESULT_LOCATION_ERROR, GEOCODING_RESULT_DATA_ERROR, GEOCODING_UNEXPECTED_ERROR, or with google map api response status
  */
-module.exports.getAddress = async (address, withNulls = true) => {
+module.exports.getAddressFromString = async (address, withNulls = true) => {
   return module.exports.geocode(address)
+    .then(response => {
+      let results = [];
+      try {
+        for (let i = 0; i < response.results.length; i++) {
+          results.push(module.exports.formatResult(response.results[i], withNulls));
+        }
+        return results;
+      } catch (error) {
+        return Promise.reject({ status: error.message });
+      }
+    });
+};
+
+module.exports.getAddressFromLatLng = async (lat, lng, withNulls = true) => {
+  return module.exports.revGeocode(lat, lng)
     .then(response => {
       let results = [];
       try {

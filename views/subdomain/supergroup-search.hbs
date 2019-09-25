@@ -24,7 +24,7 @@
 
                 <div class="col-12">
 
-                    <div class="baseline baseline-page">Lorem ipsum dolor sit amet, consectetur adipisicing elit.<span><br>Lorem ipsum dolor sit amet.</span></div>
+                    <div class="baseline baseline-page">Trouvez un établissement de santé autour de vous.<span><br>Postulez ensuite simplement en quelques clics.</span></div>
 
                 </div>
 
@@ -34,8 +34,9 @@
 
                 <div class="col-6 offset-3 tac">
 
-                    <form method="post"{{#if geoError}} class="error"{{/if}}>
+                    <form method="post"{{#if geoError}} class="error"{{/if}} class="search-form">
                         <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        <input type="hidden" name="latlng">
                         <label for="search">Où êtes-vous ?</label>
                         <input type="text" name="search" placeholder="42 rue du test, Paris">
                         {{#if geoError}}
@@ -55,7 +56,7 @@
 
                     <br>
                     <br>
-                    <form method="post">
+                    <form method="post" class="all-form">
                         <input type="hidden" name="_csrf" value="{{csrfToken}}">
                         <input type="hidden" name="all" value="1">
                         <button class="im-a-link text-pink">Afficher tous les établissement de {{supergroup.name}}</button>
@@ -73,12 +74,49 @@
 
 {{/extend}}
 
+{{#extend "bodyend"}}
+    <div class="my-location">
+        <div class="pac-item">
+            <i class="fas fa-location"></i> Ma position
+        </div>
+    </div>
+{{/extend}}
+
 {{#extend "scripts"}}
     <script src="/assets/theme/mstaff/js/modules/map-helper.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
     <script>
         $(document).ready(function(){
-            MapHelper.initAutocompleteInput($('input[name="search"]').get(0), true);
+
+        	const $searchInput = $('input[name="search"]');
+
+            MapHelper.initAutocompleteInput($searchInput.get(0), true);
+
+            $searchInput
+                .focusin(function(){
+                    $('.my-location')
+                        .css({
+                            top: $searchInput.offset().top + $searchInput.outerHeight(),
+                            left: $searchInput.offset().left,
+                            width: $searchInput.innerWidth()
+                        })
+                        .show()
+                })
+                .focusout(function(){
+                	// This is dirty but working
+                    setTimeout(function(){
+                        $('.my-location')
+                            .hide();
+                    }, 250);
+                });
+
+            $('.my-location').click(function(){
+                navigator.geolocation.getCurrentPosition(function(position){
+                    $('input[name="latlng"]').val(position.coords.latitude + ',' + position.coords.longitude);
+                    $('.search-form').submit();
+                });
+            });
+
         });
     </script>
 {{/extend}}
