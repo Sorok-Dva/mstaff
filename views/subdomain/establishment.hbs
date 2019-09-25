@@ -1,138 +1,230 @@
-<!-- HEADER -->
-<div class="header">
-  <!-- Image -->
-  <img src="{{es.banner}}" class="header-img-top" alt="Bannière {{es.name}}" style="object-fit: cover; height: 344px">
-  <div class="container-fluid">
-    <!-- Body -->
-    <div class="header-body mt-n5 mt-md-n6">
-      <div class="row align-items-end">
-        <div class="col-auto">
-          <!-- Avatar -->
-          <div class="avatar avatar-xxl header-avatar-top">
-            <img src="{{es.logo}}" alt="Logo {{es.name}}" class="avatar-img rounded border border-4 border-body">
-          </div>
+{{#extend "body"}}
 
-        </div>
-        <div class="col mb-3 ml-n3 ml-md-n2">
-          <!-- Pretitle -->
-          <h6 class="header-pretitle">
-            Page établissement
-          </h6>
+    <header class="page-header">
+        <div class="container">
 
-          <!-- Title -->
-          <h1 class="header-title">
-            {{es.name}}
-          </h1>
-        </div>
-        <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
-          <!-- Button -->
-          <a href="/join" class="btn btn-outline-primary d-block d-md-inline-block">
-            Candidature spontanée
-          </a>
-        </div>
-      </div> <!-- / .row -->
-    </div> <!-- / .header-body -->
-  </div>
-</div> <!-- / .header -->
-
-<!-- CONTENT -->
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 col-xl-8">
-      <div class="card">
-        <div class="card-header">
-          <div class="row align-items-center">
-            <div class="col">
-              <!-- Title -->
-              <h4 class="card-header-title">
-                Offres d'emploi proposées par l'établissement
-              </h4>
+            <div class="push">
+                <div class="aic">
+                    <div class="image-ratio image-ratio-100 image-round header-logo" style="background-image:url('{{es.logo}}');"></div>
+                    <div>
+                        <span class="header-title-label">Établissement</span>
+                        <h1 class="header-title">{{es.name}}</h1>
+                    </div>
+                </div>
+                <div class="aic">
+                    {{#if es.url}}<a href="{{es.url}}" class="button button-green button-fluid">Site web</a>{{/if}}
+                    {{#if hasGroup}}<a href="{{es.EstablishmentGroups.0.Group.domain_name}}" class="button button-green button-fluid">Accéder au groupe</a>{{/if}}
+                    <a href="/join" class="button button-pink button-fluid">Candidature spontanée</a>
+                </div>
             </div>
-          </div> <!-- / .row -->
-        </div>
-        <div class="card-body">
-          {{#each es.offers as |offer|}}
-            <h1 class="text-center mt-4">{{offer.name}}</h1>
 
-          {{/each}}
-          {{#unless es.offers}}
-            <h1 class="text-center mt-4">Vous pourrez prochainement voir ici les offres d'emploi proposées par {{es.name}}</h1>
-          {{/unless}}
         </div>
-      </div>
-    </div>
-    <div class="col-12 col-xl-4">
+    </header>
 
-      <!-- Projects -->
-      <div class="card">
-        <div class="card-header">
-          <div class="row align-items-center">
-            <div class="col">
-              <!-- Title -->
-              <h4 class="card-header-title">
-                Informations
-              </h4>
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <div class="col-12 no-gutters show-map-col">
+
+                <div class="page-banner">
+                    <div class="image-ratio image-ratio-40 page-banner__image" style="background-image:url('{{es.banner}}');"></div>
+                    <div class="page-banner__shadow"></div>
+                    <div class="page-banner__body">
+                        <div class="container">
+
+                            <div class="black-card">
+                                <div class="black-card__body content-type-text">
+                                    <h4 class="black-card__body__title title">Informations</h4>
+                                    {{#if es.formatted_address}}
+                                        <p><i class="far fa-map-marker-alt"></i>{{es.formatted_address}}</p>
+                                    {{/if}}
+                                    {{#if es.url}}
+                                        <p><i class="fas fa-browser"></i>{{es.url}}</p>
+                                    {{/if}}
+                                    <a href="#" class="button button-green button-fluid button-icon-big button-small show-map-button"><i class="fas fa-route"></i>Comment m'y rendre</a>
+                                    <a href="{{#if es.postal_code}}https://www.bienici.com/recherche/location/{{es.postal_code}}{{else}}https://www.bienici.com/{{/if}}" target="_blank" class="button button-green button-fluid button-icon-big button-small"><i class="fas fa-home-lg-alt"></i>Habiter autour</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
-          </div> <!-- / .row -->
+
+            <div class="w-100"></div>
+
+            <div class="col-12 no-gutters show-map-col">
+
+                <div class="container">
+
+                    <h1 class="baseline baseline-page">Retrouvez ici les <span>offres d'emploi</span> postées par <span>{{es.name}}</span></h1>
+
+                    <div class="container-fluid">
+                        <div class="row card-list">
+
+                            {{#each needs as |need|}}
+                                <div class="col-12 no-gutters">
+                                    <div class="card">
+                                        <div class="card__body">
+                                            <div class="push">
+                                                <div>
+                                                    <div class="title-label"><i class="fas fa-calendar-alt"></i>{{date need.Offer.createdAt 'DD/MM/Y'}}</div>
+                                                    <h3 class="card__title title">{{need.Offer.name}}</h3>
+                                                    <div>
+                                                        {{{need.Offer.postDescription_section.presentation}}}
+                                                    </div>
+                                                    <div class="card__footer">
+                                                        <div class="tag tag-blue">CDI</div>
+                                                    </div>
+                                                </div>
+                                                <div class="fdc jcfe">
+                                                    <a href="offer/1" class="button button-pink nw">Voir l'offre</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-12 no-gutters show-map-col">
+
+                <footer class="page-footer">
+                    <img src="/assets/images/LOGO_WEB_118_PX.png" alt="mstaff">
+                </footer>
+
+            </div>
+
         </div>
-        <div class="card-body">
-          <table class="table">
-            <tbody>
-            <tr>
-              <td style="border-top: none !important">Adresse</td>
-              <td style="border-top: none !important">{{#if es.phone}}{{es.address}}<br>{{es.town}}{{else}}Non communiqué{{/if}}</td>
-            </tr>
-            <tr>
-              <td>Téléphone</td>
-              <td>{{#if es.phone}}+33 {{es.phone}}{{else}}Non communiqué{{/if}}</td>
-            </tr>
-            <tr>
-              <td>Site Web</td>
-              <td>{{#if es.url}}{{es.url}}{{else}}Non communiqué{{/if}}</td>
-            </tr>
-            <tr>
-              <td>Habiter dans le quartier</td>
-              <td><img
-                  src="https://www.bienici.com/cacheForever/284ab4e26baea248f8da4e920b77bdfff29327d8/images/share.png"
-                  alt="Bien Ici" width="65"></td>
-            </tr>
-            {{#if ref.lat}}
-              <tr>
-                <td style="width: 24%;">Localisation</td>
-                <td>
-                  <div id="map" style="height: 450px;width: 100%;"></div>
-                </td>
-              </tr>
-            {{/if}}
-            </tbody>
-          </table>
-        </div> <!-- / .card-body -->
-      </div> <!-- / .card -->
+
     </div>
-  </div> <!-- / .row -->
-</div>
-<script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
-<script>
-  if (document.getElementById('map')) {
-    let pos = {lat: {{ref.lat}}, lng: {{ref.lon}}, rayon: 5};
-    let map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 10,
-      center: pos
-    });
-    marker = new google.maps.Marker({
-      position: pos,
-      map: map
-    });
-    cityCircle = new google.maps.Circle({
-      strokeColor: '#337AB7',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#5BBBE5',
-      fillOpacity: 0.35,
-      map: map,
-      center: pos,
-      radius: pos.rayon * 1000 || 10000
-    });
-  }
-</script>
+
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+    <script src="/assets/theme/mstaff/js/modules/adjust-layout.js"></script>
+    <script src="/assets/theme/mstaff/js/modules/map-helper.js"></script>
+    <script>
+        adjustLayout({
+            selector: 'body > .container-fluid > .row > [class*="col"]:nth-child(3)',
+            hasPageHeader: true,
+            hasPageBanner: true,
+            hasPageFooter: true
+        });
+
+        $(document).ready(() => {
+
+            $('.page-banner').css({minHeight: ($('.black-card').outerHeight() + 20) + 'px'});
+
+            $(window).resize(function(){
+                $('.page-banner').css({minHeight: ($('.black-card').outerHeight() + 20) + 'px'});
+            });
+
+        });
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMyQuBw8EQ6YixI2_Fxbw_OSmyVnnVocI&libraries=places"></script>
+    <script>
+        $(document).ready(function(){
+
+            initMap();
+
+            $('.show-map-button').click(function(){
+                if(!$(this).hasClass('map-shown')){
+
+                    $(this)
+                        .removeClass('button-green')
+                        .addClass('map-shown button-pink')
+                        .empty()
+                        .append('<i class="fas fa-times"></i>Fermer la carte');
+                    $('.show-map-col').addClass('col-md-6');
+                    $('.map-container').show();
+
+                }else{
+
+                    $(this)
+                        .removeClass('map-shown button-pink')
+                        .addClass('button-green')
+                        .empty()
+                        .append('<i class="fas fa-route"></i>Comment m\'y rendre');
+                    $('.show-map-col').removeClass('col-md-6');
+
+                    setTimeout(function(){
+                        $('.map-container').hide();
+                    }, 500); // 500 is the duration of css transition
+
+                }
+            });
+
+        });
+
+        function initMap(){
+            navigator.geolocation.getCurrentPosition(function(position){
+                $('.map-container').show();
+                $('.show-map-button').css({display: "block"});
+
+                MapHelper.initResultMap(document.getElementById('map'), [
+                    {
+                    	id: 1,
+                        name: '{{es.name}}',
+                        lat: '{{es.lat}}',
+                        lng: '{{es.lng}}'
+                    }
+                ], {
+                	'center': new google.maps.LatLng({{es.lat}}, {{es.lng}}),
+                    'zoom': 10,
+                    'clusterize': false,
+                    'onInit': function(map, info){
+                        let directionsService = new google.maps.DirectionsService();
+                        let directionsDisplay = new google.maps.DirectionsRenderer();
+
+                        directionsService.route({
+                            origin: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                            destination: new google.maps.LatLng({{es.lat}}, {{es.lng}}),
+                            travelMode: 'DRIVING'
+                        }, function(result, status){
+                            if(status == 'OK'){
+                                directionsDisplay.setMap(map);
+                                directionsDisplay.setDirections(result);
+                            }else{
+
+                                let marker = new google.maps.Marker({
+                                    position: new google.maps.LatLng({{es.lat}}, {{es.lng}}),
+                                    map: map
+                                });
+                                let info = new google.maps.InfoWindow({
+                                    content: '<h1 class="card__title title">{{es.name}}</h1>'
+                                });
+                                marker.addListener('mouseover', function(){
+                                    info.open(map, marker);
+                                });
+                                marker.addListener('mouseout', function(){
+                                    info.close();
+                                });
+
+                            }
+                        });
+                    }
+                });
+
+            }, function(){
+                $('.map-container').hide();
+                $('.show-map-button').hide();
+            });
+        }
+    </script>
+{{/extend}}

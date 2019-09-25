@@ -1,0 +1,28 @@
+.title{
+	font-weight:bold;
+
+	& + .title-label{
+		margin-top:.5rem;
+	}
+}
+
+.baseline{
+	font-weight:normal;
+
+	span{
+		font-weight:bold;
+	}
+
+	&.baseline-page{
+		margin:6rem 0;
+		font-size:1.25em;
+		text-align:center;
+	}
+}
+
+.title-label{
+	display:block;
+	font-size:.7em;
+	font-style:italic;
+	color:$fontColorLightFade;
+}

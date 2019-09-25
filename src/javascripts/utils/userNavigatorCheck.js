@@ -7,10 +7,10 @@ function isSafari(userAgent){
 }
 
 function noIE(){
-  if ( confirm( "Votre navigateur est obsolète, merci d'utiliser un navigateur récent (Google Chrome, Mozilla Firefox, Opera, ..." ) ) {
-    $(location).attr('href', 'https://www.google.com/intl/fr_fr/chrome/');
+  if ( confirm( "Internet explorer n'est plus à jour, merci de télécharger et d'installer Microsoft Edge." ) ) {
+    $(location).attr('href', 'https://www.microsoft.com/fr-fr/windows/microsoft-edge');
   } else {
-    $(location).attr('href', 'https://www.google.com/intl/fr_fr/chrome/');
+    $(location).attr('href', 'https://www.microsoft.com/fr-fr/windows/microsoft-edge');
   }
 }
 

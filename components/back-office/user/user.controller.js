@@ -191,7 +191,7 @@ let _getInclude = (type) => {
       break;
     case 'es':
       include = {
-        model: Models.ESAccount,
+        model: Models.UsersGroups,
         include: {
           model: Models.Establishment,
         }

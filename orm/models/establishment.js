@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     contact_post: DataTypes.STRING,
     contact_email: DataTypes.STRING,
     contact_phone: DataTypes.STRING,
+    user_address: DataTypes.STRING,
+    formatted_address: DataTypes.STRING,
     street_number: DataTypes.STRING,
     street_name: DataTypes.STRING,
     city: DataTypes.STRING,
@@ -57,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'es_id',
       as: 'subdomain'
     });
-    Establishment.hasMany(models.ESAccount, {
+    Establishment.hasMany(models.UsersGroups, {
       foreignKey: 'es_id',
       sourceKey: 'id'
     });

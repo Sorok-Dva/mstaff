@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-8">
-    <form method="post" class="card" style="padding: 15px">
+    <form action="?_csrf={{csrfToken}}" method="post" class="card" style="padding: 15px" enctype="multipart/form-data">
       <fieldset>
         <legend>
           <h5 style="text-align: center">Informations de base</h5>
@@ -25,14 +25,6 @@
             <label for="ESSiret">Siret</label>
             <input type="text" class="form-control" id="ESSiret" name="siret" placeholder="Numéro Siret"
                    value="{{es.siret}}">
-          </div>
-          <div class="form-group col-md-4">
-            <label for="ESAddress">Addresse</label>
-            <input type="text" class="form-control" id="ESAddress" name="address" value="{{es.address}}">
-          </div>
-          <div class="form-group col-md-3">
-            <label for="ESTown">Code postale & ville</label>
-            <input type="text" class="form-control" id="ESTown" name="addr_town" value="{{es.town}}">
           </div>
           <div class="form-group col-md-3">
             <label for="ESPhone">Numéro de téléphone</label>
@@ -62,16 +54,86 @@
               <option value="divers"{{#ifCond es.category '===' 'divers'}} selected="selected"{{/ifCond}}>Divers</option>
             </select>
           </div>
-          <div class="form-group col-md-2">
-            <label for="logo">Logo</label>
-            <input class="form-control" name="logo" type="text" id="logo" value="{{es.logo}}">
-          </div>
-          <div class="form-group col-md-2">
-            <label for="banner">Bannière</label>
-            <input class="form-control" name="banner" type="text" id="banner" value="{{es.banner}}">
-          </div>
+            <div class="form-group col-md-2">
+                <label for="banner" style="display: block;">Bannière</label>
+                {{#if es.banner}}
+                    <img src="{{es.banner}}" alt="banner">
+                {{/if}}
+                <input class="form-control" name="banner" type="file" id="banner">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="logo" style="display: block;">Logo</label>
+                {{#if es.logo}}
+                    <img src="{{es.logo}}" alt="logo">
+                {{/if}}
+                <input class="form-control" name="logo" type="file" id="logo">
+            </div>
         </div>
       </fieldset>
+        <fieldset>
+            <legend>
+                <h5 style="text-align: center">Informations de localisation</h5>
+            </legend>
+            <div class="form-row clearfix">
+                <div class="form-group col-md-12">
+                    <label for="user_address">Adresse</label>
+        <input type="text" class="form-control" id="user_address" name="user_address" value="{{#if es.user_address}}{{es.user_address}}{{else}}{{es.ref.address_num}} {{es.ref.address_type}} {{es.ref.address_name}} {{es.ref.address_town}}{{/if}}" data-ref-address="{{es.ref.address_num}} {{es.ref.address_type}} {{es.ref.address_name}} {{es.ref.address_town}}">
+                </div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="col-md-12">
+                    <a class="btn btn-info" id="loadRefAddress">Charger l'adresse de la référence</a>
+                    <a class="btn btn-info" id="updateLocation">Mettre à jour la localisation</a>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="form-row clearfix">
+                <div class="form-group col-md-12">
+                    <label for="street_number">Adresse complète</label>
+                    <input type="text" class="form-control" id="street_number" name="street_number" value="{{es.formatted_address}}" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="street_number">Numéro</label>
+                    <input type="text" class="form-control" id="street_number" name="street_number" value="{{es.street_number}}" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="street_name">Route</label>
+                    <input type="text" class="form-control" id="street_name" name="street_name" value="{{es.street_name}}" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="city">Ville</label>
+                    <input type="text" class="form-control" id="city" name="city" value="{{es.city}}" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="department">Département</label>
+                    <input type="text" class="form-control" id="department" name="department" value="{{es.department}}" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="region">Région</label>
+                    <input type="text" class="form-control" id="region" name="region" value="{{es.region}}" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="country">Pays</label>
+                    <input type="text" class="form-control" id="country" name="country" value="{{es.country}}" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="postal_code">Code postal</label>
+                    <input type="text" class="form-control" id="postal_code" name="postal_code" value="{{es.postal_code}}" disabled>
+                </div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-group col-md-3">
+                    <label for="lat">Latitude</label>
+                    <input type="number" class="form-control" id="lat" name="lat" value="{{es.lat}}" disabled>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="lng">Longitude</label>
+                    <input type="number" class="form-control" id="lng" name="lng" value="{{es.lng}}" disabled>
+                </div>
+            </div>
+            <input type="hidden" name="location_updatedAt" value="">
+        </fieldset>
       <fieldset>
         <legend>
           <h5 style="text-align: center">Informations du référent</h5>
@@ -277,4 +339,36 @@
       });
     });
   };
+</script>
+<script>
+    function onConfirm(request){
+    	$.post('/api/back-office/establishment/{{es.id}}/update-location', request, function(response){
+            $(location).attr('href', `/back-office/es/{{es.id}}`)
+        }).catch((xhr, status, error) => catchError(xhr, status, error));
+    }
+
+    $('#updateLocation').click(function(){
+    	$.post('/api/address/geoloc', {
+            _csrf: $('meta[name="csrf-token"]').attr('content'),
+    		address: $('#user_address').val(),
+            withNulls: false
+        }, response => {
+            createModal({
+                id: 'confirmAddress',
+                modal: 'back-office/confirmAddress',
+                size: 'modal-lg',
+                style: 'width:50%;margin-top:50px;',
+                title: 'Confirmez vous les informations liées à l\'adresse que vous avez renseigné ?',
+                form_data: {
+                    user_address: $('#user_address').val()
+                },
+                results: response,
+                onConfirm: 'onConfirm'
+            });
+        });
+    });
+
+    $('#loadRefAddress').click(function(){
+    	$('input[name="user_address"]').val($('input[name="user_address"]').attr('data-ref-address'));
+    });
 </script>

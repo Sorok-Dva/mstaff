@@ -15,13 +15,13 @@ Establishment_Application.getEstablishments = (req, res, next) => {
     include: [{
       model: Models.Establishment,
       on: {
-        '$ESAccount.es_id$': {
+        'UsersGroups.es_id$': {
           [Op.col]: 'Establishment.id'
         }
       }
     }]
   };
-  Models.ESAccount.findAll(query).then(eslist => {
+  Models.UsersGroups.findAll(query).then(eslist => {
     return res.status(200).send(eslist);
   })
 };
@@ -54,7 +54,7 @@ Establishment_Application.getCVs = (req, res, next) => {
       where: { id: req.user.id },
       attributes: ['id'],
       include: {
-        model: Models.ESAccount,
+        model: Models.UsersGroups,
         required: true,
         include: {
           model: Models.Establishment,
@@ -63,7 +63,7 @@ Establishment_Application.getCVs = (req, res, next) => {
         }
       }
     }).then(rh => {
-      render.esList = rh.ESAccounts;
+      render.esList = rh.UsersGroups;
       Models.Application.findAndCountAll(query).then(applications => {
         render.candidatesCount = applications.count;
         if (req.params.editNeedId) {
