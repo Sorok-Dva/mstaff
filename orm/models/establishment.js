@@ -93,7 +93,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'primary_group_id',
       targetKey: 'id'
     });
-    Establishment.hasOne(models.EstablishmentCategories, {
+    Establishment.hasOne(models.EstablishmentTypes, {
       foreignKey: 'id'
     })
   };
