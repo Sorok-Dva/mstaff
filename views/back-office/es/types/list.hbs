@@ -21,7 +21,10 @@
                             {{es.id}}
                         {{/each}}
                     </td>
-                    <td></td>
+                    <td>
+                        <a href="/back-office/es/types/{{establishmentType.id}}/delete" class="btn pull-right">Supprimer</a>
+                        <a href="/back-office/es/types/{{establishmentType.id}}/edit" class="btn pull-right">Éditer</a>
+                    </td>
                 </tr>
             {{/each}}
             </tbody>

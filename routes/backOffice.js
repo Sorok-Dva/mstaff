@@ -116,13 +116,17 @@ router.get('/es/types',
   Authentication.ensureIsAdmin,
   BackOffice.Establishment.ViewTypesList);
 
-/**
- * @Route('/back-office/es/types/create') GET;
- * Show ES List page
- */
 router.all('/es/types/create',
   Authentication.ensureIsAdmin,
-  BackOffice.Establishment.CreateType);
+  BackOffice.Establishment.TypesCreate);
+
+router.get('/es/types/:id(\\d+)/delete',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.TypesDelete);
+
+router.all('/es/types/:id(\\d+)/edit',
+  Authentication.ensureIsAdmin,
+  BackOffice.Establishment.TypesEdit);
 
 /**
  * @Route('/back-office/es/:id(\\d+)') GET;

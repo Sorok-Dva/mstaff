@@ -143,7 +143,8 @@ function images() {
 }
 */
 // Export commands.
-exports.default = parallel(browserSync, watchCss, watchJs, watchSass); // $ gulp
+//exports.default = parallel(browserSync, watchCss, watchJs, watchSass); // $ gulp
+exports.default = series(clean, buildStyles, buildScripts, buildTheme); // $ gulp
 exports.clean = clean; // $ gulp clean
 exports.css = buildStyles; // $ gulp css
 exports.js = buildScripts; // $ gulp js
