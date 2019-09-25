@@ -105,6 +105,12 @@
                 <span class="sidebar-normal">Liste complète</span>
               </a>
             </li>
+              <li{{#ifCond a.sub '===' 'es_types'}} class="active"{{/ifCond}}>
+                  <a href="/back-office/es/types">
+                      <span class="sidebar-mini"><i class="fal fa-cog"></i></span>
+                      <span class="sidebar-normal">Type d'établissements</span>
+                  </a>
+              </li>
             {{#ifCond a.sub '===' 'view'}}
               <li class="active">
                 <a href="#">

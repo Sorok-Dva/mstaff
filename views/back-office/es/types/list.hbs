@@ -1,0 +1,34 @@
+<div class="card">
+    <div class="card-content">
+        <div class="clearfix">
+            <a href="/back-office/es/types/create" class="btn pull-right">Ajouter</a>
+        </div>
+        <br>
+        <table id="users-table" class="table">
+            <thead>
+            <th data-field="id">ID</th>
+            <th data-field="name" data-sortable="true">Nom</th>
+            <th data-field="name" data-sortable="true">Ids établissements</th>
+            <th data-field="actions" class="td-actions text-right">Actions</th>
+            </thead>
+            <tbody>
+            {{#each establishmentTypes as |establishmentType|}}
+                <tr>
+                    <td>{{establishmentType.id}}</td>
+                    <td>{{establishmentType.name}}</td>
+                    <td>
+                        {{#each establishmentType.es as |es|}}
+                            {{es.id}}
+                        {{/each}}
+                    </td>
+                    <td></td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+
+</script>

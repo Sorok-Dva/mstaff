@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     finess_ej: DataTypes.STRING,
     siret: DataTypes.STRING,
     code: DataTypes.STRING,
-    type: DataTypes.STRING,
+    type_id: DataTypes.STRING,
     sector: DataTypes.STRING,
     address: DataTypes.STRING,
     town: DataTypes.STRING,
@@ -93,7 +93,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'primary_group_id',
       targetKey: 'id'
     });
-    Establishment.hasOne(models.EstablishmentCategories, {
+    Establishment.hasOne(models.EstablishmentTypes, {
       foreignKey: 'id'
     })
   };
