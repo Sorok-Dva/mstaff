@@ -1545,7 +1545,8 @@ User_Candidate.assignPool = (req, res, next) => {
         user_id: user_id,
         availability: req.body.data.availability,
         post: req.body.data.post,
-        service: req.body.data.services
+        service: req.body.data.services,
+        inEs: req.body.data.inEs ? 1 : 0,
       }, { transaction: t }).then(() => {
         return Models.InvitationPools.destroy({ where: { email: req.body.email, token: req.params.token }
         }, { transaction: t }).then(() => {

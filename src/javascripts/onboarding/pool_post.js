@@ -7,6 +7,19 @@ function generateServiceListByCategory(category, input){
   }
 }
 
+function  switchInternButton(bool)
+{
+  if (bool)
+  {
+    $('#btnInternYes').css('background-color', '#03A9DE').removeClass('btn-secondary');
+    $('#btnInternNo').css('background-color', '').addClass('btn-secondary');
+  } else {
+    $('#btnInternNo').css('background-color', '#03A9DE').removeClass('btn-secondary');
+    $('#btnInternYes').css('background-color', '').addClass('btn-secondary');
+  }
+  databaseInfo.inEs = bool;
+}
+
 function createServicesSelect(services, input){
   input.empty().select2({
     data: services.sort(),

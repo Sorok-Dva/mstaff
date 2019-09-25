@@ -26,6 +26,7 @@ function  createUser() {
     data: {
       post: data.post,
       services: data.services,
+      inEs: databaseInfo.inEs,
       availability: data.availability
     }
   };

@@ -30,6 +30,15 @@
       <label for="InputServices">Merci d'indiquer le service auquel vous êtes affecté*</label>
       <select class="form-control" data-toggle="select" multiple id="InputServices"></select>
     </div>
+    <div class="form-group">
+      <div>
+      <label for="switchIntern">Il s'agit de votre établissement principal (dans lequel vous êtes salarié) ?*</label>
+      </div>
+      <div class="btn-group btn-group">
+        <button id="btnInternYes" type="button" class="btn btn-secondary" onclick="switchInternButton(true)" style="padding-left: 4vw; padding-right: 4vw;">Oui</button>
+        <button id="btnInternNo" type="button" class="btn" onclick="switchInternButton(false)" style="padding-left: 4vw; padding-right: 4vw;background-color: #03A9DE">Non</button>
+      </div>
+    </div>
   </form>
 </div>
 

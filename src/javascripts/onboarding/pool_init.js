@@ -1,6 +1,7 @@
 let databaseInfo = {
   posts: {},
   services: {},
+  inEs: false,
 };
 
 $(document).ready(function () {
