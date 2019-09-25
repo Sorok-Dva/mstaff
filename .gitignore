@@ -69,6 +69,7 @@ gen
 /logs/
 
 /public/assets/dist
+/public/assets/theme/mstaff/css
 /public/uploads
 
 # ORM Config

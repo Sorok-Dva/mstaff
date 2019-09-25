@@ -138,13 +138,11 @@ Subdomain_SuperGroup.ViewIndex = (req, res, next) => {
       });
 
   } else {
-
     res.render('subdomain/supergroup-search', {
       layout: 'subdomain',
       pageName: 'subdomain-supergroup-search',
       layoutName: 'map-search'
     });
-
   }
 };
 

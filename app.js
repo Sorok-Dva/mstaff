@@ -3,6 +3,7 @@ const { ErrorHandler, Express } = require('./middlewares');
 const path = require('path');
 const express = require('express');
 const routes = require('./routes/router');
+//TO DELETE
 const Models = require('./orm/models/index');
 
 const app = express();
@@ -53,6 +54,7 @@ app.use(ErrorHandler.log);
 // if (Env.isProd || Env.isPreProd) app.use(ErrorHandler.sentrySenderErrorHandler);
 app.use(ErrorHandler.api);
 
+//TO DELETE - Repository aren't necessary, merge repo methods into controllers.
 Models.init();
 
 module.exports = app;
