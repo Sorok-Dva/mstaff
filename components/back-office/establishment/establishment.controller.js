@@ -129,57 +129,6 @@ BackOffice_Establishment.validateCreate = (req, res, next) => {
 
 };
 
-BackOffice_Establishment.View = (req, res, next) => {
-  Models.Establishment.findOne({
-    where: { id: req.params.id },
-    include: [{
-      model: Models.ESAccount,
-      where: { es_id: req.params.id },
-      required: false,
-      include: {
-        model: Models.User,
-        on: {
-          '$ESAccounts.user_id$': {
-            [Op.col]: 'ESAccounts->User.id'
-          }
-        },
-      }
-    }, {
-      model: Models.EstablishmentReference,
-      on: {
-        '$Establishment.finess$': {
-          [Op.col]: 'ref.finess_et'
-        }
-      },
-      as: 'ref',
-      required: true,
-    }]
-  }).then(data => {
-    if (_.isNil(data)) {
-      req.flash('error_msg', 'Cet établissement n\'existe pas.');
-      return res.redirect('/back-office/es');
-    }
-    Models.Candidate.findAll({
-      include: [{
-        model: Models.Application,
-        as: 'applications',
-        required: true,
-        where: {
-          ref_es_id: data.dataValues.finess
-        },
-      }]
-    }).then(candidates => {
-      res.render('back-office/es/show', {
-        layout,
-        candidates,
-        title: `Établissement ${data.dataValues.name}`,
-        a: { main: 'es', sub: 'es_one' },
-        es: data
-      })
-    });
-  }).catch(error => next(new BackError(error)));
-};
-
 BackOffice_Establishment.Edit = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).send({ body: req.body, errors: errors.array() });
@@ -217,6 +166,7 @@ BackOffice_Establishment.Edit = (req, res, next) => {
                 contact_phone: req.body.contactPhone,
                 domain_enable: parseInt(req.body.domain_enable),
                 domain_name: req.body.domain_name,
+                type_id: req.body.type_id
               };
               if (req.uploads && req.uploads.logo){
                 update.logo = req.uploads.logo.dir.replace('public', '') + '/' + req.uploads.logo.name;
@@ -556,13 +506,16 @@ BackOffice_Establishment.View = (req, res, next) => {
       },
       as: 'ref',
       required: true,
+    },
+    {
+      model: Models.EstablishmentTypes
     }]
   }).then(data => {
     if (_.isNil(data)) {
       req.flash('error_msg', 'Cet établissement n\'existe pas.');
       return res.redirect('/back-office/es');
     }
-    Models.Candidate.findAll({
+    return Models.Candidate.findAll({
       include: [{
         model: Models.Application,
         as: 'applications',
@@ -572,13 +525,17 @@ BackOffice_Establishment.View = (req, res, next) => {
         },
       }]
     }).then(candidates => {
-      res.render('back-office/es/show', {
-        layout,
-        candidates,
-        title: `Établissement ${data.dataValues.name}`,
-        a: { main: 'es', sub: 'es_one' },
-        es: data
-      })
+      return Models.EstablishmentTypes.findAll()
+        .then(establishmentTypes => {
+          res.render('back-office/es/show', {
+            layout,
+            candidates,
+            title: `Établissement ${data.dataValues.name}`,
+            a: { main: 'es', sub: 'es_one' },
+            es: data,
+            establishmentTypes: establishmentTypes
+          })
+        });
     });
   }).catch(error => next(new BackError(error)));
 };
@@ -608,7 +565,7 @@ BackOffice_Establishment.ViewList = (req, res, next) => {
   }).catch(error => next(new BackError(error)));
 };
 
-BackOffice_Establishment.ViewTypesList = (req, res, next) => {
+BackOffice_Establishment.TypesList = (req, res, next) => {
   Models.EstablishmentTypes.findAll({
     include: {
       model: Models.Establishment

@@ -7,7 +7,13 @@ module.exports = (sequelize, DataTypes) => {
     finess_ej: DataTypes.STRING,
     siret: DataTypes.STRING,
     code: DataTypes.STRING,
-    type_id: DataTypes.STRING,
+    type_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'EstablishmentTypes',
+        key: 'id',
+      }
+    },
     sector: DataTypes.STRING,
     address: DataTypes.STRING,
     town: DataTypes.STRING,
@@ -94,7 +100,8 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: 'id'
     });
     Establishment.hasOne(models.EstablishmentTypes, {
-      foreignKey: 'id'
+      foreignKey: 'id',
+      sourceKey: 'type_id'
     })
   };
   return Establishment;
